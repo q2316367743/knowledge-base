@@ -29,12 +29,18 @@
                             </template>
                             图
                         </a-menu-item>
-                        <a-menu-item key="/more/setting">
+                        <a-sub-menu key="/more/setting">
                             <template #icon>
-                                <icon-settings/>
+                                <icon-settings />
                             </template>
-                            设置
-                        </a-menu-item>
+                            <template #title>设置</template>
+                            <a-menu-item key="/more/setting/base">
+                                基础设置
+                            </a-menu-item>
+                            <a-menu-item key="/more/setting/category">
+                                分类设置
+                            </a-menu-item>
+                        </a-sub-menu>
                         <a-menu-item key="/more/recommend">
                             <template #icon>
                                 <icon-thumb-up/>
@@ -66,6 +72,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useSettingStore} from "@/store/db/SettingStore";
 import IconRandom from "@/icon/IconRandom.vue";
 import IconTimeLine from "@/icon/IconTimeLine.vue";
+import {useCategoryStore} from "@/store/db/CategoryStore";
 
 export default defineComponent({
     name: 'app',
@@ -94,16 +101,7 @@ export default defineComponent({
                 if (path !== this.selectedKeys[0]) {
                     this.selectedKeys[0] = path;
                 }
-                let operate = name;
-                let additional = undefined;
-                if (name) {
-                    const items = name.split("|");
-                    if (items.length > 1) {
-                        operate = items[0];
-                        additional = items[1];
-                    }
-                }
-                statistics.access(operate, additional);
+                statistics.access(name);
             }
         },
         selectedKeys(newValue) {
@@ -120,6 +118,7 @@ export default defineComponent({
         }
         this.selectedKeys = [this.$route.path];
         // TODO: 初始化数据
+        useCategoryStore().init();
     },
     methods: {}
 });

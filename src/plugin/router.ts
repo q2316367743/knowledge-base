@@ -32,9 +32,13 @@ const router = createRouter({
         path: "/graph",
         component: () => import("@/pages/graph/index.vue")
     }, {
-        name: "设置",
-        path: "/more/setting",
-        component: () => import("@/pages/more/setting/index.vue")
+        name: "基础设置",
+        path: "/more/setting/base",
+        component: () => import("@/pages/more/setting/base/index.vue")
+    }, {
+        name: "分类设置",
+        path: "/more/setting/category",
+        component: () => import("@/pages/more/setting/category/index.vue")
     }, {
         name: "推荐",
         path: "/more/recommend",

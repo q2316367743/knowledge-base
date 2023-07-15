@@ -20,8 +20,8 @@ export default class Statistics {
     /**
      * 插件打开
      */
-    async open() {
-        await this.access("/");
+    open() {
+        this.access("/").then(() => console.debug("进入插件"));
     }
 
     /**
@@ -60,7 +60,7 @@ export default class Statistics {
             nickname: this.nickname,
             operate,
             additional,
-            platform: window.rain.env,
+            platform: "utools",
             system
         });
 
