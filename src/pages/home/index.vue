@@ -3,7 +3,7 @@
         <a-row :gutter="7">
             <a-col :span="12">
                 <a-card title="快捷工具">
-                    <a-button type="primary">
+                    <a-button type="primary" @click="toEditor()">
                         新增文章
                     </a-button>
                 </a-card>
@@ -11,15 +11,15 @@
         </a-row>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
 
-export default defineComponent({
-    name: '',
-    data: () => ({
+import {useRouter} from "vue-router";
 
-    })
-});
+const router = useRouter();
+function toEditor() {
+    router.push("/editor/0")
+}
+
 </script>
 <style scoped>
 .home {

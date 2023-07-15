@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@arco-design/web-vue": "^2.48.1",
     "@vueuse/core": "^9.13.0",
     "@vueuse/integrations": "^10.2.1",
     "axios": "^1.4.0",
@@ -19,13 +20,14 @@
     "less-loader": "^11.1.0",
     "lodash-es": "^4.17.21",
     "pinia": "^2.0.34",
+    "vditor": "^3.9.4",
+    "vite-plugin-vue-devtools": "^0.5.1",
     "vue": "^3.2.47",
     "vue-router": "^4.0.13",
     "vue3-calendar-heatmap": "^2.0.5",
     "xe-utils": "^3.5.7"
   },
   "devDependencies": {
-    "@arco-design/web-vue": "^2.48.1",
     "@types/lodash-es": "^4.17.7",
     "@vitejs/plugin-vue": "^4.1.0",
     "typescript": "^4.9.3",

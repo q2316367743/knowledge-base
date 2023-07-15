@@ -11,6 +11,38 @@ const router = createRouter({
         name: "首页",
         path: '/home',
         component: () => import('@/pages/home/index.vue')
+    }, {
+        name: "编辑器",
+        path: '/editor/:id',
+        component: () => import("@/pages/editor/index.vue")
+    }, {
+        name: '文章',
+        path: '/article/:id',
+        component: () => import("@/pages/article/index.vue")
+    }, {
+        name: "随机",
+        path: '/random',
+        component: () => import("@/pages/random/index.vue")
+    }, {
+        name: "时间线",
+        path: "/timeline",
+        component: () => import("@/pages/timeline/index.vue")
+    }, {
+        name: "图",
+        path: "/graph",
+        component: () => import("@/pages/graph/index.vue")
+    }, {
+        name: "设置",
+        path: "/more/setting",
+        component: () => import("@/pages/more/setting/index.vue")
+    }, {
+        name: "推荐",
+        path: "/more/recommend",
+        component: () => import("@/pages/more/recommend/index.vue")
+    }, {
+        name: "关于",
+        path: "/more/about",
+        component: () => import("@/pages/more/about/index.vue")
     }]
 });
 

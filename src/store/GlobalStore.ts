@@ -5,7 +5,6 @@ export const useGlobalStore = defineStore('global', {
     state: () => ({
         isDark: utools.isDarkColors(),
         size: useWindowSize(),
-        collapsed: true,
         loading: false,
         loadingText: ''
     }),
@@ -23,9 +22,6 @@ export const useGlobalStore = defineStore('global', {
                 // 恢复亮色主题
                 document.body.removeAttribute('arco-theme');
             }
-        },
-        switchCollapsed() {
-            this.collapsed = !this.collapsed;
         },
         startLoading(text?: string) { // 加载中.. 可以加载完成后自动关闭页面.. 不要忘
             this.loading = true;
