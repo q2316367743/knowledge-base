@@ -1,6 +1,8 @@
 enum LocalNameEnum {
 
-    CATEGORY = '/local/category'
+    CATEGORY = '/local/category',
+
+    ARTICLE = '/local/article'
 
 }
 

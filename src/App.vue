@@ -60,23 +60,27 @@
                 </a-layout-content>
             </a-layout>
         </a-spin>
+        <sub-input />
     </div>
 </template>
 <script lang="ts">
 import {mapState} from "pinia";
 import {defineComponent} from "vue";
-
 import {statistics} from "@/global/BeanFactory";
 
+// 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useSettingStore} from "@/store/db/SettingStore";
+import {useCategoryStore} from "@/store/db/CategoryStore";
+// 组件
 import IconRandom from "@/icon/IconRandom.vue";
 import IconTimeLine from "@/icon/IconTimeLine.vue";
-import {useCategoryStore} from "@/store/db/CategoryStore";
+import SubInput from '@/components/SubInput/index.vue';
+import {useArticleStore} from "@/store/db/ArticleStore";
 
 export default defineComponent({
     name: 'app',
-    components: {IconTimeLine, IconRandom},
+    components: {IconTimeLine, IconRandom, SubInput},
     data: () => ({
         selectedKeys: ['/dashboard'],
         subInputVisible: false,
@@ -118,6 +122,7 @@ export default defineComponent({
         }
         this.selectedKeys = [this.$route.path];
         // TODO: 初始化数据
+        useArticleStore().init();
         useCategoryStore().init();
     },
     methods: {}

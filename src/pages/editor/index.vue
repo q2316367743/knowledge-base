@@ -11,9 +11,9 @@
             </div>
             <a-button-group type="text">
                 <a-button type="primary" style="margin-right: 7px">保存</a-button>
-                <a-button>
+                <a-button @click="extra.visible = true">
                     <template #icon>
-                        <icon-more-vertical/>
+                        <icon-settings/>
                     </template>
                 </a-button>
             </a-button-group>
@@ -21,7 +21,27 @@
         <div class="container">
             <div id="editor-instance"/>
         </div>
-        <a-image-preview v-model:visible="preview.show" :src="preview.src" />
+        <a-image-preview v-model:visible="preview.show" :src="preview.src"/>
+        <a-drawer v-model:visible="extra.visible" title="额外信息" :width="300" :footer="false">
+            <a-form :model="extra" layout="vertical">
+                <a-form-item label="分类">
+                    <a-select v-model="extra.categoryId" placeholder="请选择分类">
+                        <a-option v-for="category in categories" :value="category.id">{{ category.name }}</a-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label="标签">
+                    <a-select v-model="extra.tags" placeholder="请输入标签" multiple scrollbar allow-clear allow-search
+                              allow-create>
+                        <a-option v-for="tag in articleTags" :value="tag">{{ tag }}</a-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label="描述">
+                    <a-textarea v-model="extra.description" :auto-size="{minRows: 4}"
+                                placeholder="请输入描述，不能超过64个字"
+                                allow-clear :max-length="64" show-word-limit/>
+                </a-form-item>
+            </a-form>
+        </a-drawer>
     </div>
 </template>
 <script lang="ts">
@@ -30,6 +50,8 @@ import Vditor from "vditor";
 import {mapState} from "pinia";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import {useCategoryStore} from "@/store/db/CategoryStore";
 
 export default defineComponent({
     name: 'editor',
@@ -39,10 +61,18 @@ export default defineComponent({
         preview: {
             show: false,
             src: ''
+        },
+        extra: {
+            visible: false,
+            tags: new Array<string>(),
+            categoryId: null,
+            description: ''
         }
     }),
     computed: {
-        ...mapState(useGlobalStore, ['size', 'isDark'])
+        ...mapState(useGlobalStore, ['size', 'isDark']),
+        ...mapState(useArticleStore, ['articleTags']),
+        ...mapState(useCategoryStore, ['categories'])
     },
     mounted() {
         const vditor = new Vditor("editor-instance", {
