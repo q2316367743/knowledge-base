@@ -24,6 +24,7 @@ import {computed, ref, watch} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useRouter} from "vue-router";
+import {useSearchEvent} from "@/global/BeanFactory";
 
 const router = useRouter();
 
@@ -37,9 +38,11 @@ const {results} = useFuse(keyword, articles, {
         keys: [{
             name: 'name'
         }, {
-            name: 'tag'
+            name: 'tags'
         }, {
             name: 'description'
+        }, {
+            name: 'source'
         }]
     }
 });
@@ -50,8 +53,7 @@ let interval = setInterval(() => {
     subInput = utools.setSubInput(action => {
         // @ts-ignore
         let text = action.text;
-        if (visible.value) {
-        } else if (text !== '') {
+        if (text !== '') {
             visible.value = true;
         }
         keyword.value = text;
@@ -65,10 +67,12 @@ watch(() => keyword.value, newValue => {
     utools.setSubInputValue(newValue);
 });
 watch(() => visible.value, newValue => {
-    if (!newValue){
+    if (!newValue) {
         utools.setSubInputValue("");
     }
-})
+});
+
+useSearchEvent.on(() => visible.value = true);
 
 function jumpTo(id: number) {
     router.push('/article/' + id);

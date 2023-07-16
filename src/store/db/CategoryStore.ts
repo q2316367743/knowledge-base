@@ -2,7 +2,6 @@ import Category from "@/entity/Category";
 import {defineStore} from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {utools} from "@/plugin/utools";
 import {toRaw} from "vue";
 
 export const useCategoryStore = defineStore('category', {

@@ -1,16 +1,70 @@
 <template>
-    <div class="more-setting-base">基础设置</div>
+    <div class="more-setting-base">
+        <a-form :model="setting" layout="vertical">
+            <a-form-item label="JSON视图白天主题" >
+                <a-select v-model="instance.codeLightTheme" style="width: 200px">
+                    <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme" />
+                </a-select>
+            </a-form-item>
+            <a-form-item label="JSON视图黑夜主题">
+                <a-select v-model="instance.codeDarkTheme" style="width: 200px">
+                    <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme" />
+                </a-select>
+            </a-form-item>
+            <a-form-item label="文章主题">
+                <a-select v-model="instance.articleTheme" style="width: 200px">
+                    <a-option :value="ArticleThemeEnum.ZUI">Zui</a-option>
+                    <a-option :value="ArticleThemeEnum.HE_TI">赫蹏</a-option>
+                </a-select>
+                <template #help>
+                    <span v-html="renderHelp(instance.articleTheme)"></span>
+                </template>
+            </a-form-item>
+            <a-form-item>
+                <a-button type="primary" @click="save()">保存</a-button>
+            </a-form-item>
+        </a-form>
+    </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
+import {mapState} from "pinia";
+import MessageUtil from "@/utils/MessageUtil";
+import JsonTheme from "@/global/CodeTheme";
+import {getDefaultSetting, useSettingStore, renderHelp} from "@/store/db/SettingStore";
+import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
     data: () => ({
-
-    })
+        JsonTheme,
+        ArticleThemeEnum,
+        instance: getDefaultSetting()
+    }),
+    computed: {
+        ...mapState(useSettingStore, ['setting'])
+    },
+    created() {
+        this.instance = Object.assign(this.instance, this.setting);
+    },
+    methods: {
+        renderHelp,
+        save() {
+            useSettingStore().save(this.instance)
+                .then(() => MessageUtil.success("保存成功"))
+                .catch(e => MessageUtil.error("保存失败", e));
+        }
+    }
 });
 </script>
 <style scoped>
+.more-setting-base {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    overflow: auto;
+}
 
 </style>

@@ -20,7 +20,7 @@ export interface ArticleIndex {
     /**
      * 分类
      */
-    categoryId: number;
+    categoryId: number | null;
 
     /**
      * 文章标签
@@ -31,5 +31,10 @@ export interface ArticleIndex {
      * 描述，限制64个字
      */
     description: string;
+
+    /**
+     * 来源，最多32个字
+     */
+    source: string;
 
 }

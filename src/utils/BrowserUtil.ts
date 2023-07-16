@@ -158,3 +158,11 @@ export function generateUUID(): string {
 export function sleep(timestamp: number) {
     return new Promise<void>(resolve => setTimeout(resolve, timestamp));
 }
+
+const colors = [
+    'red', 'orangered', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue',
+    'arcoblue', 'purple', 'pinkpurple', 'magenta', 'gray'];
+
+export function randomColor(): string {
+    return colors[Math.floor(Math.random() * colors.length)]
+}

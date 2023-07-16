@@ -1,3 +1,5 @@
+import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
+
 export default interface Setting {
 
     /**
@@ -9,5 +11,10 @@ export default interface Setting {
      * 代码黑夜主题
      */
     codeDarkTheme: string;
+
+    /**
+     * 文章主题
+     */
+    articleTheme: ArticleThemeEnum;
 
 }

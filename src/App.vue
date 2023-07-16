@@ -13,25 +13,25 @@
                         </a-menu-item>
                         <a-menu-item key="/random">
                             <template #icon>
-                                <icon-random />
+                                <icon-random/>
                             </template>
                             随机
                         </a-menu-item>
                         <a-menu-item key="/timeline">
                             <template #icon>
-                                <icon-time-line />
+                                <icon-time-line/>
                             </template>
                             时间线
                         </a-menu-item>
                         <a-menu-item key="/graph">
                             <template #icon>
-                                <icon-mind-mapping />
+                                <icon-mind-mapping/>
                             </template>
                             图
                         </a-menu-item>
                         <a-sub-menu key="/more/setting">
                             <template #icon>
-                                <icon-settings />
+                                <icon-settings/>
                             </template>
                             <template #title>设置</template>
                             <a-menu-item key="/more/setting/base">
@@ -60,7 +60,8 @@
                 </a-layout-content>
             </a-layout>
         </a-spin>
-        <sub-input />
+        <sub-input/>
+        <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
     </div>
 </template>
 <script lang="ts">
@@ -83,19 +84,14 @@ export default defineComponent({
     components: {IconTimeLine, IconRandom, SubInput},
     data: () => ({
         selectedKeys: ['/dashboard'],
-        subInputVisible: false,
-        subInputKeyword: ''
+        preview: {
+            visible: false,
+            src: ''
+        }
     }),
     computed: {
         ...mapState(useGlobalStore, ['isDark', 'loading', 'loadingText']),
-        ...mapState(useSettingStore, ['codeLightTheme', 'codeDarkTheme']),
-        codeTheme() {
-            if (this.isDark) {
-                return this.codeLightTheme;
-            } else {
-                return this.codeDarkTheme;
-            }
-        }
+        ...mapState(useSettingStore, ['codeTheme']),
     },
     watch: {
         '$route': {
@@ -122,8 +118,16 @@ export default defineComponent({
         }
         this.selectedKeys = [this.$route.path];
         // TODO: 初始化数据
+        useSettingStore().init();
         useArticleStore().init();
         useCategoryStore().init();
+        window.onImagePreview = (src) => {
+            console.log(src)
+            this.preview = {
+                visible: true,
+                src
+            }
+        }
     },
     methods: {}
 });

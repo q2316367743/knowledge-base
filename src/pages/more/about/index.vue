@@ -1,16 +1,91 @@
 <template>
-    <div>关于</div>
+    <div class="about">
+        <div class="container">
+            <div class="logo">
+                <img src="/logo.png" alt="知识库" style="width: 200px"/>
+            </div>
+            <div class="title">{{ Constant.name }} <span class="version">{{ Constant.version }}</span></div>
+            <div class="author">
+                <a-link :link="Constant.website" target="_blank" @click="openUrl(Constant.website)">
+                    {{ Constant.author }}
+                </a-link>
+            </div>
+            <div class="desc">
+                <p>知识库，构建自己的知识库。</p>
+                <p>开通utools会员，数据可同步。</p>
+            </div>
+            <div class="action">
+                <a-button @click="openUrl(Constant.homepage)">插件主页</a-button>
+                <a-button @click="openUrl(Constant.repo)">开源地址</a-button>
+                <a-button @click="openUrl(Constant.online)">在线地址</a-button>
+            </div>
+        </div>
+    </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import Constant from "@/global/Constant";
 
 export default defineComponent({
-    name: 'more-about',
+    name: '',
     data: () => ({
-
-    })
+        Constant,
+        privacy: false,
+        rev: undefined as string | undefined,
+        privacyLoading: false
+    }),
+    methods: {
+        openUrl(url: string) {
+            utools.shellOpenExternal(url);
+        },
+    }
 });
 </script>
-<style scoped>
+<style scoped lang="less">
+.about {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
+    .logo {
+        height: 200px;
+    }
+
+    .title {
+        font-size: 2em;
+        background: linear-gradient(60deg, #E21143, #FFB03A);
+        -webkit-background-clip: text;
+        color: transparent;
+        font-weight: bolder;
+        margin-top: 28px;
+        user-select: none;
+
+        .version {
+            font-size: 0.5em;
+        }
+    }
+
+    .author {
+        margin-top: 14px;
+    }
+
+
+    .desc {
+        margin-top: 28px;
+        user-select: none;
+    }
+
+    .action {
+        margin-top: 28px;
+
+        .arco-btn {
+            margin: 0 7px;
+        }
+    }
+
+}
 </style>

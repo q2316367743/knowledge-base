@@ -10,7 +10,9 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@/less/customer.less';
 import '@/less/index.less';
-import "vditor/src/assets/less/index.less"
+import "@/less/post.css"
+import "@/less/typo.less"
+import "vditor/src/assets/less/index.less";
 
 createApp(App)
     .use(ArcoVue)
