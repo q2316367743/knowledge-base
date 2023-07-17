@@ -183,6 +183,7 @@ export default defineComponent({
         },
         // ------ 评论相关 ------
         addComment() {
+
         },
         // index: 文章索引；i：评论索引
         removeComment(index: number, i: number) {

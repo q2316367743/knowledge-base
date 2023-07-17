@@ -11,6 +11,11 @@
                     <a-statistic title="分类" :value="categories.length" show-group-separator/>
                 </a-card>
             </a-col>
+            <a-col :span="8">
+                <a-card>
+                    <a-statistic title="动态" :value="zones.length" show-group-separator/>
+                </a-card>
+            </a-col>
         </a-row>
         <a-row :gutter="7" style="margin: 7px">
             <a-col :span="24">
@@ -28,6 +33,8 @@ import {CalendarHeatmap} from 'vue3-calendar-heatmap';
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
+import {useZoneStore} from "@/store/db/ZoneStore";
+import zone from "@/pages/zone/index.vue";
 
 interface CalenderNode {
     date: string | Date,
@@ -36,6 +43,7 @@ interface CalenderNode {
 
 const articles = useArticleStore().articles;
 const categories = useCategoryStore().categories;
+const zones = useZoneStore().zones;
 const isDark = computed(() => useGlobalStore().isDark);
 
 
@@ -47,7 +55,7 @@ const endDate =  ref<any>(now.getFullYear() + '-' + month + '-' + day);
 const values = ref<Array<CalenderNode>>(new Array<CalenderNode>()) as Ref<Array<CalenderNode>>;
 
 const nodeMap = new Map<string, number>();
-for (const item of articles) {
+for (const item of [...articles, ...zones]) {
     let date = '';
     if (typeof item.createTime === 'string') {
         date = item.createTime.substring(0, 10);

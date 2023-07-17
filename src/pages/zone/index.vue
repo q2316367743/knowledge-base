@@ -3,7 +3,7 @@
         <!-- 容器 -->
         <div class="container">
             <a-list :bordered="false" :max-height="size.height" :scrollbar="true"
-                    @reach-bottom="render()" v-if="isInit">
+                    @reach-bottom="render()">
                 <zone-item v-for="item in items" :zone="item"/>
                 <template #scroll-loading>
                     <div v-if="bottom">没有更多动态了</div>
@@ -34,16 +34,11 @@ export default defineComponent({
         items: new Array<ZoneWrap>(),
         // 显示数据
         startIndex: 0,
-        isInit: false,
         bottom: false
     }),
     computed: {
         ...mapState(useGlobalStore, ['admin', 'size']),
         ...mapState(useZoneStore, ['zones'])
-    },
-    created() {
-        useZoneStore().init()
-            .then(() => this.isInit = true);
     },
     methods: {
         renderImage,
