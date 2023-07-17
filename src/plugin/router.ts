@@ -25,9 +25,9 @@ const router = createRouter({
             component: () => import("@/pages/article/info.vue")
         }]
     }, {
-        name: "随机",
-        path: '/random',
-        component: () => import("@/pages/random/index.vue")
+        name: "空间",
+        path: '/zone',
+        component: () => import("@/pages/zone/index.vue")
     }, {
         name: "时间线",
         path: "/timeline",

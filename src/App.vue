@@ -11,11 +11,11 @@
                             </template>
                             主页
                         </a-menu-item>
-                        <a-menu-item key="/random">
+                        <a-menu-item key="/zone">
                             <template #icon>
-                                <icon-random/>
+                                <icon-qq-zone />
                             </template>
-                            随机
+                            空间
                         </a-menu-item>
                         <a-menu-item key="/timeline">
                             <template #icon>
@@ -74,14 +74,13 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useSettingStore} from "@/store/db/SettingStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 // 组件
-import IconRandom from "@/icon/IconRandom.vue";
 import IconTimeLine from "@/icon/IconTimeLine.vue";
 import SubInput from '@/components/SubInput/index.vue';
 import {useArticleStore} from "@/store/db/ArticleStore";
 
 export default defineComponent({
     name: 'app',
-    components: {IconTimeLine, IconRandom, SubInput},
+    components: {IconTimeLine, SubInput},
     data: () => ({
         selectedKeys: ['/dashboard'],
         preview: {

@@ -13,6 +13,7 @@ import '@/less/index.less';
 import "@/less/post.css"
 import "@/less/typo.less"
 import "vditor/src/assets/less/index.less";
+import 'vue3-calendar-heatmap/dist/style.css'
 
 createApp(App)
     .use(ArcoVue)
