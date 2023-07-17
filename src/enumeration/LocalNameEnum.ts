@@ -8,7 +8,13 @@ enum LocalNameEnum {
 
     ARTICLE_PREVIEW = '/article/preview/',
 
-    SETTING_BASE = '/local/setting/base'
+    SETTING_BASE = '/local/setting/base',
+
+    ZONE = '/local/zone',
+
+    ZONE_CONTENT = '/zone/content/',
+
+    ZONE_COMMENT = '/zone/comment/',
 
 }
 

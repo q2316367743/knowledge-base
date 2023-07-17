@@ -77,6 +77,7 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import IconTimeLine from "@/icon/IconTimeLine.vue";
 import SubInput from '@/components/SubInput/index.vue';
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {useZoneStore} from "@/store/db/ZoneStore";
 
 export default defineComponent({
     name: 'app',
@@ -117,6 +118,7 @@ export default defineComponent({
         }
         this.selectedKeys = [this.$route.path];
         // TODO: 初始化数据
+        useZoneStore().init();
         useSettingStore().init();
         useArticleStore().init();
         useCategoryStore().init();

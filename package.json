@@ -20,6 +20,7 @@
     "less": "^4.1.3",
     "less-loader": "^11.1.0",
     "lodash-es": "^4.17.21",
+    "markdown-it": "^13.0.1",
     "pinia": "^2.0.34",
     "relation-graph": "^2.0.26",
     "vditor": "^3.9.4",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.7",
+    "@types/markdown-it": "^12.2.3",
     "@vitejs/plugin-vue": "^4.1.0",
     "typescript": "^4.9.3",
     "utools-api-types": "^3.0.0",

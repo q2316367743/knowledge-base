@@ -6,7 +6,12 @@ export const useGlobalStore = defineStore('global', {
         isDark: utools.isDarkColors(),
         size: useWindowSize(),
         loading: false,
-        loadingText: ''
+        loadingText: '',
+        admin: Object.assign({
+            avatar: null,
+            nickname: "未知用户",
+            type: '1'
+        }, utools.getUser())
     }),
     getters: {
         height: state => state.size.height,
