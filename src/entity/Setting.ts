@@ -17,4 +17,9 @@ export default interface Setting {
      */
     articleTheme: ArticleThemeEnum;
 
+    /**
+     * 文章头部是否显示
+     */
+    articleHeaderVisible: boolean;
+
 }

@@ -30,7 +30,6 @@ pre {
         padding: 0 !important;
         font-size: 1em !important;
         border: none !important;
-        border-radius: 0 !important;
         background-color: var(--color-bg-2) !important;
         color: #c7254e !important;
         border-radius: 2px;
@@ -47,6 +46,16 @@ pre {
     fill: var(--color-text-1);
 }
 
-.arco-menu-light .arco-menu-item .icon {
-    fill: var(--color-text-3);
+.arco-menu-light {
+    .arco-menu-item {
+        .icon {
+            fill: var(--color-text-3);
+        }
+
+        &.arco-menu-selected {
+            .icon {
+                fill: rgb(var(--primary-6));
+            }
+        }
+    }
 }

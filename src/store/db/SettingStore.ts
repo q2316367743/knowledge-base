@@ -9,7 +9,8 @@ export function getDefaultSetting(): Setting {
     return {
         codeLightTheme: 'github',
         codeDarkTheme: 'github-dark',
-        articleTheme: ArticleThemeEnum.ZUI
+        articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
+        articleHeaderVisible: true
     }
 }
 
@@ -28,12 +29,13 @@ export const useSettingStore = defineStore('setting', {
     getters: {
         codeTheme: (state) => {
             if (useGlobalStore().isDark) {
-                return state.setting.codeLightTheme;
-            } else {
                 return state.setting.codeDarkTheme;
+            } else {
+                return state.setting.codeLightTheme;
             }
         },
-        articleTheme: state => state.setting.articleTheme
+        articleTheme: state => state.setting.articleTheme,
+        articleHeaderVisible: state => state.setting.articleHeaderVisible
     },
     actions: {
         async init() {

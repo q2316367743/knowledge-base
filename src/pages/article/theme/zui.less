@@ -1,67 +1,4 @@
-<template>
-    <article class="info zui" id="article-zui">
-        <header>
-            <h1>{{ article.name }}</h1>
-            <div class="base">
-                <div>
-                    <span v-if="article.source.trim() !== ''" style="font-weight: bold;">来源：</span>
-                    <span v-if="article.source.trim() !== ''" style="font-weight: bold;">{{article.source}}</span>
-                    <span style="font-weight: bold;margin-left: 7px;">最后修订：</span>
-                    <span>{{renderDate(article.updateTime)}}</span>
-                </div>
-                <div class="pull-right">
-                    <a-tag v-for="tag in article.tags" style="margin-right: 7px;" :color="randomColor()">{{
-                            tag
-                        }}
-                    </a-tag>
-                </div>
-            </div>
-            <div class="desc" v-if="article.description.trim() !== ''">
-                摘要：{{ article.description }}
-            </div>
-        </header>
-        <section class="content" v-html="preview"></section>
-    </article>
-</template>
-<script lang="ts" setup>
-import {nextTick, PropType, ref, watch} from "vue";
-import {ArticleIndex} from "@/entity/article";
-import {randomColor} from "@/utils/BrowserUtil";
-import {onAfterRender} from "@/pages/article/func";
-import {toDateString} from "xe-utils";
-
-const props = defineProps({
-    article: {
-        type: Object as PropType<ArticleIndex>,
-        required: true
-    },
-    preview: String
-});
-const article = ref<ArticleIndex>({
-    id: 0,
-    name: '',
-    description: '',
-    categoryId: null,
-    tags: [],
-    createTime: '',
-    updateTime: '',
-    source: ''
-});
-Object.assign(article.value, props.article);
-watch(() => props.article, () => Object.assign(article.value, props.article));
-watch(() => props.preview, preview => {
-    if (preview) {
-        nextTick(() => onAfterRender());
-    }
-});
-
-function renderDate(date: string | Date) {
-    return toDateString(date, 'yyyy年MM月dd日 HH:mm:ss')
-}
-</script>
-<style lang="less">
 .zui {
-    padding: 14px;
 
     header {
         h1 {
@@ -357,5 +294,3 @@ body.zui-content {
         transition-property: color, background, transform, opacity, -webkit-transform, -o-transform;
     }
 }
-
-</style>

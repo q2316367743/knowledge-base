@@ -1,0 +1,261 @@
+/*默认样式，最佳实践*/
+
+/*全局属性*/
+.tailwind-blue {
+  color: rgb(30 41 59);
+  line-height: 1.6;
+  word-spacing: 0px;
+  letter-spacing: 0px;
+  word-break: break-word;
+  word-wrap: break-word;
+  text-align: left;
+  font-size: 16px;
+}
+
+/*段落*/
+.tailwind-blue p {
+  font-size: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  line-height: 26px;
+  color: rgb(30 41 59);
+}
+
+/*标题*/
+.tailwind-blue h1,
+.tailwind-blue h2,
+.tailwind-blue h3,
+.tailwind-blue h4,
+.tailwind-blue h5,
+.tailwind-blue h6 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding: 0px;
+  font-weight: bold;
+  color: rgb(17 24 39);
+}
+.tailwind-blue h1 {
+  font-size: 24px;
+}
+.tailwind-blue h2 {
+  font-size: 22px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgb(236 236 236 / 50%);
+}
+.tailwind-blue h3 {
+  font-size: 20px;
+}
+.tailwind-blue h4 {
+  font-size: 18px;
+}
+.tailwind-blue h5 {
+  font-size: 16px;
+}
+.tailwind-blue h6 {
+  font-size: 16px;
+}
+
+/*列表*/
+.tailwind-blue ul,
+.tailwind-blue ol {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-left: 25px;
+  color: rgb(30 41 59);
+}
+.tailwind-blue ul {
+  list-style-type: disc;
+}
+.tailwind-blue ul ul {
+  list-style-type: square;
+}
+
+.tailwind-blue ol {
+  list-style-type: decimal;
+}
+
+.tailwind-blue li section {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 26px;
+  text-align: left;
+  color: rgb(30 41 59);
+  font-weight: 500;
+}
+
+/*引用*/
+.tailwind-blue blockquote {
+  background-color: rgb(15 164 233 / 8%);
+  border-left-width: 4px;
+  border-left-color: #0fa4e9;
+  border-left-style: solid;
+  quotes: '\201C''\201D''\2018''\2019';
+  margin: 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 8px 8px 8px 12px;
+}
+
+.tailwind-blue blockquote h2,
+.tailwind-blue blockquote h3,
+.tailwind-blue blockquote h4,
+.tailwind-blue blockquote strong {
+  color: rgb(30 41 59);
+}
+.tailwind-blue blockquote p {
+  margin: 0px;
+  color: rgb(30 41 59);
+  line-height: 26px;
+}
+
+/*链接*/
+.tailwind-blue a,
+.tailwind-blue .link {
+  padding: 2px 4px;
+  text-decoration: none;
+  color: rgb(14 165 233);
+  word-wrap: break-word;
+  font-weight: 600;
+  border-bottom: 1px solid rgb(14 165 233);
+}
+
+/*加粗*/
+.tailwind-blue strong {
+  font-weight: bold;
+  color: rgb(17 24 39);
+}
+
+/*斜体*/
+.tailwind-blue em {
+  font-style: italic;
+  color: rgb(17 24 39);
+}
+
+/*加粗斜体*/
+.tailwind-blue em strong {
+  font-weight: bold;
+  color: rgb(17 24 39);
+}
+
+/*删除线*/
+.tailwind-blue del {
+  font-style: italic;
+  color: rgb(30 41 59);
+}
+
+/*分隔线*/
+.tailwind-blue hr {
+  height: 1px;
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-top: 1px solid rgb(236 236 236 / 50%);
+}
+
+/*行内代码*/
+.tailwind-blue p code,
+.tailwind-blue li code {
+  font-size: 14px;
+  word-break: break-word;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  color: rgb(14 165 233);
+  background-color: rgb(15 164 233 / 8%);
+  font-family: Operator Mono, Consolas, Monaco, Menlo, monospace;
+}
+
+.tailwind-blue pre {
+  font-family: Operator Mono, Consolas, Monaco, Menlo, monospace;
+  overflow: auto;
+  position: relative;
+  line-height: 1.75;
+}
+
+.tailwind-blue pre > code {
+  min-width: 100%;
+  font-size: 12px;
+  word-break: normal;
+  display: block;
+  flex: none;
+  padding: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/*图片*/
+.tailwind-blue img {
+  display: block;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: rgb(0 0 0 / 20%) 0px 0px 4px;
+}
+.qrcode-block img {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/*图片*/
+.tailwind-blue figure {
+  margin: 0;
+  padding: 0 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/*图片描述文字*/
+.tailwind-blue figcaption {
+  margin-top: 5px;
+  text-align: center;
+  color: rgb(100, 116, 139);
+  font-size: 14px;
+}
+
+/*表格*/
+.tailwind-blue table {
+  width: auto;
+  table-layout: auto;
+  text-align: left;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-spacing: 0;
+  border: 1px solid rgb(236 236 236 / 50%);
+  border-collapse: collapse;
+}
+.tailwind-blue head {
+  border-bottom-width: 1px;
+  border-bottom-color: rgb(236 236 236 / 50%);
+  color: #334155;
+}
+
+.tailwind-blue table tr {
+  border: 0;
+}
+
+.tailwind-blue table tr th,
+.tailwind-blue table tr td {
+  border: 0;
+  border-bottom: 1px solid rgb(236 236 236 / 50%);
+  font-size: 16px;
+  padding: 10px;
+  text-align: left;
+}
+
+.tailwind-blue table tr th {
+  color: rgb(17 24 39);
+  font-weight: bold;
+}
+
+.tailwind-blue sub,
+sup {
+  line-height: 0;
+}
+
+.tailwind-blue .contains-task-list {
+  padding-left: 0;
+}
+.tailwind-blue .task-list-item {
+  list-style: none;
+}

@@ -1,42 +1,3 @@
-<template>
-    <article class="info heti" id="heti" v-html="props.preview">
-    </article>
-    <a-result status="404" title="加载中" v-if="loading"></a-result>
-</template>
-<script lang="ts" setup>
-import {nextTick, PropType, ref, watch} from "vue";
-import {ArticleIndex} from "@/entity/article";
-import hljs from 'highlight.js'
-import {onAfterRender} from "@/pages/article/func";
-
-const props = defineProps({
-    article: {
-        type: Object as PropType<ArticleIndex>,
-        required: true
-    },
-    preview: String
-});
-const article = ref<ArticleIndex>({
-    id: 0,
-    name: '',
-    description: '',
-    categoryId: null,
-    tags: [],
-    createTime: '',
-    updateTime: '',
-    source: ''
-});
-const loading = ref(true)
-
-Object.assign(article.value, props.article);
-watch(() => props.article, () => Object.assign(article.value, props.article));
-watch(() => props.preview, preview => {
-    if (preview) {
-        nextTick(() => onAfterRender());
-    }
-});
-</script>
-<style lang="less">
 .heti {
     box-sizing: border-box;
     width: 80%;
@@ -996,4 +957,3 @@ watch(() => props.preview, preview => {
 .heti .heti-adjacent-quarter {
     margin-inline-end: -0.25em
 }
-</style>

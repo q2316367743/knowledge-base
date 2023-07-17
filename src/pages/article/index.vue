@@ -21,11 +21,21 @@
                         <icon-fullscreen v-else/>
                     </template>
                 </a-button>
-                <a-button>
-                    <template #icon>
-                        <icon-more-vertical/>
+                <a-dropdown trigger="click" position="br">
+                    <a-button>
+                        <template #icon>
+                            <icon-more-vertical/>
+                        </template>
+                    </a-button>
+                    <template #content>
+                        <a-doption @click="settingVisible = true">
+                            <template #icon>
+                                <icon-settings/>
+                            </template>
+                            设置
+                        </a-doption>
                     </template>
-                </a-button>
+                </a-dropdown>
             </a-button-group>
         </a-layout-header>
         <a-layout>
@@ -41,6 +51,10 @@
                 <a-back-top target-container=".article .arco-scrollbar-container"/>
             </a-layout-content>
         </a-layout>
+        <a-modal v-model:visible="settingVisible" title="基础设置" unmount-on-close class="article-setting"
+                 :footer="false">
+            <more-setting-base @save="settingVisible = false"/>
+        </a-modal>
     </a-layout>
 </template>
 <script lang="ts" setup>
@@ -48,13 +62,14 @@ import {computed, ref} from "vue";
 import {useArticleInfoStore} from "@/store/component/ArticleInfoStore";
 import {useRouter} from "vue-router";
 import {useFullscreen} from "@vueuse/core";
+import MoreSettingBase from "@/pages/more/setting/base/index.vue";
 
 const router = useRouter();
 const collapsed = ref(true);
 const id = computed(() => useArticleInfoStore().id);
 const title = computed(() => useArticleInfoStore().title);
-
 const fullscreen = useFullscreen();
+const settingVisible = ref(false);
 
 function triggerCollapsed() {
     collapsed.value = !collapsed.value;
@@ -113,6 +128,12 @@ function toHome() {
             cursor: pointer;
         }
 
+    }
+}
+
+.article-setting {
+    .arco-modal-body {
+        height: 50vh;
     }
 }
 </style>

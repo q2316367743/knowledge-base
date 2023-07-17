@@ -1,24 +1,38 @@
 <template>
     <div class="more-setting-base">
         <a-form :model="setting" layout="vertical">
-            <a-form-item label="JSON视图白天主题" >
+            <a-form-item label="JSON视图白天主题">
                 <a-select v-model="instance.codeLightTheme" style="width: 200px">
-                    <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme" />
+                    <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
                 </a-select>
             </a-form-item>
             <a-form-item label="JSON视图黑夜主题">
                 <a-select v-model="instance.codeDarkTheme" style="width: 200px">
-                    <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme" />
+                    <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
                 </a-select>
             </a-form-item>
             <a-form-item label="文章主题">
                 <a-select v-model="instance.articleTheme" style="width: 200px">
+                    <a-option :value="ArticleThemeEnum.TAILWIND_BLUE">天空蓝</a-option>
                     <a-option :value="ArticleThemeEnum.ZUI">Zui</a-option>
                     <a-option :value="ArticleThemeEnum.HE_TI">赫蹏</a-option>
+                    <a-option :value="ArticleThemeEnum.JUE_JIN">掘金</a-option>
+                    <a-option :value="ArticleThemeEnum.CHANNING_CYAN">柠青</a-option>
+                    <a-option :value="ArticleThemeEnum.CHINESE_RED">中国红</a-option>
+                    <a-option :value="ArticleThemeEnum.CONDENSED_NIGHT_PURPLE">凝夜紫</a-option>
+                    <a-option :value="ArticleThemeEnum.DEVUI_BLUE">科技蓝</a-option>
+                    <a-option :value="ArticleThemeEnum.GEEK_BLACK">极客黑</a-option>
+                    <a-option :value="ArticleThemeEnum.JZMAN">jzman</a-option>
+                    <a-option :value="ArticleThemeEnum.SMART_BLUE">灵动蓝</a-option>
+                    <a-option :value="ArticleThemeEnum.V_GREEN">微绿</a-option>
+                    <a-option :value="ArticleThemeEnum.VUEPRESS">vuepress</a-option>
                 </a-select>
                 <template #help>
                     <span v-html="renderHelp(instance.articleTheme)"></span>
                 </template>
+            </a-form-item>
+            <a-form-item label="文章头部是否显示">
+                <a-switch v-model="instance.articleHeaderVisible"/>
             </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
@@ -36,6 +50,7 @@ import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
+    emits: ['save'],
     data: () => ({
         JsonTheme,
         ArticleThemeEnum,
@@ -51,8 +66,9 @@ export default defineComponent({
         renderHelp,
         save() {
             useSettingStore().save(this.instance)
-                .then(() => MessageUtil.success("保存成功"))
-                .catch(e => MessageUtil.error("保存失败", e));
+                    .then(() => MessageUtil.success("保存成功"))
+                    .catch(e => MessageUtil.error("保存失败", e))
+                    .finally(() => this.$emit('save'));
         }
     }
 });
