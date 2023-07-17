@@ -1,7 +1,5 @@
-import hljs from "highlight.js";
 
 export function onAfterRender() {
-    hljs.highlightAll();
     document.querySelectorAll("#article-container a")
         .forEach((ele: any) => {
             ele.onclick = () => {

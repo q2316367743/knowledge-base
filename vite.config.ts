@@ -2,7 +2,6 @@
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 import path from "path";
-import VueDevTools from 'vite-plugin-vue-devtools'
 
 function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
@@ -16,7 +15,6 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        VueDevTools()
     ],
     base: "./",
     build: {

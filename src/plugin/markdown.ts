@@ -34,7 +34,8 @@ md.options.highlight = function (str, lang) {
             return '<pre class="hljs"><code>' +
                 html +
                 '</code></pre>'
-        } catch (__) { }
+        } catch (__) {
+        }
     }
     // 未添加代码语言，此处与上面同理
     const preCode = md.utils.escapeHtml(str);
@@ -71,6 +72,7 @@ md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
         } else {
             tokens[idx].attrs![hrefIndex][1] = `window.utools.shellOpenExternal('${href}')`;    // 替换已经存在的属性值
         }
+        tokens[idx].attrPush(['class', 'arco-link']); // 添加新属性
     }
 
     // 传递 token 到默认的渲染器。

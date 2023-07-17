@@ -53,7 +53,7 @@ export function renderOne(e: Zone): ZoneWrap {
  * @returns 图片base64形式
  */
 export function renderImage(e: VNode, id: string) {
-    renderLazyByArcoImage(e, '/article/attachment/' + id);
+    renderLazyByArcoImage(e, '/zone/attachment/' + id);
 }
 
 export function transformUint8ArrayToBase64(array: Uint8Array): string {

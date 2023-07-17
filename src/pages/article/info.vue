@@ -16,7 +16,7 @@
                 </ul>
             </blockquote>
         </header>
-        <section class="content" v-html="preview"></section>
+        <a-typography class="content" v-html="preview"></a-typography>
     </article>
     <a-result status="404" title="加载中" v-if="loading"></a-result>
 </template>
@@ -87,11 +87,11 @@ onMounted(() => {
     article.value = articleIndex;
     // 获取预览
     utools.db.promises.get(LocalNameEnum.ARTICLE_PREVIEW + id)
-            .then(res => {
-                if (res) {
-                    preview.value = (res.value as ArticlePreview).html;
-                }
-            }).catch(e => MessageUtil.error("获取文章内容失败", e));
+        .then(res => {
+            if (res) {
+                preview.value = (res.value as ArticlePreview).html;
+            }
+        }).catch(e => MessageUtil.error("获取文章内容失败", e));
 });
 
 watch(() => preview.value, preview => {
@@ -108,8 +108,8 @@ function toDate(date: Date | string): string {
 }
 
 </script>
-<style>
+<style lang="less">
 .info {
-    margin: 14px;
+    padding: 14px;
 }
 </style>

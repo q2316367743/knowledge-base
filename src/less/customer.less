@@ -22,6 +22,7 @@ pre {
 
         code {
             color: var(--color-text-1) !important;
+            overflow-x: hidden;
         }
     }
 
@@ -30,7 +31,7 @@ pre {
         padding: 0 !important;
         font-size: 1em !important;
         border: none !important;
-        background-color: var(--color-bg-2) !important;
+        background-color: transparent !important;
         color: #c7254e !important;
         border-radius: 2px;
         font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
@@ -58,4 +59,8 @@ pre {
             }
         }
     }
+}
+
+pre code.hljs {
+    overflow-x: initial !important;
 }

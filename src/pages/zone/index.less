@@ -5,11 +5,14 @@
     height: 100%;
     background-color: var(--color-bg-1);
     color: var(--color-text-1);
-    overflow: auto;
 
     .container {
-        position: relative;
-
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
     }
 
     .add {
@@ -58,7 +61,8 @@
 .zone {
     .item {
         border-bottom: 1px solid var(--color-neutral-3);
-        padding: 13px;
+        margin: 7px;
+
 
         .header {
             display: flex;
@@ -79,11 +83,17 @@
         }
 
         .image {
-            margin-bottom: 7px;
+            margin: 14px 0;
 
             .arco-image {
                 margin-bottom: 2px;
             }
+        }
+
+        .location {
+            color: rgb(var(--green-6));
+            margin-top: 14px;
+            text-align: right;
         }
 
         .action {

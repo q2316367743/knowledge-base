@@ -173,7 +173,7 @@ export default defineComponent({
                     tags: this.extra.tags,
                     categoryId: this.extra.categoryId,
                     source: this.extra.source
-                }, this.vditor.getValue(), this.vditor.getHTML())
+                }, this.vditor.getValue())
                     .then(() => MessageUtil.success("保存文章成功"))
                     .catch(e => MessageUtil.error("保存文章失败", e));
             } else {
@@ -184,7 +184,7 @@ export default defineComponent({
                     categoryId: this.extra.categoryId,
                     source: this.extra.source,
                     createTime: this.extra.createTime
-                }, this.vditor.getValue(), this.vditor.getHTML())
+                }, this.vditor.getValue())
                     .then(() => MessageUtil.success("保存文章成功"))
                     .catch(e => MessageUtil.error("保存文章失败", e));
             }

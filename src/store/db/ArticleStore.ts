@@ -5,6 +5,7 @@ import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import md from "@/plugin/markdown";
 
 export const useArticleStore = defineStore('article', {
     state: () => ({
@@ -62,7 +63,7 @@ export const useArticleStore = defineStore('article', {
         },
         async add(
             base: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'source'>,
-            content: string, preview: string) {
+            content: string) {
             // 校验
             if (base.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
@@ -101,7 +102,7 @@ export const useArticleStore = defineStore('article', {
             const previewRes = await utools.db.promises.put({
                 _id: LocalNameEnum.ARTICLE_PREVIEW + id,
                 value: {
-                    html: preview,
+                    html: md.render(content),
                     toc: []
                 } as ArticlePreview
             });
@@ -113,7 +114,7 @@ export const useArticleStore = defineStore('article', {
         async update(
             id: number,
             base: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'createTime' | 'source'>,
-            content: string, preview: string
+            content: string
         ) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
@@ -121,7 +122,7 @@ export const useArticleStore = defineStore('article', {
                     confirmButtonText: "新增",
                     cancelButtonText: "取消"
                 });
-                await this.add(base, content, preview);
+                await this.add(base, content);
                 return Promise.resolve();
             }
             // 校验
@@ -162,7 +163,7 @@ export const useArticleStore = defineStore('article', {
             const previewRes = await utools.db.promises.put({
                 _id: LocalNameEnum.ARTICLE_PREVIEW + id,
                 value: {
-                    html: preview,
+                    html: md.render(content),
                     toc: []
                 } as ArticlePreview
             });
@@ -170,6 +171,18 @@ export const useArticleStore = defineStore('article', {
                 // 删除索引
                 MessageUtil.warning("新增预览异常，" + previewRes.error);
             }
+        },
+        async removeById(id: number) {
+            const index = this.value.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("动态未找到，请刷新后重试！");
+            }
+            // 删除索引
+            const deleteZone = this.value.splice(index, 1)[0];
+            await this._sync();
+            // 删除内容
+            // 删除评论
+            // 删除附件
         }
     }
 });
