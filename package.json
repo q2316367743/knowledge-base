@@ -21,6 +21,7 @@
     "less-loader": "^11.1.0",
     "lodash-es": "^4.17.21",
     "pinia": "^2.0.34",
+    "relation-graph": "^2.0.26",
     "vditor": "^3.9.4",
     "vite-plugin-vue-devtools": "^0.5.1",
     "vue": "^3.2.47",
