@@ -3,7 +3,7 @@
         <a-typography-title :heading="5" style="margin-left: 14px">全部评论 0</a-typography-title>
         <div class="add">
             <div class="avatar">
-                <a-avatar :image-url="admin.avatar" style="margin: 4 16px;"></a-avatar>
+                <a-avatar :image-url="admin.avatar" style="margin: 4px 16px;"></a-avatar>
             </div>
             <div>
                 <a-textarea v-model="comment" :auto-size="{minRows: 3, maxRows: 5}"
