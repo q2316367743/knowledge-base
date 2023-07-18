@@ -9,7 +9,7 @@
              @ok="execute()" @cancel="cancelAdd()">
         <!-- 动态内容 -->
         <a-textarea :auto-size="{ minRows: 2, maxRows: 8 }" v-model="zone.content"
-                    placeholder="有什么新鲜事想分享？"/>
+                    placeholder="有什么新鲜事想分享？（支持Markdown）"/>
         <!-- 标签 -->
         <div class="tag" style="margin: 7px 0;">
             <a-tag v-for="tag of zone.tags" :key="tag" closable @close="tagHandleRemove(tag)"

@@ -17,13 +17,8 @@ const router = createRouter({
         component: () => import("@/pages/editor/index.vue")
     }, {
         name: '文章',
-        path: '/article',
+        path: '/article/:id',
         component: () => import("@/pages/article/index.vue"),
-        children: [{
-            name: '文章内容',
-            path: '/article/:id',
-            component: () => import("@/pages/article/info.vue")
-        }]
     }, {
         name: "空间",
         path: '/zone',

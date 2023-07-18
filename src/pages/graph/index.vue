@@ -13,6 +13,7 @@ import RelationGraph, {RGOptions, RGJsonData, JsonNode, JsonLine} from 'relation
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleIndex} from "@/entity/article";
 import {useCategoryStore} from "@/store/db/CategoryStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const relationGraph$ = ref<RelationGraph>()
 const options = {

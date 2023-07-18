@@ -1,0 +1,77 @@
+.article {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: var(--color-text-1);
+    background-color: var(--color-bg-1);
+    z-index: 51;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid var(--color-neutral-3);
+        line-height: 34px;
+    }
+
+    .container {
+        position: absolute;
+        top: 36px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+
+        .arco-scrollbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            .scrollbar {
+                overflow: auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+            }
+        }
+
+        img {
+            cursor: pointer;
+        }
+
+        .info {
+            padding: 0 14px;
+        }
+
+    }
+
+    .comment {
+        margin: 14px;
+        padding: 7px;
+        background-color: var(--color-neutral-2);
+        border-radius: 2px;
+        .add {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 72px 0.9fr;
+            margin: 28px 14px 14px;
+        }
+        .option {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 14px;
+        }
+    }
+}
+
+.article-setting {
+    .arco-modal-body {
+        height: 50vh;
+    }
+}

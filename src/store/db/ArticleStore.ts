@@ -178,9 +178,11 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("动态未找到，请刷新后重试！");
             }
             // 删除索引
-            const deleteZone = this.value.splice(index, 1)[0];
+            this.value.splice(index, 1);
             await this._sync();
             // 删除内容
+            await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+            await utools.db.promises.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
             // 删除评论
             // 删除附件
         }
