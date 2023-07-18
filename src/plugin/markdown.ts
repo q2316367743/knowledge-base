@@ -51,7 +51,7 @@ md.options.highlight = function (str, lang) {
 
 
 // 如果覆盖，或者是对默认渲染器的代理，则记住老的渲染器。
-var defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
     return self.renderToken(tokens, idx, options);
 };
 

@@ -3,7 +3,26 @@ import ZoneWrap from "./domain/ZoneWrap";
 import Zone from "@/entity/zone";
 import ZoneComment from "@/entity/zone/ZoneComment";
 import md from "@/plugin/markdown";
-import { VNode } from "vue";
+import {VNode} from "vue";
+
+export function getDefaultZoneWrap(): ZoneWrap {
+    return {
+        id: 0,
+        createTime: new Date(),
+        updateTime: new Date(),
+        content: {
+            location: '',
+            tags: [],
+            body: ''
+        },
+        imageWrap: [],
+        comments: [],
+        image: [],
+        source: '',
+        attachments: [],
+        collect: false
+    }
+}
 
 export function renderOne(e: Zone): ZoneWrap {
     // 获取正文

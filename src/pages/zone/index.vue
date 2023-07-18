@@ -26,12 +26,13 @@ import {renderImage, renderOne} from "./render";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import ZoneAdd from "@/pages/zone/components/add.vue";
 import ZoneItem from "@/pages/zone/components/item.vue";
+import Zone from "@/entity/zone";
 
 export default defineComponent({
     name: 'zone',
     components: {ZoneItem, ZoneAdd},
     data: () => ({
-        items: new Array<ZoneWrap>(),
+        items: new Array<Zone>(),
         // 显示数据
         startIndex: 0,
         bottom: false
@@ -57,7 +58,7 @@ export default defineComponent({
                 this.bottom = true;
             }
             for (let e of zones) {
-                this.items.push(renderOne(e));
+                this.items.push(e);
             }
         },
 

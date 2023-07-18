@@ -109,9 +109,10 @@ import {defineComponent} from "vue";
 import {toDateString} from 'xe-utils'
 import ZoneWrap from "@/pages/zone/domain/ZoneWrap";
 import MessageUtil from "@/utils/MessageUtil";
-import {renderImage} from "@/pages/zone/render";
+import {getDefaultZoneWrap, renderImage, renderOne} from "@/pages/zone/render";
 import ZoneAdd from "@/pages/zone/components/add.vue";
 import {download} from "@/utils/BrowserUtil";
+import Zone from "@/entity/zone";
 
 export default defineComponent({
     name: 'zone-item',
@@ -120,7 +121,7 @@ export default defineComponent({
         zone: Object
     },
     data: () => ({
-        item: {} as ZoneWrap,
+        item: getDefaultZoneWrap() as ZoneWrap,
         imagePreview: {
             id: '',
             name: '',
@@ -134,7 +135,9 @@ export default defineComponent({
         },
     }),
     created() {
-        this.item = Object.assign(this.item, this.zone);
+        if (this.zone) {
+            this.item = Object.assign(this.item, renderOne(this.zone as Zone));
+        }
     },
     methods: {
         renderImage,
