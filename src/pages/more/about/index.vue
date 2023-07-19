@@ -11,7 +11,7 @@
                 </a-link>
             </div>
             <div class="desc">
-                <p>知识库，构建自己的知识库。</p>
+                <p>构建属于自己的知识库。</p>
                 <p>开通utools会员，数据可同步。</p>
             </div>
             <div class="action">

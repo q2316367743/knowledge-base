@@ -9,20 +9,6 @@
                 <a-textarea v-model="comment" :auto-size="{minRows: 3, maxRows: 5}"
                             placeholder="请输入评论（支持markdown）"/>
                 <div class="option">
-                    <a-button-group type="text">
-                        <a-button>
-                            <template #icon>
-                                <icon-face-smile-fill/>
-                            </template>
-                            表情
-                        </a-button>
-                        <a-button>
-                            <template #icon>
-                                <icon-image/>
-                            </template>
-                            图片
-                        </a-button>
-                    </a-button-group>
                     <a-button type="primary">
                         发送
                     </a-button>

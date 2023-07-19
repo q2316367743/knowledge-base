@@ -6,7 +6,7 @@
                 <li><b>创建时间：</b>{{ toDate(article.createTime) }}</li>
                 <li><b>更新时间：</b>{{ toDate(article.updateTime) }}</li>
                 <li v-if="article.tags.length > 0"><b>标签：</b>
-                    <a-tag v-for="tag in article.tags" :color="randomColor()"
+                    <a-tag v-for="tag in article.tags" :color="randomColor(tag)"
                            style="margin-right: 7px;">{{
                             tag
                         }}

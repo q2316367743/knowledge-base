@@ -1,19 +1,24 @@
 <template>
     <div class="timeline">
         <a-row :gutter="7" style="margin: 7px">
-            <a-col :span="8">
+            <a-col :span="6">
                 <a-card>
                     <a-statistic title="文章" :value="articles.length" show-group-separator/>
                 </a-card>
             </a-col>
-            <a-col :span="8">
+            <a-col :span="6">
+                <a-card>
+                    <a-statistic title="动态" :value="zones.length" show-group-separator/>
+                </a-card>
+            </a-col>
+            <a-col :span="6">
                 <a-card>
                     <a-statistic title="分类" :value="categories.length" show-group-separator/>
                 </a-card>
             </a-col>
-            <a-col :span="8">
+            <a-col :span="6">
                 <a-card>
-                    <a-statistic title="动态" :value="zones.length" show-group-separator/>
+                    <a-statistic title="标签" :value="articleTags.size" show-group-separator/>
                 </a-card>
             </a-col>
         </a-row>
@@ -34,7 +39,6 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useZoneStore} from "@/store/db/ZoneStore";
-import zone from "@/pages/zone/index.vue";
 
 interface CalenderNode {
     date: string | Date,
@@ -42,6 +46,7 @@ interface CalenderNode {
 }
 
 const articles = useArticleStore().articles;
+const articleTags = useArticleStore().articleTags;
 const categories = useCategoryStore().categories;
 const zones = useZoneStore().zones;
 const isDark = computed(() => useGlobalStore().isDark);

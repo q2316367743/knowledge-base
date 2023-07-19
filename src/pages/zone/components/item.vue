@@ -1,8 +1,8 @@
 <template>
-    <a-card class="item" :bordered="false" hoverable>
+    <a-card class="item" hoverable>
         <template #title>
             <span style="color: var(--color-neutral-6);">
-                {{toDateString(item.createTime)}}
+                {{ toDateString(item.createTime) }}
             </span>
         </template>
         <!-- 内容 -->
@@ -16,14 +16,14 @@
         </div>
         <!-- 图片 -->
         <div class="image" v-if="item.imageWrap.length > 0">
-                <a-row :gutter="7">
-                    <a-col v-for="image in item.imageWrap" :span="8">
-                        <a-image :alt="image.name" height="150px" width="150px"
-                                 @vue:mounted="renderImage($event, image.id)" fit="cover" show-loader
-                                 :preview="false" @click="showImagePreview(image.id, image.name)"
-                                 style="cursor: pointer;"/>
-                    </a-col>
-                </a-row>
+            <a-row :gutter="7">
+                <a-col v-for="image in item.imageWrap" :span="8">
+                    <a-image :alt="image.name" height="150px" width="150px"
+                             @vue:mounted="renderImage($event, image.id)" fit="cover" show-loader
+                             :preview="false" @click="showImagePreview(image.id, image.name)"
+                             style="cursor: pointer;"/>
+                </a-col>
+            </a-row>
         </div>
         <!-- 标签 -->
         <div class="tags" v-if="item.content.tags.length > 0">
@@ -33,8 +33,8 @@
         </div>
         <!-- 地址 -->
         <div class="location" v-if="item.content.location.trim() !== ''">
-            <icon-location />
-            <span style="margin-left: 7px;">{{item.content.location}}</span>
+            <icon-location/>
+            <span style="margin-left: 7px;">{{ item.content.location }}</span>
         </div>
         <!-- 评论 -->
         <div class="comment">
@@ -77,7 +77,7 @@
                             </template>
                             复制
                         </a-doption>
-                        <a-doption>
+                        <a-doption @click="removeZone()">
                             <template #icon>
                                 <icon-delete/>
                             </template>
@@ -113,6 +113,7 @@ import {getDefaultZoneWrap, renderImage, renderOne} from "@/pages/zone/render";
 import ZoneAdd from "@/pages/zone/components/add.vue";
 import {download} from "@/utils/BrowserUtil";
 import Zone from "@/entity/zone";
+import {useZoneStore} from "@/store/db/ZoneStore";
 
 export default defineComponent({
     name: 'zone-item',
@@ -150,18 +151,18 @@ export default defineComponent({
         },
         showImagePreview(id: string, name: string) {
             utools.db.promises.getAttachment('/zone/attachment/' + id)
-                .then(buffer => {
-                    if (!buffer) {
-                        MessageUtil.warning("图片未找到");
-                        return;
-                    }
-                    this.imagePreview = {
-                        id,
-                        name,
-                        dialog: true,
-                        value: URL.createObjectURL(new Blob([buffer]))
-                    };
-                });
+                    .then(buffer => {
+                        if (!buffer) {
+                            MessageUtil.warning("图片未找到");
+                            return;
+                        }
+                        this.imagePreview = {
+                            id,
+                            name,
+                            dialog: true,
+                            value: URL.createObjectURL(new Blob([buffer]))
+                        };
+                    });
         },
         releaseImagePreview() {
             URL.revokeObjectURL(this.imagePreview.value);
@@ -176,21 +177,21 @@ export default defineComponent({
         },
         downloadImage() {
             utools.db.promises.getAttachment('/zone/attachment/' + this.imagePreview.id)
-                .then(buffer => {
-                    if (!buffer) {
-                        MessageUtil.warning("图片未找到");
-                        return;
-                    }
-                    download(buffer, this.imagePreview.name, 'image');
-                });
+                    .then(buffer => {
+                        if (!buffer) {
+                            MessageUtil.warning("图片未找到");
+                            return;
+                        }
+                        download(buffer, this.imagePreview.name, 'image');
+                    });
         },
-        // ------ 评论相关 ------
+        removeZone() {
+            useZoneStore().remove(this.item.id)
+                    .then(() => MessageUtil.success("删除完成"))
+                    .catch(e => MessageUtil.error("删除失败", e));
+        },
         addComment() {
-
-        },
-        // index: 文章索引；i：评论索引
-        removeComment(index: number, i: number) {
-        },
+        }
     }
 });
 </script>

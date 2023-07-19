@@ -36,7 +36,7 @@
                                 </template>
                                 {{ toDateString(item.createTime) }}
                             </a-tag>
-                            <a-tag v-for="tag in item.tags" style="margin-right: 7px;" :color="randomColor()">
+                            <a-tag v-for="tag in item.tags" style="margin-right: 7px;" :color="randomColor(tag)">
                                 {{ tag }}
                             </a-tag>
                         </template>

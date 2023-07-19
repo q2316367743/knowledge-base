@@ -20,9 +20,8 @@
 import {mapState} from "pinia";
 import {defineComponent} from 'vue';
 import {useGlobalStore} from '@/store/GlobalStore';
-import ZoneWrap from "./domain/ZoneWrap";
 import {toDateString} from 'xe-utils';
-import {renderImage, renderOne} from "./render";
+import {renderImage} from "./render";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import ZoneAdd from "@/pages/zone/components/add.vue";
 import ZoneItem from "@/pages/zone/components/item.vue";

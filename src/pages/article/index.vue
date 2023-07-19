@@ -3,7 +3,7 @@
         <article-header :name="article.name"/>
         <a-layout>
             <div class="container" id="article-container">
-                <a-scrollbar style="height:100%;overflow: auto;">
+                <a-scrollbar style="height:100%;overflow: auto;" type="track">
                     <article class="info" :class="articleTheme">
                         <article-info :value="article" v-if="!loading"/>
                         <a-typography class="content" v-html="preview"></a-typography>

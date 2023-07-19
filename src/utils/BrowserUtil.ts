@@ -163,6 +163,14 @@ const colors = [
     'red', 'orangered', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue',
     'arcoblue', 'purple', 'pinkpurple', 'magenta', 'gray'];
 
-export function randomColor(): string {
-    return colors[Math.floor(Math.random() * colors.length)]
+export function randomColor(str?: string): string {
+    let index = Math.floor(Math.random() * colors.length);
+    if (str) {
+        if (str.length <= colors.length - 1) {
+            index = str.length;
+        }else {
+            index = str.length % colors.length;
+        }
+    }
+    return colors[index]
 }
