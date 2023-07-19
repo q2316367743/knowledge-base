@@ -174,7 +174,10 @@ export default defineComponent({
                     categoryId: this.extra.categoryId,
                     source: this.extra.source
                 }, this.vditor.getValue())
-                    .then(() => MessageUtil.success("保存文章成功"))
+                    .then(id => {
+                        this.id = id;
+                        MessageUtil.success("保存文章成功");
+                    })
                     .catch(e => MessageUtil.error("保存文章失败", e));
             } else {
                 useArticleStore().update(this.id, {

@@ -38,7 +38,7 @@
                         </template>
                         编辑
                     </a-doption>
-                    <a-doption>
+                    <a-doption @click="removeBy()">
                         <template #icon>
                             <icon-delete/>
                         </template>
@@ -55,6 +55,9 @@ import {toDateString} from "xe-utils";
 import {useRouter} from "vue-router";
 import {computed, PropType, ref} from "vue";
 import {ArticleIndex} from "@/entity/article";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 const props = defineProps({
     article: Object as PropType<ArticleIndex>
@@ -84,6 +87,18 @@ function jumpTo() {
 
 function editTo() {
     router.push('/editor/' + item.value.id);
+}
+
+function removeBy() {
+    MessageBoxUtil.confirm(`你确定删除文章【${item.value.name}】，删除后将无法恢复`,
+        "删除警告", {
+            confirmButtonText: "删除",
+            cancelButtonText: "取消"
+        })
+        .then(() => useArticleStore()
+            .removeById(item.value.id)
+            .then(() => MessageUtil.success("删除成功"))
+            .catch(e => MessageUtil.error("删除成功", e)));
 }
 
 function switchFeature() {

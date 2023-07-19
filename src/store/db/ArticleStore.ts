@@ -63,7 +63,7 @@ export const useArticleStore = defineStore('article', {
         },
         async add(
             base: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'source'>,
-            content: string) {
+            content: string): Promise<number> {
             // 校验
             if (base.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
@@ -111,6 +111,7 @@ export const useArticleStore = defineStore('article', {
                 // 删除索引
                 MessageUtil.warning("新增预览异常，" + previewRes.error);
             }
+            return Promise.resolve(id);
         },
         async update(
             id: number,
