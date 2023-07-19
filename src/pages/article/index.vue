@@ -8,7 +8,7 @@
                         <article-info :value="article" v-if="!loading"/>
                         <a-typography class="content" v-html="preview"></a-typography>
                     </article>
-                    <article-comment :id="articleId"/>
+                    <article-comment :id="articleId" v-if="articleId !== 0"/>
                     <a-result status="404" title="加载中" v-if="loading"></a-result>
                 </a-scrollbar>
             </div>
@@ -88,14 +88,14 @@ onMounted(() => {
     // 获取预览
     loading.value = false
     utools.db.promises.get(LocalNameEnum.ARTICLE_PREVIEW + id)
-        .then(res => {
-            if (res) {
-                preview.value = (res.value as ArticlePreview).html;
-                nextTick(() => {
-                    onAfterRender();
-                });
-            }
-        }).catch(e => MessageUtil.error("获取文章内容失败", e));
+            .then(res => {
+                if (res) {
+                    preview.value = (res.value as ArticlePreview).html;
+                    nextTick(() => {
+                        onAfterRender();
+                    });
+                }
+            }).catch(e => MessageUtil.error("获取文章内容失败", e));
 });
 
 
