@@ -34,7 +34,6 @@ function createBlogDirectory(
         if (tits.indexOf(nodes[i].nodeName) !== -1) { // nodes[i].nodeName == mt|| nodes[i].nodeName == st
             //获取标题文本
             let nodetext = nodes[i].innerHTML.replace(/<\/?[^>]+>/g, "");//innerHTML里面的内容可能有HTML标签，所以用正则表达式去除HTML的标签
-            //nodetext = nodetext.replace(/ /ig, "");//替换掉所有的
             nodetext = htmlDecode(nodetext);
             //插入锚
             nodes[i].setAttribute("id", "blogTitle" + num);
@@ -81,14 +80,6 @@ function createBlogDirectory(
     }
     tocContents.style.display = 'block';
 
-    if (num == 0) return false;
-    tocTab.onclick = function () {
-        if (tocContents.style.display == "none")
-            tocContents.style.display = 'block';
-        else {
-            tocContents.style.display = 'none';
-        }
-    }
 }
 
 
