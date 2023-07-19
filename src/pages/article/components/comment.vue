@@ -47,7 +47,7 @@ const props = defineProps({
 const comment = ref('');
 let articleComments = ref(new Array<ArticleComment>());
 let articleCommentRev = undefined as string | undefined;
-let lock = false
+let lock = ref(false)
 
 onMounted(() => init());
 
@@ -78,11 +78,11 @@ async function _sync() {
 }
 
 function sendComment() {
-    if (lock) {
+    if (lock.value) {
         MessageUtil.warning("评论发送中，不太太频繁哦！");
         return;
     }
-    lock = true;
+    lock.value = true;
     addComment()
             .then(() => {
                 MessageUtil.success("新增评论成功");

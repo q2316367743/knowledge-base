@@ -17,13 +17,13 @@
 
     .container {
         position: absolute;
-        top: 36px;
+        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         overflow: auto;
 
-        &>.arco-scrollbar {
+        & > .arco-scrollbar {
             position: absolute;
             top: 0;
             left: 0;
@@ -51,19 +51,60 @@
 
     }
 
+    .toc {
+        dl{
+            margin:0;
+            padding:0;
+        }
+
+        dt{
+            margin-top:5px;
+            margin-left:5px;
+        }
+
+        dd, dt {
+            cursor: pointer;
+            display: block;
+        }
+
+        dd{
+            margin-left:20px;
+        }
+        dd.indent3{
+            margin-left:40px;
+        }
+        dd.indent4{
+            margin-left:60px;
+        }
+        dd.indent5{
+            margin-left:80px;
+        }
+        dd.indent6{
+            margin-left:100px;
+        }
+    }
+
     .comment {
         margin: 14px;
         padding: 7px;
         border-radius: 2px;
         border: 1px solid var(--color-neutral-3);
+
+        .arco-list-wrapper {
+            margin-bottom: 49px;
+
+        }
+
         .add {
             margin: 28px 14px 14px;
         }
+
         .option {
             margin-top: 7px;
             text-align: right;
         }
     }
+
 }
 
 .article-setting {

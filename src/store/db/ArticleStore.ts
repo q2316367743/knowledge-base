@@ -99,11 +99,12 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("新增内容异常，" + contentRes.error);
             }
             // 新增预览
+            let preview = md.render(content);
             const previewRes = await utools.db.promises.put({
                 _id: LocalNameEnum.ARTICLE_PREVIEW + id,
                 value: {
-                    html: md.render(content),
-                    toc: []
+                    html: preview,
+                    toc: ''
                 } as ArticlePreview
             });
             if (previewRes.error) {
@@ -160,11 +161,12 @@ export const useArticleStore = defineStore('article', {
             // 删除旧的预览
             await utools.db.promises.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
             // 新增预览
+            let preview = md.render(content);
             const previewRes = await utools.db.promises.put({
                 _id: LocalNameEnum.ARTICLE_PREVIEW + id,
                 value: {
-                    html: md.render(content),
-                    toc: []
+                    html: preview,
+                    toc: ''
                 } as ArticlePreview
             });
             if (previewRes.error) {

@@ -5,20 +5,9 @@ export interface ArticlePreview {
      */
     html: string;
 
-    toc: Array<ArticlePreviewToc>
-
-}
-
-export interface ArticlePreviewToc {
-
     /**
-     * 目录名字
+     * 目录
      */
-    name: string;
-
-    /**
-     * 子目录
-     */
-    children: Array<ArticlePreviewToc>;
+    toc: string
 
 }

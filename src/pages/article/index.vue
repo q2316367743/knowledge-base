@@ -1,17 +1,22 @@
 <template>
     <a-layout class="article">
-        <article-header :name="article.name"/>
+        <article-header :name="article.name" :collapsed="collapsed" @switch-collapsed="switchCollapsed()"/>
         <a-layout>
-            <div class="container" id="article-container">
-                <a-scrollbar style="height:100%;overflow: auto;" type="track">
-                    <article class="info" :class="articleTheme">
-                        <article-info :value="article" v-if="!loading"/>
-                        <a-typography class="content" v-html="preview"></a-typography>
-                    </article>
-                    <article-comment :id="articleId" v-if="articleId !== 0"/>
-                    <a-result status="404" title="加载中" v-if="loading"></a-result>
-                </a-scrollbar>
-            </div>
+            <a-layout-content>
+                <div class="container" id="article-container">
+                    <a-scrollbar style="height:100%;overflow: auto;" type="track">
+                        <article class="info" :class="articleTheme" id="article-container-content">
+                            <article-info :value="article" v-if="!loading"/>
+                            <a-typography class="content" v-html="preview"></a-typography>
+                        </article>
+                        <article-comment :id="articleId" v-if="articleId !== 0"/>
+                        <a-result status="404" title="加载中" v-if="loading"></a-result>
+                    </a-scrollbar>
+                </div>
+            </a-layout-content>
+            <a-layout-sider :collapsed="collapsed" :width="width" :collapsed-width="0">
+                <div ref="previewEle" class="toc"/>
+            </a-layout-sider>
             <a-back-top target-container=".article .arco-scrollbar-container"/>
         </a-layout>
     </a-layout>
@@ -50,6 +55,8 @@ import './theme/smart-blue.css';
 import './theme/v-green.css';
 import './theme/vuepress.css';
 import ArticleInfo from "@/pages/article/components/info.vue";
+import {useGlobalStore} from "@/store/GlobalStore";
+import createBlogDirectory from "@/components/RenderToc/render";
 
 
 const route = useRoute();
@@ -68,6 +75,14 @@ const articleId = ref(0);
 const preview = ref('');
 const loading = ref(true);
 const articleTheme = computed(() => useSettingStore().articleTheme);
+const collapsed = ref(true);
+const width = computed(() => useGlobalStore().width / 4);
+
+const previewEle = ref<HTMLDivElement>();
+
+function switchCollapsed() {
+    collapsed.value = !collapsed.value;
+}
 
 onMounted(() => {
     const id = route.params.id as string;
@@ -93,11 +108,24 @@ onMounted(() => {
                     preview.value = (res.value as ArticlePreview).html;
                     nextTick(() => {
                         onAfterRender();
+                        createBlogDirectory("article-container-content", 20, previewEle.value as HTMLDivElement);
                     });
                 }
             }).catch(e => MessageUtil.error("获取文章内容失败", e));
 });
 
+function tocClick(e: MouseEvent) {
+    const element = previewEle.value as HTMLDivElement;
+    if (!element) {
+        return;
+    }
+    const target = e.target as HTMLLinkElement;
+    if (!target) {
+        return;
+    }
+    console.log(element)
+    console.log(target.innerText);
+}
 
 </script>
 <style lang="less">

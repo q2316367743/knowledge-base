@@ -20,6 +20,11 @@
                     <icon-settings/>
                 </template>
             </a-button>
+            <a-button @click="emit('switch-collapsed')" :status="collapsed ? 'normal' : 'success'">
+                <template #icon>
+                    <icon-layout/>
+                </template>
+            </a-button>
         </a-button-group>
         <a-modal v-model:visible="settingVisible" title="基础设置" unmount-on-close class="article-setting"
                  :footer="false">
@@ -34,8 +39,10 @@ import MoreSettingBase from "@/pages/more/setting/base/index.vue";
 import {ref} from "vue";
 
 const props = defineProps({
-    name: String
+    name: String,
+    collapsed: Boolean
 });
+const emit = defineEmits(['switch-collapsed']);
 
 const router = useRouter();
 const fullscreen = useFullscreen();
