@@ -184,6 +184,7 @@ export const useArticleStore = defineStore('article', {
             await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
             await utools.db.promises.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
             // 删除评论
+            await utools.db.promises.remove(LocalNameEnum.ARTICLE_COMMENT + id);
             // 删除附件
         }
     }
