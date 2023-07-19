@@ -120,7 +120,7 @@ export const utools = {
         MessageUtil.warning("web环境不支持utools");
         window.open("https://u.tools");
     },
-    setFeature() {
+    setFeature(feature: any) {
         MessageUtil.warning("web环境不支持设置feature，请使用utools版本");
     },
     isDarkColors(): boolean {

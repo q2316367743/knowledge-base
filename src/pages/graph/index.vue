@@ -1,8 +1,7 @@
 <template>
     <div>
         <div style="border: #efefef solid 1px; height: 100vh;width: 100%;">
-            <relation-graph ref="relationGraph$" :options="options">
-            </relation-graph>
+            <relation-graph ref="relationGraph$" :options="options" />
         </div>
     </div>
 </template>

@@ -23,38 +23,7 @@
         <div class="container">
             <a-list :data="articles" :virtual-list-props="{height: height}">
                 <template #item="{item}">
-                    <a-list-item action-layout="vertical">
-                        <a-list-item-meta :description="item.description">
-                            <template #title>
-                                <a-link @click="jumpTo(item.id)">{{ item.name }}</a-link>
-                            </template>
-                        </a-list-item-meta>
-                        <template #actions>
-                            <a-tag color="orange">
-                                <template #icon>
-                                    <icon-clock-circle/>
-                                </template>
-                                {{ toDateString(item.createTime) }}
-                            </a-tag>
-                            <a-tag v-for="tag in item.tags" style="margin-right: 7px;" :color="randomColor(tag)">
-                                {{ tag }}
-                            </a-tag>
-                        </template>
-                        <template #extra>
-                            <span>{{ item.source }}</span>
-                            <a-dropdown trigger="click">
-                                <a-button type="text" style="margin-left: 14px;">
-                                    <template #icon>
-                                        <icon-more-vertical/>
-                                    </template>
-                                </a-button>
-                                <template #content>
-                                    <a-doption @click="editTo(item.id)">编辑</a-doption>
-                                    <a-doption>删除</a-doption>
-                                </template>
-                            </a-dropdown>
-                        </template>
-                    </a-list-item>
+                    <home-item :article="item"/>
                 </template>
             </a-list>
         </div>
@@ -67,8 +36,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useSearchEvent} from "@/global/BeanFactory";
-import {randomColor} from "@/utils/BrowserUtil";
-import {toDateString} from "xe-utils";
+import HomeItem from './item.vue';
 
 const router = useRouter();
 
@@ -91,13 +59,6 @@ function triggerSearch() {
     useSearchEvent.emit();
 }
 
-function jumpTo(id: number) {
-    router.push('/article/' + id);
-}
-
-function editTo(id: number) {
-    router.push('/editor/' + id);
-}
 
 
 </script>
