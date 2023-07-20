@@ -80,6 +80,7 @@ watch(() => visible.value, newValue => {
 useSearchEvent.on(() => visible.value = true);
 
 function jumpTo(id: number) {
+    visible.value = false;
     router.push('/article/' + id);
 }
 

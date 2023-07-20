@@ -12,11 +12,11 @@ const router = createRouter({
         path: '/home',
         component: () => import('@/pages/home/index.vue')
     }, {
-        name: "编辑器",
+        name: "编辑文章",
         path: '/editor/:id',
         component: () => import("@/pages/editor/index.vue")
     }, {
-        name: '文章',
+        name: '阅读文章',
         path: '/article/:id',
         component: () => import("@/pages/article/index.vue"),
     }, {

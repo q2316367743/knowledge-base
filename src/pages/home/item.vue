@@ -84,12 +84,10 @@ item.value = Object.assign(item.value, props.article);
 feature.value = utools.getFeatures(['/article/' + item.value.id])[0]
 
 function jumpTo() {
-    statistics.access("阅读文章");
     router.push('/article/' + item.value.id);
 }
 
 function editTo() {
-    statistics.access("编辑文章");
     router.push('/editor/' + item.value.id);
 }
 
