@@ -1,5 +1,5 @@
 export default {
-    uid: 'znzdzrrx',
+    uid: 'zdllh16g',
     id: 'knowledge-base',
     name: '知识库',
     version: '1.0.0',

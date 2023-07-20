@@ -16,7 +16,7 @@
     },
     "features": [
         {
-            "code": "application",
+            "code": "function:application",
             "explain": "知识库",
             "icon": "public/logo.png",
             "platform": [
@@ -26,6 +26,24 @@
             ],
             "cmds": [
                 "知识库"
+            ]
+        },
+        {
+            "code": "function:import",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                {
+                    "type": "regex",
+                    "label": "听雨文章导入",
+                    "match": "/^\\s*(\\{[\\s\\S]*\\}|\\[[\\s\\S]*\\])\\s*$/",
+                    "minLength": 2
+                }
             ]
         }
     ]

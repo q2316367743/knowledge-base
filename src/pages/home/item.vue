@@ -81,7 +81,7 @@ const collect = computed(() => typeof feature.value !== 'undefined');
 
 item.value = Object.assign(item.value, props.article);
 
-feature.value = utools.getFeatures(['/article/' + item.value.id])[0]
+feature.value = utools.getFeatures(['article:' + item.value.id])[0]
 
 function jumpTo() {
     router.push('/article/' + item.value.id);
@@ -117,7 +117,7 @@ function switchFeature() {
 function addFeature() {
     statistics.access("固定文章")
     let record = {
-        code: '/article/' + item.value.id,
+        code: 'article:' + item.value.id,
         explain: "知识库 - 文章",
         icon: "public/logo.png",
         cmds: [item.value.name],
@@ -128,7 +128,7 @@ function addFeature() {
 }
 
 function removeFeature() {
-    utools.removeFeature('/article/' + item.value.id);
+    utools.removeFeature('article:' + item.value.id);
     feature.value = undefined;
 }
 

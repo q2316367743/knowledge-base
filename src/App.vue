@@ -61,27 +61,28 @@
             </a-layout>
         </a-spin>
         <sub-input/>
+        <markdown-import />
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
     </div>
 </template>
 <script lang="ts">
 import {mapState} from "pinia";
 import {defineComponent} from "vue";
-import {statistics} from "@/global/BeanFactory";
-
+import {statistics, useImportEvent} from "@/global/BeanFactory";
 // 存储
+import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useSettingStore} from "@/store/db/SettingStore";
+import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 // 组件
 import IconTimeLine from "@/icon/IconTimeLine.vue";
 import SubInput from '@/components/SubInput/index.vue';
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {useZoneStore} from "@/store/db/ZoneStore";
+import MarkdownImport from '@/components/MarkdownImport/index.vue';
 
 export default defineComponent({
     name: 'app',
-    components: {IconTimeLine, SubInput},
+    components: {IconTimeLine, SubInput, MarkdownImport},
     data: () => ({
         selectedKeys: ['/dashboard'],
         preview: {
@@ -109,28 +110,55 @@ export default defineComponent({
         }
     },
     created() {
-        if (this.isDark) {
-            // 设置为暗黑主题
-            document.body.setAttribute('arco-theme', 'dark');
-        } else {
-            // 恢复亮色主题
-            document.body.removeAttribute('arco-theme');
-        }
+        // 插件进入
+        utools.onPluginEnter(action => {
+            const code = action.code as string;
+            const items = code.split(":");
+            if (items.length == 2) {
+                this.onPluginEnter(items[0], items[1], action.payload)
+            }
+        })
+        // 主题
+        this.theme();
         this.selectedKeys = [this.$route.path];
-        // TODO: 初始化数据
-        useZoneStore().init();
-        useSettingStore().init();
-        useArticleStore().init();
-        useCategoryStore().init();
+        // 初始化数据
+        this.init();
+        // 全局事件
         window.onImagePreview = (src) => {
-            console.log(src)
             this.preview = {
                 visible: true,
                 src
             }
         }
     },
-    methods: {}
+    methods: {
+        theme() {
+            if (this.isDark) {
+                // 设置为暗黑主题
+                document.body.setAttribute('arco-theme', 'dark');
+            } else {
+                // 恢复亮色主题
+                document.body.removeAttribute('arco-theme');
+            }
+        },
+        init() {
+            useZoneStore().init();
+            useSettingStore().init();
+            useArticleStore().init();
+            useCategoryStore().init();
+        },
+        onPluginEnter(operate: string, preload: string, extra: string) {
+            if (operate === 'article') {
+                this.$router.push('/article/' + preload);
+            }else if (operate === 'function') {
+                if (preload === 'import') {
+                    useImportEvent.emit(extra);
+                }else if (preload === 'application') {
+                    this.$router.push('/home');
+                }
+            }
+        }
+    }
 });
 </script>
 <style lang="less"></style>
