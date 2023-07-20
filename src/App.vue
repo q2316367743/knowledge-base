@@ -155,6 +155,9 @@ export default defineComponent({
                     useImportEvent.emit(extra);
                 }else if (preload === 'application') {
                     this.$router.push('/home');
+                }else if (preload === 'add') {
+                    sessionStorage.setItem("extra", extra);
+                    this.$router.push('/editor/0')
                 }
             }
         }

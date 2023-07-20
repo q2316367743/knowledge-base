@@ -45,6 +45,24 @@
                     "minLength": 2
                 }
             ]
+        },
+        {
+            "code": "function:add",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                {
+                    "type": "over",
+                    "label": "新增文章",
+                    "minLength": 2,
+                    "maxLength": 999999
+                }
+            ]
         }
     ]
 }

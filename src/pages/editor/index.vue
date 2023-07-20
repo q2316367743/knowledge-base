@@ -90,7 +90,13 @@ export default defineComponent({
     },
     mounted() {
         this.init()
-            .then(() => console.debug("初始化成功"));
+            .then(() => {
+                const extra = sessionStorage.getItem('extra');
+                sessionStorage.removeItem('extra');
+                if (extra) {
+                    this.content = extra;
+                }
+            });
     },
     methods: {
         async init() {
