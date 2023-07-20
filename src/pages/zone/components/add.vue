@@ -173,7 +173,7 @@ export default defineComponent({
             // 删除图片
             this.zone.image.forEach(id => utools.db.remove(LocalNameEnum.ZONE_ATTACHMENT + id));
             // 释放图片
-            this.zone.imageList.forEach(url => window.URL.revokeObjectURL(url));
+            this.zone.imageList.forEach(url => url.url ? window.URL.revokeObjectURL(url.url) : null);
             // TODO: 获取视频
             // TODO: 获取声音
         },
