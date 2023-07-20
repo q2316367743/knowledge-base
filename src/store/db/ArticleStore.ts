@@ -13,13 +13,7 @@ export const useArticleStore = defineStore('article', {
         rev: undefined as string | undefined
     }),
     getters: {
-        articles: state => state.value.sort((a, b) => {
-            const aTime = new Date(a.createTime);
-            const bTime = new Date(b.createTime);
-            a.createTime = aTime;
-            b.createTime = bTime;
-            return bTime.getTime() - aTime.getTime();
-        }),
+        articles: state => state.value.sort((a, b) => b.id - a.id),
         articleMap: (state): Map<number, ArticleIndex> => map(state.value, 'id'),
         categoryMap: (state): Map<number | null, Array<ArticleIndex>> => {
             const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
@@ -133,14 +127,10 @@ export const useArticleStore = defineStore('article', {
             }
             // 新增索引
             this.value[index] = {
-                id,
-                createTime: base.createTime,
+                ...this.value[index],
+                ...base,
                 updateTime: new Date(),
-                name: base.name,
-                description: base.description,
-                categoryId: base.categoryId,
                 tags: toRaw(base.tags),
-                source: base.source
             };
 
             await this._sync();
