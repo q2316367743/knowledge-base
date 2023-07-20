@@ -2,6 +2,12 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia';
 import App from './App.vue'
 import router from './plugin/router';
+import {utools} from '@/plugin/utools';
+
+if (!window.utools) {
+    // @ts-ignore
+    window.utools = utools;
+}
 
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';

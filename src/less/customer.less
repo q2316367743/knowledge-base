@@ -67,4 +67,33 @@ pre code.hljs {
 
 .bytemd {
     height: calc(100vh - 47px) !important;
+    color: var(--color-text-1) !important;
+    background-color: var(--color-bg-1) !important;
+    border: 1px solid var(--color-neutral-3) !important;
+    .bytemd-toolbar, .CodeMirror {
+        color: var(--color-text-1) !important;
+        background-color: var(--color-bg-1) !important;
+    }
+    .bytemd-status {
+        border-top: 1px solid var(--color-neutral-3) !important;
+    }
+    .bytemd-toolbar {
+        border-bottom: 1px solid var(--color-neutral-3) !important;
+    }
+    .CodeMirror-cursor {
+        border-left: 1px solid var(--color-text-2) !important;
+    }
+    .markdown-body {
+        color: var(--color-text-1) !important;
+        background-color: var(--color-bg-1) !important;
+    }
+}
+body[arco-theme=dark] {
+    .bytemd {
+        .cm-s-default {
+            .cm-header, .cm-link {
+                color: rgb(var(--arcoblue-6)) !important;
+            }
+        }
+    }
 }
