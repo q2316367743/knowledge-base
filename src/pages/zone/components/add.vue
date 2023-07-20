@@ -69,7 +69,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
 import {RequestOption} from "@arco-design/web-vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {FileItem} from "@arco-design/web-vue/es/upload/interfaces";
+import {FileItem} from "@arco-design/web-vue";
 import {statistics} from "@/global/BeanFactory";
 
 export default defineComponent({

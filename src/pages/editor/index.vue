@@ -19,7 +19,7 @@
             </a-button-group>
         </div>
         <div class="container">
-            <div id="editor-instance"/>
+            <markdown-editor v-model="content"/>
         </div>
         <a-image-preview v-model:visible="preview.show" :src="preview.src"/>
         <a-drawer v-model:visible="extra.visible" title="额外信息" :width="300" :footer="false">
@@ -51,8 +51,7 @@
     </div>
 </template>
 <script lang="ts">
-import {defineComponent, markRaw} from "vue";
-import Vditor from "vditor";
+import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -60,9 +59,11 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleSource} from "@/entity/article";
+import MarkdownEditor from "@/pages/editor/MarkdownEditor.vue";
 
 export default defineComponent({
     name: 'editor',
+    components: {MarkdownEditor},
     data: () => ({
         id: 0,
         title: '',
@@ -79,7 +80,6 @@ export default defineComponent({
             createTime: '' as Date | string,
             source: ''
         },
-        vditor: null as Vditor | null
     }),
     computed: {
         ...mapState(useGlobalStore, ['size', 'isDark']),
@@ -116,56 +116,11 @@ export default defineComponent({
                     this.content = (contentWrap.value as ArticleSource).content
                 }
             }
-            const vditor = new Vditor("editor-instance", {
-                height: '100%',
-                width: '100%',
-                theme: this.isDark ? 'dark' : 'classic',
-                preview: {
-                    hljs: {
-                        lineNumber: true
-                    }
-                },
-                cache: {
-                    enable: false
-                },
-                link: {
-                    isOpen: true,
-                    click(ele: Element) {
-                        utools.shellOpenExternal(ele.innerHTML);
-                    }
-                },
-                image: {
-                    isPreview: true,
-                    preview: (ele: Element) => {
-                        this.preview = {
-                            show: true,
-                            // @ts-ignore
-                            src: ele.src
-                        }
-                    }
-                },
-                upload: {
-                    handler(files: File[]) {
-                        utools.redirect("图床", {
-                            type: "files",
-                            // @ts-ignore
-                            data: files.map(e => e.path)
-                        })
-                        return Promise.resolve("");
-                    }
-                },
-                value: this.content
-            });
-            this.vditor = markRaw(vditor);
         },
         toHome() {
             this.$router.push("/home");
         },
         save() {
-            if (!this.vditor) {
-                MessageUtil.warning("编辑器未加载完成，无法保存");
-                return;
-            }
             if (this.id === 0) {
                 useArticleStore().add({
                     name: this.title,
@@ -173,7 +128,7 @@ export default defineComponent({
                     tags: this.extra.tags,
                     categoryId: this.extra.categoryId || null,
                     source: this.extra.source
-                }, this.vditor.getValue())
+                }, this.content)
                     .then(id => {
                         this.id = id;
                         MessageUtil.success("保存文章成功");
@@ -187,7 +142,7 @@ export default defineComponent({
                     categoryId: this.extra.categoryId || null,
                     source: this.extra.source,
                     createTime: this.extra.createTime
-                }, this.vditor.getValue())
+                }, this.content)
                     .then(() => MessageUtil.success("保存文章成功"))
                     .catch(e => MessageUtil.error("保存文章失败", e));
             }
