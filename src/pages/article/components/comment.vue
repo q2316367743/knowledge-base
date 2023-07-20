@@ -39,6 +39,7 @@ import {toDateString} from "xe-utils";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleComment} from "@/entity/article";
 import MessageUtil from "@/utils/MessageUtil";
+import {statistics} from "@/global/BeanFactory";
 
 const props = defineProps({
     id: Number
@@ -82,6 +83,7 @@ function sendComment() {
         MessageUtil.warning("评论发送中，不太太频繁哦！");
         return;
     }
+    statistics.access("新增文章评论");
     lock.value = true;
     addComment()
             .then(() => {
@@ -89,7 +91,7 @@ function sendComment() {
                 comment.value = '';
             })
             .catch(e => MessageUtil.error("新增评论失败", e))
-            .finally(() => lock = false);
+            .finally(() => lock.value = false);
 }
 
 async function addComment() {

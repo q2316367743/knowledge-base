@@ -70,6 +70,7 @@ import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
 import {RequestOption} from "@arco-design/web-vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {FileItem} from "@arco-design/web-vue/es/upload/interfaces";
+import {statistics} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'zone-add',
@@ -152,6 +153,7 @@ export default defineComponent({
 
         // ------ 空间相关 ------
         execute() {
+            statistics.access("新增动态");
             useZoneStore().add({
                 image: this.zone.image,
                 attachments: [],

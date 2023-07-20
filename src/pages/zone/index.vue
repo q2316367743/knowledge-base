@@ -52,6 +52,9 @@ export default defineComponent({
                 this.bottom = true;
                 return;
             }
+            if (zones.length < this.pageSize) {
+                this.bottom = true;
+            }
             zones.forEach(zone => this.items.push(zone));
             this.lock = false;
             this.num += 1;

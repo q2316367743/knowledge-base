@@ -113,6 +113,7 @@ import {download, randomColor} from "@/utils/BrowserUtil";
 import {ZoneBase, ZoneComment, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {statistics} from "@/global/BeanFactory";
 
 const props = defineProps({
     zone: Object as PropType<ZoneIndex>
@@ -251,6 +252,7 @@ function openComment() {
 }
 
 function addComment() {
+    statistics.access("新增动态评论")
     const id = new Date().getTime();
     comments.value.push({
         id,

@@ -36,7 +36,8 @@ export default defineComponent({
     }),
     methods: {
         openUrl(url: string) {
-            utools.shellOpenExternal(url);
+            return;
+            // utools.shellOpenExternal(url);
         },
     }
 });

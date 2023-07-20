@@ -58,6 +58,7 @@ import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {statistics} from "@/global/BeanFactory";
 
 const props = defineProps({
     article: Object as PropType<ArticleIndex>
@@ -83,10 +84,12 @@ item.value = Object.assign(item.value, props.article);
 feature.value = utools.getFeatures(['/article/' + item.value.id])[0]
 
 function jumpTo() {
+    statistics.access("阅读文章");
     router.push('/article/' + item.value.id);
 }
 
 function editTo() {
+    statistics.access("编辑文章");
     router.push('/editor/' + item.value.id);
 }
 
@@ -114,6 +117,7 @@ function switchFeature() {
 }
 
 function addFeature() {
+    statistics.access("固定文章")
     let record = {
         code: '/article/' + item.value.id,
         explain: "知识库 - 文章",

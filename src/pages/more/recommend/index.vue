@@ -110,6 +110,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import {statistics} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'setting-recommend',
@@ -120,6 +121,7 @@ export default defineComponent({
             utools.shellOpenExternal(url);
         },
         toApp(name: string) {
+            statistics.access("通过推荐前往：" + name)
             utools.redirect(name, '');
         }
     }

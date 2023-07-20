@@ -41,6 +41,7 @@ import {useFuse} from "@vueuse/integrations/useFuse";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
+import {statistics} from "@/global/BeanFactory";
 
 
 const keyword = ref('');
@@ -59,6 +60,7 @@ const {results} = useFuse(keyword, categories, {
 });
 
 function add() {
+    statistics.access("新增分类");
     useCategoryStore().add()
         .then(() => MessageUtil.success("新增成功"))
         .catch(e => {
