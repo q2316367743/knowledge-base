@@ -74,7 +74,7 @@ export default defineComponent({
         extra: {
             visible: false,
             tags: new Array<string>(),
-            categoryId: null as number | null,
+            categoryId: undefined as number | undefined,
             description: '',
             createTime: '' as Date | string,
             source: ''
@@ -105,7 +105,7 @@ export default defineComponent({
                 this.extra = {
                     visible: false,
                     tags: articleIndex.tags,
-                    categoryId: articleIndex.categoryId,
+                    categoryId: articleIndex.categoryId || undefined,
                     description: articleIndex.description,
                     createTime: articleIndex.createTime,
                     source: articleIndex.source
@@ -171,7 +171,7 @@ export default defineComponent({
                     name: this.title,
                     description: this.extra.description,
                     tags: this.extra.tags,
-                    categoryId: this.extra.categoryId,
+                    categoryId: this.extra.categoryId || null,
                     source: this.extra.source
                 }, this.vditor.getValue())
                     .then(id => {
@@ -184,7 +184,7 @@ export default defineComponent({
                     name: this.title,
                     description: this.extra.description,
                     tags: this.extra.tags,
-                    categoryId: this.extra.categoryId,
+                    categoryId: this.extra.categoryId || null,
                     source: this.extra.source,
                     createTime: this.extra.createTime
                 }, this.vditor.getValue())

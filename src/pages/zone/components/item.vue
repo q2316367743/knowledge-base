@@ -2,7 +2,7 @@
     <a-card class="item" hoverable>
         <template #title>
             <span style="color: var(--color-neutral-6);">
-                {{ toDateString(props.zone.createTime) }}
+                {{ createTime }}
             </span>
         </template>
         <!-- 内容 -->
@@ -44,7 +44,7 @@
                     <a-popconfirm content="确认删除？" @ok="removeComment(comment.id)">
                         <a-button type="text" status="danger">
                             <template #icon>
-                                <icon-delete />
+                                <icon-delete/>
                             </template>
                         </a-button>
                     </a-popconfirm>
@@ -141,13 +141,15 @@ const comment = ref({
     dialog: false,
     content: ''
 });
+const createTime = ref('');
 
 // =============================================================================
 // ---------------------------------- 数据渲染 ----------------------------------
 // =============================================================================
 
 if (props.zone) {
-// 获取基础信息
+    createTime.value = toDateString(props.zone.createTime, "yyyy-MM-dd HH:mm:ss");
+    // 获取基础信息
     utools.db.promises.get(LocalNameEnum.ZONE_BASE + props.zone.id)
             .then(res => {
                 if (res) {
