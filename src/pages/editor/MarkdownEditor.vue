@@ -63,7 +63,10 @@ const plugins = [
 
 export default defineComponent({
     name: 'markdown-editor',
-    components: {Editor},
+    components: {
+        // @ts-ignore
+        Editor: Editor
+    },
     props: {
         modelValue: String
     },
