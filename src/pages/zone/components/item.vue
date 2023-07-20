@@ -41,7 +41,7 @@
             <div class="comment-item" v-for="comment in comments">
                 <div class="comment-content">{{ comment.content }}</div>
                 <a-button-group type="text" class="action">
-                    <a-popconfirm content="确认删除？">
+                    <a-popconfirm content="确认删除？" @ok="removeComment(comment.id)">
                         <a-button type="text" status="danger">
                             <template #icon>
                                 <icon-delete />
@@ -261,6 +261,21 @@ function addComment() {
             .catch(e => {
                 comments.value.pop();
                 MessageUtil.error("新增失败", e);
+            });
+}
+
+function removeComment(id: number) {
+    const index = comments.value.findIndex(e => e.id === id);
+    if (index === -1) {
+        MessageUtil.warning("数据异常，无法删除此评论");
+        return
+    }
+    comments.value.splice(index, 1);
+    syncComment()
+            .then(() => MessageUtil.success("删除成功"))
+            .catch(e => {
+                comments.value.pop();
+                MessageUtil.error("删除失败", e);
             });
 }
 
