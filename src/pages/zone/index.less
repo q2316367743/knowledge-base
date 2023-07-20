@@ -83,7 +83,7 @@
         }
 
         .image {
-            margin: 14px 0;
+            margin-top: 14px;
 
             .arco-image {
                 margin-bottom: 2px;
@@ -95,17 +95,6 @@
             margin-top: 14px;
             text-align: right;
         }
-
-        .action {
-            display: flex;
-            flex-wrap: nowrap;
-            align-self: center;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            justify-content: space-between;
-        }
-
 
         .comment {
             background-color: var(--color-neutral-2);
@@ -126,16 +115,9 @@
 
                 .action {
                     display: flex;
-                    justify-content: space-between;
-
-                    .btn {
-                        visibility: hidden;
-                    }
-
-                    &:hover {
-                        .btn {
-                            visibility: visible;
-                        }
+                    flex-direction: row-reverse;
+                    .arco-btn {
+                        border: none;
                     }
                 }
             }

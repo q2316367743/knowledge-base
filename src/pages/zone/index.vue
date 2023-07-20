@@ -4,7 +4,7 @@
         <div class="container">
             <a-list :bordered="false" :max-height="size.height" :scrollbar="true"
                     @reach-bottom="render()">
-                <zone-item v-for="item in items" :zone="item"/>
+                <zone-item v-for="item in items" :zone="item" @remove="init()"/>
                 <template #scroll-loading>
                     <div v-if="bottom">没有更多动态了</div>
                     <a-spin v-else/>
@@ -12,7 +12,7 @@
             </a-list>
         </div>
         <!-- 新增动态 -->
-        <zone-add/>
+        <zone-add @add="init()"/>
         <a-back-top target-container=".zone .arco-scrollbar-container"/>
     </div>
 </template>
@@ -30,30 +30,40 @@ export default defineComponent({
     components: {ZoneItem, ZoneAdd},
     data: () => ({
         items: new Array<ZoneIndex>(),
-        // 显示数据
-        startIndex: 0,
-        bottom: false
+        bottom: false,
+        lock: false,
+        num: 1,
+        pageSize: 5,
     }),
     computed: {
         ...mapState(useGlobalStore, ['admin', 'size']),
-        ...mapState(useZoneStore, ['zones'])
     },
     methods: {
-        render() {
+        async render() {
             if (this.bottom) {
                 return;
             }
-            let zones = this.zones.slice(Math.max(this.startIndex, 0), Math.min(this.zones.length, this.startIndex + 5));
-            zones = zones.sort((a, b) => Number(b.id) - Number(a.id));
-            this.startIndex = Math.min(this.zones.length, this.startIndex + 5);
-            if (this.startIndex === this.zones.length) {
+            if (this.lock) {
+                return;
+            }
+            this.lock = true
+            const zones = await useZoneStore().page(this.num, this.pageSize);
+            if (zones.length === 0) {
                 this.bottom = true;
+                return;
             }
-            for (let e of zones) {
-                this.items.push(e);
-            }
+            zones.forEach(zone => this.items.push(zone));
+            this.lock = false;
+            this.num += 1;
         },
-
+        init() {
+            this.lock = false;
+            this.bottom = false;
+            this.items = [];
+            this.num = 1;
+            this.pageSize = 5;
+            this.render();
+        }
     }
 });
 </script>

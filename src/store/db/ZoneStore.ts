@@ -7,19 +7,22 @@ import md from "@/plugin/markdown";
 
 export const useZoneStore = defineStore('zone', {
     state: () => ({
-        zones: new Array<ZoneIndex>(),
+        value: new Array<ZoneIndex>(),
         rev: undefined as string | undefined
     }),
+    getters: {
+        zones: state => state.value.sort((a, b) => b.id - a.id)
+    },
     actions: {
         async init() {
-            if (this.zones.length > 0) {
+            if (this.value.length > 0) {
                 return Promise.resolve();
             }
             const res = await utools.db.promises.get(LocalNameEnum.ZONE);
             if (res) {
-                const zones: Array<ZoneIndex> = res.value;
+                const value: Array<ZoneIndex> = res.value;
                 this.rev = res._rev;
-                this.zones = zones.sort((a, b) => b.id - a.id);
+                this.value = value;
             }
         },
         async add(base: ZoneBase, content: ZoneContent): Promise<ZoneIndex> {
@@ -31,7 +34,7 @@ export const useZoneStore = defineStore('zone', {
                 createTime: now,
                 updateTime: now,
             };
-            this.zones.push(zoneIndex);
+            this.value.push(zoneIndex);
             await this._sync();
             // 新增基础信息
             let baseRes = await utools.db.promises.put({
@@ -39,7 +42,7 @@ export const useZoneStore = defineStore('zone', {
                 value: JSON.parse(JSON.stringify(base))
             });
             if (baseRes.error) {
-                this.zones.pop();
+                this.value.pop();
                 await this._sync();
                 return Promise.reject("新增基础信息异常：" + baseRes.message)
             }
@@ -53,7 +56,7 @@ export const useZoneStore = defineStore('zone', {
             });
             if (contentRes.error) {
                 // 删除索引
-                this.zones.pop();
+                this.value.pop();
                 await this._sync();
                 // 删除基础信息
                 await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
@@ -68,7 +71,7 @@ export const useZoneStore = defineStore('zone', {
             });
             if (previewRes.error) {
                 // 删除索引
-                this.zones.pop();
+                this.value.pop();
                 await this._sync();
                 // 删除基础信息
                 await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
@@ -79,7 +82,7 @@ export const useZoneStore = defineStore('zone', {
             return Promise.resolve(zoneIndex);
         },
         async remove(id: number) {
-            const index = this.zones.findIndex(e => e.id === id);
+            const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject("动态未找到，请刷新后重试！");
             }
@@ -87,7 +90,7 @@ export const useZoneStore = defineStore('zone', {
                 confirmButtonText: "删除",
                 cancelButtonText: "取消"
             })
-            this.zones.splice(index, 1);
+            this.value.splice(index, 1);
             await this._sync();
             // 删除基本信息
             const baseWrap = await utools.db.promises.get(LocalNameEnum.ZONE_BASE + id);
@@ -106,7 +109,7 @@ export const useZoneStore = defineStore('zone', {
             const res = await utools.db.promises.put({
                 _id: LocalNameEnum.ZONE,
                 _rev: this.rev,
-                value: toRaw(this.zones)
+                value: toRaw(this.value)
             });
             if (res.error) {
                 return Promise.reject(res.message);
@@ -115,7 +118,7 @@ export const useZoneStore = defineStore('zone', {
         },
         async page(num: number, size: number): Promise<Array<ZoneIndex>> {
             const startIndex = Math.max((num - 1) * size, 0);
-            const endIndex = Math.min(num * size, this.zones.length);
+            const endIndex = Math.min(num * size, this.value.length);
             if (startIndex > endIndex) {
                 return Promise.resolve([]);
             }

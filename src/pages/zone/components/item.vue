@@ -40,21 +40,21 @@
         <div class="comment">
             <div class="comment-item" v-for="comment in comments">
                 <div class="comment-content">{{ comment.content }}</div>
-                <div class="action">
-                    <div class="time">
-                        <a-tag color="var(--primary-color)">
+                <a-button-group type="text" class="action">
+                    <a-popconfirm content="确认删除？">
+                        <a-button type="text" status="danger">
                             <template #icon>
-                                <icon-clock-circle/>
+                                <icon-delete />
                             </template>
-                            {{ toDate(comment.id) }}
-                        </a-tag>
-                    </div>
-                    <div class="btn">
-                        <a-popconfirm content="确认删除？">
-                            <a-button type="text" status="danger">删除</a-button>
-                        </a-popconfirm>
-                    </div>
-                </div>
+                        </a-button>
+                    </a-popconfirm>
+                    <a-tag color="orange">
+                        <template #icon>
+                            <icon-clock-circle/>
+                        </template>
+                        {{ toDate(comment.id) }}
+                    </a-tag>
+                </a-button-group>
             </div>
         </div>
         <template #extra>
@@ -105,7 +105,7 @@
     </a-card>
 </template>
 <script lang="ts" setup>
-import {PropType, ref} from "vue";
+import {PropType, ref, toRaw} from "vue";
 import {toDateString} from 'xe-utils'
 import MessageUtil from "@/utils/MessageUtil";
 import {renderImage} from "@/pages/zone/render";
@@ -117,6 +117,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 const props = defineProps({
     zone: Object as PropType<ZoneIndex>
 });
+const emits = defineEmits(['remove']);
 
 const base = ref<ZoneBase>({
     image: [],
@@ -128,6 +129,7 @@ const preview = ref<ZonePreview>({
     html: ''
 });
 const comments = ref<Array<ZoneComment>>([]);
+let commentRev = undefined as string | undefined;
 const imagePreview = ref({
     id: '',
     name: '',
@@ -138,6 +140,10 @@ const comment = ref({
     dialog: false,
     content: ''
 });
+
+// =============================================================================
+// ---------------------------------- 数据渲染 ----------------------------------
+// =============================================================================
 
 if (props.zone) {
 // 获取基础信息
@@ -159,13 +165,17 @@ if (props.zone) {
             .then(res => {
                 if (res) {
                     comments.value = res.value;
+                    commentRev = res._rev;
                 }
             });
 
 }
 
+// =========================================================================
+// ---------------------------------- 功能 ----------------------------------
+// =========================================================================
 
-function toDate(date: Date | string) {
+function toDate(date: Date | string | number) {
     return toDateString(date, 'yyyy年MM月dd日 HH:mm')
 }
 
@@ -179,6 +189,23 @@ function executeCopy() {
                 }
             })
 }
+
+function removeZone() {
+    if (!props.zone) {
+        MessageUtil.error("动态不存在，请刷新后重试")
+        return;
+    }
+    useZoneStore().remove(props.zone.id)
+            .then(() => {
+                MessageUtil.success("删除完成");
+                emits('remove');
+            })
+            .catch(e => MessageUtil.error("删除失败", e));
+}
+
+// =========================================================================
+// ---------------------------------- 图片 ----------------------------------
+// =========================================================================
 
 function showImagePreview(id: string, name: string) {
     utools.db.promises.getAttachment('/zone/attachment/' + id)
@@ -201,13 +228,6 @@ function releaseImagePreview() {
     imagePreview.value.value = '';
 }
 
-function openComment() {
-    comment.value = {
-        dialog: true,
-        content: '',
-    }
-}
-
 function downloadImage() {
     utools.db.promises.getAttachment(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
             .then(buffer => {
@@ -219,17 +239,45 @@ function downloadImage() {
             });
 }
 
-function removeZone() {
+// =========================================================================
+// ---------------------------------- 评论 ----------------------------------
+// =========================================================================
+
+function openComment() {
+    comment.value = {
+        dialog: true,
+        content: '',
+    }
+}
+
+function addComment() {
+    const id = new Date().getTime();
+    comments.value.push({
+        id,
+        content: comment.value.content
+    });
+    syncComment()
+            .then(() => MessageUtil.success("新增成功"))
+            .catch(e => {
+                comments.value.pop();
+                MessageUtil.error("新增失败", e);
+            });
+}
+
+async function syncComment() {
     if (!props.zone) {
         MessageUtil.error("动态不存在，请刷新后重试")
         return;
     }
-    useZoneStore().remove(props.zone.id)
-            .then(() => MessageUtil.success("删除完成"))
-            .catch(e => MessageUtil.error("删除失败", e));
-}
-
-function addComment() {
+    const res = await utools.db.promises.put({
+        _id: LocalNameEnum.ZONE_COMMENT + props.zone.id,
+        _rev: commentRev,
+        value: toRaw(comments.value)
+    });
+    if (res.error) {
+        return Promise.reject(res.message);
+    }
+    commentRev = res.rev;
 }
 
 </script>

@@ -68,11 +68,13 @@ import {useZoneStore} from "@/store/db/ZoneStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
 import {RequestOption} from "@arco-design/web-vue";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {FileItem} from "@arco-design/web-vue/es/upload/interfaces";
 
 export default defineComponent({
     name: 'zone-add',
+    emits: ['add'],
     data: () => ({
-
         zone: {
             dialog: false,
             content: '',
@@ -82,14 +84,13 @@ export default defineComponent({
             showTagInput: false,
             tagInputVal: '',
             showLocationInput: false,
-            imageList: [],
+            imageList: new Array<FileItem>(),
             showImageBtn: false,
             image: new Array<ZoneAttachment>()
         },
     }),
     methods: {
         // ------ 新增标签 ------
-
         tagHandleEdit() {
             this.zone.showTagInput = true;
 
@@ -112,7 +113,6 @@ export default defineComponent({
         },
 
         // 新增图片
-
         imageRequest(option: RequestOption): any {
             if (!option.fileItem.file) {
                 MessageUtil.error("文件不存在");
@@ -123,13 +123,18 @@ export default defineComponent({
             let id = now.getTime() + '';
             let reader = new FileReader();
             reader.readAsArrayBuffer(option.fileItem.file);
-            reader.onload = (evt: ProgressEvent<FileReader>) => {
+            reader.onload = async (evt: ProgressEvent<FileReader>) => {
                 if (evt.target) {
                     // 本地导入
                     let result = evt.target.result as ArrayBuffer;
-                    let res = utools.db.postAttachment(`/zone/attachment/${id}`,
+                    let res = await utools.db.promises.postAttachment(LocalNameEnum.ZONE_ATTACHMENT + id,
                             new Uint8Array(result),
                             'image');
+                    this.zone.imageList.push({
+                        uid: LocalNameEnum.ZONE_ATTACHMENT + id,
+                        file: option.fileItem.file,
+                        url: window.URL.createObjectURL(new Blob([result]))
+                    })
                     if (res.error) {
                         MessageUtil.error(res.message || '新增异常');
                         return;
@@ -155,13 +160,18 @@ export default defineComponent({
             }, {
                 body: this.zone.content
             })
-                    .then(() => MessageUtil.success("发布成功"))
+                    .then(() => {
+                        MessageUtil.success("发布成功");
+                        this.$emit('add');
+                    })
                     .catch(e => MessageUtil.error("发布失败", e));
         },
         cancelAdd() {
             // TODO: 删除附件
             // 删除图片
-            this.zone.image.forEach(id => utools.db.remove(`/zone/attachment/${id}`));
+            this.zone.image.forEach(id => utools.db.remove(LocalNameEnum.ZONE_ATTACHMENT + id));
+            // 释放图片
+            this.zone.imageList.forEach(url => window.URL.revokeObjectURL(url));
             // TODO: 获取视频
             // TODO: 获取声音
         },
