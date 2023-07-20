@@ -21,7 +21,7 @@
             </a-tabs>
         </div>
         <div class="container">
-            <a-list :data="articles" :virtual-list-props="{height: height}" v-if="render">
+            <a-list :data="articles" :virtual-list-props="virtualListProps" v-if="render">
                 <template #item="{item}">
                     <home-item :article="item" @remove="remove()"/>
                 </template>
@@ -50,7 +50,10 @@ const articles = computed(() => {
         return useArticleStore().articles.filter(a => a.categoryId === activeKey.value);
     }
 });
-const height = computed(() => useGlobalStore().size.height - 54);
+const virtualListProps = computed(() => ({
+    height: useGlobalStore().size.height - 54,
+    threshold: 20
+}))
 
 function toEditor() {
     router.push("/editor/0")
@@ -64,7 +67,6 @@ function remove() {
     render.value = false;
     nextTick(() => render.value = true);
 }
-
 
 
 </script>
