@@ -114,19 +114,6 @@ onMounted(() => {
             }).catch(e => MessageUtil.error("获取文章内容失败", e));
 });
 
-function tocClick(e: MouseEvent) {
-    const element = previewEle.value as HTMLDivElement;
-    if (!element) {
-        return;
-    }
-    const target = e.target as HTMLLinkElement;
-    if (!target) {
-        return;
-    }
-    console.log(element)
-    console.log(target.innerText);
-}
-
 </script>
 <style lang="less">
 </style>

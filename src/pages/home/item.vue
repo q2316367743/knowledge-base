@@ -62,6 +62,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 const props = defineProps({
     article: Object as PropType<ArticleIndex>
 });
+const emits = defineEmits(['remove']);
 
 const router = useRouter();
 const item = ref({
@@ -97,7 +98,10 @@ function removeBy() {
         })
         .then(() => useArticleStore()
             .removeById(item.value.id)
-            .then(() => MessageUtil.success("删除成功"))
+            .then(() => {
+                MessageUtil.success("删除成功");
+                emits('remove');
+            })
             .catch(e => MessageUtil.error("删除成功", e)));
 }
 

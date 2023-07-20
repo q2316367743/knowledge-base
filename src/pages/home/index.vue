@@ -21,9 +21,9 @@
             </a-tabs>
         </div>
         <div class="container">
-            <a-list :data="articles" :virtual-list-props="{height: height}">
+            <a-list :data="articles" :virtual-list-props="{height: height}" v-if="render">
                 <template #item="{item}">
-                    <home-item :article="item"/>
+                    <home-item :article="item" @remove="remove()"/>
                 </template>
             </a-list>
         </div>
@@ -31,7 +31,7 @@
 </template>
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -40,6 +40,7 @@ import HomeItem from './item.vue';
 
 const router = useRouter();
 
+const render = ref(true);
 const activeKey = ref(0);
 const categories = computed(() => useCategoryStore().categories);
 const articles = computed(() => {
@@ -57,6 +58,11 @@ function toEditor() {
 
 function triggerSearch() {
     useSearchEvent.emit();
+}
+
+function remove() {
+    render.value = false;
+    nextTick(() => render.value = true);
 }
 
 
