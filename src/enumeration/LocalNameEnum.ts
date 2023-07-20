@@ -14,7 +14,13 @@ enum LocalNameEnum {
 
     ZONE = '/local/zone',
 
+    ZONE_BASE = '/zone/base/',
+
     ZONE_CONTENT = '/zone/content/',
+
+    ZONE_PREVIEW = '/zone/preview/',
+
+    ZONE_ATTACHMENT = '/zone/attachment/',
 
     ZONE_COMMENT = '/zone/comment/',
 

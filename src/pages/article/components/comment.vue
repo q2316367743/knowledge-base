@@ -37,7 +37,7 @@
 import {onMounted, ref, toRaw} from "vue";
 import {toDateString} from "xe-utils";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import ArticleComment from "@/entity/article/ArticleComment";
+import {ArticleComment} from "@/entity/article";
 import MessageUtil from "@/utils/MessageUtil";
 
 const props = defineProps({

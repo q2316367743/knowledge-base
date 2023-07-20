@@ -62,8 +62,8 @@
     </a-modal>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import ZoneAttachment from "@/entity/zone/ZoneAttachment";
+import {defineComponent} from "vue";
+import {ZoneAttachment} from "@/entity/zone";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
@@ -128,8 +128,8 @@ export default defineComponent({
                     // 本地导入
                     let result = evt.target.result as ArrayBuffer;
                     let res = utools.db.postAttachment(`/zone/attachment/${id}`,
-                        new Uint8Array(result),
-                        'image');
+                            new Uint8Array(result),
+                            'image');
                     if (res.error) {
                         MessageUtil.error(res.message || '新增异常');
                         return;
@@ -149,14 +149,14 @@ export default defineComponent({
         execute() {
             useZoneStore().add({
                 image: this.zone.image,
-                attachments: []
-            }, {
-                body: this.zone.content,
+                attachments: [],
                 location: this.zone.location,
                 tags: this.zone.tags
+            }, {
+                body: this.zone.content
             })
-                .then(() => MessageUtil.success("发布成功"))
-                .catch(e => MessageUtil.error("发布失败", e));
+                    .then(() => MessageUtil.success("发布成功"))
+                    .catch(e => MessageUtil.error("发布失败", e));
         },
         cancelAdd() {
             // TODO: 删除附件

@@ -1,9 +1,7 @@
-import Zone from "@/entity/zone";
-import ZoneContent from "@/entity/zone/ZoneContent";
+import {ZoneIndex, ZoneContent, ZoneComment} from "@/entity/zone";
 import ZoneMediaWrap from "./ZoneMediaWrap";
-import ZoneComment from "@/entity/zone/ZoneComment";
 
-export default interface ZoneWrap extends Zone {
+export default interface ZoneWrap extends ZoneIndex {
 
     /**
      * 文章内容

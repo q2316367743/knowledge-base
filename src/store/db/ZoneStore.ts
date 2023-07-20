@@ -1,15 +1,13 @@
 import {defineStore} from "pinia";
-import Zone from "@/entity/zone";
+import {ZoneIndex, ZoneContent, ZoneBase, ZonePreview} from "@/entity/zone";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import ZoneContent from "@/entity/zone/ZoneContent";
 import {toRaw} from "vue";
-import ArticleContent from "@/entity/zone/ZoneContent";
-import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import md from "@/plugin/markdown";
 
 export const useZoneStore = defineStore('zone', {
     state: () => ({
-        zones: new Array<Zone>(),
+        zones: new Array<ZoneIndex>(),
         rev: undefined as string | undefined
     }),
     actions: {
@@ -19,45 +17,66 @@ export const useZoneStore = defineStore('zone', {
             }
             const res = await utools.db.promises.get(LocalNameEnum.ZONE);
             if (res) {
-                this.zones = res.value;
+                const zones: Array<ZoneIndex> = res.value;
                 this.rev = res._rev;
+                this.zones = zones.sort((a, b) => b.id - a.id);
             }
         },
-        async add(zone: Pick<Zone, 'image' | 'attachments'>, content: ZoneContent) {
+        async add(base: ZoneBase, content: ZoneContent): Promise<ZoneIndex> {
             let now = new Date();
             let id = now.getTime();
             // 更新索引
-            this.zones.push({
+            const zoneIndex = {
                 id: id,
                 createTime: now,
                 updateTime: now,
-                image: toRaw(zone.image),
-                attachments: zone.attachments,
-                collect: false
+            };
+            this.zones.push(zoneIndex);
+            await this._sync();
+            // 新增基础信息
+            let baseRes = await utools.db.promises.put({
+                _id: LocalNameEnum.ZONE_BASE + id,
+                value: JSON.parse(JSON.stringify(base))
             });
-            await this._sync()
+            if (baseRes.error) {
+                this.zones.pop();
+                await this._sync();
+                return Promise.reject("新增基础信息异常：" + baseRes.message)
+            }
+
             // 新增文章内容
             let contentRes = await utools.db.promises.put({
-                _id: '/zone/content/' + id,
+                _id: LocalNameEnum.ZONE_CONTENT + id,
                 value: {
-                    id: id + '',
-                    tags: toRaw(content.tags),
                     body: content.body,
-                    location: content.location
-                } as ArticleContent
+                } as ZoneContent
             });
             if (contentRes.error) {
                 // 删除索引
                 this.zones.pop();
                 await this._sync();
-                // TODO: 删除附件
-                // 删除图片
-                zone.image.forEach(id => utools.db.remove(`/zone/attachment/${id}`));
-                // TODO: 获取视频
-                // TODO: 获取声音
-                return Promise.reject(contentRes.message);
+                // 删除基础信息
+                await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
+                return Promise.reject("新增文章内容异常：" + contentRes.message);
             }
-            // 刷新状态
+            // 新增文章预览
+            let previewRes = await utools.db.promises.put({
+                _id: LocalNameEnum.ZONE_PREVIEW + id,
+                value: {
+                    html: md.render(content.body)
+                } as ZonePreview
+            });
+            if (previewRes.error) {
+                // 删除索引
+                this.zones.pop();
+                await this._sync();
+                // 删除基础信息
+                await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
+                // 删除内容
+                await utools.db.promises.remove(LocalNameEnum.ZONE_CONTENT + id)
+                return Promise.reject("新增文章预览异常：" + previewRes.message);
+            }
+            return Promise.resolve(zoneIndex);
         },
         async remove(id: number) {
             const index = this.zones.findIndex(e => e.id === id);
@@ -68,16 +87,20 @@ export const useZoneStore = defineStore('zone', {
                 confirmButtonText: "删除",
                 cancelButtonText: "取消"
             })
-            let item = this.zones.splice(index, 1)[0];
+            this.zones.splice(index, 1);
             await this._sync();
+            // 删除基本信息
+            const baseWrap = await utools.db.promises.get(LocalNameEnum.ZONE_BASE + id);
+            await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
+            //  删除附件
+            if (baseWrap) {
+                const base = baseWrap.value as ZoneBase;
+                base.image.forEach(image => utools.db.remove(LocalNameEnum.ZONE_ATTACHMENT + image.id));
+            }
             // 删除内容
-            utools.db.remove('/zone/content/' + item.id);
-            // TODO: 删除附件
-            // 删除图片
-            item.image.forEach(image => utools.db.remove(`/zone/attachment/${image.id}`));
-            // TODO: 删除视频
-            // TODO: 删除声音
-            MessageUtil.success("删除成功");
+            await utools.db.promises.remove(LocalNameEnum.ZONE_CONTENT + id);
+            // 删除预览
+            await utools.db.promises.remove(LocalNameEnum.ZONE_PREVIEW + id);
         },
         async _sync() {
             const res = await utools.db.promises.put({
@@ -90,5 +113,13 @@ export const useZoneStore = defineStore('zone', {
             }
             this.rev = res.rev;
         },
+        async page(num: number, size: number): Promise<Array<ZoneIndex>> {
+            const startIndex = Math.max((num - 1) * size, 0);
+            const endIndex = Math.min(num * size, this.zones.length);
+            if (startIndex > endIndex) {
+                return Promise.resolve([]);
+            }
+            return Promise.resolve(this.zones.slice(startIndex, endIndex));
+        }
     }
 })

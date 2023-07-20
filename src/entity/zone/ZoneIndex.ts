@@ -1,11 +1,9 @@
-export interface ArticleComment {
+export interface ZoneIndex {
 
     id: number;
 
     createTime: Date | string;
 
     updateTime: Date | string;
-
-    content: string;
 
 }

@@ -1,17 +1,7 @@
 /**
  * 文章内容
  */
-export default interface ZoneContent {
-
-    /**
-     * 地点
-     */
-    location: string;
-
-    /**
-     * 标签
-     */
-    tags: Array<string>;
+export interface ZoneContent {
 
     /**
      * 内容，支持markdown

@@ -1,6 +1,6 @@
 import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
 
-export default interface ZoneAttachment {
+export interface ZoneAttachment {
 
     /**
      * 附件ID

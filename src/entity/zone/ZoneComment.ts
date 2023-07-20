@@ -1,4 +1,4 @@
-export default interface ZoneComment {
+export interface ZoneComment {
 
     id: string;
 

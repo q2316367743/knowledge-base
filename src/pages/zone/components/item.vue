@@ -2,7 +2,7 @@
     <a-card class="item" hoverable>
         <template #title>
             <span style="color: var(--color-neutral-6);">
-                {{ toDateString(item.createTime) }}
+                {{ toDateString(props.zone.createTime) }}
             </span>
         </template>
         <!-- 内容 -->
@@ -11,13 +11,13 @@
                             rows: 3,
                             expandable: true,
                         }" style="overflow-x: auto;margin-bottom: 0;">
-                <div v-html="item.content.body"></div>
+                <div v-html="preview.html"></div>
             </a-typography-paragraph>
         </div>
         <!-- 图片 -->
-        <div class="image" v-if="item.imageWrap.length > 0">
+        <div class="image" v-if="base.image.length > 0">
             <a-row :gutter="7">
-                <a-col v-for="image in item.imageWrap" :span="8">
+                <a-col v-for="image in base.image" :span="8">
                     <a-image :alt="image.name" height="150px" width="150px"
                              @vue:mounted="renderImage($event, image.id)" fit="cover" show-loader
                              :preview="false" @click="showImagePreview(image.id, image.name)"
@@ -26,19 +26,19 @@
             </a-row>
         </div>
         <!-- 标签 -->
-        <div class="tags" v-if="item.content.tags.length > 0">
-            <a-tag v-for="tag of item.content.tags" :key="tag" style="margin-right: 7px;">
+        <div class="tags" v-if="base.tags.length > 0">
+            <a-tag v-for="tag of base.tags" :key="tag" style="margin-right: 7px;" :color="randomColor(tag)">
                 # {{ tag }}
             </a-tag>
         </div>
         <!-- 地址 -->
-        <div class="location" v-if="item.content.location.trim() !== ''">
+        <div class="location" v-if="base.location.trim() !== ''">
             <icon-location/>
-            <span style="margin-left: 7px;">{{ item.content.location }}</span>
+            <span style="margin-left: 7px;">{{ base.location }}</span>
         </div>
         <!-- 评论 -->
         <div class="comment">
-            <div class="comment-item" v-for="comment in item.comments">
+            <div class="comment-item" v-for="comment in comments">
                 <div class="comment-content">{{ comment.content }}</div>
                 <div class="action">
                     <div class="time">
@@ -46,7 +46,7 @@
                             <template #icon>
                                 <icon-clock-circle/>
                             </template>
-                            {{ toDateString(comment.id) }}
+                            {{ toDate(comment.id) }}
                         </a-tag>
                     </div>
                     <div class="btn">
@@ -59,7 +59,7 @@
         </div>
         <template #extra>
             <a-button-group type="text">
-                <a-button @click="openComment(item.id)">
+                <a-button @click="openComment()">
                     <template #icon>
                         <icon-message :size="16"/>
                     </template>
@@ -71,7 +71,7 @@
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption @click="executeCopy(item.source)">
+                        <a-doption @click="executeCopy()">
                             <template #icon>
                                 <icon-copy/>
                             </template>
@@ -104,96 +104,134 @@
         </a-image-preview>
     </a-card>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
+<script lang="ts" setup>
+import {PropType, ref} from "vue";
 import {toDateString} from 'xe-utils'
-import ZoneWrap from "@/pages/zone/domain/ZoneWrap";
 import MessageUtil from "@/utils/MessageUtil";
-import {getDefaultZoneWrap, renderImage, renderOne} from "@/pages/zone/render";
-import ZoneAdd from "@/pages/zone/components/add.vue";
-import {download} from "@/utils/BrowserUtil";
-import Zone from "@/entity/zone";
+import {renderImage} from "@/pages/zone/render";
+import {download, randomColor} from "@/utils/BrowserUtil";
+import {ZoneBase, ZoneComment, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import {useZoneStore} from "@/store/db/ZoneStore";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
-export default defineComponent({
-    name: 'zone-item',
-    components: {ZoneAdd},
-    props: {
-        zone: Object
-    },
-    data: () => ({
-        item: getDefaultZoneWrap() as ZoneWrap,
-        imagePreview: {
-            id: '',
-            name: '',
-            dialog: false,
-            value: ''
-        },
-        comment: {
-            dialog: false,
-            id: 0,
-            content: ''
-        },
-    }),
-    created() {
-        if (this.zone) {
-            this.item = Object.assign(this.item, renderOne(this.zone as Zone));
-        }
-    },
-    methods: {
-        renderImage,
-        toDateString(date: Date | string) {
-            return toDateString(date, 'yyyy年MM月dd日 HH:mm')
-        },
-        executeCopy(content: string) {
-            utools.copyText(content);
-            MessageUtil.success("成功复制到剪切板");
-        },
-        showImagePreview(id: string, name: string) {
-            utools.db.promises.getAttachment('/zone/attachment/' + id)
-                    .then(buffer => {
-                        if (!buffer) {
-                            MessageUtil.warning("图片未找到");
-                            return;
-                        }
-                        this.imagePreview = {
-                            id,
-                            name,
-                            dialog: true,
-                            value: URL.createObjectURL(new Blob([buffer]))
-                        };
-                    });
-        },
-        releaseImagePreview() {
-            URL.revokeObjectURL(this.imagePreview.value);
-            this.imagePreview.value = '';
-        },
-        openComment(id: number) {
-            this.comment = {
-                id,
-                dialog: true,
-                content: '',
-            }
-        },
-        downloadImage() {
-            utools.db.promises.getAttachment('/zone/attachment/' + this.imagePreview.id)
-                    .then(buffer => {
-                        if (!buffer) {
-                            MessageUtil.warning("图片未找到");
-                            return;
-                        }
-                        download(buffer, this.imagePreview.name, 'image');
-                    });
-        },
-        removeZone() {
-            useZoneStore().remove(this.item.id)
-                    .then(() => MessageUtil.success("删除完成"))
-                    .catch(e => MessageUtil.error("删除失败", e));
-        },
-        addComment() {
-        }
-    }
+const props = defineProps({
+    zone: Object as PropType<ZoneIndex>
 });
+
+const base = ref<ZoneBase>({
+    image: [],
+    attachments: [],
+    tags: [],
+    location: ''
+});
+const preview = ref<ZonePreview>({
+    html: ''
+});
+const comments = ref<Array<ZoneComment>>([]);
+const imagePreview = ref({
+    id: '',
+    name: '',
+    dialog: false,
+    value: ''
+})
+const comment = ref({
+    dialog: false,
+    content: ''
+});
+
+if (props.zone) {
+// 获取基础信息
+    utools.db.promises.get(LocalNameEnum.ZONE_BASE + props.zone.id)
+            .then(res => {
+                if (res) {
+                    base.value = res.value;
+                }
+            });
+    // 预览
+    utools.db.promises.get(LocalNameEnum.ZONE_PREVIEW + props.zone.id)
+            .then(res => {
+                if (res) {
+                    preview.value = res.value;
+                }
+            });
+    // 评论
+    utools.db.promises.get(LocalNameEnum.ZONE_COMMENT + props.zone.id)
+            .then(res => {
+                if (res) {
+                    comments.value = res.value;
+                }
+            });
+
+}
+
+
+function toDate(date: Date | string) {
+    return toDateString(date, 'yyyy年MM月dd日 HH:mm')
+}
+
+function executeCopy() {
+    utools.db.promises.get(LocalNameEnum.ZONE_CONTENT + props.zone?.id)
+            .then(res => {
+                if (res) {
+                    const content = res.value as ZoneContent;
+                    utools.copyText(content.body);
+                    MessageUtil.success("成功复制到剪切板");
+                }
+            })
+}
+
+function showImagePreview(id: string, name: string) {
+    utools.db.promises.getAttachment('/zone/attachment/' + id)
+            .then(buffer => {
+                if (!buffer) {
+                    MessageUtil.warning("图片未找到");
+                    return;
+                }
+                imagePreview.value = {
+                    id,
+                    name,
+                    dialog: true,
+                    value: URL.createObjectURL(new Blob([buffer]))
+                };
+            });
+}
+
+function releaseImagePreview() {
+    URL.revokeObjectURL(imagePreview.value.value);
+    imagePreview.value.value = '';
+}
+
+function openComment() {
+    comment.value = {
+        dialog: true,
+        content: '',
+    }
+}
+
+function downloadImage() {
+    utools.db.promises.getAttachment(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
+            .then(buffer => {
+                if (!buffer) {
+                    MessageUtil.warning("图片未找到");
+                    return;
+                }
+                download(buffer, imagePreview.value.name, 'image');
+            });
+}
+
+function removeZone() {
+    if (!props.zone) {
+        MessageUtil.error("动态不存在，请刷新后重试")
+        return;
+    }
+    useZoneStore().remove(props.zone.id)
+            .then(() => MessageUtil.success("删除完成"))
+            .catch(e => MessageUtil.error("删除失败", e));
+}
+
+function addComment() {
+}
+
 </script>
 <style scoped>
 

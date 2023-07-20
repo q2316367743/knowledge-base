@@ -13,25 +13,23 @@
         </div>
         <!-- 新增动态 -->
         <zone-add/>
-        <a-back-top target-container=".zone"/>
+        <a-back-top target-container=".zone .arco-scrollbar-container"/>
     </div>
 </template>
 <script lang="ts">
 import {mapState} from "pinia";
 import {defineComponent} from 'vue';
 import {useGlobalStore} from '@/store/GlobalStore';
-import {toDateString} from 'xe-utils';
-import {renderImage} from "./render";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import ZoneAdd from "@/pages/zone/components/add.vue";
 import ZoneItem from "@/pages/zone/components/item.vue";
-import Zone from "@/entity/zone";
+import {ZoneIndex} from "@/entity/zone";
 
 export default defineComponent({
     name: 'zone',
     components: {ZoneItem, ZoneAdd},
     data: () => ({
-        items: new Array<Zone>(),
+        items: new Array<ZoneIndex>(),
         // 显示数据
         startIndex: 0,
         bottom: false
@@ -41,11 +39,6 @@ export default defineComponent({
         ...mapState(useZoneStore, ['zones'])
     },
     methods: {
-        renderImage,
-        // 渲染
-        toDateString(date: string | Date | number) {
-            return toDateString(date, 'yyyy-MM-dd HH:mm:ss');
-        },
         render() {
             if (this.bottom) {
                 return;
