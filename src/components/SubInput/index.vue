@@ -62,7 +62,7 @@ let interval = setInterval(() => {
             visible.value = true;
         }
         keyword.value = text;
-    }, '请输入名称', false);
+    }, '请输入名称|标签|来源|描述', false);
     if (subInput) {
         clearInterval(interval);
     }
