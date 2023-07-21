@@ -2,7 +2,18 @@
     <header v-if="articleHeaderVisible">
         <blockquote>
             <ul>
-                <li v-if="article.source.trim() !== ''"><b>来源：</b>{{ article.source }}</li>
+                <li v-if="article.source.trim() !== ''">
+                    <b>来源：</b>
+                    <a v-if="articleBase.sourceUrl.trim() !== ''" @click="openSourceUrl()">
+                        {{ article.source }}
+                    </a>
+                    <span v-else>{{ article.source }}</span>
+                </li>
+                <li v-else-if="articleBase.sourceUrl.trim() !== ''">
+                    <a-link v-if="articleBase.sourceUrl.trim() !== ''" @click="openSourceUrl()">
+                        {{ articleBase.sourceUrl }}
+                    </a-link>
+                </li>
                 <li><b>创建时间：</b>{{ toDate(article.createTime) }}</li>
                 <li><b>更新时间：</b>{{ toDate(article.updateTime) }}</li>
                 <li v-if="article.tags.length > 0"><b>标签：</b>
@@ -28,7 +39,8 @@ import {toDateString} from "xe-utils";
 export default defineComponent({
     name: 'article-info',
     props: {
-        value: Object
+        value: Object,
+        base: Object
     },
     data: () => ({
         article: {
@@ -40,13 +52,23 @@ export default defineComponent({
             createTime: '',
             updateTime: '',
             source: ''
+        },
+        articleBase: {
+            sourceUrl: ''
         }
     }),
     computed: {
         ...mapState(useSettingStore, ['articleHeaderVisible'])
     },
+    watch: {
+        base() {
+            this.articleBase = Object.assign(this.articleBase, this.base);
+
+        }
+    },
     created() {
         this.article = Object.assign(this.article, this.value);
+        this.articleBase = Object.assign(this.articleBase, this.base);
     },
     methods: {
         randomColor,
@@ -55,6 +77,9 @@ export default defineComponent({
                 return '';
             }
             return toDateString(date, "yyyy年MM月dd日 HH:mm:ss")
+        },
+        openSourceUrl() {
+            utools.shellOpenExternal(this.articleBase.sourceUrl);
         }
     }
 });

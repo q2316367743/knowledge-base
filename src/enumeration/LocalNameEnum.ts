@@ -4,6 +4,8 @@ enum LocalNameEnum {
 
     ARTICLE = '/local/article',
 
+    ARTICLE_BASE = '/article/base/',
+
     ARTICLE_CONTENT = '/article/content/',
 
     ARTICLE_PREVIEW = '/article/preview/',

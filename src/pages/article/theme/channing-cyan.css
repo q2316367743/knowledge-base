@@ -246,6 +246,7 @@
   font-weight: 400;
   text-decoration: none;
   margin: 0 4px;
+  cursor: pointer;
 }
 .channing-cyan a:hover,
 .channing-cyan a:active {

@@ -6,7 +6,7 @@
                 <div class="container" id="article-container">
                     <a-scrollbar style="height:100%;overflow: auto;" type="track">
                         <article class="info" :class="articleTheme" id="article-container-content">
-                            <article-info :value="article" v-if="!loading"/>
+                            <article-info :value="article" :base="base" v-if="!loading"/>
                             <a-typography class="content" v-html="preview"></a-typography>
                         </article>
                         <article-comment :id="articleId" v-if="articleId !== 0"/>
@@ -27,12 +27,11 @@ import {useRoute, useRouter} from "vue-router";
 import {computed, nextTick, onMounted, ref} from "vue";
 import {parseInt} from "lodash-es";
 import MessageUtil from "@/utils/MessageUtil";
-import {ArticleIndex, ArticlePreview} from "@/entity/article";
+import {ArticleBase, ArticleIndex, ArticlePreview} from "@/entity/article";
 
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 存储
-import {useArticleInfoStore} from "@/store/component/ArticleInfoStore";
 import {useSettingStore} from "@/store/db/SettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
@@ -71,6 +70,9 @@ const article = ref<ArticleIndex>({
     updateTime: '',
     source: ''
 });
+const base = ref<ArticleBase>({
+    sourceUrl: ''
+})
 const articleId = ref(0);
 const preview = ref('');
 const loading = ref(true);
@@ -85,34 +87,38 @@ function switchCollapsed() {
 }
 
 onMounted(() => {
+    init().then(() => loading.value = false)
+            .catch(e => {
+                MessageUtil.error("文章渲染失败", e);
+                router.push("/home");
+            })
+});
+
+async function init() {
     const id = route.params.id as string;
     if (!id) {
-        MessageUtil.error("ID不存在");
-        router.push("/home");
-        return;
+        return Promise.reject("ID不存在");
     }
     const articleIndex = useArticleStore().articleMap.get(parseInt(id));
     if (!articleIndex) {
-        MessageUtil.error(`文章【${id}】不存在`);
-        router.push("/home");
-        return;
+        return Promise.reject(`文章【${id}】不存在`);
     }
-    useArticleInfoStore().init(articleIndex.id, articleIndex.name);
     articleId.value = parseInt(id);
     article.value = articleIndex;
-    // 获取预览
-    loading.value = false
-    utools.db.promises.get(LocalNameEnum.ARTICLE_PREVIEW + id)
-            .then(res => {
-                if (res) {
-                    preview.value = (res.value as ArticlePreview).html;
-                    nextTick(() => {
-                        onAfterRender();
-                        createBlogDirectory("article-container-content", 20, previewEle.value as HTMLDivElement);
-                    });
-                }
-            }).catch(e => MessageUtil.error("获取文章内容失败", e));
-});
+    // 获取基础信息
+    const res = await utools.db.promises.get(LocalNameEnum.ARTICLE_BASE + id)
+    if (res) {
+        base.value = Object.assign(base.value, res.value);
+    }
+    const previewWrap = await utools.db.promises.get(LocalNameEnum.ARTICLE_PREVIEW + id)
+    if (previewWrap) {
+        preview.value = (previewWrap.value as ArticlePreview).html;
+        await nextTick(() => {
+            onAfterRender();
+            createBlogDirectory("article-container-content", 20, previewEle.value as HTMLDivElement);
+        });
+    }
+}
 
 </script>
 <style lang="less">

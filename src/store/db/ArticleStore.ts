@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {ArticleIndex, ArticlePreview, ArticleSource} from "@/entity/article";
+import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
@@ -56,13 +56,14 @@ export const useArticleStore = defineStore('article', {
             this.rev = res.rev;
         },
         async add(
-            base: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'source'>,
+            article: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'source'>,
+            base: ArticleBase,
             content: string): Promise<number> {
             // 校验
-            if (base.name.trim() === '') {
+            if (article.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
             }
-            if (this.articleNames.has(base.name)) {
+            if (this.articleNames.has(article.name)) {
                 return Promise.reject("文章标题已存在，请重新输入！");
             }
             const now = new Date();
@@ -72,13 +73,24 @@ export const useArticleStore = defineStore('article', {
                 id,
                 createTime: now,
                 updateTime: now,
-                name: base.name,
-                description: base.description,
-                categoryId: base.categoryId,
-                tags: toRaw(base.tags),
-                source: base.source
+                name: article.name,
+                description: article.description,
+                categoryId: article.categoryId,
+                tags: toRaw(article.tags),
+                source: article.source
             });
             await this._sync();
+            // 新增基础信息
+            const baseRes = await utools.db.promises.put({
+                _id: LocalNameEnum.ARTICLE_BASE + id,
+                value: toRaw(base)
+            })
+            if (baseRes.error) {
+                // 删除索引
+                this.value.pop();
+                await this._sync();
+                return Promise.reject("新增基础信息异常，" + baseRes.error);
+            }
             // 新增内容
             const contentRes = await utools.db.promises.put({
                 _id: LocalNameEnum.ARTICLE_CONTENT + id,
@@ -90,6 +102,8 @@ export const useArticleStore = defineStore('article', {
                 // 删除索引
                 this.value.pop();
                 await this._sync();
+                // 删除基础信息
+                await utools.db.promises.remove(LocalNameEnum.ARTICLE_BASE + id);
                 return Promise.reject("新增内容异常，" + contentRes.error);
             }
             // 新增预览
@@ -103,13 +117,20 @@ export const useArticleStore = defineStore('article', {
             });
             if (previewRes.error) {
                 // 删除索引
-                MessageUtil.warning("新增预览异常，" + previewRes.error);
+                this.value.pop();
+                await this._sync();
+                // 删除基础信息
+                await utools.db.promises.remove(LocalNameEnum.ARTICLE_BASE + id);
+                // 删除内容
+                await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+                return Promise.reject("新增预览异常，" + previewRes.error);
             }
             return Promise.resolve(id);
         },
         async update(
             id: number,
-            base: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'createTime' | 'source'>,
+            article: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'createTime' | 'source'>,
+            base: ArticleBase,
             content: string
         ) {
             const index = this.value.findIndex(e => e.id === id);
@@ -118,22 +139,35 @@ export const useArticleStore = defineStore('article', {
                     confirmButtonText: "新增",
                     cancelButtonText: "取消"
                 });
-                await this.add(base, content);
+                await this.add(article, base, content);
                 return Promise.resolve();
             }
             // 校验
-            if (base.name.trim() === '') {
+            if (article.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
             }
             // 新增索引
             this.value[index] = {
                 ...this.value[index],
-                ...base,
+                ...article,
                 updateTime: new Date(),
-                tags: toRaw(base.tags),
+                tags: toRaw(article.tags),
             };
 
             await this._sync();
+            // 删除旧的基础信息
+            await utools.db.promises.remove(LocalNameEnum.ARTICLE_BASE + id);
+            // 新增基础信息
+            const baseRes = await utools.db.promises.put({
+                _id: LocalNameEnum.ARTICLE_BASE + id,
+                value: toRaw(base)
+            })
+            if (baseRes.error) {
+                // 删除索引
+                this.value.pop();
+                await this._sync();
+                return Promise.reject("修改基础信息异常，" + baseRes.error);
+            }
             // 删除旧的内容
             await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
             // 新增内容
@@ -145,9 +179,7 @@ export const useArticleStore = defineStore('article', {
             });
             if (contentRes.error) {
                 // 删除索引
-                this.value.pop();
-                await this._sync();
-                return Promise.reject("新增内容异常，" + contentRes.error);
+                return Promise.reject("修改内容异常，" + contentRes.error);
             }
             // 删除旧的预览
             await utools.db.promises.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
@@ -162,7 +194,7 @@ export const useArticleStore = defineStore('article', {
             });
             if (previewRes.error) {
                 // 删除索引
-                MessageUtil.warning("新增预览异常，" + previewRes.error);
+                return Promise.reject("修改预览异常，" + contentRes.error);
             }
         },
         async removeById(id: number) {

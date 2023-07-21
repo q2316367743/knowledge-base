@@ -30,6 +30,9 @@
                         最大32个字
                     </template>
                 </a-form-item>
+                <a-form-item label="来源链接">
+                    <a-input v-model="base.sourceUrl" :max-length="32"/>
+                </a-form-item>
                 <a-form-item label="分类">
                     <a-select v-model="extra.categoryId" placeholder="请选择分类">
                         <a-option v-for="category in categories" :value="category.id">{{ category.name }}</a-option>
@@ -71,6 +74,9 @@ export default defineComponent({
         preview: {
             show: false,
             src: ''
+        },
+        base: {
+            sourceUrl: ''
         },
         extra: {
             visible: false,
@@ -117,6 +123,12 @@ export default defineComponent({
                     source: articleIndex.source
                 }
                 this.title = articleIndex.name;
+                // 基础信息
+                const baseWrap = await utools.db.promises.get(LocalNameEnum.ARTICLE_BASE + id);
+                if (baseWrap) {
+                    this.base = Object.assign(this.base, baseWrap.value);
+                }
+                // 内容
                 const contentWrap = await utools.db.promises.get(LocalNameEnum.ARTICLE_CONTENT + id);
                 if (contentWrap) {
                     this.content = (contentWrap.value as ArticleSource).content
@@ -134,7 +146,7 @@ export default defineComponent({
                     tags: this.extra.tags,
                     categoryId: this.extra.categoryId || null,
                     source: this.extra.source
-                }, this.content)
+                }, this.base, this.content)
                     .then(id => {
                         this.id = id;
                         MessageUtil.success("保存文章成功");
@@ -148,7 +160,7 @@ export default defineComponent({
                     categoryId: this.extra.categoryId || null,
                     source: this.extra.source,
                     createTime: this.extra.createTime
-                }, this.content)
+                }, this.base, this.content)
                     .then(() => MessageUtil.success("保存文章成功"))
                     .catch(e => MessageUtil.error("保存文章失败", e));
             }
