@@ -15,6 +15,12 @@
                     <icon-fullscreen v-else/>
                 </template>
             </a-button>
+            <a-button @click="switchDark()">
+                <template #icon>
+                    <icon-sun v-if="isDark"/>
+                    <icon-moon v-else/>
+                </template>
+            </a-button>
             <a-button @click="settingVisible = true">
                 <template #icon>
                     <icon-settings/>
@@ -36,7 +42,8 @@
 import {useFullscreen} from "@vueuse/core";
 import {useRouter} from "vue-router";
 import MoreSettingBase from "@/pages/more/setting/base/index.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const props = defineProps({
     name: String,
@@ -48,6 +55,8 @@ const router = useRouter();
 const fullscreen = useFullscreen();
 
 const settingVisible = ref(false);
+const isDark = computed(() => useGlobalStore().isDark);
+const switchDark = () => useGlobalStore().switchDarkColors();
 
 
 function toHome() {
