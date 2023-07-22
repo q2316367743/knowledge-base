@@ -21,6 +21,18 @@
                     <icon-moon v-else/>
                 </template>
             </a-button>
+            <a-dropdown>
+                <a-button>
+                    <template #icon>
+                        <icon-download/>
+                    </template>
+                </a-button>
+                <template #content>
+                    <a-doption @click="emit('download', 'image')">图片</a-doption>
+                    <a-doption @click="emit('download', 'md')">md</a-doption>
+                    <a-doption @click="emit('download', 'html')">网页</a-doption>
+                </template>
+            </a-dropdown>
             <a-button @click="settingVisible = true">
                 <template #icon>
                     <icon-settings/>
@@ -33,7 +45,7 @@
             </a-button>
         </a-button-group>
         <a-modal v-model:visible="settingVisible" title="基础设置" unmount-on-close class="article-setting"
-                 :footer="false">
+                 :footer="false" draggable>
             <more-setting-base @save="settingVisible = false"/>
         </a-modal>
     </a-layout-header>
@@ -49,7 +61,7 @@ const props = defineProps({
     name: String,
     collapsed: Boolean
 });
-const emit = defineEmits(['switch-collapsed']);
+const emit = defineEmits(['switch-collapsed', 'download']);
 
 const router = useRouter();
 const fullscreen = useFullscreen();

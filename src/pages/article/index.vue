@@ -1,7 +1,8 @@
 <template>
     <a-layout class="article">
-        <article-header :name="article.name" :collapsed="collapsed" @switch-collapsed="switchCollapsed()"/>
-        <a-layout>
+        <article-header :name="article.name" :collapsed="collapsed" @switch-collapsed="switchCollapsed()"
+                        @download="downloadFile"/>
+        <a-layout :style="{height: height}">
             <a-layout-content>
                 <div class="container" id="article-container">
                     <a-scrollbar style="height:100%;overflow: auto;" type="track">
@@ -20,25 +21,27 @@
             <a-back-top target-container=".article .arco-scrollbar-container"/>
         </a-layout>
     </a-layout>
-
 </template>
 <script lang="ts" setup>
 import {useRoute, useRouter} from "vue-router";
 import {computed, nextTick, onMounted, ref} from "vue";
 import {parseInt} from "lodash-es";
+import html2canvas from "html2canvas";
 import MessageUtil from "@/utils/MessageUtil";
-import {ArticleBase, ArticleIndex, ArticlePreview} from "@/entity/article";
-
+import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity/article";
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 存储
 import {useSettingStore} from "@/store/db/SettingStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
 import ArticleHeader from './components/header.vue';
 import ArticleComment from './components/comment.vue';
+import ArticleInfo from "@/pages/article/components/info.vue";
+import createBlogDirectory from "@/components/RenderToc/render";
 // 主题
-import {onAfterRender} from "@/pages/article/func";
+import {onAfterRender, renderTemplate} from "@/pages/article/func";
 import './index.less';
 import './theme/zui.less';
 import './theme/heti.less';
@@ -53,9 +56,7 @@ import './theme/jzman.css';
 import './theme/smart-blue.css';
 import './theme/v-green.css';
 import './theme/vuepress.css';
-import ArticleInfo from "@/pages/article/components/info.vue";
-import {useGlobalStore} from "@/store/GlobalStore";
-import createBlogDirectory from "@/components/RenderToc/render";
+import {download} from "@/utils/BrowserUtil";
 
 
 const route = useRoute();
@@ -79,6 +80,7 @@ const loading = ref(true);
 const articleTheme = computed(() => useSettingStore().articleTheme);
 const collapsed = ref(true);
 const width = computed(() => useGlobalStore().width / 4);
+const height = computed(() => (useGlobalStore().height - 36) + 'px');
 
 const previewEle = ref<HTMLDivElement>();
 
@@ -88,10 +90,10 @@ function switchCollapsed() {
 
 onMounted(() => {
     init().then(() => loading.value = false)
-            .catch(e => {
-                MessageUtil.error("文章渲染失败", e);
-                router.push("/home");
-            })
+        .catch(e => {
+            MessageUtil.error("文章渲染失败", e);
+            router.push("/home");
+        })
 });
 
 async function init() {
@@ -117,6 +119,67 @@ async function init() {
             onAfterRender();
             createBlogDirectory("article-container-content", 20, previewEle.value as HTMLDivElement);
         });
+    }
+}
+
+function downloadFile(type: 'image' | 'md' | 'html') {
+    switch (type) {
+        case 'image':
+            toImage();
+            break;
+        case 'md':
+            toMd();
+            break;
+        case 'html':
+            toHtml();
+            break;
+    }
+}
+
+function toImage() {
+    useGlobalStore().startLoading("开始导出");
+    try {
+        html2canvas(document.getElementById("article-container-content")!, {
+            backgroundColor: useGlobalStore().isDark ? '#000000' : '#ffffff'
+        }).then(res => {
+            res.toBlob(blob => {
+                if (blob) {
+                    download(blob, article.value.name + ".png", "image/png");
+                }
+            })
+        }).finally(() => useGlobalStore().closeLoading());
+    } catch (e) {
+        console.error(e);
+        useGlobalStore().closeLoading();
+    }
+}
+
+function toMd() {
+    useGlobalStore().startLoading("开始导出");
+    utools.db.promises.get(LocalNameEnum.ARTICLE_CONTENT + articleId.value)
+        .then(res => {
+            if (res) {
+                const source = res.value as ArticleSource;
+                download(source.content, article.value.name + ".md", "text/markdown");
+            }
+        })
+        .catch(e => MessageUtil.error("数据导出失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+}
+
+function toHtml() {
+    useGlobalStore().startLoading("开始导出");
+    try {
+        const ele = document.getElementById("article-container-content");
+        if (ele) {
+            download(renderTemplate(article.value.name, ele.outerHTML),
+                article.value.name + ".html",
+                "text/html");
+        }
+    } catch (e) {
+        MessageUtil.error("数据导出失败", e);
+    } finally {
+        useGlobalStore().closeLoading()
     }
 }
 
