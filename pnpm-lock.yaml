@@ -1781,10 +1781,6 @@ packages:
     engines: {node: '>=0.3.1'}
     dev: false
 
-  /dompurify@3.0.3:
-    resolution: {integrity: sha512-axQ9zieHLnAnHh0sfAamKYiqXMJAVwu+LM/alQ7WDagoWessyWvMSFyW65CqF3owufNu8HBcE4cM2Vflu7YWcQ==}
-    dev: false
-
   /electron-to-chromium@1.4.461:
     resolution: {integrity: sha512-1JkvV2sgEGTDXjdsaQCeSwYYuhLRphRpc+g6EHTFELJXEiznLt3/0pZ9JuAOQ5p2rI3YxKTbivtvajirIfhrEQ==}
     dev: false
@@ -2498,7 +2494,7 @@ packages:
       d3: 7.8.5
       dagre-d3-es: 7.0.10
       dayjs: 1.11.9
-      dompurify: 3.0.3
+      dompurify: registry.npmmirror.com/dompurify@3.0.3
       elkjs: 0.8.2
       khroma: 2.0.0
       lodash-es: 4.17.21
@@ -4371,6 +4367,12 @@ packages:
     resolution: {integrity: sha512-LLBi6pEqS6Do3EKQ3J0NqHWV5hhb78Pi8vvESYwyOy2c31ZEZVdtitdzsQsKb7878PEERhzUk0ftqGhG6Mz+pQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/doctypes/-/doctypes-1.1.0.tgz}
     name: doctypes
     version: 1.1.0
+    dev: false
+
+  registry.npmmirror.com/dompurify@3.0.3:
+    resolution: {integrity: sha512-axQ9zieHLnAnHh0sfAamKYiqXMJAVwu+LM/alQ7WDagoWessyWvMSFyW65CqF3owufNu8HBcE4cM2Vflu7YWcQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dompurify/-/dompurify-3.0.3.tgz}
+    name: dompurify
+    version: 3.0.3
     dev: false
 
   registry.npmmirror.com/dot-case@3.0.4:

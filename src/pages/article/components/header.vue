@@ -21,16 +21,17 @@
                     <icon-moon v-else/>
                 </template>
             </a-button>
-            <a-dropdown>
+            <a-dropdown position="br">
                 <a-button>
                     <template #icon>
                         <icon-download/>
                     </template>
                 </a-button>
                 <template #content>
-                    <a-doption @click="emit('download', 'image')">图片</a-doption>
-                    <a-doption @click="emit('download', 'md')">md</a-doption>
-                    <a-doption @click="emit('download', 'html')">网页</a-doption>
+                    <a-doption @click="emit('download', 'md')">导出为 Markdown 文件</a-doption>
+                    <a-doption @click="emit('download', 'html')">导出为 HTML 文件</a-doption>
+                    <a-doption @click="emit('download', 'pdf')">导出为 PDF 文件</a-doption>
+                    <a-doption @click="emit('download', 'image')">导出为 图片</a-doption>
                 </template>
             </a-dropdown>
             <a-button @click="settingVisible = true">

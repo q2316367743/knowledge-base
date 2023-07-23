@@ -1,16 +1,20 @@
 <template>
     <div class="editor">
         <div class="header">
-            <div class="left">
+            <div class="left" :style="{width: width - 32 * 2 - 4 * 7 + 'px'}">
                 <a-button type="text" @click="toHome()">
                     <template #icon>
                         <icon-left/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear style="margin-left: 7px;"/>
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear :style="{marginLeft: '7px', width: width - 3 * 32 - 4 * 7 + 'px'}"/>
             </div>
             <a-button-group type="primary">
-                <a-button @click="save()" style="margin-right: 7px">保存</a-button>
+                <a-button @click="save()" style="margin-right: 7px">
+                    <template #icon>
+                        <icon-save />
+                    </template>
+                </a-button>
                 <a-button @click="extra.visible = true">
                     <template #icon>
                         <icon-settings/>
@@ -88,9 +92,9 @@ export default defineComponent({
         },
     }),
     computed: {
-        ...mapState(useGlobalStore, ['size', 'isDark']),
+        ...mapState(useGlobalStore, ['width', 'isDark']),
         ...mapState(useArticleStore, ['articleTags']),
-        ...mapState(useCategoryStore, ['categories'])
+        ...mapState(useCategoryStore, ['categories']),
     },
     created() {
     },

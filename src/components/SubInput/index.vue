@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" :footer="false" title-align="start" :width="500" draggable>
+    <a-modal v-model:visible="visible" :footer="false" title-align="start" :width="500">
         <template #title>
             <a-input-search v-model="keyword" style="width: 300px" allow-clear/>
         </template>

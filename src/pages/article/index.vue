@@ -28,6 +28,7 @@ import {computed, nextTick, onMounted, ref} from "vue";
 import {parseInt} from "lodash-es";
 import html2canvas from "html2canvas";
 import MessageUtil from "@/utils/MessageUtil";
+import {download} from "@/utils/BrowserUtil";
 import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity/article";
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
@@ -56,7 +57,6 @@ import './theme/jzman.css';
 import './theme/smart-blue.css';
 import './theme/v-green.css';
 import './theme/vuepress.css';
-import {download} from "@/utils/BrowserUtil";
 
 
 const route = useRoute();
@@ -122,7 +122,7 @@ async function init() {
     }
 }
 
-function downloadFile(type: 'image' | 'md' | 'html') {
+function downloadFile(type: 'image' | 'md' | 'html' | 'pdf') {
     switch (type) {
         case 'image':
             toImage();
@@ -132,6 +132,9 @@ function downloadFile(type: 'image' | 'md' | 'html') {
             break;
         case 'html':
             toHtml();
+            break;
+        case 'pdf':
+            toPdf();
             break;
     }
 }
@@ -181,6 +184,11 @@ function toHtml() {
     } finally {
         useGlobalStore().closeLoading()
     }
+}
+
+
+function toPdf() {
+    MessageUtil.warning("暂不支持");
 }
 
 </script>
