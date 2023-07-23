@@ -11,9 +11,14 @@
                                 <icon-search/>
                             </template>
                         </a-button>
-                        <a-button @click="toEditor()">
+                        <a-button @click="toEditor()" style="margin-right: 7px">
                             <template #icon>
                                 <icon-plus/>
+                            </template>
+                        </a-button>
+                        <a-button @click="toImport()">
+                            <template #icon>
+                                <icon-import/>
                             </template>
                         </a-button>
                     </a-button-group>
@@ -66,6 +71,10 @@ function triggerSearch() {
 function remove() {
     render.value = false;
     nextTick(() => render.value = true);
+}
+
+function toImport() {
+    utools.redirect('听雨html转markdown', '')
 }
 
 
