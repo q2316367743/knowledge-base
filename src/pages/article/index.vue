@@ -188,6 +188,7 @@ function toHtml() {
 
 
 function toPdf() {
+    window.print();
     MessageUtil.warning("暂不支持");
 }
 

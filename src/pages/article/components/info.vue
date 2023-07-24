@@ -4,15 +4,15 @@
             <ul>
                 <li v-if="article.source.trim() !== ''">
                     <b>来源：</b>
-                    <a v-if="articleBase.sourceUrl.trim() !== ''" @click="openSourceUrl()">
+                    <a v-if="articleBase.sourceUrl.trim() !== ''" @click="openSourceUrl()" style="cursor: pointer;">
                         {{ article.source }}
                     </a>
                     <span v-else>{{ article.source }}</span>
                 </li>
                 <li v-else-if="articleBase.sourceUrl.trim() !== ''">
-                    <a-link v-if="articleBase.sourceUrl.trim() !== ''" @click="openSourceUrl()">
+                    <a v-if="articleBase.sourceUrl.trim() !== ''" @click="openSourceUrl()" style="cursor: pointer;">
                         {{ articleBase.sourceUrl }}
-                    </a-link>
+                    </a>
                 </li>
                 <li><b>创建时间：</b>{{ toDate(article.createTime) }}</li>
                 <li><b>更新时间：</b>{{ toDate(article.updateTime) }}</li>
