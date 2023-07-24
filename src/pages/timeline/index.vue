@@ -1,6 +1,6 @@
 <template>
     <div class="timeline">
-        <a-row :gutter="7" style="margin: 7px">
+        <a-row :gutter="7" style="margin: 7px 4px">
             <a-col :span="6">
                 <a-card>
                     <a-statistic title="文章" :value="articles.length" show-group-separator/>
@@ -22,7 +22,7 @@
                 </a-card>
             </a-col>
         </a-row>
-        <a-row :gutter="7" style="margin: 7px">
+        <a-row :gutter="7" style="margin: 7px 4px;">
             <a-col :span="24">
                 <a-card title="活跃图">
                     <template #extra>{{ endDate }}</template>

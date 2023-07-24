@@ -133,6 +133,5 @@ function removeFeature() {
 }
 
 </script>
-<style scoped>
-
+<style lang="less">
 </style>
