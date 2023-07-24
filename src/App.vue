@@ -29,30 +29,30 @@
                             </template>
                             图
                         </a-menu-item>
-                        <a-sub-menu key="/more/setting">
+                        <a-sub-menu key="/more">
                             <template #icon>
-                                <icon-settings/>
+                                <icon-more/>
                             </template>
-                            <template #title>设置</template>
+                            <template #title>更多</template>
                             <a-menu-item key="/more/setting/base">
                                 基础设置
                             </a-menu-item>
                             <a-menu-item key="/more/setting/category">
                                 分类设置
                             </a-menu-item>
+                            <a-menu-item key="/more/recommend">
+                                <template #icon>
+                                    <icon-thumb-up/>
+                                </template>
+                                推荐
+                            </a-menu-item>
+                            <a-menu-item key="/more/about">
+                                <template #icon>
+                                    <icon-exclamation-circle/>
+                                </template>
+                                关于
+                            </a-menu-item>
                         </a-sub-menu>
-                        <a-menu-item key="/more/recommend">
-                            <template #icon>
-                                <icon-thumb-up/>
-                            </template>
-                            推荐
-                        </a-menu-item>
-                        <a-menu-item key="/more/about">
-                            <template #icon>
-                                <icon-exclamation-circle/>
-                            </template>
-                            关于
-                        </a-menu-item>
                     </a-menu>
                 </a-layout-sider>
                 <a-layout-content>
