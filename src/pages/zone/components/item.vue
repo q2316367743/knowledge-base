@@ -1,10 +1,36 @@
 <template>
     <a-card class="item" hoverable>
-        <template #title>
-            <span style="color: var(--color-neutral-6);">
-                {{ createTime }}
-            </span>
-        </template>
+        <div class="header">
+            <div class="create-time">{{ createTime }}</div>
+            <a-button-group type="text" size="mini">
+                <a-button @click="openComment()">
+                    <template #icon>
+                        <icon-message/>
+                    </template>
+                </a-button>
+                <a-dropdown position="br">
+                    <a-button>
+                        <template #icon>
+                            <icon-more/>
+                        </template>
+                    </a-button>
+                    <template #content>
+                        <a-doption @click="executeCopy()">
+                            <template #icon>
+                                <icon-copy/>
+                            </template>
+                            复制
+                        </a-doption>
+                        <a-doption @click="removeZone()">
+                            <template #icon>
+                                <icon-delete/>
+                            </template>
+                            删除
+                        </a-doption>
+                    </template>
+                </a-dropdown>
+            </a-button-group>
+        </div>
         <!-- 内容 -->
         <div class="content">
             <a-typography-paragraph :ellipsis="{
@@ -57,36 +83,6 @@
                 </a-button-group>
             </div>
         </div>
-        <template #extra>
-            <a-button-group type="text">
-                <a-button @click="openComment()">
-                    <template #icon>
-                        <icon-message :size="16"/>
-                    </template>
-                </a-button>
-                <a-dropdown position="br">
-                    <a-button>
-                        <template #icon>
-                            <icon-more-vertical/>
-                        </template>
-                    </a-button>
-                    <template #content>
-                        <a-doption @click="executeCopy()">
-                            <template #icon>
-                                <icon-copy/>
-                            </template>
-                            复制
-                        </a-doption>
-                        <a-doption @click="removeZone()">
-                            <template #icon>
-                                <icon-delete/>
-                            </template>
-                            删除
-                        </a-doption>
-                    </template>
-                </a-dropdown>
-            </a-button-group>
-        </template>
         <!-- 新增评论 -->
         <a-modal v-model:visible="comment.dialog" title="新增评论" title-align="start" draggable ok-text="发布"
                  @ok="addComment()">
@@ -203,7 +199,11 @@ function removeZone() {
                 MessageUtil.success("删除完成");
                 emits('remove');
             })
-            .catch(e => MessageUtil.error("删除失败", e));
+            .catch(e => {
+                if (e !== 'cancel') {
+                    MessageUtil.error("删除失败", e);
+                }
+            });
 }
 
 // =========================================================================
