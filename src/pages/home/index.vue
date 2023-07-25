@@ -26,7 +26,7 @@
             </a-tabs>
         </div>
         <div class="container">
-            <a-list :data="articles" :virtual-list-props="virtualListProps" v-if="render">
+            <a-list :data="articles" :virtual-list-props="virtualListProps" v-if="render" :bordered="false" :split="false">
                 <template #item="{item}">
                     <home-item :article="item" @remove="remove()"/>
                 </template>

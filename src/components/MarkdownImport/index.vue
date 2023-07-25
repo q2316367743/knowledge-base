@@ -36,6 +36,8 @@ useImportEvent.on(content => {
             description: zone.description || '',
             name: zone.title,
             categoryId: null
+        }, {
+            sourceUrl: zone.sourceUrl || ''
         }, zone.content)
                 .then(() => MessageUtil.success("文章导入成功！"))
                 .catch(e => MessageUtil.error("文章导入失败", e))

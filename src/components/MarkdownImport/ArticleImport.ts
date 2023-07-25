@@ -16,6 +16,11 @@ export default interface ArticleImport {
     source?: string;
 
     /**
+     * 来源
+     */
+    sourceUrl?: string;
+
+    /**
      * 标签
      */
     tags?: Array<string>;

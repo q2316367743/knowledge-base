@@ -154,6 +154,7 @@ export default defineComponent({
                     .then(id => {
                         this.id = id;
                         MessageUtil.success("保存文章成功");
+                        this.$router.push("/home");
                     })
                     .catch(e => MessageUtil.error("保存文章失败", e));
             } else {
@@ -165,7 +166,10 @@ export default defineComponent({
                     source: this.extra.source,
                     createTime: this.extra.createTime
                 }, this.base, this.content)
-                    .then(() => MessageUtil.success("保存文章成功"))
+                    .then(() => {
+                        MessageUtil.success("保存文章成功");
+                        this.$router.push("/home");
+                    })
                     .catch(e => MessageUtil.error("保存文章失败", e));
             }
         }

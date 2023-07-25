@@ -1,11 +1,45 @@
 <template>
-    <a-list-item action-layout="vertical">
-        <a-list-item-meta :description="item.description">
-            <template #title>
+    <a-card hoverable class="home-item">
+        <div class="header">
+            <div class="title">
                 <a-link @click="jumpTo()">{{ item.name }}</a-link>
-            </template>
-        </a-list-item-meta>
-        <template #actions>
+            </div>
+            <div class="extra">
+                <span>{{ item.source }}</span>
+                <a-dropdown trigger="click" position="br">
+                    <a-button type="text" style="margin-left: 14px;">
+                        <template #icon>
+                            <icon-more-vertical/>
+                        </template>
+                    </a-button>
+                    <template #content>
+                        <a-doption @click="switchFeature()">
+                            <template #icon>
+                                <icon-heart-fill v-if="collect"/>
+                                <icon-heart v-else/>
+                            </template>
+                            {{ collect ? '取消收藏' : '添加收藏' }}
+                        </a-doption>
+                        <a-doption @click="editTo()">
+                            <template #icon>
+                                <icon-edit/>
+                            </template>
+                            编辑
+                        </a-doption>
+                        <a-doption @click="removeBy()">
+                            <template #icon>
+                                <icon-delete/>
+                            </template>
+                            删除
+                        </a-doption>
+                    </template>
+                </a-dropdown>
+            </div>
+        </div>
+        <div class="desc">
+            {{ item.description}}
+        </div>
+        <div class="tags">
             <a-tag color="orange">
                 <template #icon>
                     <icon-clock-circle/>
@@ -15,39 +49,8 @@
             <a-tag v-for="tag in item.tags" style="margin-right: 7px;" :color="randomColor(tag)">
                 {{ tag }}
             </a-tag>
-        </template>
-        <template #extra>
-            <span>{{ item.source }}</span>
-            <a-dropdown trigger="click" position="br">
-                <a-button type="text" style="margin-left: 14px;">
-                    <template #icon>
-                        <icon-more-vertical/>
-                    </template>
-                </a-button>
-                <template #content>
-                    <a-doption @click="switchFeature()">
-                        <template #icon>
-                            <icon-heart-fill v-if="collect"/>
-                            <icon-heart v-else/>
-                        </template>
-                        {{ collect ? '取消收藏' : '添加收藏' }}
-                    </a-doption>
-                    <a-doption @click="editTo()">
-                        <template #icon>
-                            <icon-edit/>
-                        </template>
-                        编辑
-                    </a-doption>
-                    <a-doption @click="removeBy()">
-                        <template #icon>
-                            <icon-delete/>
-                        </template>
-                        删除
-                    </a-doption>
-                </template>
-            </a-dropdown>
-        </template>
-    </a-list-item>
+        </div>
+    </a-card>
 </template>
 <script lang="ts" setup>
 import {randomColor} from "@/utils/BrowserUtil";
@@ -134,4 +137,26 @@ function removeFeature() {
 
 </script>
 <style lang="less">
+.home-item {
+    margin: 4px 0;
+    &:first-child {
+        margin-top: 0;
+    }
+    &:last-child {
+        margin-bottom: 0;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+    }
+    .desc {
+        font-size: 0.9em;
+        color: var(--color-neutral-6);
+    }
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 7px;
+    }
+}
 </style>
