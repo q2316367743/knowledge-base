@@ -3,6 +3,7 @@ import {defineStore} from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {toRaw} from "vue";
+import {cloneDeep} from "lodash-es";
 
 export const useCategoryStore = defineStore('category', {
     state: () => ({
@@ -37,8 +38,8 @@ export const useCategoryStore = defineStore('category', {
             if (index === -1) {
                 return Promise.reject(`分类【${id}】不存在`);
             }
-            const name = await MessageBoxUtil.prompt("请输入分类名", "修改分类", {
-                confirmButtonText: "新增",
+            const name = await MessageBoxUtil.prompt("请输入分类名", "修改分类名称", {
+                confirmButtonText: "更新",
                 cancelButtonText: "取消",
                 inputValue: this.categories[index].name
             });
@@ -57,11 +58,15 @@ export const useCategoryStore = defineStore('category', {
             this.categories.splice(index, 1);
             await this._sync();
         },
+        async save(categories: Array<Category>) {
+            this.categories = categories;
+            await this._sync();
+        },
         async _sync() {
             const res = await utools.db.promises.put({
                 _id: LocalNameEnum.CATEGORY,
                 _rev: this.rev,
-                value: toRaw(this.categories)
+                value: cloneDeep(this.categories)
             });
             if (res.error) {
                 return Promise.reject(res.message);

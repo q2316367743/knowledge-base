@@ -5,21 +5,32 @@
             <a-button type="primary" @click="add()">新增</a-button>
         </div>
         <div class="container">
-            <a-list :virtual-list-props="{height: height - 47}" :data="results">
-                <template #item="{ item, index }">
-                    <a-list-item>
-                        <a-list-item-meta :title="item.item.name" :description="item.item.description"/>
-                        <template #actions>
+            <a-table :data="items" :virtual-list-props="{height: height - 87}" :pagination="false" scrollbar
+                     :draggable="draggable" @change="handleDraggable">
+                <template #columns>
+                    <a-table-column title="分类名称" data-index="name"/>
+                    <a-table-column title="创建时间" :width="190">
+                        <template #cell="{record }">
+                            {{ renderDate(record.createTime) }}
+                        </template>
+                    </a-table-column>
+                    <a-table-column title="最后更新时间" :width="190">
+                        <template #cell="{record }">
+                            {{ renderDate(record.updateTime) }}
+                        </template>
+                    </a-table-column>
+                    <a-table-column title="操作" :width="64">
+                        <template #cell="{record}">
                             <a-button-group type="text">
                                 <a-tooltip content="修改字典">
-                                    <a-button @click="update(item.item.id)">
+                                    <a-button @click="update(record.id)">
                                         <template #icon>
                                             <icon-edit/>
                                         </template>
                                     </a-button>
                                 </a-tooltip>
                                 <a-popconfirm content="是否删除此字典，删除后无法恢复！"
-                                              @ok="remove(item.item.id)"
+                                              @ok="remove(record.id)"
                                               ok-text="删除">
                                     <a-button status="danger">
                                         <template #icon>
@@ -29,24 +40,27 @@
                                 </a-popconfirm>
                             </a-button-group>
                         </template>
-                    </a-list-item>
+                    </a-table-column>
                 </template>
-            </a-list>
+            </a-table>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {statistics} from "@/global/BeanFactory";
+import {toDateString} from "xe-utils";
+import {TableDraggable} from "@arco-design/web-vue";
 
 
 const keyword = ref('');
 const categories = computed(() => useCategoryStore().categories);
-const height = computed(() => useGlobalStore().size.height)
+const height = computed(() => useGlobalStore().size.height);
+const draggable = reactive<TableDraggable>({type: 'handle', width: 40});
 
 
 const {results} = useFuse(keyword, categories, {
@@ -58,32 +72,41 @@ const {results} = useFuse(keyword, categories, {
         }]
     }
 });
+const items = computed(() => results.value.map(e => e.item));
+
+function renderDate(date: Date | string) {
+    return toDateString(date);
+}
 
 function add() {
     statistics.access("新增分类");
     useCategoryStore().add()
-        .then(() => MessageUtil.success("新增成功"))
-        .catch(e => {
-            if (e !== 'cancel') {
-                MessageUtil.error("新增失败", e)
-            }
-        });
+            .then(() => MessageUtil.success("新增成功"))
+            .catch(e => {
+                if (e !== 'cancel') {
+                    MessageUtil.error("新增失败", e)
+                }
+            });
 }
 
 function update(id: number) {
     useCategoryStore().update(id)
-        .then(() => MessageUtil.success("更新成功"))
-        .catch(e => {
-            if (e !== 'cancel') {
-                MessageUtil.error("更新失败", e)
-            }
-        });
+            .then(() => MessageUtil.success("更新成功"))
+            .catch(e => {
+                if (e !== 'cancel') {
+                    MessageUtil.error("更新失败", e)
+                }
+            });
 }
 
 function remove(id: number) {
     useCategoryStore().remove(id)
-        .then(() => MessageUtil.success("更新成功"))
-        .catch(e => MessageUtil.error("更新失败", e));
+            .then(() => MessageUtil.success("更新成功"))
+            .catch(e => MessageUtil.error("更新失败", e));
+}
+
+function handleDraggable(categories: any) {
+    useCategoryStore().save(categories)
 }
 
 
