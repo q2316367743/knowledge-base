@@ -53,7 +53,7 @@ const plugins = [
     markdownTheme({
         locale: zhHansMarkdownTheme,
         themes,
-        defaultTheme: useSettingStore().articleTheme
+        defaultTheme: 'juejin'
     }),
     highlightTheme({
         locale: zhHansHighlightTheme,

@@ -1,38 +1,53 @@
 <template>
-    <div class="home">
-        <div class="header">
-            <a-tabs v-model:active-key="activeKey">
-                <a-tab-pane :key="0" title="全部"/>
-                <a-tab-pane v-for="category in categories" :title="category.name" :key="category.id"/>
-                <template #extra>
-                    <a-button-group type="primary">
-                        <a-button @click="triggerSearch()" style="margin-right: 7px">
-                            <template #icon>
-                                <icon-search/>
-                            </template>
-                        </a-button>
-                        <a-button @click="toEditor()" style="margin-right: 7px">
-                            <template #icon>
-                                <icon-plus/>
-                            </template>
-                        </a-button>
-                        <a-button @click="toImport()">
-                            <template #icon>
-                                <icon-import/>
-                            </template>
-                        </a-button>
-                    </a-button-group>
-                </template>
-            </a-tabs>
-        </div>
-        <div class="container">
-            <a-list :data="articles" :virtual-list-props="virtualListProps" v-if="render" :bordered="false" :split="false">
-                <template #item="{item}">
-                    <home-item :article="item" @remove="remove()"/>
-                </template>
-            </a-list>
-        </div>
-    </div>
+    <a-layout class="home">
+        <a-layout-header class="header">
+            <a-breadcrumb>
+                <a-breadcrumb-item>
+                    <a-link @click="clearFilter()">
+                        <icon-home/>
+                    </a-link>
+                </a-breadcrumb-item>
+                <a-breadcrumb-item v-for="breadcrumb in breadcrumbs"> {{ breadcrumb }}</a-breadcrumb-item>
+            </a-breadcrumb>
+            <a-button-group type="text">
+                <a-button @click="triggerSearch()" style="margin-right: 7px">
+                    <template #icon>
+                        <icon-search/>
+                    </template>
+                </a-button>
+                <a-button @click="toEditor()" style="margin-right: 7px">
+                    <template #icon>
+                        <icon-plus/>
+                    </template>
+                </a-button>
+                <a-button @click="collapsed = !collapsed">
+                    <template #icon>
+                        <icon-layout/>
+                    </template>
+                </a-button>
+            </a-button-group>
+        </a-layout-header>
+        <a-layout class="container">
+            <a-layout-content style="padding-right: 6px">
+                <a-list :max-height="maxHeight" v-if="render" :bordered="false"
+                        :split="false">
+                    <home-item v-for="article in articles" :article="article" :key="article.id" @remove="remove()"
+                               @use-tag="useTag"/>
+                </a-list>
+            </a-layout-content>
+            <a-layout-sider :width="200" :collapsed-width="0" v-model:collapsed="collapsed">
+                <a-divider>分类</a-divider>
+                <a-link v-for="category in categories" @click="useCategory(category.id, category.name)"
+                        :key="category.id">
+                    {{ category.name }}
+                </a-link>
+                <a-divider>标签</a-divider>
+                <a-tag v-for="tag in articleTags" @click="useTag(tag)" :color="randomColor(tag)" :key="tag"
+                       style="margin-left: 4px;cursor:pointer;">{{ tag }}
+                </a-tag>
+            </a-layout-sider>
+        </a-layout>
+    </a-layout>
 </template>
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
@@ -42,23 +57,19 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useSearchEvent} from "@/global/BeanFactory";
 import HomeItem from './item.vue';
+import {ArticleIndex} from "@/entity/article";
+import {randomColor} from "@/utils/BrowserUtil";
 
 const router = useRouter();
 
 const render = ref(true);
 const activeKey = ref(0);
+const articles = ref<Array<ArticleIndex>>(new Array<ArticleIndex>());
+const collapsed = ref(true);
+const breadcrumbs = ref<Array<string>>([]);
 const categories = computed(() => useCategoryStore().categories);
-const articles = computed(() => {
-    if (activeKey.value === 0) {
-        return useArticleStore().articles;
-    } else {
-        return useArticleStore().articles.filter(a => a.categoryId === activeKey.value);
-    }
-});
-const virtualListProps = computed(() => ({
-    height: useGlobalStore().size.height - 54,
-    threshold: 20
-}))
+const articleTags = computed(() => useArticleStore().articleTags);
+const maxHeight = computed(() => useGlobalStore().size.height - 47);
 
 function toEditor() {
     router.push("/editor/0")
@@ -73,31 +84,68 @@ function remove() {
     nextTick(() => render.value = true);
 }
 
-function toImport() {
-    utools.redirect('听雨html转markdown', '')
+// 筛选
+function clearFilter() {
+    breadcrumbs.value = [];
+    collapsed.value = true
+    filter();
 }
 
+function useCategory(id: number, name: string) {
+    breadcrumbs.value = ['分类', name];
+    filter(true, id + '')
+}
+
+function useTag(tag: string) {
+    breadcrumbs.value = ['标签', tag];
+    filter(false, tag);
+}
+
+
+function filter(isCategory: boolean | null = null, keyword: string = '') {
+    const items = useArticleStore().articles;
+    if (isCategory !== null) {
+        if (isCategory) {
+            articles.value = items.filter(e => (e.categoryId + '') === keyword);
+        } else {
+            articles.value = items.filter(e => {
+                for (let tag of e.tags) {
+                    if (tag == keyword) {
+                        return true;
+                    }
+                }
+                return false;
+            })
+        }
+    } else {
+        articles.value = items;
+    }
+}
+
+filter();
 
 </script>
 <style scoped lang="less">
 .home {
     position: absolute;
     top: 0;
-    left: 7px;
-    right: 7px;
-    bottom: 7px;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     .header {
-        height: 47px;
-        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 7px;
     }
 
     .container {
         position: absolute;
-        top: 47px;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        top: 40px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+        width: auto;
     }
 
 }
