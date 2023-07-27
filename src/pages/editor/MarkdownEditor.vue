@@ -27,6 +27,7 @@ import zhHansImageZoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Hans.j
 import zhHansAlign from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
 import zhHansHighlightTheme from '@ziuchen/bytemd-plugin-highlight-theme/locales/zh_Hans.json'
 import zhHansMarkdownTheme from '@ziuchen/bytemd-plugin-markdown-theme/locales/zh_Hans.json'
+import {useSettingStore} from "@/store/db/SettingStore";
 
 const plugins = [
     gfm({
@@ -52,12 +53,12 @@ const plugins = [
     markdownTheme({
         locale: zhHansMarkdownTheme,
         themes,
-        defaultTheme: 'juejin'
+        defaultTheme: useSettingStore().articleTheme
     }),
     highlightTheme({
         locale: zhHansHighlightTheme,
         highlights,
-        defaultHighlight: 'atom-one-dark'
+        defaultHighlight: useSettingStore().codeTheme
     }),
 ]
 

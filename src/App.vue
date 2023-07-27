@@ -1,5 +1,6 @@
 <template>
     <link :href="`./highlight.js/styles/${codeTheme}.css`" type="text/css" rel="stylesheet">
+    <link :href="`./article/${articleTheme}.css`" type="text/css" rel="stylesheet">
     <div class="app">
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout>
@@ -98,7 +99,7 @@ export default defineComponent({
     }),
     computed: {
         ...mapState(useGlobalStore, ['isDark', 'loading', 'loadingText']),
-        ...mapState(useSettingStore, ['codeTheme']),
+        ...mapState(useSettingStore, ['codeTheme', "articleTheme"]),
     },
     watch: {
         '$route': {

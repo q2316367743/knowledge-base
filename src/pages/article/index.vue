@@ -44,19 +44,6 @@ import createBlogDirectory from "@/components/RenderToc/render";
 // 主题
 import {onAfterRender, renderTemplate} from "@/pages/article/func";
 import './index.less';
-import './theme/zui.less';
-import './theme/heti.less';
-import './theme/juejin.less';
-import './theme/tailwind-blue.css';
-import './theme/channing-cyan.css';
-import './theme/chinese-red.css';
-import './theme/condensed-night-purple.css';
-import './theme/devui-blue.css';
-import './theme/geek-black.css';
-import './theme/jzman.css';
-import './theme/smart-blue.css';
-import './theme/v-green.css';
-import './theme/vuepress.css';
 
 
 const route = useRoute();

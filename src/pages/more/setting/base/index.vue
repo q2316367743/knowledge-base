@@ -14,8 +14,6 @@
             <a-form-item label="文章主题">
                 <a-select v-model="instance.articleTheme" style="width: 200px">
                     <a-option :value="ArticleThemeEnum.TAILWIND_BLUE">天空蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.ZUI">Zui</a-option>
-                    <a-option :value="ArticleThemeEnum.HE_TI">赫蹏</a-option>
                     <a-option :value="ArticleThemeEnum.JUE_JIN">掘金</a-option>
                     <a-option :value="ArticleThemeEnum.CHANNING_CYAN">柠青</a-option>
                     <a-option :value="ArticleThemeEnum.CHINESE_RED">中国红</a-option>
@@ -26,6 +24,9 @@
                     <a-option :value="ArticleThemeEnum.SMART_BLUE">灵动蓝</a-option>
                     <a-option :value="ArticleThemeEnum.V_GREEN">微绿</a-option>
                     <a-option :value="ArticleThemeEnum.VUEPRESS">vuepress</a-option>
+                    <a-option :value="ArticleThemeEnum.HE_TI">赫蹏</a-option>
+                    <a-option :value="ArticleThemeEnum.GITHUB">Github</a-option>
+                    <a-option :value="ArticleThemeEnum.ZUI">Zui</a-option>
                 </a-select>
                 <template #help>
                     <span v-html="renderHelp(instance.articleTheme)"></span>

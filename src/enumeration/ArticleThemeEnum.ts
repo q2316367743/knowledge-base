@@ -60,7 +60,12 @@ enum ArticleThemeEnum {
     /**
      * vuepress
      */
-    VUEPRESS = 'vuepress'
+    VUEPRESS = 'vuepress',
+
+    /**
+     * github
+     */
+    GITHUB = 'article-github'
 
 }
 
