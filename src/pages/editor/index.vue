@@ -35,7 +35,7 @@
                     </template>
                 </a-form-item>
                 <a-form-item label="来源链接">
-                    <a-input v-model="base.sourceUrl" :max-length="32"/>
+                    <a-input v-model="base.sourceUrl" :max-length="255"/>
                 </a-form-item>
                 <a-form-item label="分类">
                     <a-select v-model="extra.categoryId" placeholder="请选择分类">

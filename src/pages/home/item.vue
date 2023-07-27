@@ -219,16 +219,16 @@ function removeFeature() {
         height: 20px;
         position: absolute;
         top: 0;
-        right: 0;
+        left: 0;
 
         .more-tips {
             position: absolute;
             top: 0;
-            right: 0;
+            left: 0;
             width: 0;
             height: 0;
             border: 5px solid;
-            border-color: rgb(var(--arcoblue-4)) rgb(var(--arcoblue-4)) transparent transparent;
+            border-color:  rgb(var(--arcoblue-4)) transparent transparent  rgb(var(--arcoblue-4))  ;
             border-radius: 2px;
         }
     }

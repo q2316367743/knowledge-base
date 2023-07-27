@@ -18,12 +18,12 @@
                             </template>
                             空间
                         </a-menu-item>
-                        <a-menu-item key="/html">
-                            <template #icon>
-                                <icon-file />
-                            </template>
-                            离线网页
-                        </a-menu-item>
+<!--                        <a-menu-item key="/html">-->
+<!--                            <template #icon>-->
+<!--                                <icon-file />-->
+<!--                            </template>-->
+<!--                            离线网页-->
+<!--                        </a-menu-item>-->
                         <a-menu-item key="/timeline">
                             <template #icon>
                                 <icon-time-line/>
