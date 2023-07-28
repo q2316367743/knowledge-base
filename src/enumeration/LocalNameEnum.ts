@@ -12,6 +12,8 @@ enum LocalNameEnum {
 
     ARTICLE_COMMENT = '/article/comment/',
 
+    ARTICLE_MARK = '/article/mark/',
+
     SETTING_BASE = '/local/setting/base',
 
     ZONE = '/local/zone',

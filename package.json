@@ -38,10 +38,12 @@
     "markdown-it": "^13.0.1",
     "pinia": "^2.0.34",
     "relation-graph": "^2.0.26",
+    "tippy.js": "^6.3.7",
     "vite-plugin-vue-devtools": "^0.5.1",
     "vue": "^3.2.47",
     "vue-router": "^4.0.13",
     "vue3-calendar-heatmap": "^2.0.5",
+    "web-highlighter": "^0.7.4",
     "xe-utils": "^3.5.7"
   },
   "devDependencies": {
