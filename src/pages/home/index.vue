@@ -38,12 +38,12 @@
             <a-layout-sider :width="200" :collapsed-width="0" v-model:collapsed="collapsed">
                 <a-divider>分类</a-divider>
                 <a-link v-for="category in categories" @click="useCategory(category.id, category.name)"
-                        :key="category.id">
+                        :key="category.id" style="margin-bottom: 4px;">
                     {{ category.name }}
                 </a-link>
                 <a-divider>标签</a-divider>
                 <a-tag v-for="tag in articleTags" @click="useTag(tag)" :color="randomColor(tag)" :key="tag"
-                       style="margin-left: 4px;cursor:pointer;">{{ tag }}
+                       style="margin-left: 4px;margin-bottom: 4px;cursor:pointer;">{{ tag }}
                 </a-tag>
             </a-layout-sider>
         </a-layout>

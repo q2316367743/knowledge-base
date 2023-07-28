@@ -54,7 +54,7 @@
         </div>
         <div class="more-tips-wrap" v-if="item.source != '' || base.sourceUrl !== ''" @click="toSource()"
              :style="{cursor: base.sourceUrl !== '' ? 'pointer' : ''}">
-            <a-tooltip :content="item.source || base.sourceUrl">
+            <a-tooltip :content="item.source || base.sourceUrl" position="right">
                 <div class="more-tips"></div>
             </a-tooltip>
         </div>
