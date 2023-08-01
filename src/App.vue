@@ -14,16 +14,16 @@
                         </a-menu-item>
                         <a-menu-item key="/zone">
                             <template #icon>
-                                <icon-qq-zone />
+                                <icon-qq-zone/>
                             </template>
                             空间
                         </a-menu-item>
-<!--                        <a-menu-item key="/html">-->
-<!--                            <template #icon>-->
-<!--                                <icon-file />-->
-<!--                            </template>-->
-<!--                            离线网页-->
-<!--                        </a-menu-item>-->
+                        <!--                        <a-menu-item key="/html">-->
+                        <!--                            <template #icon>-->
+                        <!--                                <icon-file />-->
+                        <!--                            </template>-->
+                        <!--                            离线网页-->
+                        <!--                        </a-menu-item>-->
                         <a-menu-item key="/timeline">
                             <template #icon>
                                 <icon-time-line/>
@@ -47,6 +47,12 @@
                             <a-menu-item key="/more/setting/category">
                                 分类设置
                             </a-menu-item>
+                            <a-menu-item key="/more/attachment">
+                                <template #icon>
+                                    <icon-attachment/>
+                                </template>
+                                附件
+                            </a-menu-item>
                             <a-menu-item key="/more/recommend">
                                 <template #icon>
                                     <icon-thumb-up/>
@@ -68,7 +74,7 @@
             </a-layout>
         </a-spin>
         <sub-input/>
-        <markdown-import />
+        <markdown-import/>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
     </div>
 </template>
@@ -157,12 +163,12 @@ export default defineComponent({
         onPluginEnter(operate: string, preload: string, extra: string) {
             if (operate === 'article') {
                 this.$router.push('/article/' + preload);
-            }else if (operate === 'function') {
+            } else if (operate === 'function') {
                 if (preload === 'import') {
                     useImportEvent.emit(extra);
-                }else if (preload === 'application') {
+                } else if (preload === 'application') {
                     this.$router.push('/home');
-                }else if (preload === 'add') {
+                } else if (preload === 'add') {
                     sessionStorage.setItem("extra", extra);
                     this.$router.push('/editor/0')
                 }

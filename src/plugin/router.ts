@@ -44,6 +44,10 @@ const router = createRouter({
         path: "/more/setting/category",
         component: () => import("@/pages/more/setting/category/index.vue")
     }, {
+        name: "附件管理",
+        path: "/more/attachment",
+        component: () => import("@/pages/more/attachment/index.vue")
+    }, {
         name: "推荐",
         path: "/more/recommend",
         component: () => import("@/pages/more/recommend/index.vue")
