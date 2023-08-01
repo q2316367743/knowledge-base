@@ -8,7 +8,7 @@
             </div>
             <div class="extra">
                 <a-dropdown trigger="click" position="br">
-                    <a-button type="text" style="margin-left: 14px;">
+                    <a-button type="text">
                         <template #icon>
                             <icon-more-vertical/>
                         </template>
@@ -192,15 +192,19 @@ function removeFeature() {
     }
 
     .header {
-        display: flex;
-        justify-content: space-between;
-        overflow-x: hidden;
+        display: grid;
+        grid-template-columns: 1fr 32px;
 
         .title {
+            overflow-x: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow-wrap: break-word;
+            height: 32px;
+            line-height: 32px;
         }
+
+        width: 100%;
     }
 
     .desc {
@@ -228,7 +232,7 @@ function removeFeature() {
             width: 0;
             height: 0;
             border: 5px solid;
-            border-color:  rgb(var(--arcoblue-4)) transparent transparent  rgb(var(--arcoblue-4))  ;
+            border-color: rgb(var(--arcoblue-4)) transparent transparent rgb(var(--arcoblue-4));
             border-radius: 2px;
         }
     }

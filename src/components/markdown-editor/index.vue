@@ -28,6 +28,10 @@ import zhHansAlign from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
 import zhHansHighlightTheme from '@ziuchen/bytemd-plugin-highlight-theme/locales/zh_Hans.json'
 import zhHansMarkdownTheme from '@ziuchen/bytemd-plugin-markdown-theme/locales/zh_Hans.json'
 import {useSettingStore} from "@/store/db/SettingStore";
+import {enhancePlugin} from "@/components/markdown-editor/plugins/enhancePlugin";
+import {imageUploadPlugin} from "@/components/markdown-editor/plugins/imageUploadPlugin";
+import {customImagePlugin} from "@/components/markdown-editor/plugins/customImagePlugin";
+import {pasteImagePlugin} from "@/components/markdown-editor/plugins/pasteImagePlugin";
 
 const plugins = [
     gfm({
@@ -60,6 +64,10 @@ const plugins = [
         highlights,
         defaultHighlight: useSettingStore().codeTheme
     }),
+    enhancePlugin(),
+    imageUploadPlugin(),
+    customImagePlugin(),
+    pasteImagePlugin()
 ]
 
 export default defineComponent({

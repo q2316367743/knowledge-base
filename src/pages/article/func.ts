@@ -1,7 +1,17 @@
+import {loadImageByAsync, loadImageBySync} from "@/components/markdown-editor/common";
+
 export function onAfterRender() {
     document.querySelectorAll("#article-container img")
-        .forEach((ele: any) => {
-            ele.onclick = () => window.onImagePreview(ele.src)
+        .forEach((image: any) => {
+            if (image.src.startsWith("attachment:")) {
+                const attachmentId = image.src.split(':')[1];
+                loadImageByAsync(attachmentId).then(url => {
+                    image.src =url;
+                    image.onclick = () => window.onImagePreview(image.src)
+                })
+            }else {
+                image.onclick = () => window.onImagePreview(image.src)
+            }
         })
 }
 

@@ -39,6 +39,7 @@
     "pinia": "^2.0.34",
     "relation-graph": "^2.0.26",
     "tippy.js": "^6.3.7",
+    "unist-util-visit": "^5.0.0",
     "vite-plugin-vue-devtools": "^0.5.1",
     "vue": "^3.2.47",
     "vue-router": "^4.0.13",

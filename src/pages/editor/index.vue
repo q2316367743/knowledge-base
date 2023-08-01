@@ -66,7 +66,7 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleSource} from "@/entity/article";
-import MarkdownEditor from "@/pages/editor/MarkdownEditor.vue";
+import MarkdownEditor from "@/components/markdown-editor/index.vue";
 
 export default defineComponent({
     name: 'editor',
@@ -100,13 +100,13 @@ export default defineComponent({
     },
     mounted() {
         this.init()
-            .then(() => {
-                const extra = sessionStorage.getItem('extra');
-                sessionStorage.removeItem('extra');
-                if (extra) {
-                    this.content = extra;
-                }
-            });
+                .then(() => {
+                    const extra = sessionStorage.getItem('extra');
+                    sessionStorage.removeItem('extra');
+                    if (extra) {
+                        this.content = extra;
+                    }
+                });
     },
     methods: {
         async init() {
@@ -151,12 +151,12 @@ export default defineComponent({
                     categoryId: this.extra.categoryId || null,
                     source: this.extra.source
                 }, this.base, this.content)
-                    .then(id => {
-                        this.id = id;
-                        MessageUtil.success("保存文章成功");
-                        this.$router.push("/home");
-                    })
-                    .catch(e => MessageUtil.error("保存文章失败", e));
+                        .then(id => {
+                            this.id = id;
+                            MessageUtil.success("保存文章成功");
+                            this.$router.push("/home");
+                        })
+                        .catch(e => MessageUtil.error("保存文章失败", e));
             } else {
                 useArticleStore().update(this.id, {
                     name: this.title,
@@ -166,11 +166,11 @@ export default defineComponent({
                     source: this.extra.source,
                     createTime: this.extra.createTime
                 }, this.base, this.content)
-                    .then(() => {
-                        MessageUtil.success("保存文章成功");
-                        this.$router.push("/home");
-                    })
-                    .catch(e => MessageUtil.error("保存文章失败", e));
+                        .then(() => {
+                            MessageUtil.success("保存文章成功");
+                            this.$router.push("/home");
+                        })
+                        .catch(e => MessageUtil.error("保存文章失败", e));
             }
         }
     }
