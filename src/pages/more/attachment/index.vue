@@ -66,7 +66,7 @@ function pre() {
         openClick = false;
         const items = document.querySelectorAll(".more-attachment .item");
         if (side.value && items.length > 0) {
-            side.value.append(items[items.length - 1]);
+            side.value.prepend(items[items.length - 1]);
             setTimeout(() => openClick = true, 1000);
         } else {
             openClick = true
