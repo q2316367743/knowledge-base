@@ -61,7 +61,8 @@ export default class Statistics {
             operate,
             additional,
             platform: "utools",
-            system
+            system,
+            version: Constant.version
         });
 
     }
