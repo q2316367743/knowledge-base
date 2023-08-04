@@ -24,7 +24,7 @@
 </template>
 <script lang="ts" setup>
 import {useRoute, useRouter} from "vue-router";
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref} from "vue";
 import {parseInt} from "lodash-es";
 import html2canvas from "html2canvas";
 import Highlighter from 'web-highlighter';
@@ -89,6 +89,8 @@ onMounted(() => {
             })
 });
 
+const urls = new Array<string>();
+
 async function init() {
     id = route.params.id as string;
     if (!id) {
@@ -109,12 +111,15 @@ async function init() {
     if (previewWrap) {
         preview.value = (previewWrap.value as ArticlePreview).html;
         await nextTick(() => {
-            onAfterRender();
+            onAfterRender(url => urls.push(url));
             createBlogDirectory("article-container-content-wrap", 20, previewEle.value as HTMLDivElement);
             renderMark();
         });
     }
 }
+
+// 释放资源
+onUnmounted(() => urls.forEach(url => window.URL.revokeObjectURL(url)));
 
 
 let markLock = false;

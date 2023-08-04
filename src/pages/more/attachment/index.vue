@@ -6,8 +6,8 @@
         </div>
         <div class="buttons">
             <a-button type="primary" @click="pre()">上一张</a-button>
-            <a-button type="primary" style="margin: 0 7px">下载图片</a-button>
-            <a-button type="primary" status="danger" style="margin: 0 7px 0 0;">删除图片</a-button>
+            <a-button type="primary" @click="copy()" style="margin: 0 7px ;">复制链接</a-button>
+            <a-button type="primary" @click="remove()" status="danger" style="margin: 0 7px 0 0;">删除图片</a-button>
             <a-button type="primary" @click="next()">下一张</a-button>
         </div>
     </div>
@@ -15,6 +15,8 @@
 <script lang="ts" setup>
 import {onUnmounted, ref} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageUtil from "@/utils/MessageUtil";
 
 const attachments = ref(new Array<string>());
 let resources = new Array<string>();
@@ -73,6 +75,30 @@ function pre() {
         }
 
     }
+}
+
+function copy() {
+    const item = document.querySelector(".more-attachment .item:nth-child(1)")!;
+    let id = item?.attributes.getNamedItem('data-id')?.value;
+    const index = id?.lastIndexOf("/") || 0;
+    utools.copyText(`![](attachment:${id?.substring(index + 1)})`);
+    MessageUtil.success("成功复制到剪切板");
+}
+
+function remove() {
+    MessageBoxUtil.confirm("删除此附件后，使用的文章将无法展示附件", "删除确认", {
+        confirmButtonText: "删除",
+        cancelButtonText: "取消"
+    }).then(() => {
+        const item = document.querySelector(".more-attachment .item:nth-child(1)")!;
+        utools.db.promises.remove(item?.attributes.getNamedItem('data-id')?.value!)
+                .then(() => {
+                    if (side.value) {
+                        side.value.removeChild(item);
+                        MessageUtil.success("删除成功");
+                    }
+                }).catch(e => MessageUtil.error("删除失败"));
+    })
 }
 
 </script>
