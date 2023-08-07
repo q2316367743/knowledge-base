@@ -47,7 +47,7 @@ let interval = setInterval(() => {
             visible.value = true;
         }
         keyword.value = text;
-    }, '请输入关键字', false);
+    }, '在文章内搜索', false);
     if (subInput) {
         clearInterval(interval);
     }
