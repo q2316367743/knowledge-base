@@ -22,7 +22,7 @@
     </a-modal>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
+import {computed, onUnmounted, ref, watch} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useRouter} from "vue-router";
@@ -76,6 +76,9 @@ watch(() => visible.value, newValue => {
         utools.setSubInputValue("");
     }
 });
+
+// 离开时移除子输入框
+onUnmounted(() => utools.removeSubInput());
 
 useSearchEvent.on(() => visible.value = true);
 

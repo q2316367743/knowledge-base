@@ -8,7 +8,8 @@
                     <a-scrollbar style="height:100%;overflow: auto;" type="track">
                         <article class="info" :class="articleTheme" id="article-container-content-wrap">
                             <article-info :value="article" :base="base" v-if="!loading"/>
-                            <a-typography class="content" v-html="preview" id="article-container-content"></a-typography>
+                            <a-typography class="content" v-html="preview"
+                                          id="article-container-content"></a-typography>
                         </article>
                         <article-comment :id="articleId" v-if="articleId !== 0"/>
                         <a-result status="404" title="加载中" v-if="loading"></a-result>
@@ -20,6 +21,7 @@
             </a-layout-sider>
             <a-back-top target-container=".article .arco-scrollbar-container"/>
         </a-layout>
+        <article-search/>
     </a-layout>
 </template>
 <script lang="ts" setup>
@@ -42,9 +44,10 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
 import ArticleHeader from './components/header.vue';
 import ArticleComment from './components/comment.vue';
+import ArticleSearch from './components/search.vue';
 import ArticleInfo from "@/pages/article/components/info.vue";
-import createBlogDirectory from "@/components/RenderToc/render";
 // 主题
+import createBlogDirectory from "@/components/RenderToc/render";
 import {onAfterRender, renderTemplate} from "@/pages/article/func";
 import './index.less';
 import 'tippy.js/dist/tippy.css';
@@ -119,7 +122,12 @@ async function init() {
 }
 
 // 释放资源
-onUnmounted(() => urls.forEach(url => window.URL.revokeObjectURL(url)));
+onUnmounted(() => {
+    // 释放资源
+    urls.forEach(url => window.URL.revokeObjectURL(url));
+    // 移除子输入框
+    utools.removeSubInput();
+});
 
 
 let markLock = false;

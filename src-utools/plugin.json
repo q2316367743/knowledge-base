@@ -59,8 +59,28 @@
                 {
                     "type": "over",
                     "label": "新增文章",
-                    "minLength": 2,
+                    "minLength": 20,
                     "maxLength": 999999
+                }
+            ]
+        },
+        {
+            "code": "function:search",
+            "explain": "听雨文件浏览器",
+            "icon": "public/logo.png",
+            "mainPush": true,
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                {
+                    "type": "over",
+                    "label": "文章搜索",
+                    "exclude": "\n/[\\\/\t\n]/",
+                    "minLength": 1,
+                    "maxLength": 500
                 }
             ]
         }

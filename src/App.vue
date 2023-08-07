@@ -69,11 +69,10 @@
                     </a-menu>
                 </a-layout-sider>
                 <a-layout-content>
-                    <router-view/>
+                    <router-view v-if="show"/>
                 </a-layout-content>
             </a-layout>
         </a-spin>
-        <sub-input/>
         <markdown-import/>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
     </div>
@@ -90,18 +89,19 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 // 组件
 import IconTimeLine from "@/icon/IconTimeLine.vue";
-import SubInput from '@/components/SubInput/index.vue';
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
+import {ArticleIndex} from "@/entity/article";
 
 export default defineComponent({
     name: 'app',
-    components: {IconTimeLine, SubInput, MarkdownImport},
+    components: {IconTimeLine, MarkdownImport},
     data: () => ({
         selectedKeys: ['/dashboard'],
         preview: {
             visible: false,
             src: ''
-        }
+        },
+        show: true
     }),
     computed: {
         ...mapState(useGlobalStore, ['isDark', 'loading', 'loadingText']),
@@ -143,6 +143,30 @@ export default defineComponent({
                 src
             }
         }
+        // 适配新版，快速启动
+        utools.onMainPush(action => {
+            if (action.code !== "function:search") {
+                return [];
+            }
+            // 快速启动
+            const storages = new Array<ArticleIndex>();
+            for (let storage of useArticleStore().articles) {
+                if (storage.name.indexOf(action.payload) > -1) {
+                    storages.push(storage);
+                }
+            }
+            return storages.map(e => ({
+                icon: 'public/logo.png',
+                text: e.name,
+                title: e.id + ''
+            }))
+        }, action => {
+            if (this.$route.path.startsWith("/article")) {
+                this.show = false;
+            }
+            this.$router.push('/article/' + action.option.title).finally(() => this.show = true);
+            return true;
+        })
     },
     methods: {
         theme() {

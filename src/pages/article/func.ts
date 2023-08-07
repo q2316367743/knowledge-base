@@ -1,4 +1,4 @@
-import {loadImageByAsync, loadImageBySync} from "@/components/markdown-editor/common";
+import {loadImageByAsync} from "@/components/markdown-editor/common";
 
 export function onAfterRender(callback: (url: string) => void) {
     document.querySelectorAll("#article-container img")
@@ -8,6 +8,7 @@ export function onAfterRender(callback: (url: string) => void) {
                 loadImageByAsync(attachmentId).then(url => {
                     image.src = url;
                     image.onclick = () => window.onImagePreview(image.src)
+                    callback(url);
                 })
             } else {
                 image.onclick = () => window.onImagePreview(image.src)

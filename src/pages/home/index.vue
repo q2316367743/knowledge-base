@@ -47,18 +47,23 @@
                 </a-tag>
             </a-layout-sider>
         </a-layout>
+        <sub-input/>
     </a-layout>
 </template>
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
 import {computed, nextTick, ref} from "vue";
+// 存储
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
+// 其他
 import {useSearchEvent} from "@/global/BeanFactory";
-import HomeItem from './item.vue';
 import {ArticleIndex} from "@/entity/article";
 import {randomColor} from "@/utils/BrowserUtil";
+// 组件
+import HomeItem from './item.vue';
+import SubInput from '@/components/SubInput/index.vue';
 
 const router = useRouter();
 
