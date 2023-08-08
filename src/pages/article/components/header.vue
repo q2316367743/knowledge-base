@@ -9,16 +9,14 @@
             <div style="margin-left: 7px">{{ props.name }}</div>
         </a-button-group>
         <a-button-group type="text">
-            <a-button @click="fullscreen.toggle()">
+            <a-tooltip :content="isMark ? '禁用标记' : '启用标记'">
+                <a-switch type="line" v-model="isMark" style="margin-right: 7px">
+                    <template checked>启用</template>
+                </a-switch>
+            </a-tooltip>
+            <a-button @click="emit('to-editor')">
                 <template #icon>
-                    <icon-fullscreen-exit v-if="fullscreen.isFullscreen.value"/>
-                    <icon-fullscreen v-else/>
-                </template>
-            </a-button>
-            <a-button @click="switchDark()">
-                <template #icon>
-                    <icon-sun v-if="isDark"/>
-                    <icon-moon v-else/>
+                    <icon-edit/>
                 </template>
             </a-button>
             <a-dropdown position="br">
@@ -34,11 +32,35 @@
                     <a-doption @click="emit('download', 'image')">导出为 图片</a-doption>
                 </template>
             </a-dropdown>
-            <a-button @click="settingVisible = true">
-                <template #icon>
-                    <icon-settings/>
+            <a-dropdown trigger="click"  position="br">
+                <a-button type="text">
+                    <template #icon>
+                        <icon-more/>
+                    </template>
+                </a-button>
+                <template #content>
+                    <a-doption @click="settingVisible = true">
+                        <template #icon>
+                            <icon-settings/>
+                        </template>
+                        设置
+                    </a-doption>
+                    <a-doption @click="fullscreen.toggle()">
+                        <template #icon>
+                            <icon-fullscreen-exit v-if="fullscreen.isFullscreen.value"/>
+                            <icon-fullscreen v-else/>
+                        </template>
+                        全屏
+                    </a-doption>
+                    <a-doption @click="switchDark()">
+                        <template #icon>
+                            <icon-sun v-if="isDark"/>
+                            <icon-moon v-else/>
+                        </template>
+                        模式
+                    </a-doption>
                 </template>
-            </a-button>
+            </a-dropdown>
             <a-button @click="emit('switch-collapsed')" :status="collapsed ? 'normal' : 'success'">
                 <template #icon>
                     <icon-layout/>
@@ -55,21 +77,24 @@
 import {useFullscreen} from "@vueuse/core";
 import {useRouter} from "vue-router";
 import MoreSettingBase from "@/pages/more/setting/base/index.vue";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 
 const props = defineProps({
     name: String,
     collapsed: Boolean
 });
-const emit = defineEmits(['switch-collapsed', 'download']);
+const emit = defineEmits(['switch-collapsed', 'download', 'to-editor', 'set-mark']);
 
 const router = useRouter();
 const fullscreen = useFullscreen();
 
 const settingVisible = ref(false);
+const isMark = ref(false);
 const isDark = computed(() => useGlobalStore().isDark);
 const switchDark = () => useGlobalStore().switchDarkColors();
+
+watch(() => isMark.value, value => emit('set-mark', value));
 
 
 function toHome() {

@@ -1,7 +1,7 @@
 <template>
     <a-layout class="article">
         <article-header :name="article.name" :collapsed="collapsed" @switch-collapsed="switchCollapsed()"
-                        @download="downloadFile"/>
+                        @download="downloadFile" @to-editor="toEditor()" @set-mark="setMark"/>
         <a-layout :style="{height: height}">
             <a-layout-content>
                 <div class="container" id="article-container">
@@ -129,11 +129,30 @@ onUnmounted(() => {
     utools.removeSubInput();
 });
 
+function toEditor() {
+    router.push('/editor/' + id);
+}
+
+// =======================================================================
+// --------------------------------- 标记 ---------------------------------
+// =======================================================================
+
 
 let markLock = false;
+let highlighter: Highlighter;
+
+function setMark(isMark: boolean) {
+    if (highlighter) {
+        if (isMark) {
+            highlighter.run();
+        }else {
+            highlighter.stop();
+        }
+    }
+}
 
 async function renderMark() {
-    const highlighter = new Highlighter({
+    highlighter = new Highlighter({
         $root: document.getElementById("article-container-content") as HTMLDivElement,
         exceptSelectors: ['pre', 'code']
     });
@@ -152,8 +171,8 @@ async function renderMark() {
                 highlighter.remove(id);
             })
             .on(Highlighter.event.CREATE, ({sources}) => saveMark(highlighter, sources))
-            .on(Highlighter.event.REMOVE, ({ids}) => removeMark(ids))
-            .run();
+            .on(Highlighter.event.REMOVE, ({ids}) => removeMark(ids));
+
 
     tippy('.highlight-mengshou-wrap', {
         content: '删除'
