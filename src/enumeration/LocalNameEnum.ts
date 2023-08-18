@@ -30,6 +30,8 @@ enum LocalNameEnum {
 
     ZONE_COMMENT = '/zone/comment/',
 
+    VERSION = '/key/VERSION'
+
 }
 
 export default LocalNameEnum;

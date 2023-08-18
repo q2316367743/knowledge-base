@@ -91,6 +91,7 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import IconTimeLine from "@/icon/IconTimeLine.vue";
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
+import updateCheck from "@/components/UpdateCheck";
 
 export default defineComponent({
     name: 'app',
@@ -166,7 +167,9 @@ export default defineComponent({
             }
             this.$router.push('/article/' + action.option.title).finally(() => this.show = true);
             return true;
-        })
+        });
+        // 检测更新
+        updateCheck();
     },
     methods: {
         theme() {
