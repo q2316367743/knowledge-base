@@ -49,18 +49,40 @@
             padding: 0 14px;
         }
 
+        .content {
+            .hljs {
+                overflow: auto;
+                code {
+                    overflow: auto;
+                }
+            }
+            &.need-wrap {
+                .hljs {
+                    white-space: pre-wrap; /* css-3 */
+                    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+                    white-space: -o-pre-wrap; /* Opera 7 */
+                    word-wrap: break-word; /* Internet Explorer 5.5+ */
+                    overflow: hidden;
+                    code {
+                        overflow: hidden;
+                    }
+                }
+            }
+        }
+
     }
 
     .toc {
         padding-top: 14px;
-        dl{
-            margin:0;
-            padding:0;
+
+        dl {
+            margin: 0;
+            padding: 0;
         }
 
-        dt{
-            margin-top:5px;
-            margin-left:5px;
+        dt {
+            margin-top: 5px;
+            margin-left: 5px;
         }
 
         dd, dt {
@@ -68,20 +90,24 @@
             display: block;
         }
 
-        dd{
-            margin-left:20px;
+        dd {
+            margin-left: 20px;
         }
-        dd.indent3{
-            margin-left:40px;
+
+        dd.indent3 {
+            margin-left: 40px;
         }
-        dd.indent4{
-            margin-left:60px;
+
+        dd.indent4 {
+            margin-left: 60px;
         }
-        dd.indent5{
-            margin-left:80px;
+
+        dd.indent5 {
+            margin-left: 80px;
         }
-        dd.indent6{
-            margin-left:100px;
+
+        dd.indent6 {
+            margin-left: 100px;
         }
     }
 
@@ -113,10 +139,12 @@
         border-radius: 2px;
         padding: 4px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
         .item {
-            padding:0 4px;
+            padding: 0 4px;
             cursor: pointer;
-            &:hover{
+
+            &:hover {
                 background-color: var(--color-neutral-3);
             }
         }

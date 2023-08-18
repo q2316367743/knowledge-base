@@ -35,6 +35,12 @@
             <a-form-item label="文章头部是否显示">
                 <a-switch v-model="instance.articleHeaderVisible"/>
             </a-form-item>
+            <a-form-item label="代码是否换行">
+                <a-switch v-model="instance.codeWrap">
+                    <template #checked>换行</template>
+                    <template #unchecked>滚动</template>
+                </a-switch>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>

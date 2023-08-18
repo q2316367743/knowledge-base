@@ -22,4 +22,9 @@ export default interface Setting {
      */
     articleHeaderVisible: boolean;
 
+    /**
+     * 代码是否换行
+     */
+    codeWrap: boolean;
+
 }

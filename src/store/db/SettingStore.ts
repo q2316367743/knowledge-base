@@ -10,7 +10,8 @@ export function getDefaultSetting(): Setting {
         codeLightTheme: 'github',
         codeDarkTheme: 'github-dark',
         articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
-        articleHeaderVisible: true
+        articleHeaderVisible: true,
+        codeWrap: false
     }
 }
 
@@ -35,7 +36,8 @@ export const useSettingStore = defineStore('setting', {
             }
         },
         articleTheme: state => state.setting.articleTheme,
-        articleHeaderVisible: state => state.setting.articleHeaderVisible
+        articleHeaderVisible: state => state.setting.articleHeaderVisible,
+        codeWrap: state => state.setting.codeWrap
     },
     actions: {
         async init() {

@@ -8,7 +8,7 @@
                     <a-scrollbar style="height:100%;overflow: auto;" type="track">
                         <article class="info" :class="articleTheme" id="article-container-content-wrap">
                             <article-info :value="article" :base="base" v-if="!loading"/>
-                            <a-typography class="content" v-html="preview"
+                            <a-typography class="content" v-html="preview" :class="codeWrap ? 'need-wrap' : ''"
                                           id="article-container-content"></a-typography>
                         </article>
                         <article-comment :id="articleId" v-if="articleId !== 0"/>
@@ -74,6 +74,7 @@ const articleId = ref(0);
 const preview = ref('');
 const loading = ref(true);
 const articleTheme = computed(() => useSettingStore().articleTheme);
+const codeWrap = computed(() => useSettingStore().codeWrap);
 const collapsed = ref(true);
 const width = computed(() => useGlobalStore().width / 4);
 const height = computed(() => (useGlobalStore().height - 36) + 'px');
@@ -145,7 +146,7 @@ function setMark(isMark: boolean) {
     if (highlighter) {
         if (isMark) {
             highlighter.run();
-        }else {
+        } else {
             highlighter.stop();
         }
     }
