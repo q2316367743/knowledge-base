@@ -4,7 +4,7 @@
         <div class="container">
             <a-list :bordered="false" :max-height="size.height" :scrollbar="true"
                     @reach-bottom="render()">
-                <zone-item v-for="item in items" :zone="item" @remove="init()"/>
+                <zone-item v-for="item in items" :zone="item" @remove="init()" :key="item.id" :id="'zone-' + item.id"/>
                 <template #scroll-loading>
                     <div v-if="bottom">没有更多动态了</div>
                     <a-spin v-else/>

@@ -27,44 +27,17 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import Constant from "@/global/Constant";
-import VConsole from 'vconsole';
-import {useGlobalStore} from "@/store/GlobalStore";
+import {useErrorStore} from "@/store/components/ErrorStore";
 
-let vconsole: VConsole | undefined;
-
-const consoleShow = ref(false);
+const consoleShow = computed(() => useErrorStore().consoleShow);
+const changeConsole = () => useErrorStore().changeConsole();
 
 function openUrl(url: string) {
     utools.shellOpenExternal(url);
 }
 
-function changeConsole() {
-    if (consoleShow.value) {
-        hide();
-    } else {
-        show();
-    }
-}
-
-function show() {
-    if (vconsole) {
-        vconsole.destroy();
-    }
-    vconsole = new VConsole({
-        theme: useGlobalStore().isDark ? 'dark' : 'light',
-    });
-    consoleShow.value = true;
-}
-
-function hide() {
-    if (vconsole) {
-        vconsole.destroy();
-        vconsole = undefined;
-    }
-    consoleShow.value = false;
-}
 </script>
 <style scoped lang="less">
 .about {

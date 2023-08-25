@@ -101,7 +101,7 @@ export const utools = {
             /**
              * 获取附件
              */
-            getAttachment(): Promise<Uint8Array | null> {
+            getAttachment(id: string): Promise<Uint8Array | null> {
                 return Promise.reject("Web不支持获取附件")
             },
             /**
@@ -173,6 +173,9 @@ export const utools = {
     onMainPush() {
     },
     removeSubInput() {
+    },
+    copyText(str: string) {
+
     }
 
 }

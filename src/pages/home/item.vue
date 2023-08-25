@@ -176,7 +176,7 @@ function removeFeature() {
 </script>
 <style lang="less">
 .home-item {
-    margin: 4px 0;
+    margin: 4px 0 7px 0;
 
     &:first-child {
         margin-top: 0;

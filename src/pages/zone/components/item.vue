@@ -2,7 +2,7 @@
     <a-card class="item" hoverable>
         <div class="header">
             <div class="create-time">{{ createTime }}</div>
-            <a-button-group type="text" size="mini">
+            <a-button-group type="text" size="mini"  v-if="ellipsis">
                 <a-button @click="openComment()">
                     <template #icon>
                         <icon-message/>
@@ -27,16 +27,19 @@
                             </template>
                             删除
                         </a-doption>
+                        <a-doption @click="toImage()">
+                            <template #icon>
+                                <icon-share-external/>
+                            </template>
+                            导出
+                        </a-doption>
                     </template>
                 </a-dropdown>
             </a-button-group>
         </div>
         <!-- 内容 -->
         <div class="content">
-            <a-typography-paragraph :ellipsis="{
-                            rows: 3,
-                            expandable: true,
-                        }" style="overflow-x: auto;margin-bottom: 0;">
+            <a-typography-paragraph :ellipsis="ellipsis" style="overflow-x: auto;margin-bottom: 0;">
                 <div v-html="preview.html"></div>
             </a-typography-paragraph>
         </div>
@@ -101,7 +104,7 @@
     </a-card>
 </template>
 <script lang="ts" setup>
-import {PropType, ref, toRaw} from "vue";
+import {nextTick, PropType, ref, toRaw} from "vue";
 import {toDateString} from 'xe-utils'
 import MessageUtil from "@/utils/MessageUtil";
 import {renderImage} from "@/pages/zone/render";
@@ -110,6 +113,8 @@ import {ZoneBase, ZoneComment, ZoneContent, ZoneIndex, ZonePreview} from "@/enti
 import {useZoneStore} from "@/store/db/ZoneStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {statistics} from "@/global/BeanFactory";
+import {useGlobalStore} from "@/store/GlobalStore";
+import html2canvas from "html2canvas";
 
 const props = defineProps({
     zone: Object as PropType<ZoneIndex>
@@ -138,6 +143,13 @@ const comment = ref({
     content: ''
 });
 const createTime = ref('');
+const ellipsis = ref<boolean | {
+    rows: 3,
+    expandable: true,
+}>({
+    rows: 3,
+    expandable: true,
+});
 
 // =============================================================================
 // ---------------------------------- 数据渲染 ----------------------------------
@@ -147,26 +159,26 @@ if (props.zone) {
     createTime.value = toDateString(props.zone.createTime, "yyyy-MM-dd HH:mm:ss");
     // 获取基础信息
     utools.db.promises.get(LocalNameEnum.ZONE_BASE + props.zone.id)
-            .then(res => {
-                if (res) {
-                    base.value = res.value;
-                }
-            });
+        .then(res => {
+            if (res) {
+                base.value = res.value;
+            }
+        });
     // 预览
     utools.db.promises.get(LocalNameEnum.ZONE_PREVIEW + props.zone.id)
-            .then(res => {
-                if (res) {
-                    preview.value = res.value;
-                }
-            });
+        .then(res => {
+            if (res) {
+                preview.value = res.value;
+            }
+        });
     // 评论
     utools.db.promises.get(LocalNameEnum.ZONE_COMMENT + props.zone.id)
-            .then(res => {
-                if (res) {
-                    comments.value = res.value;
-                    commentRev = res._rev;
-                }
-            });
+        .then(res => {
+            if (res) {
+                comments.value = res.value;
+                commentRev = res._rev;
+            }
+        });
 
 }
 
@@ -180,13 +192,13 @@ function toDate(date: Date | string | number) {
 
 function executeCopy() {
     utools.db.promises.get(LocalNameEnum.ZONE_CONTENT + props.zone?.id)
-            .then(res => {
-                if (res) {
-                    const content = res.value as ZoneContent;
-                    utools.copyText(content.body);
-                    MessageUtil.success("成功复制到剪切板");
-                }
-            })
+        .then(res => {
+            if (res) {
+                const content = res.value as ZoneContent;
+                utools.copyText(content.body);
+                MessageUtil.success("成功复制到剪切板");
+            }
+        })
 }
 
 function removeZone() {
@@ -195,15 +207,15 @@ function removeZone() {
         return;
     }
     useZoneStore().remove(props.zone.id)
-            .then(() => {
-                MessageUtil.success("删除完成");
-                emits('remove');
-            })
-            .catch(e => {
-                if (e !== 'cancel') {
-                    MessageUtil.error("删除失败", e);
-                }
-            });
+        .then(() => {
+            MessageUtil.success("删除完成");
+            emits('remove');
+        })
+        .catch(e => {
+            if (e !== 'cancel') {
+                MessageUtil.error("删除失败", e);
+            }
+        });
 }
 
 // =========================================================================
@@ -212,18 +224,18 @@ function removeZone() {
 
 function showImagePreview(id: string, name: string) {
     utools.db.promises.getAttachment('/zone/attachment/' + id)
-            .then(buffer => {
-                if (!buffer) {
-                    MessageUtil.warning("图片未找到");
-                    return;
-                }
-                imagePreview.value = {
-                    id,
-                    name,
-                    dialog: true,
-                    value: URL.createObjectURL(new Blob([buffer]))
-                };
-            });
+        .then(buffer => {
+            if (!buffer) {
+                MessageUtil.warning("图片未找到");
+                return;
+            }
+            imagePreview.value = {
+                id,
+                name,
+                dialog: true,
+                value: URL.createObjectURL(new Blob([buffer]))
+            };
+        });
 }
 
 function releaseImagePreview() {
@@ -233,13 +245,13 @@ function releaseImagePreview() {
 
 function downloadImage() {
     utools.db.promises.getAttachment(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
-            .then(buffer => {
-                if (!buffer) {
-                    MessageUtil.warning("图片未找到");
-                    return;
-                }
-                download(buffer, imagePreview.value.name, 'image');
-            });
+        .then(buffer => {
+            if (!buffer) {
+                MessageUtil.warning("图片未找到");
+                return;
+            }
+            download(buffer, imagePreview.value.name, 'image');
+        });
 }
 
 // =========================================================================
@@ -261,11 +273,11 @@ function addComment() {
         content: comment.value.content
     });
     syncComment()
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => {
-                comments.value.pop();
-                MessageUtil.error("新增失败", e);
-            });
+        .then(() => MessageUtil.success("新增成功"))
+        .catch(e => {
+            comments.value.pop();
+            MessageUtil.error("新增失败", e);
+        });
 }
 
 function removeComment(id: number) {
@@ -276,11 +288,11 @@ function removeComment(id: number) {
     }
     comments.value.splice(index, 1);
     syncComment()
-            .then(() => MessageUtil.success("删除成功"))
-            .catch(e => {
-                comments.value.pop();
-                MessageUtil.error("删除失败", e);
-            });
+        .then(() => MessageUtil.success("删除成功"))
+        .catch(e => {
+            comments.value.pop();
+            MessageUtil.error("删除失败", e);
+        });
 }
 
 async function syncComment() {
@@ -297,6 +309,41 @@ async function syncComment() {
         return Promise.reject(res.message);
     }
     commentRev = res.rev;
+}
+
+// =========================================================================
+// ---------------------------------- 导出 ----------------------------------
+// =========================================================================
+
+function toImage() {
+    useGlobalStore().startLoading("开始导出");
+    ellipsis.value = false;
+    nextTick(() => {
+        try {
+            html2canvas(document.getElementById("zone-" + props.zone!.id!)!, {
+                backgroundColor: useGlobalStore().isDark ? '#000000' : '#ffffff'
+            }).then(res => {
+                res.toBlob(blob => {
+                    if (blob) {
+                        download(blob, "导出.png", "image/png");
+                    }
+                })
+            }).finally(() => {
+                useGlobalStore().closeLoading();
+                ellipsis.value = {
+                    rows: 3,
+                    expandable: true
+                };
+            });
+        } catch (e) {
+            console.error(e);
+            useGlobalStore().closeLoading();
+            ellipsis.value = {
+                rows: 3,
+                expandable: true
+            };
+        }
+    })
 }
 
 </script>
