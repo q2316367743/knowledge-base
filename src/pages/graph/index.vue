@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="border: #efefef solid 1px; height: 100vh;width: 100%;">
-            <relation-graph ref="relationGraph$" :options="options" />
+            <relation-graph ref="relationGraph$" :options="options" :on-node-click="onNodeClick" />
         </div>
     </div>
 </template>
@@ -12,7 +12,6 @@ import RelationGraph, {RGOptions, RGJsonData, JsonNode, JsonLine} from 'relation
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleIndex} from "@/entity/article";
 import {useCategoryStore} from "@/store/db/CategoryStore";
-import {useGlobalStore} from "@/store/GlobalStore";
 
 const relationGraph$ = ref<RelationGraph>()
 const options = {
@@ -87,5 +86,11 @@ onMounted(() => {
             console.log('relationGraph ready!');
         })
     }
-})
+});
+
+
+function onNodeClick(nodeObject: any, $event: Event) {
+    console.log('onNodeClick:', nodeObject)
+}
+
 </script>
