@@ -32,6 +32,7 @@ import {enhancePlugin} from "@/components/markdown-editor/plugins/enhancePlugin"
 import {imageUploadPlugin} from "@/components/markdown-editor/plugins/imageUploadPlugin";
 import {customImagePlugin} from "@/components/markdown-editor/plugins/customImagePlugin";
 import {pasteImagePlugin} from "@/components/markdown-editor/plugins/pasteImagePlugin";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const plugins = [
     gfm({
@@ -62,7 +63,7 @@ const plugins = [
     highlightTheme({
         locale: zhHansHighlightTheme,
         highlights,
-        defaultHighlight: useSettingStore().codeTheme
+        defaultHighlight: useGlobalStore().isDark ? 'a11y-dark' : 'github'
     }),
     enhancePlugin(),
     imageUploadPlugin(),

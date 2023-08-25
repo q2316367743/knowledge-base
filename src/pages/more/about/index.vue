@@ -18,29 +18,53 @@
                 <a-button @click="openUrl(Constant.homepage)">插件主页</a-button>
                 <a-button @click="openUrl(Constant.repo)">开源地址</a-button>
                 <a-button @click="openUrl(Constant.online)">在线地址</a-button>
+                <a-switch :default-checked="consoleShow" @change="changeConsole()">
+                    <template #checked>显示</template>
+                    <template #unchecked>隐藏</template>
+                </a-switch>
             </div>
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import {ref} from "vue";
 import Constant from "@/global/Constant";
+import VConsole from 'vconsole';
+import {useGlobalStore} from "@/store/GlobalStore";
 
-export default defineComponent({
-    name: '',
-    data: () => ({
-        Constant,
-        privacy: false,
-        rev: undefined as string | undefined,
-        privacyLoading: false
-    }),
-    methods: {
-        openUrl(url: string) {
-            return;
-            // utools.shellOpenExternal(url);
-        },
+let vconsole: VConsole | undefined;
+
+const consoleShow = ref(false);
+
+function openUrl(url: string) {
+    utools.shellOpenExternal(url);
+}
+
+function changeConsole() {
+    if (consoleShow.value) {
+        hide();
+    } else {
+        show();
     }
-});
+}
+
+function show() {
+    if (vconsole) {
+        vconsole.destroy();
+    }
+    vconsole = new VConsole({
+        theme: useGlobalStore().isDark ? 'dark' : 'light',
+    });
+    consoleShow.value = true;
+}
+
+function hide() {
+    if (vconsole) {
+        vconsole.destroy();
+        vconsole = undefined;
+    }
+    consoleShow.value = false;
+}
 </script>
 <style scoped lang="less">
 .about {

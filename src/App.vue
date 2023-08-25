@@ -92,6 +92,7 @@ import IconTimeLine from "@/icon/IconTimeLine.vue";
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
 import updateCheck from "@/components/UpdateCheck";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'app',
@@ -170,6 +171,7 @@ export default defineComponent({
         });
         // 检测更新
         updateCheck();
+        // 异常拦截
     },
     methods: {
         theme() {

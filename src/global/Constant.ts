@@ -6,7 +6,7 @@ export default {
     author: '落雨不悔',
     website: 'https://blog.esion.xyz',
     homepage: '',
-    repo: '',
+    repo: 'https://gitee.com/qiaoshengda/knowledge-base',
     online: '',
     goodsId: '',
     statistics: "http://project-esion.nat300.top"
