@@ -32,7 +32,7 @@
                     <a-doption @click="emit('download', 'image')">导出为 图片</a-doption>
                 </template>
             </a-dropdown>
-            <a-dropdown trigger="click"  position="br">
+            <a-dropdown trigger="click" position="br">
                 <a-button type="text">
                     <template #icon>
                         <icon-more/>
@@ -75,7 +75,7 @@
 </template>
 <script lang="ts" setup>
 import {useFullscreen} from "@vueuse/core";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import MoreSettingBase from "@/pages/more/setting/base/index.vue";
 import {computed, ref, watch} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -86,6 +86,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['switch-collapsed', 'download', 'to-editor', 'set-mark']);
 
+const route = useRoute();
 const router = useRouter();
 const fullscreen = useFullscreen();
 
@@ -98,7 +99,11 @@ watch(() => isMark.value, value => emit('set-mark', value));
 
 
 function toHome() {
-    router.push("/home")
+    if (route.query.redirect) {
+        router.push(route.query.redirect as string)
+    } else {
+        router.push("/home")
+    }
 }
 </script>
 <style scoped>

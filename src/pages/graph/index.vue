@@ -1,17 +1,21 @@
 <template>
     <div>
         <div style="border: #efefef solid 1px; height: 100vh;width: 100%;">
-            <relation-graph ref="relationGraph$" :options="options" :on-node-click="onNodeClick" />
+            <relation-graph ref="relationGraph$" :options="options" :on-node-click="onNodeClick"/>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import RelationGraph, {RGOptions, RGJsonData, JsonNode, JsonLine} from 'relation-graph/vue3'
+import RelationGraph, {JsonLine, JsonNode, RGJsonData, RGOptions} from 'relation-graph/vue3'
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleIndex} from "@/entity/article";
 import {useCategoryStore} from "@/store/db/CategoryStore";
+import {useRouter} from "vue-router";
+import MessageUtil from "@/utils/MessageUtil";
+
+const router = useRouter();
 
 const relationGraph$ = ref<RelationGraph>()
 const options = {
@@ -22,7 +26,12 @@ const options = {
     allowSwitchJunctionPoint: true,
     defaultJunctionPoint: 'border',
     showDebugPanel: false,
-} as RGOptions
+} as RGOptions;
+
+const TAG = '#ff7d00';
+const CATEGORY = '#f53f3f';
+const ARTICLE = '#00b42a';
+const LINE = '#43a2f1';
 
 // 文章
 // 标签
@@ -38,17 +47,17 @@ nodes.push({id: '0', text: '知识库', color: '#165dff'});
 
 // 分类
 for (let category of categories) {
-    nodes.push({id: category.id + '', text: category.name, color: '#f53f3f'});
-    lines.push({from: "0", to: category.id + '', color: '#43a2f1'});
+    nodes.push({id: category.id + '', text: category.name, color: CATEGORY});
+    lines.push({from: "0", to: category.id + '', color: LINE});
 }
 
 // 文章
 for (let article of articles) {
-    nodes.push({id: article.id + '', text: article.name, color: '#00b42a'});
-    lines.push({from: article.categoryId ? (article.categoryId + '') : '1', to: article.id + '', color: '#43a2f1'});
+    nodes.push({id: article.id + '', text: article.name, color: ARTICLE});
+    lines.push({from: article.categoryId ? (article.categoryId + '') : '1', to: article.id + '', color: LINE});
     if (notCategory && !article.categoryId) {
-        nodes.push({id: '1', text: "未分类", color: '#f53f3f'});
-        lines.push({from: "0", to: '1', color: '#43a2f1'});
+        nodes.push({id: '1', text: "未分类", color: CATEGORY});
+        lines.push({from: "0", to: '1', color: LINE});
         notCategory = false
     }
     for (let tag of article.tags) {
@@ -64,12 +73,12 @@ for (let article of articles) {
 let index = 2;
 for (let tag of tags) {
     index += 1;
-    nodes.push({id: index + '', text: tag, color: '#ff7d00'});
+    nodes.push({id: index + '', text: tag, color: TAG});
     // 插入关联
     let articleList = tagArticleMap.get(tag);
     if (articleList) {
         for (let articleIndex of articleList) {
-            lines.push({from: articleIndex.id + '', to: index + '', color: '#43a2f1'});
+            lines.push({from: articleIndex.id + '', to: index + '', color: LINE});
         }
     }
 }
@@ -90,7 +99,32 @@ onMounted(() => {
 
 
 function onNodeClick(nodeObject: any, $event: Event) {
-    console.log('onNodeClick:', nodeObject)
+    if (nodeObject.color === ARTICLE) {
+        router.push({
+            path: '/article/' + nodeObject.id,
+            query: {
+                redirect: '/graph'
+            }
+        })
+    } else if (nodeObject.color === TAG) {
+        router.push({
+            path: '/home',
+            query: {
+                tag: nodeObject.text
+            }
+        });
+    } else if (nodeObject.color === CATEGORY) {
+        if (nodeObject.text === '未分类') {
+            MessageUtil.warning("无法搜索未分类")
+            return;
+        }
+        router.push({
+            path: '/home',
+            query: {
+                category: nodeObject.id
+            }
+        });
+    }
 }
 
 </script>

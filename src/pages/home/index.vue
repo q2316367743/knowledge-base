@@ -51,7 +51,7 @@
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {computed, nextTick, ref} from "vue";
 // 存储
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -65,6 +65,7 @@ import {randomColor} from "@/utils/BrowserUtil";
 import HomeItem from './item.vue';
 import SubInput from '@/components/SubInput/index.vue';
 
+const route = useRoute();
 const router = useRouter();
 
 const render = ref(true);
@@ -75,6 +76,19 @@ const breadcrumbs = ref<Array<string>>([]);
 const categories = computed(() => useCategoryStore().categories);
 const articleTags = computed(() => useArticleStore().articleTags);
 const maxHeight = computed(() => useGlobalStore().size.height - 47);
+
+if (route.query.categroy) {
+    for (let valueElement of categories.value) {
+        if ((valueElement.id + '') === route.query.categroy) {
+            useCategory(valueElement.id, valueElement.name);
+            break;
+        }
+    }
+} else if (route.query.tag) {
+    useTag(route.query.tag as string);
+} else {
+    filter();
+}
 
 function toEditor() {
     router.push("/editor/0")
@@ -127,7 +141,6 @@ function filter(isCategory: boolean | null = null, keyword: string = '') {
     }
 }
 
-filter();
 
 </script>
 <style scoped lang="less">
