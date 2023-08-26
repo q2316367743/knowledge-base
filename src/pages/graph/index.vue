@@ -98,7 +98,7 @@ onMounted(() => {
 });
 
 
-function onNodeClick(nodeObject: any, $event: Event) {
+function onNodeClick(nodeObject: any): boolean {
     if (nodeObject.color === ARTICLE) {
         router.push({
             path: '/article/' + nodeObject.id,
@@ -116,7 +116,7 @@ function onNodeClick(nodeObject: any, $event: Event) {
     } else if (nodeObject.color === CATEGORY) {
         if (nodeObject.text === '未分类') {
             MessageUtil.warning("无法搜索未分类")
-            return;
+            return false;
         }
         router.push({
             path: '/home',
@@ -125,6 +125,7 @@ function onNodeClick(nodeObject: any, $event: Event) {
             }
         });
     }
+    return true
 }
 
 </script>
