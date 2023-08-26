@@ -37,12 +37,16 @@ const router = createRouter({
         component: () => import("@/pages/graph/index.vue")
     }, {
         name: "基础设置",
-        path: "/more/setting/base",
-        component: () => import("@/pages/more/setting/base/index.vue")
+        path: "/setting/base",
+        component: () => import("@/pages/setting/base/index.vue")
     }, {
         name: "分类设置",
-        path: "/more/setting/category",
-        component: () => import("@/pages/more/setting/category/index.vue")
+        path: "/setting/category",
+        component: () => import("@/pages/setting/category/index.vue")
+    }, {
+        name: "备份设置",
+        path: "/setting/backup",
+        component: () => import("@/pages/setting/backup/index.vue")
     }, {
         name: "附件管理",
         path: "/more/attachment",

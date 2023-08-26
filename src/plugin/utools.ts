@@ -170,7 +170,7 @@ export const utools = {
     isLinux(): boolean {
         return !isMacOS() && !isWindows();
     },
-    onMainPush() {
+    onMainPush(callback: (action: {code: string, type: string, payload: any }) => { icon?: string, text: string, title?: string }[], selectCallback: (action: {code: string, type: string, payload: any,  option: { icon?: string, text: string, title?: string }}) => void): void {
     },
     removeSubInput() {
     },

@@ -33,7 +33,7 @@
 import {defineComponent} from "vue";
 import {randomColor} from "@/utils/BrowserUtil";
 import {mapState} from "pinia";
-import {useSettingStore} from "@/store/db/SettingStore";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {toDateString} from "xe-utils";
 
 export default defineComponent({
@@ -58,7 +58,7 @@ export default defineComponent({
         }
     }),
     computed: {
-        ...mapState(useSettingStore, ['articleHeaderVisible'])
+        ...mapState(useBaseSettingStore, ['articleHeaderVisible'])
     },
     watch: {
         base() {

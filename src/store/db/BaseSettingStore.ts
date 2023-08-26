@@ -1,11 +1,11 @@
 import {defineStore} from "pinia";
-import Setting from "@/entity/Setting";
+import BaseSetting from "@/entity/setting/BaseSetting";
 import {useGlobalStore} from "@/store/GlobalStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 
-export function getDefaultSetting(): Setting {
+export function getDefaultBaseSetting(): BaseSetting {
     return {
         codeLightTheme: 'github',
         codeDarkTheme: 'github-dark',
@@ -22,37 +22,37 @@ export function renderHelp(theme: ArticleThemeEnum): string {
     return "";
 }
 
-export const useSettingStore = defineStore('setting', {
+export const useBaseSettingStore = defineStore('base-setting', {
     state: () => ({
-        setting: getDefaultSetting(),
+        baseSetting: getDefaultBaseSetting(),
         rev: undefined as string | undefined
     }),
     getters: {
         codeTheme: (state) => {
             if (useGlobalStore().isDark) {
-                return state.setting.codeDarkTheme;
+                return state.baseSetting.codeDarkTheme;
             } else {
-                return state.setting.codeLightTheme;
+                return state.baseSetting.codeLightTheme;
             }
         },
-        articleTheme: state => state.setting.articleTheme,
-        articleHeaderVisible: state => state.setting.articleHeaderVisible,
-        codeWrap: state => state.setting.codeWrap
+        articleTheme: state => state.baseSetting.articleTheme,
+        articleHeaderVisible: state => state.baseSetting.articleHeaderVisible,
+        codeWrap: state => state.baseSetting.codeWrap
     },
     actions: {
         async init() {
             const res = await utools.db.promises.get(LocalNameEnum.SETTING_BASE);
             if (res) {
-                this.setting = Object.assign(this.setting, res.value);
+                this.baseSetting = Object.assign(this.baseSetting, res.value);
                 this.rev = res._rev;
             }
         },
-        async save(setting: Setting) {
-            this.setting = setting;
+        async save(baseSetting: BaseSetting) {
+            this.baseSetting = baseSetting;
             const res = await utools.db.promises.put({
                 _id: LocalNameEnum.SETTING_BASE,
                 _rev: this.rev,
-                value: toRaw(this.setting)
+                value: toRaw(this.baseSetting)
             });
             if (res.error) {
                 return Promise.reject(res.message);

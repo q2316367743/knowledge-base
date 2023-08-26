@@ -36,17 +36,26 @@
                             </template>
                             图
                         </a-menu-item>
+                        <a-sub-menu key="/setting">
+                            <template #icon>
+                                <icon-settings/>
+                            </template>
+                            <template #title>设置</template>
+                            <a-menu-item key="/setting/base">
+                                基础设置
+                            </a-menu-item>
+                            <a-menu-item key="/setting/category">
+                                分类设置
+                            </a-menu-item>
+                            <a-menu-item key="/setting/backup">
+                                备份设置
+                            </a-menu-item>
+                        </a-sub-menu>
                         <a-sub-menu key="/more">
                             <template #icon>
                                 <icon-more/>
                             </template>
                             <template #title>更多</template>
-                            <a-menu-item key="/more/setting/base">
-                                基础设置
-                            </a-menu-item>
-                            <a-menu-item key="/more/setting/category">
-                                分类设置
-                            </a-menu-item>
                             <a-menu-item key="/more/attachment">
                                 <template #icon>
                                     <icon-attachment/>
@@ -84,7 +93,7 @@ import {statistics, useImportEvent} from "@/global/BeanFactory";
 // 存储
 import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useSettingStore} from "@/store/db/SettingStore";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 // 组件
@@ -92,7 +101,7 @@ import IconTimeLine from "@/icon/IconTimeLine.vue";
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
 import updateCheck from "@/components/UpdateCheck";
-import MessageUtil from "@/utils/MessageUtil";
+import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 
 export default defineComponent({
     name: 'app',
@@ -107,7 +116,7 @@ export default defineComponent({
     }),
     computed: {
         ...mapState(useGlobalStore, ['isDark', 'loading', 'loadingText']),
-        ...mapState(useSettingStore, ['codeTheme', "articleTheme"]),
+        ...mapState(useBaseSettingStore, ['codeTheme', "articleTheme"]),
     },
     watch: {
         '$route': {
@@ -171,7 +180,6 @@ export default defineComponent({
         });
         // 检测更新
         updateCheck();
-        // 异常拦截
     },
     methods: {
         theme() {
@@ -185,9 +193,10 @@ export default defineComponent({
         },
         init() {
             useZoneStore().init();
-            useSettingStore().init();
+            useBaseSettingStore().init();
             useArticleStore().init();
             useCategoryStore().init();
+            useBackupSettingStore().init();
         },
         onPluginEnter(operate: string, preload: string, extra: string) {
             if (operate === 'article') {

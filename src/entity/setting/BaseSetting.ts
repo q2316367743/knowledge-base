@@ -1,6 +1,6 @@
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 
-export default interface Setting {
+export default interface BaseSetting {
 
     /**
      * 代码白天主题

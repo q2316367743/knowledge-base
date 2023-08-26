@@ -174,3 +174,7 @@ export function randomColor(str?: string): string {
     }
     return colors[index]
 }
+
+export function pathJoin(...paths: string[]):string {
+    return paths.join("/")
+}

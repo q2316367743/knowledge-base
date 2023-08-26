@@ -38,7 +38,7 @@ import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 存储
-import {useSettingStore} from "@/store/db/SettingStore";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
@@ -73,8 +73,8 @@ const base = ref<ArticleBase>({
 const articleId = ref(0);
 const preview = ref('');
 const loading = ref(true);
-const articleTheme = computed(() => useSettingStore().articleTheme);
-const codeWrap = computed(() => useSettingStore().codeWrap);
+const articleTheme = computed(() => useBaseSettingStore().articleTheme);
+const codeWrap = computed(() => useBaseSettingStore().codeWrap);
 const collapsed = ref(true);
 const width = computed(() => useGlobalStore().width / 4);
 const height = computed(() => (useGlobalStore().height - 36) + 'px');

@@ -76,7 +76,7 @@
 <script lang="ts" setup>
 import {useFullscreen} from "@vueuse/core";
 import {useRoute, useRouter} from "vue-router";
-import MoreSettingBase from "@/pages/more/setting/base/index.vue";
+import MoreSettingBase from "@/pages/setting/base/index.vue";
 import {computed, ref, watch} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 

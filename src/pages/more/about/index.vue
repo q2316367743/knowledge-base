@@ -18,10 +18,12 @@
                 <a-button @click="openUrl(Constant.homepage)">插件主页</a-button>
                 <a-button @click="openUrl(Constant.repo)">开源地址</a-button>
                 <a-button @click="openUrl(Constant.online)">在线地址</a-button>
-                <a-switch :default-checked="consoleShow" @change="changeConsole()">
-                    <template #checked>显示</template>
-                    <template #unchecked>隐藏</template>
-                </a-switch>
+                <a-tooltip content="控制台">
+                    <a-switch :default-checked="consoleShow" @change="changeConsole()">
+                        <template #checked>显示</template>
+                        <template #unchecked>隐藏</template>
+                    </a-switch>
+                </a-tooltip>
             </div>
         </div>
     </div>

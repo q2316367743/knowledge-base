@@ -1,6 +1,6 @@
 <template>
     <div class="more-setting-base">
-        <a-form :model="setting" layout="vertical">
+        <a-form :model="instance" layout="vertical">
             <a-form-item label="JSON视图白天主题">
                 <a-select v-model="instance.codeLightTheme" style="width: 200px">
                     <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
@@ -52,7 +52,7 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
-import {getDefaultSetting, useSettingStore, renderHelp} from "@/store/db/SettingStore";
+import {getDefaultBaseSetting, useBaseSettingStore, renderHelp} from "@/store/db/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 
 export default defineComponent({
@@ -61,18 +61,18 @@ export default defineComponent({
     data: () => ({
         JsonTheme,
         ArticleThemeEnum,
-        instance: getDefaultSetting()
+        instance: getDefaultBaseSetting()
     }),
     computed: {
-        ...mapState(useSettingStore, ['setting'])
+        ...mapState(useBaseSettingStore, ['baseSetting'])
     },
     created() {
-        this.instance = Object.assign(this.instance, this.setting);
+        this.instance = Object.assign(this.instance, this.baseSetting);
     },
     methods: {
         renderHelp,
         save() {
-            useSettingStore().save(this.instance)
+            useBaseSettingStore().save(this.instance)
                     .then(() => MessageUtil.success("保存成功"))
                     .catch(e => MessageUtil.error("保存失败", e))
                     .finally(() => this.$emit('save'));

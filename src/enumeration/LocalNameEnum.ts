@@ -18,6 +18,8 @@ enum LocalNameEnum {
 
     SETTING_BASE = '/local/setting/base',
 
+    SETTING_BACKUP = '/local/setting/backup',
+
     ZONE = '/local/zone',
 
     ZONE_BASE = '/zone/base/',

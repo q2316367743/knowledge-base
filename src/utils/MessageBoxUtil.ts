@@ -4,17 +4,17 @@ import Optional from "@/utils/Optional";
 
 export default {
 
-    confirm(content: string, title: string, config: {
-        confirmButtonText: string,
-        cancelButtonText: string
+    confirm(content: string, title: string, config?: {
+        confirmButtonText?: string,
+        cancelButtonText?: string
     }): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             Modal.confirm({
                 content,
                 title,
                 draggable: true,
-                okText: config.confirmButtonText,
-                cancelText: config.cancelButtonText,
+                okText: config && config.confirmButtonText,
+                cancelText: config && config.cancelButtonText,
                 onOk: () => {
                     resolve();
                 },
