@@ -48,6 +48,10 @@ const router = createRouter({
         path: "/setting/backup",
         component: () => import("@/pages/setting/backup/index.vue")
     }, {
+        name: "关键字设置",
+        path: "/setting/feature",
+        component: () => import("@/pages/setting/feature/index.vue")
+    }, {
         name: "附件管理",
         path: "/more/attachment",
         component: () => import("@/pages/more/attachment/index.vue")

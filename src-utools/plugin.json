@@ -47,26 +47,8 @@
             ]
         },
         {
-            "code": "function:add",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                {
-                    "type": "over",
-                    "label": "新增文章",
-                    "minLength": 20,
-                    "maxLength": 999999
-                }
-            ]
-        },
-        {
             "code": "function:search",
-            "explain": "听雨文件浏览器",
+            "explain": "知识库",
             "icon": "public/logo.png",
             "mainPush": true,
             "platform": [

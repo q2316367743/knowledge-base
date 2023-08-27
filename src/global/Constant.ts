@@ -9,5 +9,10 @@ export default {
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',
     online: 'https://blog.esion.xyz/apps/knowledge-base',
     goodsId: '',
-    statistics: "http://project-esion.nat300.top"
+    statistics: "http://project-esion.nat300.top",
+    feature: {
+        ADD: 'function:add-article',
+        IMPORT: 'function:md-import',
+        ADD_ZONE: 'function:add-zone'
+    }
 }

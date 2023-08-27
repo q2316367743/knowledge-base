@@ -50,6 +50,9 @@
                             <a-menu-item key="/setting/backup">
                                 备份设置
                             </a-menu-item>
+                            <a-menu-item key="/setting/feature">
+                                关键字设置
+                            </a-menu-item>
                         </a-sub-menu>
                         <a-sub-menu key="/more">
                             <template #icon>
@@ -88,7 +91,7 @@
 </template>
 <script lang="ts">
 import {mapState} from "pinia";
-import {defineComponent} from "vue";
+import {defineComponent,} from "vue";
 import {statistics, useImportEvent} from "@/global/BeanFactory";
 // 存储
 import {useZoneStore} from "@/store/db/ZoneStore";

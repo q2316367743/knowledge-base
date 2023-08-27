@@ -122,10 +122,43 @@ export const utools = {
         MessageUtil.warning("web环境不支持utools");
         window.open("https://u.tools");
     },
-    setFeature() {
-        MessageUtil.warning("web环境不支持设置feature，请使用utools版本");
+    /**
+     * 设置插件应用动态功能
+     */
+    setFeature(feature: {
+        code: string,
+        explain: string,
+        platform: ('darwin' | 'win32' | 'linux') | (Array<'darwin' | 'win32' | 'linux'>),
+        icon?: string,
+        cmds: (string | {
+            type: 'img' | 'files' | 'regex' | 'over' | 'window',
+            label: string
+        })[]
+    }): boolean {
+        MessageUtil.warning("web环境不支持设置关键字");
+        return false;
     },
-    getFeatures(): Array<string> {
+    /**
+     * 移除插件应用动态功能
+     */
+    removeFeature(code: string): boolean {
+        MessageUtil.warning("web环境不支持移除关键字");
+        return false;
+    },
+    /**
+     * 获取插件应用动态功能，参数为空获取所有动态功能
+     */
+    getFeatures(codes?: string[]): {
+        code: string,
+        explain: string,
+        platform: ('darwin' | 'win32' | 'linux') | (Array<'darwin' | 'win32' | 'linux'>),
+        icon?: string,
+        cmds: string | {
+            type: 'img' | 'files' | 'regex' | 'over' | 'window',
+            label: string
+        }[]
+    }[] {
+        MessageUtil.warning("web环境不支持获取关键字");
         return [];
     },
     isDarkColors(): boolean {
@@ -170,7 +203,16 @@ export const utools = {
     isLinux(): boolean {
         return !isMacOS() && !isWindows();
     },
-    onMainPush(callback: (action: {code: string, type: string, payload: any }) => { icon?: string, text: string, title?: string }[], selectCallback: (action: {code: string, type: string, payload: any,  option: { icon?: string, text: string, title?: string }}) => void): void {
+    onMainPush(callback: (action: { code: string, type: string, payload: any }) => {
+        icon?: string,
+        text: string,
+        title?: string
+    }[], selectCallback: (action: {
+        code: string,
+        type: string,
+        payload: any,
+        option: { icon?: string, text: string, title?: string }
+    }) => void): void {
     },
     removeSubInput() {
     },
