@@ -105,6 +105,7 @@ import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
 import updateCheck from "@/components/UpdateCheck";
 import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'app',
@@ -212,6 +213,16 @@ export default defineComponent({
                 } else if (preload === 'add') {
                     sessionStorage.setItem("extra", extra);
                     this.$router.push('/editor/0')
+                } else if (preload === 'add-zone') {
+                    useZoneStore().addSimple(extra)
+                        .then(() => {
+                            // 隐藏插件
+                            utools.hideMainWindow();
+                            utools.outPlugin();
+                            // 显示提示
+                            utools.showNotification("新增动态成功");
+                        })
+                        .catch(e => MessageUtil.error("新增动态失败", e));
                 }
             }
         }

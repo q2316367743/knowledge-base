@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {ZoneIndex, ZoneContent, ZoneBase, ZonePreview} from "@/entity/zone";
+import {ZoneBase, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
@@ -24,6 +24,16 @@ export const useZoneStore = defineStore('zone', {
                 this.rev = res._rev;
                 this.value = value;
             }
+        },
+        addSimple(content: string): Promise<ZoneIndex> {
+            return this.add({
+                image: [],
+                attachments: [],
+                tags: [],
+                location: ''
+            }, {
+                body: content
+            })
         },
         async add(base: ZoneBase, content: ZoneContent): Promise<ZoneIndex> {
             let now = new Date();

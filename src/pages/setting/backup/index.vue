@@ -121,7 +121,10 @@ async function _loadFiles(): Promise<Array<string>> {
     }
 
     let files = await client.getDirectoryContents(FOLDER_PATH) as Array<FileStat>;
-    return Promise.resolve(files.filter(e => e.type === 'file').map(e => e.basename));
+    return Promise.resolve(files
+        .filter(e => e.type === 'file')
+        .sort((a, b) => new Date(b.lastmod).getTime() - new Date(a.lastmod).getTime())
+        .map(e => e.basename));
 }
 
 function execBackup() {
@@ -178,7 +181,7 @@ async function _deleteFile(name: string) {
 
 function restore() {
     _restore()
-        .then(() =>{
+        .then(() => {
             MessageUtil.success("恢复成功");
             // 重新初始化数据
             useZoneStore().init();

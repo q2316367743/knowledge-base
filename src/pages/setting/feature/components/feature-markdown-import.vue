@@ -2,8 +2,11 @@
     <a-alert style="margin-bottom: 7px">
         当选中md文件时，新增关键字：【从md导入文章】
     </a-alert>
-    <a-button type="primary" v-if="enable" status="danger" @click="close()">关闭</a-button>
-    <a-button type="primary" v-else @click="open()">开启</a-button>
+    <a-alert style="margin-bottom: 7px" type="warning">
+        暂未实现
+    </a-alert>
+    <a-button type="primary" v-if="enable" status="danger" @click="close()" disabled>关闭</a-button>
+    <a-button type="primary" v-else @click="open()" disabled>开启</a-button>
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
