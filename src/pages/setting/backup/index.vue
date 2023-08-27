@@ -140,9 +140,7 @@ async function _execBackup() {
     const zip = new JSZip();
     const items = await utools.db.promises.allDocs();
     for (let item of items) {
-        if (notBackup.has(item._id)) {
-            continue;
-        }
+        // 备份时，全部备份
         zip.file(item._id, JSON.stringify(item));
     }
     zip.generateAsync({type: "arraybuffer"}).then(function (content) {
@@ -209,6 +207,7 @@ async function _restore(): Promise<void> {
         if (notBackup.has(oldFile._id)) {
             continue;
         }
+        // 删除时有选择删除
         await utools.db.promises.remove(oldFile._id);
     }
 
@@ -217,6 +216,7 @@ async function _restore(): Promise<void> {
         let index = 0;
         for (let path in zip.files) {
             if (notBackup.has(path)) {
+                // 恢复时，有选择恢复
                 index += 1;
                 continue;
             }
