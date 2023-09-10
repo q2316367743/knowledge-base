@@ -1,6 +1,9 @@
 import type { BytemdPlugin } from 'bytemd'
 import {useFileSelect, useImageUpload} from "../common";
 import MessageUtil from "@/utils/MessageUtil";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
+import {RedirectPreload, ShowOpenDialogOption} from "@/plugin/utools";
 
 
 /**
@@ -17,27 +20,49 @@ export function imageUploadPlugin(): BytemdPlugin {
                 handler: {
                     type: 'action',
                     click: (ctx) => {
-                        // 触发文件选择框
-                        useFileSelect()
-                            .then((blob) => {
-                                // 从本地读取文件为 Buffer 执行上传
-                                if (blob === null) {
-                                    return null;
-                                }
-                                return useImageUpload(blob)
-                            })
-                            .then((id) => {
-                                if (id) {
-                                    // 未聚焦 则聚焦到最后一行
-                                    if (!ctx.editor.hasFocus()) {
-                                        ctx.editor.focus()
-                                        ctx.editor.setCursor({ line: ctx.editor.lineCount(), ch: 0 })
-                                        ctx.appendBlock('')
+
+                        if (useBaseSettingStore().imageStrategy === ImageStrategyEnum.INNER) {
+                            // 内置
+                            useFileSelect()
+                                .then((blob) => {
+                                    // 从本地读取文件为 Buffer 执行上传
+                                    if (blob === null) {
+                                        return null;
                                     }
-                                    ctx.wrapText('![', `](attachment:${id})`)
-                                }
-                            })
-                            .catch(e => MessageUtil.error("文件上传失败", e));
+                                    return useImageUpload(blob)
+                                })
+                                .then((id) => {
+                                    if (id) {
+                                        // 未聚焦 则聚焦到最后一行
+                                        if (!ctx.editor.hasFocus()) {
+                                            ctx.editor.focus()
+                                            ctx.editor.setCursor({ line: ctx.editor.lineCount(), ch: 0 })
+                                            ctx.appendBlock('')
+                                        }
+                                        ctx.wrapText('![', `](attachment:${id})`)
+                                    }
+                                })
+                                .catch(e => MessageUtil.error("文件上传失败", e));
+                        }else if (useBaseSettingStore().imageStrategy === ImageStrategyEnum.IMAGE) {
+                            // 使用图床
+                            const paths = utools.showOpenDialog({
+                                title: '选择图片',
+                                buttonLabel: '上传',
+                                properties: ['openFile'],
+                                filters: [{
+                                    name: '图片',
+                                    extensions: ['jpg', 'png', 'jpeg', 'gif', 'webp']
+                                }]
+                            } as ShowOpenDialogOption);
+                            if (paths) {
+                                utools.redirect(['图床', '上传到图床'], {
+                                    type: 'files',
+                                    data: paths
+                                } as RedirectPreload);
+                            }
+                        }else {
+                            MessageUtil.warning("图片策略未知，请在基础设置中设置")
+                        }
                     }
                 }
             }

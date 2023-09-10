@@ -20,6 +20,31 @@ export interface DbReturn {
     message?: string
 }
 
+export type ShowOpenDialogOptionProperty = 'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles'
+    | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent';
+
+export interface ShowOpenDialogOptionFilter {
+    name: string;
+    extensions: Array<string>
+}
+
+export type RedirectPreloadType = 'text' | 'img' | 'files';
+
+export interface RedirectPreload {
+    type: RedirectPreloadType;
+    data: any;
+}
+
+export interface ShowOpenDialogOption {
+    title?: string,
+    defaultPath?: string,
+    buttonLabel?: string,
+    filters?: Array<ShowOpenDialogOptionFilter>,
+    properties?: Array<ShowOpenDialogOptionProperty>,
+    message?: string,
+    securityScopedBookmarks?: boolean
+}
+
 function isMacOS(): boolean {
     return /macintosh|mac os x/i.test(navigator.userAgent);
 }
@@ -118,7 +143,7 @@ export const utools = {
     shellOpenExternal(url: string): void {
         window.open(url);
     },
-    redirect() {
+    redirect(label: string | string[], payload: string | RedirectPreload) {
         MessageUtil.warning("web环境不支持utools");
         window.open("https://u.tools");
     },
@@ -167,11 +192,11 @@ export const utools = {
     onPluginEnter(callback: (action: { code: string, type: string, payload: any }) => void): void {
         document.addEventListener('load', () => callback({code: 'application', type: '', payload: {}}));
     },
-    showOpenDialog(): [] {
+    showOpenDialog(options: ShowOpenDialogOption): (string[]) | (undefined) {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
         return [];
     },
-    setSubInput(): boolean {
+    setSubInput(action: { text: string }): boolean {
         console.warn("web环境不支持子输入框事件");
         return true
     },

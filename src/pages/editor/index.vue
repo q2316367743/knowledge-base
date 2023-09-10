@@ -1,5 +1,6 @@
 <template>
     <div class="editor">
+        <!-- 头部 -->
         <div class="header">
             <div class="left" :style="{width: width - 32 * 2 - 4 * 7 + 'px'}">
                 <a-button type="text" @click="toHome()">
@@ -22,10 +23,11 @@
                 </a-button>
             </a-button-group>
         </div>
+        <!-- 编辑区 -->
         <div class="container">
             <markdown-editor v-model="content"/>
         </div>
-        <a-image-preview v-model:visible="preview.show" :src="preview.src"/>
+        <!-- 额外信息 -->
         <a-drawer v-model:visible="extra.visible" title="额外信息" :width="300" :footer="false">
             <a-form :model="extra" layout="vertical">
                 <a-form-item label="来源">
@@ -75,10 +77,6 @@ export default defineComponent({
         id: 0,
         title: '',
         content: '',
-        preview: {
-            show: false,
-            src: ''
-        },
         base: {
             sourceUrl: ''
         },
@@ -177,37 +175,5 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.editor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 51;
-    background-color: var(--color-bg-1);
-
-    .header {
-        padding: 4px 7px;
-        display: flex;
-        justify-content: space-between;
-
-        .left {
-            display: flex;
-            width: 50%;
-        }
-    }
-
-    .container {
-        position: absolute;
-        top: 40px;
-        left: 7px;
-        right: 7px;
-        bottom: 7px;
-
-        .vditor-reset {
-            color: var(--color-text-1);
-        }
-    }
-
-}
+@import url(./index.less);
 </style>

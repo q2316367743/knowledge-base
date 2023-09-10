@@ -41,6 +41,20 @@
                     <template #unchecked>滚动</template>
                 </a-switch>
             </a-form-item>
+            <a-form-item label="图片上传策略">
+                <a-radio-group v-model="instance.imageStrategy">
+                    <a-radio :value="ImageStrategyEnum.INNER">内部实现</a-radio>
+                    <a-radio :value="ImageStrategyEnum.IMAGE">插件【图床】</a-radio>
+                </a-radio-group>
+                <template #help>
+                    <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
+                        上传到插件内部，占用个人存储空间，最大图片仅支持10m
+                    </span>
+                    <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
+                        需要安装插件【图床】
+                    </span>
+                </template>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>
@@ -54,6 +68,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
 import {getDefaultBaseSetting, useBaseSettingStore, renderHelp} from "@/store/db/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
+import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -61,6 +76,7 @@ export default defineComponent({
     data: () => ({
         JsonTheme,
         ArticleThemeEnum,
+        ImageStrategyEnum,
         instance: getDefaultBaseSetting()
     }),
     computed: {

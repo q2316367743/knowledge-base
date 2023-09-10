@@ -4,6 +4,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
+import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -11,7 +12,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         codeDarkTheme: 'github-dark',
         articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
         articleHeaderVisible: true,
-        codeWrap: false
+        codeWrap: false,
+        imageStrategy: ImageStrategyEnum.INNER
     }
 }
 
@@ -37,7 +39,8 @@ export const useBaseSettingStore = defineStore('base-setting', {
         },
         articleTheme: state => state.baseSetting.articleTheme,
         articleHeaderVisible: state => state.baseSetting.articleHeaderVisible,
-        codeWrap: state => state.baseSetting.codeWrap
+        codeWrap: state => state.baseSetting.codeWrap,
+        imageStrategy: state => state.baseSetting.imageStrategy
     },
     actions: {
         async init() {

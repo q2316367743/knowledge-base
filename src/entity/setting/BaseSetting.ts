@@ -1,4 +1,5 @@
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
+import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 
 export default interface BaseSetting {
 
@@ -26,5 +27,10 @@ export default interface BaseSetting {
      * 代码是否换行
      */
     codeWrap: boolean;
+
+    /**
+     * 图片策略
+     */
+    imageStrategy: ImageStrategyEnum;
 
 }

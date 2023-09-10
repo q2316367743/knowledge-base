@@ -168,13 +168,23 @@ export function randomColor(str?: string): string {
     if (str) {
         if (str.length <= colors.length - 1) {
             index = str.length;
-        }else {
+        } else {
             index = str.length % colors.length;
         }
     }
     return colors[index]
 }
 
-export function pathJoin(...paths: string[]):string {
+export function pathJoin(...paths: string[]): string {
     return paths.join("/")
+}
+
+export function arrayBufferToBase64(buffer: ArrayBuffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
 }

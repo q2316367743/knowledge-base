@@ -38,7 +38,6 @@ const articles = computed(() => useArticleStore().articles);
 const height = computed(() => useGlobalStore().height / 2);
 
 const {results} = useFuse(keyword, articles, {
-    matchAllWhenSearchEmpty: true,
     fuseOptions: {
         keys: [{
             name: 'name'
