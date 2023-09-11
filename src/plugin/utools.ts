@@ -7,7 +7,6 @@ import {del, get, getMany, keys, set} from 'idb-keyval';
 export interface DbDoc {
     _id: string,
     _rev?: string,
-
     [key: string]: any
 }
 
@@ -45,11 +44,10 @@ export interface ShowOpenDialogOption {
     securityScopedBookmarks?: boolean
 }
 
-function isMacOS(): boolean {
+function isMacOS(): boolean{
     return /macintosh|mac os x/i.test(navigator.userAgent);
 }
-
-function isWindows(): boolean {
+function isWindows(): boolean{
     let agent = navigator.userAgent.toLowerCase();
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
@@ -77,14 +75,14 @@ export const utools = {
                 }
             },
             /**
-             * 获取文档
-             */
+              * 获取文档
+              */
             get(id: string): Promise<DbDoc | undefined> {
                 return get(id)
             },
             /**
-             * 删除文档
-             */
+              * 删除文档
+              */
             async remove(id: string): Promise<DbReturn> {
                 try {
                     await del(id);
@@ -103,8 +101,8 @@ export const utools = {
 
             },
             /**
-             * 获取所有文档 可根据文档id前缀查找
-             */
+              * 获取所有文档 可根据文档id前缀查找
+              */
             async allDocs(key?: string): Promise<DbDoc[]> {
                 let itemKeys = await keys();
                 if (key) {
@@ -118,20 +116,20 @@ export const utools = {
                 return getMany(itemKeys);
             },
             /**
-             * 存储附件到新文档
-             */
+              * 存储附件到新文档
+              */
             postAttachment(): Promise<DbReturn> {
                 return Promise.reject("Web不支持保存附件")
             },
             /**
-             * 获取附件
-             */
-            getAttachment(id: string): Promise<Uint8Array | null> {
+              * 获取附件
+              */
+            getAttachment(): Promise<Uint8Array | null> {
                 return Promise.reject("Web不支持获取附件")
             },
             /**
-             * 获取附件类型
-             */
+              * 获取附件类型
+              */
             getAttachmentType(): Promise<string | null> {
                 return Promise.reject("Web不支持获取附件类型")
             }
@@ -147,50 +145,14 @@ export const utools = {
         MessageUtil.warning("web环境不支持utools");
         window.open("https://u.tools");
     },
-    /**
-     * 设置插件应用动态功能
-     */
-    setFeature(feature: {
-        code: string,
-        explain: string,
-        platform: ('darwin' | 'win32' | 'linux') | (Array<'darwin' | 'win32' | 'linux'>),
-        icon?: string,
-        cmds: (string | {
-            type: 'img' | 'files' | 'regex' | 'over' | 'window',
-            label: string
-        })[]
-    }): boolean {
-        MessageUtil.warning("web环境不支持设置关键字");
-        return false;
-    },
-    /**
-     * 移除插件应用动态功能
-     */
-    removeFeature(code: string): boolean {
-        MessageUtil.warning("web环境不支持移除关键字");
-        return false;
-    },
-    /**
-     * 获取插件应用动态功能，参数为空获取所有动态功能
-     */
-    getFeatures(codes?: string[]): {
-        code: string,
-        explain: string,
-        platform: ('darwin' | 'win32' | 'linux') | (Array<'darwin' | 'win32' | 'linux'>),
-        icon?: string,
-        cmds: string | {
-            type: 'img' | 'files' | 'regex' | 'over' | 'window',
-            label: string
-        }[]
-    }[] {
-        MessageUtil.warning("web环境不支持获取关键字");
-        return [];
+    setFeature() {
+        MessageUtil.warning("web环境不支持设置feature，请使用utools版本");
     },
     isDarkColors(): boolean {
         return window.matchMedia('(prefers-color-scheme: dark)').matches;
     },
     onPluginEnter(callback: (action: { code: string, type: string, payload: any }) => void): void {
-        document.addEventListener('load', () => callback({code: 'application', type: '', payload: {}}));
+        document.addEventListener('load', () => callback({ code: 'application', type: '', payload: {} }));
     },
     showOpenDialog(options: ShowOpenDialogOption): (string[]) | (undefined) {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
@@ -207,7 +169,7 @@ export const utools = {
         return Promise.resolve([]);
     },
     getUser() {
-        return {avatar: "", nickname: "web用户", type: ""};
+        return { avatar: "", nickname: "web用户", type: "" };
     },
     fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
         let token = localStorage.getItem("token");
@@ -227,22 +189,6 @@ export const utools = {
     isWindows,
     isLinux(): boolean {
         return !isMacOS() && !isWindows();
-    },
-    onMainPush(callback: (action: { code: string, type: string, payload: any }) => {
-        icon?: string,
-        text: string,
-        title?: string
-    }[], selectCallback: (action: {
-        code: string,
-        type: string,
-        payload: any,
-        option: { icon?: string, text: string, title?: string }
-    }) => void): void {
-    },
-    removeSubInput() {
-    },
-    copyText(str: string) {
-
     }
 
 }
