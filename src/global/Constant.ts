@@ -2,7 +2,7 @@ export default {
     uid: 'zdllh16g',
     id: 'knowledge-base',
     name: '知识库',
-    version: '1.0.7',
+    version: '1.0.8',
     author: '落雨不悔',
     website: 'https://blog.esion.xyz',
     homepage: 'https://flowus.cn/esion/share/3f990895-e56a-4693-8e0f-5ab2998a1039',
