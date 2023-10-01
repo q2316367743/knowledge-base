@@ -13,8 +13,13 @@ export default interface Category {
     updateTime: Date | string;
 
     /**
-     * 文章名称
+     * 分类名称
      */
     name: string;
+
+    /**
+     * 负极ID
+     */
+    pid: number;
 
 }
