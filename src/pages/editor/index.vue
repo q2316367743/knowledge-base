@@ -40,9 +40,8 @@
                     <a-input v-model="base.sourceUrl" :max-length="255"/>
                 </a-form-item>
                 <a-form-item label="分类">
-                    <a-select v-model="extra.categoryId" placeholder="请选择分类">
-                        <a-option v-for="category in categories" :value="category.id">{{ category.name }}</a-option>
-                    </a-select>
+                    <a-tree-select :data="categoryTree" v-model="extra.categoryId" placeholder="请选择分类" >
+                    </a-tree-select>
                 </a-form-item>
                 <a-form-item label="标签">
                     <a-select v-model="extra.tags" placeholder="请输入标签" multiple scrollbar allow-clear allow-search
@@ -92,7 +91,7 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalStore, ['width', 'isDark']),
         ...mapState(useArticleStore, ['articleTags']),
-        ...mapState(useCategoryStore, ['categories']),
+        ...mapState(useCategoryStore, ['categoryTree']),
     },
     created() {
     },
