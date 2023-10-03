@@ -65,7 +65,7 @@ import {randomColor} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
 import {useRouter} from "vue-router";
 import {computed, PropType, ref, watch} from "vue";
-import {ArticleBase, ArticleIndex} from "@/entity/article";
+import {ArticleBase, ArticleIndex, getDefaultArticleBase} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
@@ -88,9 +88,7 @@ const item = ref({
     source: '',
     description: ''
 });
-const base = ref<ArticleBase>({
-    sourceUrl: ''
-})
+const base = ref<ArticleBase>(getDefaultArticleBase())
 const feature = ref<any | undefined>(undefined);
 const collect = computed(() => typeof feature.value !== 'undefined');
 

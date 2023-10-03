@@ -97,13 +97,11 @@ import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {useCategoryStore} from "@/store/db/CategoryStore";
 // 组件
 import IconTimeLine from "@/icon/IconTimeLine.vue";
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
 import updateCheck from "@/components/UpdateCheck";
-import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
@@ -146,10 +144,10 @@ export default defineComponent({
             }
         })
         // 主题
-        this.theme();
+        useGlobalStore().initDarkColors();
         this.selectedKeys = [this.$route.path];
         // 初始化数据
-        this.init();
+        import('@/global/BeanFactory').then(data => data.initData().then(() => console.log("数据初始化成功")))
         // 全局事件
         window.onImagePreview = (src) => {
             this.preview = {
@@ -159,6 +157,7 @@ export default defineComponent({
         }
         // 适配新版，快速启动
         utools.onMainPush(action => {
+            useGlobalStore().initDarkColors();
             if (action.code !== "function:search") {
                 return [];
             }
@@ -185,22 +184,6 @@ export default defineComponent({
         updateCheck();
     },
     methods: {
-        theme() {
-            if (this.isDark) {
-                // 设置为暗黑主题
-                document.body.setAttribute('arco-theme', 'dark');
-            } else {
-                // 恢复亮色主题
-                document.body.removeAttribute('arco-theme');
-            }
-        },
-        init() {
-            useZoneStore().init();
-            useBaseSettingStore().init();
-            useArticleStore().init();
-            useCategoryStore().init();
-            useBackupSettingStore().init();
-        },
         onPluginEnter(operate: string, preload: string, extra: string) {
             if (operate === 'article') {
                 this.$router.push('/article/' + preload);

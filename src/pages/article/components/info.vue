@@ -1,5 +1,5 @@
 <template>
-    <header v-if="articleHeaderVisible">
+    <header>
         <blockquote>
             <ul>
                 <li v-if="article.source.trim() !== ''">
@@ -32,8 +32,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {randomColor} from "@/utils/BrowserUtil";
-import {mapState} from "pinia";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {toDateString} from "xe-utils";
 
 export default defineComponent({
@@ -57,9 +55,6 @@ export default defineComponent({
             sourceUrl: ''
         }
     }),
-    computed: {
-        ...mapState(useBaseSettingStore, ['articleHeaderVisible'])
-    },
     watch: {
         base() {
             this.articleBase = Object.assign(this.articleBase, this.base);

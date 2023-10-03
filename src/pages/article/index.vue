@@ -3,19 +3,25 @@
         <article-header :name="article.name" :collapsed="collapsed" @switch-collapsed="switchCollapsed()"
                         @download="downloadFile" @to-editor="toEditor()" @set-mark="setMark"/>
         <a-layout :style="{height: height}">
+            <!-- 内容 -->
             <a-layout-content>
                 <div class="container" id="article-container">
                     <a-scrollbar style="height:100%;overflow: auto;" type="track">
+                        <!-- 实际内容 -->
                         <article class="info" :class="articleTheme" id="article-container-content-wrap">
-                            <article-info :value="article" :base="base" v-if="!loading"/>
+                            <!-- 文章信息 -->
+                            <article-info :value="article" :base="base" v-if="!loading && articleHeaderVisible"/>
+                            <!-- 文章内容 -->
                             <a-typography class="content" v-html="preview" :class="codeWrap ? 'need-wrap' : ''"
                                           id="article-container-content"></a-typography>
                         </article>
+                        <!-- 评论 -->
                         <article-comment :id="articleId" v-if="articleId !== 0"/>
                         <a-result status="404" title="加载中" v-if="loading"></a-result>
                     </a-scrollbar>
                 </div>
             </a-layout-content>
+            <!-- 目录 -->
             <a-layout-sider :collapsed="collapsed" :width="width" :collapsed-width="0">
                 <div ref="previewEle" class="toc"/>
             </a-layout-sider>
@@ -34,11 +40,10 @@ import HighlightSource from "web-highlighter/src/model/source";
 import tippy from 'tippy.js'
 import MessageUtil from "@/utils/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
-import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity/article";
+import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource, getDefaultArticleBase} from "@/entity/article";
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 存储
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
@@ -51,6 +56,7 @@ import createBlogDirectory from "@/components/RenderToc/render";
 import {onAfterRender, renderTemplate} from "@/pages/article/func";
 import './index.less';
 import 'tippy.js/dist/tippy.css';
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 
 let id = '';
 let marks = new Array<HighlightSource>();
@@ -67,17 +73,17 @@ const article = ref<ArticleIndex>({
     updateTime: '',
     source: ''
 });
-const base = ref<ArticleBase>({
-    sourceUrl: ''
-})
+const base = ref<ArticleBase>(getDefaultArticleBase())
 const articleId = ref(0);
 const preview = ref('');
 const loading = ref(true);
-const articleTheme = computed(() => useBaseSettingStore().articleTheme);
-const codeWrap = computed(() => useBaseSettingStore().codeWrap);
 const collapsed = ref(true);
 const width = computed(() => useGlobalStore().width / 4);
 const height = computed(() => (useGlobalStore().height - 36) + 'px');
+
+const articleHeaderVisible = ref(useBaseSettingStore().articleHeaderVisible);
+const articleTheme = ref(useBaseSettingStore().articleTheme);
+const codeWrap = ref(useBaseSettingStore().codeWrap);
 
 const previewEle = ref<HTMLDivElement>();
 
@@ -86,11 +92,20 @@ function switchCollapsed() {
 }
 
 onMounted(() => {
-    init().then(() => loading.value = false)
-            .catch(e => {
-                MessageUtil.error("文章渲染失败", e);
-                router.push("/home");
-            })
+    init()
+        .then(() => {
+            loading.value = false;
+            // 设置
+            if (base.value.customer) {
+                articleHeaderVisible.value = base.value.articleHeaderVisible;
+                articleTheme.value = base.value.articleTheme;
+                codeWrap.value = base.value.codeWrap;
+            }
+        })
+        .catch(e => {
+            MessageUtil.error("文章渲染失败", e);
+            router.push("/home");
+        })
 });
 
 const urls = new Array<string>();
@@ -168,11 +183,11 @@ async function renderMark() {
         highlighter.fromStore(mark.startMeta, mark.endMeta, mark.id, mark.text);
     }
     highlighter
-            .on(Highlighter.event.CLICK, ({id}) => {
-                highlighter.remove(id);
-            })
-            .on(Highlighter.event.CREATE, ({sources}) => saveMark(highlighter, sources))
-            .on(Highlighter.event.REMOVE, ({ids}) => removeMark(ids));
+        .on(Highlighter.event.CLICK, ({id}) => {
+            highlighter.remove(id);
+        })
+        .on(Highlighter.event.CREATE, ({sources}) => saveMark(highlighter, sources))
+        .on(Highlighter.event.REMOVE, ({ids}) => removeMark(ids));
 
 
     tippy('.highlight-mengshou-wrap', {
@@ -203,7 +218,7 @@ function saveMark(highlighter: Highlighter, templateMarks: HighlightSource[]) {
         }
         markRev = res.rev;
     }).catch(e => MessageUtil.error("新增标记错误", e))
-            .finally(() => markLock = false);
+        .finally(() => markLock = false);
 }
 
 function removeMark(ids: string[]) {
@@ -228,7 +243,7 @@ function removeMark(ids: string[]) {
         }
         markRev = res.rev;
     }).catch(e => MessageUtil.error("删除标记错误", e))
-            .finally(() => markLock = false);
+        .finally(() => markLock = false);
 
 }
 
@@ -274,14 +289,14 @@ function toImage() {
 function toMd() {
     useGlobalStore().startLoading("开始导出");
     utools.db.promises.get(LocalNameEnum.ARTICLE_CONTENT + articleId.value)
-            .then(res => {
-                if (res) {
-                    const source = res.value as ArticleSource;
-                    download(source.content, article.value.name + ".md", "text/markdown");
-                }
-            })
-            .catch(e => MessageUtil.error("数据导出失败", e))
-            .finally(() => useGlobalStore().closeLoading());
+        .then(res => {
+            if (res) {
+                const source = res.value as ArticleSource;
+                download(source.content, article.value.name + ".md", "text/markdown");
+            }
+        })
+        .catch(e => MessageUtil.error("数据导出失败", e))
+        .finally(() => useGlobalStore().closeLoading());
 }
 
 function toHtml() {
@@ -290,8 +305,8 @@ function toHtml() {
         const ele = document.getElementById("article-container-content-wrap");
         if (ele) {
             download(renderTemplate(article.value.name, ele.outerHTML),
-                    article.value.name + ".html",
-                    "text/html");
+                article.value.name + ".html",
+                "text/html");
         }
     } catch (e) {
         MessageUtil.error("数据导出失败", e);

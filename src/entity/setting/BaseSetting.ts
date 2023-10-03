@@ -1,32 +1,7 @@
-import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
+import { ArticleBaseSetting} from "@/entity/article";
 
-export default interface BaseSetting {
-
-    /**
-     * 代码白天主题
-     */
-    codeLightTheme: string;
-
-    /**
-     * 代码黑夜主题
-     */
-    codeDarkTheme: string;
-
-    /**
-     * 文章主题
-     */
-    articleTheme: ArticleThemeEnum;
-
-    /**
-     * 文章头部是否显示
-     */
-    articleHeaderVisible: boolean;
-
-    /**
-     * 代码是否换行
-     */
-    codeWrap: boolean;
+export default interface BaseSetting extends ArticleBaseSetting{
 
     /**
      * 图片策略
