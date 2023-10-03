@@ -103,9 +103,9 @@ function onNodeClick(nodeObject: any): boolean {
         router.push({
             path: '/article/' + nodeObject.id,
             query: {
-                redirect: '/graph'
+                redirect: '/graph/relation'
             }
-        })
+        });
     } else if (nodeObject.color === TAG) {
         router.push({
             path: '/home',

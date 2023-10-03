@@ -29,12 +29,18 @@
                             </template>
                             时间线
                         </a-menu-item>
-                        <a-menu-item key="/graph">
+                        <a-sub-menu key="/graph">
                             <template #icon>
                                 <icon-mind-mapping/>
                             </template>
-                            图
-                        </a-menu-item>
+                            <template #title>图</template>
+                            <a-menu-item key="/graph/relation">
+                                关联图
+                            </a-menu-item>
+                            <a-menu-item key="/graph/category">
+                                分类图
+                            </a-menu-item>
+                        </a-sub-menu>
                         <a-sub-menu key="/setting">
                             <template #icon>
                                 <icon-settings/>

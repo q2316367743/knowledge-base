@@ -78,6 +78,7 @@ const articleTags = computed(() => useArticleStore().articleTags);
 const maxHeight = computed(() => useGlobalStore().size.height - 47);
 
 if (route.query.categroy) {
+    console.log(route.query.categroy)
     for (let valueElement of categories.value) {
         if ((valueElement.id + '') === route.query.categroy) {
             useCategory(valueElement.id, valueElement.name);

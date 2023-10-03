@@ -32,9 +32,13 @@ const router = createRouter({
         path: "/timeline",
         component: () => import("@/pages/timeline/index.vue")
     }, {
-        name: "图",
-        path: "/graph",
-        component: () => import("@/pages/graph/index.vue")
+        name: "图-关联",
+        path: "/graph/relation",
+        component: () => import("@/pages/graph/relation/index.vue")
+    }, {
+        name: "图-分类",
+        path: "/graph/category",
+        component: () => import("@/pages/graph/category/index.vue")
     }, {
         name: "基础设置",
         path: "/setting/base",
