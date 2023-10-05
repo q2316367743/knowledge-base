@@ -4,86 +4,7 @@
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout>
                 <a-layout-sider collapsed style="z-index: 50">
-                    <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys">
-                        <a-menu-item key="/home">
-                            <template #icon>
-                                <icon-home/>
-                            </template>
-                            主页
-                        </a-menu-item>
-                        <a-menu-item key="/zone">
-                            <template #icon>
-                                <icon-qq-zone/>
-                            </template>
-                            空间
-                        </a-menu-item>
-                        <!--                        <a-menu-item key="/html">-->
-                        <!--                            <template #icon>-->
-                        <!--                                <icon-file />-->
-                        <!--                            </template>-->
-                        <!--                            离线网页-->
-                        <!--                        </a-menu-item>-->
-                        <a-menu-item key="/timeline">
-                            <template #icon>
-                                <icon-time-line/>
-                            </template>
-                            时间线
-                        </a-menu-item>
-                        <a-sub-menu key="/graph">
-                            <template #icon>
-                                <icon-mind-mapping/>
-                            </template>
-                            <template #title>图</template>
-                            <a-menu-item key="/graph/relation">
-                                关联图
-                            </a-menu-item>
-                            <a-menu-item key="/graph/category">
-                                分类图
-                            </a-menu-item>
-                        </a-sub-menu>
-                        <a-sub-menu key="/setting">
-                            <template #icon>
-                                <icon-settings/>
-                            </template>
-                            <template #title>设置</template>
-                            <a-menu-item key="/setting/base">
-                                基础设置
-                            </a-menu-item>
-                            <a-menu-item key="/setting/category">
-                                分类设置
-                            </a-menu-item>
-                            <a-menu-item key="/setting/backup">
-                                备份设置
-                            </a-menu-item>
-                            <a-menu-item key="/setting/feature">
-                                关键字设置
-                            </a-menu-item>
-                        </a-sub-menu>
-                        <a-sub-menu key="/more">
-                            <template #icon>
-                                <icon-more/>
-                            </template>
-                            <template #title>更多</template>
-                            <a-menu-item key="/more/attachment">
-                                <template #icon>
-                                    <icon-attachment/>
-                                </template>
-                                附件
-                            </a-menu-item>
-                            <a-menu-item key="/more/recommend">
-                                <template #icon>
-                                    <icon-thumb-up/>
-                                </template>
-                                推荐
-                            </a-menu-item>
-                            <a-menu-item key="/more/about">
-                                <template #icon>
-                                    <icon-exclamation-circle/>
-                                </template>
-                                关于
-                            </a-menu-item>
-                        </a-sub-menu>
-                    </a-menu>
+                    <app-side/>
                 </a-layout-sider>
                 <a-layout-content>
                     <router-view v-if="show"/>
@@ -96,15 +17,14 @@
 </template>
 <script lang="ts">
 import {mapState} from "pinia";
-import {defineComponent,} from "vue";
-import {statistics, useImportEvent} from "@/global/BeanFactory";
+import {defineAsyncComponent, defineComponent,} from "vue";
+import {useImportEvent} from "@/global/BeanFactory";
 // 存储
 import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
-import IconTimeLine from "@/icon/IconTimeLine.vue";
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
 import updateCheck from "@/components/UpdateCheck";
@@ -112,9 +32,11 @@ import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'app',
-    components: {IconTimeLine, MarkdownImport},
+    components: {
+        MarkdownImport,
+        AppSide: defineAsyncComponent(() => import("@/components/app-side/index.vue"))
+    },
     data: () => ({
-        selectedKeys: ['/dashboard'],
         preview: {
             visible: false,
             src: ''
@@ -124,21 +46,6 @@ export default defineComponent({
     computed: {
         ...mapState(useGlobalStore, ['isDark', 'loading', 'loadingText']),
         ...mapState(useBaseSettingStore, ['codeTheme']),
-    },
-    watch: {
-        '$route': {
-            handler(newValue) {
-                const path = newValue.path as string;
-                const name = newValue.name as string;
-                if (path !== this.selectedKeys[0]) {
-                    this.selectedKeys[0] = path;
-                }
-                statistics.access(name);
-            }
-        },
-        selectedKeys(newValue) {
-            this.$router.push(newValue[0]);
-        }
     },
     created() {
         // 插件进入
@@ -151,7 +58,6 @@ export default defineComponent({
         })
         // 主题
         useGlobalStore().initDarkColors();
-        this.selectedKeys = [this.$route.path];
         // 初始化数据
         import('@/global/BeanFactory').then(data => data.initData().then(() => console.log("数据初始化成功")))
         // 全局事件

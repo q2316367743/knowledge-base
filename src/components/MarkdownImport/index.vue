@@ -10,6 +10,7 @@ import {useImportEvent} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/MessageUtil";
 import ArticleImport from "@/components/MarkdownImport/ArticleImport";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {getDefaultArticleBase} from "@/entity/article";
 
 const visible = ref(false);
 const subtitle = ref('');
@@ -37,6 +38,7 @@ useImportEvent.on(content => {
             name: zone.title,
             categoryId: null
         }, {
+            ...getDefaultArticleBase(),
             sourceUrl: zone.sourceUrl || ''
         }, zone.content)
                 .then(() => MessageUtil.success("文章导入成功！"))
