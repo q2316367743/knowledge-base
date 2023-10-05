@@ -55,6 +55,20 @@
                     </span>
                 </template>
             </a-form-item>
+            <a-form-item label="首页类型">
+                <a-radio-group v-model="instance.homeType">
+                    <a-radio :value="HomeTypeEnum.DEFAULT">默认</a-radio>
+                    <a-radio :value="HomeTypeEnum.EDITOR">编辑器</a-radio>
+                </a-radio-group>
+                <template #help>
+                    <span v-if="instance.homeType === HomeTypeEnum.DEFAULT">
+                        以预览文章为主
+                    </span>
+                    <span v-else-if="instance.homeType === HomeTypeEnum.EDITOR">
+                        以编辑文章为主
+                    </span>
+                </template>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>
@@ -69,6 +83,7 @@ import JsonTheme from "@/global/CodeTheme";
 import {getDefaultBaseSetting, useBaseSettingStore, renderHelp} from "@/store/db/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
+import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -77,6 +92,7 @@ export default defineComponent({
         JsonTheme,
         ArticleThemeEnum,
         ImageStrategyEnum,
+        HomeTypeEnum,
         instance: getDefaultBaseSetting()
     }),
     computed: {

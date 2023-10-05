@@ -1,7 +1,9 @@
 import {ListTree} from "@/entity/ListTree";
 
-export default interface Category extends ListTree{
-
+/**
+ * 目录
+ */
+export interface Folder extends ListTree{
 
     /**
      * 创建时间

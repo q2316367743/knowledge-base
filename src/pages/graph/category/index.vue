@@ -5,13 +5,14 @@
 </template>
 <script lang="ts" setup>
 import {computed, h} from "vue";
-import {CategoryTree, useCategoryStore} from "@/store/db/CategoryStore";
+import { useCategoryStore} from "@/store/db/CategoryStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {useWindowSize} from "@vueuse/core";
 import MessageUtil from "@/utils/MessageUtil";
 import {useRouter} from "vue-router";
+import {treeEach} from "@/entity/ListTree";
 
 const router = useRouter();
 const size = useWindowSize();
@@ -20,7 +21,7 @@ const categoryTree = computed(() => useCategoryStore().categoryTree);
 const categoryMap = computed(() => useArticleStore().categoryMap);
 const treeData = computed<Array<TreeNodeData>>(() => {
     const treeData = new Array<TreeNodeData>();
-    _categoryEach(categoryTree.value, treeData);
+    treeEach(categoryTree.value, treeData, categoryMap.value);
     // 没有分类
     const articles = categoryMap.value.get(null);
     if (articles && articles.length > 0) {
@@ -42,31 +43,6 @@ const treeData = computed<Array<TreeNodeData>>(() => {
 const virtualListProps = computed(() => ({
     height: size.height.value - 14
 }));
-
-function _categoryEach(list: Array<CategoryTree>, treeData: Array<TreeNodeData>) {
-    list.forEach(item => {
-        const data = {
-            key: item.key,
-            title: item.title,
-            isLeaf: false,
-            icon: () => h(IconFolder, {}),
-            children: new Array<TreeNodeData>()
-        };
-        treeData.push(data);
-        // 分类
-        _categoryEach(item.children, data.children);
-        // 文章
-        const articles = categoryMap.value.get(data.key);
-        if (articles) {
-            articles.map(article => ({
-                key: article.id,
-                title: article.name,
-                isLeaf: true,
-                icon: () => h(IconFile, {}),
-            })).forEach(article => data.children.push(article));
-        }
-    });
-}
 
 function onSelect(
     selectedKeys: Array<string | number>,

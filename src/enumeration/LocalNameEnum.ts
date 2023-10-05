@@ -2,6 +2,8 @@ enum LocalNameEnum {
 
     CATEGORY = '/local/category',
 
+    FOLDER = '/local/folder',
+
     ARTICLE = '/local/article',
 
     ARTICLE_BASE = '/article/base/',

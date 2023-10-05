@@ -28,7 +28,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref} from "vue";
-import {CategoryTree, useCategoryStore} from "@/store/db/CategoryStore";
+import { useCategoryStore} from "@/store/db/CategoryStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {statistics} from "@/global/BeanFactory";
@@ -36,7 +36,7 @@ import {TreeNodeData} from "@arco-design/web-vue";
 
 
 const keyword = ref('');
-const categoryTree = computed<Array<CategoryTree>>(() => useCategoryStore().categoryTree);
+const categoryTree = computed<Array<TreeNodeData>>(() => useCategoryStore().categoryTree);
 const height = computed(() => useGlobalStore().size.height - 40 - 7);
 
 
@@ -73,10 +73,10 @@ const treeData = computed<Array<TreeNodeData>>(() => {
 })
 
 function searchData(keyword: string) {
-    const loop = (data: Array<CategoryTree>) => {
+    const loop = (data: Array<TreeNodeData>) => {
         const result: Array<TreeNodeData> = [];
         data.forEach(item => {
-            if (item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+            if ((item.title || '').toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
                 result.push({...item});
             } else if (item.children) {
                 const filterData = loop(item.children);

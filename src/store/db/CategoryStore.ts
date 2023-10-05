@@ -3,41 +3,8 @@ import {defineStore} from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {clone} from "xe-utils";
+import {listToTree} from "@/entity/ListTree";
 
-export interface CategoryTree {
-
-    key: number;
-
-    title: string;
-
-    children: Array<CategoryTree>;
-
-}
-
-function listToTree(categories: Array<Category>): Array<CategoryTree> {
-    const base: Array<CategoryTree> = categories.filter(c => c.pid === 0 || !c.pid)
-        .map(c => ({
-            key: c.id,
-            title: c.name,
-            children: []
-        }));
-    base.forEach(item => _listToTree(item, item.key, categories));
-    return [{
-        key: 0,
-        title: "全部分类",
-        children: base
-    }];
-}
-
-function _listToTree(tree: CategoryTree, pid: number, categories: Array<Category>) {
-    tree.children = categories.filter(c => c.pid === pid)
-        .map(c => ({
-            key: c.id,
-            title: c.name,
-            children: []
-        }));
-    tree.children.forEach(item => _listToTree(item, item.key, categories));
-}
 
 export const useCategoryStore = defineStore('category', {
     state: () => ({
@@ -45,7 +12,7 @@ export const useCategoryStore = defineStore('category', {
         rev: undefined as string | undefined
     }),
     getters: {
-        categoryTree: (state) => listToTree(state.categories)
+        categoryTree: (state) => listToTree(state.categories, "全部分类")
     },
     actions: {
         async init() {
