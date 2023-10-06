@@ -8,6 +8,9 @@ export class UtoolsAuthDriverImpl implements AuthDriver {
     allDocs(key?: string): Promise<DbDoc[]> {
         return utools.db.promises.allDocs(key);
     }
+    allDocKeys(key?: string | undefined): Promise<string[]> {
+        return utools.db.promises.allDocs(key).then(docs => docs.map(doc => doc.id));
+    }
 
     get(id: string): Promise<DbDoc | null> {
         return utools.db.promises.get(id);
