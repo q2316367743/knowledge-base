@@ -178,8 +178,6 @@ export class AlistAuthDriverImpl implements AuthDriver {
     }
 
     allDocKeys(key?: string | undefined): Promise<string[]> {
-        const docs = new Array<DbDoc>();
-
         let keys = Array.from(this.pathMap.keys());
 
         // 基于key过滤
