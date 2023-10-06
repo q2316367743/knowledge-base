@@ -99,7 +99,7 @@ function remove() {
                         side.value.removeChild(item);
                         MessageUtil.success("删除成功");
                     }
-                }).catch(e => MessageUtil.error("删除失败"));
+                }).catch(e => MessageUtil.error("删除失败", e));
     })
 }
 
