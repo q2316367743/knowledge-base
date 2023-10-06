@@ -40,6 +40,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleComment} from "@/entity/article";
 import MessageUtil from "@/utils/MessageUtil";
 import {statistics} from "@/global/BeanFactory";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 const props = defineProps({
     id: Number
@@ -57,7 +58,7 @@ function toDate(date: any) {
 }
 
 function init() {
-    utools.db.promises.get(LocalNameEnum.ARTICLE_COMMENT + props.id)
+    useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_COMMENT + props.id)
             .then(res => {
                 if (res) {
                     articleComments.value = res.value;
@@ -67,7 +68,7 @@ function init() {
 }
 
 async function _sync() {
-    const res = await utools.db.promises.put({
+    const res = await useAuthStore().authDriver.put({
         _id: LocalNameEnum.ARTICLE_COMMENT + props.id,
         _rev: articleCommentRev,
         value: toRaw(articleComments.value)

@@ -46,6 +46,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {useAuthStore} from "@/store/components/AuthStore";
 // 组件
 import ArticleHeader from './components/header.vue';
 import ArticleComment from './components/comment.vue';
@@ -122,11 +123,11 @@ async function init() {
     articleId.value = parseInt(id);
     article.value = articleIndex;
     // 获取基础信息
-    const res = await utools.db.promises.get(LocalNameEnum.ARTICLE_BASE + id)
+    const res = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_BASE + id)
     if (res) {
         base.value = Object.assign(base.value, res.value);
     }
-    const previewWrap = await utools.db.promises.get(LocalNameEnum.ARTICLE_PREVIEW + id)
+    const previewWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_PREVIEW + id)
     if (previewWrap) {
         preview.value = (previewWrap.value as ArticlePreview).html;
         await nextTick(() => {
@@ -173,7 +174,7 @@ async function renderMark() {
         exceptSelectors: ['pre', 'code']
     });
     // 1. 实例化
-    const res = await utools.db.promises.get(LocalNameEnum.ARTICLE_MARK + id)
+    const res = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_MARK + id)
     if (res) {
         // 存在
         marks = res.value as any[];
@@ -208,7 +209,7 @@ function saveMark(highlighter: Highlighter, templateMarks: HighlightSource[]) {
         content: '删除'
     })
     // 更新数据
-    utools.db.promises.put({
+    useAuthStore().authDriver.put({
         _id: LocalNameEnum.ARTICLE_MARK + id,
         _rev: markRev,
         value: marks
@@ -233,7 +234,7 @@ function removeMark(ids: string[]) {
         }
     }
     // 更新数据
-    utools.db.promises.put({
+    useAuthStore().authDriver.put({
         _id: LocalNameEnum.ARTICLE_MARK + id,
         _rev: markRev,
         value: marks
@@ -288,7 +289,7 @@ function toImage() {
 
 function toMd() {
     useGlobalStore().startLoading("开始导出");
-    utools.db.promises.get(LocalNameEnum.ARTICLE_CONTENT + articleId.value)
+    useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_CONTENT + articleId.value)
         .then(res => {
             if (res) {
                 const source = res.value as ArticleSource;

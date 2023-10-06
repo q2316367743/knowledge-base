@@ -8,6 +8,10 @@ const router = createRouter({
         path: '/',
         redirect: '/home'
     }, {
+        name: "登录",
+        path: '/login',
+        component: () => import('@/pages/login/index.vue')
+    }, {
         name: "首页",
         path: '/home',
         component: () => import('@/pages/home/index.vue')

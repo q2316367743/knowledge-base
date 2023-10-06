@@ -4,6 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {clone} from "xe-utils";
 import {listToTree} from "@/entity/ListTree";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 
 export const useCategoryStore = defineStore('category', {
@@ -16,10 +17,13 @@ export const useCategoryStore = defineStore('category', {
     },
     actions: {
         async init() {
-            const res = await utools.db.promises.get(LocalNameEnum.CATEGORY);
+            const res = await useAuthStore().authDriver.get(LocalNameEnum.CATEGORY);
             if (res) {
                 this.categories = res.value;
                 this.rev = res._rev
+            }else {
+                this.categories = new Array<Category>();
+                this.rev = undefined;
             }
         },
         async add(pid: number) {
@@ -78,7 +82,7 @@ export const useCategoryStore = defineStore('category', {
             return Promise.reject("未找到分类【" + id + "】");
         },
         async _sync() {
-            const res = await utools.db.promises.put({
+            const res = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.CATEGORY,
                 _rev: this.rev,
                 value: clone(this.categories, true)

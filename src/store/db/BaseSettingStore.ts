@@ -6,6 +6,7 @@ import {toRaw} from "vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -47,15 +48,18 @@ export const useBaseSettingStore = defineStore('base-setting', {
     },
     actions: {
         async init() {
-            const res = await utools.db.promises.get(LocalNameEnum.SETTING_BASE);
+            const res = await useAuthStore().authDriver.get(LocalNameEnum.SETTING_BASE);
             if (res) {
                 this.baseSetting = Object.assign(this.baseSetting, res.value);
                 this.rev = res._rev;
+            }else {
+                this.baseSetting = getDefaultBaseSetting();
+                this.rev = undefined;
             }
         },
         async save(baseSetting: BaseSetting) {
             this.baseSetting = baseSetting;
-            const res = await utools.db.promises.put({
+            const res = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.SETTING_BASE,
                 _rev: this.rev,
                 value: toRaw(this.baseSetting)

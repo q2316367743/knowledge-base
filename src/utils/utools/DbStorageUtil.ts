@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store/components/AuthStore";
 import {toRaw} from "vue";
 
 // 定义
@@ -62,7 +63,7 @@ export interface DbRecord<T> {
 // --------------------------------------- 列表操作 ---------------------------------------
 
 export async function listByAsync<T>(key: string): Promise<DbList<T>> {
-    const res = await utools.db.promises.get(key);
+    const res = await useAuthStore().authDriver.get(key);
     if (res) {
         return {
             list: res.value,
@@ -73,7 +74,7 @@ export async function listByAsync<T>(key: string): Promise<DbList<T>> {
 }
 
 export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: string): Promise<undefined | string> {
-    const res = await utools.db.promises.put({
+    const res = await useAuthStore().authDriver.put({
         _id: key,
         _rev: rev,
         value: toRaw(records)
@@ -81,7 +82,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
     if (res.error) {
         if (res.message === "Document update conflict") {
             // 查询后更新
-            const res = await utools.db.promises.get(key);
+            const res = await useAuthStore().authDriver.get(key);
             return await saveListByAsync(key, records, res ? res._rev : undefined);
         }
         return Promise.reject(res.message);
@@ -90,7 +91,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
 }
 
 export async function listRecordByAsync<T>(key: string): Promise<Array<DbRecord<T>>> {
-    const items = await utools.db.promises.allDocs(key);
+    const items = await useAuthStore().authDriver.allDocs(key);
     return items.map(item => ({
         record: item.value,
         rev: item._rev
@@ -100,7 +101,7 @@ export async function listRecordByAsync<T>(key: string): Promise<Array<DbRecord<
 // --------------------------------------- 单一对象操作 ---------------------------------------
 
 export async function getFromOneByAsync<T extends Record<string, any>>(key: string, record: T): Promise<DbRecord<T>> {
-    const res = await utools.db.promises.get(key);
+    const res = await useAuthStore().authDriver.get(key);
     if (!res) {
         return {record}
     }
@@ -111,7 +112,7 @@ export async function getFromOneByAsync<T extends Record<string, any>>(key: stri
 }
 
 export async function saveOneByAsync<T>(key: string, value: T, rev?: string): Promise<undefined | string> {
-    const res = await utools.db.promises.put({
+    const res = await useAuthStore().authDriver.put({
         _id: key,
         _rev: rev,
         value: toRaw(value)
@@ -119,7 +120,7 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string): Pr
     if (res.error) {
         if (res.message === "Document update conflict") {
             // 查询后更新
-            const res = await utools.db.promises.get(key);
+            const res = await useAuthStore().authDriver.get(key);
             return await saveOneByAsync(key, value, res ? res._rev : undefined);
         }
         return Promise.reject(res.message);
@@ -128,7 +129,7 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string): Pr
 }
 
 export async function removeOneByAsync(key: string, ignoreError: boolean = false): Promise<void> {
-    const res = await utools.db.promises.remove(key);
+    const res = await useAuthStore().authDriver.remove(key);
     if (res.error) {
         if (!ignoreError) {
             return Promise.reject(res.message);
@@ -144,7 +145,7 @@ export async function removeOneByAsync(key: string, ignoreError: boolean = false
  * @param ignoreError 是否忽略异常，默认不忽略
  */
 export async function removeMultiByAsync(key: string, ignoreError: boolean = false): Promise<void> {
-    const items = await utools.db.promises.allDocs(key);
+    const items = await useAuthStore().authDriver.allDocs(key);
     for (let item of items) {
         await removeOneByAsync(item._id, ignoreError);
     }

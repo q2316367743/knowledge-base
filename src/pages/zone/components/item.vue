@@ -115,6 +115,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {statistics} from "@/global/BeanFactory";
 import {useGlobalStore} from "@/store/GlobalStore";
 import html2canvas from "html2canvas";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 const props = defineProps({
     zone: Object as PropType<ZoneIndex>
@@ -158,21 +159,21 @@ const ellipsis = ref<boolean | {
 if (props.zone) {
     createTime.value = toDateString(props.zone.createTime, "yyyy-MM-dd HH:mm:ss");
     // 获取基础信息
-    utools.db.promises.get(LocalNameEnum.ZONE_BASE + props.zone.id)
+    useAuthStore().authDriver.get(LocalNameEnum.ZONE_BASE + props.zone.id)
         .then(res => {
             if (res) {
                 base.value = res.value;
             }
         });
     // 预览
-    utools.db.promises.get(LocalNameEnum.ZONE_PREVIEW + props.zone.id)
+    useAuthStore().authDriver.get(LocalNameEnum.ZONE_PREVIEW + props.zone.id)
         .then(res => {
             if (res) {
                 preview.value = res.value;
             }
         });
     // 评论
-    utools.db.promises.get(LocalNameEnum.ZONE_COMMENT + props.zone.id)
+    useAuthStore().authDriver.get(LocalNameEnum.ZONE_COMMENT + props.zone.id)
         .then(res => {
             if (res) {
                 comments.value = res.value;
@@ -191,7 +192,7 @@ function toDate(date: Date | string | number) {
 }
 
 function executeCopy() {
-    utools.db.promises.get(LocalNameEnum.ZONE_CONTENT + props.zone?.id)
+    useAuthStore().authDriver.get(LocalNameEnum.ZONE_CONTENT + props.zone?.id)
         .then(res => {
             if (res) {
                 const content = res.value as ZoneContent;
@@ -223,7 +224,7 @@ function removeZone() {
 // =========================================================================
 
 function showImagePreview(id: string, name: string) {
-    utools.db.promises.getAttachment('/zone/attachment/' + id)
+    useAuthStore().authDriver.getAttachment('/zone/attachment/' + id)
         .then(buffer => {
             if (!buffer) {
                 MessageUtil.warning("图片未找到");
@@ -244,7 +245,7 @@ function releaseImagePreview() {
 }
 
 function downloadImage() {
-    utools.db.promises.getAttachment(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
+    useAuthStore().authDriver.getAttachment(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
         .then(buffer => {
             if (!buffer) {
                 MessageUtil.warning("图片未找到");
@@ -300,7 +301,7 @@ async function syncComment() {
         MessageUtil.error("动态不存在，请刷新后重试")
         return;
     }
-    const res = await utools.db.promises.put({
+    const res = await useAuthStore().authDriver.put({
         _id: LocalNameEnum.ZONE_COMMENT + props.zone.id,
         _rev: commentRev,
         value: toRaw(comments.value)

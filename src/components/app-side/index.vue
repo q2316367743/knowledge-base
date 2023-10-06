@@ -79,6 +79,15 @@
             </a-menu-item>
         </a-sub-menu>
     </a-menu>
+    <div class="app-exit">
+        <a-tooltip content="退出" position="tr">
+            <a-button type="text" @click="toLogin()">
+                <template #icon>
+                    <icon-import/>
+                </template>
+            </a-button>
+        </a-tooltip>
+    </div>
 </template>
 <script lang="ts" setup>
 import IconTimeLine from "@/icon/IconTimeLine.vue";
@@ -96,7 +105,15 @@ watch(() => route.path, path => {
         selectedKeys.value[0] = path;
     }
 })
+
+function toLogin() {
+    router.push('/login');
+}
 </script>
 <style scoped>
-
+.app-exit {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+}
 </style>

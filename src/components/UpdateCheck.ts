@@ -1,13 +1,14 @@
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
 import NotificationUtil from "@/utils/NotificationUtil";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 export default function updateCheck(toUpdate?: () => void) {
-    utools.db.promises.get(LocalNameEnum.VERSION)
+    useAuthStore().authDriver.get(LocalNameEnum.VERSION)
         .then(res => {
             if (res) {
                 if (res.value !== Constant.version) {
-                    utools.db.promises.put({
+                    useAuthStore().authDriver.put({
                         _id: LocalNameEnum.VERSION,
                         _rev: res._rev,
                         value: Constant.version
@@ -26,7 +27,7 @@ export default function updateCheck(toUpdate?: () => void) {
             } else {
                 // 第一次
                 NotificationUtil.success("欢迎您使用知识库");
-                utools.db.promises.put({
+                useAuthStore().authDriver.put({
                     _id: LocalNameEnum.VERSION,
                     value: Constant.version
                 });

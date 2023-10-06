@@ -6,6 +6,7 @@ import {toRaw} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 export const useArticleStore = defineStore('article', {
     state: () => ({
@@ -38,14 +39,17 @@ export const useArticleStore = defineStore('article', {
     },
     actions: {
         async init() {
-            const res = await utools.db.promises.get(LocalNameEnum.ARTICLE);
+            const res = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE);
             if (res) {
                 this.value = res.value;
                 this.rev = res._rev
+            } else {
+                this.value = new Array<ArticleIndex>();
+                this.rev = undefined;
             }
         },
         async _sync() {
-            const res = await utools.db.promises.put({
+            const res = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE,
                 _rev: this.rev,
                 value: toRaw(this.articles)
@@ -81,7 +85,7 @@ export const useArticleStore = defineStore('article', {
             });
             await this._sync();
             // 新增基础信息
-            const baseRes = await utools.db.promises.put({
+            const baseRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_BASE + id,
                 value: toRaw(base)
             })
@@ -92,7 +96,7 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("新增基础信息异常，" + baseRes.error);
             }
             // 新增内容
-            const contentRes = await utools.db.promises.put({
+            const contentRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_CONTENT + id,
                 value: {
                     content
@@ -103,12 +107,12 @@ export const useArticleStore = defineStore('article', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await utools.db.promises.remove(LocalNameEnum.ARTICLE_BASE + id);
+                await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_BASE + id);
                 return Promise.reject("新增内容异常，" + contentRes.error);
             }
             // 新增预览
             let preview = md.render(content);
-            const previewRes = await utools.db.promises.put({
+            const previewRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_PREVIEW + id,
                 value: {
                     html: preview,
@@ -120,9 +124,9 @@ export const useArticleStore = defineStore('article', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await utools.db.promises.remove(LocalNameEnum.ARTICLE_BASE + id);
+                await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_BASE + id);
                 // 删除内容
-                await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+                await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_CONTENT + id);
                 return Promise.reject("新增预览异常，" + previewRes.error);
             }
             return Promise.resolve(id);
@@ -156,9 +160,9 @@ export const useArticleStore = defineStore('article', {
 
             await this._sync();
             // 删除旧的基础信息
-            await utools.db.promises.remove(LocalNameEnum.ARTICLE_BASE + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_BASE + id);
             // 新增基础信息
-            const baseRes = await utools.db.promises.put({
+            const baseRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_BASE + id,
                 value: toRaw(base)
             })
@@ -169,9 +173,9 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("修改基础信息异常，" + baseRes.error);
             }
             // 删除旧的内容
-            await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_CONTENT + id);
             // 新增内容
-            const contentRes = await utools.db.promises.put({
+            const contentRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_CONTENT + id,
                 value: {
                     content
@@ -182,10 +186,10 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("修改内容异常，" + contentRes.error);
             }
             // 删除旧的预览
-            await utools.db.promises.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
             // 新增预览
             let preview = md.render(content);
-            const previewRes = await utools.db.promises.put({
+            const previewRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_PREVIEW + id,
                 value: {
                     html: preview,
@@ -206,10 +210,10 @@ export const useArticleStore = defineStore('article', {
             this.value.splice(index, 1);
             await this._sync();
             // 删除内容
-            await utools.db.promises.remove(LocalNameEnum.ARTICLE_CONTENT + id);
-            await utools.db.promises.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
             // 删除评论
-            await utools.db.promises.remove(LocalNameEnum.ARTICLE_COMMENT + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_COMMENT + id);
             // 删除附件
         }
     }

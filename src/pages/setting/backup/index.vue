@@ -63,6 +63,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
 import {useFileSystemAccess} from "@vueuse/core";
 import {initData} from "@/global/BeanFactory";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 
 const FOLDER = Constant.id;
@@ -104,7 +105,7 @@ function save() {
 
 async function buildBackup(): Promise<ArrayBuffer> {
     const zip = new JSZip();
-    const items = await utools.db.promises.allDocs();
+    const items = await useAuthStore().authDriver.allDocs();
     for (let item of items) {
         // 备份时，全部备份
         zip.file(item._id, JSON.stringify(item));
@@ -120,13 +121,13 @@ async function restoreBackup(backup: ArrayBuffer): Promise<void> {
     const zip = await JSZip.loadAsync(backup);
 
     // 删除当前存储
-    const oldFiles = await utools.db.promises.allDocs();
+    const oldFiles = await useAuthStore().authDriver.allDocs();
     for (let oldFile of oldFiles) {
         if (notBackup.has(oldFile._id)) {
             continue;
         }
         // 删除时有选择删除
-        await utools.db.promises.remove(oldFile._id);
+        await useAuthStore().authDriver.remove(oldFile._id);
     }
 
     return new Promise<void>(async resolve => {
@@ -157,7 +158,7 @@ async function restoreBackup(backup: ArrayBuffer): Promise<void> {
                     }
                     return;
                 }
-                await utools.db.promises.put({
+                await useAuthStore().authDriver.put({
                     _id: path,
                     value: JSON.parse(fileReader.result as string).value
                 });

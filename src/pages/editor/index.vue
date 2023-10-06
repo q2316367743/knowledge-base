@@ -104,6 +104,7 @@ import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import {renderHelp} from "@/store/db/BaseSettingStore";
 import {useRoute, useRouter} from "vue-router";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 const route = useRoute();
 const router = useRouter();
@@ -155,12 +156,12 @@ async function init() {
         }
         title.value = articleIndex.name;
         // 基础信息
-        const baseWrap = await utools.db.promises.get(LocalNameEnum.ARTICLE_BASE + id.value);
+        const baseWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_BASE + id.value);
         if (baseWrap) {
             base.value = Object.assign(base.value, baseWrap.value);
         }
         // 内容
-        const contentWrap = await utools.db.promises.get(LocalNameEnum.ARTICLE_CONTENT + id.value);
+        const contentWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_CONTENT + id.value);
         if (contentWrap) {
             content.value = (contentWrap.value as ArticleSource).content;
         }

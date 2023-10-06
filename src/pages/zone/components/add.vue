@@ -71,6 +71,7 @@ import {RequestOption} from "@arco-design/web-vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {FileItem} from "@arco-design/web-vue";
 import {statistics} from "@/global/BeanFactory";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 export default defineComponent({
     name: 'zone-add',
@@ -122,33 +123,27 @@ export default defineComponent({
 
             let now = new Date();
             let id = now.getTime() + '';
-            let reader = new FileReader();
-            reader.readAsArrayBuffer(option.fileItem.file);
-            reader.onload = async (evt: ProgressEvent<FileReader>) => {
-                if (evt.target) {
-                    // 本地导入
-                    let result = evt.target.result as ArrayBuffer;
-                    let res = await utools.db.promises.postAttachment(LocalNameEnum.ZONE_ATTACHMENT + id,
-                            new Uint8Array(result),
-                            'image');
-                    this.zone.imageList.push({
-                        uid: LocalNameEnum.ZONE_ATTACHMENT + id,
-                        file: option.fileItem.file,
-                        url: window.URL.createObjectURL(new Blob([result]))
-                    })
-                    if (res.error) {
-                        MessageUtil.error(res.message || '新增异常');
-                        return;
+            useAuthStore().authDriver.postAttachment(LocalNameEnum.ZONE_ATTACHMENT + id,
+                option.fileItem.file)
+                .then(res => {
+                    if (option.fileItem.file) {
+
+                        this.zone.imageList.push({
+                            uid: LocalNameEnum.ZONE_ATTACHMENT + id,
+                            file: option.fileItem.file,
+                            url: window.URL.createObjectURL(option.fileItem.file)
+                        })
+                        if (res.error) {
+                            MessageUtil.error(res.message || '新增异常');
+                            return;
+                        }
+                        this.zone.image.push({
+                            id,
+                            type: ZoneAttachmentTypeEnum.IMAGE,
+                            name: option.fileItem.name || '未知文件',
+                        });
                     }
-                    this.zone.image.push({
-                        id,
-                        type: ZoneAttachmentTypeEnum.IMAGE,
-                        name: option.fileItem.name || '未知文件',
-                    });
-                } else {
-                    MessageUtil.error("解析失败", option.fileItem.name);
-                }
-            }
+                });
         },
 
         // ------ 空间相关 ------

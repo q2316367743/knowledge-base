@@ -1,6 +1,7 @@
 import {useFileSystemAccess} from "@vueuse/core";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageUtil from "@/utils/MessageUtil";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 /**
  * 选择文件，返回文件内容
@@ -29,9 +30,9 @@ export function useFileSelect(): Promise<Blob | null> {
 
 /**
  * 文件上擦混，返回文件hash
- * @param blob 文件内容
+ * @param data 文件内容
  */
-export async function useImageUpload(data: Blob | ArrayBuffer): Promise<string> {
+export async function useImageUpload(data: Blob): Promise<string> {
     const id = new Date().getTime() + '';
 
     let buffer: ArrayBuffer;
@@ -43,10 +44,9 @@ export async function useImageUpload(data: Blob | ArrayBuffer): Promise<string> 
     }
 
 
-    const res = await utools.db.promises.postAttachment(
+    const res = await useAuthStore().authDriver.postAttachment(
         LocalNameEnum.ARTICLE_ATTACHMENT + id,
-        new Uint8Array(buffer),
-        'image'
+        data
     );
     if (res.error) {
         return Promise.reject(res.message);
@@ -73,10 +73,6 @@ export function loadImageBySync(id: string): string {
  * @param id 附件ID
  */
 export async function loadImageByAsync(id: string): Promise<string> {
-    const data = await utools.db.promises.getAttachment(LocalNameEnum.ARTICLE_ATTACHMENT + id);
-    if (!data) {
-        return Promise.reject(`资源【${id}】加载失败`)
-    }
-    const blob = new Blob([data]);
-    return Promise.resolve(window.URL.createObjectURL(blob));
+    const data = await useAuthStore().authDriver.getAttachment(LocalNameEnum.ARTICLE_ATTACHMENT + id);
+    return Promise.resolve(data);
 }

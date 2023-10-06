@@ -115,24 +115,32 @@ export const utools = {
                 }
                 return getMany(itemKeys);
             },
+
             /**
-              * 存储附件到新文档
-              */
-            postAttachment(): Promise<DbReturn> {
+             * 存储附件到新文档
+             * @param docId 文档ID
+             * @param attachment 附件 buffer
+             * @param type 附件类型，示例：image/png, text/plain
+             */
+            postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn>{
                 return Promise.reject("Web不支持保存附件")
             },
+
             /**
-              * 获取附件
-              */
-            getAttachment(): Promise<Uint8Array | null> {
-                return Promise.reject("Web不支持获取附件")
+             * 获取附件
+             * @param docId 文档ID
+             */
+            getAttachment(docId: string): Promise<Uint8Array | null>{
+                return Promise.reject("Web不支持保存附件")
             },
+
             /**
-              * 获取附件类型
-              */
-            getAttachmentType(): Promise<string | null> {
-                return Promise.reject("Web不支持获取附件类型")
-            }
+             * 获取附件类型
+             * @param docId 文档ID
+             */
+            getAttachmentType(docId: string): Promise<string | null>{
+                return Promise.reject("Web不支持保存附件")
+            },
         }
     },
     getPath(): string {

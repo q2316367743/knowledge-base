@@ -71,6 +71,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {statistics} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 const props = defineProps({
     article: Object as PropType<ArticleIndex>
@@ -94,7 +95,7 @@ const collect = computed(() => typeof feature.value !== 'undefined');
 
 item.value = Object.assign(item.value, props.article);
 if (item.value.id !== 0) {
-    utools.db.promises.get(LocalNameEnum.ARTICLE_BASE + item.value.id)
+    useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_BASE + item.value.id)
             .then(res => {
                 if (res) {
                     base.value = Object.assign(base.value, res.value);
@@ -105,7 +106,7 @@ if (item.value.id !== 0) {
 watch(() => item.value, value => {
     item.value = Object.assign(item.value, value);
     if (item.value.id !== 0) {
-        utools.db.promises.get(LocalNameEnum.ARTICLE_BASE + value.id)
+        useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_BASE + value.id)
                 .then(res => {
                     if (res) {
                         base.value = Object.assign(base.value, res.value);

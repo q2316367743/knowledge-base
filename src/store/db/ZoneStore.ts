@@ -4,6 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
+import {useAuthStore} from "@/store/components/AuthStore";
 
 export const useZoneStore = defineStore('zone', {
     state: () => ({
@@ -15,14 +16,14 @@ export const useZoneStore = defineStore('zone', {
     },
     actions: {
         async init() {
-            if (this.value.length > 0) {
-                return Promise.resolve();
-            }
-            const res = await utools.db.promises.get(LocalNameEnum.ZONE);
+            const res = await useAuthStore().authDriver.get(LocalNameEnum.ZONE);
             if (res) {
                 const value: Array<ZoneIndex> = res.value;
                 this.rev = res._rev;
                 this.value = value;
+            } else {
+                this.value = new Array<ZoneIndex>()
+                this.rev = undefined
             }
         },
         addSimple(content: string): Promise<ZoneIndex> {
@@ -47,7 +48,7 @@ export const useZoneStore = defineStore('zone', {
             this.value.push(zoneIndex);
             await this._sync();
             // 新增基础信息
-            let baseRes = await utools.db.promises.put({
+            let baseRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ZONE_BASE + id,
                 value: JSON.parse(JSON.stringify(base))
             });
@@ -58,7 +59,7 @@ export const useZoneStore = defineStore('zone', {
             }
 
             // 新增文章内容
-            let contentRes = await utools.db.promises.put({
+            let contentRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ZONE_CONTENT + id,
                 value: {
                     body: content.body,
@@ -69,11 +70,11 @@ export const useZoneStore = defineStore('zone', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
+                await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_BASE + id);
                 return Promise.reject("新增文章内容异常：" + contentRes.message);
             }
             // 新增文章预览
-            let previewRes = await utools.db.promises.put({
+            let previewRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ZONE_PREVIEW + id,
                 value: {
                     html: md.render(content.body)
@@ -84,9 +85,9 @@ export const useZoneStore = defineStore('zone', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
+                await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_BASE + id);
                 // 删除内容
-                await utools.db.promises.remove(LocalNameEnum.ZONE_CONTENT + id)
+                await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_CONTENT + id)
                 return Promise.reject("新增文章预览异常：" + previewRes.message);
             }
             return Promise.resolve(zoneIndex);
@@ -103,20 +104,20 @@ export const useZoneStore = defineStore('zone', {
             this.value.splice(index, 1);
             await this._sync();
             // 删除基本信息
-            const baseWrap = await utools.db.promises.get(LocalNameEnum.ZONE_BASE + id);
-            await utools.db.promises.remove(LocalNameEnum.ZONE_BASE + id);
+            const baseWrap = await useAuthStore().authDriver.get(LocalNameEnum.ZONE_BASE + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_BASE + id);
             //  删除附件
             if (baseWrap) {
                 const base = baseWrap.value as ZoneBase;
                 base.image.forEach(image => utools.db.remove(LocalNameEnum.ZONE_ATTACHMENT + image.id));
             }
             // 删除内容
-            await utools.db.promises.remove(LocalNameEnum.ZONE_CONTENT + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_CONTENT + id);
             // 删除预览
-            await utools.db.promises.remove(LocalNameEnum.ZONE_PREVIEW + id);
+            await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_PREVIEW + id);
         },
         async _sync() {
-            const res = await utools.db.promises.put({
+            const res = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ZONE,
                 _rev: this.rev,
                 value: toRaw(this.value)
