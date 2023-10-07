@@ -84,15 +84,20 @@ const treeData = computed<Array<TreeNodeData>>(() => {
     treeEach(folderTree.value, treeData, folderMap.value);
     treeData = treeData.length === 0 ? [] : (treeData[0].children || []);
     // 文件夹被删除或没有的
-    const articles = folderMap.value.get(null);
-    if (articles && articles.length > 0) {
-        articles.map(article => ({
-            key: article.id,
-            title: article.name,
-            isLeaf: true,
-            icon: () => h(IconFile, {}),
-        })).forEach(article => treeData.push(article));
-    }
+    const articleFolders = new Set(Array.from(folderMap.value.keys()));
+    useFolderStore().folderIds.forEach(folderId => articleFolders.delete(folderId));
+    articleFolders.delete(0);
+    articleFolders.forEach(folderId => {
+        const articles = folderMap.value.get(folderId);
+        if (articles && articles.length > 0) {
+            articles.map(article => ({
+                key: article.id,
+                title: article.name,
+                isLeaf: true,
+                icon: () => h(IconFile, {}),
+            })).forEach(article => treeData.push(article));
+        }
+    })
     return treeData;
 });
 const virtualListProps = computed(() => ({
