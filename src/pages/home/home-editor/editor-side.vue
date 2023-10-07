@@ -103,8 +103,8 @@ const virtualListProps = computed(() => ({
     height: size.height.value - 46
 }));
 
-function onSelect(selectKeys: Array<number>) {
-    const id = selectKeys[0];
+function onSelect(selectKeys: Array<number | string>) {
+    const id = selectKeys[0] as number;
     if (useArticleStore().articleMap.has(id)) {
         useHomeEditorStore().setId(id);
     }

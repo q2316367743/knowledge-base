@@ -16,7 +16,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         articleHeaderVisible: true,
         codeWrap: false,
         imageStrategy: ImageStrategyEnum.INNER,
-        homeType: HomeTypeEnum.DEFAULT
+        homeType: HomeTypeEnum.EDITOR
     }
 }
 

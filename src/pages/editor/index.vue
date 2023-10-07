@@ -194,7 +194,8 @@ function save() {
             tags: extra.value.tags,
             categoryId: extra.value.categoryId || null,
             source: extra.value.source,
-            createTime: extra.value.createTime
+            folder: 0,
+            preview: false
         }, base.value,content.value)
             .then(() => {
                 MessageUtil.success("保存文章成功");
