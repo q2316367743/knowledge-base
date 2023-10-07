@@ -96,7 +96,7 @@ function switchCollapsed() {
 
 onMounted(() => {
     // 从路由和props中获取
-    init(props.id )
+    init(props.id as string)
         .then(() => {
             loading.value = false;
             // 设置
@@ -156,7 +156,7 @@ function toEditor() {
         useArticleStore().setPreview(parseInt(id), false)
             .then(() => MessageUtil.success("切换为编辑模式"))
             .catch(e => MessageUtil.error("切换为编辑模式失败", e));
-    }else {
+    } else {
         router.push('/editor/' + id);
     }
 }
