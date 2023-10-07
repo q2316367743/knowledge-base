@@ -96,7 +96,7 @@ function switchCollapsed() {
 
 onMounted(() => {
     // 从路由和props中获取
-    init(props.id || '')
+    init(props.id )
         .then(() => {
             loading.value = false;
             // 设置
@@ -115,6 +115,7 @@ onMounted(() => {
 const urls = new Array<string>();
 
 async function init(articleIdStr: string) {
+    console.log(articleIdStr)
     id = articleIdStr;
     if (!id) {
         return Promise.reject("ID不存在");

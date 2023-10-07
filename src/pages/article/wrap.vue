@@ -1,13 +1,17 @@
 <template>
     <div class="article-wrap">
-        <kb-article :id="route.query.id as string"/>
+        <kb-article :id="id"/>
     </div>
 </template>
 <script lang="ts" setup>
 import {useRoute} from "vue-router";
 import KbArticle from '@/pages/article/index.vue';
+import {computed} from "vue";
 
 const route = useRoute();
+
+const id = computed(() => route.params.id as string);
+
 </script>
 <style scoped>
 .article-wrap {
