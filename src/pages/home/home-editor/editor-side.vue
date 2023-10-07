@@ -2,7 +2,7 @@
     <div class="home-editor-side">
         <header style="margin: 7px;">
             <a-input-group>
-                <a-input style="width: 218px;"/>
+                <a-input style="width: 218px;" disabled/>
                 <a-dropdown>
                     <a-button type="text">
                         <template #icon>

@@ -231,7 +231,8 @@ export const useArticleStore = defineStore('article', {
             this.value[index] = {
                 ...this.value[index],
                 preview: preview,
-                updateTime: new Date()
+                updateTime: new Date(),
+                tags: toRaw(this.value[index].tags),
             };
             await this._sync();
             useUpdatePreviewEvent.emit(id);

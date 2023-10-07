@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/store/components/AuthStore";
 import {toRaw} from "vue";
+import {clone} from "xe-utils";
 
 // 对象
 
@@ -66,7 +67,10 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
             // 查询后更新
             const res = await useAuthStore().authDriver.get(key);
             return await saveListByAsync(key, records, res ? res._rev : undefined);
+        }else if (res.message === 'An object could not be cloned.') {
+            return await saveListByAsync(key, clone(records, true), rev);
         }
+        console.log(res)
         return Promise.reject(res.message);
     }
     return Promise.resolve(res.rev);
