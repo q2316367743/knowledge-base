@@ -19,6 +19,7 @@ export const useZoneStore = defineStore('zone', {
             const res = await listByAsync(LocalNameEnum.ZONE);
             this.rev = res.rev;
             this.value = res.list;
+            console.log(this.value)
         },
         addSimple(content: string): Promise<ZoneIndex> {
             return this.add({

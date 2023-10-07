@@ -4,6 +4,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import {FileData, FileInfo, FileItem, Result} from "../domain/AlistDomain";
 import {FileListItem, PathIndex} from "@/components/AuthDriver/domain/FileListItem";
 import MessageUtil from "@/utils/MessageUtil";
+import {sleep} from "@/utils/BrowserUtil";
 
 /**
  * 生成随机字符串
@@ -18,6 +19,14 @@ function getRandomChar(len: number): string {
         tmp += x.charAt(Math.ceil(Math.random() * 100000000) % x.length);
     }
     return timestamp + tmp;
+}
+
+let lock = false;
+let todo = false;
+
+async function buildFileName(): Promise<string> {
+    await sleep(123);
+    return Promise.resolve(`/${new Date().getTime()}.json`);
 }
 
 export class AlistAuthDriverImpl implements AuthDriver {
@@ -69,6 +78,30 @@ export class AlistAuthDriverImpl implements AuthDriver {
             console.error(e);
             return Promise.resolve();
         }
+    }
+
+    /**
+     * 同步索引文件
+     */
+    private sync() {
+        if (lock) {
+            todo = true;
+            return Promise.resolve();
+        }
+        lock = true;
+        this._sync()
+            .then(() => {
+                lock = false;
+                if (todo) {
+                    this._sync();
+                }
+            })
+            .catch(e => {
+                lock = false;
+                todo = false;
+                MessageUtil.error("同步远程服务器错误", e);
+            })
+
     }
 
     /**
@@ -281,7 +314,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
 
         // 再新增索引
         this.pathMap.set(docId, fileName);
-        await this._sync();
+        this.sync();
 
         return Promise.resolve({
             id: docId,
@@ -308,7 +341,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
         }
 
         // 处理文件路径
-        const fileName = `/${new Date().getTime()}.json`;
+        const fileName = await buildFileName();
 
         // 先新增数据
         await this.buildHttp({
@@ -326,7 +359,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
 
         // 再新增索引
         this.pathMap.set(item._id, fileName);
-        await this._sync();
+        this.sync();
 
         return Promise.resolve({
             id: doc._id,
@@ -351,7 +384,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
         }
         this.pathMap.delete(_id);
         // 同步
-        await this._sync();
+        this.sync();
         // 删除内容
         const path = this.getKey(id);
         let nameIndex = path.lastIndexOf("/");
