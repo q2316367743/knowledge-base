@@ -40,6 +40,19 @@ export const useFolderStore = defineStore('folder', {
             }
             this.folders.splice(index, 1);
             await this._sync();
+        },
+        async renameFolder(id: number, name: string) {
+            const index = this.folders.findIndex(folder => folder.id === id);
+            if (index == -1) {
+                return Promise.reject(`文件夹【${id}】不存在`)
+            }
+            this.folders[index] = {
+                ...this.folders[index],
+                name: name,
+                updateTime: new Date()
+            }
+            await this._sync();
+
         }
     }
 })

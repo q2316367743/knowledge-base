@@ -38,11 +38,11 @@
                             </template>
                             新建文件夹
                         </a-doption>
-                        <a-doption>
+                        <a-doption v-if="!nodeData.isLeaf" @click="renameFolder(nodeData.key, nodeData.title)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
-                            修改
+                            重命名
                         </a-doption>
                         <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
                             <template #icon>
@@ -157,6 +157,17 @@ async function _remove(id: number, article: boolean) {
         // 删除文件夹
         await useFolderStore().removeFolder(id)
     }
+}
+
+function renameFolder(id: number, name: string) {
+    MessageBoxUtil.prompt("请输入新的文件夹名称", "重命名", {
+        confirmButtonText: "确认",
+        inputValue: name
+    }).then(newName => {
+        useFolderStore().renameFolder(id, newName)
+            .then(() => MessageUtil.success("重命名成功"))
+            .catch(e => MessageUtil.error("重命名失败", e));
+    })
 }
 
 </script>

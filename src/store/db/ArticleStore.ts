@@ -6,6 +6,7 @@ import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
+import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 
 export const useArticleStore = defineStore('article', {
     state: () => ({
@@ -42,25 +43,12 @@ export const useArticleStore = defineStore('article', {
     },
     actions: {
         async init() {
-            const res = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE);
-            if (res) {
-                this.value = res.value;
-                this.rev = res._rev
-            } else {
-                this.value = new Array<ArticleIndex>();
-                this.rev = undefined;
-            }
+            const res = await listByAsync<ArticleIndex>(LocalNameEnum.ARTICLE);
+            this.value = res.list;
+            this.rev = res.rev
         },
         async _sync() {
-            const res = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE,
-                _rev: this.rev,
-                value: toRaw(this.articles)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
+            this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value);
         },
         async add(
             article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
@@ -111,7 +99,7 @@ export const useArticleStore = defineStore('article', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_BASE + id);
+                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id);
                 return Promise.reject("新增内容异常，" + contentRes.error);
             }
             // 新增预览
@@ -128,9 +116,9 @@ export const useArticleStore = defineStore('article', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_BASE + id);
+                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id);
                 // 删除内容
-                await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+                await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id);
                 return Promise.reject("新增预览异常，" + previewRes.error);
             }
             return Promise.resolve(id);
@@ -164,7 +152,7 @@ export const useArticleStore = defineStore('article', {
 
             await this._sync();
             // 删除旧的基础信息
-            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_BASE + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id);
             // 新增基础信息
             const baseRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_BASE + id,
@@ -177,7 +165,7 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("修改基础信息异常，" + baseRes.error);
             }
             // 删除旧的内容
-            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_CONTENT + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id);
             // 新增内容
             const contentRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_CONTENT + id,
@@ -190,7 +178,7 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("修改内容异常，" + contentRes.error);
             }
             // 删除旧的预览
-            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_PREVIEW + id);
             // 新增预览
             let preview = md.render(content);
             const previewRes = await useAuthStore().authDriver.put({
@@ -214,11 +202,11 @@ export const useArticleStore = defineStore('article', {
             this.value.splice(index, 1);
             await this._sync();
             // 删除内容
-            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_CONTENT + id);
-            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_PREVIEW + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_PREVIEW + id, true);
             // 删除评论
-            await useAuthStore().authDriver.remove(LocalNameEnum.ARTICLE_COMMENT + id);
-            // 删除附件
+            await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
+            // TODO: 删除附件
         }
     }
 });

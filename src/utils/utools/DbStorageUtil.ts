@@ -1,24 +1,6 @@
 import { useAuthStore } from "@/store/components/AuthStore";
 import {toRaw} from "vue";
 
-// 定义
-
-export interface DbDoc {
-    _id: string,
-    _rev?: string,
-
-    [key: string]: any
-}
-
-export interface DbReturn {
-    id: string,
-    rev?: string,
-    ok?: boolean,
-    error?: boolean,
-    name?: string,
-    message?: string
-}
-
 // 对象
 
 export function getItem<T>(key: string): T | null {
@@ -62,7 +44,7 @@ export interface DbRecord<T> {
 
 // --------------------------------------- 列表操作 ---------------------------------------
 
-export async function listByAsync<T>(key: string): Promise<DbList<T>> {
+export async function listByAsync<T = any>(key: string): Promise<DbList<T>> {
     const res = await useAuthStore().authDriver.get(key);
     if (res) {
         return {
@@ -111,7 +93,14 @@ export async function getFromOneByAsync<T extends Record<string, any>>(key: stri
     });
 }
 
-export async function saveOneByAsync<T>(key: string, value: T, rev?: string): Promise<undefined | string> {
+/**
+ * 保存一条数据
+ * @param key 键
+ * @param value 值
+ * @param rev 恢复
+ * @param err 错误处理函数
+ */
+export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err?: (e: Error) => void): Promise<undefined | string> {
     const res = await useAuthStore().authDriver.put({
         _id: key,
         _rev: rev,
@@ -123,11 +112,20 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string): Pr
             const res = await useAuthStore().authDriver.get(key);
             return await saveOneByAsync(key, value, res ? res._rev : undefined);
         }
-        return Promise.reject(res.message);
+        if (err) {
+            err(new Error(res.message));
+        }else {
+            return Promise.reject(res.message);
+        }
     }
     return Promise.resolve(res.rev);
 }
 
+/**
+ * 删除一条记录
+ * @param key 键
+ * @param ignoreError 是否忽略异常
+ */
 export async function removeOneByAsync(key: string, ignoreError: boolean = false): Promise<void> {
     const res = await useAuthStore().authDriver.remove(key);
     if (res.error) {
