@@ -341,7 +341,13 @@ export class AlistAuthDriverImpl implements AuthDriver {
         }
 
         // 处理文件路径
-        const fileName = await buildFileName();
+        let fileName = "";
+
+        const valueSet = new Set<string>(this.pathMap.values());
+
+        do {
+            fileName = await buildFileName();
+        } while (valueSet.has(fileName));
 
         // 先新增数据
         await this.buildHttp({
