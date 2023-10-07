@@ -177,7 +177,8 @@ function save() {
             description: extra.value.description,
             tags: extra.value.tags,
             categoryId: extra.value.categoryId || null,
-            source: extra.value.source
+            source: extra.value.source,
+            folder: 0
         }, base.value, content.value)
             .then(idWrap => {
                 id.value = idWrap;

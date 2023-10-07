@@ -37,7 +37,11 @@ async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
     return driver;
 }
 
+// 是否初始化
 let init = false;
+
+// key
+const KEY = LocalNameEnum.AUTH + utools.getNativeId()
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -53,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
                 return;
             }
             init = true;
-            const res = await utools.db.promises.get(LocalNameEnum.AUTH);
+            const res = await utools.db.promises.get(KEY);
             if (res) {
                 this.need = false;
                 this.auth = Object.assign(this.auth, res.value);
@@ -64,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
         async save(auth: Auth) {
             this.auth = auth;
             const res = await utools.db.promises.put({
-                _id: LocalNameEnum.AUTH,
+                _id: KEY,
                 _rev: this.rev,
                 value: toRaw(this.auth)
             });

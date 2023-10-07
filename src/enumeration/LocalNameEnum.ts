@@ -1,6 +1,6 @@
 enum LocalNameEnum {
 
-    AUTH = '/local/auth',
+    AUTH = '/local/auth/',
 
     CATEGORY = '/local/category',
 

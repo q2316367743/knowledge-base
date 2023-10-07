@@ -10,7 +10,8 @@ export const useFolderStore = defineStore('folder', {
         rev: undefined as string | undefined
     }),
     getters: {
-        folderTree: state => listToTree(state.folders, "全部文件夹")
+        folderTree: state => listToTree(state.folders, "全部文件夹"),
+        folderIds: state => state.folders.map(folder => folder.id)
     },
     actions: {
         async init() {
@@ -30,6 +31,14 @@ export const useFolderStore = defineStore('folder', {
                 name: name,
                 pid: pid
             });
+            await this._sync();
+        },
+        async removeFolder(id: number) {
+            const index = this.folders.findIndex(folder => folder.id === id);
+            if (index == -1) {
+                return Promise.reject(`文件夹【${id}】不存在`)
+            }
+            this.folders.splice(index, 1);
             await this._sync();
         }
     }

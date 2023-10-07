@@ -37,4 +37,9 @@ export interface ArticleIndex {
      */
     source: string;
 
+    /**
+     * 所属文件夹
+     */
+    folder: number;
+
 }

@@ -3,7 +3,6 @@ import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
-import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
@@ -19,6 +18,10 @@ export const useArticleStore = defineStore('article', {
         categoryMap: (state): Map<number | null, Array<ArticleIndex>> => {
             const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
             return group(articles, 'categoryId')
+        },
+        folderMap: (state): Map<number | null, Array<ArticleIndex>> => {
+            const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
+            return group<ArticleIndex, 'folder'>(articles, 'folder')
         },
         articleTags: (state): Set<string> => {
             const tags = new Set<string>();
@@ -60,7 +63,7 @@ export const useArticleStore = defineStore('article', {
             this.rev = res.rev;
         },
         async add(
-            article: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'source'>,
+            article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
             base: ArticleBase,
             content: string): Promise<number> {
             // 校验
@@ -81,7 +84,8 @@ export const useArticleStore = defineStore('article', {
                 description: article.description,
                 categoryId: article.categoryId,
                 tags: toRaw(article.tags),
-                source: article.source
+                source: article.source,
+                folder: article.folder
             });
             await this._sync();
             // 新增基础信息
@@ -133,7 +137,7 @@ export const useArticleStore = defineStore('article', {
         },
         async update(
             id: number,
-            article: Pick<ArticleIndex, 'name' | 'categoryId' | 'tags' | 'description' | 'createTime' | 'source'>,
+            article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
             base: ArticleBase,
             content: string
         ) {

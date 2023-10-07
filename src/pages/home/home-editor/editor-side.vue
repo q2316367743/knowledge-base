@@ -3,37 +3,50 @@
         <header style="margin: 7px;">
             <a-input-group>
                 <a-input style="width: 218px;"/>
-                <a-button type="text" @click="addFolder(0)">
-                    <template #icon>
-                        <icon-plus/>
+                <a-dropdown>
+                    <a-button type="text">
+                        <template #icon>
+                            <icon-plus/>
+                        </template>
+                    </a-button>
+                    <template #content>
+                        <a-doption @click="addArticle(0)">新增文章</a-doption>
+                        <a-doption @click="addFolder(0)">新建文件夹</a-doption>
                     </template>
-                </a-button>
+                </a-dropdown>
             </a-input-group>
         </header>
-        <a-tree :data="treeData" block-node :virtual-list-props="virtualListProps" @select="onSelect($event)">
+        <a-tree v-model:selected-keys="selectedKeys" :data="treeData" :virtual-list-props="virtualListProps" block-node
+                @select="onSelect($event)">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
                         <template #icon>
-                            <icon-more />
+                            <icon-more/>
                         </template>
                     </a-button>
                     <template #content>
+                        <a-doption v-if="!nodeData.isLeaf" @click="addArticle(nodeData.key)">
+                            <template #icon>
+                                <icon-plus/>
+                            </template>
+                            新增文章
+                        </a-doption>
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
                             <template #icon>
-                                <icon-plus />
+                                <icon-plus/>
                             </template>
-                            新增
+                            新建文件夹
                         </a-doption>
                         <a-doption>
                             <template #icon>
-                                <icon-edit />
+                                <icon-edit/>
                             </template>
                             修改
                         </a-doption>
-                        <a-doption style="color: red;">
+                        <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
                             <template #icon>
-                                <icon-delete />
+                                <icon-delete/>
                             </template>
                             删除
                         </a-doption>
@@ -45,7 +58,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, h} from "vue";
+import {computed, h, nextTick, ref} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {treeEach} from "@/entity/ListTree";
 import {IconFile} from "@arco-design/web-vue/es/icon";
@@ -55,25 +68,34 @@ import {useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
+import {toDateString} from "xe-utils";
+import {getDefaultArticleBase} from "@/entity/article";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const size = useWindowSize();
 
+const selectedKeys = ref<Array<number>>([]);
+
 const folderTree = computed(() => useFolderStore().folderTree);
-const categoryMap = computed(() => useArticleStore().categoryMap);
+const folderMap = computed(() => useArticleStore().folderMap);
 const treeData = computed<Array<TreeNodeData>>(() => {
     let treeData = new Array<TreeNodeData>();
-    treeEach(folderTree.value, treeData, categoryMap.value);
+    treeEach(folderTree.value, treeData, folderMap.value);
     treeData = treeData.length === 0 ? [] : (treeData[0].children || []);
-    // 没有分类
-    const articles = categoryMap.value.get(null);
-    if (articles && articles.length > 0) {
-        articles.map(article => ({
-            key: article.id,
-            title: article.name,
-            isLeaf: true,
-            icon: () => h(IconFile, {}),
-        })).forEach(article => treeData.push(article));
-    }
+    // 文件夹被删除或没有的
+    const articleFolders = new Set(Array.from(folderMap.value.keys()));
+    useFolderStore().folderIds.forEach(folderId => articleFolders.delete(folderId));
+    articleFolders.forEach(folderId => {
+        const articles = folderMap.value.get(folderId);
+        if (articles && articles.length > 0) {
+            articles.map(article => ({
+                key: article.id,
+                title: article.name,
+                isLeaf: true,
+                icon: () => h(IconFile, {}),
+            })).forEach(article => treeData.push(article));
+        }
+    })
     return treeData;
 });
 const virtualListProps = computed(() => ({
@@ -96,6 +118,45 @@ function addFolder(pid: number) {
             .then(() => MessageUtil.success("新增成功"))
             .catch(e => MessageUtil.error("新增失败", e));
     })
+}
+
+function addArticle(pid: number) {
+    useGlobalStore().startLoading("正在新增文章")
+    useArticleStore().add({
+        name: "新建文章 " + toDateString(new Date()),
+        folder: pid,
+        categoryId: null,
+        description: '',
+        source: '',
+        tags: []
+    }, getDefaultArticleBase(), "")
+        .then(id => {
+            MessageUtil.success("新增成功");
+            useHomeEditorStore().setId(id);
+            // 树选择
+            nextTick(() => selectedKeys.value[0] = id);
+        })
+        .catch(e => MessageUtil.error("新增失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+}
+
+function remove(id: number, name: string, article: boolean) {
+    MessageBoxUtil.confirm(`确认删除${article ? '文章' : '文件夹'}【${name}】？`, "删除提示", {
+        confirmButtonText: "删除"
+    }).then(() => {
+        _remove(id, article)
+            .then(() => MessageUtil.success("删除成功"))
+            .catch(e => MessageUtil.error("删除失败", e));
+    })
+}
+
+async function _remove(id: number, article: boolean) {
+    if (article) {
+        await useArticleStore().removeById(id)
+    }else {
+        // 删除文件夹
+        await useFolderStore().removeFolder(id)
+    }
 }
 
 </script>
