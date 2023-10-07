@@ -16,8 +16,9 @@
                 </a-dropdown>
             </a-input-group>
         </header>
-        <a-tree v-model:selected-keys="selectedKeys" :data="treeData" :virtual-list-props="virtualListProps" block-node
-                @select="onSelect($event)">
+        <a-tree v-model:selected-keys="selectedKeys" :data="treeData" :virtual-list-props="virtualListProps"
+                :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable
+                @select="onSelect($event)" @drop="onDrop($event)">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -153,7 +154,7 @@ function remove(id: number, name: string, article: boolean) {
 async function _remove(id: number, article: boolean) {
     if (article) {
         await useArticleStore().removeById(id)
-    }else {
+    } else {
         // 删除文件夹
         await useFolderStore().removeFolder(id)
     }
@@ -168,6 +169,23 @@ function renameFolder(id: number, name: string) {
             .then(() => MessageUtil.success("重命名成功"))
             .catch(e => MessageUtil.error("重命名失败", e));
     })
+}
+
+/**
+ * 检测节点是否允许被释放
+ * @param options 参数
+ */
+function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 | 1; }): boolean {
+    return !options.dropNode.isLeaf
+}
+
+function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
+    if (typeof data.dragNode.key !== 'undefined' &&
+        typeof data.dropNode.key !== 'undefined') {
+        useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+            .then(() => MessageUtil.success("移动成功"))
+            .catch(e => MessageUtil.error("移动失败", e));
+    }
 }
 
 </script>

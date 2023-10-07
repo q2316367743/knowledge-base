@@ -207,6 +207,19 @@ export const useArticleStore = defineStore('article', {
             // 删除评论
             await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
             // TODO: 删除附件
+        },
+        async drop(id: number, pid: number) {
+            const index = this.value.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("动态未找到，请刷新后重试！");
+            }
+            this.value[index] = {
+                ...this.value[index],
+                folder: pid,
+                updateTime: new Date()
+            }
+            // 同步
+            await this._sync();
         }
     }
 });
