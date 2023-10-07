@@ -37,33 +37,38 @@ export class AlistAuthDriverImpl implements AuthDriver {
     }
 
     async init(): Promise<void> {
-        // 获取索引文件
-        const result = await this.buildHttp<FileInfo>({
-            url: '/api/fs/get',
-            method: 'POST',
-            data: {
-                path: this.getKey(AlistAuthDriverImpl.INDEX_JSON),
-                password: ''
-            },
-        });
-        let url = result.data.raw_url as string;
-        if (this.baseURL.startsWith("https") && !url.startsWith("https")) {
-            // 如果站点是https，但是链接不是
-            url = url.replace('http:/', 'https:/');
-        }
-        const indexRsp = await axios.request<Array<PathIndex>>({
-            url,
-            method: 'GET',
-            responseType: 'json',
-            headers: {
-                Authorization: this.authorization
+        try {
+            // 获取索引文件
+            const result = await this.buildHttp<FileInfo>({
+                url: '/api/fs/get',
+                method: 'POST',
+                data: {
+                    path: this.getKey(AlistAuthDriverImpl.INDEX_JSON),
+                    password: ''
+                },
+            });
+            let url = result.data.raw_url as string;
+            if (this.baseURL.startsWith("https") && !url.startsWith("https")) {
+                // 如果站点是https，但是链接不是
+                url = url.replace('http:/', 'https:/');
             }
-        });
-        const indexes = indexRsp.data;
-        for (let index of indexes) {
-            this.pathMap.set(index.key, index.value)
+            const indexRsp = await axios.request<Array<PathIndex>>({
+                url,
+                method: 'GET',
+                responseType: 'json',
+                headers: {
+                    Authorization: this.authorization
+                }
+            });
+            const indexes = indexRsp.data;
+            for (let index of indexes) {
+                this.pathMap.set(index.key, index.value)
+            }
+            return Promise.resolve();
+        } catch (e) {
+            console.error(e);
+            return Promise.resolve();
         }
-        return Promise.resolve();
     }
 
     /**
