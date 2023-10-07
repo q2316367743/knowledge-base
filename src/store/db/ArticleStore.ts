@@ -218,7 +218,8 @@ export const useArticleStore = defineStore('article', {
             this.value[index] = {
                 ...this.value[index],
                 folder: pid,
-                updateTime: new Date()
+                updateTime: new Date(),
+                tags: toRaw(this.value[index].tags),
             }
             // 同步
             await this._sync();

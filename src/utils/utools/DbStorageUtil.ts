@@ -73,7 +73,6 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
         console.log(res)
         return Promise.reject(res.message);
     }
-    return Promise.resolve(res.rev);
 }
 
 export async function listRecordByAsync<T>(key: string): Promise<Array<DbRecord<T>>> {
