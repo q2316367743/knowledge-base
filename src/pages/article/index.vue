@@ -31,7 +31,7 @@
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {computed, nextTick, onMounted, onUnmounted, ref} from "vue";
 import {parseInt} from "lodash-es";
 import html2canvas from "html2canvas";
@@ -40,7 +40,14 @@ import HighlightSource from "web-highlighter/src/model/source";
 import tippy from 'tippy.js'
 import MessageUtil from "@/utils/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
-import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource, getDefaultArticleBase} from "@/entity/article";
+import {
+    ArticleBase,
+    ArticleIndex,
+    ArticlePreview,
+    ArticleSource,
+    getDefaultArticleBase,
+    getDefaultArticleIndex
+} from "@/entity/article";
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // 存储
@@ -58,22 +65,17 @@ import {onAfterRender, renderTemplate} from "@/pages/article/func";
 import './index.less';
 import 'tippy.js/dist/tippy.css';
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
+
+const props = defineProps({
+    id: String
+});
 
 let id = '';
 let marks = new Array<HighlightSource>();
 let markRev = undefined as string | undefined;
-const route = useRoute();
 const router = useRouter();
-const article = ref<ArticleIndex>({
-    id: 0,
-    name: '',
-    description: '',
-    categoryId: null,
-    tags: [],
-    createTime: '',
-    updateTime: '',
-    source: ''
-});
+const article = ref<ArticleIndex>(getDefaultArticleIndex());
 const base = ref<ArticleBase>(getDefaultArticleBase())
 const articleId = ref(0);
 const preview = ref('');
@@ -93,7 +95,8 @@ function switchCollapsed() {
 }
 
 onMounted(() => {
-    init()
+    // 从路由和props中获取
+    init(props.id || '')
         .then(() => {
             loading.value = false;
             // 设置
@@ -111,8 +114,8 @@ onMounted(() => {
 
 const urls = new Array<string>();
 
-async function init() {
-    id = route.params.id as string;
+async function init(articleIdStr: string) {
+    id = articleIdStr;
     if (!id) {
         return Promise.reject("ID不存在");
     }
@@ -147,7 +150,14 @@ onUnmounted(() => {
 });
 
 function toEditor() {
-    router.push('/editor/' + id);
+    if (useBaseSettingStore().homeType === HomeTypeEnum.EDITOR) {
+        // 编辑器模式
+        useArticleStore().setPreview(parseInt(id), false)
+            .then(() => MessageUtil.success("切换为编辑模式"))
+            .catch(e => MessageUtil.error("切换为编辑模式失败", e));
+    }else {
+        router.push('/editor/' + id);
+    }
 }
 
 // =======================================================================

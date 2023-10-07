@@ -22,7 +22,7 @@ const router = createRouter({
     }, {
         name: '阅读文章',
         path: '/article/:id',
-        component: () => import("@/pages/article/index.vue"),
+        component: () => import("@/pages/article/wrap.vue"),
     }, {
         name: "空间",
         path: '/zone',

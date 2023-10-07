@@ -1,6 +1,6 @@
 <template>
     <div class="editor-content">
-        <he-preview v-if="preview"/>
+        <he-preview v-if="preview" :id="id + ''"/>
         <he-editor :id="id" v-else/>
     </div>
 </template>
@@ -12,23 +12,41 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/MessageUtil";
 import HeEditor from "@/pages/home/home-editor/components/he-editor.vue";
 import HePreview from "@/pages/home/home-editor/components/he-preview.vue";
+import {getDefaultArticleIndex} from "@/entity/article";
+import {useUpdatePreviewEvent} from "@/global/BeanFactory";
 
 const id = computed(() => useHomeEditorStore().id);
-const preview = ref(false);
+const articleIndex = ref(getDefaultArticleIndex());
+const title = ref("");
+const preview = computed(() => typeof articleIndex.value.preview == 'undefined' ? false : articleIndex.value.preview);
 
 watch(() => useHomeEditorStore().id, value => init(value));
 
-async function init(articleId: number) {
-    const articleIndex = useArticleStore().articleMap.get(articleId);
-    if (!articleIndex) {
+useUpdatePreviewEvent.reset();
+useUpdatePreviewEvent.on(articleId => {
+    if (articleId === id.value) {
+        init(articleId)
+    }
+})
+
+function init(articleId: number) {
+    const article = useArticleStore().articleMap.get(articleId);
+    if (!article) {
         MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
         return;
     }
+    articleIndex.value = article;
     // 此处判断是锁定还是编辑器
-    preview.value = typeof articleIndex.preview == 'undefined' ? false : articleIndex.preview;
+    title.value = article.name;
 }
+
+
+const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
+const setPreview = () => useArticleStore().setPreview(id.value, !preview.value)
+    .then(() => MessageUtil.success("锁定成功"))
+    .catch(e => MessageUtil.error("锁定失败", e));
 </script>
-<style scoped>
+<style lang="less">
 .editor-content {
     position: absolute;
     top: 0;

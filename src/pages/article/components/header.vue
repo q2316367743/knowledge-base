@@ -1,13 +1,18 @@
 <template>
     <a-layout-header class="header">
         <a-button-group type="text">
-            <a-button @click="toHome()">
+            <a-button @click="toHome()" v-if="homeType === HomeTypeEnum.DEFAULT">
                 <template #icon>
                     <icon-left/>
                 </template>
             </a-button>
-            <div style="margin-left: 7px">{{ props.name }}</div>
+            <a-button @click="switchCollapsed()" v-else-if="homeType === HomeTypeEnum.EDITOR">
+                <template #icon>
+                    <icon-menu/>
+                </template>
+            </a-button>
         </a-button-group>
+        <div class="title">{{ props.name }}</div>
         <a-button-group type="text">
             <a-tooltip :content="isMark ? '禁用标记' : '启用标记'">
                 <a-switch type="line" v-model="isMark" style="margin-right: 7px">
@@ -79,6 +84,9 @@ import {useRoute, useRouter} from "vue-router";
 import MoreSettingBase from "@/pages/setting/base/index.vue";
 import {computed, ref, watch} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 const props = defineProps({
     name: String,
@@ -93,7 +101,10 @@ const fullscreen = useFullscreen();
 const settingVisible = ref(false);
 const isMark = ref(false);
 const isDark = computed(() => useGlobalStore().isDark);
+const homeType = useBaseSettingStore().baseSetting.homeType
+
 const switchDark = () => useGlobalStore().switchDarkColors();
+const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
 
 watch(() => isMark.value, value => emit('set-mark', value));
 
@@ -105,6 +116,7 @@ function toHome() {
         router.push("/home")
     }
 }
+
 </script>
 <style scoped>
 

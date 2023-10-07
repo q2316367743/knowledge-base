@@ -17,7 +17,7 @@
                 <a-form-item label="路径" v-if="path">
                     <a-input v-model="auth.path"/>
                     <template #help>
-                        请以/开头，不要以/结尾
+                        请以/开头，不要以/结尾，如果在根目录，请置空。
                     </template>
                 </a-form-item>
                 <a-form-item label="用户名" v-if="username">

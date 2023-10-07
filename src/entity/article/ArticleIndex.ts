@@ -48,3 +48,18 @@ export interface ArticleIndex {
     preview: boolean;
 
 }
+
+export function getDefaultArticleIndex(): ArticleIndex {
+    return {
+        id: 0,
+        createTime: new Date(),
+        updateTime: new Date(),
+        name: '',
+        categoryId: null,
+        tags: [],
+        description: '',
+        source: '',
+        folder: 0,
+        preview: false,
+    };
+}

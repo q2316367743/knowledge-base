@@ -7,6 +7,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {useUpdatePreviewEvent} from "@/global/BeanFactory";
 
 export const useArticleStore = defineStore('article', {
     state: () => ({
@@ -221,6 +222,19 @@ export const useArticleStore = defineStore('article', {
             }
             // 同步
             await this._sync();
+        },
+        async setPreview(id: number, preview: boolean) {
+            const index = this.value.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("动态未找到，请刷新后重试！");
+            }
+            this.value[index] = {
+                ...this.value[index],
+                preview: preview,
+                updateTime: new Date()
+            };
+            await this._sync();
+            useUpdatePreviewEvent.emit(id);
         }
     }
 });

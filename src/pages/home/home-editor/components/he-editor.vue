@@ -1,7 +1,7 @@
 <template>
     <div class="he-editor">
         <!-- 头部 -->
-        <div class="header">
+        <header class="header">
             <div class="left">
                 <a-button type="text" @click="switchCollapsed()">
                     <template #icon>
@@ -17,7 +17,7 @@
                             <icon-save/>
                         </template>
                     </a-button>
-                    <a-button>
+                    <a-button @click="setPreview()">
                         <template #icon>
                             <icon-lock/>
                         </template>
@@ -29,7 +29,7 @@
                     </a-button>
                 </a-space>
             </a-button-group>
-        </div>
+        </header>
         <!-- 编辑区 -->
         <div class="container">
             <markdown-editor v-model="content"/>
@@ -173,6 +173,9 @@ async function init(articleId: number) {
 }
 
 const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
+const setPreview = () => useArticleStore().setPreview(id.value, true)
+    .then(() => MessageUtil.success("切换为预览模式"))
+    .catch(e => MessageUtil.error("切换为预览模式失败", e));
 
 function save() {
     if (id.value === 0) {
