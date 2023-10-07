@@ -101,7 +101,7 @@ export const useArticleStore = defineStore('article', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id);
+                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
                 return Promise.reject("新增内容异常，" + contentRes.error);
             }
             // 新增预览
@@ -118,9 +118,9 @@ export const useArticleStore = defineStore('article', {
                 this.value.pop();
                 await this._sync();
                 // 删除基础信息
-                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id);
+                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
                 // 删除内容
-                await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id);
+                await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
                 return Promise.reject("新增预览异常，" + previewRes.error);
             }
             return Promise.resolve(id);
@@ -154,7 +154,7 @@ export const useArticleStore = defineStore('article', {
 
             await this._sync();
             // 删除旧的基础信息
-            await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
             // 新增基础信息
             const baseRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_BASE + id,
@@ -167,7 +167,7 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("修改基础信息异常，" + baseRes.error);
             }
             // 删除旧的内容
-            await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
             // 新增内容
             const contentRes = await useAuthStore().authDriver.put({
                 _id: LocalNameEnum.ARTICLE_CONTENT + id,
@@ -180,7 +180,7 @@ export const useArticleStore = defineStore('article', {
                 return Promise.reject("修改内容异常，" + contentRes.error);
             }
             // 删除旧的预览
-            await removeOneByAsync(LocalNameEnum.ARTICLE_PREVIEW + id);
+            await removeOneByAsync(LocalNameEnum.ARTICLE_PREVIEW + id, true);
             // 新增预览
             let preview = md.render(content);
             const previewRes = await useAuthStore().authDriver.put({

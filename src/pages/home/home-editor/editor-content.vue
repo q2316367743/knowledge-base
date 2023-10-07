@@ -40,11 +40,6 @@ function init(articleId: number) {
     title.value = article.name;
 }
 
-
-const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
-const setPreview = () => useArticleStore().setPreview(id.value, !preview.value)
-    .then(() => MessageUtil.success("锁定成功"))
-    .catch(e => MessageUtil.error("锁定失败", e));
 </script>
 <style lang="less">
 .editor-content {
