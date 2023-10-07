@@ -1,10 +1,10 @@
 import {defineStore} from "pinia";
 import {ZoneBase, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
+import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 
 export const useZoneStore = defineStore('zone', {
     state: () => ({
@@ -16,15 +16,9 @@ export const useZoneStore = defineStore('zone', {
     },
     actions: {
         async init() {
-            const res = await useAuthStore().authDriver.get(LocalNameEnum.ZONE);
-            if (res) {
-                const value: Array<ZoneIndex> = res.value;
-                this.rev = res._rev;
-                this.value = value;
-            } else {
-                this.value = new Array<ZoneIndex>()
-                this.rev = undefined
-            }
+            const res = await listByAsync(LocalNameEnum.ZONE);
+            this.rev = res.rev;
+            this.value = res.list;
         },
         addSimple(content: string): Promise<ZoneIndex> {
             return this.add({
@@ -117,15 +111,7 @@ export const useZoneStore = defineStore('zone', {
             await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_PREVIEW + id);
         },
         async _sync() {
-            const res = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ZONE,
-                _rev: this.rev,
-                value: toRaw(this.value)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
+            this.rev = await saveListByAsync(LocalNameEnum.ZONE, this.value, this.rev);
         },
         async page(num: number, size: number): Promise<Array<ZoneIndex>> {
             const startIndex = Math.max((num - 1) * size, 0);
