@@ -4,7 +4,6 @@ import axios, {AxiosRequestConfig} from "axios";
 import {FileData, FileInfo, FileItem, Result} from "../domain/AlistDomain";
 import {FileListItem, PathIndex} from "@/components/AuthDriver/domain/FileListItem";
 import MessageUtil from "@/utils/MessageUtil";
-import {sleep} from "@/utils/BrowserUtil";
 
 /**
  * 生成随机字符串
@@ -24,10 +23,6 @@ function getRandomChar(len: number): string {
 let lock = false;
 let todo = false;
 
-async function buildFileName(): Promise<string> {
-    await sleep(123);
-    return Promise.resolve(`/${new Date().getTime()}.json`);
-}
 
 export class AlistAuthDriverImpl implements AuthDriver {
 
@@ -341,13 +336,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
         }
 
         // 处理文件路径
-        let fileName = "";
-
-        const valueSet = new Set<string>(this.pathMap.values());
-
-        do {
-            fileName = await buildFileName();
-        } while (valueSet.has(fileName));
+        let fileName = `/${doc._id.replaceAll("/", ">")}.json`;
 
         // 先新增数据
         await this.buildHttp({
