@@ -178,7 +178,8 @@ function save() {
             tags: extra.value.tags,
             categoryId: extra.value.categoryId || null,
             source: extra.value.source,
-            folder: 0
+            folder: 0,
+            preview: false
         }, base.value, content.value)
             .then(idWrap => {
                 id.value = idWrap;

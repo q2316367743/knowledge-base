@@ -129,7 +129,8 @@ function addArticle(pid: number) {
         categoryId: null,
         description: '',
         source: '',
-        tags: []
+        tags: [],
+        preview: false
     }, getDefaultArticleBase(), "")
         .then(id => {
             MessageUtil.success("新增成功");
@@ -194,7 +195,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
     bottom: 0;
+    width: 264px;
 }
 </style>

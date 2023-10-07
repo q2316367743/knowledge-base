@@ -1,5 +1,5 @@
 <template>
-    <div class="editor">
+    <div class="he-editor">
         <!-- 头部 -->
         <div class="header">
             <div class="left">
@@ -8,19 +8,26 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear :style="{marginLeft: '7px'}"/>
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear style="margin-left: 7px;"/>
             </div>
-            <a-button-group type="primary">
-                <a-button @click="save()" style="margin-right: 7px">
-                    <template #icon>
-                        <icon-save/>
-                    </template>
-                </a-button>
-                <a-button @click="extra.visible = true">
-                    <template #icon>
-                        <icon-settings/>
-                    </template>
-                </a-button>
+            <a-button-group type="text">
+                <a-space>
+                    <a-button @click="save()">
+                        <template #icon>
+                            <icon-save/>
+                        </template>
+                    </a-button>
+                    <a-button>
+                        <template #icon>
+                            <icon-lock/>
+                        </template>
+                    </a-button>
+                    <a-button @click="extra.visible = true">
+                        <template #icon>
+                            <icon-settings/>
+                        </template>
+                    </a-button>
+                </a-space>
             </a-button-group>
         </div>
         <!-- 编辑区 -->
@@ -102,12 +109,15 @@ import {ArticleSource, getDefaultArticleBaseByBaseSetting} from "@/entity/articl
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import {renderHelp} from "@/store/db/BaseSettingStore";
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
 
-const route = useRoute();
+const props = defineProps({
+    id: Number
+});
+
 const router = useRouter();
 
 const id = ref(0);
@@ -128,7 +138,11 @@ const isDark = computed(() => useGlobalStore().isDark);
 const articleTags = computed(() => useArticleStore().articleTags);
 const categoryTree = computed(() => useCategoryStore().categoryTree);
 
-watch(() => useHomeEditorStore().id, value => init(value));
+watch(() => props.id, value => value ? init(value) : 0);
+
+if (props.id) {
+    init(props.id);
+}
 
 async function init(articleId: number) {
     id.value = articleId;
@@ -168,7 +182,8 @@ function save() {
             tags: extra.value.tags,
             categoryId: extra.value.categoryId || null,
             source: extra.value.source,
-            folder: 0
+            folder: 0,
+            preview: false
         }, base.value, content.value)
             .then(idWrap => {
                 id.value = idWrap;
@@ -183,7 +198,8 @@ function save() {
             tags: extra.value.tags,
             categoryId: extra.value.categoryId || null,
             source: extra.value.source,
-            createTime: extra.value.createTime
+            folder: 0,
+            preview: false
         }, base.value, content.value)
             .then(() => {
                 MessageUtil.success("保存文章成功");
@@ -195,5 +211,36 @@ function save() {
 
 </script>
 <style lang="less">
-@import url(./editor-wrap.less);
+.he-editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-bg-1);
+
+    .header {
+        padding: 4px 7px;
+        display: flex;
+        justify-content: space-between;
+
+        .left {
+            display: flex;
+            width: 70%;
+        }
+    }
+
+    .container {
+        position: absolute;
+        top: 40px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+
+        .vditor-reset {
+            color: var(--color-text-1);
+        }
+    }
+}
+
 </style>

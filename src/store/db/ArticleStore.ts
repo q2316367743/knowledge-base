@@ -73,7 +73,8 @@ export const useArticleStore = defineStore('article', {
                 categoryId: article.categoryId,
                 tags: toRaw(article.tags),
                 source: article.source,
-                folder: article.folder
+                folder: article.folder,
+                preview: article.preview
             });
             await this._sync();
             // 新增基础信息

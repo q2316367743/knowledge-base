@@ -42,4 +42,9 @@ export interface ArticleIndex {
      */
     folder: number;
 
+    /**
+     * 是否是预览模式
+     */
+    preview: boolean;
+
 }

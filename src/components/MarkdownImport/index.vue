@@ -37,7 +37,8 @@ useImportEvent.on(content => {
             description: zone.description || '',
             name: zone.title,
             categoryId: null,
-            folder: 0
+            folder: 0,
+            preview: false
         }, {
             ...getDefaultArticleBase(),
             sourceUrl: zone.sourceUrl || ''
