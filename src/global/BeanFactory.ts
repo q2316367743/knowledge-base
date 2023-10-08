@@ -7,6 +7,7 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useAuthStore} from "@/store/components/AuthStore";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
@@ -25,7 +26,8 @@ export async function initData(needAuth: boolean = true): Promise<void> {
         useArticleStore().init(),
         useCategoryStore().init(),
         useBackupSettingStore().init(),
-        useFolderStore().init()
+        useFolderStore().init(),
+        useTodoCategoryStore().init()
     ])
     return Promise.resolve();
 }

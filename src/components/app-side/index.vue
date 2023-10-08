@@ -12,12 +12,12 @@
             </template>
             空间
         </a-menu-item>
-        <!--                        <a-menu-item key="/html">-->
-        <!--                            <template #icon>-->
-        <!--                                <icon-file />-->
-        <!--                            </template>-->
-        <!--                            离线网页-->
-        <!--                        </a-menu-item>-->
+        <a-menu-item key="/todo">
+            <template #icon>
+                <icon-check-square/>
+            </template>
+            待办
+        </a-menu-item>
         <a-menu-item key="/timeline">
             <template #icon>
                 <icon-time-line/>
@@ -97,7 +97,7 @@ import {useRoute, useRouter} from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const selectedKeys= ref(['/dashboard']);
+const selectedKeys = ref(['/dashboard']);
 
 watch(() => selectedKeys.value, value => router.push(value[0]));
 watch(() => route.path, path => {
