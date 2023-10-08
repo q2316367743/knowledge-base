@@ -1,13 +1,21 @@
 <template>
     <a-layout class="todo">
-        <a-layout-sider :width="250" :collapsed-width="0">
+        <a-layout-sider :width="270" :collapsed-width="0" :collapsed="collapsed">
             <todo-side />
         </a-layout-sider>
-        <a-layout-content>待办</a-layout-content>
+        <a-layout-content>
+            <todo-content />
+        </a-layout-content>
     </a-layout>
 </template>
 <script lang="ts" setup>
 import TodoSide from "@/pages/todo/components/todo-side.vue";
+import TodoContent from "@/pages/todo/components/todo-content/index.vue";
+import {computed} from "vue";
+import {useTodoStore} from "@/store/components/TodoStore";
+
+const collapsed = computed(() => useTodoStore().collapsed)
+
 </script>
 <style scoped>
 .todo {

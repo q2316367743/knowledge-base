@@ -4,7 +4,7 @@
             <a-input-group>
                 <a-input style="width: 218px;" disabled/>
                 <a-dropdown>
-                    <a-button type="text">
+                    <a-button type="primary">
                         <template #icon>
                             <icon-plus/>
                         </template>

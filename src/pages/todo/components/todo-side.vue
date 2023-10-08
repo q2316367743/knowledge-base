@@ -1,6 +1,17 @@
 <template>
     <div class="todo-side">
-        <a-tree :data="todoCategoryTree" block-node style="margin: 7px;width: calc(100% - 14px)" draggable>
+        <header style="margin: 7px;">
+            <a-input-group>
+                <a-input style="width: 218px;" disabled/>
+                <a-button type="primary" @click="add(0)">
+                    <template #icon>
+                        <icon-plus/>
+                    </template>
+                </a-button>
+            </a-input-group>
+        </header>
+        <a-tree v-model:selected-keys="selectKeys" :data="todoCategoryTree" block-node
+                style="margin: 7px;width: calc(100% - 14px)" draggable :virtual-list-props="virtualListProps">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -33,7 +44,6 @@
                 </a-dropdown>
             </template>
         </a-tree>
-        <a-button long type="dashed" style="margin: 7px;width: calc(100% - 14px)" @click="add(0)">新增</a-button>
         <a-modal v-model:visible="todoCategory.visible" title="新增待办分类" ok-text="新增" draggable
                  @ok="submit()">
             <a-form :model="todoCategory.record" layout="vertical">
@@ -51,11 +61,15 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {TodoCategoryRecord, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {useTodoStore} from "@/store/components/TodoStore";
+import {useWindowSize} from "@vueuse/core";
+
+const size = useWindowSize();
 
 const todoCategory = ref({
     visible: false,
@@ -65,8 +79,23 @@ const todoCategory = ref({
         type: TodoCategoryTypeEnum.FOLDER
     } as TodoCategoryRecord
 });
+const selectKeys = ref([useTodoStore().categoryId]);
 
 const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree);
+const virtualListProps = computed(() => ({
+    height: size.height.value - 53
+}));
+
+watch(() => selectKeys.value, value => {
+    const categoryId = value[0];
+    useTodoStore().setCategoryId(categoryId);
+    let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
+    if (category && category.type === TodoCategoryTypeEnum.TODO) {
+        useTodoStore().setId(categoryId);
+    } else {
+        useTodoStore().setId(0);
+    }
+});
 
 
 function add(pid: number) {
@@ -89,7 +118,7 @@ function submit() {
 
 function rename(id: number, name: string) {
     MessageBoxUtil.prompt("请输入新的名称", "重命名", {
-        confirmButtonText:"修改",
+        confirmButtonText: "修改",
         cancelButtonText: "取消",
         inputValue: name
     }).then(newName => useTodoCategoryStore().rename(id, newName)
@@ -110,9 +139,8 @@ function remove(id: number) {
     position: absolute;
     top: 0;
     left: 0;
-    right: 1px;
     bottom: 0;
+    width: 269px;
     border-right: 1px solid var(--color-neutral-3);
-    overflow: auto;
 }
 </style>

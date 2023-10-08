@@ -38,6 +38,8 @@ enum LocalNameEnum {
 
     ZONE_COMMENT = '/zone/comment/',
 
+    TODO_ITEM = '/todo/',
+
     VERSION = '/key/VERSION'
 
 }
