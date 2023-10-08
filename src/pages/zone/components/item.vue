@@ -1,5 +1,10 @@
 <template>
     <a-card class="item" hoverable>
+        <a-result v-if="loading" title="正在加载中" status="info">
+            <template #icon>
+                <icon-refresh spin />
+            </template>
+        </a-result>
         <div class="header">
             <div class="create-time">{{ createTime }}</div>
             <a-button-group type="text" size="mini"  v-if="ellipsis">
@@ -122,6 +127,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['remove']);
 
+const loading = ref(true);
 const base = ref<ZoneBase>({
     image: [],
     attachments: [],
@@ -171,7 +177,8 @@ if (props.zone) {
             if (res) {
                 preview.value = res.value;
             }
-        });
+        })
+        .finally(() => loading.value = false);
     // 评论
     useAuthStore().authDriver.get(LocalNameEnum.ZONE_COMMENT + props.zone.id)
         .then(res => {

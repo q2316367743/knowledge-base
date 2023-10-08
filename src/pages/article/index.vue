@@ -96,6 +96,7 @@ function switchCollapsed() {
 
 onMounted(() => {
     // 从路由和props中获取
+    useGlobalStore().startLoading("开始获取文章内容")
     init(props.id as string)
         .then(() => {
             loading.value = false;
@@ -110,6 +111,7 @@ onMounted(() => {
             MessageUtil.error("文章渲染失败", e);
             router.push("/home");
         })
+        .finally(() => useGlobalStore().closeLoading());
 });
 
 const urls = new Array<string>();

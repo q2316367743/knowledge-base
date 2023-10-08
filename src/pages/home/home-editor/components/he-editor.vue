@@ -144,7 +144,14 @@ if (props.id) {
     init(props.id);
 }
 
-async function init(articleId: number) {
+function init(articleId: number) {
+    useGlobalStore().startLoading("正在获取文章内容");
+    _init(articleId)
+        .catch(e => MessageUtil.error("获取内容失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+}
+
+async function _init(articleId: number) {
     id.value = articleId;
     const articleIndex = useArticleStore().articleMap.get(id.value);
     if (!articleIndex) {
