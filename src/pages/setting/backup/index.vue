@@ -261,7 +261,11 @@ function restore() {
         .then(() => {
             MessageUtil.success("恢复成功");
             // 重新初始化数据
-            initData();
+            useGlobalStore().startLoading("开始初始化数据...");
+            initData(false)
+                .then(() => MessageUtil.success("数据初始化成功"))
+                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .finally(() => useGlobalStore().closeLoading());
         })
         .catch(e => MessageUtil.error("恢复失败", e));
 }
@@ -313,7 +317,11 @@ function restoreByFile() {
         .then(() => {
             MessageUtil.success("恢复成功");
             // 重新初始化数据
-            initData();
+            useGlobalStore().startLoading("开始初始化数据...");
+            initData(false)
+                .then(() => MessageUtil.success("数据初始化成功"))
+                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .finally(() => useGlobalStore().closeLoading());
         })
         .catch(e => {
             if ((e + '') === 'AbortError: The user aborted a request.') {

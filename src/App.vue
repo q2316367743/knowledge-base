@@ -59,7 +59,15 @@ export default defineComponent({
         // 主题
         useGlobalStore().initDarkColors();
         // 初始化数据
-        import('@/global/BeanFactory').then(data => data.initData().then(() => console.log("数据初始化成功")))
+        import('@/global/BeanFactory').then(data => {
+            useGlobalStore().startLoading("开始初始化数据...");
+            data.initData()
+                .then(() => console.log("数据初始化成功"))
+                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .finally(() => useGlobalStore().closeLoading());
+
+
+        })
         // 全局事件
         window.onImagePreview = (src) => {
             this.preview = {

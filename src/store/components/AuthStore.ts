@@ -7,6 +7,7 @@ import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
 import MessageUtil from "@/utils/MessageUtil";
 import {initData} from "@/global/BeanFactory";
 import {AlistAuthDriverImpl} from "@/components/AuthDriver/impl/AlistAuthDriverImpl";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 /**
  * 获取认证驱动
@@ -79,7 +80,11 @@ export const useAuthStore = defineStore('auth', {
             // 驱动
             this.authDriver = await getAuthDriver(this.auth);
             // 重新初始化数据
-            await initData(false);
+            useGlobalStore().startLoading("开始初始化数据...");
+            initData(false)
+                .then(() => MessageUtil.success("数据初始化成功"))
+                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .finally(() => useGlobalStore().closeLoading());
         },
     }
 })
