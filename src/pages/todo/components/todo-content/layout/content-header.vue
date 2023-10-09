@@ -104,7 +104,7 @@ function submit() {
 
     .input {
         width: calc(100% - 14px);
-        margin: 7px 7px 0;
+        margin: 7px 7px;
     }
 }
 </style>

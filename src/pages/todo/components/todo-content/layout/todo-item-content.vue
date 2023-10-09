@@ -1,5 +1,5 @@
 <template>
-    <div class="todo-layout-list-item">
+    <div class="todo-item-content">
         <a-result v-if="itemId === 0" status="404" title="请选择待办项"/>
         <a-typography v-show="itemId !== 0">
             <header>
@@ -98,8 +98,8 @@ onMounted(() => {
 })
 
 </script>
-<style scoped lang="less">
-.todo-layout-list-item {
+<style lang="less">
+.todo-item-content {
     position: absolute;
     top: 0;
     left: 0;
@@ -123,5 +123,10 @@ onMounted(() => {
     left: 0;
     right: 0;
     bottom: 0;
+    cursor: text;
+    .w-e-text-container {
+        background-color: var(--color-bg-1) !important;
+        color: var(--color-text-1) !important;
+    }
 }
 </style>

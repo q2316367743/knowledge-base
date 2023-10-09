@@ -27,7 +27,6 @@ const max = computed(() => (size.width.value - 200) + 'px');
 .todo-layout-list {
     width: 100%;
     height: 100%;
-    overflow-x: scroll;
 
     .list {
         position: relative;

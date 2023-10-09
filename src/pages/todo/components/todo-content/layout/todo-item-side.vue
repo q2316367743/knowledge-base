@@ -44,8 +44,13 @@ const setItemId = (itemId: number) => useTodoStore().setItemId(itemId);
 </script>
 <style scoped lang="less">
 .list {
-
     .list-container {
+        position: absolute;
+        top: 78px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
         .todo-layout-list-item {
             padding: 4px 7px;
             border-bottom: 1px solid var(--color-neutral-3);
