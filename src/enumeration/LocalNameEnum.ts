@@ -6,7 +6,7 @@ enum LocalNameEnum {
 
     FOLDER = '/local/folder',
 
-    TODO_CATEGORY = '/local/todo-category',
+    LOCAL_TODO_CATEGORY = '/local/todo-category',
 
     ARTICLE = '/local/article',
 
@@ -38,7 +38,15 @@ enum LocalNameEnum {
 
     ZONE_COMMENT = '/zone/comment/',
 
-    TODO_ITEM = '/todo/',
+    /**
+     * 待办分组索引
+     */
+    TODO_CATEGORY = '/todo/category/',
+
+    /**
+     * 待办项
+     */
+    TODO_ITEM = '/todo/item/',
 
     VERSION = '/key/VERSION'
 

@@ -22,6 +22,8 @@
     "@bytemd/vue-next": "^1.21.0",
     "@vueuse/core": "^9.13.0",
     "@vueuse/integrations": "^10.2.1",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/plugin-md": "^1.0.0",
     "@ziuchen/bytemd-plugin-align": "^1.0.1",
     "@ziuchen/bytemd-plugin-highlight-theme": "^1.0.6",
     "@ziuchen/bytemd-plugin-image-zoom": "^1.0.1",

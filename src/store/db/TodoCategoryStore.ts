@@ -15,12 +15,12 @@ export const useTodoCategoryStore = defineStore('todo-category', {
     },
     actions: {
         async init() {
-            const res = await listByAsync(LocalNameEnum.TODO_CATEGORY);
+            const res = await listByAsync(LocalNameEnum.LOCAL_TODO_CATEGORY);
             this.value = res.list;
             this.rev = res.rev;
         },
         async _sync() {
-            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY, this.value, this.rev);
+            this.rev = await saveListByAsync(LocalNameEnum.LOCAL_TODO_CATEGORY, this.value, this.rev);
         },
         async add(record: TodoCategoryRecord) {
             const now = new Date();

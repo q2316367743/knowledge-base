@@ -1,7 +1,9 @@
+import {DbRecord} from "@/utils/utools/DbStorageUtil";
+
 /**
  * 待办项
  */
-export interface TodoItem {
+export interface TodoItemIndex {
 
     id: number;
 
@@ -16,17 +18,17 @@ export interface TodoItem {
     updateTime: Date | string;
 
     /**
-     * 是否置顶
+     * 是否置顶，用于排序
      */
     top: boolean;
 
     /**
-     * 状态
+     * 状态，用于分组
      */
     status: TodoItemStatus;
 
     /**
-     * 优先级
+     * 优先级，用于排序
      */
     priority: TodoItemPriority;
 
@@ -34,6 +36,12 @@ export interface TodoItem {
      * 标题
      */
     title: string;
+
+}
+
+export interface TodoItemContent {
+
+    id: number
 
     /**
      * 内容源码
@@ -60,6 +68,14 @@ export interface TodoItem {
      */
     progress: number;
 
+}
+
+/**
+ * 待办项
+ */
+export interface TodoItem {
+    index: TodoItemIndex;
+    content: DbRecord<TodoItemContent>;
 }
 
 export enum TodoItemPriority {
@@ -94,11 +110,6 @@ export enum TodoItemStatus {
     TODO = 1,
 
     /**
-     * 进行中
-     */
-    DOING = 2,
-
-    /**
      * 已完成
      */
     COMPLETE
@@ -106,21 +117,39 @@ export enum TodoItemStatus {
 }
 
 /**
- * 获取默认数据
+ * 获取默认数据索引
  */
-export function getDefaultTodoItem(): TodoItem {
+export function getDefaultTodoItemIndex(id?: number): TodoItemIndex {
     return {
-        id: 0,
+        id: id || 0,
         createTime: new Date(),
         updateTime: new Date(),
         top: false,
         status: TodoItemStatus.TODO,
         priority: TodoItemPriority.NONE,
         title: '',
+    };
+}
+
+/**
+ * 获取默认数据内容
+ */
+export function getDefaultTodoItemContent(id?: number): TodoItemContent {
+    return {
+        id: id || 0,
         content: '',
         preview: '',
         tags: [],
         end: '',
         progress: 0
     };
+}
+
+export function getDefaultTodoItem(): TodoItem {
+    return {
+        content: {
+            record: getDefaultTodoItemContent()
+        },
+        index: getDefaultTodoItemIndex()
+    }
 }

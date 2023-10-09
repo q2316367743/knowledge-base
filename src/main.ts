@@ -15,6 +15,7 @@ import "@/less/post.css"
 import "@/less/typo.less"
 import 'vue3-calendar-heatmap/dist/style.css';
 import 'bytemd/dist/index.css'
+import '@wangeditor/editor/dist/css/style.css'
 
 // utools注入
 window.utools = window.utools || utools;
@@ -29,3 +30,10 @@ createApp(App)
 import { statistics } from './global/BeanFactory';
 statistics.init();
 statistics.open();
+
+// 安装wangEditor插件
+import { Boot } from '@wangeditor/editor'
+import markdownModule from '@wangeditor/plugin-md'
+
+Boot.registerModule(markdownModule);
+

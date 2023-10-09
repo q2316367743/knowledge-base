@@ -92,6 +92,10 @@ watch(() => selectKeys.value, value => {
     let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
     if (category && category.type === TodoCategoryTypeEnum.TODO) {
         useTodoStore().setId(categoryId);
+        // 如果宽度小于1080，则自动隐藏
+        if (size.width.value < 1080) {
+            useTodoStore().switchCollapsed();
+        }
     } else {
         useTodoStore().setId(0);
     }
