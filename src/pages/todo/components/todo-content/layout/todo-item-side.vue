@@ -6,9 +6,39 @@
                  :key="item.id">
                 <a-checkbox :default-checked="false" @change="updateStatus(item.id, TodoItemStatus.COMPLETE)">
                 </a-checkbox>
-                <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
-                    {{ item.title }}
-                </div>
+                <a-dropdown align-point trigger="contextMenu">
+                    <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
+                        {{ item.title }}
+                    </div>
+                    <template #content>
+                        <a-dsubmenu>
+                            优先级
+                            <template #content>
+                                <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
+                                           :value="TodoItemPriority.HIGH"
+                                           @click="updatePriority(item.id, TodoItemPriority.HIGH)">
+                                    高优先级
+                                </a-doption>
+                                <a-doption :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
+                                           :value="TodoItemPriority.MIDDLE"
+                                           @click="updatePriority(item.id, TodoItemPriority.MIDDLE)">
+                                    中优先级
+                                </a-doption>
+                                <a-doption :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
+                                           :value="TodoItemPriority.FLOOR"
+                                           @click="updatePriority(item.id, TodoItemPriority.FLOOR)">
+                                    低优先级
+                                </a-doption>
+                                <a-doption :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
+                                           :value="TodoItemPriority.NONE"
+                                           @click="updatePriority(item.id, TodoItemPriority.NONE)">
+                                    无优先级
+                                </a-doption>
+                            </template>
+                        </a-dsubmenu>
+                        <a-doption style="color: red;" @click="removeById(item.id)">删除</a-doption>
+                    </template>
+                </a-dropdown>
                 <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="right">
                     <a-button type="text" :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
                               @click="updateTop(item.id, !item.top)">
@@ -18,7 +48,7 @@
                     </a-button>
                 </a-tooltip>
             </div>
-            <a-divider orientation="left">已完成</a-divider>
+            <a-divider orientation="left" v-if="completeList.length > 0">已完成</a-divider>
             <div v-for="item in completeList" class="todo-layout-list-item" :class="itemId === item.id ? 'active' : ''"
                  :key="item.id">
                 <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
@@ -31,13 +61,14 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {handlePriorityColor, TodoItemIndex, TodoItemStatus} from "@/entity/todo/TodoItem";
+import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useWindowSize} from "@vueuse/core";
 import {computed} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 
 const size = useWindowSize();
@@ -61,6 +92,26 @@ function updateStatus(itemId: number, status: TodoItemStatus) {
         .then(() => MessageUtil.success("更新成功"))
         .catch(e => MessageUtil.error("更新失败"))
         .finally(() => useGlobalStore().closeLoading());
+}
+
+function updatePriority(id: number, priority: TodoItemPriority) {
+    useGlobalStore().startLoading("开始更新待办项");
+    useTodoStore().updateById(id, {priority})
+        .then(() => MessageUtil.success("更新成功"))
+        .catch(e => MessageUtil.error("更新失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+}
+
+function removeById(id: number) {
+    MessageBoxUtil.confirm("是否删除该待办项？", "删除提示", {
+        confirmButtonText: "删除"
+    }).then(() => {
+        useGlobalStore().startLoading("开始删除待办项");
+        useTodoStore().removeById(id)
+            .then(() => MessageUtil.success("删除成功"))
+            .catch(e => MessageUtil.error("删除失败"))
+            .finally(() => useGlobalStore().closeLoading());
+    })
 }
 
 </script>

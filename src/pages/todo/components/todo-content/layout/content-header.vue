@@ -17,13 +17,13 @@
                     <template #content>
                         <a-doption>
                             <template #icon>
-                                <icon-check />
+                                <icon-check/>
                             </template>
                             名称
                         </a-doption>
                         <a-doption>
                             <template #icon>
-                                <a-icon />
+                                <a-icon/>
                             </template>
                             优先级
                         </a-doption>
@@ -52,7 +52,8 @@
                 </a-dropdown>
             </a-button-group>
         </header>
-        <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"/>
+        <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
+                 :disabled="id === 0"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -60,8 +61,12 @@ import {computed, ref} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/MessageUtil";
 
+const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
 const placeholder = computed(() => {
+    if (id.value === 0) {
+        return '';
+    }
     if (useTodoStore().title.length > 0) {
         return `添加任务到“${useTodoStore().title}”，回车即可创建`;
     } else {

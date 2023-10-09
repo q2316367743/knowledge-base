@@ -8,7 +8,13 @@ import {
     TodoItemStatus
 } from "@/entity/todo/TodoItem";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {
+    getFromOneByAsync,
+    listByAsync,
+    removeOneByAsync,
+    saveListByAsync,
+    saveOneByAsync
+} from "@/utils/utools/DbStorageUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
@@ -123,6 +129,20 @@ export const useTodoStore = defineStore('todo', {
             };
             // 同步
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+        },
+        async removeById(id: number) {
+            const index = this.todoItems.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("待办项不存在");
+            }
+            let splice = this.todoItems.splice(index, 1);
+            // 同步
+            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+            // 删除内容
+            await removeOneByAsync(LocalNameEnum.TODO_ITEM + splice[0].id, true);
+            if (this.itemId === id) {
+                this.itemId = 0;
+            }
         }
     }
 })
