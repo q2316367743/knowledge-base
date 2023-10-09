@@ -47,7 +47,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import {createEditor, IDomEditor, IEditorConfig} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
@@ -139,7 +139,13 @@ onMounted(() => {
         mode: 'default', // or 'simple'
     })
 
-})
+});
+
+onUnmounted(() => {
+    if (editor) {
+        editor.destroy();
+    }
+});
 
 function updatePriority(priority: any) {
     useGlobalStore().startLoading("开始更新待办项");
