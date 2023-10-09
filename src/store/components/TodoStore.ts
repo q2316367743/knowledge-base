@@ -1,9 +1,11 @@
 import {defineStore} from "pinia";
 import {
     getDefaultTodoItemContent,
-    getDefaultTodoItemIndex, TodoItem,
+    getDefaultTodoItemIndex,
+    TodoItem,
     TodoItemContent,
-    TodoItemIndex, TodoItemStatus
+    TodoItemIndex,
+    TodoItemStatus
 } from "@/entity/todo/TodoItem";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
@@ -18,7 +20,7 @@ function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex): number {
     if (b.top) {
         return 1;
     }
-    return a.id - b.id;
+    return a.priority - b.priority || a.id - b.id;
 }
 
 
@@ -107,7 +109,7 @@ export const useTodoStore = defineStore('todo', {
         },
         async getTodoItem(id: number): Promise<TodoItem> {
             if (id === 0) {
-                return  Promise.reject("待办项不存在");
+                return Promise.reject("待办项不存在");
             }
             const index = this.todoItems.findIndex(e => e.id === id);
             if (index === -1) {
@@ -121,6 +123,19 @@ export const useTodoStore = defineStore('todo', {
                 index: todoItem,
                 content: content
             });
+        },
+        async updateById(id: number, record: Partial<TodoItemIndex>) {
+            const index = this.todoItems.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("待办项不存在");
+            }
+            this.todoItems[index] = {
+                ...this.todoItems[index],
+                ...record,
+                updateTime: new Date(),
+            };
+            // 同步
+            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
         }
     }
 })

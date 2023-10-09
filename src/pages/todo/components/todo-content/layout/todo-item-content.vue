@@ -2,8 +2,36 @@
     <div class="todo-item-content">
         <a-result v-if="itemId === 0" status="404" title="请选择待办项"/>
         <a-typography v-show="itemId !== 0">
-            <header>
-                <a-input v-model="item.index.title" allow-clear/>
+            <header class="header">
+                <div class="title">
+                    <a-input v-model="item.index.title" allow-clear>
+                    </a-input>
+                </div>
+                <a-dropdown position="br" @select="updatePriority($event)">
+                    <a-button type="dashed" :style="{color: color}" class="priority">
+                        <template #icon>
+                            <icon-thunderbolt/>
+                        </template>
+                    </a-button>
+                    <template #content>
+                        <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
+                                   :value="TodoItemPriority.HIGH">
+                            高优先级
+                        </a-doption>
+                        <a-doption :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
+                                   :value="TodoItemPriority.MIDDLE">
+                            中优先级
+                        </a-doption>
+                        <a-doption :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
+                                   :value="TodoItemPriority.FLOOR">
+                            低优先级
+                        </a-doption>
+                        <a-doption :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
+                                   :value="TodoItemPriority.NONE">
+                            无优先级
+                        </a-doption>
+                    </template>
+                </a-dropdown>
             </header>
             <main class="item-container">
                 <div id="todo-editor—wrapper">
@@ -16,7 +44,7 @@
 import {computed, onMounted, ref, watch} from "vue";
 import {createEditor, IDomEditor, IEditorConfig} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
-import {getDefaultTodoItem, TodoItem} from "@/entity/todo/TodoItem";
+import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {debounce} from "xe-utils";
@@ -31,6 +59,7 @@ const item = ref<TodoItem>(getDefaultTodoItem());
 let editor: IDomEditor | null = null;
 
 const itemId = computed(() => useTodoStore().itemId);
+const color = computed(() => handlePriorityColor(item.value.index.priority));
 
 
 watch(() => itemId.value, value => init(value));
@@ -97,6 +126,14 @@ onMounted(() => {
 
 })
 
+function updatePriority(priority: any) {
+    useGlobalStore().startLoading("开始更新待办项");
+    useTodoStore().updateById(itemId.value, {priority})
+        .then(() => MessageUtil.success("更新成功"))
+        .catch(e => MessageUtil.error("更新失败"))
+        .finally(() => useGlobalStore().closeLoading());
+}
+
 </script>
 <style lang="less">
 .todo-item-content {
@@ -106,6 +143,26 @@ onMounted(() => {
     right: 0;
     bottom: 0;
     padding: 7px;
+
+    .header {
+        position: absolute;
+        top: 7px;
+        left: 7px;
+        right: 7px;
+
+        .title {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 39px;
+        }
+
+        .priority {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
 
     .item-container {
         position: absolute;
@@ -124,6 +181,7 @@ onMounted(() => {
     right: 0;
     bottom: 0;
     cursor: text;
+
     .w-e-text-container {
         background-color: var(--color-bg-1) !important;
         color: var(--color-text-1) !important;

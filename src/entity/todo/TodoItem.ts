@@ -153,3 +153,18 @@ export function getDefaultTodoItem(): TodoItem {
         index: getDefaultTodoItemIndex()
     }
 }
+
+export function handlePriorityColor(priority: TodoItemPriority): string {
+    switch (priority){
+        case TodoItemPriority.HIGH:
+            return 'rgb(var(--red-6))';
+        case TodoItemPriority.MIDDLE:
+            return 'rgb(var(--orange-6))';
+        case TodoItemPriority.FLOOR:
+            return 'rgb(var(--arcoblue-6))';
+        case TodoItemPriority.NONE:
+            return 'var(--color-text-1)';
+        default:
+            return 'var(--color-text-1)';
+    }
+}
