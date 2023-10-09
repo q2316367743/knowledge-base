@@ -91,6 +91,7 @@ function submit() {
     .header {
         display: grid;
         height: 32px;
+        padding: 7px 7px 0;
         grid-template-columns: 32px 1fr 64px;
 
         .title {

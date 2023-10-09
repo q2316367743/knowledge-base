@@ -3,10 +3,12 @@
         <a-result v-if="itemId === 0" status="404" title="请选择待办项"/>
         <a-typography v-show="itemId !== 0">
             <header class="header">
+                <!-- 标题 -->
                 <div class="title">
-                    <a-input v-model="item.index.title" allow-clear>
-                    </a-input>
+                    <a-input v-model="item.index.title" allow-clear placeholder="待办标题，回车修改"
+                             @keydown.enter="updateTitle()"/>
                 </div>
+                <!-- 优先级 -->
                 <a-dropdown position="br" @select="updatePriority($event)">
                     <a-button type="dashed" :style="{color: color}" class="priority">
                         <template #icon>
@@ -36,6 +38,10 @@
             <main class="item-container">
                 <div id="todo-editor—wrapper">
                 </div>
+                <div class="auto-save" v-if="autoSaveLoading">
+                    <icon-refresh spin/>
+                    自动保存中
+                </div>
             </main>
         </a-typography>
     </div>
@@ -47,15 +53,19 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {debounce} from "xe-utils";
 import {saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useMagicKeys} from "@vueuse/core";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 let lock = false;
 let todo = false;
 
+const {ctrl, s} = useMagicKeys()
+
 const item = ref<TodoItem>(getDefaultTodoItem());
+const autoSaveLoading = ref(false);
+
 let editor: IDomEditor | null = null;
 
 const itemId = computed(() => useTodoStore().itemId);
@@ -84,11 +94,12 @@ function init(id: number) {
 }
 
 // 内容的自动保存
-const autoSave = debounce(() => {
+const autoSave = () => {
     if (lock) {
         todo = true;
         return;
     }
+    autoSaveLoading.value = true;
     lock = true;
     saveOneByAsync(LocalNameEnum.TODO_ITEM + itemId.value, item.value.content.record, item.value.content.rev)
         .then(rev => {
@@ -99,8 +110,9 @@ const autoSave = debounce(() => {
                 autoSave()
             }
         })
-        .catch(e => MessageUtil.error("自动保存内容失败", e));
-}, 1000);
+        .catch(e => MessageUtil.error("自动保存内容失败", e))
+        .finally(() => autoSaveLoading.value = false);
+};
 
 onMounted(() => {
     const editorConfig: IEditorConfig = {
@@ -130,9 +142,25 @@ function updatePriority(priority: any) {
     useGlobalStore().startLoading("开始更新待办项");
     useTodoStore().updateById(itemId.value, {priority})
         .then(() => MessageUtil.success("更新成功"))
-        .catch(e => MessageUtil.error("更新失败"))
+        .catch(e => MessageUtil.error("更新失败", e))
         .finally(() => useGlobalStore().closeLoading());
 }
+
+function updateTitle() {
+    useGlobalStore().startLoading("开始更新待办项");
+    useTodoStore().updateById(itemId.value, {title: item.value.index.title})
+        .then(() => MessageUtil.success("更新成功"))
+        .catch(e => MessageUtil.error("更新失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+}
+
+watch(() => s.value, value => {
+    if (value && ctrl.value) {
+        updateTitle();
+        autoSave()
+    }
+})
+
 
 </script>
 <style lang="less">
@@ -171,7 +199,16 @@ function updatePriority(priority: any) {
         right: 7px;
         bottom: 7px;
 
+        .auto-save {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            color: rgb(var(--arcoblue-6));
+            line-height: 32px;
+
+        }
     }
+
 }
 
 #todo-editor—wrapper {

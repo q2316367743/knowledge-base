@@ -12,6 +12,7 @@ import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {clone} from "xe-utils";
 
 function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex): number {
     if (a.top) {
@@ -48,7 +49,7 @@ export const useTodoStore = defineStore('todo', {
             return state.todoItems.filter(e => e.status === TodoItemStatus.TODO).sort((a, b) => sortTodoIndex(a, b));
         },
         completeList: (state): Array<TodoItemIndex> => {
-            return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE);
+            return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE).sort((a, b) => a.id - b.id);
         }
     },
     actions: {
@@ -69,7 +70,6 @@ export const useTodoStore = defineStore('todo', {
                     .then(items => {
                         this.todoItems = items.list;
                         this.rev = items.rev;
-                        console.log(this.todoItems)
                     })
                     .catch(e => MessageUtil.error("获取待办项失败", e))
                     .finally(() => useGlobalStore().closeLoading());
@@ -94,19 +94,6 @@ export const useTodoStore = defineStore('todo', {
             // 新增内容
             await saveOneByAsync<TodoItemContent>(LocalNameEnum.TODO_ITEM + '/' + id, getDefaultTodoItemContent(id));
         },
-        async updateTop(id: number, top: boolean) {
-            const index = this.todoItems.findIndex(e => e.id === id);
-            if (index === -1) {
-                return Promise.reject("待办项不存在");
-            }
-            this.todoItems[index] = {
-                ...this.todoItems[index],
-                updateTime: new Date(),
-                top
-            };
-            // 同步
-            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
-        },
         async getTodoItem(id: number): Promise<TodoItem> {
             if (id === 0) {
                 return Promise.reject("待办项不存在");
@@ -120,7 +107,7 @@ export const useTodoStore = defineStore('todo', {
                 LocalNameEnum.TODO_ITEM + todoItem.id,
                 getDefaultTodoItemContent(todoItem.id));
             return Promise.resolve({
-                index: todoItem,
+                index: clone(todoItem),
                 content: content
             });
         },
