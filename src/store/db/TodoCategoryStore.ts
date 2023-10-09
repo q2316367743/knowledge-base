@@ -1,8 +1,10 @@
 import {listToTree, TodoCategory, TodoCategoryRecord, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import {defineStore} from "pinia";
-import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {map} from "@/utils/ArrayUtil";
+import {TodoItemIndex} from "@/entity/todo/TodoItem";
+import {useTodoStore} from "@/store/components/TodoStore";
 
 export const useTodoCategoryStore = defineStore('todo-category', {
     state: () => ({
@@ -60,7 +62,17 @@ export const useTodoCategoryStore = defineStore('todo-category', {
             await this._sync();
             // 如果是清单，还要删除待办
             if (splice[0].type === TodoCategoryTypeEnum.TODO) {
-                // TODO: 删除清单
+                const items = await listByAsync<TodoItemIndex>(LocalNameEnum.TODO_CATEGORY + id);
+                for (let item of items.list) {
+                    // 删除内容
+                    await removeOneByAsync(LocalNameEnum.TODO_ITEM + item.id, true);
+                }
+                // 删除列表
+                await removeOneByAsync(LocalNameEnum.TODO_CATEGORY + id, true);
+            }
+            if (useTodoStore().categoryId === id) {
+                useTodoStore().setCategoryId(0);
+                useTodoStore().setId(0);
             }
         }
     }

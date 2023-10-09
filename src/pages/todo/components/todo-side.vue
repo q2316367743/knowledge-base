@@ -33,7 +33,7 @@
                             修改
                         </a-doption>
                         <a-doption v-if="!nodeData.children || nodeData.children.length === 0"
-                                   @click="remove(nodeData.key)" style="color: red;">
+                                   @click="remove(nodeData.key, nodeData.title)" style="color: red;">
                             <template #icon>
                                 <icon-delete/>
                             </template>
@@ -130,10 +130,13 @@ function rename(id: number, name: string) {
         .catch(e => MessageUtil.error("重命名失败", e)))
 }
 
-function remove(id: number) {
-    useTodoCategoryStore().remove(id)
+function remove(id: number, title: string) {
+    MessageBoxUtil.confirm("确认删除清单【" + title + '】吗，删除时会将清单下全部待办一并删除', "删除", {
+        confirmButtonText: "删除",
+        cancelButtonText: "取消"
+    }).then(() => useTodoCategoryStore().remove(id)
         .then(() => MessageUtil.success("删除成功"))
-        .catch(e => MessageUtil.error("删除失败", e));
+        .catch(e => MessageUtil.error("删除失败", e)));
 
 }
 

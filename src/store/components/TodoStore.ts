@@ -33,7 +33,9 @@ function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex): number {
 
 export const useTodoStore = defineStore('todo', {
     state: () => ({
+        // 当前选择的分类
         categoryId: 0,
+        // 当前打开的清单
         id: 0,
         todoItems: new Array<TodoItemIndex>(),
         rev: undefined as string | undefined,
@@ -98,7 +100,7 @@ export const useTodoStore = defineStore('todo', {
             // 同步
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
             // 新增内容
-            await saveOneByAsync<TodoItemContent>(LocalNameEnum.TODO_ITEM + '/' + id, getDefaultTodoItemContent(id));
+            await saveOneByAsync<TodoItemContent>(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
         },
         async getTodoItem(id: number): Promise<TodoItem> {
             if (id === 0) {
