@@ -86,6 +86,8 @@ function init(id: number) {
             item.value = value;
             // 重新设置编辑器的值
             if (editor) {
+                editor.clear();
+                editor.setHtml("<p></p>")
                 editor.setHtml(item.value.content.record.content);
             }
         })
@@ -95,6 +97,7 @@ function init(id: number) {
 
 // 内容的自动保存
 const autoSave = () => {
+    console.log('保存' + new Date().getTime());
     if (lock) {
         todo = true;
         return;
@@ -217,7 +220,6 @@ watch(() => s.value, value => {
     left: 0;
     right: 0;
     bottom: 0;
-    cursor: text;
 
     .w-e-text-container {
         background-color: var(--color-bg-1) !important;
