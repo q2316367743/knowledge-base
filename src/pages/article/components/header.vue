@@ -1,14 +1,14 @@
 <template>
     <a-layout-header class="header">
         <a-button-group type="text">
-            <a-button @click="toHome()" v-if="homeType === HomeTypeEnum.DEFAULT">
-                <template #icon>
-                    <icon-left/>
-                </template>
-            </a-button>
-            <a-button @click="switchCollapsed()" v-else-if="homeType === HomeTypeEnum.EDITOR">
+            <a-button @click="switchCollapsed()" v-if="isEmbed">
                 <template #icon>
                     <icon-menu/>
+                </template>
+            </a-button>
+            <a-button @click="toHome()" v-else>
+                <template #icon>
+                    <icon-left/>
                 </template>
             </a-button>
         </a-button-group>
@@ -19,7 +19,7 @@
                     <template checked>启用</template>
                 </a-switch>
             </a-tooltip>
-            <a-button @click="emit('to-editor')">
+            <a-button @click="toEditor()">
                 <template #icon>
                     <icon-edit/>
                 </template>
@@ -101,7 +101,8 @@ const fullscreen = useFullscreen();
 const settingVisible = ref(false);
 const isMark = ref(false);
 const isDark = computed(() => useGlobalStore().isDark);
-const homeType = useBaseSettingStore().baseSetting.homeType
+
+const isEmbed = computed(() => useBaseSettingStore().baseSetting.homeType === HomeTypeEnum.EDITOR && route.path === '/home');
 
 const switchDark = () => useGlobalStore().switchDarkColors();
 const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
@@ -115,6 +116,10 @@ function toHome() {
     } else {
         router.push("/home")
     }
+}
+
+function toEditor() {
+    emit('to-editor', isEmbed.value);
 }
 
 </script>

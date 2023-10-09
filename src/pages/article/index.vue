@@ -1,7 +1,7 @@
 <template>
     <a-layout class="article">
         <article-header :name="article.name" :collapsed="collapsed" @switch-collapsed="switchCollapsed()"
-                        @download="downloadFile" @to-editor="toEditor()" @set-mark="setMark"/>
+                        @download="downloadFile" @to-editor="toEditor($event)" @set-mark="setMark"/>
         <a-layout :style="{height: height}">
             <!-- 内容 -->
             <a-layout-content>
@@ -65,7 +65,6 @@ import {onAfterRender, renderTemplate} from "@/pages/article/func";
 import './index.less';
 import 'tippy.js/dist/tippy.css';
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
-import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
 
 const props = defineProps({
     id: String
@@ -152,8 +151,8 @@ onUnmounted(() => {
     utools.removeSubInput();
 });
 
-function toEditor() {
-    if (useBaseSettingStore().homeType === HomeTypeEnum.EDITOR) {
+function toEditor(isEmbed: boolean) {
+    if (isEmbed) {
         // 编辑器模式
         useArticleStore().setPreview(parseInt(id), false)
             .then(() => MessageUtil.success("切换为编辑模式"))
