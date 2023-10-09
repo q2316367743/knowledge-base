@@ -113,10 +113,13 @@ import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
+import {useMagicKeys} from "@vueuse/core";
 
 const props = defineProps({
     id: Number
 });
+
+const {ctrl, s} = useMagicKeys()
 
 const router = useRouter();
 
@@ -218,6 +221,13 @@ function save() {
             .catch(e => MessageUtil.error("保存文章失败", e));
     }
 }
+
+
+watch(() => s.value, value => {
+    if (value && ctrl.value) {
+        save();
+    }
+});
 
 </script>
 <style lang="less">

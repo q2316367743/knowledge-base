@@ -93,7 +93,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
@@ -105,6 +105,9 @@ import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import {renderHelp} from "@/store/db/BaseSettingStore";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/store/components/AuthStore";
+import {useMagicKeys} from "@vueuse/core";
+
+const {ctrl, s} = useMagicKeys()
 
 const route = useRoute();
 const router = useRouter();
@@ -204,6 +207,12 @@ function save() {
             .catch(e => MessageUtil.error("保存文章失败", e));
     }
 }
+
+watch(() => s.value, value => {
+    if (value && ctrl.value) {
+        save();
+    }
+});
 
 </script>
 <style lang="less">
