@@ -7,7 +7,7 @@
                 </template>
             </a-button>
             <div class="title">{{ title }}</div>
-            <a-button-group type="text">
+            <a-button-group type="text" disabled>
                 <a-dropdown position="br">
                     <a-button>
                         <template #icon>
