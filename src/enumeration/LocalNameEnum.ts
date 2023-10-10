@@ -52,7 +52,12 @@ enum LocalNameEnum {
 
     KEY_HOME_WIDTH = '/key/home/width',
 
-    KEY_HOME_COLLAPSED = '/key/home/collapsed'
+    KEY_HOME_COLLAPSED = '/key/home/collapsed',
+
+    /**
+     * 待办列表排序
+     */
+    KEY_TODO_LIST_SORT = '/key/todo/list/sort'
 
 }
 

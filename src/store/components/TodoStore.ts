@@ -10,22 +10,36 @@ import {
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {
     getFromOneByAsync,
+    getItemByDefault,
     listByAsync,
     removeOneByAsync,
     saveListByAsync,
-    saveOneByAsync
+    saveOneByAsync,
+    setItem
 } from "@/utils/utools/DbStorageUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {clone} from "xe-utils";
+import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 
-function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex): number {
+function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
     if (a.top) {
         return -1;
     }
     if (b.top) {
         return 1;
+    }
+    if (sort === TodoListSortEnum.PRIORITY) {
+        return a.priority - b.priority || a.id - b.id;
+    } else if (sort === TodoListSortEnum.NAME_ASC) {
+        return a.title.localeCompare(b.title, 'zh-CH') || a.id - b.id;
+    } else if (sort === TodoListSortEnum.NAME_DESC) {
+        return b.title.localeCompare(a.title, 'zh-CH') || a.id - b.id;
+    } else if (sort === TodoListSortEnum.CREATE_TIME_ASC) {
+        return a.id - b.id;
+    } else if (sort === TodoListSortEnum.CREATE_TIME_DESC) {
+        return b.id - a.id;
     }
     return a.priority - b.priority || a.id - b.id;
 }
@@ -40,7 +54,8 @@ export const useTodoStore = defineStore('todo', {
         todoItems: new Array<TodoItemIndex>(),
         rev: undefined as string | undefined,
         collapsed: false,
-        itemId: 0
+        itemId: 0,
+        todoListSort: getItemByDefault<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, TodoListSortEnum.PRIORITY)
     }),
     getters: {
         title: state => {
@@ -54,7 +69,9 @@ export const useTodoStore = defineStore('todo', {
             return '请选择清单';
         },
         todoList: (state): Array<TodoItemIndex> => {
-            return state.todoItems.filter(e => e.status === TodoItemStatus.TODO).sort((a, b) => sortTodoIndex(a, b));
+            return state.todoItems
+                .filter(e => e.status === TodoItemStatus.TODO)
+                .sort((a, b) => sortTodoIndex(a, b, state.todoListSort));
         },
         completeList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE).sort((a, b) => a.id - b.id);
@@ -85,6 +102,10 @@ export const useTodoStore = defineStore('todo', {
         },
         setItemId(itemId: number) {
             this.itemId = itemId;
+        },
+        setTodoListSort(todoListSort: TodoListSortEnum) {
+            this.todoListSort = todoListSort;
+            setItem<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, this.todoListSort);
         },
         async addSimple(title: string) {
             if (title.trim() === '') {

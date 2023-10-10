@@ -7,29 +7,52 @@
                 </template>
             </a-button>
             <div class="title">{{ title }}</div>
-            <a-button-group type="text" disabled>
-                <a-dropdown position="br">
+            <a-button-group type="text">
+                <a-dropdown position="br" @select="setTodoListSort($event)">
                     <a-button>
                         <template #icon>
                             <icon-sort/>
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption>
+                        <a-doption :value="TodoListSortEnum.PRIORITY">
                             <template #icon>
-                                <icon-check/>
-                            </template>
-                            名称
-                        </a-doption>
-                        <a-doption>
-                            <template #icon>
-                                <a-icon/>
+                                <icon-check v-if="todoListSort === TodoListSortEnum.PRIORITY"/>
+                                <a-icon v-else/>
                             </template>
                             优先级
                         </a-doption>
+                        <a-doption :value="TodoListSortEnum.NAME_ASC">
+                            <template #icon>
+                                <icon-check v-if="todoListSort === TodoListSortEnum.NAME_ASC"/>
+                                <a-icon v-else/>
+                            </template>
+                            名称正序
+                        </a-doption>
+                        <a-doption :value="TodoListSortEnum.NAME_DESC">
+                            <template #icon>
+                                <icon-check v-if="todoListSort === TodoListSortEnum.NAME_DESC"/>
+                                <a-icon v-else/>
+                            </template>
+                            名称倒序
+                        </a-doption>
+                        <a-doption :value="TodoListSortEnum.CREATE_TIME_ASC">
+                            <template #icon>
+                                <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_ASC"/>
+                                <a-icon v-else/>
+                            </template>
+                            创建时间正序
+                        </a-doption>
+                        <a-doption :value="TodoListSortEnum.CREATE_TIME_DESC">
+                            <template #icon>
+                                <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_DESC"/>
+                                <a-icon v-else/>
+                            </template>
+                            创建时间倒序
+                        </a-doption>
                     </template>
                 </a-dropdown>
-                <a-dropdown position="br">
+                <a-dropdown position="br" disabled>
                     <a-button>
                         <template #icon>
                             <icon-more-vertical/>
@@ -60,6 +83,7 @@
 import {computed, ref} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/MessageUtil";
+import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
@@ -72,9 +96,10 @@ const placeholder = computed(() => {
     } else {
         return '';
     }
-})
+});
 
 const titleWrap = ref("");
+const todoListSort = computed<TodoListSortEnum>(() => useTodoStore().todoListSort)
 
 const switchCollapsed = () => useTodoStore().switchCollapsed();
 
@@ -86,6 +111,8 @@ function submit() {
         })
         .catch(e => MessageUtil.error("新增失败", e))
 }
+
+const setTodoListSort = (value: any) => useTodoStore().setTodoListSort(value);
 
 </script>
 <style scoped lang="less">
