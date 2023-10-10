@@ -71,6 +71,19 @@ let editor: IDomEditor | null = null;
 const itemId = computed(() => useTodoStore().itemId);
 const color = computed(() => handlePriorityColor(item.value.index.priority));
 
+const editorConfig: IEditorConfig = {
+    placeholder: '请输入待办内容',
+    onChange(editor: IDomEditor) {
+        item.value.content.record.content = editor.getHtml();
+        autoSave();
+    },
+    customAlert: (info: string, type: AlertType) => {
+        MessageUtil[type](info);
+    },
+    scroll: true,
+    readOnly: false,
+    autoFocus: false,
+}
 
 watch(() => itemId.value, value => init(value));
 init(itemId.value);
@@ -86,9 +99,14 @@ function init(id: number) {
             item.value = value;
             // 重新设置编辑器的值
             if (editor) {
-                editor.clear();
-                editor.setHtml("<p></p>")
-                editor.setHtml(item.value.content.record.content);
+                try {
+                    editor.setHtml("<p></p>")
+                    editor.setHtml(item.value.content.record.content);
+                }catch (e) {
+                    console.error("编辑器赋值错误，重新创建");
+                    editor.destroy();
+                    create();
+                }
             }
         })
         .catch(e => MessageUtil.error("获取待办内容失败", e))
@@ -116,29 +134,18 @@ const autoSave = () => {
         .finally(() => autoSaveLoading.value = false);
 };
 
-onMounted(() => {
-    const editorConfig: IEditorConfig = {
-        placeholder: '请输入待办内容',
-        onChange(editor: IDomEditor) {
-            item.value.content.record.content = editor.getHtml();
-            autoSave();
-        },
-        customAlert: (info: string, type: AlertType) => {
-            MessageUtil[type](info);
-        },
-        scroll: true,
-        readOnly: false,
-        autoFocus: false,
-    }
-
+function create() {
     editor = createEditor({
         selector: '#todo-editor—wrapper',
         html: item.value.content.record.content,
         config: editorConfig,
         mode: 'default', // or 'simple'
-    })
+    });
+    editor.setHtml(item.value.content.record.content);
+}
 
-});
+onMounted(() => create());
+
 
 onUnmounted(() => {
     if (editor) {
