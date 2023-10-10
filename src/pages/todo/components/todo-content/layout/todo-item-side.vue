@@ -1,9 +1,9 @@
 <template>
     <div class="list">
         <content-header/>
-        <div class="list-container">
+        <div class="list-container" @click="setItemId(0)">
             <div v-for="item in todoList" class="todo-layout-list-item" :class="itemId === item.id ? 'active' : ''"
-                 :key="item.id">
+                 :key="item.id" @click.stop>
                 <a-checkbox :default-checked="false" @change="updateStatus(item.id, TodoItemStatus.COMPLETE)">
                 </a-checkbox>
                 <a-dropdown align-point trigger="contextMenu">
@@ -41,7 +41,7 @@
                         </a-dsubmenu>
                         <a-doption style="color: red;" @click="removeById(item.id)">
                             <template #icon>
-                                <icon-delete />
+                                <icon-delete/>
                             </template>
                             删除
                         </a-doption>
@@ -58,7 +58,7 @@
             </div>
             <a-divider orientation="left" v-if="completeList.length > 0">已完成</a-divider>
             <div v-for="item in completeList" class="todo-layout-list-item" :class="itemId === item.id ? 'active' : ''"
-                 :key="item.id">
+                 :key="item.id" @click.stop>
                 <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
                 </a-checkbox>
                 <p class="title" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
