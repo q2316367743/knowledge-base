@@ -109,7 +109,6 @@ import {ArticleSource, getDefaultArticleBaseByBaseSetting} from "@/entity/articl
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import {renderHelp} from "@/store/db/BaseSettingStore";
-import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
@@ -120,8 +119,6 @@ const props = defineProps({
 });
 
 const {ctrl, s} = useMagicKeys()
-
-const router = useRouter();
 
 const id = ref(0);
 const title = ref('');
@@ -201,7 +198,6 @@ function save() {
             .then(idWrap => {
                 id.value = idWrap;
                 MessageUtil.success("保存文章成功");
-                router.push("/home");
             })
             .catch(e => MessageUtil.error("保存文章失败", e));
     } else {
@@ -211,12 +207,9 @@ function save() {
             tags: extra.value.tags,
             categoryId: extra.value.categoryId || null,
             source: extra.value.source,
-            folder: 0,
-            preview: false
         }, base.value, content.value)
             .then(() => {
                 MessageUtil.success("保存文章成功");
-                router.push("/home");
             })
             .catch(e => MessageUtil.error("保存文章失败", e));
     }

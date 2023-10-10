@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource} from "@/entity/article";
+import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource, getDefaultArticleIndex} from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
@@ -127,7 +127,7 @@ export const useArticleStore = defineStore('article', {
         },
         async update(
             id: number,
-            article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
+            article: Partial<ArticleIndex>,
             base: ArticleBase,
             content: string
         ) {
@@ -137,11 +137,11 @@ export const useArticleStore = defineStore('article', {
                     confirmButtonText: "新增",
                     cancelButtonText: "取消"
                 });
-                await this.add(article, base, content);
+                await this.add(Object.assign(getDefaultArticleIndex(), article), base, content);
                 return Promise.resolve();
             }
             // 校验
-            if (article.name.trim() === '') {
+            if (!article.name || article.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
             }
             // 新增索引
@@ -149,7 +149,7 @@ export const useArticleStore = defineStore('article', {
                 ...this.value[index],
                 ...article,
                 updateTime: new Date(),
-                tags: toRaw(article.tags),
+                tags: article.tags ? toRaw(article.tags) : toRaw(this.value[index].tags),
             };
 
             await this._sync();
