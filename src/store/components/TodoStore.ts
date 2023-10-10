@@ -87,6 +87,9 @@ export const useTodoStore = defineStore('todo', {
             this.itemId = itemId;
         },
         async addSimple(title: string) {
+            if (title.trim() === '') {
+                return Promise.reject("请输入内容");
+            }
             if (this.id === 0) {
                 return Promise.reject("请选择清单");
             }
