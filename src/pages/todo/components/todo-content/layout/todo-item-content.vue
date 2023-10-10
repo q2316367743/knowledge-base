@@ -43,11 +43,42 @@
                     自动保存中
                 </div>
             </main>
+            <footer class="footer">
+                <a-overflow-list class="todo-item-tags">
+                    <a-input
+                            v-if="tag.input"
+                            ref="tagInputRef"
+                            :style="{ width: '90px'}"
+                            size="mini"
+                            v-model.trim="tag.value"
+                            @keyup.enter="tagAdd()"
+                            @blur="tagAdd()"
+                    />
+                    <a-tag
+                            v-else
+                            @click="tagEdit()"
+                    >
+                        <template #icon>
+                            <icon-plus/>
+                        </template>
+                        新增标签
+                    </a-tag>
+                    <a-tag v-for="tag in tags" :key="tag" :color="randomColor(tag)" closable
+                           @close="tagRemove(tag)">{{ tag }}
+                    </a-tag>
+                </a-overflow-list>
+                <a-tag color="orange" style="margin: 4px 0;">
+                    <template #icon>
+                        <icon-clock-circle/>
+                    </template>
+                    {{ createTime }}
+                </a-tag>
+            </footer>
         </a-typography>
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
 import {createEditor, IDomEditor, IEditorConfig} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
@@ -56,20 +87,30 @@ import MessageUtil from "@/utils/MessageUtil";
 import {saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useMagicKeys} from "@vueuse/core";
+import {randomColor} from "@/utils/BrowserUtil";
+import {toDateString} from "xe-utils";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 let lock = false;
 let todo = false;
 
-const {ctrl, s} = useMagicKeys()
+const {ctrl, s} = useMagicKeys();
+
 
 const item = ref<TodoItem>(getDefaultTodoItem());
 const autoSaveLoading = ref(false);
+const tagInputRef = ref<HTMLInputElement | null>(null);
+const tag = ref({
+    input: false,
+    value: ''
+})
 
 let editor: IDomEditor | null = null;
 
 const itemId = computed(() => useTodoStore().itemId);
 const color = computed(() => handlePriorityColor(item.value.index.priority));
+const createTime = computed(() => toDateString(item.value.index.createTime, "yyyy-MM-dd HH:mm:ss"));
+const tags = computed(() => item.value.content.record.tags);
 
 const editorConfig: IEditorConfig = {
     placeholder: '请输入待办内容',
@@ -102,7 +143,7 @@ function init(id: number) {
                 try {
                     editor.setHtml("<p></p>")
                     editor.setHtml(item.value.content.record.content);
-                }catch (e) {
+                } catch (e) {
                     console.error("编辑器赋值错误，重新创建");
                     editor.destroy();
                     create();
@@ -121,7 +162,10 @@ const autoSave = () => {
     }
     autoSaveLoading.value = true;
     lock = true;
-    saveOneByAsync(LocalNameEnum.TODO_ITEM + itemId.value, item.value.content.record, item.value.content.rev)
+    saveOneByAsync(LocalNameEnum.TODO_ITEM + itemId.value, {
+        ...item.value.content.record,
+        tags: toRaw(item.value.content.record.tags)
+    }, item.value.content.rev)
         .then(rev => {
             item.value.content.rev = rev;
             lock = false;
@@ -176,6 +220,35 @@ watch(() => s.value, value => {
     }
 })
 
+function tagAdd() {
+    tag.value.input = false;
+    if (tag.value.value.trim().length === 0) {
+        return;
+    }
+    const temp = tag.value.value.trim();
+    if (item.value.content.record.tags.indexOf(temp) === -1) {
+        item.value.content.record.tags.push(temp);
+        autoSave();
+    }
+}
+
+function tagEdit() {
+    tag.value = {
+        input: true,
+        value: ''
+    }
+    nextTick(() => {
+        if (tagInputRef.value) {
+            tagInputRef.value.focus();
+        }
+    })
+}
+
+function tagRemove(tag: string) {
+    item.value.content.record.tags.splice(item.value.content.record.tags.indexOf(tag), 1);
+    autoSave();
+}
+
 
 </script>
 <style lang="less">
@@ -212,7 +285,7 @@ watch(() => s.value, value => {
         top: 46px;
         left: 7px;
         right: 7px;
-        bottom: 7px;
+        bottom: 39px;
 
         .auto-save {
             position: absolute;
@@ -221,6 +294,19 @@ watch(() => s.value, value => {
             color: rgb(var(--arcoblue-6));
             line-height: 32px;
 
+        }
+    }
+
+    .footer {
+        position: absolute;
+        left: 7px;
+        right: 7px;
+        bottom: 0;
+        height: 32px;
+        display: flex;
+
+        .todo-item-tags {
+            width: calc(100% - 150px);
         }
     }
 
