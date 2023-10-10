@@ -2,7 +2,7 @@
     <div class="todo-side">
         <header style="margin: 7px;">
             <a-input-group>
-                <a-input style="width: 218px;" disabled/>
+                <a-input style="width: 218px;" v-model="keyword" allow-clear/>
                 <a-button type="primary" @click="add(0)">
                     <template #icon>
                         <icon-plus/>
@@ -10,8 +10,9 @@
                 </a-button>
             </a-input-group>
         </header>
-        <a-tree v-model:selected-keys="selectKeys" :data="todoCategoryTree" block-node
-                style="margin: 7px;width: calc(100% - 14px)" draggable :virtual-list-props="virtualListProps">
+        <a-tree v-model:selected-keys="selectKeys" :data="treeNodeData" block-node
+                style="margin: 7px;width: calc(100% - 14px)" draggable :virtual-list-props="virtualListProps"
+                :allow-drop="checkAllowDrop" @drop="onDrop">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -68,6 +69,7 @@ import {TodoCategoryRecord, TodoCategoryTypeEnum} from "@/entity/todo/TodoCatego
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {useWindowSize} from "@vueuse/core";
+import {TreeNodeData} from "@arco-design/web-vue";
 
 const size = useWindowSize();
 
@@ -80,11 +82,35 @@ const todoCategory = ref({
     } as TodoCategoryRecord
 });
 const selectKeys = ref([useTodoStore().categoryId]);
+const keyword = ref('')
 
 const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree);
 const virtualListProps = computed(() => ({
     height: size.height.value - 53
 }));
+const treeNodeData = computed(() => keyword.value.length == 0 ? todoCategoryTree.value : searchData(keyword.value));
+
+function searchData(keyword: string): Array<TreeNodeData> {
+    const loop = (data: Array<TreeNodeData>): Array<TreeNodeData> => {
+        const result = new Array<TreeNodeData>();
+        data.forEach(item => {
+            if (item.title && item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+                result.push({...item});
+            } else if (item.children) {
+                const filterData = loop(item.children);
+                if (filterData.length) {
+                    result.push({
+                        ...item,
+                        children: filterData
+                    })
+                }
+            }
+        })
+        return result;
+    }
+
+    return loop(todoCategoryTree.value);
+}
 
 watch(() => selectKeys.value, value => {
     const categoryId = value[0];
@@ -138,6 +164,23 @@ function remove(id: number, title: string) {
         .then(() => MessageUtil.success("删除成功"))
         .catch(e => MessageUtil.error("删除失败", e)));
 
+}
+
+/**
+ * 检测节点是否允许被释放
+ * @param options 参数
+ */
+function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 | 1; }): boolean {
+    return !options.dropNode.isLeaf
+}
+
+function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
+    if (typeof data.dragNode.key !== 'undefined' &&
+        typeof data.dropNode.key !== 'undefined') {
+        useTodoCategoryStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+            .then(() => MessageUtil.success("移动成功"))
+            .catch(e => MessageUtil.error("移动失败", e));
+    }
 }
 
 </script>

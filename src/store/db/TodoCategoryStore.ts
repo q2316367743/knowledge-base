@@ -74,6 +74,18 @@ export const useTodoCategoryStore = defineStore('todo-category', {
                 useTodoStore().setCategoryId(0);
                 useTodoStore().setId(0);
             }
+        },
+        async drop(id: number, pid: number) {
+            const index = this.value.findIndex(v => v.id === id);
+            if (index === -1) {
+                return Promise.reject("待办分类不存在");
+            }
+            this.value[index] = {
+                ...this.value[index],
+                pid: pid,
+                updateTime: new Date()
+            }
+            await this._sync();
         }
     }
 })
