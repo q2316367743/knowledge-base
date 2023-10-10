@@ -14,5 +14,6 @@ export default {
         ADD: 'function:add-article',
         IMPORT: 'function:md-import',
         ADD_ZONE: 'function:add-zone'
-    }
+    },
+    autoCollapsedWidth: 1080
 }

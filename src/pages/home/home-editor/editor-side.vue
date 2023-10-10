@@ -1,8 +1,8 @@
 <template>
     <div class="home-editor-side">
         <header style="margin: 7px;">
-            <a-input-group>
-                <a-input style="width: 218px;" v-model="keyword" allow-clear/>
+            <a-input-group style="width: 100%">
+                <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
                 <a-dropdown>
                     <a-button type="primary">
                         <template #icon>
@@ -72,6 +72,8 @@ import MessageUtil from "@/utils/MessageUtil";
 import {toDateString} from "xe-utils";
 import {getDefaultArticleBase} from "@/entity/article";
 import {useGlobalStore} from "@/store/GlobalStore";
+import Constant from "@/global/Constant";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 
 const size = useWindowSize();
 
@@ -110,6 +112,9 @@ function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
     if (useArticleStore().articleMap.has(id)) {
         useHomeEditorStore().setId(id);
+        if (useBaseSettingStore().authCollapsed && size.width.value < Constant.autoCollapsedWidth) {
+            useHomeEditorStore().switchCollapsed();
+        }
     }
 }
 
@@ -199,6 +204,6 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
     top: 0;
     left: 0;
     bottom: 0;
-    width: 264px;
+    right: 0;
 }
 </style>

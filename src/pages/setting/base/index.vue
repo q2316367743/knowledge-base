@@ -69,6 +69,15 @@
                     </span>
                 </template>
             </a-form-item>
+            <a-form-item label="编辑文章是否自动收起菜单">
+                <a-switch v-model="instance.authCollapsed" :disabled="instance.homeType === HomeTypeEnum.DEFAULT">
+                    <template #checked>是</template>
+                    <template #unchecked>否</template>
+                </a-switch>
+                <template #help>
+                    当插件宽度小于1080px时生效
+                </template>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>

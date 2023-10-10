@@ -7,6 +7,7 @@ import {del, get, getMany, keys, set} from 'idb-keyval';
 export interface DbDoc {
     _id: string,
     _rev?: string,
+
     [key: string]: any
 }
 
@@ -44,10 +45,11 @@ export interface ShowOpenDialogOption {
     securityScopedBookmarks?: boolean
 }
 
-function isMacOS(): boolean{
+function isMacOS(): boolean {
     return /macintosh|mac os x/i.test(navigator.userAgent);
 }
-function isWindows(): boolean{
+
+function isWindows(): boolean {
     let agent = navigator.userAgent.toLowerCase();
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
@@ -75,14 +77,14 @@ export const utools = {
                 }
             },
             /**
-              * 获取文档
-              */
+             * 获取文档
+             */
             get(id: string): Promise<DbDoc | undefined> {
                 return get(id)
             },
             /**
-              * 删除文档
-              */
+             * 删除文档
+             */
             async remove(id: string): Promise<DbReturn> {
                 try {
                     await del(id);
@@ -101,8 +103,8 @@ export const utools = {
 
             },
             /**
-              * 获取所有文档 可根据文档id前缀查找
-              */
+             * 获取所有文档 可根据文档id前缀查找
+             */
             async allDocs(key?: string): Promise<DbDoc[]> {
                 let itemKeys = await keys();
                 if (key) {
@@ -122,7 +124,7 @@ export const utools = {
              * @param attachment 附件 buffer
              * @param type 附件类型，示例：image/png, text/plain
              */
-            postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn>{
+            postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
                 return Promise.reject("Web不支持保存附件")
             },
 
@@ -130,7 +132,7 @@ export const utools = {
              * 获取附件
              * @param docId 文档ID
              */
-            getAttachment(docId: string): Promise<Uint8Array | null>{
+            getAttachment(docId: string): Promise<Uint8Array | null> {
                 return Promise.reject("Web不支持保存附件")
             },
 
@@ -138,9 +140,38 @@ export const utools = {
              * 获取附件类型
              * @param docId 文档ID
              */
-            getAttachmentType(docId: string): Promise<string | null>{
+            getAttachmentType(docId: string): Promise<string | null> {
                 return Promise.reject("Web不支持保存附件")
             },
+        }
+    },
+    dbStorage: {
+        /**
+         * 键值对存储，如果键名存在，则更新其对应的值
+         * @param key 键名(同时为文档ID)
+         * @param value 键值
+         */
+        setItem(key: string, value: any): void {
+            localStorage.setItem(key, JSON.stringify({
+                value: value
+            }))
+        },
+        /**
+         * 获取键名对应的值
+         */
+        getItem(key: string): any {
+            const value = localStorage.getItem(key);
+            if (!value) {
+                return null;
+            }
+            const valueWrap = JSON.parse(value);
+            return valueWrap['value'];
+        },
+        /**
+         * 删除键值对(删除文档)
+         */
+        removeItem(key: string): void {
+            localStorage.removeItem(key)
         }
     },
     getPath(): string {
@@ -153,7 +184,7 @@ export const utools = {
         if (typeof label === 'string' || typeof payload !== 'string') {
             MessageUtil.warning("web环境不支持utools");
             window.open("https://u.tools");
-        }else {
+        } else {
             window.open(`utools://${label[0]}/${label[1]}?${payload}`)
         }
     },
@@ -164,7 +195,7 @@ export const utools = {
         return window.matchMedia('(prefers-color-scheme: dark)').matches;
     },
     onPluginEnter(callback: (action: { code: string, type: string, payload: any }) => void): void {
-        document.addEventListener('load', () => callback({ code: 'application', type: '', payload: {} }));
+        document.addEventListener('load', () => callback({code: 'application', type: '', payload: {}}));
     },
     showOpenDialog(options: ShowOpenDialogOption): (string[]) | (undefined) {
         MessageUtil.warning("web环境不支持打开文件操作，请使用utools版本");
@@ -181,7 +212,7 @@ export const utools = {
         return Promise.resolve([]);
     },
     getUser() {
-        return { avatar: "", nickname: "web用户", type: "" };
+        return {avatar: "", nickname: "web用户", type: ""};
     },
     fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
         let token = localStorage.getItem("token");

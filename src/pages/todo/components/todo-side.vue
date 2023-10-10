@@ -71,6 +71,7 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import {useWindowSize} from "@vueuse/core";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData} from "@/entity/ListTree";
+import Constant from "@/global/Constant";
 
 const size = useWindowSize();
 
@@ -97,8 +98,7 @@ watch(() => selectKeys.value, value => {
     let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
     if (category && category.type === TodoCategoryTypeEnum.TODO) {
         useTodoStore().setId(categoryId);
-        // 如果宽度小于1080，则自动隐藏
-        if (size.width.value < 1080) {
+        if (size.width.value < Constant.autoCollapsedWidth) {
             useTodoStore().switchCollapsed();
         }
     } else {

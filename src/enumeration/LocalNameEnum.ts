@@ -48,7 +48,11 @@ enum LocalNameEnum {
      */
     TODO_ITEM = '/todo/item/',
 
-    VERSION = '/key/VERSION'
+    VERSION = '/key/VERSION',
+
+    KEY_HOME_WIDTH = '/key/home/width',
+
+    KEY_HOME_COLLAPSED = '/key/home/collapsed'
 
 }
 

@@ -14,4 +14,9 @@ export default interface BaseSetting extends ArticleBaseSetting{
      */
     homeType: HomeTypeEnum;
 
+    /**
+     * 当屏幕太小时，是否自动收起
+     */
+    authCollapsed: boolean;
+
 }

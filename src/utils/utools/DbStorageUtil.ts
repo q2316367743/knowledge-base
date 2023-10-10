@@ -13,7 +13,7 @@ export function getItem<T>(key: string): T | null {
 
 }
 
-export function getItemByDefault<T>(key: string, defaultValue: T) {
+export function getItemByDefault<T>(key: string, defaultValue: T): T {
     let value = utools.dbStorage.getItem(key);
     if (typeof value === 'undefined' || value == null) {
         return defaultValue;
@@ -21,7 +21,7 @@ export function getItemByDefault<T>(key: string, defaultValue: T) {
     return value;
 }
 
-export function setItem(key: string, value: any) {
+export function setItem<T = any>(key: string, value: T) {
     utools.dbStorage.setItem(key, toRaw(value));
 }
 
