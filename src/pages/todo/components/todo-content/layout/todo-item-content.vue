@@ -97,7 +97,6 @@ function init(id: number) {
 
 // 内容的自动保存
 const autoSave = () => {
-    console.log('保存' + new Date().getTime());
     if (lock) {
         todo = true;
         return;

@@ -12,7 +12,10 @@
                     </div>
                     <template #content>
                         <a-dsubmenu>
-                            优先级
+                            <template #icon>
+                                <icon-thunderbolt :style="{color:handlePriorityColor(item.priority)}"/>
+                            </template>
+                            <span :style="{color:handlePriorityColor(item.priority)}">优先级</span>
                             <template #content>
                                 <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
                                            :value="TodoItemPriority.HIGH"
@@ -36,7 +39,12 @@
                                 </a-doption>
                             </template>
                         </a-dsubmenu>
-                        <a-doption style="color: red;" @click="removeById(item.id)">删除</a-doption>
+                        <a-doption style="color: red;" @click="removeById(item.id)">
+                            <template #icon>
+                                <icon-delete />
+                            </template>
+                            删除
+                        </a-doption>
                     </template>
                 </a-dropdown>
                 <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="right">
@@ -90,7 +98,7 @@ function updateStatus(itemId: number, status: TodoItemStatus) {
     useGlobalStore().startLoading("开始更新待办项");
     useTodoStore().updateById(itemId, {status: status})
         .then(() => MessageUtil.success("更新成功"))
-        .catch(e => MessageUtil.error("更新失败"))
+        .catch(e => MessageUtil.error("更新失败", e))
         .finally(() => useGlobalStore().closeLoading());
 }
 
@@ -109,7 +117,7 @@ function removeById(id: number) {
         useGlobalStore().startLoading("开始删除待办项");
         useTodoStore().removeById(id)
             .then(() => MessageUtil.success("删除成功"))
-            .catch(e => MessageUtil.error("删除失败"))
+            .catch(e => MessageUtil.error("删除失败", e))
             .finally(() => useGlobalStore().closeLoading());
     })
 }
