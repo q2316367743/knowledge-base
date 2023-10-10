@@ -93,3 +93,33 @@ export function treeEach(
         }
     });
 }
+
+/**
+ * 树搜索
+ * @param keyword 关键字
+ * @param tree 树
+ */
+export function searchData(keyword: string, tree: Array<TreeNodeData>): Array<TreeNodeData> {
+    if (!keyword || keyword.length === 0) {
+        return tree;
+    }
+    const loop = (data: Array<TreeNodeData>): Array<TreeNodeData> => {
+        const result = new Array<TreeNodeData>();
+        data.forEach(item => {
+            if (item.title && item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+                result.push({...item});
+            } else if (item.children) {
+                const filterData = loop(item.children);
+                if (filterData.length) {
+                    result.push({
+                        ...item,
+                        children: filterData
+                    })
+                }
+            }
+        })
+        return result;
+    }
+
+    return loop(tree);
+}

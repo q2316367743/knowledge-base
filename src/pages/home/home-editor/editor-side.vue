@@ -2,7 +2,7 @@
     <div class="home-editor-side">
         <header style="margin: 7px;">
             <a-input-group>
-                <a-input style="width: 218px;" disabled/>
+                <a-input style="width: 218px;" v-model="keyword" allow-clear/>
                 <a-dropdown>
                     <a-button type="primary">
                         <template #icon>
@@ -16,9 +16,9 @@
                 </a-dropdown>
             </a-input-group>
         </header>
-        <a-tree v-model:selected-keys="selectedKeys" :data="treeData" :virtual-list-props="virtualListProps"
+        <a-tree v-model:selected-keys="selectedKeys" :data="treeNodeData" :virtual-list-props="virtualListProps"
                 :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable
-                @select="onSelect($event)" @drop="onDrop($event)">
+                @select="onSelect($event)" @drop="onDrop($event)" style="margin: 0 7px;">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -61,7 +61,7 @@
 <script lang="ts" setup>
 import {computed, h, nextTick, ref} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
-import {treeEach} from "@/entity/ListTree";
+import {searchData, treeEach} from "@/entity/ListTree";
 import {IconFile} from "@arco-design/web-vue/es/icon";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
@@ -75,6 +75,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 
 const size = useWindowSize();
 
+const keyword = ref('');
 const selectedKeys = ref<Array<number>>([]);
 
 const folderTree = computed(() => useFolderStore().folderTree);
@@ -103,6 +104,7 @@ const treeData = computed<Array<TreeNodeData>>(() => {
 const virtualListProps = computed(() => ({
     height: size.height.value - 46
 }));
+const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
 
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;

@@ -70,6 +70,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {useWindowSize} from "@vueuse/core";
 import {TreeNodeData} from "@arco-design/web-vue";
+import {searchData} from "@/entity/ListTree";
 
 const size = useWindowSize();
 
@@ -88,29 +89,7 @@ const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree)
 const virtualListProps = computed(() => ({
     height: size.height.value - 53
 }));
-const treeNodeData = computed(() => keyword.value.length == 0 ? todoCategoryTree.value : searchData(keyword.value));
-
-function searchData(keyword: string): Array<TreeNodeData> {
-    const loop = (data: Array<TreeNodeData>): Array<TreeNodeData> => {
-        const result = new Array<TreeNodeData>();
-        data.forEach(item => {
-            if (item.title && item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-                result.push({...item});
-            } else if (item.children) {
-                const filterData = loop(item.children);
-                if (filterData.length) {
-                    result.push({
-                        ...item,
-                        children: filterData
-                    })
-                }
-            }
-        })
-        return result;
-    }
-
-    return loop(todoCategoryTree.value);
-}
+const treeNodeData = computed(() => searchData(keyword.value, todoCategoryTree.value));
 
 watch(() => selectKeys.value, value => {
     const categoryId = value[0];
