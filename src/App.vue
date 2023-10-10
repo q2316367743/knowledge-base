@@ -110,8 +110,10 @@ export default defineComponent({
             } else if (operate === 'function') {
                 if (preload === 'import') {
                     useImportEvent.emit(extra);
-                } else if (preload === 'application') {
+                } else if (preload === 'editor') {
                     this.$router.push('/home');
+                } else if (preload === 'todo') {
+                    this.$router.push('/todo');
                 } else if (preload === 'add') {
                     sessionStorage.setItem("extra", extra);
                     this.$router.push('/editor/0')
