@@ -19,7 +19,7 @@ export class UtoolsAuthDriverImpl implements AuthDriver {
     async getAttachment(docId: string): Promise<string> {
         const data = await utools.db.promises.getAttachment(docId);
         if (!data) {
-            return Promise.reject(`资源【${docId}】加载失败`)
+            return Promise.resolve("./logo.png")
         }
         const blob = new Blob([data]);
         return Promise.resolve(window.URL.createObjectURL(blob));
