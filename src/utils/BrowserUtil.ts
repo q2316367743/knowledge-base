@@ -188,3 +188,12 @@ export function arrayBufferToBase64(buffer: ArrayBuffer) {
     }
     return window.btoa(binary);
 }
+
+export function parseFileName(fileName: string): string {
+    const indexOf = fileName.lastIndexOf(".");
+    if (indexOf > -1) {
+        return fileName.substring(0, indexOf);
+    }else {
+        return fileName;
+    }
+}

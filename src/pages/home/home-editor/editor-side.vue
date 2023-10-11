@@ -12,6 +12,7 @@
                     <template #content>
                         <a-doption @click="addArticle(0)">新增文章</a-doption>
                         <a-doption @click="addFolder(0)">新建文件夹</a-doption>
+                        <a-doption @click="importArticle()">导入文章</a-doption>
                     </template>
                 </a-dropdown>
             </a-input-group>
@@ -65,15 +66,16 @@ import {searchData, treeEach} from "@/entity/ListTree";
 import {IconFile} from "@arco-design/web-vue/es/icon";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {useWindowSize} from "@vueuse/core";
+import {useFileSystemAccess, useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import {toDateString} from "xe-utils";
-import {getDefaultArticleBase} from "@/entity/article";
+import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useGlobalStore} from "@/store/GlobalStore";
 import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {parseFileName} from "@/utils/BrowserUtil";
 
 const size = useWindowSize();
 
@@ -195,6 +197,49 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
             .then(() => MessageUtil.success("移动成功"))
             .catch(e => MessageUtil.error("移动失败", e));
     }
+}
+
+const file = useFileSystemAccess({
+    dataType: 'Text',
+    types: [{
+        description: 'Markdown文档',
+        accept: {
+            'text/plain': ['.md', '.markdown']
+        }
+    }]
+})
+
+function importArticle() {
+    _importArticle()
+        .then(() => MessageUtil.success("导入成功"))
+        .catch(e => {
+            if (e.message !== 'The user aborted a request.') {
+                MessageUtil.error("导入失败", e)
+            }
+        })
+}
+
+async function _importArticle() {
+    await file.open();
+    let content = "";
+    const contentWrap = file.data.value;
+    if (contentWrap) {
+        content = contentWrap.trim();
+    }
+    const title = file.fileName.value;
+    const fileEntry = file.file.value;
+    if (!content) {
+        return Promise.reject("违章内容不存在")
+    }
+    const articleId = await useArticleStore().add(getDefaultArticleIndex({
+        source: '导入文章',
+        name: parseFileName(title),
+    }), getDefaultArticleBase({
+        // @ts-ignore
+        sourceUrl: fileEntry ? (fileEntry.path || '') : ''
+    }), content);
+    // 切换文章
+    useHomeEditorStore().setId(articleId);
 }
 
 </script>

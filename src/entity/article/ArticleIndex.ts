@@ -48,9 +48,8 @@ export interface ArticleIndex {
     preview: boolean;
 
 }
-
-export function getDefaultArticleIndex(): ArticleIndex {
-    return {
+export function getDefaultArticleIndex(source?: Partial<ArticleIndex>): ArticleIndex {
+    return Object.assign({
         id: 0,
         createTime: new Date(),
         updateTime: new Date(),
@@ -61,5 +60,5 @@ export function getDefaultArticleIndex(): ArticleIndex {
         source: '',
         folder: 0,
         preview: false,
-    };
+    }, source);
 }

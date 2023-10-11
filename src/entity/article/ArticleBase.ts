@@ -46,8 +46,8 @@ export interface ArticleBase extends ArticleBaseSetting{
 
 }
 
-export function getDefaultArticleBase(): ArticleBase {
-    return {
+export function getDefaultArticleBase(source?: Partial<ArticleBase>): ArticleBase {
+    return Object.assign({
         sourceUrl: '',
         customer: false,
         codeLightTheme: 'github',
@@ -55,7 +55,7 @@ export function getDefaultArticleBase(): ArticleBase {
         articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
         articleHeaderVisible: true,
         codeWrap: false,
-    };
+    }, source);
 }
 
 export function getDefaultArticleBaseByBaseSetting(): ArticleBase {
