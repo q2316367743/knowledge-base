@@ -138,13 +138,18 @@ const isDark = computed(() => useGlobalStore().isDark);
 const articleTags = computed(() => useArticleStore().articleTags);
 const categoryTree = computed(() => useCategoryStore().categoryTree);
 
-watch(() => props.id, value => value ? init(value) : 0);
+watch(() => props.id, value => init(value || 0));
 
 if (props.id) {
     init(props.id);
 }
 
 function init(articleId: number) {
+    if (articleId === 0) {
+        // 清空数据
+        clear()
+        return;
+    }
     useGlobalStore().startLoading("正在获取文章内容");
     _init(articleId)
         .catch(e => MessageUtil.error("获取内容失败", e))
@@ -221,6 +226,22 @@ watch(() => s.value, value => {
         save();
     }
 });
+
+function clear() {
+    // 清空数据
+    id.value = 0;
+    title.value = '';
+    content.value = '';
+    base.value = getDefaultArticleBaseByBaseSetting();
+    extra.value = {
+        visible: false,
+        tags: new Array<string>(),
+        categoryId: undefined as number | undefined,
+        description: '',
+        createTime: '' as Date | string,
+        source: ''
+    };
+}
 
 </script>
 <style lang="less">

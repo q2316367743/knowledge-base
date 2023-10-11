@@ -8,6 +8,7 @@ import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import {useUpdatePreviewEvent} from "@/global/BeanFactory";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 export const useArticleStore = defineStore('article', {
     state: () => ({
@@ -209,6 +210,10 @@ export const useArticleStore = defineStore('article', {
             // 删除评论
             await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
             // TODO: 删除附件
+            // 如果当前就是这个文章，则清除
+            if (id === useHomeEditorStore().id) {
+                useHomeEditorStore().setId(0);
+            }
         },
         async drop(id: number, pid: number) {
             const index = this.value.findIndex(e => e.id === id);

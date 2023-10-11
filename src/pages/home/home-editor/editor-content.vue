@@ -30,6 +30,12 @@ useUpdatePreviewEvent.on(articleId => {
 })
 
 function init(articleId: number) {
+    if (articleId === 0) {
+        articleIndex.value = getDefaultArticleIndex();
+        // 此处判断是锁定还是编辑器
+        title.value = "";
+        return;
+    }
     const article = useArticleStore().articleMap.get(articleId);
     if (!article) {
         MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);

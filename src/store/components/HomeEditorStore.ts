@@ -4,8 +4,8 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 export const useHomeEditorStore = defineStore('home-editor', {
     state: () => ({
-        id: 0,
-        collapsed: getItemByDefault<boolean>(LocalNameEnum.KEY_HOME_COLLAPSED, false),
+        id: getItemByDefault<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, 0),
+        collapsed: false,
         widthWrap: getItemByDefault<string>(LocalNameEnum.KEY_HOME_WIDTH, '264px')
     }),
     getters: {
@@ -20,10 +20,10 @@ export const useHomeEditorStore = defineStore('home-editor', {
     actions: {
         switchCollapsed() {
             this.collapsed = !this.collapsed;
-            setItem<boolean>(LocalNameEnum.KEY_HOME_COLLAPSED, this.collapsed);
         },
         setId(id: number) {
             this.id = id;
+            setItem<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, this.id);
         },
         setWidth(width: string) {
             if (width === '0px' && this.collapsed) {

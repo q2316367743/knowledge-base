@@ -52,7 +52,10 @@ enum LocalNameEnum {
 
     KEY_HOME_WIDTH = '/key/home/width',
 
-    KEY_HOME_COLLAPSED = '/key/home/collapsed',
+    /**
+     * 上一次的文章ID
+     */
+    KEY_HOME_EDITOR_ID = '/key/home/editor/id',
 
     /**
      * 待办列表排序

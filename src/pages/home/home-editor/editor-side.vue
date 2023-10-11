@@ -80,7 +80,7 @@ import {parseFileName} from "@/utils/BrowserUtil";
 const size = useWindowSize();
 
 const keyword = ref('');
-const selectedKeys = ref<Array<number>>([]);
+const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [useHomeEditorStore().id]);
 
 const folderTree = computed(() => useFolderStore().folderTree);
 const folderMap = computed(() => useArticleStore().folderMap);
@@ -227,17 +227,13 @@ async function _importArticle() {
         content = contentWrap.trim();
     }
     const title = file.fileName.value;
-    const fileEntry = file.file.value;
     if (!content) {
-        return Promise.reject("违章内容不存在")
+        return Promise.reject("文章内容不存在")
     }
     const articleId = await useArticleStore().add(getDefaultArticleIndex({
         source: '导入文章',
         name: parseFileName(title),
-    }), getDefaultArticleBase({
-        // @ts-ignore
-        sourceUrl: fileEntry ? (fileEntry.path || '') : ''
-    }), content);
+    }), getDefaultArticleBase(), content);
     // 切换文章
     useHomeEditorStore().setId(articleId);
 }
