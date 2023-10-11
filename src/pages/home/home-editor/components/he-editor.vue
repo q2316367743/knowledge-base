@@ -22,7 +22,7 @@
                             <icon-lock/>
                         </template>
                     </a-button>
-                    <a-button @click="extra.visible = true">
+                    <a-button @click="extraVisible = true">
                         <template #icon>
                             <icon-settings/>
                         </template>
@@ -31,14 +31,14 @@
             </a-button-group>
         </header>
         <!-- 编辑区 -->
-        <div class="container">
+        <div class="ec-container">
             <markdown-editor v-model="content"/>
         </div>
         <!-- 额外信息 -->
-        <a-drawer v-model:visible="extra.visible" title="信息" :width="300" :footer="false">
-            <a-form :model="extra" layout="vertical">
+        <a-drawer v-model:visible="extraVisible" title="信息" :width="300" ok-text="保存" @ok="save()">
+            <a-form :model="articleIndex" layout="vertical">
                 <a-form-item label="来源">
-                    <a-input v-model="extra.source" :max-length="32"/>
+                    <a-input v-model="articleIndex.source" :max-length="32"/>
                     <template #help>
                         最大32个字
                     </template>
@@ -47,17 +47,18 @@
                     <a-input v-model="base.sourceUrl" :max-length="255"/>
                 </a-form-item>
                 <a-form-item label="分类">
-                    <a-tree-select :data="categoryTree" v-model="extra.categoryId" placeholder="请选择分类">
+                    <a-tree-select :data="categoryTree" v-model="articleIndex.categoryId" placeholder="请选择分类">
                     </a-tree-select>
                 </a-form-item>
                 <a-form-item label="标签">
-                    <a-select v-model="extra.tags" placeholder="请输入标签" multiple scrollbar allow-clear allow-search
+                    <a-select v-model="articleIndex.tags" placeholder="请输入标签" multiple scrollbar allow-clear
+                              allow-search
                               allow-create>
                         <a-option v-for="tag in articleTags" :value="tag">{{ tag }}</a-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="描述">
-                    <a-textarea v-model="extra.description" :auto-size="{minRows: 4}"
+                    <a-textarea v-model="articleIndex.description" :auto-size="{minRows: 4}"
                                 placeholder="请输入描述，不能超过64个字"
                                 allow-clear :max-length="64" show-word-limit/>
                 </a-form-item>
@@ -105,7 +106,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {ArticleSource, getDefaultArticleBaseByBaseSetting} from "@/entity/article";
+import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import {renderHelp} from "@/store/db/BaseSettingStore";
@@ -114,36 +115,25 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {useMagicKeys} from "@vueuse/core";
 
-const props = defineProps({
-    id: Number
-});
 
 const {ctrl, s} = useMagicKeys()
 
-const id = ref(0);
 const title = ref('');
 const content = ref('');
 const base = ref(getDefaultArticleBaseByBaseSetting());
-const extra = ref({
-    visible: false,
-    tags: new Array<string>(),
-    categoryId: undefined as number | undefined,
-    description: '',
-    createTime: '' as Date | string,
-    source: ''
-});
+const extraVisible = ref(false);
 const saveLoading = ref(false);
+const articleIndex = ref(getDefaultArticleIndex());
 
+const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
 const isDark = computed(() => useGlobalStore().isDark);
 const articleTags = computed(() => useArticleStore().articleTags);
 const categoryTree = computed(() => useCategoryStore().categoryTree);
 
-watch(() => props.id, value => init(value || 0));
+watch(() => id.value, value => init(value));
 
-if (props.id) {
-    init(props.id);
-}
+init(id.value);
 
 function init(articleId: number) {
     if (articleId === 0) {
@@ -158,21 +148,14 @@ function init(articleId: number) {
 }
 
 async function _init(articleId: number) {
-    id.value = articleId;
-    const articleIndex = useArticleStore().articleMap.get(id.value);
-    if (!articleIndex) {
+    const articleIndexWrap = useArticleStore().articleMap.get(id.value);
+    if (!articleIndexWrap) {
         MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
         return;
     }
-    extra.value = {
-        visible: false,
-        tags: articleIndex.tags,
-        categoryId: articleIndex.categoryId || undefined,
-        description: articleIndex.description,
-        createTime: articleIndex.createTime,
-        source: articleIndex.source
-    }
-    title.value = articleIndex.name;
+    articleIndex.value = articleIndexWrap;
+    extraVisible.value = false;
+    title.value = articleIndexWrap.name;
     // 基础信息
     const baseWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_BASE + id.value);
     if (baseWrap) {
@@ -195,15 +178,15 @@ function save() {
     if (id.value === 0) {
         useArticleStore().add({
             name: title.value,
-            description: extra.value.description,
-            tags: extra.value.tags,
-            categoryId: extra.value.categoryId || null,
-            source: extra.value.source,
+            description: articleIndex.value.description,
+            tags: articleIndex.value.tags,
+            categoryId: articleIndex.value.categoryId || null,
+            source: articleIndex.value.source,
             folder: 0,
             preview: false
         }, base.value, content.value)
             .then(idWrap => {
-                id.value = idWrap;
+                useHomeEditorStore().setId(idWrap);
                 MessageUtil.success("保存文章成功");
             })
             .catch(e => MessageUtil.error("保存文章失败", e))
@@ -211,10 +194,10 @@ function save() {
     } else {
         useArticleStore().update(id.value, {
             name: title.value,
-            description: extra.value.description,
-            tags: extra.value.tags,
-            categoryId: extra.value.categoryId || null,
-            source: extra.value.source,
+            description: articleIndex.value.description,
+            tags: articleIndex.value.tags,
+            categoryId: articleIndex.value.categoryId || null,
+            source: articleIndex.value.source,
         }, base.value, content.value)
             .then(() => {
                 MessageUtil.success("保存文章成功");
@@ -233,18 +216,11 @@ watch(() => s.value, value => {
 
 function clear() {
     // 清空数据
-    id.value = 0;
     title.value = '';
     content.value = '';
     base.value = getDefaultArticleBaseByBaseSetting();
-    extra.value = {
-        visible: false,
-        tags: new Array<string>(),
-        categoryId: undefined as number | undefined,
-        description: '',
-        createTime: '' as Date | string,
-        source: ''
-    };
+    articleIndex.value = getDefaultArticleIndex();
+    extraVisible.value = false;
 }
 
 let lock = false;
@@ -262,10 +238,10 @@ function autoSave() {
     saveLoading.value = true;
     useArticleStore().update(id.value, {
         name: title.value,
-        description: extra.value.description,
-        tags: extra.value.tags,
-        categoryId: extra.value.categoryId || null,
-        source: extra.value.source,
+        description: articleIndex.value.description,
+        tags: articleIndex.value.tags,
+        categoryId: articleIndex.value.categoryId || null,
+        source: articleIndex.value.source,
     }, base.value, content.value)
         .then(() => {
             lock = false;
@@ -279,7 +255,7 @@ function autoSave() {
         .finally(() => saveLoading.value = false);
 }
 
-watch(() => content.value, () => autoSave())
+watch(() => content.value, () => autoSave());
 
 </script>
 <style lang="less">
@@ -291,28 +267,6 @@ watch(() => content.value, () => autoSave())
     bottom: 0;
     background-color: var(--color-bg-1);
 
-    .header {
-        padding: 4px 7px;
-        display: flex;
-        justify-content: space-between;
-
-        .left {
-            display: flex;
-            width: 70%;
-        }
-    }
-
-    .container {
-        position: absolute;
-        top: 40px;
-        left: 7px;
-        right: 7px;
-        bottom: 7px;
-
-        .vditor-reset {
-            color: var(--color-text-1);
-        }
-    }
 }
 
 </style>

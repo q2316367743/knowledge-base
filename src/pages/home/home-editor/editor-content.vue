@@ -1,7 +1,7 @@
 <template>
     <div class="editor-content">
         <he-preview v-if="preview" :id="id + ''"/>
-        <he-editor :id="id" v-else/>
+        <he-editor v-else/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -27,7 +27,9 @@ useUpdatePreviewEvent.on(articleId => {
     if (articleId === id.value) {
         init(articleId)
     }
-})
+});
+
+init(useHomeEditorStore().id)
 
 function init(articleId: number) {
     if (articleId === 0) {
@@ -54,5 +56,26 @@ function init(articleId: number) {
     left: 0;
     right: 0;
     bottom: 0;
+
+    .header {
+        padding: 4px 7px;
+        display: flex;
+        justify-content: space-between;
+
+        .left {
+            display: flex;
+            width: 70%;
+        }
+    }
+
+    .ec-container {
+        position: absolute;
+        top: 40px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+
+    }
+
 }
 </style>
