@@ -12,6 +12,8 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
 export const useImportEvent = useEventBus<string>('import');
+export const useUpdatePreviewEvent = useEventBus<number>('update-preview');
+
 export async function initData(needAuth: boolean = true): Promise<void> {
     if (needAuth) {
         // 先进行认证驱动

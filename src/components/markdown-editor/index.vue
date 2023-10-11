@@ -1,75 +1,105 @@
 <template>
-    <div class="markdown-editor" :id="id"></div>
+    <Editor :value="value" :plugins="plugins" @change="handleChange" :locale="zhHans" placeholder="请输入文章内容"/>
 </template>
-<script lang="ts" setup>
-import Cherry from "cherry-markdown";
-import {onMounted, shallowRef, watch} from "vue";
-import {CherryConfig, editorProps} from "@/components/markdown-editor/MarkdownProp";
+<script lang="ts">
+import {defineComponent, markRaw} from "vue";
+import {Editor} from '@bytemd/vue-next';
+import zhHans from 'bytemd/locales/zh_Hans.json';
+
+import gfm from '@bytemd/plugin-gfm'
+import breaks from '@bytemd/plugin-breaks'
+import frontmatter from '@bytemd/plugin-frontmatter'
+import highlight from '@bytemd/plugin-highlight'
+import math from '@bytemd/plugin-math'
+import mermaid from '@bytemd/plugin-mermaid'
+import mediumZoom from '@bytemd/plugin-medium-zoom'
+import gemoji from '@bytemd/plugin-gemoji'
+import imageZoom from '@ziuchen/bytemd-plugin-image-zoom'
+import align from '@ziuchen/bytemd-plugin-align'
+import highlightTheme from '@ziuchen/bytemd-plugin-highlight-theme'
+import markdownTheme from '@ziuchen/bytemd-plugin-markdown-theme'
+import highlights from '@ziuchen/bytemd-plugin-highlight-theme/dist/highlights.json'
+import themes from '@ziuchen/bytemd-plugin-markdown-theme/dist/themes.json'
+import zhHansGfm from '@bytemd/plugin-gfm/locales/zh_Hans.json'
+import zhHansMath from '@bytemd/plugin-math/locales/zh_Hans.json'
+import zhHansMerimaid from '@bytemd/plugin-mermaid/locales/zh_Hans.json'
+import zhHansImageZoom from '@ziuchen/bytemd-plugin-image-zoom/locales/zh_Hans.json'
+import zhHansAlign from '@ziuchen/bytemd-plugin-align/locales/zh_Hans.json'
+import zhHansHighlightTheme from '@ziuchen/bytemd-plugin-highlight-theme/locales/zh_Hans.json'
+import zhHansMarkdownTheme from '@ziuchen/bytemd-plugin-markdown-theme/locales/zh_Hans.json'
+import {enhancePlugin} from "@/components/markdown-editor/plugins/enhancePlugin";
+import {imageUploadPlugin} from "@/components/markdown-editor/plugins/imageUploadPlugin";
+import {customImagePlugin} from "@/components/markdown-editor/plugins/customImagePlugin";
+import {pasteImagePlugin} from "@/components/markdown-editor/plugins/pasteImagePlugin";
 import {useGlobalStore} from "@/store/GlobalStore";
 
-const props = defineProps(editorProps);
-const emits = defineEmits(['update:moduleValue']);
+const plugins = [
+    gfm({
+        locale: zhHansGfm
+    }),
+    gemoji(),
+    breaks(),
+    frontmatter(),
+    highlight(),
+    mediumZoom(),
+    align({
+        locale: zhHansAlign
+    }),
+    imageZoom({
+        locale: zhHansImageZoom
+    }),
+    math({
+        locale: zhHansMath
+    }),
+    mermaid({
+        locale: zhHansMerimaid
+    }),
+    markdownTheme({
+        locale: zhHansMarkdownTheme,
+        themes,
+        defaultTheme: 'juejin'
+    }),
+    highlightTheme({
+        locale: zhHansHighlightTheme,
+        highlights,
+        defaultHighlight: useGlobalStore().isDark ? 'a11y-dark' : 'github'
+    }),
+    enhancePlugin(),
+    imageUploadPlugin(),
+    customImagePlugin(),
+    pasteImagePlugin()
+]
 
-const instance = shallowRef<Cherry>();
-const id = 'markdown-editor-' + new Date().getTime();
-
-const config: CherryConfig = {
-    id: id,
-    value: props.modelValue || '',
-    previewer: {
-        dom: false,
-        className: 'markdown-content',
-        enablePreviewerBubble: true,
+export default defineComponent({
+    name: 'markdown-editor',
+    components: {
+        // @ts-ignore
+        Editor: Editor
     },
-    isPreviewOnly: false,
-    autoScrollByCursor: true,
-    forceAppend: true,
-    locale: 'zh_CN',
-    engine: {
-        syntax: {
-            codeBlock: {
-                lineNumber:true
-            }
+    props: {
+        modelValue: String
+    },
+    emits: ['update:modelValue'],
+    data: () => ({
+        value: '',
+        plugins: markRaw(plugins),
+        zhHans
+    }),
+    watch: {
+        modelValue(newValue) {
+            this.value = newValue;
+        },
+        value(newValue) {
+            this.$emit('update:modelValue', newValue);
         }
     },
-    editor: {
-        defaultModel: props.preview ? 'previewOnly' : props.defaultModel,
-        codemirror: {
-            theme: useGlobalStore().isDark ? 'material-ocean' : 'default',
+    methods: {
+        handleChange(v: string) {
+            this.value = v
         },
     },
-    toolbars: {
-        theme: useGlobalStore().isDark ? 'dark' : 'light',
-        showToolbar: false,
-    },
-    callback: {
-        afterChange(value) {
-            emits('update:moduleValue', value);
-        }
-    }
-};
-
-onMounted(() => {
-    instance.value = new Cherry(config);
-});
-
-watch(() => props.modelValue, value => {
-    if (instance.value) {
-        instance.value.setValue(value || "");
-    }
-});
-watch(() => props.preview, value => {
-    if (typeof value !== 'undefined') {
-        if (instance.value) {
-            instance.value.switchModel(value ? 'previewOnly' : 'edit&preview');
-        }
-    }
 });
 </script>
 <style scoped>
-.markdown-editor {
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
+
 </style>
