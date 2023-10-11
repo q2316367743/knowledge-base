@@ -12,7 +12,7 @@
             </div>
             <a-button-group type="text">
                 <a-space>
-                    <a-button @click="save()">
+                    <a-button @click="save()" :loadin="saveLoading">
                         <template #icon>
                             <icon-save/>
                         </template>
@@ -132,6 +132,7 @@ const extra = ref({
     createTime: '' as Date | string,
     source: ''
 });
+const saveLoading = ref(false);
 
 const width = computed(() => useGlobalStore().width);
 const isDark = computed(() => useGlobalStore().isDark);
@@ -190,6 +191,7 @@ const setPreview = () => useArticleStore().setPreview(id.value, true)
     .catch(e => MessageUtil.error("切换为预览模式失败", e));
 
 function save() {
+    saveLoading.value = true;
     if (id.value === 0) {
         useArticleStore().add({
             name: title.value,
@@ -204,7 +206,8 @@ function save() {
                 id.value = idWrap;
                 MessageUtil.success("保存文章成功");
             })
-            .catch(e => MessageUtil.error("保存文章失败", e));
+            .catch(e => MessageUtil.error("保存文章失败", e))
+            .finally(() => saveLoading.value = false);
     } else {
         useArticleStore().update(id.value, {
             name: title.value,
@@ -216,7 +219,8 @@ function save() {
             .then(() => {
                 MessageUtil.success("保存文章成功");
             })
-            .catch(e => MessageUtil.error("保存文章失败", e));
+            .catch(e => MessageUtil.error("保存文章失败", e))
+            .finally(() => saveLoading.value = false);
     }
 }
 
@@ -242,6 +246,40 @@ function clear() {
         source: ''
     };
 }
+
+let lock = false;
+let todo = false;
+
+function autoSave() {
+    if (id.value === 0) {
+        return;
+    }
+    if (lock) {
+        todo = true;
+        return;
+    }
+    lock = true;
+    saveLoading.value = true;
+    useArticleStore().update(id.value, {
+        name: title.value,
+        description: extra.value.description,
+        tags: extra.value.tags,
+        categoryId: extra.value.categoryId || null,
+        source: extra.value.source,
+    }, base.value, content.value)
+        .then(() => {
+            lock = false;
+            if (todo) {
+                todo = false;
+                // 存在待办，再次执行
+                autoSave();
+            }
+        })
+        .catch(e => MessageUtil.error("保存文章失败", e))
+        .finally(() => saveLoading.value = false);
+}
+
+watch(() => content.value, () => autoSave())
 
 </script>
 <style lang="less">
