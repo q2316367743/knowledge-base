@@ -76,7 +76,7 @@
                  :key="item.id" @click.stop>
                 <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
                 </a-checkbox>
-                <p class="title" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
+                <p class="title gray" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
                     {{ item.title }}
                 </p>
             </div>
@@ -93,7 +93,7 @@
                  :key="item.id" @click.stop>
                 <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
                 </a-checkbox>
-                <p class="title" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
+                <p class="title gray" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
                     {{ item.title }}
                 </p>
             </div>
@@ -232,6 +232,10 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
                 &.disabled {
                     color: var(--color-neutral-4);
                 }
+            }
+
+            .gray {
+                color: var(--color-neutral-6);
             }
         }
     }
