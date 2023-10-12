@@ -42,9 +42,10 @@
                     <icon-refresh spin/>
                     自动保存中
                 </div>
-            </main>
-            <footer class="footer">
-                <a-overflow-list class="todo-item-tags">
+                <div class="todo-item-tags">
+                    <a-tag v-for="tag in tags" :key="tag" :color="randomColor(tag)" closable
+                           @close="tagRemove(tag)">{{ tag }}
+                    </a-tag>
                     <a-input
                             v-if="tag.input"
                             ref="tagInputRef"
@@ -63,18 +64,10 @@
                         </template>
                         新增标签
                     </a-tag>
-                    <a-tag v-for="tag in tags" :key="tag" :color="randomColor(tag)" closable
-                           @close="tagRemove(tag)">{{ tag }}
-                    </a-tag>
-                </a-overflow-list>
-                <a-tag color="orange" style="margin: 4px 0;">
-                    <template #icon>
-                        <icon-clock-circle/>
-                    </template>
-                    {{ createTime }}
-                </a-tag>
-            </footer>
+                </div>
+            </main>
         </a-typography>
+        <a-back-top target-container=".todo-item-content .item-container" />
     </div>
 </template>
 <script lang="ts" setup>
@@ -121,7 +114,7 @@ const editorConfig: IEditorConfig = {
     customAlert: (info: string, type: AlertType) => {
         MessageUtil[type](info);
     },
-    scroll: true,
+    scroll: false,
     readOnly: false,
     autoFocus: false,
 }
@@ -284,7 +277,8 @@ function tagRemove(tag: string) {
         top: 46px;
         left: 7px;
         right: 7px;
-        bottom: 39px;
+        bottom: 7px;
+        overflow: auto;
 
         .auto-save {
             position: absolute;
@@ -294,29 +288,21 @@ function tagRemove(tag: string) {
             line-height: 32px;
 
         }
-    }
 
-    .footer {
-        position: absolute;
-        left: 7px;
-        right: 7px;
-        bottom: 0;
-        height: 32px;
-        display: flex;
 
         .todo-item-tags {
-            width: calc(100% - 150px);
+            width: 100%;
+            flex-wrap: wrap;
+
+            .arco-tag {
+                margin: 4px 7px;
+            }
         }
     }
 
 }
 
 #todo-editor—wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 
     .w-e-text-container {
         background-color: var(--color-bg-1) !important;
