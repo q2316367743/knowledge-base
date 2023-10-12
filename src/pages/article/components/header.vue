@@ -15,19 +15,11 @@
         <div class="title">{{ props.name }}</div>
         <a-button-group type="text">
             <a-space>
-                <a-dropdown position="br">
-                    <a-button>
-                        <template #icon>
-                            <icon-download/>
-                        </template>
-                    </a-button>
-                    <template #content>
-                        <a-doption @click="emit('download', 'md')">导出为 Markdown 文件</a-doption>
-                        <a-doption @click="emit('download', 'html')">导出为 HTML 文件</a-doption>
-                        <a-doption @click="emit('download', 'pdf')">导出为 PDF 文件</a-doption>
-                        <a-doption @click="emit('download', 'image')">导出为 图片</a-doption>
+                <a-button @click="toEditor()">
+                    <template #icon>
+                        <icon-edit/>
                     </template>
-                </a-dropdown>
+                </a-button>
                 <a-dropdown trigger="click" position="br">
                     <a-button type="text">
                         <template #icon>
@@ -35,18 +27,11 @@
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption @click="settingVisible = true">
+                        <a-doption @click="emit('switch-collapsed')">
                             <template #icon>
-                                <icon-settings/>
+                                <icon-layout/>
                             </template>
-                            设置
-                        </a-doption>
-                        <a-doption @click="fullscreen.toggle()">
-                            <template #icon>
-                                <icon-fullscreen-exit v-if="fullscreen.isFullscreen.value"/>
-                                <icon-fullscreen v-else/>
-                            </template>
-                            全屏
+                            目录
                         </a-doption>
                         <a-doption @click="switchDark()">
                             <template #icon>
@@ -55,18 +40,33 @@
                             </template>
                             模式
                         </a-doption>
+                        <a-doption @click="fullscreen.toggle()">
+                            <template #icon>
+                                <icon-fullscreen-exit v-if="fullscreen.isFullscreen.value"/>
+                                <icon-fullscreen v-else/>
+                            </template>
+                            全屏
+                        </a-doption>
+                        <a-dsubmenu>
+                            <template #icon>
+                                <icon-download/>
+                            </template>
+                            下载
+                            <template #content>
+                                <a-doption @click="emit('download', 'md')">导出为 Markdown 文件</a-doption>
+                                <a-doption @click="emit('download', 'html')">导出为 HTML 文件</a-doption>
+                                <a-doption @click="emit('download', 'pdf')">导出为 PDF 文件</a-doption>
+                                <a-doption @click="emit('download', 'image')">导出为 图片</a-doption>
+                            </template>
+                        </a-dsubmenu>
+                        <a-doption @click="settingVisible = true">
+                            <template #icon>
+                                <icon-settings/>
+                            </template>
+                            设置
+                        </a-doption>
                     </template>
                 </a-dropdown>
-                <a-button @click="toEditor()">
-                    <template #icon>
-                        <icon-edit/>
-                    </template>
-                </a-button>
-                <a-button @click="emit('switch-collapsed')" :status="collapsed ? 'normal' : 'success'">
-                    <template #icon>
-                        <icon-layout/>
-                    </template>
-                </a-button>
             </a-space>
         </a-button-group>
         <a-modal v-model:visible="settingVisible" title="基础设置" unmount-on-close class="article-setting"
@@ -79,7 +79,7 @@
 import {useFullscreen} from "@vueuse/core";
 import {useRoute, useRouter} from "vue-router";
 import MoreSettingBase from "@/pages/setting/base/index.vue";
-import {computed, ref, watch} from "vue";
+import {computed, ref} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
