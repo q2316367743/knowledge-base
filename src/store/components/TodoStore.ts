@@ -52,11 +52,14 @@ export const useTodoStore = defineStore('todo', {
         categoryId: 0,
         // 当前打开的清单
         id: 0,
+        // 当前打开清单的所有待办项
         todoItems: new Array<TodoItemIndex>(),
         rev: undefined as string | undefined,
+        // 收起状态
         collapsed: false,
         // 当前选择的待办项
         itemId: 0,
+        // 待办项列表排序规则
         todoListSort: getItemByDefault<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, TodoListSortEnum.PRIORITY),
     }),
     getters: {
@@ -112,6 +115,9 @@ export const useTodoStore = defineStore('todo', {
             this.todoListSort = todoListSort;
             setItem<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, this.todoListSort);
         },
+        async _sync() {
+            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+        },
         async addSimple(title: string) {
             if (title.trim() === '') {
                 return Promise.reject("请输入内容");
@@ -127,7 +133,7 @@ export const useTodoStore = defineStore('todo', {
             // 新增到当前列表
             this.todoItems.push(item);
             // 同步
-            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+            await this._sync();
             // 新增内容
             await saveOneByAsync<TodoItemContent>(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
         },
@@ -179,7 +185,7 @@ export const useTodoStore = defineStore('todo', {
                 updateTime: new Date(),
             };
             // 同步
-            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + id, this.todoItems, this.rev);
+            await this._sync();
             if (attr) {
                 // 由于数据量不大，就直接查询
                 let old = await getFromOneByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
@@ -198,7 +204,7 @@ export const useTodoStore = defineStore('todo', {
             }
             this.todoItems.splice(index, 1);
             // 同步
-            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+            await this._sync();
             // 删除内容
             await removeOneByAsync(LocalNameEnum.TODO_ITEM + id, true);
             // 删除属性

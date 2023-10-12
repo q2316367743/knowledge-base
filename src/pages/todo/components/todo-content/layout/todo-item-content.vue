@@ -206,11 +206,8 @@ function updatePriority(priority: any) {
 }
 
 function updateTitle() {
-    useGlobalStore().startLoading("开始更新待办项");
-    useTodoStore().updateById(itemId.value, {title: item.value.index.title})
-        .then(() => MessageUtil.success("更新成功"))
-        .catch(e => MessageUtil.error("更新失败", e))
-        .finally(() => useGlobalStore().closeLoading());
+    useTodoStore().updateById(item.value.index.id, {title: item.value.index.title})
+        .catch(e => MessageUtil.error("更新标题失败", e));
 }
 
 watch(() => s.value, value => {
@@ -218,7 +215,9 @@ watch(() => s.value, value => {
         updateTitle();
         autoSave()
     }
-})
+});
+
+watch(() => item.value.index.title, () => updateTitle());
 
 function tagAdd() {
     tag.value.input = false;
