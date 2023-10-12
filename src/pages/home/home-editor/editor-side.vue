@@ -13,6 +13,7 @@
                         <a-doption @click="addArticle(0)">新增文章</a-doption>
                         <a-doption @click="addFolder(0)">新建文件夹</a-doption>
                         <a-doption @click="importArticle()">导入文章</a-doption>
+                        <a-doption @click="exportToMd()">导出为ZIP</a-doption>
                     </template>
                 </a-dropdown>
             </a-input-group>
@@ -76,6 +77,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {parseFileName} from "@/utils/BrowserUtil";
+import {markdownToZip} from "@/components/export-component/markdownToZip";
 
 const size = useWindowSize();
 
@@ -237,6 +239,14 @@ async function _importArticle() {
     }), getDefaultArticleBase(), content);
     // 切换文章
     useHomeEditorStore().setId(articleId);
+}
+
+function exportToMd() {
+    useGlobalStore().startLoading("正在准备数据")
+    markdownToZip()
+        .then(() => MessageUtil.success("导出成功"))
+        .catch(e => MessageUtil.error("导出失败", e))
+        .finally(() => useGlobalStore().closeLoading());
 }
 
 </script>

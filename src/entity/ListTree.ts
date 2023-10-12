@@ -2,6 +2,7 @@ import {TreeNodeData} from "@arco-design/web-vue";
 import {h} from "vue";
 import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
+import {pathJoin} from "@/utils/BrowserUtil";
 
 /**
  * 基础列表树
@@ -68,7 +69,7 @@ export function treeEach(
             icon: () => h(IconFolder, {})
         }
 
-        if (map){
+        if (map) {
             temp = map(temp);
         }
 
@@ -122,4 +123,34 @@ export function searchData(keyword: string, tree: Array<TreeNodeData>): Array<Tr
     }
 
     return loop(tree);
+}
+
+export function listToList(list: Array<ListTree>, articleListMap: Map<number, Array<ArticleIndex>>): Map<string, number> {
+    const map = new Map<string, number>();
+    _listToMap(list, map, articleListMap, '', 0);
+    return map;
+}
+
+function _listToMap(
+    list: Array<ListTree>,
+    map: Map<string, number>,
+    articleListMap: Map<number, Array<ArticleIndex>>,
+    path: string,
+    pid: number) {
+
+
+    // 此目录下可能存在的文章
+    const articles = articleListMap.get(pid);
+    if (articles) {
+        for (let article of articles) {
+            map.set(pathJoin(path, article.name) + '.md', article.id);
+        }
+    }
+
+    // 此目录下可能存在的其他目录
+    let items = list.filter(i => i.pid === pid);
+    for (let item of items) {
+        // 此目录下的目录
+        _listToMap(list, map, articleListMap, pathJoin(path, item.name), item.id);
+    }
 }

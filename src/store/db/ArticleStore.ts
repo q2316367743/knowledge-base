@@ -29,9 +29,9 @@ export const useArticleStore = defineStore('article', {
             const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
             return group(articles, 'categoryId')
         },
-        folderMap: (state): Map<number | null, Array<ArticleIndex>> => {
+        folderMap: (state): Map<number, Array<ArticleIndex>> => {
             const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
-            return group<ArticleIndex, 'folder'>(articles, 'folder')
+            return group<ArticleIndex, 'folder', number>(articles, 'folder')
         },
         articleTags: (state): Set<string> => {
             const tags = new Set<string>();
