@@ -97,7 +97,11 @@ const handleColor = (item: TodoItemIndex): string => handlePriorityColor(item.pr
 function updateStatus(itemId: number, status: TodoItemStatus) {
     useGlobalStore().startLoading("开始更新待办项");
     useTodoStore().updateById(itemId, {status: status})
-        .then(() => MessageUtil.success("更新成功"))
+        .then(record => {
+            if (record.status === TodoItemStatus.COMPLETE) {
+                MessageUtil.success(`【${record.title}】已完成`)
+            }
+        })
         .catch(e => MessageUtil.error("更新失败", e))
         .finally(() => useGlobalStore().closeLoading());
 }

@@ -143,7 +143,13 @@ export const useTodoStore = defineStore('todo', {
                 content: content
             });
         },
-        async updateById(id: number, record: Partial<TodoItemIndex>) {
+        /**
+         * 根据ID更新待办项
+         * @param id 待办项ID
+         * @param record 更新内容
+         * @return 更新后的数据
+         */
+        async updateById(id: number, record: Partial<TodoItemIndex>): Promise<TodoItemIndex> {
             const index = this.todoItems.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject("待办项不存在");
@@ -155,6 +161,7 @@ export const useTodoStore = defineStore('todo', {
             };
             // 同步
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+            return Promise.resolve(this.todoItems[index]);
         },
         async removeById(id: number) {
             const index = this.todoItems.findIndex(e => e.id === id);
