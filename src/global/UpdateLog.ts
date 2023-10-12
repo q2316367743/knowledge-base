@@ -7,7 +7,7 @@ export default [
         time: '2023-10-12',
         items: [{
             label: LogItemEnum.ADD,
-            content: '【文章】新增文章自动保存功能，在也不用担心文章丢失了'
+            content: '【文章】新增文章自动保存功能，再也不用担心文章丢失了'
         }, {
             label: LogItemEnum.ADD,
             content: '【文章】新增文章导入功能，支持导入markdown文件'

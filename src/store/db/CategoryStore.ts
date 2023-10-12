@@ -47,7 +47,7 @@ export const useCategoryStore = defineStore('category', {
             if (index === -1) {
                 return Promise.reject(`分类【${id}】不存在`);
             }
-            const name = await MessageBoxUtil.prompt("请输入分类名", "修改分类名称", {
+            const name = await MessageBoxUtil.prompt("请输入分类名", "重命名", {
                 confirmButtonText: "更新",
                 cancelButtonText: "取消",
                 inputValue: this.categories[index].name

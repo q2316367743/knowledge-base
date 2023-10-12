@@ -13,6 +13,11 @@
                                 <icon-plus/>
                             </template>
                         </a-button>
+                        <a-button @click="update(nodeData.key)">
+                            <template #icon>
+                                <icon-edit/>
+                            </template>
+                        </a-button>
                         <a-popconfirm content="确定要删除此分类？" ok-text="删除" @ok="remove(nodeData.key)">
                             <a-button status="danger">
                                 <template #icon>
