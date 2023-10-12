@@ -39,24 +39,17 @@ export interface TodoItemIndex {
 
 }
 
-export interface TodoItemContent {
+/**
+ * 待办项基础树形
+ */
+export interface TodoItemAttr {
 
-    id: number
-
-    /**
-     * 内容源码
-     */
-    content: string;
+    id: number;
 
     /**
-     * 内容预览
+     * 放弃原因
      */
-    preview: string;
-
-    /**
-     * 标签
-     */
-    tags: Array<string>;
+    reason: string;
 
     /**
      * 截止至，仅用于展示
@@ -70,11 +63,28 @@ export interface TodoItemContent {
 
 }
 
+export interface TodoItemContent {
+
+    id: number
+
+    /**
+     * 标签
+     */
+    tags: Array<string>;
+
+    /**
+     * 内容源码
+     */
+    content: string;
+
+}
+
 /**
  * 待办项
  */
 export interface TodoItem {
     index: TodoItemIndex;
+    attr: TodoItemAttr;
     content: DbRecord<TodoItemContent>;
 }
 
@@ -112,7 +122,12 @@ export enum TodoItemStatus {
     /**
      * 已完成
      */
-    COMPLETE
+    COMPLETE = 2,
+
+    /**
+     * 放弃
+     */
+    ABANDON = 3
 
 }
 
@@ -138,11 +153,17 @@ export function getDefaultTodoItemContent(id?: number): TodoItemContent {
     return {
         id: id || 0,
         content: '',
-        preview: '',
         tags: [],
+    };
+}
+
+export function getDefaultTodoItemAttr(id?: number): TodoItemAttr {
+    return {
+        id: id || 0,
+        reason: '',
         end: '',
         progress: 0
-    };
+    }
 }
 
 export function getDefaultTodoItem(): TodoItem {

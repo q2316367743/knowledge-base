@@ -1,8 +1,9 @@
 import {defineStore} from "pinia";
 import {
+    getDefaultTodoItemAttr,
     getDefaultTodoItemContent,
     getDefaultTodoItemIndex,
-    TodoItem,
+    TodoItem, TodoItemAttr,
     TodoItemContent,
     TodoItemIndex,
     TodoItemStatus
@@ -54,8 +55,9 @@ export const useTodoStore = defineStore('todo', {
         todoItems: new Array<TodoItemIndex>(),
         rev: undefined as string | undefined,
         collapsed: false,
+        // 当前选择的待办项
         itemId: 0,
-        todoListSort: getItemByDefault<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, TodoListSortEnum.PRIORITY)
+        todoListSort: getItemByDefault<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, TodoListSortEnum.PRIORITY),
     }),
     getters: {
         title: state => {
@@ -75,6 +77,9 @@ export const useTodoStore = defineStore('todo', {
         },
         completeList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE).sort((a, b) => a.id - b.id);
+        },
+        abandonList: (state): Array<TodoItemIndex> => {
+            return state.todoItems.filter(e => e.status === TodoItemStatus.ABANDON).sort((a, b) => a.id - b.id);
         }
     },
     actions: {
@@ -138,18 +143,32 @@ export const useTodoStore = defineStore('todo', {
             const content = await getFromOneByAsync(
                 LocalNameEnum.TODO_ITEM + todoItem.id,
                 getDefaultTodoItemContent(todoItem.id));
+            // 内容备份
             return Promise.resolve({
                 index: clone(todoItem),
-                content: content
+                content: content,
+                attr: await this.getTodoItemAttr(id)
             });
+        },
+        async getTodoItemAttr(id: number): Promise<TodoItemAttr> {
+            if (id === 0) {
+                return Promise.reject("待办项不存在");
+            }
+            const index = this.todoItems.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("待办项不存在");
+            }
+            let attrDbRecord = await getFromOneByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+            return Promise.resolve(attrDbRecord.record);
         },
         /**
          * 根据ID更新待办项
          * @param id 待办项ID
          * @param record 更新内容
+         * @param attr 待办属性
          * @return 更新后的数据
          */
-        async updateById(id: number, record: Partial<TodoItemIndex>): Promise<TodoItemIndex> {
+        async updateById(id: number, record: Partial<TodoItemIndex>, attr?: Partial<TodoItemAttr>): Promise<TodoItemIndex> {
             const index = this.todoItems.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject("待办项不存在");
@@ -160,7 +179,16 @@ export const useTodoStore = defineStore('todo', {
                 updateTime: new Date(),
             };
             // 同步
-            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
+            this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + id, this.todoItems, this.rev);
+            if (attr) {
+                // 由于数据量不大，就直接查询
+                let old = await getFromOneByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+                // 如果存在内容，则一并更新
+                await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ATTR + id, {
+                    ...old.record,
+                    ...attr
+                }, old.rev);
+            }
             return Promise.resolve(this.todoItems[index]);
         },
         async removeById(id: number) {
@@ -168,11 +196,13 @@ export const useTodoStore = defineStore('todo', {
             if (index === -1) {
                 return Promise.reject("待办项不存在");
             }
-            let splice = this.todoItems.splice(index, 1);
+            this.todoItems.splice(index, 1);
             // 同步
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
             // 删除内容
-            await removeOneByAsync(LocalNameEnum.TODO_ITEM + splice[0].id, true);
+            await removeOneByAsync(LocalNameEnum.TODO_ITEM + id, true);
+            // 删除属性
+            await removeOneByAsync(LocalNameEnum.TODO_ATTR + id, true)
             if (this.itemId === id) {
                 this.itemId = 0;
             }

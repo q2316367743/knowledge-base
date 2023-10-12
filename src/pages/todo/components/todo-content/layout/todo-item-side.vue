@@ -39,7 +39,13 @@
                                 </a-doption>
                             </template>
                         </a-dsubmenu>
-                        <a-doption style="color: red;" @click="removeById(item.id)">
+                        <a-doption style="color: rgb(var(--orange-6));" @click="updateStatusToAbandon(item.id)">
+                            <template #icon>
+                                <icon-thumb-down/>
+                            </template>
+                            放弃
+                        </a-doption>
+                        <a-doption style="color: rgb(var(--red-6));" @click="removeById(item.id)">
                             <template #icon>
                                 <icon-delete/>
                             </template>
@@ -56,8 +62,34 @@
                     </a-button>
                 </a-tooltip>
             </div>
-            <a-divider orientation="left" v-if="completeList.length > 0">已完成</a-divider>
-            <div v-for="item in completeList" class="todo-layout-list-item" :class="itemId === item.id ? 'active' : ''"
+            <!-- 已完成 -->
+            <a-divider orientation="left" v-if="completeList.length > 0">
+                <span style="cursor: pointer;color: rgb(var(--green-6));"
+                      @click.stop="hideOfComplete = !hideOfComplete">
+                    <icon-right v-if="hideOfComplete"/>
+                    <icon-down v-else/>
+                    已完成
+                </span>
+            </a-divider>
+            <div v-if="!hideOfComplete" v-for="item in completeList" class="todo-layout-list-item"
+                 :class="itemId === item.id ? 'active' : ''"
+                 :key="item.id" @click.stop>
+                <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
+                </a-checkbox>
+                <p class="title" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
+                    {{ item.title }}
+                </p>
+            </div>
+            <!-- 已放弃 -->
+            <a-divider orientation="left" v-if="abandonList.length > 0">
+                <span style="cursor: pointer;color: rgb(var(--orange-6));" @click.stop="hideOfAbandon = !hideOfAbandon">
+                    <icon-right v-if="hideOfAbandon"/>
+                    <icon-down v-else/>
+                    已放弃
+                </span>
+            </a-divider>
+            <div v-if="!hideOfAbandon" v-for="item in abandonList" class="todo-layout-list-item"
+                 :class="itemId === item.id ? 'active' : ''"
                  :key="item.id" @click.stop>
                 <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
                 </a-checkbox>
@@ -71,21 +103,29 @@
 <script lang="ts" setup>
 import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useWindowSize} from "@vueuse/core";
-import {computed} from "vue";
+import {computed, ref, watch} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 
 const size = useWindowSize();
 
+const hideOfComplete = ref(getItemByDefault<boolean>(LocalNameEnum.KEY_TODO_LIST_HIDE_COMPLETE, false));
+const hideOfAbandon = ref(getItemByDefault<boolean>(LocalNameEnum.KEY_TODO_LIST_HIDE_ABANDON, false));
+
 const itemId = computed(() => useTodoStore().itemId);
 const todoList = computed(() => useTodoStore().todoList);
 const completeList = computed(() => useTodoStore().completeList);
+const abandonList = computed(() => useTodoStore().abandonList);
 
 const max = computed(() => (size.width.value - 200) + 'px');
+
+watch(() => hideOfComplete.value, value => setItem<boolean>(LocalNameEnum.KEY_TODO_LIST_HIDE_COMPLETE, value));
 
 const updateTop = (id: number, top: boolean) => useTodoStore().updateById(id, {top})
     .then(() => MessageUtil.success(top ? "已置顶" : "取消置顶"))
@@ -124,6 +164,34 @@ function removeById(id: number) {
             .catch(e => MessageUtil.error("删除失败", e))
             .finally(() => useGlobalStore().closeLoading());
     })
+}
+
+function updateStatusToAbandon(itemId: number) {
+    useGlobalStore().startLoading("开始更新待办项");
+    _updateStatusToAbandon(itemId)
+        .then(record => {
+            if (record.status === TodoItemStatus.COMPLETE) {
+                MessageUtil.success(`【${record.title}】已完成`)
+            }
+        })
+        .catch(e => {
+            if (e !== 'cancel') {
+                MessageUtil.error("更新失败", e)
+            }
+        })
+        .finally(() => useGlobalStore().closeLoading());
+}
+
+async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
+    // 实时查询
+    const attr = await useTodoStore().getTodoItemAttr(itemId);
+    const reason = await MessageBoxUtil.prompt("请输入放弃原因", "放弃待办", {
+        confirmButtonText: "放弃",
+        cancelButtonText: "取消",
+        inputValue: attr.reason
+    });
+    const record = await useTodoStore().updateById(itemId, {status: TodoItemStatus.ABANDON}, {reason})
+    return Promise.resolve(record);
 }
 
 </script>

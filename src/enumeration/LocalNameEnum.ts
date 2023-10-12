@@ -48,8 +48,19 @@ enum LocalNameEnum {
      */
     TODO_ITEM = '/todo/item/',
 
+    /**
+     * 待办项属性
+     */
+    TODO_ATTR = '/todo/attr/',
+
+    /**
+     * 版本
+     */
     VERSION = '/key/VERSION',
 
+    /**
+     * 首页宽度
+     */
     KEY_HOME_WIDTH = '/key/home/width',
 
     /**
@@ -60,7 +71,17 @@ enum LocalNameEnum {
     /**
      * 待办列表排序
      */
-    KEY_TODO_LIST_SORT = '/key/todo/list/sort'
+    KEY_TODO_LIST_SORT = '/key/todo/list/sort',
+
+    /**
+     * 待办列表隐藏完成项
+     */
+    KEY_TODO_LIST_HIDE_COMPLETE = '/key/todo/list/hide/complete',
+
+    /**
+     * 待办列表隐藏放弃项
+     */
+    KEY_TODO_LIST_HIDE_ABANDON = '/key/todo/list/hide/abandon'
 
 }
 
