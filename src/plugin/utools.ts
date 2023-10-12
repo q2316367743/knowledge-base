@@ -243,5 +243,8 @@ export const utools = {
     },
     onMainPush(callback: (action: {code: string, type: string, payload: any }) => { icon?: string, text: string, title?: string }[], selectCallback: (action: {code: string, type: string, payload: any,  option: { icon?: string, text: string, title?: string }}) => void): void{
         console.warn("web环境不支持主程序推送事件");
+    },
+    removeSubInput() {
+        console.warn("web环境不支持子输入框事件");
     }
 }

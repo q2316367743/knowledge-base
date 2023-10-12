@@ -36,7 +36,7 @@
                                 </template>
                                 发布到
                                 <template #content>
-                                    <a-doption>稀土掘金</a-doption>
+                                    <a-doption @click="sendTo(OneSendType.JUEJIN)">稀土掘金</a-doption>
                                     <a-doption>CSDN</a-doption>
                                     <a-doption>博客园</a-doption>
                                 </template>
@@ -136,6 +136,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {useMagicKeys} from "@vueuse/core";
+import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
 
 
 const {ctrl, s} = useMagicKeys()
@@ -278,6 +279,15 @@ function autoSave() {
 }
 
 watch(() => content.value, () => autoSave());
+watch(() => title.value, () => autoSave());
+
+function sendTo(type: OneSendType) {
+    try{
+        getOneSend(type).send(useHomeEditorStore().id);
+    }catch (e) {
+        MessageUtil.error("发送失败", e);
+    }
+}
 
 </script>
 <style lang="less">
