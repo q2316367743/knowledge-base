@@ -3,19 +3,7 @@
         <header style="margin: 7px;">
             <a-input-group style="width: 100%">
                 <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
-                <a-dropdown>
-                    <a-button type="primary">
-                        <template #icon>
-                            <icon-plus/>
-                        </template>
-                    </a-button>
-                    <template #content>
-                        <a-doption @click="addArticle(0)">新增文章</a-doption>
-                        <a-doption @click="addFolder(0)">新建文件夹</a-doption>
-                        <a-doption @click="importArticle()">导入文章</a-doption>
-                        <a-doption @click="exportToMd()">导出为ZIP</a-doption>
-                    </template>
-                </a-dropdown>
+                <he-more />
             </a-input-group>
         </header>
         <a-tree v-model:selected-keys="selectedKeys" :data="treeNodeData" :virtual-list-props="virtualListProps"
@@ -61,23 +49,22 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, h, nextTick, ref, watch} from "vue";
+import {computed, h, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach} from "@/entity/ListTree";
 import {IconFile} from "@arco-design/web-vue/es/icon";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {useFileSystemAccess, useWindowSize} from "@vueuse/core";
+import { useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
-import {toDateString} from "xe-utils";
-import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
-import {useGlobalStore} from "@/store/GlobalStore";
 import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
-import {parseFileName} from "@/utils/BrowserUtil";
-import {markdownToZip} from "@/components/export-component/markdownToZip";
+import HeMore from "@/pages/home/home-editor/components/he-more.vue";
+import {useGlobalStore} from "@/store/GlobalStore";
+import {toDateString} from "xe-utils";
+import {getDefaultArticleBase} from "@/entity/article";
 
 const size = useWindowSize();
 
@@ -148,8 +135,6 @@ function addArticle(pid: number) {
         .then(id => {
             MessageUtil.success("新增成功");
             useHomeEditorStore().setId(id);
-            // 树选择
-            nextTick(() => selectedKeys.value[0] = id);
         })
         .catch(e => MessageUtil.error("新增失败", e))
         .finally(() => useGlobalStore().closeLoading());
@@ -200,53 +185,6 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
             .then(() => MessageUtil.success("移动成功"))
             .catch(e => MessageUtil.error("移动失败", e));
     }
-}
-
-const file = useFileSystemAccess({
-    dataType: 'Text',
-    types: [{
-        description: 'Markdown文档',
-        accept: {
-            'text/plain': ['.md', '.markdown']
-        }
-    }]
-})
-
-function importArticle() {
-    _importArticle()
-        .then(() => MessageUtil.success("导入成功"))
-        .catch(e => {
-            if (e.message !== 'The user aborted a request.') {
-                MessageUtil.error("导入失败", e)
-            }
-        })
-}
-
-async function _importArticle() {
-    await file.open();
-    let content = "";
-    const contentWrap = file.data.value;
-    if (contentWrap) {
-        content = contentWrap.trim();
-    }
-    const title = file.fileName.value;
-    if (!content) {
-        return Promise.reject("文章内容不存在")
-    }
-    const articleId = await useArticleStore().add(getDefaultArticleIndex({
-        source: '导入文章',
-        name: parseFileName(title),
-    }), getDefaultArticleBase(), content);
-    // 切换文章
-    useHomeEditorStore().setId(articleId);
-}
-
-function exportToMd() {
-    useGlobalStore().startLoading("正在准备数据")
-    markdownToZip()
-        .then(() => MessageUtil.success("导出成功"))
-        .catch(e => MessageUtil.error("导出失败", e))
-        .finally(() => useGlobalStore().closeLoading());
 }
 
 </script>
