@@ -75,10 +75,10 @@ export function set<T, S extends Record<string, any>, A extends keyof S>(arr: S[
  * @param attrName 属性名
  * @returns 分组后的结果
  */
-export function group<T, K extends keyof T>(arr: T[], attrName: K): Map<T[K] | null, T[]> {
-    let result = new Map<T[K] | null, T[]>();
+export function group<T, KT extends keyof T, K = T[KT] | null>(arr: T[], attrName: KT): Map<K | null, T[]> {
+    let result = new Map<K | null, T[]>();
     for (let item of arr) {
-        const key = (typeof item[attrName] === 'undefined' ? null : item[attrName]);
+        const key = (typeof item[attrName] === 'undefined' ? null : item[attrName]) as K;
         if (result.has(key)) {
             result.get(key)?.push(item);
         } else {

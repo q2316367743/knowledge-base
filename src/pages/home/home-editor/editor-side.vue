@@ -136,7 +136,6 @@ function addArticle(pid: number) {
     useArticleStore().add({
         name: "新建文章 " + toDateString(new Date()),
         folder: pid,
-        categoryId: null,
         description: '',
         source: '',
         tags: [],

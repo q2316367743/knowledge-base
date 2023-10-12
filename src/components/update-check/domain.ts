@@ -36,31 +36,6 @@ export interface LogItem {
 
     content: string;
 
-    /**
-     * 兔小巢反馈
-     */
-    txc?: string
-
-    /**
-     * gitee反馈
-     */
-    gitee?: {
-
-        title: string;
-
-        content: string;
-    }
-
-    /**
-     * pull request
-     */
-    pull?: {
-
-        name: string;
-
-        url: string;
-    }
-
 }
 
 export enum LogItemEnum {

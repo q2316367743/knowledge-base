@@ -20,7 +20,7 @@ export interface ArticleIndex {
     /**
      * 分类
      */
-    categoryId: number | null;
+    categoryId?: number;
 
     /**
      * 文章标签
@@ -48,6 +48,7 @@ export interface ArticleIndex {
     preview: boolean;
 
 }
+
 export function getDefaultArticleIndex(source?: Partial<ArticleIndex>): ArticleIndex {
     return Object.assign({
         id: 0,

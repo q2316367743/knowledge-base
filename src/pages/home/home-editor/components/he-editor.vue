@@ -26,13 +26,13 @@
                         <template #content>
                             <a-doption @click="save()">
                                 <template #icon>
-                                    <icon-save />
+                                    <icon-save/>
                                 </template>
                                 保存
                             </a-doption>
                             <a-dsubmenu disabled>
                                 <template #icon>
-                                    <icon-send />
+                                    <icon-send/>
                                 </template>
                                 发布到
                                 <template #content>
@@ -43,7 +43,7 @@
                             </a-dsubmenu>
                             <a-doption @click="extraVisible = true">
                                 <template #icon>
-                                    <icon-settings />
+                                    <icon-settings/>
                                 </template>
                                 设置
                             </a-doption>
@@ -203,7 +203,7 @@ function save() {
             name: title.value,
             description: articleIndex.value.description,
             tags: articleIndex.value.tags,
-            categoryId: articleIndex.value.categoryId || null,
+            categoryId: articleIndex.value.categoryId,
             source: articleIndex.value.source,
             folder: 0,
             preview: false
@@ -219,7 +219,7 @@ function save() {
             name: title.value,
             description: articleIndex.value.description,
             tags: articleIndex.value.tags,
-            categoryId: articleIndex.value.categoryId || null,
+            categoryId: articleIndex.value.categoryId,
             source: articleIndex.value.source,
         }, base.value, content.value)
             .then(() => {
@@ -263,7 +263,7 @@ function autoSave() {
         name: title.value,
         description: articleIndex.value.description,
         tags: articleIndex.value.tags,
-        categoryId: articleIndex.value.categoryId || null,
+        categoryId: articleIndex.value.categoryId,
         source: articleIndex.value.source,
     }, base.value, content.value)
         .then(() => {
@@ -282,9 +282,9 @@ watch(() => content.value, () => autoSave());
 watch(() => title.value, () => autoSave());
 
 function sendTo(type: OneSendType) {
-    try{
+    try {
         getOneSend(type).send(useHomeEditorStore().id);
-    }catch (e) {
+    } catch (e) {
         MessageUtil.error("发送失败", e);
     }
 }

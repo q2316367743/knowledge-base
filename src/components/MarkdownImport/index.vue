@@ -36,7 +36,6 @@ useImportEvent.on(content => {
             source: zone.source || '',
             description: zone.description || '',
             name: zone.title,
-            categoryId: null,
             folder: 0,
             preview: false
         }, {

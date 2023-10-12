@@ -8,12 +8,13 @@
                         <icon-left/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear :style="{marginLeft: '7px', width: width - 3 * 32 - 4 * 7 + 'px'}"/>
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear
+                         :style="{marginLeft: '7px', width: width - 3 * 32 - 4 * 7 + 'px'}"/>
             </div>
             <a-button-group type="primary">
                 <a-button @click="save()" style="margin-right: 7px">
                     <template #icon>
-                        <icon-save />
+                        <icon-save/>
                     </template>
                 </a-button>
                 <a-button @click="extra.visible = true">
@@ -40,7 +41,7 @@
                     <a-input v-model="base.sourceUrl" :max-length="255"/>
                 </a-form-item>
                 <a-form-item label="分类">
-                    <a-tree-select :data="categoryTree" v-model="extra.categoryId" placeholder="请选择分类" >
+                    <a-tree-select :data="categoryTree" v-model="extra.categoryId" placeholder="请选择分类">
                     </a-tree-select>
                 </a-form-item>
                 <a-form-item label="标签">
@@ -56,7 +57,7 @@
                 </a-form-item>
                 <a-divider>额外信息</a-divider>
                 <a-form-item label="自定义设置">
-                    <a-switch v-model="base.customer" />
+                    <a-switch v-model="base.customer"/>
                 </a-form-item>
                 <a-form-item v-if="base.customer" label="文章主题">
                     <a-select v-model="base.articleTheme" style="width: 200px">
@@ -170,16 +171,18 @@ async function init() {
         }
     }
 }
+
 function toHome() {
     router.back();
 }
+
 function save() {
     if (id.value === 0) {
         useArticleStore().add({
             name: title.value,
             description: extra.value.description,
             tags: extra.value.tags,
-            categoryId: extra.value.categoryId || null,
+            categoryId: extra.value.categoryId,
             source: extra.value.source,
             folder: 0,
             preview: false
@@ -195,11 +198,11 @@ function save() {
             name: title.value,
             description: extra.value.description,
             tags: extra.value.tags,
-            categoryId: extra.value.categoryId || null,
+            categoryId: extra.value.categoryId,
             source: extra.value.source,
             folder: 0,
             preview: false
-        }, base.value,content.value)
+        }, base.value, content.value)
             .then(() => {
                 MessageUtil.success("保存文章成功");
                 router.push("/home");
