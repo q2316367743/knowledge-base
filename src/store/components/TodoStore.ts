@@ -47,7 +47,7 @@ function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnu
 
 export const useTodoStore = defineStore('todo', {
     state: () => ({
-        // 当前选择的分类
+        // 当前选择的分类，如果是文件夹，下面的就是0
         categoryId: 0,
         // 当前打开的清单
         id: 0,

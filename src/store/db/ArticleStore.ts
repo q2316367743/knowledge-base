@@ -1,5 +1,12 @@
 import {defineStore} from "pinia";
-import {ArticleBase, ArticleIndex, ArticlePreview, ArticleSource, getDefaultArticleIndex} from "@/entity/article";
+import {
+    ArticleBase,
+    ArticleIndex,
+    ArticlePreview,
+    ArticleSource,
+    getDefaultArticleBase,
+    getDefaultArticleIndex
+} from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
@@ -51,6 +58,12 @@ export const useArticleStore = defineStore('article', {
         },
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value);
+        },
+        addSimple(content: string, title?: string): Promise<number> {
+            return  this.add(getDefaultArticleIndex({
+                name: title || ('导入文章' + new Date().getTime()),
+                source: "快捷导入"
+            }), getDefaultArticleBase(), content);
         },
         async add(
             article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
