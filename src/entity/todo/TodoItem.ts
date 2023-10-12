@@ -171,6 +171,7 @@ export function getDefaultTodoItem(): TodoItem {
         content: {
             record: getDefaultTodoItemContent()
         },
+        attr: getDefaultTodoItemAttr(),
         index: getDefaultTodoItemIndex()
     }
 }
