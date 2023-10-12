@@ -12,6 +12,11 @@
             </div>
             <a-button-group type="text">
                 <a-space>
+                    <a-button @click="screenShot()">
+                        <template #icon>
+                            <icon-screenshot />
+                        </template>
+                    </a-button>
                     <a-button @click="setPreview()" :loadin="saveLoading">
                         <template #icon>
                             <icon-lock/>
@@ -137,6 +142,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {useMagicKeys} from "@vueuse/core";
 import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
+import IconScreenshot from "@/icon/IconScreenshot.vue";
 
 
 const {ctrl, s} = useMagicKeys()
@@ -287,6 +293,12 @@ function sendTo(type: OneSendType) {
     } catch (e) {
         MessageUtil.error("发送失败", e);
     }
+}
+
+function screenShot() {
+    utools.screenCapture(base64 => {
+        content.value = (content.value + ('![截屏](' + base64 + ')'))
+    })
 }
 
 </script>
