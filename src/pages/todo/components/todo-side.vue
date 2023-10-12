@@ -40,8 +40,14 @@
                             </template>
                             删除
                         </a-doption>
+                        <a-doption v-if="nodeData.isLeaf" @click="switchFeature(nodeData.key)">
+                            <template #icon>
+                                <icon-star-fill v-if="hasFeature(nodeData.key)"/>
+                                <icon-star v-else />
+                            </template>
+                            快速启动
+                        </a-doption>
                     </template>
-
                 </a-dropdown>
             </template>
         </a-tree>
@@ -106,6 +112,17 @@ watch(() => selectKeys.value, value => {
     }
 });
 
+const hasFeature = (id: number) => useTodoCategoryStore().hasFeature(id);
+const addFeature = (id: number) => useTodoCategoryStore().addFeature(id);
+const removeFeature = (id: number) => useTodoCategoryStore().removeFeature(id);
+
+function switchFeature(id: number) {
+    if (hasFeature(id)) {
+        removeFeature(id);
+    }else {
+        addFeature(id);
+    }
+}
 
 function add(pid: number) {
     todoCategory.value = {

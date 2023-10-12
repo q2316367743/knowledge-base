@@ -32,7 +32,7 @@ export type FeatureCmdType = 'img' | 'files' | 'regex' | 'over' | 'window';
 
 export type FeatureCmdFileType = 'file' | 'directory';
 
-export function setFeatureOne(code: string, cmd: FeatureCmd): boolean {
+export function setFeatureOne(code: string, cmd: FeatureCmd | string): boolean {
     return utools.setFeature({
         code: code,
         explain: Constant.name,
@@ -66,4 +66,9 @@ export function getFeatureOne(code: string): Feature | null {
 
 export function removeFeatureOne(code: string): boolean {
     return utools.removeFeature(code);
+}
+
+export function listFeature(preview: string, keys: Array<any>): Array<string> {
+    const features = utools.getFeatures(keys.map(key => preview + key));
+    return features.map(feature => feature.code);
 }

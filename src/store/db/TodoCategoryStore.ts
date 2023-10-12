@@ -5,11 +5,15 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {map} from "@/utils/ArrayUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {useTodoStore} from "@/store/components/TodoStore";
+import {listFeature, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
+import Constant from "@/global/Constant";
+import MessageUtil from "@/utils/MessageUtil";
 
 export const useTodoCategoryStore = defineStore('todo-category', {
     state: () => ({
         value: new Array<TodoCategory>(),
-        rev: undefined as string | undefined
+        rev: undefined as string | undefined,
+        featureKeys: new Set<string>()
     }),
     getters: {
         todoCategoryTree: state => listToTree(state.value),
@@ -17,12 +21,14 @@ export const useTodoCategoryStore = defineStore('todo-category', {
     },
     actions: {
         async init() {
-            const res = await listByAsync(LocalNameEnum.LOCAL_TODO_CATEGORY);
+            const res = await listByAsync<TodoCategory>(LocalNameEnum.LOCAL_TODO_CATEGORY);
             this.value = res.list;
             this.rev = res.rev;
+            this.featureKeys = new Set<string>(listFeature(Constant.feature.TODO_CATEGORY, this.value.map(r => r.id)));
         },
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.LOCAL_TODO_CATEGORY, this.value, this.rev);
+            this.featureKeys = new Set<string>(listFeature(Constant.feature.TODO_CATEGORY, this.value.map(r => r.id)));
         },
         async add(record: TodoCategoryRecord) {
             const now = new Date();
@@ -74,6 +80,10 @@ export const useTodoCategoryStore = defineStore('todo-category', {
                 useTodoStore().setCategoryId(0);
                 useTodoStore().setId(0);
             }
+            // 删除快捷访问
+            if (this.hasFeature(id)) {
+                this.removeFeature(id);
+            }
         },
         async drop(id: number, pid: number) {
             const index = this.value.findIndex(v => v.id === id);
@@ -86,6 +96,24 @@ export const useTodoCategoryStore = defineStore('todo-category', {
                 updateTime: new Date()
             }
             await this._sync();
+        },
+        hasFeature(id: number) {
+            return this.featureKeys.has(Constant.feature.TODO_CATEGORY + id);
+        },
+        addFeature(id: number) {
+            const index = this.value.findIndex(v => v.id === id);
+            if (index === -1) {
+                MessageUtil.error("该分类不存在");
+                return;
+            }
+            const feature = Constant.feature.TODO_CATEGORY + id;
+            setFeatureOne(feature, this.value[index].name);
+            this.featureKeys.add(feature);
+        },
+        removeFeature(id: number) {
+            const feature = Constant.feature.TODO_CATEGORY + id;
+            removeFeatureOne(feature);
+            this.featureKeys.delete(feature);
         }
     }
 })
