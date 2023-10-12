@@ -60,7 +60,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, h, nextTick, ref} from "vue";
+import {computed, h, nextTick, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach} from "@/entity/ListTree";
 import {IconFile} from "@arco-design/web-vue/es/icon";
@@ -109,6 +109,8 @@ const virtualListProps = computed(() => ({
     height: size.height.value - 46
 }));
 const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
+
+watch(() => useHomeEditorStore().id, id => selectedKeys.value = [id]);
 
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
