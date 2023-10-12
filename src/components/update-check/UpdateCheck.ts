@@ -2,7 +2,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
 import NotificationUtil from "@/utils/NotificationUtil";
 import {useAuthStore} from "@/store/components/AuthStore";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default function updateCheck(toUpdate?: () => void) {
     useAuthStore().authDriver.get(LocalNameEnum.VERSION)
@@ -13,16 +12,8 @@ export default function updateCheck(toUpdate?: () => void) {
                         _id: LocalNameEnum.VERSION,
                         _rev: res._rev,
                         value: Constant.version
-                    });
+                    }).then(() => console.log("版本更新"));
                     toUpdate && toUpdate();
-                    // 更新
-                    MessageBoxUtil.confirm(`欢迎您更新到【${Constant.version}】`, "版本更新", {
-                        confirmButtonText: "查看更新日志",
-                        cancelButtonText: "取消",
-                    })
-                        .then(() => {
-                            utools.shellOpenExternal(Constant.updateLog);
-                        });
                 }
             } else {
                 // 第一次
@@ -30,7 +21,7 @@ export default function updateCheck(toUpdate?: () => void) {
                 useAuthStore().authDriver.put({
                     _id: LocalNameEnum.VERSION,
                     value: Constant.version
-                });
+                }).then(() => console.log("版本更新"));
             }
         })
 }

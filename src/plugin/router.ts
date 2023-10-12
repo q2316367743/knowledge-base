@@ -72,6 +72,10 @@ const router = createRouter({
         path: "/more/recommend",
         component: () => import("@/pages/more/recommend/index.vue")
     }, {
+        name: "更新",
+        path: "/more/update",
+        component: () => import("@/pages/more/update-log/index.vue")
+    }, {
         name: "关于",
         path: "/more/about",
         component: () => import("@/pages/more/about/index.vue")

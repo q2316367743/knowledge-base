@@ -71,6 +71,12 @@
                 </template>
                 推荐
             </a-menu-item>
+            <a-menu-item key="/more/update">
+                <template #icon>
+                    <icon-time-line/>
+                </template>
+                更新
+            </a-menu-item>
             <a-menu-item key="/more/about">
                 <template #icon>
                     <icon-exclamation-circle/>

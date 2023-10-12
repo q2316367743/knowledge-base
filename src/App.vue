@@ -13,6 +13,7 @@
         </a-spin>
         <markdown-import/>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
+        <update-item />
     </div>
 </template>
 <script lang="ts">
@@ -27,12 +28,12 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
 import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
-import updateCheck from "@/components/UpdateCheck";
 import MessageUtil from "@/utils/MessageUtil";
 
 export default defineComponent({
     name: 'app',
     components: {
+        UpdateItem: defineAsyncComponent(() => import("@/components/update-check/index.vue")),
         MarkdownImport,
         AppSide: defineAsyncComponent(() => import("@/components/app-side/index.vue"))
     },
@@ -100,8 +101,6 @@ export default defineComponent({
             this.$router.push('/article/' + action.option.title).finally(() => this.show = true);
             return true;
         });
-        // 检测更新
-        updateCheck();
     },
     methods: {
         onPluginEnter(operate: string, preload: string, extra: string) {
