@@ -197,3 +197,12 @@ export function parseFileName(fileName: string): string {
         return fileName;
     }
 }
+export function base64toBlob(base64: string, type = 'application/octet-stream') {
+    const bStr = atob(base64);
+    let n = bStr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bStr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type});
+}

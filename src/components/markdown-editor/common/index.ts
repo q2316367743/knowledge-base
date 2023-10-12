@@ -1,6 +1,5 @@
 import {useFileSystemAccess} from "@vueuse/core";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import MessageUtil from "@/utils/MessageUtil";
 import {useAuthStore} from "@/store/components/AuthStore";
 
 /**
@@ -35,15 +34,6 @@ export function useFileSelect(): Promise<Blob | null> {
 export async function useImageUpload(data: Blob): Promise<string> {
     const id = new Date().getTime() + '';
 
-    let buffer: ArrayBuffer;
-
-    if (data instanceof Blob) {
-        buffer = await data.arrayBuffer();
-    } else {
-        buffer = data
-    }
-
-
     const res = await useAuthStore().authDriver.postAttachment(
         LocalNameEnum.ARTICLE_ATTACHMENT + id,
         data
@@ -61,7 +51,7 @@ export async function useImageUpload(data: Blob): Promise<string> {
 export function loadImageBySync(id: string): string {
     const data = utools.db.getAttachment(LocalNameEnum.ARTICLE_ATTACHMENT + id);
     if (!data) {
-        MessageUtil.warning(`资源【${id}】加载失败`)
+        console.error(`资源【${id}】加载失败`)
         return ""
     }
     const blob = new Blob([data]);

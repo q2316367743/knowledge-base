@@ -14,7 +14,7 @@
                 <a-space>
                     <a-button @click="screenShot()">
                         <template #icon>
-                            <icon-screenshot />
+                            <icon-screenshot/>
                         </template>
                     </a-button>
                     <a-button @click="setPreview()" :loadin="saveLoading">
@@ -143,6 +143,8 @@ import {useAuthStore} from "@/store/components/AuthStore";
 import {useMagicKeys} from "@vueuse/core";
 import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
 import IconScreenshot from "@/icon/IconScreenshot.vue";
+import {useImageUpload} from "@/components/markdown-editor/common";
+import {base64toBlob} from "@/utils/BrowserUtil";
 
 
 const {ctrl, s} = useMagicKeys()
@@ -297,7 +299,10 @@ function sendTo(type: OneSendType) {
 
 function screenShot() {
     utools.screenCapture(base64 => {
-        content.value = (content.value + ('![截屏](' + base64 + ')'))
+        const blob = base64toBlob(base64.replace("data:image/png;base64,", ""));
+        useImageUpload(blob)
+            .then(id => content.value = (content.value + ('![截屏](attachment:' + id + ')')))
+            .catch(e => MessageUtil.error("截图失败", e))
     })
 }
 
