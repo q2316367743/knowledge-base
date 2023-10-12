@@ -12,21 +12,43 @@
             </div>
             <a-button-group type="text">
                 <a-space>
-                    <a-button @click="save()" :loadin="saveLoading">
-                        <template #icon>
-                            <icon-save/>
-                        </template>
-                    </a-button>
-                    <a-button @click="setPreview()">
+                    <a-button @click="setPreview()" :loadin="saveLoading">
                         <template #icon>
                             <icon-lock/>
                         </template>
                     </a-button>
-                    <a-button @click="extraVisible = true">
-                        <template #icon>
-                            <icon-settings/>
+                    <a-dropdown position="br">
+                        <a-button>
+                            <template #icon>
+                                <icon-more/>
+                            </template>
+                        </a-button>
+                        <template #content>
+                            <a-doption @click="save()">
+                                <template #icon>
+                                    <icon-save />
+                                </template>
+                                保存
+                            </a-doption>
+                            <a-dsubmenu>
+                                <template #icon>
+                                    <icon-send />
+                                </template>
+                                发布到
+                                <template #content>
+                                    <a-doption>稀土掘金</a-doption>
+                                    <a-doption>CSDN</a-doption>
+                                    <a-doption>博客园</a-doption>
+                                </template>
+                            </a-dsubmenu>
+                            <a-doption @click="extraVisible = true">
+                                <template #icon>
+                                    <icon-settings />
+                                </template>
+                                设置
+                            </a-doption>
                         </template>
-                    </a-button>
+                    </a-dropdown>
                 </a-space>
             </a-button-group>
         </header>

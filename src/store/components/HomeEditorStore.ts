@@ -18,8 +18,8 @@ export const useHomeEditorStore = defineStore('home-editor', {
         }
     },
     actions: {
-        switchCollapsed() {
-            this.collapsed = !this.collapsed;
+        switchCollapsed(collapsed?: boolean) {
+            this.collapsed = typeof collapsed === 'undefined' ? !this.collapsed : collapsed;
         },
         setId(id: number) {
             this.id = id;

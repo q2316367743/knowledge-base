@@ -13,6 +13,7 @@ import {useWindowSize} from "@vueuse/core";
 import MessageUtil from "@/utils/MessageUtil";
 import {useRouter} from "vue-router";
 import {treeEach} from "@/entity/ListTree";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 const router = useRouter();
 const size = useWindowSize();
@@ -55,12 +56,8 @@ function onSelect(
 
 function onNodeClick(nodeObject: TreeNodeData) {
     if (nodeObject.isLeaf) {
-        router.push({
-            path: '/article/' + nodeObject.key,
-            query: {
-                redirect: '/graph/category'
-            }
-        });
+        useHomeEditorStore().setId(nodeObject.key as number)
+        router.push('/home');
     } else {
         if (nodeObject.title === '未分类文章') {
             MessageUtil.warning("无法搜索未分类")

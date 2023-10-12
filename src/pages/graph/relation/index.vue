@@ -14,6 +14,7 @@ import {ArticleIndex} from "@/entity/article";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useRouter} from "vue-router";
 import MessageUtil from "@/utils/MessageUtil";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 const router = useRouter();
 
@@ -100,12 +101,8 @@ onMounted(() => {
 
 function onNodeClick(nodeObject: any): boolean {
     if (nodeObject.color === ARTICLE) {
-        router.push({
-            path: '/article/' + nodeObject.id,
-            query: {
-                redirect: '/graph/relation'
-            }
-        });
+        useHomeEditorStore().setId(parseInt(nodeObject.id));
+        router.push('/home');
     } else if (nodeObject.color === TAG) {
         router.push({
             path: '/home',
