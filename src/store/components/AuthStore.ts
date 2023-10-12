@@ -8,6 +8,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {initData} from "@/global/BeanFactory";
 import {AlistAuthDriverImpl} from "@/components/AuthDriver/impl/AlistAuthDriverImpl";
 import {useGlobalStore} from "@/store/GlobalStore";
+import {utools} from '@/plugin/utools';
 
 /**
  * 获取认证驱动
@@ -42,7 +43,7 @@ async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
 let init = false;
 
 // key
-const KEY = LocalNameEnum.AUTH + utools.getNativeId()
+const KEY = LocalNameEnum.AUTH + (window.utools || utools).getNativeId()
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({

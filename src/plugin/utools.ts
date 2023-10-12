@@ -232,6 +232,16 @@ export const utools = {
     isWindows,
     isLinux(): boolean {
         return !isMacOS() && !isWindows();
+    },
+    getNativeId() {
+        let nativeId = localStorage.getItem("nativeId");
+        if (!nativeId) {
+            nativeId = generateUUID();
+            localStorage.setItem("token", nativeId);
+        }
+        return nativeId;
+    },
+    onMainPush(callback: (action: {code: string, type: string, payload: any }) => { icon?: string, text: string, title?: string }[], selectCallback: (action: {code: string, type: string, payload: any,  option: { icon?: string, text: string, title?: string }}) => void): void{
+        console.warn("web环境不支持主程序推送事件");
     }
-
 }

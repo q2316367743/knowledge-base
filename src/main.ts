@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia';
 import App from './App.vue'
 import router from './plugin/router';
-import {utools}from '@/plugin/utools';
 
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
@@ -17,8 +16,6 @@ import 'vue3-calendar-heatmap/dist/style.css';
 import 'bytemd/dist/index.css'
 import '@wangeditor/editor/dist/css/style.css'
 
-// utools注入
-window.utools = window.utools || utools;
 
 createApp(App)
     .use(ArcoVue)

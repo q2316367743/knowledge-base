@@ -8,7 +8,10 @@ import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {utools} from "@/plugin/utools";
 
+// utools注入
+window.utools = window.utools || utools;
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
 export const useImportEvent = useEventBus<string>('import');
