@@ -8,7 +8,8 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear :disabled="articleIndex.preview" style="margin-left: 7px;"/>
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear :disabled="articleIndex.preview"
+                         style="margin-left: 7px;"/>
             </div>
             <a-button-group type="text">
                 <a-space>
@@ -42,12 +43,23 @@
                                     <a-doption>博客园</a-doption>
                                 </template>
                             </a-dsubmenu>
-                            <a-doption @click="extraVisible = true">
+                            <a-doption @click="extraVisible = true" :disabled="articleIndex.preview">
                                 <template #icon>
                                     <icon-settings/>
                                 </template>
                                 设置
                             </a-doption>
+                            <a-dsubmenu v-if="articleIndex.preview">
+                                <template #icon>
+                                    <icon-export/>
+                                </template>
+                                导出
+                                <template #content>
+                                    <a-doption @click="exportFile('md')">markdown文件</a-doption>
+                                    <a-doption @click="exportFile('pdf')">pdf文件</a-doption>
+                                    <a-doption @click="exportFile('img')">图片</a-doption>
+                                </template>
+                            </a-dsubmenu>
                         </template>
                     </a-dropdown>
                 </a-space>
@@ -55,7 +67,7 @@
         </header>
         <!-- 编辑区 -->
         <div class="ec-container">
-            <markdown-editor v-model="content" :preview="articleIndex.preview"/>
+            <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"/>
         </div>
         <!-- 额外信息 -->
         <a-drawer v-model:visible="extraVisible" title="信息" :width="300" ok-text="保存" @ok="save()">
@@ -138,6 +150,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {useMagicKeys} from "@vueuse/core";
 import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
+import {download} from "@/utils/BrowserUtil";
 
 
 const {ctrl, s} = useMagicKeys()
@@ -148,6 +161,7 @@ const base = ref(getDefaultArticleBaseByBaseSetting());
 const extraVisible = ref(false);
 const saveLoading = ref(false);
 const articleIndex = ref(getDefaultArticleIndex());
+const mdEditor = ref<any | null>(null);
 
 const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
@@ -294,6 +308,16 @@ function sendTo(type: OneSendType) {
         getOneSend(type).send(useHomeEditorStore().id);
     } catch (e) {
         MessageUtil.error("发送失败", e);
+    }
+}
+
+function exportFile(type: 'pdf' | 'img' | 'md') {
+    if (type === 'md') {
+        download(content.value, title.value + '.md', 'text/markdown;charset=utf-8');
+    } else {
+        if (mdEditor.value) {
+            mdEditor.value.exportFile(type, title.value + (type === 'pdf' ? '.pdf' : '.png'));
+        }
     }
 }
 

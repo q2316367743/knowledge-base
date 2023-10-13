@@ -19,6 +19,7 @@ const DEV_URL = "http://localhost:5173/#";
 
 const props = defineProps(editorProps);
 const emits = defineEmits(['update:modelValue']);
+defineExpose({exportFile})
 
 const instance = shallowRef<Cherry>();
 const id = 'markdown-editor-' + new Date().getTime();
@@ -242,8 +243,15 @@ function handleTheme() {
     }
 }
 
+function exportFile(type: string, fileName: string) {
+    if (instance.value) {
+        console.log(type, fileName)
+        instance.value.export(type, fileName);
+    }
+}
+
 </script>
-<style>
+<style lang="less">
 .markdown-editor {
     position: relative;
     height: 100%;
