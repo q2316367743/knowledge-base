@@ -30,7 +30,7 @@ export default class Statistics {
      * @param additional 附加
      */
     access(operate: string, additional?: string) {
-        this._access(operate, additional).then(() => console.log("调用成功"))
+        this._access(operate, additional).then(() => console.debug("调用成功"))
     }
 
     /**

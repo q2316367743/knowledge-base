@@ -30,7 +30,6 @@
     "pinia": "^2.0.34",
     "relation-graph": "^2.0.26",
     "tippy.js": "^6.3.7",
-    "turndown": "^7.1.2",
     "unist-util-visit": "^5.0.0",
     "vconsole": "^3.15.1",
     "vite-plugin-vue-devtools": "^0.5.1",
