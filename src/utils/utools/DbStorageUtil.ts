@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/components/AuthStore";
+import {useAuthStore} from "@/store/components/AuthStore";
 import {toRaw} from "vue";
 import {clone} from "xe-utils";
 
@@ -67,7 +67,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
             // 查询后更新
             const res = await useAuthStore().authDriver.get(key);
             return await saveListByAsync(key, records, res ? res._rev : undefined);
-        }else if (res.message === 'An object could not be cloned.') {
+        } else if (res.message === 'An object could not be cloned.') {
             return await saveListByAsync(key, clone(records, true), rev);
         }
         console.log(res)
@@ -104,24 +104,35 @@ export async function getFromOneByAsync<T extends Record<string, any>>(key: stri
  * @param err 错误处理函数
  */
 export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err?: (e: Error) => void): Promise<undefined | string> {
-    const res = await useAuthStore().authDriver.put({
-        _id: key,
-        _rev: rev,
-        value: toRaw(value)
-    });
-    if (res.error) {
-        if (res.message === "Document update conflict") {
-            // 查询后更新
-            const res = await useAuthStore().authDriver.get(key);
-            return await saveOneByAsync(key, value, res ? res._rev : undefined);
+    try {
+        const res = await useAuthStore().authDriver.put({
+            _id: key,
+            _rev: rev,
+            value: toRaw(value)
+        });
+        if (res.error) {
+            if (res.message === "Document update conflict") {
+                // 查询后更新
+                const res = await useAuthStore().authDriver.get(key);
+                return await saveOneByAsync(key, value, res ? res._rev : undefined);
+            }
+            if (err) {
+                err(new Error(res.message));
+            } else {
+                return Promise.reject(res.message);
+            }
         }
-        if (err) {
-            err(new Error(res.message));
-        }else {
-            return Promise.reject(res.message);
+        return Promise.resolve(res.rev);
+    } catch (e: any) {
+        console.log(typeof e.message)
+        console.log(e.message)
+        if (e.message === "An object could not be cloned.") {
+            // 查询后更新
+            return await saveOneByAsync(key, clone(value, true), rev);
+        } else {
+            return Promise.reject(e);
         }
     }
-    return Promise.resolve(res.rev);
 }
 
 /**
