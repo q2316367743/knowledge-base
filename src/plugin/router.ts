@@ -16,14 +16,6 @@ const router = createRouter({
         path: '/home',
         component: () => import('@/pages/home/index.vue')
     }, {
-        name: "编辑文章",
-        path: '/editor/:id',
-        component: () => import("@/pages/editor/index.vue")
-    }, {
-        name: '阅读文章',
-        path: '/article/:id',
-        component: () => import("@/pages/article/wrap.vue"),
-    }, {
         name: "空间",
         path: '/zone',
         component: () => import("@/pages/zone/index.vue")

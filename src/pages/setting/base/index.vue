@@ -55,22 +55,8 @@
                     </span>
                 </template>
             </a-form-item>
-            <a-form-item label="首页类型">
-                <a-radio-group v-model="instance.homeType">
-                    <a-radio :value="HomeTypeEnum.DEFAULT">默认</a-radio>
-                    <a-radio :value="HomeTypeEnum.EDITOR">编辑器</a-radio>
-                </a-radio-group>
-                <template #help>
-                    <span v-if="instance.homeType === HomeTypeEnum.DEFAULT">
-                        以预览文章为主
-                    </span>
-                    <span v-else-if="instance.homeType === HomeTypeEnum.EDITOR">
-                        以编辑文章为主
-                    </span>
-                </template>
-            </a-form-item>
             <a-form-item label="编辑文章是否自动收起菜单">
-                <a-switch v-model="instance.authCollapsed" :disabled="instance.homeType === HomeTypeEnum.DEFAULT">
+                <a-switch v-model="instance.authCollapsed">
                     <template #checked>是</template>
                     <template #unchecked>否</template>
                 </a-switch>
@@ -89,10 +75,9 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
-import {getDefaultBaseSetting, useBaseSettingStore, renderHelp} from "@/store/db/BaseSettingStore";
+import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -101,7 +86,6 @@ export default defineComponent({
         JsonTheme,
         ArticleThemeEnum,
         ImageStrategyEnum,
-        HomeTypeEnum,
         instance: getDefaultBaseSetting()
     }),
     computed: {
@@ -114,9 +98,9 @@ export default defineComponent({
         renderHelp,
         save() {
             useBaseSettingStore().save(this.instance)
-                    .then(() => MessageUtil.success("保存成功"))
-                    .catch(e => MessageUtil.error("保存失败", e))
-                    .finally(() => this.$emit('save'));
+                .then(() => MessageUtil.success("保存成功"))
+                .catch(e => MessageUtil.error("保存失败", e))
+                .finally(() => this.$emit('save'));
         }
     }
 });

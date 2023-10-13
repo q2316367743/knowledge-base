@@ -5,7 +5,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import HomeTypeEnum from "@/enumeration/HomeTypeEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
 
 export function getDefaultBaseSetting(): BaseSetting {
@@ -16,7 +15,6 @@ export function getDefaultBaseSetting(): BaseSetting {
         articleHeaderVisible: true,
         codeWrap: false,
         imageStrategy: ImageStrategyEnum.INNER,
-        homeType: HomeTypeEnum.EDITOR,
         authCollapsed: true
     }
 }
@@ -45,7 +43,6 @@ export const useBaseSettingStore = defineStore('base-setting', {
         articleHeaderVisible: state => state.baseSetting.articleHeaderVisible,
         codeWrap: state => state.baseSetting.codeWrap,
         imageStrategy: state => state.baseSetting.imageStrategy,
-        homeType: state => state.baseSetting.homeType,
         authCollapsed: state => state.baseSetting.authCollapsed
     },
     actions: {

@@ -61,7 +61,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
-import HeMore from "@/pages/home/home-editor/components/he-more.vue";
+import HeMore from "@/pages/home/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateString} from "xe-utils";
 import {getDefaultArticleBase} from "@/entity/article";
