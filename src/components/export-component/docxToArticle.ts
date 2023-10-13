@@ -1,5 +1,8 @@
 import Mammoth from 'mammoth';
 import TurndownService, { Rule, Options } from 'turndown';
+import {useFileSystemAccess} from "@vueuse/core";
+import {ArticleIndex} from "@/entity/article";
+import {parseFileName} from "@/utils/BrowserUtil";
 
 const LANGUAGE_PREFIX = 'language-'
 
@@ -45,10 +48,37 @@ const turndownService = new TurndownService(getDefaultTurndownSetting());
 turndownService.addRule('codeLanguage', codeLanguage);
 
 
-export const docxToMarkdown = async (file: ArrayBuffer): Promise<string> => {
+export const docxToArticle = async (): Promise<{
+    title: string;
+    content: string;
+}> => {
+
+    const docx = useFileSystemAccess({
+        dataType: 'ArrayBuffer',
+        types: [{
+            description: 'docx文档',
+            accept: {
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document    ': ['.docx']
+            }
+        }]
+    });
+
+    await docx.open();
+    const contentWrap = docx.data.value;
+    if (!contentWrap) {
+        return Promise.reject("文章内容不存在")
+    }
+    const title = docx.fileName.value;
+
+
     // docx转html
-    const resultObject = await Mammoth.convertToHtml({arrayBuffer: new Uint8Array(file)})
+    const resultObject = await Mammoth.convertToHtml({arrayBuffer: new Uint8Array(contentWrap)})
     const html = resultObject.value;
     // html转markdown
-    return turndownService.turndown(html);
+    const content =  turndownService.turndown(html);
+
+    return {
+        title: parseFileName(title) || '导入文章-' + new Date().getTime(),
+        content
+    }
 }

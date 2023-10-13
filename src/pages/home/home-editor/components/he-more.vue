@@ -15,7 +15,8 @@
                 导入
                 <template #content>
                     <a-doption @click="importArticleByMd()">markdown文件</a-doption>
-                    <a-doption @click="importArticleByDocx()">Docx文件</a-doption>
+                    <a-doption @click="importArticleByDocx()">docx文件</a-doption>
+                    <a-doption @click="importArticleByZip()">zip文件</a-doption>
                 </template>
             </a-dsubmenu>
             <a-dsubmenu>
@@ -39,10 +40,10 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {useFileSystemAccess} from "@vueuse/core";
-import {parseFileName} from "@/utils/BrowserUtil";
 import {markdownToZip} from "@/components/export-component/markdownToZip";
-import {docxToMarkdown} from "@/components/export-component/docxToMarkdown";
+import {docxToArticle} from "@/components/export-component/docxToArticle";
+import {mdToArticle} from "@/components/export-component/mdToArticle";
+import {zipToArticle} from "@/components/export-component/zipToArticle";
 
 function addArticle(pid: number) {
     useGlobalStore().startLoading("正在新增文章")
@@ -74,15 +75,6 @@ function addFolder(pid: number) {
     })
 }
 
-const file = useFileSystemAccess({
-    dataType: 'Text',
-    types: [{
-        description: 'Markdown文档',
-        accept: {
-            'text/plain': ['.md', '.markdown']
-        }
-    }]
-})
 
 function importArticleByMd() {
     _importArticleByMd()
@@ -95,20 +87,11 @@ function importArticleByMd() {
 }
 
 async function _importArticleByMd() {
-    await file.open();
-    let content = "";
-    const contentWrap = file.data.value;
-    if (contentWrap) {
-        content = contentWrap.trim();
-    }
-    const title = file.fileName.value;
-    if (!content) {
-        return Promise.reject("文章内容不存在")
-    }
+    const article = await mdToArticle();
     const articleId = await useArticleStore().add(getDefaultArticleIndex({
         source: '导入文章',
-        name: parseFileName(title),
-    }), getDefaultArticleBase(), content);
+        name: article.title,
+    }), getDefaultArticleBase(), article.content);
     // 切换文章
     useHomeEditorStore().setId(articleId);
 }
@@ -122,16 +105,6 @@ function exportToMd() {
 }
 
 
-const docx = useFileSystemAccess({
-    dataType: 'ArrayBuffer',
-    types: [{
-        description: 'docx文档',
-        accept: {
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document    ': ['.docx']
-        }
-    }]
-});
-
 function importArticleByDocx() {
     _importArticleByDocx()
         .then(() => MessageUtil.success("导入成功"))
@@ -143,23 +116,24 @@ function importArticleByDocx() {
 }
 
 async function _importArticleByDocx() {
-    await docx.open();
-    const contentWrap = docx.data.value;
-    if (!contentWrap) {
-        return Promise.reject("文章内容不存在")
-    }
-    const title = docx.fileName.value;
-    console.log(title)
-
-
-    const content = await docxToMarkdown(contentWrap);
-
+    const article = await docxToArticle();
     const articleId = await useArticleStore().add(getDefaultArticleIndex({
         source: '导入文章',
-        name: parseFileName(title) || '导入文章-' + new Date().getTime(),
-    }), getDefaultArticleBase(), content);
+        name: article.title,
+    }), getDefaultArticleBase(), article.content);
     // 切换文章
     useHomeEditorStore().setId(articleId);
+}
+
+
+function importArticleByZip() {
+    zipToArticle()
+        .then(() => MessageUtil.success("导入成功"))
+        .catch(e => {
+            if (e.message !== 'The user aborted a request.') {
+                MessageUtil.error("导入失败", e)
+            }
+        })
 }
 
 </script>
