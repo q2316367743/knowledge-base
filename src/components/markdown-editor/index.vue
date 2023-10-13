@@ -146,6 +146,10 @@ const config: CherryConfig = {
         onCopyCode(event: Event, src: string) {
             console.log(event, src);
             return src;
+        },
+        afterInit() {
+            handleToolbar(preview.value);
+            handleTheme()
         }
     },
     fileUpload(file, callback) {
@@ -178,22 +182,6 @@ const preview = computed(() => {
 
 onMounted(() => {
     instance.value = new Cherry(config);
-    handleToolbar(preview.value);
-
-    const cherryTheme = localStorage.getItem('cherry-theme');
-    if (cherryTheme && ((cherryTheme === 'dark') !== useGlobalStore().isDark)) {
-        if (cherryTheme === 'dark') {
-            if (!useGlobalStore().isDark) {
-                // 记录是暗黑，但现在不是
-                instance.value.setTheme('default')
-            }
-        } else {
-            if (useGlobalStore().isDark) {
-                // 记录不是暗黑，但是现在是黑
-                instance.value.setTheme('default')
-            }
-        }
-    }
 });
 
 watch(() => props.modelValue, value => {
@@ -232,6 +220,28 @@ function handleToolbar(value: boolean) {
     }
 }
 
+function handleTheme() {
+    if (!instance.value) {
+        return;
+    }
+    const cherryTheme = localStorage.getItem('cherry-theme');
+    if (cherryTheme && ((cherryTheme === 'dark') !== useGlobalStore().isDark)) {
+        if (cherryTheme === 'dark') {
+            if (!useGlobalStore().isDark) {
+                // 记录是暗黑，但现在不是
+                instance.value.setTheme('default')
+            }
+        } else {
+            if (useGlobalStore().isDark) {
+                // 记录不是暗黑，但是现在是黑
+                instance.value.setTheme('default')
+            }
+        }
+    }else {
+        instance.value.setTheme(useGlobalStore().isDark ? 'dark' : 'default')
+    }
+}
+
 </script>
 <style>
 .markdown-editor {
@@ -243,5 +253,10 @@ function handleToolbar(value: boolean) {
 .cherry {
     background-color: var(--color-bg-1);
     color: var(--color-text-1);
+    .cherry-previewer {
+        a {
+            color: rgb(var(--arcoblue-6));
+        }
+    }
 }
 </style>
