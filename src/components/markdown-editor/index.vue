@@ -83,7 +83,7 @@ const config: CherryConfig = {
         ],
         toolbarRight: ['fullScreen', '|'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'size', 'color'], // array or false
-        sidebar: ['theme','settings',],
+        sidebar: ['theme', 'settings',],
         customMenu: {
             ScreenShotMenu: useScreenShotMenu(instance),
         },
@@ -96,20 +96,35 @@ const config: CherryConfig = {
             const aEle = event.target as HTMLLinkElement;
             if (aEle) {
                 if (aEle.tagName === 'A') {
-                    console.log(aEle.href)
-                    if (aEle.href.startsWith(DEV_URL)) {
+                    const href = aEle.href;
+                    if (href.startsWith(DEV_URL)) {
                         // hash定位
                         event.preventDefault();
                         event.stopPropagation();
                         event.stopImmediatePropagation();
-                        const id = aEle.href.replace(DEV_URL, "");
+                        const id = href.replace(DEV_URL, "");
                         const target = document.getElementById(id);
                         if (target) {
                             target.scrollIntoView();
                         }
                         return;
                     }
-                    utools.shellOpenExternal(aEle.href);
+                    if (!href.startsWith("http")) {
+                        // hash定位
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.stopImmediatePropagation();
+                        const targetIndex = href.lastIndexOf("#");
+                        if (targetIndex > -1) {
+                            const id = href.substring(targetIndex + 1, href.length);
+                            const target = document.getElementById(id);
+                            if (target) {
+                                target.scrollIntoView();
+                            }
+                        }
+                        return;
+                    }
+                    utools.shellOpenExternal(href);
                 }
             }
         }
@@ -134,7 +149,7 @@ onMounted(() => {
                 // 记录是暗黑，但现在不是
                 instance.value.setTheme('default')
             }
-        }else {
+        } else {
             if (useGlobalStore().isDark) {
                 // 记录不是暗黑，但是现在是黑
                 instance.value.setTheme('default')
@@ -186,6 +201,7 @@ function handleToolbar(value: boolean) {
     height: 100%;
     width: 100%;
 }
+
 .cherry {
     background-color: var(--color-bg-1);
     color: var(--color-text-1);
