@@ -77,11 +77,6 @@ export interface TodoItemContent {
      */
     content: string;
 
-    /**
-     * 原始内容
-     */
-    source: any;
-
 }
 
 /**
@@ -158,11 +153,6 @@ export function getDefaultTodoItemContent(id?: number): TodoItemContent {
     return {
         id: id || 0,
         content: '',
-        source: {
-            "time": new Date().getTime(),
-            "blocks": [],
-            "version": "2.29.0-rc.1"
-        },
         tags: [],
     };
 }

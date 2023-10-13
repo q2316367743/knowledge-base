@@ -36,13 +36,9 @@
                 </a-dropdown>
             </header>
             <main class="item-container">
-                <!-- 工具栏 -->
                 <div id="toolbar-container"></div>
-                <!-- 内容 -->
-                <editor-js v-model="source" v-if="show"/>
                 <div id="todo-editor—wrapper">
                 </div>
-                <!-- 标签 -->
                 <div class="todo-item-tags">
                     <a-tag v-for="tag in tags" :key="tag" :color="randomColor(tag)" closable
                            @close="tagRemove(tag)">{{ tag }}
@@ -84,7 +80,8 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, nextTick, ref, toRaw, watch} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
+import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -94,9 +91,8 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useMagicKeys} from "@vueuse/core";
 import {randomColor} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
-import EditorJs from '@/components/editor-js/index.vue';
-import {content} from "html2canvas/dist/types/css/property-descriptors/content";
 
+type AlertType = 'success' | 'info' | 'warning' | 'error';
 let lock = false;
 let todo = false;
 
@@ -110,22 +106,32 @@ const tag = ref({
     input: false,
     value: ''
 });
-const source = ref<any>({});
-const show = ref(false);
 
-
+let editor: IDomEditor | null = null;
 
 const itemId = computed(() => useTodoStore().itemId);
 const color = computed(() => handlePriorityColor(item.value.index.priority));
 const createTime = computed(() => toDateString(item.value.index.createTime, "yyyy-MM-dd HH:mm:ss"));
 const tags = computed(() => item.value.content.record.tags);
 
+const editorConfig: IEditorConfig = {
+    placeholder: '请输入待办内容',
+    onChange(editor: IDomEditor) {
+        item.value.content.record.content = editor.getHtml();
+        autoSave();
+    },
+    customAlert: (info: string, type: AlertType) => {
+        MessageUtil[type](info);
+    },
+    scroll: false,
+    readOnly: false,
+    autoFocus: false,
+}
 
 watch(() => itemId.value, value => init(value));
 init(itemId.value);
 
 function init(id: number) {
-    show.value = false;
     if (id === 0) {
         return;
     }
@@ -135,8 +141,16 @@ function init(id: number) {
         .then(value => {
             item.value = value;
             // 重新设置编辑器的值
-            source.value = value.content.record.source;
-            show.value = true;
+            if (editor) {
+                try {
+                    editor.setHtml("<p></p>")
+                    editor.setHtml(item.value.content.record.content);
+                } catch (e) {
+                    console.error("编辑器赋值错误，重新创建");
+                    editor.destroy();
+                    create();
+                }
+            }
         })
         .catch(e => MessageUtil.error("获取待办内容失败", e))
         .finally(() => useGlobalStore().closeLoading());
@@ -152,8 +166,7 @@ const autoSave = () => {
     lock = true;
     saveOneByAsync(LocalNameEnum.TODO_ITEM + itemId.value, {
         ...item.value.content.record,
-        tags: toRaw(item.value.content.record.tags),
-        source: toRaw(source.value)
+        tags: toRaw(item.value.content.record.tags)
     }, item.value.content.rev)
         .then(rev => {
             item.value.content.rev = rev;
@@ -167,6 +180,50 @@ const autoSave = () => {
         .finally(() => autoSaveLoading.value = false);
 };
 
+function create() {
+    editor = createEditor({
+        selector: '#todo-editor—wrapper',
+        html: item.value.content.record.content,
+        config: editorConfig,
+        mode: 'default', // or 'simple'
+    });
+    editor.setHtml(item.value.content.record.content);
+    const toolbarConfig: Partial<IToolbarConfig> = {
+        toolbarKeys: ["blockquote", "header1", "header2", "header3", "|",
+            "bold", "underline", "italic", "through", "color", "bgColor", "clearStyle", "|",
+            "bulletedList", "numberedList", "todo",
+            {
+                "key": "group-layout",
+                "title": "对齐",
+                "iconSvg": "<svg class=\"icon\" viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\"><path d=\"M170.666667 213.333333h682.666666v85.333334H170.666667V213.333333z m0 512h682.666666v85.333334H170.666667v-85.333334z m0-256h682.666666v85.333334H170.666667v-85.333334z\" ></path></svg>",
+                "menuKeys": ["justifyLeft", "justifyRight", "justifyCenter"]
+            }, "|",
+            "insertLink",
+            {
+                "key": "group-image",
+                "title": "图片",
+                "iconSvg": "<svg viewBox=\"0 0 1024 1024\"><path d=\"M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z\"></path></svg>",
+                "menuKeys": ["insertImage", "uploadImage"]
+            },
+            "insertVideo", "insertTable", "codeBlock"]
+    }
+
+    const toolbar = createToolbar({
+        editor,
+        selector: '#toolbar-container',
+        config: toolbarConfig,
+        mode: 'simple', // 'default' or 'simple'
+    });
+}
+
+onMounted(() => create());
+
+
+onUnmounted(() => {
+    if (editor) {
+        editor.destroy();
+    }
+});
 
 function updatePriority(priority: any) {
     useGlobalStore().startLoading("开始更新待办项");
@@ -189,7 +246,6 @@ watch(() => s.value, value => {
 });
 
 watch(() => item.value.index.title, () => updateTitle());
-watch(() => source.value, () => autoSave())
 
 function tagAdd() {
     tag.value.input = false;
@@ -290,4 +346,11 @@ function tagRemove(tag: string) {
 
 }
 
+#todo-editor—wrapper {
+
+    .w-e-text-container {
+        background-color: var(--color-bg-1) !important;
+        color: var(--color-text-1) !important;
+    }
+}
 </style>
