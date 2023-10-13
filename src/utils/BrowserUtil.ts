@@ -71,7 +71,6 @@ export function uint8ArrayToString(uint8Array: Uint8Array): string {
 
 export function svg2png(svg: SVGSVGElement): Promise<string> {
     // 创建一个Image对象，用于保存生成的图片
-    const img = new Image();
     // 创建一个Canvas元素
     const canvas = document.createElement('canvas');
     // 获取Canvas上下文对象
@@ -197,7 +196,7 @@ export function parseFileName(fileName: string): string {
         return fileName;
     }
 }
-export function base64toBlob(base64: string, type = 'application/octet-stream') {
+export function base64toBlob(base64: string, type = 'application/octet-stream'): Blob {
     const bStr = atob(base64);
     let n = bStr.length;
     const u8arr = new Uint8Array(n);
@@ -205,4 +204,19 @@ export function base64toBlob(base64: string, type = 'application/octet-stream') 
         u8arr[n] = bStr.charCodeAt(n);
     }
     return new Blob([u8arr], {type});
+}
+
+export function blobToBase64(file: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            if (reader.result) {
+                resolve(reader.result as string);
+            }else {
+                reject("解析失败")
+            }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }

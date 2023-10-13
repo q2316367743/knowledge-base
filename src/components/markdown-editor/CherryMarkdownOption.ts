@@ -12,7 +12,7 @@ export interface CherryConfig {
     editor?: Editor;
     // toolbar configuration
     toolbars?: Toolbars;
-    fileUpload?: () => void;
+    fileUpload?: (file: File, callback: (url: string) => void) => void;
     callback?: Callback;
     previewer?: Previewer;
     // The preview page does not need to bind events

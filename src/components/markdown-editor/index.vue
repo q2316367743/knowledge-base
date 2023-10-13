@@ -8,6 +8,12 @@ import {CherryConfig, editorProps} from "@/components/markdown-editor/CherryMark
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
 import {useScreenShotMenu} from "@/components/markdown-editor/plugins/ScreenShotMenu";
+import {loadImageBySync, useImageUpload} from "@/components/markdown-editor/common";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
+import MessageUtil from "@/utils/MessageUtil";
+import {RedirectPreload} from "@/plugin/utools";
+import {blobToBase64} from "@/utils/BrowserUtil";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -41,9 +47,15 @@ const config: CherryConfig = {
             }
         },
         global: {
-            urlProcessor: (url) => {
-                // 此处处理url
-                return url
+            urlProcessor: (url, srcType) => {
+                if (srcType === 'image') {
+                    if (url.startsWith("attachment:")) {
+                        const id = url.replace("attachment:", "");
+                        // TODO: 此种方法无法再web端使用
+                        return loadImageBySync(id)
+                    }
+                }
+                return url;
             }
         }
     },
@@ -93,10 +105,10 @@ const config: CherryConfig = {
             emits('update:modelValue', value);
         },
         onClickPreview(event: PointerEvent) {
-            const aEle = event.target as HTMLLinkElement;
+            const aEle = event.target as HTMLElement;
             if (aEle) {
                 if (aEle.tagName === 'A') {
-                    const href = aEle.href;
+                    const href = (aEle as HTMLLinkElement).href;
                     if (href.startsWith(DEV_URL)) {
                         // hash定位
                         event.preventDefault();
@@ -125,9 +137,35 @@ const config: CherryConfig = {
                         return;
                     }
                     utools.shellOpenExternal(href);
+                }else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
+                    const src = (aEle as HTMLImageElement).src;
+                    window.onImagePreview(src);
                 }
             }
+        },
+        onCopyCode(event: Event, src: string) {
+            console.log(event, src);
+            return src;
         }
+    },
+    fileUpload(file, callback) {
+
+        if (useBaseSettingStore().imageStrategy === ImageStrategyEnum.INNER) {
+            // 内置
+            useImageUpload(file).then(id => callback('attachment:' + id));
+        } else if (useBaseSettingStore().imageStrategy === ImageStrategyEnum.IMAGE) {
+            blobToBase64(file).then(base64 => {
+                // 使用图床
+                utools.redirect(['图床', '上传到图床'], {
+                    type: 'img',
+                    data: base64
+                } as RedirectPreload);
+                callback('上传中')
+            })
+        } else {
+            MessageUtil.warning("图片策略未知，请在基础设置中设置")
+        }
+
     }
 };
 

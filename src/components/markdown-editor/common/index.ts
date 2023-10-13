@@ -28,7 +28,7 @@ export function useFileSelect(): Promise<Blob | null> {
 }
 
 /**
- * 文件上擦混，返回文件hash
+ * 文件上传，返回文件
  * @param data 文件内容
  */
 export async function useImageUpload(data: Blob): Promise<string> {
