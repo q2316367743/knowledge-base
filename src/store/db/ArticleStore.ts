@@ -14,7 +14,6 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
 import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
-import {useUpdatePreviewEvent} from "@/global/BeanFactory";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 export const useArticleStore = defineStore('article', {
@@ -254,7 +253,6 @@ export const useArticleStore = defineStore('article', {
                 tags: toRaw(this.value[index].tags),
             };
             await this._sync();
-            useUpdatePreviewEvent.emit(id);
         }
     }
 });

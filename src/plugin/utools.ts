@@ -246,5 +246,9 @@ export const utools = {
     },
     removeSubInput() {
         console.warn("web环境不支持子输入框事件");
+    },
+    getFeatures(codes?: Array<string>): Array<any> {
+        console.warn("web环境不支持feature功能");
+        return [];
     }
 }
