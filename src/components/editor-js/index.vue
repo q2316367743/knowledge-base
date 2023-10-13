@@ -11,10 +11,9 @@ import List from '@editorjs/list/dist/bundle.js';
 // @ts-ignore
 import Table from '@editorjs/table/dist/table.js';
 import {onMounted, onUnmounted, PropType, watch} from "vue";
-import {useTodoStore} from "@/store/components/TodoStore";
 
 const props = defineProps({
-    modelValue: Object as PropType<any>
+    modelValue: Object as PropType<any>,
 });
 const emits = defineEmits(['update:modelValue']);
 
