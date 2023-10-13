@@ -95,7 +95,6 @@ import {useMagicKeys} from "@vueuse/core";
 import {randomColor} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
 import EditorJs from '@/components/editor-js/index.vue';
-import {content} from "html2canvas/dist/types/css/property-descriptors/content";
 
 let lock = false;
 let todo = false;
