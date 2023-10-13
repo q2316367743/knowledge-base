@@ -26,10 +26,10 @@ export interface CherryConfig {
 }
 
 interface Previewer {
-    dom: boolean;
-    className: string;
+    dom?: boolean;
+    className?: string;
     // Whether to enable the editing ability of preview area (currently supports editing picture size and table content)
-    enablePreviewerBubble: boolean;
+    enablePreviewerBubble?: boolean;
 }
 
 interface Callback {
@@ -205,7 +205,7 @@ interface Global {
     // Enable classic new line logic
     // true：One line break is ignored and more than two consecutive lines break into paragraphs
     // false： One line break will turn into < br >, two consecutive line breaks will be divided into paragraphs, and more than three consecutive line breaks will turn into < br > and divide into paragraphs
-    classicBr: boolean;
+    classicBr?: boolean;
     /**
      * Additional HTML tags that allow rendering
      * Labels are separated by vertical lines in English，such as htmlWhiteList: 'iframe|script|style'
@@ -214,7 +214,7 @@ interface Global {
      *    - After enabling iframe, script and other tags, XSS injection will be generated. Please judge whether it needs to be enabled according to the actual scene
      *    - Generally, scenes with controllable editing permissions (such as API document system) can allow iframe, script and other tags
      */
-    htmlWhiteList: string;
+    htmlWhiteList?: string;
     /**
      * global URL processor
      * @param {string} url 来源url

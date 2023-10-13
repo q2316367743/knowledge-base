@@ -20,7 +20,6 @@ const config: CherryConfig = {
     value: props.modelValue || '',
     previewer: {
         dom: false,
-        className: 'markdown-content',
         enablePreviewerBubble: true,
     },
     isPreviewOnly: false,
@@ -34,6 +33,15 @@ const config: CherryConfig = {
             },
             header: {
                 anchorStyle: 'none'
+            },
+            toc: {
+                allowMultiToc: false
+            }
+        },
+        global: {
+            urlProcessor: (url, srcType) => {
+                console.log(srcType, url)
+                return url
             }
         }
     },
@@ -69,12 +77,11 @@ const config: CherryConfig = {
             },
             'graph',
             'export',
-            'settings',
             'ScreenShotMenu'
         ],
         toolbarRight: ['fullScreen', '|'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'size', 'color'], // array or false
-        sidebar: ['mobilePreview', 'copy', 'theme'],
+        sidebar: ['theme','settings',],
         customMenu: {
             ScreenShotMenu: useScreenShotMenu(instance),
         },
@@ -96,11 +103,28 @@ const preview = computed(() => {
 onMounted(() => {
     instance.value = new Cherry(config);
     handleToolbar(preview.value);
+
+    const cherryTheme = localStorage.getItem('cherry-theme');
+    if (cherryTheme && ((cherryTheme === 'dark') !== useGlobalStore().isDark)) {
+        if (cherryTheme === 'dark') {
+            if (!useGlobalStore().isDark) {
+                // 记录是暗黑，但现在不是
+                instance.value.setTheme('default')
+            }
+        }else {
+            if (useGlobalStore().isDark) {
+                // 记录不是暗黑，但是现在是黑
+                instance.value.setTheme('default')
+            }
+        }
+    }
 });
 
 watch(() => props.modelValue, value => {
     if (instance.value) {
-        instance.value.setValue(value || "");
+        if (instance.value.getMarkdown() != value) {
+            instance.value.setValue(value || "");
+        }
     }
 });
 watch(() => preview.value, value => handleToolbar(value));
@@ -109,6 +133,11 @@ watch(() => size.width.value, value => {
         if (!props.preview) {
             instance.value.switchModel(value > 1080 ? 'edit&preview' : 'editOnly');
         }
+    }
+});
+watch(() => useGlobalStore().isDark, value => {
+    if (instance.value) {
+        instance.value.setTheme(value ? 'dark' : 'default')
     }
 })
 
@@ -126,11 +155,16 @@ function handleToolbar(value: boolean) {
         }
     }
 }
+
 </script>
-<style scoped>
+<style>
 .markdown-editor {
     position: relative;
     height: 100%;
     width: 100%;
+}
+.cherry {
+    background-color: var(--color-bg-1);
+    color: var(--color-text-1);
 }
 </style>
