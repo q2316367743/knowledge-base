@@ -38,7 +38,7 @@ interface Callback {
     // 图片加载回调
     beforeImageMounted?: (e: Event, src: string) => void;
     // 预览区域点击事件
-    onClickPreview?: (event: Event) => void,
+    onClickPreview?: (event: PointerEvent) => void,
     // 粘贴事件
     onCopyCode?: (event: Event, code: string) => string
 }

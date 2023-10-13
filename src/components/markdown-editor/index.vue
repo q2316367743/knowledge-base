@@ -9,6 +9,8 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
 import {useScreenShotMenu} from "@/components/markdown-editor/plugins/ScreenShotMenu";
 
+const DEV_URL = "http://localhost:5173/#";
+
 const props = defineProps(editorProps);
 const emits = defineEmits(['update:modelValue']);
 
@@ -39,8 +41,8 @@ const config: CherryConfig = {
             }
         },
         global: {
-            urlProcessor: (url, srcType) => {
-                console.log(srcType, url)
+            urlProcessor: (url) => {
+                // 此处处理url
                 return url
             }
         }
@@ -89,6 +91,27 @@ const config: CherryConfig = {
     callback: {
         afterChange(value) {
             emits('update:modelValue', value);
+        },
+        onClickPreview(event: PointerEvent) {
+            const aEle = event.target as HTMLLinkElement;
+            if (aEle) {
+                if (aEle.tagName === 'A') {
+                    console.log(aEle.href)
+                    if (aEle.href.startsWith(DEV_URL)) {
+                        // hash定位
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.stopImmediatePropagation();
+                        const id = aEle.href.replace(DEV_URL, "");
+                        const target = document.getElementById(id);
+                        if (target) {
+                            target.scrollIntoView();
+                        }
+                        return;
+                    }
+                    utools.shellOpenExternal(aEle.href);
+                }
+            }
         }
     }
 };
