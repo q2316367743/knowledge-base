@@ -65,6 +65,9 @@ dependencies:
   tippy.js:
     specifier: ^6.3.7
     version: 6.3.7
+  turndown:
+    specifier: ^7.1.2
+    version: 7.1.2
   unist-util-visit:
     specifier: ^5.0.0
     version: 5.0.0
@@ -2451,6 +2454,10 @@ packages:
       webidl-conversions: 7.0.0
     dev: false
 
+  /domino@2.1.6:
+    resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
+    dev: false
+
   /dompurify@2.4.3:
     resolution: {integrity: sha512-q6QaLcakcRjebxjg8/+NP+h0rPfatOgOzc46Fst9VAA3jF2ApfKBNKMzdP4DYTqtUMXSCd5pRS/8Po/OmoCHZQ==}
     requiresBuild: true
@@ -4167,6 +4174,12 @@ packages:
       '@esbuild-kit/esm-loader': 2.5.5
     optionalDependencies:
       fsevents: 2.3.2
+    dev: false
+
+  /turndown@7.1.2:
+    resolution: {integrity: sha512-ntI9R7fcUKjqBP6QU8rBK2Ehyt8LAzt3UBT9JR9tgo6GtuKvyUzpayWmeMKJw1DPdXzktvtIT8m2mVXz+bL/Qg==}
+    dependencies:
+      domino: 2.1.6
     dev: false
 
   /type@1.2.0:

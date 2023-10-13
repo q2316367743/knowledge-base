@@ -148,7 +148,7 @@ async function _importArticleByDocx() {
     if (!contentWrap) {
         return Promise.reject("文章内容不存在")
     }
-    const title = file.fileName.value;
+    const title = docx.fileName.value;
     console.log(title)
 
 
