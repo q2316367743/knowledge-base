@@ -81,7 +81,12 @@ enum LocalNameEnum {
     /**
      * 待办列表隐藏放弃项
      */
-    KEY_TODO_LIST_HIDE_ABANDON = '/key/todo/list/hide/abandon'
+    KEY_TODO_LIST_HIDE_ABANDON = '/key/todo/list/hide/abandon',
+
+    /**
+     * 待办编辑器隐藏工具栏
+     */
+    KEY_TODO_EDITOR_HIDE_TOOLBAR = '/key/todo/editor/hide/toolbar'
 
 }
 

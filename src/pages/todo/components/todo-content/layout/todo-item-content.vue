@@ -36,11 +36,8 @@
                 </a-dropdown>
             </header>
             <main class="item-container">
+                <div id="toolbar-container"></div>
                 <div id="todo-editor—wrapper">
-                </div>
-                <div class="auto-save" v-if="autoSaveLoading">
-                    <icon-refresh spin/>
-                    自动保存中
                 </div>
                 <div class="todo-item-tags">
                     <a-tag v-for="tag in tags" :key="tag" :color="randomColor(tag)" closable
@@ -66,13 +63,25 @@
                     </a-tag>
                 </div>
             </main>
+            <footer class="footer">
+                <div></div>
+                <a-button type="text">
+                    <template #icon>
+                        <icon-more-vertical/>
+                    </template>
+                </a-button>
+            </footer>
+            <div class="auto-save" v-if="autoSaveLoading">
+                <icon-refresh spin/>
+                自动保存中
+            </div>
         </a-typography>
-        <a-back-top target-container=".todo-item-content .item-container" />
+        <a-back-top target-container=".todo-item-content .item-container" style="bottom:56px"/>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, nextTick, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
-import {createEditor, IDomEditor, IEditorConfig} from '@wangeditor/editor';
+import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -96,7 +105,7 @@ const tagInputRef = ref<HTMLInputElement | null>(null);
 const tag = ref({
     input: false,
     value: ''
-})
+});
 
 let editor: IDomEditor | null = null;
 
@@ -179,6 +188,32 @@ function create() {
         mode: 'default', // or 'simple'
     });
     editor.setHtml(item.value.content.record.content);
+    const toolbarConfig: Partial<IToolbarConfig> = {
+        toolbarKeys: ["blockquote", "header1", "header2", "header3", "|",
+            "bold", "underline", "italic", "through", "color", "bgColor", "clearStyle", "|",
+            "bulletedList", "numberedList", "todo",
+            {
+                "key": "group-layout",
+                "title": "对齐",
+                "iconSvg": "<svg class=\"icon\" viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\"><path d=\"M170.666667 213.333333h682.666666v85.333334H170.666667V213.333333z m0 512h682.666666v85.333334H170.666667v-85.333334z m0-256h682.666666v85.333334H170.666667v-85.333334z\" ></path></svg>",
+                "menuKeys": ["justifyLeft", "justifyRight", "justifyCenter"]
+            }, "|",
+            "insertLink",
+            {
+                "key": "group-image",
+                "title": "图片",
+                "iconSvg": "<svg viewBox=\"0 0 1024 1024\"><path d=\"M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z\"></path></svg>",
+                "menuKeys": ["insertImage", "uploadImage"]
+            },
+            "insertVideo", "insertTable", "codeBlock"]
+    }
+
+    const toolbar = createToolbar({
+        editor,
+        selector: '#toolbar-container',
+        config: toolbarConfig,
+        mode: 'simple', // 'default' or 'simple'
+    });
 }
 
 onMounted(() => create());
@@ -277,17 +312,8 @@ function tagRemove(tag: string) {
         top: 46px;
         left: 7px;
         right: 7px;
-        bottom: 7px;
+        bottom: 46px;
         overflow: auto;
-
-        .auto-save {
-            position: absolute;
-            top: 7px;
-            right: 7px;
-            color: rgb(var(--arcoblue-6));
-            line-height: 32px;
-
-        }
 
 
         .todo-item-tags {
@@ -298,6 +324,24 @@ function tagRemove(tag: string) {
                 margin: 4px 7px;
             }
         }
+    }
+
+    .footer {
+        position: absolute;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .auto-save {
+        position: absolute;
+        top: 53px;
+        right: 7px;
+        color: rgb(var(--arcoblue-6));
+        line-height: 32px;
+
     }
 
 }
