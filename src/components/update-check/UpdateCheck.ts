@@ -73,7 +73,7 @@ function parseVersion(str: string): Version {
     }
 }
 
-// TODO 更新到1.3.0需要做数据迁移
+// 更新到1.3.0需要做数据迁移
 function updateTo130FromUnder() {
     useGlobalStore().startLoading("数据开始迁移");
     _updateTo130FromUnder()
