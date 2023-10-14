@@ -1,0 +1,136 @@
+.utools-image {
+    --bg-color: #cdd1e0;
+    --front-color: #388ae5;
+    --border-color: #e8e8eb;
+
+}
+
+.utools-image__image {
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.utools-image__image-picture {
+    max-width: 100%;
+    vertical-align: bottom;
+    display: block;
+}
+
+.utools-image__image-preloader {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    margin: auto;
+    position: relative;
+    background-color: var(--bg-color);
+    background-position: center center;
+}
+
+.utools-image__image-preloader::after {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-color);
+    border-top-color: var(--front-color);
+    left: 50%;
+    top: 50%;
+    margin-top: -30px;
+    margin-left: -30px;
+    animation: image-preloader-spin 2s infinite linear;
+    box-sizing: border-box;
+}
+
+.utools-image__caption[contentEditable="true"][data-placeholder]::before {
+    position: absolute !important;
+    content: attr(data-placeholder);
+    color: #707684;
+    font-weight: normal;
+    display: none;
+}
+
+.utools-image__caption[contentEditable="true"][data-placeholder]:empty::before {
+    display: block;
+}
+
+.utools-image__caption[contentEditable="true"][data-placeholder]:empty:focus::before {
+    display: none;
+}
+
+.utools-image--empty .utools-image__image {
+    display: none;
+}
+
+.utools-image--empty .utools-image__caption, .utools-image--loading .utools-image__caption {
+    display: none;
+}
+
+.utools-image .cdx-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.utools-image .cdx-button svg {
+    height: auto;
+    margin: 0 6px 0 0;
+}
+
+.utools-image--filled .cdx-button {
+    display: none;
+}
+
+.utools-image--filled .utools-image__image-preloader {
+    display: none;
+}
+
+.utools-image--loading .utools-image__image {
+    min-height: 200px;
+    display: flex;
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+}
+
+.utools-image--loading .utools-image__image-picture {
+    display: none;
+}
+
+.utools-image--loading .cdx-button {
+    display: none;
+}
+
+/**
+ * Tunes
+ * ----------------
+ */
+
+.utools-image--withBorder .utools-image__image {
+    border: 1px solid var(--border-color);
+}
+
+.utools-image--withBackground .utools-image__image {
+    padding: 15px;
+    background: var(--bg-color);
+}
+
+.utools-image--withBackground .utools-image__image-picture {
+    max-width: 60%;
+    margin: 0 auto;
+}
+
+.utools-image--stretched .utools-image__image-picture {
+    width: 100%;
+}
+
+@keyframes image-preloader-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

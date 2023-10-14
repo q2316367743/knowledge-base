@@ -21,6 +21,7 @@ import Quote from '@editorjs/quote/dist/bundle.js';
 import Raw from '@editorjs/raw/dist/bundle.js';
 import Underline from '@editorjs/underline/dist/bundle.js';
 import Warning from '@editorjs/warning/dist/bundle.js';
+import {UtoolsImage} from './plugins/UtoolsImage';
 
 const props = defineProps({
     modelValue: Object as PropType<any>,
@@ -81,6 +82,7 @@ onMounted(() => {
             table: Table,
             Code: Code,
             Raw: Raw,
+            UtoolsImage: UtoolsImage,
             Image: Image,
             Attaches: Attaches,
         },
@@ -89,7 +91,9 @@ onMounted(() => {
          * onChange callback
          */
         onChange: (api) => {
-            api.saver.save().then(data => emits('update:modelValue', data))
+            api.saver.save()
+                .then(data => emits('update:modelValue', data))
+                .catch(e => console.error('保存失败', e))
         },
         readOnly: props.readOnly
     });
