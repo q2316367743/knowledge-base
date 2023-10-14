@@ -1,3 +1,5 @@
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+
 export interface ArticleIndex {
 
     id: number;
@@ -23,21 +25,6 @@ export interface ArticleIndex {
     categoryId?: number;
 
     /**
-     * 文章标签
-     */
-    tags: string[];
-
-    /**
-     * 描述，限制64个字
-     */
-    description: string;
-
-    /**
-     * 来源，最多32个字
-     */
-    source: string;
-
-    /**
      * 所属文件夹
      */
     folder: number;
@@ -46,6 +33,11 @@ export interface ArticleIndex {
      * 是否是预览模式
      */
     preview: boolean;
+
+    /**
+     * 文章类型
+     */
+    type: ArticleTypeEnum;
 
 }
 
@@ -56,10 +48,8 @@ export function getDefaultArticleIndex(source?: Partial<ArticleIndex>): ArticleI
         updateTime: new Date(),
         name: '',
         categoryId: null,
-        tags: [],
-        description: '',
-        source: '',
         folder: 0,
         preview: false,
+        type: ArticleTypeEnum.MARKDOWN
     }, source);
 }

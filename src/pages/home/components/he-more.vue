@@ -6,8 +6,22 @@
             </template>
         </a-button>
         <template #content>
-            <a-doption @click="addArticle(0)">新增文章</a-doption>
-            <a-doption @click="addFolder(0)">新建文件夹</a-doption>
+            <a-doption @click="addFolder(0)">
+                <template #icon>
+                    <icon-folder-add/>
+                </template>
+                新建文件夹
+            </a-doption>
+            <a-dsubmenu>
+                <template #icon>
+                    <icon-plus/>
+                </template>
+                新增文章
+                <template #content>
+                    <a-doption @click="addArticle(0)">markdown</a-doption>
+                    <a-doption @click="addArticle(0)">富文本</a-doption>
+                </template>
+            </a-dsubmenu>
             <a-dsubmenu>
                 <template #icon>
                     <icon-import/>
@@ -15,8 +29,12 @@
                 导入
                 <template #content>
                     <a-doption @click="importArticleByMd()">markdown文件</a-doption>
-                    <a-doption @click="importArticleByDocx()">docx文件</a-doption>
-                    <a-doption @click="importArticleByZip()">zip文件</a-doption>
+                    <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                        <a-doption @click="importArticleByDocx()">docx文件</a-doption>
+                    </a-tooltip>
+                    <a-tooltip content="导入压缩包中全部markdown文件，文件路径为文件名">
+                        <a-doption @click="importArticleByZip()">zip文件</a-doption>
+                    </a-tooltip>
                 </template>
             </a-dsubmenu>
             <a-dsubmenu>
@@ -25,7 +43,9 @@
                 </template>
                 导出
                 <template #content>
-                    <a-doption @click="exportToMd()">导出为ZIP</a-doption>
+                    <a-tooltip content="将全部笔记保存为ZIP，并保留目录结构">
+                        <a-doption @click="exportToMd()">导出为ZIP</a-doption>
+                    </a-tooltip>
                 </template>
             </a-dsubmenu>
         </template>
@@ -47,14 +67,10 @@ import {zipToArticle} from "@/components/export-component/zipToArticle";
 
 function addArticle(pid: number) {
     useGlobalStore().startLoading("正在新增文章")
-    useArticleStore().add({
+    useArticleStore().add(getDefaultArticleIndex({
         name: "新建文章 " + toDateString(new Date()),
         folder: pid,
-        description: '',
-        source: '',
-        tags: [],
-        preview: false
-    }, getDefaultArticleBase(), "")
+    }), getDefaultArticleBase(), "")
         .then(id => {
             MessageUtil.success("新增成功");
             useHomeEditorStore().setId(id);

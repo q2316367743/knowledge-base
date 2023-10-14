@@ -21,12 +21,24 @@ import UpdateLog from "@/global/UpdateLog";
 import {ref} from "vue";
 import Constant from "@/global/Constant";
 import updateCheck from "@/components/update-check/UpdateCheck";
+import {useGlobalStore} from "@/store/GlobalStore";
+import MessageUtil from "@/utils/MessageUtil";
 
 const log = UpdateLog[0];
 const version = Constant.version;
 const visible = ref(false);
 
-updateCheck(() => visible.value = true);
+// 初始化数据
+import('@/global/BeanFactory').then(data => {
+    useGlobalStore().startLoading("开始初始化数据...");
+    data.initData()
+        .then(() => {
+            console.log("数据初始化成功");
+            updateCheck(() => visible.value = true);
+        })
+        .catch(e => MessageUtil.error("数据初始化失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+})
 
 const toBlog = () => utools.shellOpenExternal(Constant.website)
 

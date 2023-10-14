@@ -35,9 +35,24 @@ export interface ArticleBaseSetting {
 export interface ArticleBase extends ArticleBaseSetting{
 
     /**
-     * 是否自动以
+     * 是否自定义设置
      */
     customer: boolean;
+
+    /**
+     * 文章标签
+     */
+    tags: string[];
+
+    /**
+     * 描述，限制64个字
+     */
+    description: string;
+
+    /**
+     * 来源，最多32个字
+     */
+    source: string;
 
     /**
      * 源链接
@@ -47,7 +62,10 @@ export interface ArticleBase extends ArticleBaseSetting{
 }
 
 export function getDefaultArticleBase(source?: Partial<ArticleBase>): ArticleBase {
-    return Object.assign({
+    return Object.assign<ArticleBase, Partial<ArticleBase> | undefined>({
+        tags: [],
+        description: '',
+        source: '',
         sourceUrl: '',
         customer: false,
         codeLightTheme: 'github',
@@ -61,6 +79,9 @@ export function getDefaultArticleBase(source?: Partial<ArticleBase>): ArticleBas
 export function getDefaultArticleBaseByBaseSetting(): ArticleBase {
     const baseSetting = useBaseSettingStore().baseSetting;
     return {
+        tags: [],
+        description: '',
+        source: '',
         sourceUrl: '',
         customer: false,
         ...baseSetting

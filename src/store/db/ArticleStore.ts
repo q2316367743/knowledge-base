@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import {
     ArticleBase,
     ArticleIndex,
-    ArticlePreview,
     ArticleSource,
     getDefaultArticleBase,
     getDefaultArticleIndex
@@ -11,9 +10,8 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import md from "@/plugin/markdown";
 import {useAuthStore} from "@/store/components/AuthStore";
-import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 export const useArticleStore = defineStore('article', {
@@ -31,15 +29,6 @@ export const useArticleStore = defineStore('article', {
         folderMap: (state): Map<number, Array<ArticleIndex>> => {
             const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
             return group<ArticleIndex, 'folder', number>(articles, 'folder')
-        },
-        articleTags: (state): Set<string> => {
-            const tags = new Set<string>();
-            for (let item of state.value) {
-                for (let tag of item.tags) {
-                    tags.add(tag);
-                }
-            }
-            return tags;
         },
         articleNames: (state): Set<string> => {
             const names = new Set<string>();
@@ -59,10 +48,9 @@ export const useArticleStore = defineStore('article', {
             this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value);
         },
         addSimple(content: string, title?: string): Promise<number> {
-            return  this.add(getDefaultArticleIndex({
+            return this.add(getDefaultArticleIndex({
                 name: title || ('导入文章' + new Date().getTime()),
-                source: "快捷导入"
-            }), getDefaultArticleBase(), content);
+            }), getDefaultArticleBase({source: "快捷导入"}), content);
         },
         async add(
             article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
@@ -83,12 +71,10 @@ export const useArticleStore = defineStore('article', {
                 createTime: now,
                 updateTime: now,
                 name: article.name,
-                description: article.description,
                 categoryId: article.categoryId,
-                tags: toRaw(article.tags),
-                source: article.source,
                 folder: article.folder,
-                preview: article.preview
+                preview: article.preview,
+                type: article.type
             });
             await this._sync();
             // 新增基础信息
@@ -117,32 +103,11 @@ export const useArticleStore = defineStore('article', {
                 await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
                 return Promise.reject("新增内容异常，" + contentRes.error);
             }
-            // 新增预览
-            let preview = md.render(content);
-            const previewRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE_PREVIEW + id,
-                value: {
-                    html: preview,
-                    toc: ''
-                } as ArticlePreview
-            });
-            if (previewRes.error) {
-                // 删除索引
-                this.value.pop();
-                await this._sync();
-                // 删除基础信息
-                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
-                // 删除内容
-                await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
-                return Promise.reject("新增预览异常，" + previewRes.error);
-            }
             return Promise.resolve(id);
         },
-        async update(
+        async updateIndex(
             id: number,
-            article: Partial<ArticleIndex>,
-            base: ArticleBase,
-            content: string
+            article: Partial<ArticleIndex>
         ) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
@@ -150,22 +115,31 @@ export const useArticleStore = defineStore('article', {
                     confirmButtonText: "新增",
                     cancelButtonText: "取消"
                 });
-                await this.add(Object.assign(getDefaultArticleIndex(), article), base, content);
+                await this.add(Object.assign(getDefaultArticleIndex(), article), getDefaultArticleBase(), "");
                 return Promise.resolve();
             }
             // 校验
-            if (!article.name || article.name.trim() === '') {
-                return Promise.reject("文章标题不能为空");
+            if (typeof article.name != 'undefined') {
+                if (article.name.trim() === '') {
+                    return Promise.reject("文章标题不能为空");
+                }
             }
             // 新增索引
             this.value[index] = {
                 ...this.value[index],
                 ...article,
                 updateTime: new Date(),
-                tags: article.tags ? toRaw(article.tags) : toRaw(this.value[index].tags),
             };
 
             await this._sync();
+        },
+        async update(
+            id: number,
+            article: Partial<ArticleIndex>,
+            base: ArticleBase,
+            content: string
+        ) {
+            await this.updateIndex(id, article);
             // 删除旧的基础信息
             await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
             // 新增基础信息
@@ -192,21 +166,27 @@ export const useArticleStore = defineStore('article', {
                 // 删除索引
                 return Promise.reject("修改内容异常，" + contentRes.error);
             }
-            // 删除旧的预览
-            await removeOneByAsync(LocalNameEnum.ARTICLE_PREVIEW + id, true);
-            // 新增预览
-            let preview = md.render(content);
-            const previewRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE_PREVIEW + id,
-                value: {
-                    html: preview,
-                    toc: ''
-                } as ArticlePreview
-            });
-            if (previewRes.error) {
-                // 删除索引
-                return Promise.reject("修改预览异常，" + contentRes.error);
-            }
+        },
+        async updateContent(
+            id: number,
+            article: Partial<ArticleIndex>,
+            content: string,
+            rev: undefined | string
+        ): Promise<undefined | string> {
+            await this.updateIndex(id, article);
+            // 新增内容
+            return saveOneByAsync<ArticleSource>(LocalNameEnum.ARTICLE_CONTENT + id, {
+                content
+            }, rev);
+        },
+        async updateBase(
+            id: number,
+            article: Partial<ArticleIndex>,
+            base: ArticleBase,
+            rev: undefined | string
+        ): Promise<string | undefined> {
+            await this.updateIndex(id, article);
+            return saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, base, rev);
         },
         async removeById(id: number) {
             const index = this.value.findIndex(e => e.id === id);
@@ -236,23 +216,9 @@ export const useArticleStore = defineStore('article', {
                 ...this.value[index],
                 folder: pid,
                 updateTime: new Date(),
-                tags: toRaw(this.value[index].tags),
             }
             // 同步
             await this._sync();
         },
-        async setPreview(id: number, preview: boolean) {
-            const index = this.value.findIndex(e => e.id === id);
-            if (index === -1) {
-                return Promise.reject("动态未找到，请刷新后重试！");
-            }
-            this.value[index] = {
-                ...this.value[index],
-                preview: preview,
-                updateTime: new Date(),
-                tags: toRaw(this.value[index].tags),
-            };
-            await this._sync();
-        }
     }
 });

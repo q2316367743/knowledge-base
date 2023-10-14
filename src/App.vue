@@ -13,7 +13,7 @@
         </a-spin>
         <markdown-import/>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
-        <update-item/>
+        <update-check/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -33,7 +33,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";
 
 
-const UpdateItem = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
+const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
 const AppSide = defineAsyncComponent(() => import("@/components/app-side/index.vue"))
 
 const router = useRouter();
@@ -58,16 +58,7 @@ utools.onPluginEnter(action => {
 })
 // 主题
 useGlobalStore().initDarkColors();
-// 初始化数据
-import('@/global/BeanFactory').then(data => {
-    useGlobalStore().startLoading("开始初始化数据...");
-    data.initData()
-        .then(() => console.log("数据初始化成功"))
-        .catch(e => MessageUtil.error("数据初始化失败", e))
-        .finally(() => useGlobalStore().closeLoading());
 
-
-})
 // 全局事件
 window.onImagePreview = (src) => {
     preview.value = {
@@ -100,6 +91,7 @@ function toArticle(id?: string) {
     useHomeEditorStore().setId(parseInt(id || '0'));
     router.push('/home');
 }
+
 // 前往待办
 function toTodo(id?: string) {
     const categoryId = parseInt(id || '0');
@@ -107,6 +99,7 @@ function toTodo(id?: string) {
     useTodoStore().setId(categoryId);
     router.push('/todo');
 }
+
 // 插件进入
 function onPluginEnter(operate: string, preload: string, extra: string) {
     if (operate === 'article') {

@@ -2,6 +2,57 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.3.0',
+        sign: 130,
+        time: '2023-10-16',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【文章】增加导入功能，支持导入markdown文件、docx文件、zip文件'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】支持导出功能，可以将文章导出为zip压缩包，并保留目录结构'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】编辑器增加截图功能，可以截图并粘贴到编辑器中'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】删除了之前以预览为主的主页，并删除了单独的编辑器和单独的预览页'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】修改markdown编辑器引擎为cherry-markdown，支持的语法更多，编辑器更强大'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】新增临时markdown编辑器，可以作为草稿使用，此编辑器内容自动保存'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】新增富文本编辑器，新建文章时，可以选择富文本编辑器，此编辑器基于块编辑，功能十分的强大，' +
+                '支持的样式也更多，未来也会将更多的功能在此编辑器上实现'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】新增代码编辑器，使用VSCode同款编辑器Monaco Editor，支持常见语法高亮。可以记录代码片段'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【文章】新增临时编辑器，此编辑器为markdown编辑器，支持自动保存。' +
+                '此编辑器可以作为发布到支持markdown博客平台的编辑器，不用担心编写的文章丢失。'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【TODO】新增快速访问，可以将代办清单新增为关键字，快速访问待办清单'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【TODO】待办支持放弃并且支持填写放弃原因，新增分组：已放弃'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【TODO】待办描述编辑器增加工具栏，增加返回顶部功能'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '【分类】修复分类不能重命名问题'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【TODO】优化待办项完成消息内容'
+        }],
+        remark: "cherry-markdown具体语法可前往临时编辑器查看。功能十分强大。按ctrl+f可进行搜索，再次按ctrl+f可进行替换"
+    },
+    {
         version: '1.2.1',
         sign: 121,
         time: '2023-10-12',
