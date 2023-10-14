@@ -14,7 +14,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
         articleHeaderVisible: true,
         codeWrap: false,
-        imageStrategy: ImageStrategyEnum.INNER,
+        imageStrategy: ImageStrategyEnum.IMAGE,
         authCollapsed: true
     }
 }
