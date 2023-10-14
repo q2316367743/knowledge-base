@@ -18,11 +18,11 @@
             </template>
             待办
         </a-menu-item>
-        <a-menu-item key="/timeline">
+        <a-menu-item key="/editor">
             <template #icon>
-                <icon-time-line/>
+                <icon-edit/>
             </template>
-            时间线
+            临时编辑器
         </a-menu-item>
         <a-sub-menu key="/graph">
             <template #icon>
@@ -34,6 +34,9 @@
             </a-menu-item>
             <a-menu-item key="/graph/category">
                 分类图
+            </a-menu-item>
+            <a-menu-item key="/graph/timeline">
+                时间线
             </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="/setting">

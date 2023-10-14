@@ -24,13 +24,13 @@ const router = createRouter({
         path: '/todo',
         component: () => import("@/pages/todo/index.vue")
     }, {
+        name: "临时编辑器",
+        path: '/editor',
+        component: () => import("@/pages/editor/index.vue")
+    }, {
         name: "离线网页",
         path: '/html',
         component: () => import("@/pages/html/index.vue")
-    }, {
-        name: "时间线",
-        path: "/timeline",
-        component: () => import("@/pages/timeline/index.vue")
     }, {
         name: "图-关联",
         path: "/graph/relation",
@@ -39,6 +39,10 @@ const router = createRouter({
         name: "图-分类",
         path: "/graph/category",
         component: () => import("@/pages/graph/category/index.vue")
+    }, {
+        name: "图-时间线",
+        path: "/graph/timeline",
+        component: () => import("@/pages/graph/timeline/index.vue")
     }, {
         name: "基础设置",
         path: "/setting/base",

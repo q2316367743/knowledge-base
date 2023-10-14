@@ -59,6 +59,11 @@ enum LocalNameEnum {
     VERSION = '/key/VERSION',
 
     /**
+     * 临时编辑器内容
+     */
+    KEY_EDITOR_CONTENT = '/key/editor/content',
+
+    /**
      * 首页宽度
      */
     KEY_HOME_WIDTH = '/key/home/width',

@@ -15,7 +15,7 @@ export const useScreenShotMenu = (editor: ShallowRef) => {
                 utools.screenCapture(base64 => {
                     const blob = base64toBlob(base64.replace("data:image/png;base64,", ""));
                     useImageUpload(blob)
-                        .then(id => editor.value.insert('![截屏](attachment:' + id + ')'))
+                        .then(id => editor.value.insert('\n![截屏](attachment:' + id + ')'))
                         .catch(e => MessageUtil.error("截图失败", e))
                 })
             }
