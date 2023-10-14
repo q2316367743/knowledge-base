@@ -18,8 +18,9 @@
                 </template>
                 新增文章
                 <template #content>
-                    <a-doption @click="addArticle(0)">markdown</a-doption>
-                    <a-doption @click="addArticle(0)">富文本</a-doption>
+                    <a-doption @click="addArticle(0, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
+                    <a-doption @click="addArticle(0, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
+                    <a-doption @click="addArticle(0, ArticleTypeEnum.CODE)">代码</a-doption>
                 </template>
             </a-dsubmenu>
             <a-dsubmenu>
@@ -54,7 +55,6 @@
 <script lang="ts" setup>
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {toDateString} from "xe-utils";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
@@ -64,12 +64,14 @@ import {markdownToZip} from "@/components/export-component/markdownToZip";
 import {docxToArticle} from "@/components/export-component/docxToArticle";
 import {mdToArticle} from "@/components/export-component/mdToArticle";
 import {zipToArticle} from "@/components/export-component/zipToArticle";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
-function addArticle(pid: number) {
+function addArticle(pid: number, type: ArticleTypeEnum) {
     useGlobalStore().startLoading("正在新增文章")
     useArticleStore().add(getDefaultArticleIndex({
-        name: "新建文章 " + toDateString(new Date()),
+        name: type === ArticleTypeEnum.CODE ? ("新建代码" + new Date().getTime() + '.md') : ("新建文章" + new Date().getTime()),
         folder: pid,
+        type,
     }), getDefaultArticleBase(), "")
         .then(id => {
             MessageUtil.success("新增成功");
@@ -105,7 +107,6 @@ function importArticleByMd() {
 async function _importArticleByMd() {
     const article = await mdToArticle();
     const articleId = await useArticleStore().add(getDefaultArticleIndex({
-        source: '导入文章',
         name: article.title,
     }), getDefaultArticleBase(), article.content);
     // 切换文章
@@ -134,7 +135,6 @@ function importArticleByDocx() {
 async function _importArticleByDocx() {
     const article = await docxToArticle();
     const articleId = await useArticleStore().add(getDefaultArticleIndex({
-        source: '导入文章',
         name: article.title,
     }), getDefaultArticleBase(), article.content);
     // 切换文章

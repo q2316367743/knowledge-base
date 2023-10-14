@@ -28,10 +28,6 @@ const router = createRouter({
         path: '/editor',
         component: () => import("@/pages/editor/index.vue")
     }, {
-        name: "离线网页",
-        path: '/html',
-        component: () => import("@/pages/html/index.vue")
-    }, {
         name: "图-关联",
         path: "/graph/relation",
         component: () => import("@/pages/graph/relation/index.vue")

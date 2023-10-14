@@ -1,8 +1,7 @@
 import Mammoth from 'mammoth';
-import TurndownService, { Rule, Options } from 'turndown';
+import TurndownService, {Options, Rule} from 'turndown';
 import {useFileSystemAccess} from "@vueuse/core";
-import {ArticleIndex} from "@/entity/article";
-import {parseFileName} from "@/utils/BrowserUtil";
+import {parseFileName} from "@/utils/FileUtil";
 
 const LANGUAGE_PREFIX = 'language-'
 
@@ -37,11 +36,11 @@ const codeLanguage = {
                     }
                 }
             }
-        } catch (_) { }
+        } catch (_) {
+        }
         return '```' + language + '\n' + content + '\n```';
     }
 } as Rule;
-
 
 
 const turndownService = new TurndownService(getDefaultTurndownSetting());
@@ -75,7 +74,7 @@ export const docxToArticle = async (): Promise<{
     const resultObject = await Mammoth.convertToHtml({arrayBuffer: new Uint8Array(contentWrap)})
     const html = resultObject.value;
     // html转markdown
-    const content =  turndownService.turndown(html);
+    const content = turndownService.turndown(html);
 
     return {
         title: parseFileName(title) || '导入文章-' + new Date().getTime(),

@@ -1,5 +1,5 @@
 import {useFileSystemAccess} from "@vueuse/core";
-import {parseFileName} from "@/utils/BrowserUtil";
+import {parseFileName} from "@/utils/FileUtil";
 
 export async function mdToArticle(): Promise<{
     title: string;

@@ -10,7 +10,7 @@ import Header from '@editorjs/header/dist/bundle.js';
 import List from '@editorjs/list/dist/bundle.js';
 // @ts-ignore
 import Table from '@editorjs/table/dist/table.js';
-import {onMounted, onUnmounted, PropType, watch} from "vue";
+import {onMounted, onUnmounted, PropType} from "vue";
 
 const props = defineProps({
     modelValue: Object as PropType<any>,
@@ -23,7 +23,7 @@ onMounted(() => {
     let data = props.modelValue;
     if (editor) {
         if (!data['version']) {
-            data  = {
+            data = {
                 "time": new Date().getTime(),
                 "blocks": [],
                 "version": "2.29.0-rc.1"
@@ -31,7 +31,7 @@ onMounted(() => {
         }
     }
     editor = new EditorJS({
-        holder: 'todo-editor—wrapper',
+        holder: 'editor-js-editor',
         /**
          * Available Tools list.
          * Pass Tool's class or Settings object for each Tool you want to use
@@ -62,7 +62,11 @@ onMounted(() => {
 
 onUnmounted(() => {
     if (editor) {
-        editor.destroy();
+        try {
+            editor.destroy();
+        } catch (e) {
+            console.error(e);
+        }
     }
 });
 </script>

@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <header class="header">
             <div class="left">
-                <a-button type="text" @click="switchCollapsed()">
+                <a-button type="text" @click="switchCollapsed()" v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN">
                     <template #icon>
                         <icon-menu/>
                     </template>
@@ -67,25 +67,39 @@
         </header>
         <!-- 编辑区 -->
         <div class="ec-container">
-            <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"/>
+            <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"
+                             v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN"/>
+            <editor-js v-model="content"
+                           v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT"/>
+            <monaco-editor v-model="content" :language="language"
+                           v-else-if="articleIndex.type === ArticleTypeEnum.CODE"/>
         </div>
         <he-base v-model="extraVisible"/>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {useGlobalStore} from "@/store/GlobalStore";
-import {useArticleStore} from "@/store/db/ArticleStore";
+import {useMagicKeys} from "@vueuse/core";
 import MessageUtil from "@/utils/MessageUtil";
 import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
+// 编辑器
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
+import MonacoEditor from "@/components/monaco-editor/index.vue";
+import EditorJs from '@/components/editor-js/index.vue';
+// 状态存储
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useGlobalStore} from "@/store/GlobalStore";
+import {useArticleStore} from "@/store/db/ArticleStore";
 import {useAuthStore} from "@/store/components/AuthStore";
-import {useMagicKeys} from "@vueuse/core";
-import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
+// 工具类
+import {parseFileExtra} from "@/utils/FileUtil";
 import {download} from "@/utils/BrowserUtil";
+// 组件
 import HeBase from "@/pages/home/components/he-base.vue";
+import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
+// 枚举
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
 
 const {ctrl, s} = useMagicKeys()
@@ -101,6 +115,7 @@ const extraVisible = ref(false);
 const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
 const isDark = computed(() => useGlobalStore().isDark);
+const language = computed(() => parseFileExtra(title.value));
 
 watch(() => id.value, value => init(value));
 
@@ -124,7 +139,7 @@ async function _init(articleId: number) {
         MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
         return;
     }
-    articleIndex.value = articleIndexWrap;
+    articleIndex.value = getDefaultArticleIndex(articleIndexWrap);
     title.value = articleIndexWrap.name;
     // 内容
     const contentWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_CONTENT + id.value);

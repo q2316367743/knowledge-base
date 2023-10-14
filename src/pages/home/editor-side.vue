@@ -17,12 +17,18 @@
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption v-if="!nodeData.isLeaf" @click="addArticle(nodeData.key)">
+                        <a-dsubmenu>
                             <template #icon>
                                 <icon-plus/>
                             </template>
                             新增文章
-                        </a-doption>
+                            <template #content>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
+                            </template>
+                        </a-dsubmenu>
+
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
                             <template #icon>
                                 <icon-plus/>
@@ -52,10 +58,9 @@
 import {computed, h, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach} from "@/entity/ListTree";
-import {IconFile} from "@arco-design/web-vue/es/icon";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import { useWindowSize} from "@vueuse/core";
+import {useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
@@ -63,8 +68,9 @@ import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import HeMore from "@/pages/home/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {toDateString} from "xe-utils";
 import {getDefaultArticleBase} from "@/entity/article";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {IconBook, IconCode, IconFile} from "@arco-design/web-vue/es/icon";
 
 const size = useWindowSize();
 
@@ -88,7 +94,15 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                 key: article.id,
                 title: article.name,
                 isLeaf: true,
-                icon: () => h(IconFile, {}),
+                icon: () => {
+                    if (article.type === ArticleTypeEnum.CODE) {
+                        return h(IconCode, {})
+                    }else if (article.type === ArticleTypeEnum.RICH_TEXT) {
+                        return h(IconBook, {})
+                    }else {
+                        return h(IconFile, {})
+                    }
+                },
             })).forEach(article => treeData.push(article));
         }
     })
@@ -122,15 +136,13 @@ function addFolder(pid: number) {
     })
 }
 
-function addArticle(pid: number) {
+function addArticle(pid: number, type: ArticleTypeEnum) {
     useGlobalStore().startLoading("正在新增文章")
     useArticleStore().add({
-        name: "新建文章 " + toDateString(new Date()),
+        name: type === ArticleTypeEnum.CODE ? ("新建代码" + new Date().getTime() + '.md') : ("新建文章" + new Date().getTime()),
         folder: pid,
-        description: '',
-        source: '',
-        tags: [],
-        preview: false
+        preview: false,
+        type
     }, getDefaultArticleBase(), "")
         .then(id => {
             MessageUtil.success("新增成功");

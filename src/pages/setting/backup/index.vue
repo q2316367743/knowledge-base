@@ -55,7 +55,8 @@ import {createClient, FileStat} from "webdav";
 import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import JSZip from "jszip";
-import {download, pathJoin} from "@/utils/BrowserUtil";
+import {download} from "@/utils/BrowserUtil";
+import {pathJoin} from "@/utils/FileUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateString} from "xe-utils";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
@@ -264,7 +265,7 @@ function restore() {
             useGlobalStore().startLoading("开始初始化数据...");
             initData(false)
                 .then(() => MessageUtil.success("数据初始化成功"))
-                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .catch(e => MessageUtil.error("数据初始化失败", e))
                 .finally(() => useGlobalStore().closeLoading());
         })
         .catch(e => MessageUtil.error("恢复失败", e));
@@ -320,7 +321,7 @@ function restoreByFile() {
             useGlobalStore().startLoading("开始初始化数据...");
             initData(false)
                 .then(() => MessageUtil.success("数据初始化成功"))
-                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .catch(e => MessageUtil.error("数据初始化失败", e))
                 .finally(() => useGlobalStore().closeLoading());
         })
         .catch(e => {

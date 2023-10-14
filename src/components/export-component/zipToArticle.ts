@@ -1,6 +1,7 @@
 import {useFileSystemAccess} from "@vueuse/core";
 import JSZip from "jszip";
-import {parseFileName, sleep} from "@/utils/BrowserUtil";
+import {sleep} from "@/utils/BrowserUtil";
+import {parseFileName} from "@/utils/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
@@ -15,7 +16,6 @@ export async function zipToArticle() {
             }
         }]
     });
-
 
 
     await zip.open();
@@ -35,9 +35,8 @@ export async function zipToArticle() {
         await sleep(100);
 
         lastId = await useArticleStore().add(getDefaultArticleIndex({
-            source: '导入文章',
             name: parseFileName(title),
-        }), getDefaultArticleBase(), text);
+        }), getDefaultArticleBase({source: '导入文章'}), text);
 
     }
     // 切换文章

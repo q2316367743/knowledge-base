@@ -1,8 +1,9 @@
 import {TreeNodeData} from "@arco-design/web-vue";
 import {h} from "vue";
-import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
+import {IconBook, IconCode, IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
-import {pathJoin} from "@/utils/BrowserUtil";
+import {pathJoin} from "@/utils/FileUtil";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
 /**
  * 基础列表树
@@ -84,7 +85,15 @@ export function treeEach(
                 key: article.id,
                 title: article.name,
                 isLeaf: true,
-                icon: () => h(IconFile, {}),
+                icon: () => {
+                    if (article.type === ArticleTypeEnum.CODE) {
+                        return h(IconCode, {})
+                    }else if (article.type === ArticleTypeEnum.RICH_TEXT) {
+                        return h(IconBook, {})
+                    }else {
+                        return h(IconFile, {})
+                    }
+                },
             })).forEach(article => {
                 if (!temp.children) {
                     temp.children = [];

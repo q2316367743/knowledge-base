@@ -31,6 +31,7 @@
     "lodash-es": "^4.17.21",
     "mammoth": "^1.6.0",
     "markdown-it": "^13.0.1",
+    "monaco-editor": "^0.44.0",
     "pinia": "^2.0.34",
     "relation-graph": "^2.0.26",
     "tippy.js": "^6.3.7",

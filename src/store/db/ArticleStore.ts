@@ -118,12 +118,6 @@ export const useArticleStore = defineStore('article', {
                 await this.add(Object.assign(getDefaultArticleIndex(), article), getDefaultArticleBase(), "");
                 return Promise.resolve();
             }
-            // 校验
-            if (typeof article.name != 'undefined') {
-                if (article.name.trim() === '') {
-                    return Promise.reject("文章标题不能为空");
-                }
-            }
             // 新增索引
             this.value[index] = {
                 ...this.value[index],

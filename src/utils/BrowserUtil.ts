@@ -174,10 +174,6 @@ export function randomColor(str?: string): string {
     return colors[index]
 }
 
-export function pathJoin(...paths: string[]): string {
-    return paths.join("/")
-}
-
 export function arrayBufferToBase64(buffer: ArrayBuffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
@@ -186,15 +182,6 @@ export function arrayBufferToBase64(buffer: ArrayBuffer) {
         binary += String.fromCharCode(bytes[i]);
     }
     return window.btoa(binary);
-}
-
-export function parseFileName(fileName: string): string {
-    const indexOf = fileName.lastIndexOf(".");
-    if (indexOf > -1) {
-        return fileName.substring(0, indexOf);
-    }else {
-        return fileName;
-    }
 }
 export function base64toBlob(base64: string, type = 'application/octet-stream'): Blob {
     const bStr = atob(base64);

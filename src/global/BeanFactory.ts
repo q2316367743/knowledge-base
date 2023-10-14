@@ -14,7 +14,6 @@ import {utools} from "@/plugin/utools";
 window.utools = window.utools || utools;
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
-export const useImportEvent = useEventBus<string>('import');
 
 export async function initData(needAuth: boolean = true): Promise<void> {
     if (needAuth) {

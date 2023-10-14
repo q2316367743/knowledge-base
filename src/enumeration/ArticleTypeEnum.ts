@@ -8,7 +8,12 @@ enum ArticleTypeEnum {
     /**
      * 富文本
      */
-    RICH_TEXT = 2
+    RICH_TEXT = 2,
+
+    /**
+     * 代码笔记
+     */
+    CODE= 3
 
 }
 

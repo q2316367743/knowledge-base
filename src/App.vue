@@ -11,26 +11,25 @@
                 </a-layout-content>
             </a-layout>
         </a-spin>
-        <markdown-import/>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
         <update-check/>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref,} from "vue";
-import {statistics, useImportEvent} from "@/global/BeanFactory";
+import {statistics} from "@/global/BeanFactory";
 // 存储
 import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
-import MarkdownImport from '@/components/MarkdownImport/index.vue';
 import {ArticleIndex} from "@/entity/article";
 import MessageUtil from "@/utils/MessageUtil";
 import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";
+import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -111,7 +110,11 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     } else if (operate === 'function') {
         if (preload === 'import') {
             statistics.access("进入", "导入文章");
-            useImportEvent.emit(extra);
+            useGlobalStore().startLoading("开始导入")
+            htmlToArticle(extra)
+                .then(() => MessageUtil.success("导入成功"))
+                .catch(e => MessageUtil.error("导入失败",e))
+                .finally(() => useGlobalStore().closeLoading());
         } else if (preload === 'editor') {
             statistics.access("进入", "前往编辑器");
             router.push('/home');
