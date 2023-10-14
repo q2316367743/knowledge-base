@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <header class="header">
             <div class="left">
-                <a-button type="text" @click="switchCollapsed()" v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN">
+                <a-button type="text" @click="switchCollapsed()">
                     <template #icon>
                         <icon-menu/>
                     </template>
@@ -68,11 +68,11 @@
         <!-- 编辑区 -->
         <div class="ec-container">
             <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"
-                             v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN"/>
-            <editor-js v-model="content"
-                           v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT"/>
-            <monaco-editor v-model="content" :language="language"
-                           v-else-if="articleIndex.type === ArticleTypeEnum.CODE"/>
+                             v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN && editorVisible"/>
+            <editor-js v-model="content" :read-only="articleIndex.preview"
+                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
+            <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
+                           v-else-if="articleIndex.type === ArticleTypeEnum.CODE && editorVisible"/>
         </div>
         <he-base v-model="extraVisible"/>
     </div>
@@ -111,6 +111,7 @@ const saveLoading = ref(false);
 const articleIndex = ref(getDefaultArticleIndex());
 const mdEditor = ref<any | null>(null);
 const extraVisible = ref(false);
+const editorVisible = ref(false);
 
 const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
@@ -142,10 +143,17 @@ async function _init(articleId: number) {
     articleIndex.value = getDefaultArticleIndex(articleIndexWrap);
     title.value = articleIndexWrap.name;
     // 内容
-    const contentWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_CONTENT + id.value);
-    if (contentWrap) {
-        content.value = (contentWrap.value as ArticleSource).content;
-        contentRev = contentWrap._rev;
+    editorVisible.value = false;
+    try {
+        const contentWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_CONTENT + id.value);
+        if (contentWrap) {
+            content.value = (contentWrap.value as ArticleSource).content;
+            contentRev = contentWrap._rev;
+        }
+    } catch (e) {
+        MessageUtil.error("内容获取失败", e);
+    } finally {
+        editorVisible.value = true;
     }
 }
 

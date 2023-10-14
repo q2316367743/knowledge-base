@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { editorProps } from './MonacoEditorType'
+import {defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue'
+import {editorProps} from './MonacoEditorType'
 // @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 // @ts-ignore
@@ -21,7 +21,7 @@ export default defineComponent({
     name: 'monaco-editor',
     props: editorProps,
     emits: ['update:modelValue', 'change', 'editor-mounted'],
-    setup(props, { emit }) {
+    setup(props, {emit}) {
         self.MonacoEnvironment = {
             getWorker(_: string, label: string) {
                 if (label === 'json') {
@@ -57,6 +57,7 @@ export default defineComponent({
                 language: props.language,
                 theme: props.theme,
                 ...props.options,
+                readOnly: props.readOnly
             })
 
             // 监听值的变化
@@ -85,7 +86,7 @@ export default defineComponent({
             newValue => {
                 editor.updateOptions(newValue)
             },
-            { deep: true }
+            {deep: true}
         )
 
         watch(
@@ -95,6 +96,10 @@ export default defineComponent({
             }
         )
 
+        watch(() => props.readOnly, value => {
+            editor.updateOptions({readOnly: value});
+        })
+
         onBeforeUnmount(() => {
             editor.dispose()
         })
@@ -103,7 +108,7 @@ export default defineComponent({
             init()
         })
 
-        return { codeEditBox }
+        return {codeEditBox}
     },
 })
 </script>

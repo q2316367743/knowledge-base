@@ -2,33 +2,46 @@
     <div id="editor-js-editor"></div>
 </template>
 <script lang="ts" setup>
+import {onMounted, onUnmounted, PropType, watch} from "vue";
 import './index.less';
 import EditorJS from '@editorjs/editorjs';
-// @ts-ignore
+// 组件
 import Header from '@editorjs/header/dist/bundle.js';
-// @ts-ignore
 import List from '@editorjs/list/dist/bundle.js';
-// @ts-ignore
 import Table from '@editorjs/table/dist/table.js';
-import {onMounted, onUnmounted, PropType} from "vue";
+import Attaches from '@editorjs/attaches/dist/bundle.js';
+import CheckList from '@editorjs/checklist/dist/bundle.js';
+import Code from '@editorjs/code/dist/bundle.js';
+import Image from '@editorjs/image/dist/bundle.js';
+import InlineCode from '@editorjs/inline-code/dist/bundle.js';
+import Link from '@editorjs/link/dist/bundle.js';
+import LinkAutoComplete from '@editorjs/link-autocomplete/dist/link-autocomplete.js';
+import Marker from '@editorjs/marker/dist/bundle.js';
+import Quote from '@editorjs/quote/dist/bundle.js';
+import Raw from '@editorjs/raw/dist/bundle.js';
+import Underline from '@editorjs/underline/dist/bundle.js';
+import Warning from '@editorjs/warning/dist/bundle.js';
 
 const props = defineProps({
     modelValue: Object as PropType<any>,
+    readOnly: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
 });
 const emits = defineEmits(['update:modelValue']);
 
 let editor: EditorJS | null = null;
 
 onMounted(() => {
-    let data = props.modelValue;
-    if (editor) {
-        if (!data['version']) {
-            data = {
-                "time": new Date().getTime(),
-                "blocks": [],
-                "version": "2.29.0-rc.1"
-            };
-        }
+    let data = {
+        "time": new Date().getTime(),
+        "blocks": [],
+        "version": "2.29.0-rc.1"
+    };
+    if (typeof props.modelValue === 'object' && data['version']) {
+        data = props.modelValue;
     }
     editor = new EditorJS({
         holder: 'editor-js-editor',
@@ -41,13 +54,35 @@ onMounted(() => {
                 class: Header,
                 inlineToolbar: true
             },
-            list: {
-                class: List,
+            InlineCode: {
+                class: InlineCode,
                 inlineToolbar: true
             },
-            table: {
-                class: Table,
-            }
+            Link: {
+                class: Link,
+                inlineToolbar: true
+            },
+            LinkAutoComplete: {
+                class: LinkAutoComplete,
+                inlineToolbar: true
+            },
+            Marker: {
+                class: Marker,
+                inlineToolbar: true
+            },
+            Underline: {
+                class: Underline,
+                inlineToolbar: true
+            },
+            list: List,
+            checklist: CheckList,
+            Quote: Quote,
+            Warning: Warning,
+            table: Table,
+            Code: Code,
+            Raw: Raw,
+            Image: Image,
+            Attaches: Attaches,
         },
         data: data,
         /**
@@ -55,10 +90,18 @@ onMounted(() => {
          */
         onChange: (api) => {
             api.saver.save().then(data => emits('update:modelValue', data))
-        }
+        },
+        readOnly: props.readOnly
     });
 });
 
+watch(() => props.readOnly, value => {
+    if (editor) {
+        if (editor.readOnly.isEnabled !== value) {
+            editor.readOnly.toggle();
+        }
+    }
+})
 
 onUnmounted(() => {
     if (editor) {

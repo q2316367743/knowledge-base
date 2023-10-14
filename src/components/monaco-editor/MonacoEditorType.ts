@@ -35,6 +35,10 @@ export const editorProps = {
         type: String as PropType<string>,
         default: 'javascript',
     },
+    readOnly: {
+        type: Boolean,
+        default: false,
+    },
     theme: {
         type: String as PropType<Theme>,
         validator(value: string): boolean {

@@ -1,0 +1,15 @@
+declare module '@editorjs/header/dist/bundle.js';
+declare module '@editorjs/list/dist/bundle.js';
+declare module '@editorjs/table/dist/table.js';
+declare module '@editorjs/attaches/dist/bundle.js';
+declare module '@editorjs/checklist/dist/bundle.js';
+declare module '@editorjs/code/dist/bundle.js';
+declare module '@editorjs/inline-code/dist/bundle.js';
+declare module '@editorjs/link/dist/bundle.js';
+declare module '@editorjs/link-autocomplete/dist/link-autocomplete.js';
+declare module '@editorjs/marker/dist/bundle.js';
+declare module '@editorjs/quote/dist/bundle.js';
+declare module '@editorjs/raw/dist/bundle.js';
+declare module '@editorjs/image/dist/bundle.js';
+declare module '@editorjs/underline/dist/bundle.js';
+declare module '@editorjs/warning/dist/bundle.js';
