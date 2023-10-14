@@ -2,7 +2,7 @@
     <div id="editor-js-editor"></div>
 </template>
 <script lang="ts" setup>
-import {onMounted, onUnmounted, PropType, watch, watchEffect} from "vue";
+import {onMounted, onUnmounted, PropType, watch} from "vue";
 import './index.less';
 import EditorJS from '@editorjs/editorjs';
 // 组件
