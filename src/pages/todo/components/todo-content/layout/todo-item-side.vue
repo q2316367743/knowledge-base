@@ -146,12 +146,22 @@ function getHide(id: number) {
 
 watch(() => useTodoStore().id, () => getHide(useTodoStore().id), {immediate: true});
 
-watch(() => hideOfComplete.value, value => useTodoCategoryStore()
-    .update(useTodoStore().id, {hideOfComplete: value})
-    .catch(e => MessageUtil.error("更新隐藏已完成异常", e)));
-watch(() => hideOfAbandon.value, value => useTodoCategoryStore()
-    .update(useTodoStore().id, {hideOfAbandon: value})
-    .catch(e => MessageUtil.error("更新隐藏已放弃异常", e)));
+watch(() => hideOfComplete.value, value => {
+    if (useTodoStore().id === 0) {
+        return;
+    }
+    useTodoCategoryStore()
+        .update(useTodoStore().id, {hideOfComplete: value})
+        .catch(e => MessageUtil.error("更新隐藏已完成异常", e))
+});
+watch(() => hideOfAbandon.value, value => {
+    if (useTodoStore().id === 0) {
+        return;
+    }
+    useTodoCategoryStore()
+        .update(useTodoStore().id, {hideOfAbandon: value})
+        .catch(e => MessageUtil.error("更新隐藏已放弃异常", e))
+});
 
 const updateTop = (id: number, top: boolean) => useTodoStore().updateById(id, {top})
     .then(() => MessageUtil.success(top ? "已置顶" : "取消置顶"))

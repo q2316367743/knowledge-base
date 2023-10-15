@@ -3,7 +3,7 @@
         <a-typography-paragraph>
             <a-alert style="margin-bottom: 7px;" v-if="log.url">
                 点击
-                <a-link @click="open(log.url)">此处</a-link>
+                <a-link @click="open(log ? log.url : undefined)">此处</a-link>
                 查看更加详细的更新说明
             </a-alert>
         </a-typography-paragraph>

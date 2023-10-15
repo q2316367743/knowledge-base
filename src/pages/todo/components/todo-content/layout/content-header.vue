@@ -128,13 +128,18 @@ function submit() {
         .catch(e => MessageUtil.error("新增失败", e))
 }
 
-const setTodoListSort = (value: any) => useTodoCategoryStore()
-    .update(useTodoStore().id, {todoListSort: value})
-    .then(() => {
-        todoListSort.value = value;
-        useTodoListSortEvent.emit();
-    })
-    .catch(e => MessageUtil.error("更新待办列表排序异常", e));
+const setTodoListSort = (value: any) => {
+    if (useTodoStore().id === 0) {
+        return;
+    }
+    useTodoCategoryStore()
+        .update(useTodoStore().id, {todoListSort: value})
+        .then(() => {
+            todoListSort.value = value;
+            useTodoListSortEvent.emit();
+        })
+        .catch(e => MessageUtil.error("更新待办列表排序异常", e));
+}
 
 </script>
 <style scoped lang="less">
