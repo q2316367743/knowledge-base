@@ -10,7 +10,7 @@ export default {
     homepage: 'https://flowus.cn/esion/share/3f990895-e56a-4693-8e0f-5ab2998a1039',
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',
     online: 'https://blog.esion.xyz/apps/knowledge-base',
-    updateLog: 'https://blog.esion.xyz/index.php/2023/10/10/知识库1-2-0版本更新/',
+    updateLog: UpdateLog[0].url || '',
     statistics: "http://project-esion.nat300.top",
     feature: {
         ADD: 'function:add-article',

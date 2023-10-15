@@ -6,6 +6,16 @@
                     <template #header>
                         推荐
                     </template>
+                    <!-- 代码管家 -->
+                    <a-list-item action-layout="vertical">
+                        <template #extra>
+                            <a-link @click="toApp('代码管家')" style="margin-top: 40px;">立即使用</a-link>
+                        </template>
+                        <a-list-item-meta title="代码管家" description="代码管家包含了[模板解析DDL]【代码片段生成】
+                        [模板解析Jso][本地Mock管理]【代码笔记】【模板解析Exc】等功能，代码管家是通过编写代码模板，
+                        生成各种自定义代码文本，可实现重复代码快速生成，避免重复操作，自由度很高的代码生成器。">
+                        </a-list-item-meta>
+                    </a-list-item>
                     <!-- 听雨图编辑器 -->
                     <a-list-item action-layout="vertical">
                         <template #actions>
@@ -53,22 +63,6 @@
                             </template>
                         </a-list-item-meta>
                     </a-list-item>
-                    <!-- 数据导出 -->
-                    <a-list-item action-layout="vertical">
-                        <template #actions>
-                            <a-link target="_blank">Gitee仓库</a-link>
-                        </template>
-                        <template #extra>
-                            <a-link @click="toApp('数据导出')" style="margin-top: 40px;">立即使用</a-link>
-                        </template>
-                        <a-list-item-meta title="数据导出" description="数据库数据导出">
-                            <template #avatar>
-                                <a-avatar shape="square">
-                                    <img alt="es-client" src="@/assets/logo/data-export.png" />
-                                </a-avatar>
-                            </template>
-                        </a-list-item-meta>
-                    </a-list-item>
                     <!-- 阅读 -->
                     <a-list-item action-layout="vertical">
                         <template #actions>
@@ -95,7 +89,7 @@
                         <template #extra>
                             <a-link @click="toApp('听雨html转markdown')" style="margin-top: 40px;">立即使用</a-link>
                         </template>
-                        <a-list-item-meta title="听雨HTML转Markdown" description="Html转Markdown">
+                        <a-list-item-meta title="听雨HTML转Markdown" description="快速将Html转Markdown，可以实现网页文章转存知识库">
                             <template #avatar>
                                 <a-avatar shape="square">
                                     <img alt="es-client" src="@/assets/logo/rain-html-to-markdown.png" />

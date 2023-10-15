@@ -3,7 +3,8 @@ import {
     getDefaultTodoItemAttr,
     getDefaultTodoItemContent,
     getDefaultTodoItemIndex,
-    TodoItem, TodoItemAttr,
+    TodoItem,
+    TodoItemAttr,
     TodoItemContent,
     TodoItemIndex,
     TodoItemStatus
@@ -11,12 +12,10 @@ import {
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {
     getFromOneByAsync,
-    getItemByDefault,
     listByAsync,
     removeOneByAsync,
     saveListByAsync,
-    saveOneByAsync,
-    setItem
+    saveOneByAsync
 } from "@/utils/utools/DbStorageUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
@@ -24,7 +23,7 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {clone} from "xe-utils";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 
-function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
+export function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
     if (a.top) {
         return -1;
     }
@@ -59,8 +58,6 @@ export const useTodoStore = defineStore('todo', {
         collapsed: false,
         // 当前选择的待办项
         itemId: 0,
-        // 待办项列表排序规则
-        todoListSort: getItemByDefault<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, TodoListSortEnum.PRIORITY),
     }),
     getters: {
         title: state => {
@@ -74,9 +71,9 @@ export const useTodoStore = defineStore('todo', {
             return '请选择清单';
         },
         todoList: (state): Array<TodoItemIndex> => {
+            const category = useTodoCategoryStore().todoCategoryMap.get(state.id);
             return state.todoItems
-                .filter(e => e.status === TodoItemStatus.TODO)
-                .sort((a, b) => sortTodoIndex(a, b, state.todoListSort));
+                .filter(e => e.status === TodoItemStatus.TODO);
         },
         completeList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE).sort((a, b) => a.id - b.id);
@@ -110,10 +107,6 @@ export const useTodoStore = defineStore('todo', {
         },
         setItemId(itemId: number) {
             this.itemId = itemId;
-        },
-        setTodoListSort(todoListSort: TodoListSortEnum) {
-            this.todoListSort = todoListSort;
-            setItem<TodoListSortEnum>(LocalNameEnum.KEY_TODO_LIST_SORT, this.todoListSort);
         },
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);

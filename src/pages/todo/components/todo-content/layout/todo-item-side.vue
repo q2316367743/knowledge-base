@@ -104,28 +104,54 @@
 import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useWindowSize} from "@vueuse/core";
 import {computed, ref, watch} from "vue";
-import {useTodoStore} from "@/store/components/TodoStore";
+import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/MessageUtil";
 import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
+import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 
 
 const size = useWindowSize();
 
-const hideOfComplete = ref(getItemByDefault<boolean>(LocalNameEnum.KEY_TODO_LIST_HIDE_COMPLETE, false));
-const hideOfAbandon = ref(getItemByDefault<boolean>(LocalNameEnum.KEY_TODO_LIST_HIDE_ABANDON, false));
+const hideOfComplete = ref(false);
+const hideOfAbandon = ref(false);
 
 const itemId = computed(() => useTodoStore().itemId);
-const todoList = computed(() => useTodoStore().todoList);
+const todoList = computed(() => {
+    const category = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().id);
+    return useTodoStore().todoList
+        .sort((a, b) => sortTodoIndex(a, b,
+            category ? getDefaultTodoCategory(category).todoListSort : TodoListSortEnum.PRIORITY))
+});
 const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
 
 const max = computed(() => (size.width.value - 200) + 'px');
 
-watch(() => hideOfComplete.value, value => setItem<boolean>(LocalNameEnum.KEY_TODO_LIST_HIDE_COMPLETE, value));
+function getHide(id: number) {
+    if (id === 0) {
+        hideOfComplete.value = false;
+        hideOfAbandon.value = false;
+        return;
+    }
+    const category = useTodoCategoryStore().todoCategoryMap.get(id);
+    if (category) {
+        hideOfComplete.value = getDefaultTodoCategory(category).hideOfComplete;
+        hideOfAbandon.value = getDefaultTodoCategory(category).hideOfAbandon;
+    }
+}
+
+watch(() => useTodoStore().id, () => getHide(useTodoStore().id), {immediate: true});
+
+watch(() => hideOfComplete.value, value => useTodoCategoryStore()
+    .update(useTodoStore().id, {hideOfComplete: value})
+    .catch(e => MessageUtil.error("更新隐藏已完成异常", e)));
+watch(() => hideOfAbandon.value, value => useTodoCategoryStore()
+    .update(useTodoStore().id, {hideOfAbandon: value})
+    .catch(e => MessageUtil.error("更新隐藏已放弃异常", e)));
 
 const updateTop = (id: number, top: boolean) => useTodoStore().updateById(id, {top})
     .then(() => MessageUtil.success(top ? "已置顶" : "取消置顶"))

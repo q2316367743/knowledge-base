@@ -2,6 +2,7 @@ import {ListTree} from "@/entity/ListTree";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {h} from "vue";
 import {IconFolder, IconList} from "@arco-design/web-vue/es/icon";
+import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 
 /**
  * 待办分类
@@ -18,10 +19,25 @@ export interface TodoCategory extends ListTree {
      */
     updateTime: Date | string;
 
-
     /**
+     * 分类类型
      */
     type: TodoCategoryTypeEnum;
+
+    /**
+     * 隐藏已完成
+     */
+    hideOfComplete: boolean;
+
+    /**
+     * 隐藏已放弃
+     */
+    hideOfAbandon: boolean;
+
+    /**
+     * 待办排序
+     */
+    todoListSort: TodoListSortEnum;
 
 }
 
@@ -31,6 +47,21 @@ export enum TodoCategoryTypeEnum {
 
     TODO = 2
 
+}
+
+export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCategory {
+    const now = new Date();
+    return Object.assign<TodoCategory, Partial<TodoCategory>>({
+        id: now.getTime(),
+        createTime: now,
+        updateTime: now,
+        name: '',
+        pid: 0,
+        type: TodoCategoryTypeEnum.FOLDER,
+        hideOfAbandon: false,
+        hideOfComplete: false,
+        todoListSort: TodoListSortEnum.PRIORITY
+    }, source);
 }
 
 export type TodoCategoryRecord = Omit<TodoCategory, 'id' | 'createTime' | 'updateTime'>;

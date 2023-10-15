@@ -22,7 +22,8 @@ export default [
             content: '【文章】修改markdown编辑器引擎为cherry-markdown，支持的语法更多，编辑器更强大'
         }, {
             label: LogItemEnum.ADD,
-            content: '【文章】新增临时markdown编辑器，可以作为草稿使用，此编辑器内容自动保存'
+            content: '【文章】新增临时markdown编辑器，可以作为草稿使用，此编辑器内容自动保存。' +
+                '此编辑器可以作为发布到支持markdown博客平台的编辑器，不用担心编写的文章丢失。'
         }, {
             label: LogItemEnum.ADD,
             content: '【文章】新增富文本编辑器，新建文章时，可以选择富文本编辑器，此编辑器基于块编辑，功能十分的强大，' +
@@ -32,11 +33,7 @@ export default [
             content: '【文章】新增代码编辑器，使用VSCode同款编辑器Monaco Editor，支持常见语法高亮。可以记录代码片段'
         }, {
             label: LogItemEnum.ADD,
-            content: '【文章】新增临时编辑器，此编辑器为markdown编辑器，支持自动保存。' +
-                '此编辑器可以作为发布到支持markdown博客平台的编辑器，不用担心编写的文章丢失。'
-        }, {
-            label: LogItemEnum.ADD,
-            content: '【TODO】新增快速访问，可以将代办清单新增为关键字，快速访问待办清单'
+            content: '【TODO】新增快速访问，可以将待办清单新增为关键字，快速访问待办清单'
         }, {
             label: LogItemEnum.ADD,
             content: '【TODO】待办支持放弃并且支持填写放弃原因，新增分组：已放弃'
@@ -50,7 +47,8 @@ export default [
             label: LogItemEnum.UPDATE,
             content: '【TODO】优化待办项完成消息内容'
         }],
-        remark: "cherry-markdown具体语法可前往临时编辑器查看。功能十分强大。按ctrl+f可进行搜索，再次按ctrl+f可进行替换"
+        remark: "cherry-markdown具体语法可前往临时编辑器查看。功能十分强大。按ctrl+f可进行搜索，再次按ctrl+f可进行替换",
+        url: "https://blog.esion.xyz/index.php/2023/10/15/知识库-1-3-0版本更新/"
     },
     {
         version: '1.2.1',
@@ -90,7 +88,8 @@ export default [
         }, {
             label: LogItemEnum.UPDATE,
             content: '优化数据获取，在数据获取时增加全局加载框。'
-        }]
+        }],
+        url: 'https://blog.esion.xyz/index.php/2023/10/10/知识库1-2-0版本更新/'
     },
     {
         version: '1.1.0',

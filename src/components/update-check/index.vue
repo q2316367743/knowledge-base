@@ -1,6 +1,6 @@
 <template>
     <a-modal v-model:visible="visible" title="版本更新" mask-closable draggable lock-scroll
-             width="600px">
+             width="600px" ok-text="查看更详细更新内容">
         <a-alert style="margin-bottom: 7px">
             更加详细的更新说明，可以关注
             <a-link @click="toBlog()">作者博客</a-link>
@@ -41,6 +41,7 @@ import('@/global/BeanFactory').then(data => {
 })
 
 const toBlog = () => utools.shellOpenExternal(Constant.website)
+const toUpdateLog = () => utools.shellOpenExternal(Constant.updateLog)
 
 </script>
 <style scoped>

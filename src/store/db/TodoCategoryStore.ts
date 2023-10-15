@@ -41,14 +41,17 @@ export const useTodoCategoryStore = defineStore('todo-category', {
             });
             await this._sync();
         },
-        async rename(id: number, newName: string) {
+        rename(id: number, newName: string) {
+            return this.update(id, {name: newName});
+        },
+        async update(id: number, source: Partial<TodoCategory>) {
             const index = this.value.findIndex(v => v.id === id);
             if (index === -1) {
                 return Promise.reject("该分类不存在");
             }
             this.value[index] = {
                 ...this.value[index],
-                name: newName,
+                ...source,
                 updateTime: new Date()
             }
             await this._sync();

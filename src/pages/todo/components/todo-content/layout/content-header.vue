@@ -80,10 +80,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/MessageUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
+import {useTodoListSortEvent} from "@/global/BeanFactory";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
@@ -99,7 +102,20 @@ const placeholder = computed(() => {
 });
 
 const titleWrap = ref("");
-const todoListSort = computed<TodoListSortEnum>(() => useTodoStore().todoListSort)
+const todoListSort = ref<TodoListSortEnum>(TodoListSortEnum.PRIORITY);
+
+watch(() => useTodoStore().id, value => getTodoListSort(value), {immediate: true});
+
+function getTodoListSort(id: number) {
+    if (id === 0) {
+        todoListSort.value = TodoListSortEnum.PRIORITY;
+        return;
+    }
+    const category = useTodoCategoryStore().todoCategoryMap.get(id);
+    if (category) {
+        todoListSort.value = getDefaultTodoCategory(category).todoListSort;
+    }
+}
 
 const switchCollapsed = () => useTodoStore().switchCollapsed();
 
@@ -112,7 +128,13 @@ function submit() {
         .catch(e => MessageUtil.error("新增失败", e))
 }
 
-const setTodoListSort = (value: any) => useTodoStore().setTodoListSort(value);
+const setTodoListSort = (value: any) => useTodoCategoryStore()
+    .update(useTodoStore().id, {todoListSort: value})
+    .then(() => {
+        todoListSort.value = value;
+        useTodoListSortEvent.emit();
+    })
+    .catch(e => MessageUtil.error("更新待办列表排序异常", e));
 
 </script>
 <style scoped lang="less">

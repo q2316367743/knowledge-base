@@ -1,5 +1,10 @@
 <template>
     <div v-if="log">
+        <a-alert style="margin-bottom: 7px" v-if="log.url">
+            点击
+            <a-link @click="open(log.url)">此处</a-link>
+            查看更加详细的更新说明
+        </a-alert>
         <ol>
             <template v-for="item in log.items">
                 <li v-if="typeof item === 'string'">{{ item }}</li>
@@ -27,9 +32,15 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {Log, LogItemEnum} from "@/components/update-check/domain";
+import Constant from "@/global/Constant";
 
 export default defineComponent({
     name: 'update-item',
+    computed: {
+        Constant() {
+            return Constant
+        }
+    },
     props: {
         log: Object as PropType<Log>
     },

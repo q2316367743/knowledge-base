@@ -28,6 +28,11 @@ export interface Log {
      */
     remark: string;
 
+    /**
+     * 更新的链接
+     */
+    url?: string;
+
 }
 
 export interface LogItem {

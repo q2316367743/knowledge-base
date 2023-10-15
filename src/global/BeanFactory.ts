@@ -14,6 +14,7 @@ import {utools} from "@/plugin/utools";
 window.utools = window.utools || utools;
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
+export const useTodoListSortEvent= useEventBus<void>('todo-lost-sort')
 
 export async function initData(needAuth: boolean = true): Promise<void> {
     if (needAuth) {

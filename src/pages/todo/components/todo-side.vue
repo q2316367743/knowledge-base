@@ -12,7 +12,7 @@
         </header>
         <a-tree v-model:selected-keys="selectKeys" :data="treeNodeData" block-node
                 style="margin: 7px;width: calc(100% - 14px)" draggable :virtual-list-props="virtualListProps"
-                :allow-drop="checkAllowDrop" @drop="onDrop">
+                :allow-drop="checkAllowDrop" @drop="onDrop($event)">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -43,7 +43,7 @@
                         <a-doption v-if="nodeData.isLeaf" @click="switchFeature(nodeData.key)">
                             <template #icon>
                                 <icon-star-fill v-if="hasFeature(nodeData.key)"/>
-                                <icon-star v-else />
+                                <icon-star v-else/>
                             </template>
                             快速启动
                         </a-doption>
@@ -71,7 +71,7 @@
 import {computed, ref, watch} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {TodoCategoryRecord, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
+import {getDefaultTodoCategory, TodoCategoryRecord, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {useWindowSize} from "@vueuse/core";
@@ -119,7 +119,7 @@ const removeFeature = (id: number) => useTodoCategoryStore().removeFeature(id);
 function switchFeature(id: number) {
     if (hasFeature(id)) {
         removeFeature(id);
-    }else {
+    } else {
         addFeature(id);
     }
 }
@@ -127,11 +127,7 @@ function switchFeature(id: number) {
 function add(pid: number) {
     todoCategory.value = {
         visible: true,
-        record: {
-            name: '',
-            pid,
-            type: TodoCategoryTypeEnum.FOLDER
-        }
+        record: getDefaultTodoCategory({pid: pid})
     }
 }
 
