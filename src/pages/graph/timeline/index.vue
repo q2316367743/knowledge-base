@@ -16,11 +16,6 @@
                     <a-statistic title="分类" :value="categories.length" show-group-separator/>
                 </a-card>
             </a-col>
-            <a-col :span="6">
-                <a-card>
-                    <a-statistic title="标签" :value="articleTags.size" show-group-separator/>
-                </a-card>
-            </a-col>
         </a-row>
         <a-row :gutter="7" style="margin: 7px 4px;">
             <a-col :span="24">
@@ -46,7 +41,6 @@ interface CalenderNode {
 }
 
 const articles = useArticleStore().articles;
-const articleTags = useArticleStore().articleTags;
 const categories = useCategoryStore().categories;
 const zones = useZoneStore().zones;
 const isDark = computed(() => useGlobalStore().isDark);

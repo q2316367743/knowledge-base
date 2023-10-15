@@ -10,7 +10,6 @@
 import {onMounted, ref} from 'vue'
 import RelationGraph, {JsonLine, JsonNode, RGJsonData, RGOptions} from 'relation-graph/vue3'
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {ArticleIndex} from "@/entity/article";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useRouter} from "vue-router";
 import MessageUtil from "@/utils/MessageUtil";
@@ -37,13 +36,11 @@ const LINE = '#43a2f1';
 // 文章
 // 标签
 const articles = useArticleStore().articles;
-const tags = useArticleStore().articleTags;
 const categories = useCategoryStore().categories;
 const nodes = new Array<JsonNode>();
 const lines = new Array<JsonLine>();
 let notCategory = true;
 // 标签Map，标签=>id;
-const tagArticleMap = new Map<string, Array<ArticleIndex>>();
 nodes.push({id: '0', text: '知识库', color: '#165dff'});
 
 // 分类
@@ -60,27 +57,6 @@ for (let article of articles) {
         nodes.push({id: '1', text: "未分类", color: CATEGORY});
         lines.push({from: "0", to: '1', color: LINE});
         notCategory = false
-    }
-    for (let tag of article.tags) {
-        let temp = tagArticleMap.get(tag);
-        if (!temp) {
-            temp = new Array<ArticleIndex>();
-        }
-        temp.push(article)
-        tagArticleMap.set(tag, temp);
-    }
-}
-// 标签
-let index = 2;
-for (let tag of tags) {
-    index += 1;
-    nodes.push({id: index + '', text: tag, color: TAG});
-    // 插入关联
-    let articleList = tagArticleMap.get(tag);
-    if (articleList) {
-        for (let articleIndex of articleList) {
-            lines.push({from: articleIndex.id + '', to: index + '', color: LINE});
-        }
     }
 }
 

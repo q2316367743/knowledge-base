@@ -6,6 +6,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {ArticleBase, ArticleIndex, getDefaultArticleBase} from "@/entity/article";
+import {init} from "@/components/update-check/init";
 
 export default function updateCheck(toUpdate?: () => void) {
     useAuthStore().authDriver.get(LocalNameEnum.VERSION)
@@ -37,6 +38,7 @@ export default function updateCheck(toUpdate?: () => void) {
                     _id: LocalNameEnum.VERSION,
                     value: Constant.version
                 }).then(() => console.log("版本更新"));
+                init();
             }
         })
 }
@@ -112,5 +114,7 @@ async function _updateTo130FromUnder() {
     }
     // 更新
     await saveListByAsync<ArticleIndex>(LocalNameEnum.ARTICLE, results, res.rev);
+    // 初始化数据
+    init();
 }
 
