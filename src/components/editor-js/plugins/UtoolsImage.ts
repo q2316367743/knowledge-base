@@ -16,7 +16,6 @@ export class UtoolsImage {
     constructor(ops: BlockToolConstructorOptions<UtoolsImageData>) {
         this.data = ops.data;
         this.readonly = ops.readOnly;
-        console.log(this.readonly)
     }
 
     static get toolbox() {

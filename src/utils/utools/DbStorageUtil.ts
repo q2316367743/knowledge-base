@@ -70,8 +70,10 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
                 return await saveListByAsync(key, records, res ? res._rev : undefined);
             } else if (res.message === 'An object could not be cloned.') {
                 return await saveListByAsync(key, clone(records, true), rev);
+            } else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.") {
+                return await saveListByAsync(key, clone(records, true), rev);
             }
-            console.log(res)
+            console.error(res)
             return Promise.reject(res.message);
         }
     } catch (e: any) {
@@ -124,7 +126,10 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err
                 // 查询后更新
                 const res = await useAuthStore().authDriver.get(key);
                 return await saveOneByAsync(key, value, res ? res._rev : undefined);
+            } else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': #<Object> could not be cloned.") {
+                return await saveOneByAsync(key, clone(value, true), rev);
             }
+            console.error(res);
             if (err) {
                 err(new Error(res.message));
             } else {
@@ -136,7 +141,10 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err
         if (e.message === "An object could not be cloned.") {
             // 查询后更新
             return await saveOneByAsync(key, clone(value, true), rev);
+        } else if (e.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': #<Object> could not be cloned.") {
+            return await saveOneByAsync(key, clone(value, true), rev);
         } else {
+            console.error(e);
             return Promise.reject(e);
         }
     }

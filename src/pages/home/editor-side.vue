@@ -21,10 +21,10 @@
                             <template #icon>
                                 <icon-plus/>
                             </template>
-                            新增文章
+                            新增笔记
                             <template #content>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
                             </template>
                         </a-dsubmenu>
