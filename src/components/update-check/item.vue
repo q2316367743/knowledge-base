@@ -1,33 +1,37 @@
 <template>
-    <div v-if="log">
-        <a-alert style="margin-bottom: 7px" v-if="log.url">
-            点击
-            <a-link @click="open(log.url)">此处</a-link>
-            查看更加详细的更新说明
-        </a-alert>
-        <ol>
-            <template v-for="item in log.items">
-                <li v-if="typeof item === 'string'">{{ item }}</li>
-                <ol v-else-if="item instanceof Array">
-                    <li v-for="i in item">
-                        <span v-html="i"></span>
+    <a-typography v-if="log" class="log-item">
+        <a-typography-paragraph>
+            <a-alert style="margin-bottom: 7px;" v-if="log.url">
+                点击
+                <a-link @click="open(log.url)">此处</a-link>
+                查看更加详细的更新说明
+            </a-alert>
+        </a-typography-paragraph>
+        <a-typography-paragraph>
+            <ol>
+                <template v-for="item in log.items">
+                    <li v-if="typeof item === 'string'">{{ item }}</li>
+                    <ol v-else-if="item instanceof Array">
+                        <li v-for="i in item">
+                            <span v-html="i"></span>
+                        </li>
+                    </ol>
+                    <li v-else>
+                        <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">
+                            {{ renderTag(item.label).name }}
+                        </a-tag>
+                        <span style="margin-left:5px;">{{ item.content }}</span>
                     </li>
-                </ol>
-                <li v-else>
-                    <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">
-                        {{ renderTag(item.label).name }}
-                    </a-tag>
-                    <span style="margin-left:5px;">{{ item.content }}</span>
-                </li>
-            </template>
-        </ol>
+                </template>
+            </ol>
+        </a-typography-paragraph>
         <a-typography-paragraph v-if="log.remark">{{ log.remark }}</a-typography-paragraph>
-        <div v-if="log.doc">
+        <a-typography-paragraph v-if="log.doc">
             更多详细的更新信息与功能变化，请在
             <a-link target="_blank" @click="open(log?.doc)">此处</a-link>
             中查看
-        </div>
-    </div>
+        </a-typography-paragraph>
+    </a-typography>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
@@ -82,4 +86,10 @@ export default defineComponent({
     }
 });
 </script>
-<style scoped></style>
+<style lang="less">
+.log-item {
+    .arco-alert-body {
+        margin: 0;
+    }
+}
+</style>

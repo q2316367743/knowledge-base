@@ -138,6 +138,7 @@ const config: CherryConfig = {
                         }
                         return;
                     }
+                    console.log(href);
                     utools.shellOpenExternal(href);
                 }else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
                     const src = (aEle as HTMLImageElement).src;

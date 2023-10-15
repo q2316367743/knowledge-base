@@ -3,9 +3,7 @@
         <a-timeline style="margin-top: 10px;" label-position="relative">
             <a-timeline-item :label="log.time" placement="top" v-for="log in UpdateLog">
                 <a-card shadow="hover" :title="log.version">
-                    <div class="entry">
-                        <update-item :log="log"/>
-                    </div>
+                    <update-item :log="log"/>
                 </a-card>
             </a-timeline-item>
         </a-timeline>
@@ -14,7 +12,6 @@
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";
 import UpdateLog from "@/global/UpdateLog";
-
 </script>
 <style scoped>
 .more-update-log {
@@ -25,5 +22,6 @@ import UpdateLog from "@/global/UpdateLog";
     bottom: 0;
     overflow: auto;
     padding: 7px;
+    font-size: 16px;
 }
 </style>
