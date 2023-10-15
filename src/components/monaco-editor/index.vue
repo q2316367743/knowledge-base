@@ -16,6 +16,7 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import * as monaco from 'monaco-editor'
+import {useGlobalStore} from "@/store/GlobalStore";
 
 export default defineComponent({
     name: 'monaco-editor',
@@ -55,7 +56,7 @@ export default defineComponent({
             editor = monaco.editor.create(codeEditBox.value, {
                 value: props.modelValue,
                 language: props.language,
-                theme: props.theme,
+                theme: useGlobalStore().isDark ? 'vs-dark' : 'vs',
                 ...props.options,
                 readOnly: props.readOnly
             })
@@ -98,6 +99,10 @@ export default defineComponent({
 
         watch(() => props.readOnly, value => {
             editor.updateOptions({readOnly: value});
+        });
+
+        watch(() => useGlobalStore().isDark, value => {
+            editor.updateOptions({theme: value ? 'vs-dark' : 'vs'})
         })
 
         onBeforeUnmount(() => {
