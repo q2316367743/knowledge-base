@@ -192,7 +192,6 @@ export const useArticleStore = defineStore('article', {
             await this._sync();
             // 删除内容
             await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
-            await removeOneByAsync(LocalNameEnum.ARTICLE_PREVIEW + id, true);
             // 删除评论
             await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
             // TODO: 删除附件

@@ -14,11 +14,7 @@ enum LocalNameEnum {
 
     ARTICLE_CONTENT = '/article/content/',
 
-    ARTICLE_PREVIEW = '/article/preview/',
-
     ARTICLE_COMMENT = '/article/comment/',
-
-    ARTICLE_MARK = '/article/mark/',
 
     ARTICLE_ATTACHMENT = '/article/attachment/',
 
@@ -72,26 +68,6 @@ enum LocalNameEnum {
      * 上一次的文章ID
      */
     KEY_HOME_EDITOR_ID = '/key/home/editor/id',
-
-    /**
-     * 待办列表排序
-     */
-    KEY_TODO_LIST_SORT = '/key/todo/list/sort',
-
-    /**
-     * 待办列表隐藏完成项
-     */
-    KEY_TODO_LIST_HIDE_COMPLETE = '/key/todo/list/hide/complete',
-
-    /**
-     * 待办列表隐藏放弃项
-     */
-    KEY_TODO_LIST_HIDE_ABANDON = '/key/todo/list/hide/abandon',
-
-    /**
-     * 待办编辑器隐藏工具栏
-     */
-    KEY_TODO_EDITOR_HIDE_TOOLBAR = '/key/todo/editor/hide/toolbar'
 
 }
 

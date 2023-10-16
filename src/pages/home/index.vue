@@ -4,7 +4,8 @@
             <editor-side/>
         </template>
         <template #second>
-            <editor-content/>
+            <a-result title="请在左侧选择文章" status="404" v-if="id === 0"/>
+            <editor-content v-else/>
         </template>
     </a-split>
 </template>
@@ -21,6 +22,7 @@ const size = ref(useHomeEditorStore().width);
 const min = computed(() => useHomeEditorStore().collapsed ? "0px" : "270px");
 const max = computed(() => (windowSize.width.value - 350) + 'px');
 const disabled = computed(() => size.value === '0px');
+const id = computed(() => useHomeEditorStore().id)
 
 watch(() => size.value, value => useHomeEditorStore().setWidth(value));
 watch(() => useHomeEditorStore().width, value => {
