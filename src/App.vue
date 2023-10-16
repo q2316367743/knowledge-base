@@ -42,7 +42,6 @@ const preview = ref({
     src: ''
 })
 
-const isDark = computed(() => useGlobalStore().isDark);
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
 const codeTheme = computed(() => useBaseSettingStore().codeTheme);
