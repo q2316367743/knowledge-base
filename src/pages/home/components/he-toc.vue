@@ -10,6 +10,9 @@
             <a-descriptions-item label="字符数" v-if="props.length > -1">
                 {{ props.length }}
             </a-descriptions-item>
+            <a-descriptions-item label="行数" v-if="props.line > -1">
+                {{ props.line }}
+            </a-descriptions-item>
         </a-descriptions>
         <a-divider v-if="props.toc?.length > 0"/>
         <div v-for="item in props.toc" :key="item.id">
@@ -34,7 +37,11 @@ const props = defineProps({
     },
     length: {
         type: Number,
-        default: 0
+        default: -1
+    },
+    line: {
+        type: Number,
+        default: -1
     }
 });
 const emits = defineEmits(['hide']);

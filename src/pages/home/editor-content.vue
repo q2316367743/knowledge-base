@@ -20,7 +20,7 @@
                             </template>
                         </a-button>
                         <template #content>
-                            <he-toc :index="articleIndex" :toc="tocItems" :length="length"/>
+                            <he-toc :index="articleIndex" :toc="tocItems" :length="length" :line="line"/>
                         </template>
                     </a-trigger>
                     <a-button @click="setPreview()" :loadin="saveLoading">
@@ -128,17 +128,12 @@ const editorVisible = ref(false);
 
 // 目录数据
 const tocItems = ref(new Array<TocItem>());
+const length = ref(0);
+const line = ref(0);
 
 const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
 const language = computed(() => parseFileExtra(title.value));
-const length = computed(() => {
-    if (articleIndex.value.type !== ArticleTypeEnum.RICH_TEXT) {
-        return content.value.length;
-    } else {
-        return -1;
-    }
-})
 
 watch(() => id.value, value => init(value));
 
@@ -286,6 +281,13 @@ function renderToc(visible: boolean) {
             tocItems.value = mdEditor.value.getToc();
         } else {
             tocItems.value = [];
+        }
+        if (articleIndex.value.type !== ArticleTypeEnum.RICH_TEXT) {
+            length.value = content.value.length;
+            line.value = content.value.split('\n').length;
+        } else {
+            length.value = -1;
+            line.value = -1;
         }
     }
 }
