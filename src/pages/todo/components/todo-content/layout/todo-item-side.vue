@@ -97,27 +97,47 @@
                     {{ item.title }}
                 </p>
             </div>
+            <!-- 关联的文章 -->
+            <a-divider orientation="left" v-if="articleList.length > 0">
+                <span style="cursor: pointer;color: rgb(var(--arcoblue-6));"
+                      @click.stop="hideOfArticle = !hideOfArticle">
+                    <icon-right v-if="hideOfArticle"/>
+                    <icon-down v-else/>
+                    关联的文章
+                </span>
+            </a-divider>
+            <a-typography v-if="!hideOfArticle" style="padding: 0 7px;">
+                <a-typography-paragraph v-for="item in articleList" :key="item.id" @click.stop>
+                    <a-link @click="toArticle(item.id)">{{ item.name }}</a-link>
+                </a-typography-paragraph>
+            </a-typography>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useWindowSize} from "@vueuse/core";
 import {computed, ref, watch} from "vue";
-import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
-import MessageUtil from "@/utils/MessageUtil";
-import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
-import {useGlobalStore} from "@/store/GlobalStore";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {useRouter} from "vue-router";
+import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
+// 存储
+import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
+import {useGlobalStore} from "@/store/GlobalStore";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+// 工具类
+import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 
 
 const size = useWindowSize();
+const router = useRouter();
 
 const hideOfComplete = ref(false);
 const hideOfAbandon = ref(false);
+const hideOfArticle = ref(false);
 
 const itemId = computed(() => useTodoStore().itemId);
 const todoList = computed(() => {
@@ -128,6 +148,7 @@ const todoList = computed(() => {
 });
 const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
+const articleList = computed(() => useTodoStore().articleList);
 
 const max = computed(() => (size.width.value - 200) + 'px');
 
@@ -135,12 +156,14 @@ function getHide(id: number) {
     if (id === 0) {
         hideOfComplete.value = false;
         hideOfAbandon.value = false;
+        hideOfArticle.value = false;
         return;
     }
     const category = useTodoCategoryStore().todoCategoryMap.get(id);
     if (category) {
         hideOfComplete.value = getDefaultTodoCategory(category).hideOfComplete;
         hideOfAbandon.value = getDefaultTodoCategory(category).hideOfAbandon;
+        hideOfArticle.value = getDefaultTodoCategory(category).hideOfArticle;
     }
 }
 
@@ -161,6 +184,14 @@ watch(() => hideOfAbandon.value, value => {
     useTodoCategoryStore()
         .update(useTodoStore().id, {hideOfAbandon: value})
         .catch(e => MessageUtil.error("更新隐藏已放弃异常", e))
+});
+watch(() => hideOfArticle.value, value => {
+    if (useTodoStore().id === 0) {
+        return;
+    }
+    useTodoCategoryStore()
+        .update(useTodoStore().id, {hideOfArticle: value})
+        .catch(e => MessageUtil.error("更新隐藏文章异常", e))
 });
 
 const updateTop = (id: number, top: boolean) => useTodoStore().updateById(id, {top})
@@ -228,6 +259,11 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
     });
     const record = await useTodoStore().updateById(itemId, {status: TodoItemStatus.ABANDON}, {reason})
     return Promise.resolve(record);
+}
+
+function toArticle(id: number) {
+    useHomeEditorStore().setId(id);
+    router.push('/home')
 }
 
 </script>

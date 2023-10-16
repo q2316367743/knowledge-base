@@ -35,6 +35,11 @@ export interface TodoCategory extends ListTree {
     hideOfAbandon: boolean;
 
     /**
+     * 隐藏文章
+     */
+    hideOfArticle: boolean;
+
+    /**
      * 待办排序
      */
     todoListSort: TodoListSortEnum;
@@ -60,6 +65,7 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
         type: TodoCategoryTypeEnum.FOLDER,
         hideOfAbandon: false,
         hideOfComplete: false,
+        hideOfArticle: false,
         todoListSort: TodoListSortEnum.PRIORITY
     }, source);
 }

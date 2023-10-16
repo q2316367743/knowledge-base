@@ -4,7 +4,7 @@
             <editor-side/>
         </template>
         <template #second>
-            <a-result title="请在左侧选择文章" status="404" v-if="id === 0"/>
+            <a-result title="请在左侧选择文章" subtitle="点击加号创建文章" status="404" v-if="id === 0"/>
             <editor-content v-else/>
         </template>
     </a-split>

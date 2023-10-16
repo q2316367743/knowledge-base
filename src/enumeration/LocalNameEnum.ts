@@ -6,6 +6,9 @@ enum LocalNameEnum {
 
     FOLDER = '/local/folder',
 
+    /**
+     * 待办分类，此处保存了文件夹/清单
+     */
     LOCAL_TODO_CATEGORY = '/local/todo-category',
 
     ARTICLE = '/local/article',
@@ -35,17 +38,22 @@ enum LocalNameEnum {
     ZONE_COMMENT = '/zone/comment/',
 
     /**
-     * 待办分组索引
+     * 待办清单中待办项索引，内部保存了全部的待办项
      */
     TODO_CATEGORY = '/todo/category/',
 
     /**
-     * 待办项
+     * 待办分组关联文章，这个待办清单所关联的全部文章ID
+     */
+    TODO_ARTICLE = '/todo/article/',
+
+    /**
+     * 待办项的详细内容
      */
     TODO_ITEM = '/todo/item/',
 
     /**
-     * 待办项属性
+     * 待办项的属性
      */
     TODO_ATTR = '/todo/attr/',
 

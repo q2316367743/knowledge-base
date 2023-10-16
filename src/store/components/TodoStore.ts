@@ -22,6 +22,8 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {clone} from "xe-utils";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+import {ArticleIndex} from "@/entity/article";
+import {useArticleStore} from "@/store/db/ArticleStore";
 
 export function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
     if (a.top) {
@@ -53,6 +55,8 @@ export const useTodoStore = defineStore('todo', {
         id: 0,
         // 当前打开清单的所有待办项
         todoItems: new Array<TodoItemIndex>(),
+        todoArticles: new Array<number>(),
+        todoArticlesRev: undefined as string | undefined,
         rev: undefined as string | undefined,
         // 收起状态
         collapsed: false,
@@ -71,15 +75,27 @@ export const useTodoStore = defineStore('todo', {
             return '请选择清单';
         },
         todoList: (state): Array<TodoItemIndex> => {
-            const category = useTodoCategoryStore().todoCategoryMap.get(state.id);
-            return state.todoItems
-                .filter(e => e.status === TodoItemStatus.TODO);
+            return state.todoItems.filter(e => e.status === TodoItemStatus.TODO);
         },
         completeList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE).sort((a, b) => a.id - b.id);
         },
         abandonList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.ABANDON).sort((a, b) => a.id - b.id);
+        },
+        articleList: (state): Array<ArticleIndex> => {
+            if (state.todoArticles.length === 0) {
+                return new Array<ArticleIndex>();
+            }
+            const items = new Array<ArticleIndex>();
+            for (let todoArticle of state.todoArticles) {
+                const articleIndex = useArticleStore().articleMap.get(todoArticle);
+                if (articleIndex) {
+                    items.push(articleIndex);
+                }
+            }
+            return items
+
         }
     },
     actions: {
@@ -102,6 +118,13 @@ export const useTodoStore = defineStore('todo', {
                         this.rev = items.rev;
                     })
                     .catch(e => MessageUtil.error("获取待办项失败", e))
+                    .finally(() => useGlobalStore().closeLoading());
+                getFromOneByAsync<Array<number>>(LocalNameEnum.TODO_ARTICLE + id, new Array<number>())
+                    .then(articles => {
+                        this.todoArticles = articles.record;
+                        this.todoArticlesRev = articles.rev;
+                    })
+                    .catch(e => MessageUtil.error("获取待办关联文章失败", e))
                     .finally(() => useGlobalStore().closeLoading());
             }
         },
@@ -205,6 +228,16 @@ export const useTodoStore = defineStore('todo', {
             if (this.itemId === id) {
                 this.itemId = 0;
             }
+        },
+        async associationArticle(ids: Array<number>) {
+            this.todoArticles = ids;
+            if (this.id === 0) {
+                return;
+            }
+            this.todoArticlesRev = await saveOneByAsync<Array<number>>(
+                LocalNameEnum.TODO_ARTICLE + this.id,
+                this.todoArticles,
+                this.todoArticlesRev);
         }
     }
 })

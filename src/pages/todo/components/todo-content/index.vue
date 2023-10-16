@@ -9,12 +9,14 @@
             </div>
         </template>
     </a-split>
+    <todo-item-article />
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import TodoItemContent from "@/pages/todo/components/todo-content/layout/todo-item-content.vue";
 import TodoItemSide from "@/pages/todo/components/todo-content/layout/todo-item-side.vue";
+import TodoItemArticle from "@/pages/todo/components/todo-content/layout/todo-item-article.vue";
 
 const size = useWindowSize();
 

@@ -52,24 +52,18 @@
                         </a-doption>
                     </template>
                 </a-dropdown>
-                <a-dropdown position="br" disabled>
+                <a-dropdown position="br">
                     <a-button>
                         <template #icon>
                             <icon-more-vertical/>
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption>
+                        <a-doption @click="association()" :disabled="disabled">
                             <template #icon>
-                                <icon-export/>
+                                <icon-file/>
                             </template>
-                            导出
-                        </a-doption>
-                        <a-doption>
-                            <template #icon>
-                                <icon-list/>
-                            </template>
-                            切换样式
+                            关联文章
                         </a-doption>
                     </template>
                 </a-dropdown>
@@ -86,7 +80,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
-import {useTodoListSortEvent} from "@/global/BeanFactory";
+import {useTodoAddArticleEvent} from "@/global/BeanFactory";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
@@ -100,6 +94,7 @@ const placeholder = computed(() => {
         return '';
     }
 });
+const disabled = computed(() => useTodoStore().id === 0);
 
 const titleWrap = ref("");
 const todoListSort = ref<TodoListSortEnum>(TodoListSortEnum.PRIORITY);
@@ -136,9 +131,12 @@ const setTodoListSort = (value: any) => {
         .update(useTodoStore().id, {todoListSort: value})
         .then(() => {
             todoListSort.value = value;
-            useTodoListSortEvent.emit();
         })
         .catch(e => MessageUtil.error("更新待办列表排序异常", e));
+}
+
+function association() {
+    useTodoAddArticleEvent.emit();
 }
 
 </script>

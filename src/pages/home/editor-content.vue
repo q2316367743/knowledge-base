@@ -115,7 +115,6 @@ const editorVisible = ref(false);
 
 const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
-const isDark = computed(() => useGlobalStore().isDark);
 const language = computed(() => parseFileExtra(title.value));
 
 watch(() => id.value, value => init(value));
