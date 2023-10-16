@@ -13,6 +13,16 @@
             </div>
             <a-button-group type="text">
                 <a-space>
+                    <a-trigger trigger="hover" position="br" @popup-visible-change="renderToc($event)">
+                        <a-button type="text">
+                            <template #icon>
+                                <icon-info-circle/>
+                            </template>
+                        </a-button>
+                        <template #content>
+                            <he-toc :index="articleIndex" :toc="tocItems" :length="length"/>
+                        </template>
+                    </a-trigger>
                     <a-button @click="setPreview()" :loadin="saveLoading">
                         <template #icon>
                             <icon-edit v-if="articleIndex.preview"/>
@@ -49,7 +59,8 @@
                                 </template>
                                 设置
                             </a-doption>
-                            <a-dsubmenu v-if="articleIndex.preview">
+                            <a-dsubmenu v-if="articleIndex.preview"
+                                        :disabled="articleIndex.type !== ArticleTypeEnum.MARKDOWN">
                                 <template #icon>
                                     <icon-export/>
                                 </template>
@@ -100,6 +111,8 @@ import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import HeToc from "@/pages/home/components/he-toc.vue";
+import {TocItem} from "@/components/markdown-editor/common/TocItem";
 
 
 const {ctrl, s} = useMagicKeys()
@@ -113,18 +126,28 @@ const mdEditor = ref<any | null>(null);
 const extraVisible = ref(false);
 const editorVisible = ref(false);
 
+// 目录数据
+const tocItems = ref(new Array<TocItem>());
+
 const id = computed(() => useHomeEditorStore().id);
 const width = computed(() => useGlobalStore().width);
 const language = computed(() => parseFileExtra(title.value));
+const length = computed(() => {
+    if (articleIndex.value.type !== ArticleTypeEnum.RICH_TEXT) {
+        return content.value.length;
+    } else {
+        return -1;
+    }
+})
 
 watch(() => id.value, value => init(value));
 
 init(id.value);
 
 function init(articleId: number) {
+    // 清空数据
+    clear()
     if (articleId === 0) {
-        // 清空数据
-        clear()
         return;
     }
     useGlobalStore().startLoading("正在获取文章内容");
@@ -253,6 +276,16 @@ function exportFile(type: 'pdf' | 'img' | 'md') {
     } else {
         if (mdEditor.value) {
             mdEditor.value.exportFile(type, title.value + (type === 'pdf' ? '.pdf' : '.png'));
+        }
+    }
+}
+
+function renderToc(visible: boolean) {
+    if (visible) {
+        if (mdEditor.value) {
+            tocItems.value = mdEditor.value.getToc();
+        } else {
+            tocItems.value = [];
         }
     }
 }

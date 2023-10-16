@@ -14,12 +14,13 @@ import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import MessageUtil from "@/utils/MessageUtil";
 import {RedirectPreload} from "@/plugin/utools";
 import {blobToBase64} from "@/utils/BrowserUtil";
+import {TocItem} from "@/components/markdown-editor/common/TocItem";
 
 const DEV_URL = "http://localhost:5173/#";
 
 const props = defineProps(editorProps);
 const emits = defineEmits(['update:modelValue']);
-defineExpose({exportFile})
+defineExpose({exportFile, getToc})
 
 const instance = shallowRef<Cherry>();
 const id = 'markdown-editor-' + new Date().getTime();
@@ -107,10 +108,12 @@ const config: CherryConfig = {
             emits('update:modelValue', value);
         },
         onClickPreview(event: PointerEvent) {
+            console.log(event)
             const aEle = event.target as HTMLElement;
             if (aEle) {
                 if (aEle.tagName === 'A') {
                     const href = (aEle as HTMLLinkElement).href;
+                    console.log(href);
                     if (href.startsWith(DEV_URL)) {
                         // hash定位
                         event.preventDefault();
@@ -138,7 +141,6 @@ const config: CherryConfig = {
                         }
                         return;
                     }
-                    console.log(href);
                     utools.shellOpenExternal(href);
                 }else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
                     const src = (aEle as HTMLImageElement).src;
@@ -187,13 +189,6 @@ onMounted(() => {
     instance.value = new Cherry(config);
 });
 
-watch(() => props.modelValue, value => {
-    if (instance.value) {
-        if (instance.value.getMarkdown() != value) {
-            instance.value.setValue(value || "");
-        }
-    }
-});
 watch(() => preview.value, value => handleToolbar(value));
 watch(() => size.width.value, value => {
     if (instance.value) {
@@ -249,6 +244,15 @@ function exportFile(type: string, fileName: string) {
     if (instance.value) {
         console.log(type, fileName)
         instance.value.export(type, fileName);
+    }
+}
+
+
+function getToc(): Array<TocItem> {
+    if (instance.value) {
+        return instance.value.getToc();
+    }else {
+        return [];
     }
 }
 

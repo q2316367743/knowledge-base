@@ -1,6 +1,6 @@
 <template>
     <div class="editor">
-        <markdown-editor v-model="content" default-model="edit&preview"/>
+        <markdown-editor v-model="content" default-model="edit&preview" :preview="false"/>
     </div>
 </template>
 <script lang="ts" setup>

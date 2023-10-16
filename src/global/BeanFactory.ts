@@ -16,6 +16,7 @@ export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
 export const useTodoAddArticleEvent = useEventBus<void>('todo-add-article');
 
+
 export async function initData(needAuth: boolean = true): Promise<void> {
     if (needAuth) {
         // 先进行认证驱动
