@@ -309,6 +309,12 @@ function toArticle(id: number) {
             .gray {
                 color: var(--color-neutral-6);
             }
+
+            .title {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
     }
 }
