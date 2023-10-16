@@ -15,6 +15,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {RedirectPreload} from "@/plugin/utools";
 import {blobToBase64} from "@/utils/BrowserUtil";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
+import {usePanGu} from "@/components/markdown-editor/plugins/PanGuMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -97,10 +98,11 @@ const config: CherryConfig = {
             'ScreenShotMenu'
         ],
         toolbarRight: ['fullScreen', '|'],
-        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'size', 'color'], // array or false
+        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'PanGu'], // array or false
         sidebar: ['theme', 'settings',],
         customMenu: {
             ScreenShotMenu: useScreenShotMenu(instance),
+            PanGu: usePanGu(instance)
         },
     },
     callback: {
