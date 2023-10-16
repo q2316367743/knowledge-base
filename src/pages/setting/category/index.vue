@@ -34,15 +34,16 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
 import { useCategoryStore} from "@/store/db/CategoryStore";
-import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {statistics} from "@/global/BeanFactory";
 import {TreeNodeData} from "@arco-design/web-vue";
+import {useWindowSize} from "@vueuse/core";
 
+const size = useWindowSize();
 
 const keyword = ref('');
 const categoryTree = computed<Array<TreeNodeData>>(() => useCategoryStore().categoryTree);
-const height = computed(() => useGlobalStore().size.height - 40 - 7);
+const height = computed(() => size.height.value - 40 - 7);
 
 
 function add(pid: number) {

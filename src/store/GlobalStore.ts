@@ -1,23 +1,15 @@
-import {useWindowSize} from "@vueuse/core";
 import {defineStore} from "pinia";
 
 export const useGlobalStore = defineStore('global', {
     state: () => ({
         isDark: utools.isDarkColors(),
-        size: useWindowSize(),
         loading: false,
         loadingText: '',
-        admin: Object.assign({
-            avatar: null,
-            nickname: "未知用户",
-            type: '1'
-        }, utools.getUser())
     }),
-    getters: {
-        height: state => state.size.height,
-        width: state => state.size.width,
-    },
     actions: {
+        /**
+         * 初始化主题、重置主题
+         */
         initDarkColors() {
             this.isDark = utools.isDarkColors();
             if (this.isDark) {
@@ -28,6 +20,9 @@ export const useGlobalStore = defineStore('global', {
                 document.body.removeAttribute('arco-theme');
             }
         },
+        /**
+         * 切换主题
+         */
         switchDarkColors() {
             this.isDark = !this.isDark;
             if (this.isDark) {
