@@ -102,7 +102,7 @@ const config: CherryConfig = {
         sidebar: ['theme', 'settings',],
         customMenu: {
             ScreenShotMenu: useScreenShotMenu(instance),
-            PanGu: usePanGu(instance)
+            PanGu: usePanGu()
         },
     },
     callback: {
@@ -110,7 +110,6 @@ const config: CherryConfig = {
             emits('update:modelValue', value);
         },
         onClickPreview(event: PointerEvent) {
-            console.log(event)
             const aEle = event.target as HTMLElement;
             if (aEle) {
                 if (aEle.tagName === 'A') {
