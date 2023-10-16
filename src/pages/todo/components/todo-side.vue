@@ -169,9 +169,19 @@ function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 
 function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
     if (typeof data.dragNode.key !== 'undefined' &&
         typeof data.dropNode.key !== 'undefined') {
-        useTodoCategoryStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-            .then(() => MessageUtil.success("移动成功"))
-            .catch(e => MessageUtil.error("移动失败", e));
+        if (data.dropPosition === 0) {
+            useTodoCategoryStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+                .then(() => MessageUtil.success("移动成功"))
+                .catch(e => MessageUtil.error("移动失败", e));
+        }else {
+            const target = useTodoCategoryStore().todoCategoryMap.get(data.dropNode.key as number);
+            if (!target) {
+                return;
+            }
+            useTodoCategoryStore().drop(data.dragNode.key as number, target.pid)
+                .then(() => MessageUtil.success("移动成功"))
+                .catch(e => MessageUtil.error("移动失败", e));
+        }
     }
 }
 

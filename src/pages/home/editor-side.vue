@@ -204,7 +204,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
                     .then(() => MessageUtil.success("移动成功"))
                     .catch(e => MessageUtil.error("移动失败", e));
             }
-        }else {
+        } else {
             // 上或者下
             const target = useFolderStore().folderMap.get(data.dropNode.key as number);
             if (!target) {
@@ -215,7 +215,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
                 useArticleStore().drop(data.dragNode.key as number, target.pid)
                     .then(() => MessageUtil.success("移动成功"))
                     .catch(e => MessageUtil.error("移动失败", e));
-            }else {
+            } else {
                 useFolderStore().drop(data.dragNode.key as number, target.pid)
                     .then(() => MessageUtil.success("移动成功"))
                     .catch(e => MessageUtil.error("移动失败", e));
