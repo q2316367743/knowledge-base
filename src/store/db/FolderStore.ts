@@ -3,6 +3,7 @@ import {Folder} from "@/entity/folder";
 import {listToTree} from "@/entity/ListTree";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {map} from "@/utils/ArrayUtil";
 
 export const useFolderStore = defineStore('folder', {
     state: () => ({
@@ -11,7 +12,8 @@ export const useFolderStore = defineStore('folder', {
     }),
     getters: {
         folderTree: state => listToTree(state.folders, "全部文件夹"),
-        folderIds: state => state.folders.map(folder => folder.id)
+        folderIds: state => state.folders.map(folder => folder.id),
+        folderMap: state => map(state.folders, 'id')
     },
     actions: {
         async init() {
@@ -52,7 +54,19 @@ export const useFolderStore = defineStore('folder', {
                 updateTime: new Date()
             }
             await this._sync();
-
-        }
+        },
+        async drop(id: number, pid: number) {
+            const index = this.folders.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("文件夹未找到，请刷新后重试！");
+            }
+            this.folders[index] = {
+                ...this.folders[index],
+                pid: pid,
+                updateTime: new Date(),
+            }
+            // 同步
+            await this._sync();
+        },
     }
 })

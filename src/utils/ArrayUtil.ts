@@ -44,8 +44,9 @@ export function containsArray<T>(arr: T[], keywords: T[]): boolean {
 export function map<T, K, A extends keyof T>(arr: T[], attrName: A, merge?: (item1: T, item2: T) => T): Map<K, T> {
     let result = new Map<K, T>();
     for (let item of arr) {
+        const key = item[attrName] || 0;
         // @ts-ignore
-        if (result.has(item[attrName])) {
+        if (result.has(key)) {
             if (merge) {
                 // @ts-ignore
                 result.set(item[attrName], merge(result.get(item[attrName]), item));

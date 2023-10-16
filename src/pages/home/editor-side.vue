@@ -193,9 +193,34 @@ function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 
 function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
     if (typeof data.dragNode.key !== 'undefined' &&
         typeof data.dropNode.key !== 'undefined') {
-        useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-            .then(() => MessageUtil.success("移动成功"))
-            .catch(e => MessageUtil.error("移动失败", e));
+        if (data.dropPosition === 0) {
+            if (data.dragNode.isLeaf) {
+                // 文章
+                useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
+            }else {
+                useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
+            }
+        }else {
+            // 上或者下
+            const target = useFolderStore().folderMap.get(data.dropNode.key as number);
+            if (!target) {
+                return;
+            }
+            if (data.dragNode.isLeaf) {
+                // 文章
+                useArticleStore().drop(data.dragNode.key as number, target.pid)
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
+            }else {
+                useFolderStore().drop(data.dragNode.key as number, target.pid)
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
+            }
+        }
     }
 }
 

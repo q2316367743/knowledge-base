@@ -203,7 +203,7 @@ export const useArticleStore = defineStore('article', {
         async drop(id: number, pid: number) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
-                return Promise.reject("动态未找到，请刷新后重试！");
+                return Promise.reject("笔记未找到，请刷新后重试！");
             }
             this.value[index] = {
                 ...this.value[index],
