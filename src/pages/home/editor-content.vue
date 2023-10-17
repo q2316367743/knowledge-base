@@ -114,7 +114,6 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import HeToc from "@/pages/home/components/he-toc.vue";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 
-
 const {ctrl, s} = useMagicKeys()
 
 const title = ref('');
@@ -132,7 +131,6 @@ const length = ref(0);
 const line = ref(0);
 
 const id = computed(() => useHomeEditorStore().id);
-const width = computed(() => useGlobalStore().width);
 const language = computed(() => parseFileExtra(title.value));
 
 watch(() => id.value, value => init(value));

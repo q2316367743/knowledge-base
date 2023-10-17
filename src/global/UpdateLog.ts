@@ -2,6 +2,34 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.3.1',
+        sign: 131,
+        time: '2023-10-16',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【todo】待办可以关联文章'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】新增目录、字数统计、创建修改时间'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】markdown编辑器增加盘古之白插件，可以在中英文之间增加空格'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【编辑器】未选择文章不能编辑'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '【编辑器】修复文件夹无法移动，文件夹、文章无法移动到根目录'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '【todo】待办标题太长进行隐藏，显示省略号'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '【todo】修复待办文件夹、清单无法移动到根目录BUG'
+        }],
+        remark: "未来将逐步删除原先的默认主页功能，最终会全部删除，建议使用编辑器主页。"
+    },
+    {
         version: '1.3.0',
         sign: 130,
         time: '2023-10-16',

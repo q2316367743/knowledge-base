@@ -27,15 +27,16 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {useRouter} from "vue-router";
 import {useSearchEvent} from "@/global/BeanFactory";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {randomColor} from "@/utils/BrowserUtil";
+import {useWindowSize} from "@vueuse/core";
 
 const router = useRouter();
+const size = useWindowSize();
 
 const visible = ref(false);
 const keyword = ref('');
 const articles = computed(() => useArticleStore().articles);
-const height = computed(() => useGlobalStore().height / 2);
+const height = computed(() => size.height.value / 2);
 
 const {results} = useFuse(keyword, articles, {
     fuseOptions: {

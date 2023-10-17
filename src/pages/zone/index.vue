@@ -2,7 +2,7 @@
     <div class="zone">
         <!-- 容器 -->
         <div class="container">
-            <a-list :bordered="false" :max-height="size.height" :scrollbar="true"
+            <a-list :bordered="false" :max-height="size.height.value" :scrollbar="true"
                     @reach-bottom="render()">
                 <zone-item v-for="item in items" :zone="item" @remove="init()" :key="item.id" :id="'zone-' + item.id"/>
                 <template #scroll-loading>
@@ -16,59 +16,53 @@
         <a-back-top target-container=".zone .arco-scrollbar-container"/>
     </div>
 </template>
-<script lang="ts">
-import {mapState} from "pinia";
-import {defineComponent} from 'vue';
-import {useGlobalStore} from '@/store/GlobalStore';
+<script lang="ts" setup>
+import {ref} from 'vue';
 import {useZoneStore} from "@/store/db/ZoneStore";
 import ZoneAdd from "@/pages/zone/components/add.vue";
 import ZoneItem from "@/pages/zone/components/item.vue";
 import {ZoneIndex} from "@/entity/zone";
+import {useWindowSize} from "@vueuse/core";
 
-export default defineComponent({
-    name: 'zone',
-    components: {ZoneItem, ZoneAdd},
-    data: () => ({
-        items: new Array<ZoneIndex>(),
-        bottom: false,
-        lock: false,
-        num: 1,
-        pageSize: 5,
-    }),
-    computed: {
-        ...mapState(useGlobalStore, ['admin', 'size']),
-    },
-    methods: {
-        async render() {
-            if (this.bottom) {
-                return;
-            }
-            if (this.lock) {
-                return;
-            }
-            this.lock = true
-            const zones = await useZoneStore().page(this.num, this.pageSize);
-            if (zones.length === 0) {
-                this.bottom = true;
-                return;
-            }
-            if (zones.length < this.pageSize) {
-                this.bottom = true;
-            }
-            zones.forEach(zone => this.items.push(zone));
-            this.lock = false;
-            this.num += 1;
-        },
-        init() {
-            this.lock = false;
-            this.bottom = false;
-            this.items = [];
-            this.num = 1;
-            this.pageSize = 5;
-            this.render();
-        }
+const size = useWindowSize()
+
+const items = ref(new Array<ZoneIndex>());
+let bottom = false;
+let lock = false;
+let num = 1;
+let pageSize = 5;
+
+
+async function render() {
+    if (bottom) {
+        return;
     }
-});
+    if (lock) {
+        return;
+    }
+    lock = true
+    const zones = await useZoneStore().page(num, pageSize);
+    if (zones.length === 0) {
+        bottom = true;
+        return;
+    }
+    if (zones.length < pageSize) {
+        bottom = true;
+    }
+    zones.forEach(zone => items.value.push(zone));
+    lock = false;
+    num += 1;
+}
+
+function init() {
+    lock = false;
+    bottom = false;
+    items.value = [];
+    num = 1;
+    pageSize = 5;
+    render();
+}
+
 </script>
 <style lang="less">
 @import url(./index.less);
