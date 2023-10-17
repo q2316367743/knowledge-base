@@ -16,6 +16,7 @@ import {RedirectPreload} from "@/plugin/utools";
 import {blobToBase64} from "@/utils/BrowserUtil";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {usePanGu} from "@/components/markdown-editor/plugins/PanGuMenu";
+import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -73,14 +74,18 @@ const config: CherryConfig = {
         theme: useGlobalStore().isDark ? 'dark' : 'light',
         showToolbar: true,
         toolbar: [
+            'quote',
             'header',
-            'bold',
-            'italic',
             {
-                strikethrough: ['strikethrough', 'underline', 'sub', 'sup', 'ruby'],
+                YangShi: [
+                    'bold',
+                    'italic','strikethrough', 'underline', 'sub', 'sup', 'ruby'],
             },
-            'size',
-            'color',
+            {
+                ZiTi: [
+                    'size',
+                    'color']
+            },
             '|',
             {
                 checklist: ['ol', 'ul', 'checklist']
@@ -98,11 +103,14 @@ const config: CherryConfig = {
             'ScreenShotMenu'
         ],
         toolbarRight: ['fullScreen', '|'],
-        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'PanGu'], // array or false
+        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'], // array or false
         sidebar: ['theme', 'settings',],
         customMenu: {
             ScreenShotMenu: useScreenShotMenu(instance),
-            PanGu: usePanGu()
+            PanGu: usePanGu(),
+            FanYi: useFanYi(),
+            YangShi: Cherry.createMenuHook("样式", {}),
+            ZiTi: Cherry.createMenuHook("字体", {})
         },
     },
     callback: {
@@ -153,10 +161,6 @@ const config: CherryConfig = {
             console.log(event, src);
             return src;
         },
-        afterInit() {
-            handleToolbar(preview.value);
-            handleTheme()
-        }
     },
     fileUpload(file, callback) {
 
@@ -188,6 +192,8 @@ const preview = computed(() => {
 
 onMounted(() => {
     instance.value = new Cherry(config);
+    handleToolbar(preview.value);
+    handleTheme()
 });
 
 watch(() => preview.value, value => handleToolbar(value));
