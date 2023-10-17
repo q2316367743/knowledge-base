@@ -100,7 +100,7 @@ const config: CherryConfig = {
             },
             'graph',
             'export',
-            'ScreenShotMenu'
+            'ScreenShotMenu',
         ],
         toolbarRight: ['fullScreen', '|'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'], // array or false

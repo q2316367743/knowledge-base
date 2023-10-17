@@ -12,7 +12,9 @@ export const useScreenShotMenu = (editor: ShallowRef) => {
         name: '截图',
         onClick: function() {
             if (editor.value) {
+                utools.hideMainWindow()
                 utools.screenCapture(base64 => {
+                    utools.showMainWindow()
                     const blob = base64toBlob(base64.replace("data:image/png;base64,", ""));
                     useImageUpload(blob)
                         .then(id => editor.value.insert('\n![截屏](attachment:' + id + ')'))
