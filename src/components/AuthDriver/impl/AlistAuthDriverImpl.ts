@@ -4,21 +4,8 @@ import axios, {AxiosRequestConfig} from "axios";
 import {FileData, FileInfo, FileItem, Result} from "../domain/AlistDomain";
 import {FileListItem, PathIndex} from "@/components/AuthDriver/domain/FileListItem";
 import MessageUtil from "@/utils/MessageUtil";
+import {getRandomChar} from "@/utils/BrowserUtil";
 
-/**
- * 生成随机字符串
- * @param len 字符串长度
- * @return 字符串
- */
-function getRandomChar(len: number): string {
-    const x = "0123456789qwertyuioplkjhgfdsazxcvbnm"; // 需要什么字符这里添加
-    let tmp = "";
-    const timestamp = new Date().getTime();
-    for (let i = 0; i < len; i++) {
-        tmp += x.charAt(Math.ceil(Math.random() * 100000000) % x.length);
-    }
-    return timestamp + tmp;
-}
 
 let lock = false;
 let todo = false;
@@ -81,7 +68,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
     private sync() {
         if (lock) {
             todo = true;
-            return Promise.resolve();
+            return;
         }
         lock = true;
         this._sync()

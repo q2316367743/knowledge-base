@@ -9,6 +9,7 @@ import {initData} from "@/global/BeanFactory";
 import {AlistAuthDriverImpl} from "@/components/AuthDriver/impl/AlistAuthDriverImpl";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {utools} from '@/plugin/utools';
+import {FileAuthDriverImpl} from "@/components/AuthDriver/impl/FileAuthDriverImpl";
 
 /**
  * 获取认证驱动
@@ -22,7 +23,7 @@ async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
             break;
         case AuthType.LOCATION:
             // TODO: 本地
-            driver = new UtoolsAuthDriverImpl();
+            driver = new FileAuthDriverImpl(auth.host);
             break;
         case AuthType.UTOOLS:
             driver = new UtoolsAuthDriverImpl();
