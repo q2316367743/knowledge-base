@@ -89,6 +89,12 @@
         </a-sub-menu>
     </a-menu>
     <div class="app-exit">
+        <a-button type="text" @click="useGlobalStore().switchDarkColors" style="margin-bottom: 7px">
+            <template #icon>
+                <icon-moon v-if="isDark"/>
+                <icon-sun v-else/>
+            </template>
+        </a-button>
         <a-tooltip content="退出" position="tr">
             <a-button type="text" @click="toLogin()">
                 <template #icon>
@@ -100,13 +106,16 @@
 </template>
 <script lang="ts" setup>
 import IconTimeLine from "@/icon/IconTimeLine.vue";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const route = useRoute();
 const router = useRouter();
 
 const selectedKeys = ref(['/dashboard']);
+
+const isDark = computed(() => useGlobalStore().isDark);
 
 watch(() => selectedKeys.value, value => router.push(value[0]));
 watch(() => route.path, path => {

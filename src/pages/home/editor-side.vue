@@ -17,7 +17,7 @@
                         </template>
                     </a-button>
                     <template #content>
-                        <a-dsubmenu>
+                        <a-dsubmenu v-if="!nodeData.isLeaf">
                             <template #icon>
                                 <icon-plus/>
                             </template>

@@ -110,6 +110,9 @@ export const useTodoStore = defineStore('todo', {
             this.id = id;
             if (id === 0) {
                 this.todoItems = new Array<TodoItemIndex>();
+                this.todoArticles = new Array<number>();
+                this.todoArticlesRev = undefined;
+                this.itemId = 0
             } else {
                 useGlobalStore().startLoading("正在获取待办项");
                 listByAsync<TodoItemIndex>(LocalNameEnum.TODO_CATEGORY + id)
