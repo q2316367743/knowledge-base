@@ -56,6 +56,13 @@ function isWindows(): boolean {
 
 export const utools = {
     db: {
+        /**
+         * 获取附件
+         * @param docId 文档ID
+         */
+        getAttachment(docId: string): Uint8Array | null {
+            return null;
+        },
         promises: {
             /**
              * 创建/更新文档
@@ -124,16 +131,24 @@ export const utools = {
              * @param attachment 附件 buffer
              * @param type 附件类型，示例：image/png, text/plain
              */
-            postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
-                return Promise.reject("Web不支持保存附件")
+            async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
+                await set(docId, attachment);
+                return Promise.resolve({
+                    id: docId,
+                    rev: ''
+                });
             },
 
             /**
              * 获取附件
              * @param docId 文档ID
              */
-            getAttachment(docId: string): Promise<Uint8Array | null> {
-                return Promise.reject("Web不支持保存附件")
+            async getAttachment(docId: string): Promise<Uint8Array | null> {
+                const res = await get(docId);
+                if (!res) {
+                    return Promise.resolve(null);
+                }
+                return Promise.resolve(res);
             },
 
             /**
