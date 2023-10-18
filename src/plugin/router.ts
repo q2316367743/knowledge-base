@@ -64,6 +64,10 @@ const router = createRouter({
         path: "/more/recommend",
         component: () => import("@/pages/more/recommend/index.vue")
     }, {
+        name: "vip",
+        path: "/more/vip",
+        component: () => import("@/pages/more/vip/index.vue")
+    }, {
         name: "更新",
         path: "/more/update",
         component: () => import("@/pages/more/update-log/index.vue")

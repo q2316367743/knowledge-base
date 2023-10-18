@@ -8,14 +8,22 @@
                         <a-radio :value="AuthType.UTOOLS">utools</a-radio>
                         <a-radio :value="AuthType.ALIST">AList</a-radio>
                         <a-radio :value="AuthType.WEBDAV" disabled>WebDAV</a-radio>
-                        <a-radio :value="AuthType.LOCATION">本地文件夹</a-radio>
+                        <a-radio :value="AuthType.LOCATION" :disabled="useVipStore().isNotVip">本地文件夹</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="主机地址" v-if="host">
                     <a-input v-model="auth.host"/>
                 </a-form-item>
                 <a-form-item label="路径" v-if="path">
-                    <a-input v-model="auth.path"/>
+                    <a-input v-model="auth.path">
+                        <template #append>
+                            <a-button type="text" v-if="auth.type === AuthType.LOCATION" @click="choose()">
+                                <template #icon>
+                                    <icon-file />
+                                </template>
+                            </a-button>
+                        </template>
+                    </a-input>
                     <template #help>
                         请以/开头，不要以/结尾，如果在根目录，请置空。
                     </template>
@@ -39,6 +47,7 @@ import {AuthType} from "@/entity/auth";
 import {useAuthStore} from "@/store/components/AuthStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useRouter} from "vue-router";
+import {useVipStore} from "@/store/components/VipStore";
 
 const router = useRouter();
 
@@ -61,6 +70,17 @@ function login() {
             router.push('/home');
         })
         .catch(e => MessageUtil.error("设置存储失败", e));
+}
+
+function choose() {
+    const paths = utools.showOpenDialog({
+        title: "选择保存的文件夹",
+        properties: ['openDirectory', 'createDirectory'],
+        buttonLabel: '选择',
+    });
+    if (paths && paths[0]) {
+        auth.value.path = paths[0];
+    }
 }
 </script>
 <style lang="less">

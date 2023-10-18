@@ -23,7 +23,7 @@ async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
             break;
         case AuthType.LOCATION:
             // TODO: 本地
-            driver = new FileAuthDriverImpl(auth.host);
+            driver = new FileAuthDriverImpl(auth.path);
             break;
         case AuthType.UTOOLS:
             driver = new UtoolsAuthDriverImpl();

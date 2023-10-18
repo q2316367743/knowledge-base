@@ -1,5 +1,5 @@
-const { readFile, existsSync, writeFile, mkdirSync } = require('fs');
-const { join, dirname } = require('path');
+const fs = require('fs');
+const { join, dirname, sep } = require('path');
 
 /**
  * 读取一个文件
@@ -7,13 +7,13 @@ const { join, dirname } = require('path');
  * @param {string} path 文件路径
  * @return {Promise<string>} 文件内容
  */
-function readFileWrap(root, path) {
-    const render = join(root, path);
-    if (!existsSync(render)) {
+function readFileByText(root, path) {
+    const render = join(root, path.replaceAll('/', sep));
+    if (!fs.existsSync(render)) {
         return Promise.resolve('');
     }
     return new Promise((resolve, reject) => {
-        readFile(render, 'utf-8', (err, data) => {
+        fs.readFile(render, 'utf-8', (err, data) => {
             if (err) {
                 reject(err);
             } else {
@@ -27,29 +27,91 @@ function readFileWrap(root, path) {
  * 保存文件
  * @param {string} root 根目录
  * @param {string} path 文件路径
- * @param {string} data 文件内容
+ * @param {string | Uint8Array} data 文件内容
  * @returns {Promise<void>}
  */
 function saveFile(root, path, data) {
-    const render = join(root, path);
-    if (!existsSync(render)) {
-        mkdirSync(join(root, dirname(path)), {
+    const render = join(root, path.replaceAll('/', sep));
+    if (!fs.existsSync(render)) {
+        fs.mkdirSync(join(root, dirname(path.replaceAll('/', sep))), {
             recursive: true
         })
     }
     return new Promise((resolve, reject) => {
-        writeFile(render, data, 'utf-8', (err) => {
+        fs.writeFile(render, data, {
+            encoding: 'utf-8',
+            flag: 'w'
+        }, (err) => {
             if (err) {
                 reject(err);
                 return;
             }
-            resolve();;
+            resolve();
         })
     })
 
 }
 
+/**
+ * 删除文件
+ * @param {string} root 根目录
+ * @param {string} path 文件路径
+ * @returns {Promise<void>}
+ */
+function removeFile(root, path) {
+    const render = join(root, path.replaceAll('/', sep));
+    return new Promise((resolve, reject) => {
+        if (existsSync(render)) {
+            fs.unlink(render, e => {
+                if (e) {
+                    reject(e);
+                    return;
+                }
+                resolve();
+            });
+            return;
+        }
+        resolve();
+    })
+}
+
+/**
+ * 路径拼接
+ * @param {string} root 根目录
+ * @param {string} path 文件路径
+ * @returns 新路径
+ */
+function pathJoin(root, path) {
+    return join(root, path.replaceAll('/', sep));
+}
+
+
+
+/**
+ * 列表目录下全部的文件
+ * @param {string} root 根目录
+ * @param {string} path 目录
+ * @returns {Promise<string>} 全部的文件
+ */
+function listFile(root, path = '') {
+    const render = join(root, path.replaceAll('/', sep));
+    const items = [];
+    getFiles(render, (file) => items.push(file));
+    return Promise.resolve(items);
+}
+
+
+function getFiles(dirPath, callback) {
+    fs.readdirSync(dirPath).forEach(file => {
+        const fullPath = join(dirPath, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            getFiles(fullPath, callback);
+        } else {
+            callback(fullPath);
+        }
+    });
+}
+
 window.preload = {
-    readFile: readFileWrap,
-    saveTextFile: saveFile
+    readFileByText, saveFile, removeFile, pathJoin, listFile
 }
