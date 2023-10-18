@@ -8,7 +8,7 @@
                         <a-radio :value="AuthType.UTOOLS">utools</a-radio>
                         <a-radio :value="AuthType.ALIST">AList</a-radio>
                         <a-radio :value="AuthType.WEBDAV" disabled>WebDAV</a-radio>
-                        <a-radio :value="AuthType.LOCATION">本地文件夹</a-radio>
+                        <a-radio :value="AuthType.LOCATION" :disabled="useVipStore().isNotVip">本地文件夹</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="主机地址" v-if="host">
@@ -47,6 +47,7 @@ import {AuthType} from "@/entity/auth";
 import {useAuthStore} from "@/store/components/AuthStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useRouter} from "vue-router";
+import {useVipStore} from "@/store/components/VipStore";
 
 const router = useRouter();
 

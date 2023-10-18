@@ -74,6 +74,12 @@
                 </template>
                 推荐
             </a-menu-item>
+            <a-menu-item key="/more/vip">
+                <template #icon>
+                    <icon-fire />
+                </template>
+                高级版
+            </a-menu-item>
             <a-menu-item key="/more/update">
                 <template #icon>
                     <icon-time-line/>
