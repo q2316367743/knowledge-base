@@ -1,100 +1,28 @@
 import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
-import MessageUtil from "@/utils/MessageUtil";
-import {PathIndex} from "@/components/AuthDriver/domain/FileListItem";
 import {getRandomChar} from "@/utils/BrowserUtil";
-
-
-let lock = false;
-let todo = false;
-
-const INDEX_JSON: string = '/index.json';
 
 
 export class FileAuthDriverImpl implements AuthDriver {
 
     private readonly root: string;
-    private readonly pathMap: Map<string, string>;
 
     constructor(root: string) {
         this.root = root;
-        this.pathMap = new Map<string, string>();
     }
 
-    /**
-     * 同步索引文件
-     */
-    private sync(): void {
-        if (lock) {
-            todo = true;
-            return;
-        }
-        lock = true;
-        this._sync()
-            .then(() => {
-                lock = false;
-                if (todo) {
-                    this._sync().then(() => console.debug("存在待办"));
-                }
-            })
-            .catch(e => {
-                lock = false;
-                todo = false;
-                MessageUtil.error("同步远程服务器错误", e);
-            })
-
-    }
-
-    private async _sync() {
-        const indexes = new Array<PathIndex>();
-        Array.from(this.pathMap.keys()).forEach(key => {
-            const value = this.pathMap.get(key);
-            if (value) {
-                indexes.push({
-                    key,
-                    value
-                })
-            }
-        })
-        await window.preload.saveTextFile(this.root, INDEX_JSON, JSON.stringify(indexes));
-    }
-
-    async init(): Promise<void> {
-        // 读取索引文件
-        const index = await window.preload.readFile(this.root, '/index.json')
-        if (index) {
-            const items = JSON.parse(index);
-            for (let index of items) {
-                this.pathMap.set(index.key, index.value)
-            }
-        }
-        return Promise.resolve();
-    }
 
     allDocKeys(key?: string | undefined): Promise<string[]> {
-        let keys = Array.from(this.pathMap.keys());
-
-        // 基于key过滤
-        if (key) {
-            keys = keys.filter(item => item.startsWith(key));
-        }
-
-        return Promise.resolve(keys);
+        return window.preload.listFile(this.root, key)
     }
 
     async allDocs(key?: string): Promise<DbDoc[]> {
         const docs = new Array<DbDoc>();
 
-        let keys = Array.from(this.pathMap.keys());
-
-        // 基于key过滤
-        if (key) {
-            keys = keys.filter(item => item.startsWith(key));
-        }
 
         // 每一个文件获取内容
-        for (let item of keys) {
+        for (let path of await this.allDocKeys(key)) {
             try {
-                let doc = await this.get(item);
+                let doc = await this.get(path);
                 if (doc) {
                     docs.push(doc);
                 }
@@ -108,12 +36,8 @@ export class FileAuthDriverImpl implements AuthDriver {
     }
 
     async get(id: string): Promise<DbDoc | null> {
-        const path = this.pathMap.get(id);
-        if (!path) {
-            return Promise.resolve(null);
-        }
 
-        const content = await window.preload.readFile(this.root, path);
+        const content = await window.preload.readFileByText(this.root, id + '.json');
 
         if (!content) {
             return Promise.resolve(null);
@@ -123,26 +47,17 @@ export class FileAuthDriverImpl implements AuthDriver {
     }
 
     getAttachment(docId: string): Promise<string> {
-
         // 路径渲染
-        const path = this.pathMap.get(docId);
-        if (!path) {
-            return Promise.resolve("./logo.png");
-        }
-        return Promise.resolve(window.preload.pathJoin(this.root, path));
+        return Promise.resolve(window.preload.pathJoin(this.root, docId + '.png'));
     }
 
     async postAttachment(docId: string, attachment: Blob): Promise<DbReturn> {
 
         // 处理文件路径
-        const fileName = `/${new Date().getTime()}.png`;
-
-        // 再新增索引
-        this.pathMap.set(docId, fileName);
-        this.sync();
+        const fileName = docId + '.png';
 
         const buffer = await attachment.arrayBuffer();
-        await window.preload.saveBinaryFile(this.root, fileName, new Uint8Array(buffer));
+        await window.preload.saveFile(this.root, fileName, new Uint8Array(buffer));
 
         return Promise.resolve({
             id: docId,
@@ -155,6 +70,7 @@ export class FileAuthDriverImpl implements AuthDriver {
 
         // 处理内容
         let rev = getRandomChar(16);
+
         if (doc._rev) {
             const split = doc._rev.split("-");
             const version = parseInt(split[0]);
@@ -169,11 +85,9 @@ export class FileAuthDriverImpl implements AuthDriver {
 
 
         // 处理文件路径
-        let fileName = `/${doc._id.replaceAll("/", ">")}.json`;
+        let fileName = doc._id + '.json';
 
-        await window.preload.saveTextFile(this.root, fileName, JSON.stringify(item));
-
-        this.sync();
+        await window.preload.saveFile(this.root, fileName, JSON.stringify(item));
 
         return Promise.resolve({
             id: doc._id,
@@ -186,22 +100,9 @@ export class FileAuthDriverImpl implements AuthDriver {
     async remove(doc: string | DbDoc): Promise<DbReturn> {
 
         const _id = typeof doc === 'string' ? doc : doc._id;
-        // 先删除索引
-        const id = this.pathMap.get(_id);
-        if (!id) {
-            return Promise.resolve({
-                id: _id,
-                error: true,
-                ok: false,
-                message: "文件不存在"
-            });
-        }
-        this.pathMap.delete(_id);
-        // 同步
-        this.sync();
 
         // 删除
-        await window.preload.removeFile(this.root, id);
+        await window.preload.removeFile(this.root, _id + '.json');
 
         return Promise.resolve({
             id: _id,
@@ -209,6 +110,10 @@ export class FileAuthDriverImpl implements AuthDriver {
             ok: true,
         })
 
+    }
+
+    init(): Promise<void> {
+        return Promise.resolve();
     }
 
 }

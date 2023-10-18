@@ -143,6 +143,13 @@ export const utools = {
             getAttachmentType(docId: string): Promise<string | null> {
                 return Promise.reject("Web不支持保存附件")
             },
+        },
+        /**
+         * 获取附件
+         * @param docId 文档ID
+         */
+        getAttachment(docId: string): Uint8Array | null {
+            return null;
         }
     },
     dbStorage: {
