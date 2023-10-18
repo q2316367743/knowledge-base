@@ -52,7 +52,7 @@ export function loadImageBySync(id: string): string {
     const data = utools.db.getAttachment(LocalNameEnum.ARTICLE_ATTACHMENT + id);
     if (!data) {
         console.error(`资源【${id}】加载失败`)
-        return ""
+        return 'file:////'+window.preload.pathJoin(useAuthStore().auth.path, '/article/attachment/' + id + '.png')
     }
     const blob = new Blob([data]);
     return window.URL.createObjectURL(blob);
