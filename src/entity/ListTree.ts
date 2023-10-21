@@ -68,7 +68,6 @@ export function treeEach(
             title: item.title,
             children: [],
             icon: () => h(IconFolder, {}),
-            checkable: false
         }
 
         if (map) {
@@ -94,9 +93,14 @@ export function treeEach(
                     }else {
                         return h(IconFile, {})
                     }
-                },
-                checkable: true
-            })).forEach(article => {
+                }
+            } as TreeNodeData)).forEach(article => {
+
+                if (map) {
+                    article = map(article);
+                }
+
+
                 if (!temp.children) {
                     temp.children = [];
                 }

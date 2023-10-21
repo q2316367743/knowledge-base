@@ -1,8 +1,9 @@
 import Cherry from "cherry-markdown";
 import {base64toBlob} from "@/utils/BrowserUtil";
-import {useImageUpload} from "@/components/markdown-editor/common";
+import {useImageUpload} from "@/plugin/image";
 import MessageUtil from "@/utils/MessageUtil";
 import {ShallowRef} from "vue";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 /**
  * 截屏菜单
@@ -16,9 +17,11 @@ export const useScreenShotMenu = (editor: ShallowRef) => {
                 utools.screenCapture(base64 => {
                     utools.showMainWindow()
                     const blob = base64toBlob(base64.replace("data:image/png;base64,", ""));
+                    useGlobalStore().startLoading("开始文件上传");
                     useImageUpload(blob)
-                        .then(id => editor.value.insert('\n![截屏](attachment:' + id + ')'))
+                        .then(url => editor.value.insert('\n![截屏](' + url + ')'))
                         .catch(e => MessageUtil.error("截图失败", e))
+                        .finally(() => useGlobalStore().closeLoading())
                 })
             }
             return ''

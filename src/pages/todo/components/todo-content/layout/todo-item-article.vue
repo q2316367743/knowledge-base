@@ -31,7 +31,12 @@ const folderTree = computed(() => useFolderStore().folderTree);
 const folderMap = computed(() => useArticleStore().folderMap);
 const treeData = computed<Array<TreeNodeData>>(() => {
     let treeData = new Array<TreeNodeData>();
-    treeEach(folderTree.value, treeData, folderMap.value);
+    treeEach(folderTree.value, treeData, folderMap.value, e => {
+        return {
+            ...e,
+            checkable: e.isLeaf === true
+        }
+    });
     treeData = treeData.length === 0 ? [] : (treeData[0].children || []);
     // 文件夹被删除或没有的
     const articleFolders = new Set(Array.from(folderMap.value.keys()));
