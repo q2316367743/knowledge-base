@@ -2,7 +2,17 @@
     <div class="list">
         <content-header/>
         <div class="list-container" @click="setItemId(0)">
-            <div v-for="item in todoList" class="todo-layout-list-item" :class="itemId === item.id ? 'active' : ''"
+            <!-- 待办 -->
+            <a-divider orientation="left" v-if="todoList.length > 0">
+                <span style="cursor: pointer;color: var(--color-text-1);"
+                      @click.stop="hideOfTodo = !hideOfTodo">
+                    <icon-right v-if="hideOfTodo"/>
+                    <icon-down v-else/>
+                    待办
+                </span>
+            </a-divider>
+            <div v-if="!hideOfTodo" v-for="item in todoList" class="todo-layout-list-item"
+                 :class="itemId === item.id ? 'active' : ''"
                  :key="item.id" @click.stop>
                 <a-checkbox :default-checked="false" @change="updateStatus(item.id, TodoItemStatus.COMPLETE)">
                 </a-checkbox>
@@ -135,6 +145,7 @@ import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 const size = useWindowSize();
 const router = useRouter();
 
+const hideOfTodo = ref(false);
 const hideOfComplete = ref(false);
 const hideOfAbandon = ref(false);
 const hideOfArticle = ref(false);
@@ -161,6 +172,7 @@ function getHide(id: number) {
     }
     const category = useTodoCategoryStore().todoCategoryMap.get(id);
     if (category) {
+        hideOfTodo.value = getDefaultTodoCategory(category).hideOfTodo;
         hideOfComplete.value = getDefaultTodoCategory(category).hideOfComplete;
         hideOfAbandon.value = getDefaultTodoCategory(category).hideOfAbandon;
         hideOfArticle.value = getDefaultTodoCategory(category).hideOfArticle;
@@ -169,6 +181,14 @@ function getHide(id: number) {
 
 watch(() => useTodoStore().id, () => getHide(useTodoStore().id), {immediate: true});
 
+watch(() => hideOfTodo.value, value => {
+    if (useTodoStore().id === 0) {
+        return;
+    }
+    useTodoCategoryStore()
+        .update(useTodoStore().id, {hideOfTodo: value})
+        .catch(e => MessageUtil.error("更新隐藏待办异常", e))
+});
 watch(() => hideOfComplete.value, value => {
     if (useTodoStore().id === 0) {
         return;

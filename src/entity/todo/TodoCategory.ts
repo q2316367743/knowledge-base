@@ -25,6 +25,11 @@ export interface TodoCategory extends ListTree {
     type: TodoCategoryTypeEnum;
 
     /**
+     * 隐藏待办
+     */
+    hideOfTodo: boolean;
+
+    /**
      * 隐藏已完成
      */
     hideOfComplete: boolean;
@@ -63,6 +68,7 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
         name: '',
         pid: 0,
         type: TodoCategoryTypeEnum.FOLDER,
+        hideOfTodo: false,
         hideOfAbandon: false,
         hideOfComplete: false,
         hideOfArticle: false,

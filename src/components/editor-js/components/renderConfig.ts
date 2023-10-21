@@ -13,8 +13,6 @@ import Warning from "@editorjs/warning/dist/bundle.js";
 import Table from "@editorjs/table/dist/table.js";
 import Code from "@editorjs/code/dist/bundle.js";
 import Raw from "@editorjs/raw/dist/bundle.js";
-import Image from "@editorjs/image/dist/bundle.js";
-import Attaches from "@editorjs/attaches/dist/bundle.js";
 // 自定义组件
 import {UtoolsImage} from "@/components/editor-js/plugins/UtoolsImage";
 import {BilibiliVideo} from "@/components/editor-js/plugins/BiliBiliVideo";
@@ -67,9 +65,7 @@ export function renderConfig(modelValue: any, readOnly: boolean, emits: (event: 
             Code: Code,
             Raw: Raw,
             UtoolsImage: UtoolsImage,
-            Image: Image,
             BilibiliVideo: BilibiliVideo,
-            Attaches: Attaches,
         },
         data: data,
         /**
