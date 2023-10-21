@@ -98,19 +98,12 @@
         </a-sub-menu>
     </a-menu>
     <div class="app-exit">
-        <a-button type="text" @click="useGlobalStore().switchDarkColors()" style="margin-bottom: 7px">
+        <a-button type="text" @click="useGlobalStore().switchDarkColors()">
             <template #icon>
                 <icon-moon v-if="isDark"/>
                 <icon-sun v-else/>
             </template>
         </a-button>
-        <a-tooltip content="退出" position="tr">
-            <a-button type="text" @click="toLogin()">
-                <template #icon>
-                    <icon-import/>
-                </template>
-            </a-button>
-        </a-tooltip>
     </div>
 </template>
 <script lang="ts" setup>
@@ -133,9 +126,6 @@ watch(() => route.path, path => {
     }
 })
 
-function toLogin() {
-    router.push('/login');
-}
 </script>
 <style scoped>
 .app-exit {
