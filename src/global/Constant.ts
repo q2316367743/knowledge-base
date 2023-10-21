@@ -18,5 +18,6 @@ export default {
         ADD_ZONE: 'function:add-zone',
         TODO_CATEGORY: 'todo:'
     },
-    autoCollapsedWidth: 1080
+    autoCollapsedWidth: 1080,
+    goodsId: 'nrniJTkDF7bjDosiki1vjXxAxGNbUsG6'
 }

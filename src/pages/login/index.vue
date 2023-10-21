@@ -8,7 +8,10 @@
                         <a-radio :value="AuthType.UTOOLS">utools</a-radio>
                         <a-radio :value="AuthType.ALIST">AList</a-radio>
                         <a-radio :value="AuthType.WEBDAV" disabled>WebDAV</a-radio>
-                        <a-radio :value="AuthType.LOCATION" :disabled="useVipStore().isNotVip">本地文件夹</a-radio>
+                        <a-badge text="VIP" v-if="useVipStore().isNotVip">
+                            <a-radio :value="AuthType.LOCATION" disabled>本地文件夹</a-radio>
+                        </a-badge>
+                        <a-radio :value="AuthType.LOCATION" disabled v-else>本地文件夹</a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="主机地址" v-if="host">
@@ -19,7 +22,7 @@
                         <template #append>
                             <a-button type="text" v-if="auth.type === AuthType.LOCATION" @click="choose()">
                                 <template #icon>
-                                    <icon-file />
+                                    <icon-file/>
                                 </template>
                             </a-button>
                         </template>

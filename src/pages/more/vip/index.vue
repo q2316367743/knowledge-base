@@ -51,10 +51,11 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useVipStore} from "@/store/components/VipStore";
 
 const visible = ref(false);
+const isVip = computed(() => useVipStore().isVip);
 
 const tableData = [{
     title: '基础功能',
@@ -68,12 +69,14 @@ const tableData = [{
     title: '合并成书导出',
     base: '❌',
     vip: '✅'
+}, {
+    title: '备份到alist',
+    base: '❌',
+    vip: '✅'
 }];
 
 function openPayment() {
-    utools.openPurchase({
-        goodsId: 'zk3LWEdkL0OLeAGKfYVko1b2xmypphg3'
-    })
+    useVipStore().openPayment(() => visible.value = false);
 }
 
 </script>
