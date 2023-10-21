@@ -29,6 +29,9 @@
                 <icon-mind-mapping/>
             </template>
             <template #title>图</template>
+            <a-menu-item key="/graph/search">
+                搜索内容
+            </a-menu-item>
             <a-menu-item key="/graph/relation">
                 关联图
             </a-menu-item>
@@ -95,7 +98,7 @@
         </a-sub-menu>
     </a-menu>
     <div class="app-exit">
-        <a-button type="text" @click="useGlobalStore().switchDarkColors" style="margin-bottom: 7px">
+        <a-button type="text" @click="useGlobalStore().switchDarkColors()" style="margin-bottom: 7px">
             <template #icon>
                 <icon-moon v-if="isDark"/>
                 <icon-sun v-else/>
