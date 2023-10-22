@@ -105,26 +105,16 @@ export class DockerAuthDriverImpl implements AuthDriver {
             });
     }
 
-    postAttachment(docId: string, attachment: Blob): Promise<DbReturn> {
+    postAttachment(docId: string, attachment: Blob): Promise<string> {
         const form = new FormData();
         form.set('docId', docId);
         form.set('file', attachment);
         return this.http.post<Result<string | undefined>>('/api/db/postAttachment', form)
             .then(rsp => {
                 if (rsp.data.code === 200) {
-                    return {
-                        id: docId,
-                        error: false,
-                        ok: true,
-                        rev: rsp.data.data
-                    };
+                    return rsp.data.data + '';
                 } else {
-                    return {
-                        id: docId,
-                        error: true,
-                        ok: false,
-                        message: rsp.data.message
-                    }
+                    return Promise.reject(rsp.data.message)
                 }
             });
     }

@@ -1,10 +1,16 @@
 import {defineStore} from "pinia";
-import {ZoneBase, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
+import {getDefaultZoneBase, ZoneBase, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import md from "@/plugin/markdown";
-import {useAuthStore} from "@/store/components/AuthStore";
-import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {
+    getFromOneWithDefaultByAsync,
+    listByAsync,
+    removeOneByAsync,
+    saveListByAsync,
+    saveOneByAsync
+} from "@/utils/utools/DbStorageUtil";
+import {clone} from "xe-utils";
 
 export const useZoneStore = defineStore('zone', {
     state: () => ({
@@ -42,51 +48,27 @@ export const useZoneStore = defineStore('zone', {
             this.value.push(zoneIndex);
             await this._sync();
             // 新增基础信息
-            let baseRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ZONE_BASE + id,
-                value: JSON.parse(JSON.stringify(base))
-            });
-            if (baseRes.error) {
-                this.value.pop();
-                await this._sync();
-                return Promise.reject("新增基础信息异常：" + baseRes.message)
-            }
+            await saveOneByAsync(LocalNameEnum.ZONE_BASE + id, clone(base, true));
 
             // 新增文章内容
-            let contentRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ZONE_CONTENT + id,
-                value: {
+            await saveOneByAsync(
+                LocalNameEnum.ZONE_CONTENT + id,
+                {
                     body: content.body,
-                } as ZoneContent
-            });
-            if (contentRes.error) {
-                // 删除索引
-                this.value.pop();
-                await this._sync();
-                // 删除基础信息
-                await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_BASE + id);
-                return Promise.reject("新增文章内容异常：" + contentRes.message);
-            }
+                } as ZoneContent);
             // 新增文章预览
-            let previewRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ZONE_PREVIEW + id,
-                value: {
+            await saveOneByAsync(
+                LocalNameEnum.ZONE_PREVIEW + id,
+                {
                     html: md.render(content.body)
                 } as ZonePreview
-            });
-            if (previewRes.error) {
-                // 删除索引
-                this.value.pop();
-                await this._sync();
-                // 删除基础信息
-                await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_BASE + id);
-                // 删除内容
-                await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_CONTENT + id)
-                return Promise.reject("新增文章预览异常：" + previewRes.message);
-            }
+            );
             return Promise.resolve(zoneIndex);
         },
-        async remove(id: number) {
+        async remove(id
+                         :
+                         number
+        ) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject("动态未找到，请刷新后重试！");
@@ -98,25 +80,36 @@ export const useZoneStore = defineStore('zone', {
             this.value.splice(index, 1);
             await this._sync();
             // 删除基本信息
-            const baseWrap = await useAuthStore().authDriver.get(LocalNameEnum.ZONE_BASE + id);
-            await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_BASE + id);
+            const baseWrap = await getFromOneWithDefaultByAsync(LocalNameEnum.ZONE_BASE + id, getDefaultZoneBase());
+            await removeOneByAsync(LocalNameEnum.ZONE_BASE + id, true);
             //  删除附件
             if (baseWrap) {
-                const base = baseWrap.value as ZoneBase;
-                base.image.forEach(image => utools.db.remove(LocalNameEnum.ZONE_ATTACHMENT + image.id));
+                const base = baseWrap.record;
+                for (let image of base.image) {
+                    await removeOneByAsync(LocalNameEnum.ZONE_ATTACHMENT + image.id, true)
+                }
             }
             // 删除内容
-            await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_CONTENT + id);
+            await removeOneByAsync(LocalNameEnum.ZONE_CONTENT + id, true);
             // 删除预览
-            await useAuthStore().authDriver.remove(LocalNameEnum.ZONE_PREVIEW + id);
-        },
+            await removeOneByAsync(LocalNameEnum.ZONE_PREVIEW + id, true);
+        }
+        ,
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.ZONE, this.value, this.rev);
-        },
-        async page(num: number, size: number): Promise<Array<ZoneIndex>> {
+        }
+        ,
+        async page(num
+                       :
+                       number, size
+                       :
+                       number
+        ):
+            Promise<Array<ZoneIndex>> {
             const startIndex = Math.max((num - 1) * size, 0);
             const endIndex = Math.min(num * size, this.value.length);
-            if (startIndex > endIndex) {
+            if (startIndex > endIndex
+            ) {
                 return Promise.resolve([]);
             }
             return Promise.resolve(this.zones.slice(startIndex, endIndex));

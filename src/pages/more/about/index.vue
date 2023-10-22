@@ -18,7 +18,6 @@
                 <a-button @click="openUrl(Constant.homepage)">插件主页</a-button>
                 <a-button @click="openUrl(Constant.repo)">开源地址</a-button>
                 <a-button @click="openUrl(Constant.updateLog)">更新日志</a-button>
-                <a-button @click="toLogin()">切换存储</a-button>
                 <br />
                 <a-tooltip content="控制台">
                     <a-switch :default-checked="consoleShow" @change="changeConsole()" style="margin-top: 14px;">
@@ -31,12 +30,10 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import Constant from "@/global/Constant";
 import {useErrorStore} from "@/store/components/ErrorStore";
-import {useRouter} from "vue-router";
 
-const router = useRouter();
 const consoleShow = computed(() => useErrorStore().consoleShow);
 const changeConsole = () => useErrorStore().changeConsole();
 
@@ -44,9 +41,6 @@ function openUrl(url: string) {
     utools.shellOpenExternal(url);
 }
 
-function toLogin() {
-    router.push('/login');
-}
 
 </script>
 <style scoped lang="less">

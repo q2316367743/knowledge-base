@@ -101,7 +101,6 @@ import EditorJs from '@/components/editor-js/index.vue';
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {useAuthStore} from "@/store/components/AuthStore";
 // 工具类
 import {parseFileExtra} from "@/utils/FileUtil";
 import {download} from "@/utils/BrowserUtil";
@@ -113,6 +112,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import HeToc from "@/pages/home/components/he-toc.vue";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
+import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 const {ctrl, s} = useMagicKeys()
 
@@ -160,11 +160,11 @@ async function _init(articleId: number) {
     // 内容
     editorVisible.value = false;
     try {
-        const contentWrap = await useAuthStore().authDriver.get(LocalNameEnum.ARTICLE_CONTENT + id.value);
-        if (contentWrap) {
-            content.value = (contentWrap.value as ArticleSource).content;
-            contentRev = contentWrap._rev;
+        const contentWrap = await getFromOneByAsync<ArticleSource>(LocalNameEnum.ARTICLE_CONTENT + id.value);
+        if (contentWrap.record) {
+            content.value = contentWrap.record.content;
         }
+        contentRev = contentWrap.rev;
     } catch (e) {
         MessageUtil.error("内容获取失败", e);
     } finally {

@@ -10,7 +10,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {useAuthStore} from "@/store/components/AuthStore";
 import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
@@ -78,31 +77,17 @@ export const useArticleStore = defineStore('article', {
             });
             await this._sync();
             // 新增基础信息
-            const baseRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE_BASE + id,
-                value: toRaw(base)
-            })
-            if (baseRes.error) {
-                // 删除索引
-                this.value.pop();
-                await this._sync();
-                return Promise.reject("新增基础信息异常，" + baseRes.error);
-            }
+            await saveOneByAsync(
+                LocalNameEnum.ARTICLE_BASE + id,
+                toRaw(base)
+            )
             // 新增内容
-            const contentRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE_CONTENT + id,
-                value: {
+            await saveOneByAsync(
+                LocalNameEnum.ARTICLE_CONTENT + id,
+                {
                     content
                 } as ArticleSource
-            });
-            if (contentRes.error) {
-                // 删除索引
-                this.value.pop();
-                await this._sync();
-                // 删除基础信息
-                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
-                return Promise.reject("新增内容异常，" + contentRes.error);
-            }
+            );
             return Promise.resolve(id);
         },
         async updateIndex(
@@ -137,29 +122,19 @@ export const useArticleStore = defineStore('article', {
             // 删除旧的基础信息
             await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
             // 新增基础信息
-            const baseRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE_BASE + id,
-                value: toRaw(base)
-            })
-            if (baseRes.error) {
-                // 删除索引
-                this.value.pop();
-                await this._sync();
-                return Promise.reject("修改基础信息异常，" + baseRes.error);
-            }
+            await saveOneByAsync(
+                LocalNameEnum.ARTICLE_BASE + id,
+                toRaw(base)
+            )
             // 删除旧的内容
             await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
             // 新增内容
-            const contentRes = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.ARTICLE_CONTENT + id,
-                value: {
+            await saveOneByAsync(
+                LocalNameEnum.ARTICLE_CONTENT + id,
+                {
                     content
                 } as ArticleSource
-            });
-            if (contentRes.error) {
-                // 删除索引
-                return Promise.reject("修改内容异常，" + contentRes.error);
-            }
+            );
         },
         async updateContent(
             id: number,

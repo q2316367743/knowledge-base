@@ -2,10 +2,9 @@ import {defineStore} from "pinia";
 import BaseSetting from "@/entity/setting/BaseSetting";
 import {useGlobalStore} from "@/store/GlobalStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {toRaw} from "vue";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import {useAuthStore} from "@/store/components/AuthStore";
+import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -47,26 +46,13 @@ export const useBaseSettingStore = defineStore('base-setting', {
     },
     actions: {
         async init() {
-            const res = await useAuthStore().authDriver.get(LocalNameEnum.SETTING_BASE);
-            if (res) {
-                this.baseSetting = Object.assign(this.baseSetting, res.value);
-                this.rev = res._rev;
-            }else {
-                this.baseSetting = getDefaultBaseSetting();
-                this.rev = undefined;
-            }
+            const res = await getFromOneWithDefaultByAsync(LocalNameEnum.SETTING_BASE, getDefaultBaseSetting());
+            this.baseSetting = res.record;
+            this.rev = res.rev;
         },
         async save(baseSetting: BaseSetting) {
             this.baseSetting = baseSetting;
-            const res = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.SETTING_BASE,
-                _rev: this.rev,
-                value: toRaw(this.baseSetting)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
+            this.rev = await saveOneByAsync(LocalNameEnum.SETTING_BASE, this.baseSetting, this.rev);
         }
     }
 })

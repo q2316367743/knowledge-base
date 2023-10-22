@@ -273,7 +273,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
         });
     }
 
-    async postAttachment(docId: string, attachment: Blob): Promise<DbReturn> {
+    async postAttachment(docId: string, attachment: Blob): Promise<string> {
 
         // 处理文件路径
         const fileName = `/${new Date().getTime()}.png`;
@@ -298,11 +298,7 @@ export class AlistAuthDriverImpl implements AuthDriver {
         this.pathMap.set(docId, fileName);
         this.sync();
 
-        return Promise.resolve({
-            id: docId,
-            error: false,
-            ok: true,
-        });
+        return Promise.resolve("attachment:"+docId);
 
     }
 

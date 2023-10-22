@@ -67,7 +67,7 @@ import {getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/enti
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const props = defineProps({
@@ -89,7 +89,7 @@ function init(id: number) {
         rev = undefined;
         return;
     }
-    getFromOneByAsync(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, getDefaultArticleBaseByBaseSetting())
+    getFromOneWithDefaultByAsync(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, getDefaultArticleBaseByBaseSetting())
         .then(res => {
             base.value = res.record;
             rev = res.rev;

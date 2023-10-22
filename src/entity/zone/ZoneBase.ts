@@ -23,3 +23,12 @@ export interface ZoneBase {
     attachments: Array<ZoneAttachment>;
 
 }
+
+export function getDefaultZoneBase(): ZoneBase {
+    return {
+        location:'',
+        tags: [],
+        image: [],
+        attachments: []
+    }
+}

@@ -37,6 +37,8 @@ export interface DbList<T> {
 
 export interface DbRecord<T> {
 
+    id: string;
+
     record: T;
 
     rev?: string;
@@ -89,6 +91,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
 export async function listRecordByAsync<T>(key: string): Promise<Array<DbRecord<T>>> {
     const items = await useAuthStore().authDriver.allDocs(key);
     return items.map(item => ({
+        id: item._id,
         record: item.value,
         rev: item._rev
     }));
@@ -96,13 +99,26 @@ export async function listRecordByAsync<T>(key: string): Promise<Array<DbRecord<
 
 // --------------------------------------- 单一对象操作 ---------------------------------------
 
-export async function getFromOneByAsync<T extends Record<string, any>>(key: string, record: T): Promise<DbRecord<T>> {
+export async function getFromOneWithDefaultByAsync<T>(key: string, record: T): Promise<DbRecord<T>> {
     const res = await useAuthStore().authDriver.get(key);
     if (!res) {
-        return {record}
+        return {record, id: key}
     }
     return Promise.resolve({
-        record: Object.assign(record, res.value),
+        id: key,
+        record: Object.assign(record || {}, res.value),
+        rev: res._rev
+    });
+}
+
+export async function getFromOneByAsync<T extends Record<string, any>>(key: string): Promise<DbRecord<T | null>> {
+    const res = await useAuthStore().authDriver.get(key);
+    if (!res) {
+        return {record: null, id: key}
+    }
+    return Promise.resolve({
+        id: key,
+        record: res.value,
         rev: res._rev
     });
 }

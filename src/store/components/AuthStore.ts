@@ -11,23 +11,13 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {utools} from '@/plugin/utools';
 import {FileAuthDriverImpl} from "@/components/AuthDriver/impl/FileAuthDriverImpl";
 import {DockerAuthDriverImpl} from "@/components/AuthDriver/impl/DockerAuthDriverImpl";
-import Constant from "@/global/Constant";
-import PluginPlatformEnum from "@/enumeration/PluginPlatformEnum";
 
 /**
  * 获取认证驱动
  * @param auth 认证信息
  */
-async function getAuthDriver(auth?: Auth): Promise<AuthDriver> {
+async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
 
-    if (!auth) {
-
-        if (Constant.platform === PluginPlatformEnum.DOCKER) {
-            return Promise.resolve(new DockerAuthDriverImpl('123456'));
-        } else {
-            return Promise.resolve(new UtoolsAuthDriverImpl());
-        }
-    }
 
     let driver: AuthDriver;
     switch (auth.type) {
@@ -82,18 +72,9 @@ export const useAuthStore = defineStore('auth', {
                 this.auth = Object.assign(this.auth, res.value);
                 this.rev = res._rev;
                 this.authDriver = await getAuthDriver(this.auth);
-            }else {
-                this.authDriver = await getAuthDriver();
             }
         },
         async save(auth: Auth) {
-
-            if (Constant.platform === PluginPlatformEnum.DOCKER) {
-                // 不能修改
-                if (auth.type !== AuthType.SERVER) {
-                    return Promise.reject("Docker不能修改认证类型");
-                }
-            }
 
 
             this.auth = auth;

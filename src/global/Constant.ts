@@ -1,5 +1,4 @@
 import UpdateLog from "@/global/UpdateLog";
-import PluginPlatformEnum from "@/enumeration/PluginPlatformEnum";
 
 export default {
     uid: 'zdllh16g',
@@ -7,7 +6,6 @@ export default {
     name: '知识库',
     version: UpdateLog[0].version,
     author: '落雨不悔',
-    platform: import.meta.env.VITE_PLATFORM as PluginPlatformEnum,
     website: 'https://blog.esion.xyz',
     homepage: 'https://flowus.cn/esion/share/3f990895-e56a-4693-8e0f-5ab2998a1039',
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',

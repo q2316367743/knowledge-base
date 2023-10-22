@@ -1,30 +1,31 @@
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
 import NotificationUtil from "@/utils/NotificationUtil";
-import {useAuthStore} from "@/store/components/AuthStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {
+    getFromOneByAsync,
+    getFromOneWithDefaultByAsync,
+    listByAsync,
+    saveListByAsync,
+    saveOneByAsync
+} from "@/utils/utools/DbStorageUtil";
 import {ArticleBase, ArticleIndex, getDefaultArticleBase} from "@/entity/article";
 import {init} from "@/components/update-check/init";
 
 export default function updateCheck(toUpdate?: () => void) {
-    useAuthStore().authDriver.get(LocalNameEnum.VERSION)
+    getFromOneByAsync<string>(LocalNameEnum.VERSION)
         .then(res => {
-            if (res) {
-                if (res.value !== Constant.version) {
-                    useAuthStore().authDriver.put({
-                        _id: LocalNameEnum.VERSION,
-                        _rev: res._rev,
-                        value: Constant.version
-                    }).then(() => console.log("版本更新"));
+            if (res.record) {
+                if (res.record !== Constant.version) {
+                    saveOneByAsync(LocalNameEnum.VERSION, Constant.version, res.rev).then(() => console.log("版本更新"));
                     toUpdate && toUpdate();
 
-                    const oldVersion = parseVersion(res.value);
+                    const oldVersion = parseVersion(res.record);
                     const newVersion = parseVersion(Constant.version);
 
                     if (oldVersion.main <= 1 && oldVersion.sub <= 3) {
-                        if (newVersion.main > 1  || (newVersion.main == 1 && oldVersion.sub >=3)) {
+                        if (newVersion.main > 1 || (newVersion.main == 1 && oldVersion.sub >= 3)) {
                             // 执行
                             updateTo130FromUnder();
                         }
@@ -34,10 +35,7 @@ export default function updateCheck(toUpdate?: () => void) {
             } else {
                 // 第一次
                 NotificationUtil.success("欢迎您使用知识库");
-                useAuthStore().authDriver.put({
-                    _id: LocalNameEnum.VERSION,
-                    value: Constant.version
-                }).then(() => console.log("版本更新"));
+                saveOneByAsync(LocalNameEnum.VERSION, Constant.version).then(() => console.log("版本更新"));
                 init();
             }
         })
@@ -64,7 +62,7 @@ function parseVersion(str: string): Version {
             sub: 0,
             dot: 0
         }
-    }catch (e){
+    } catch (e) {
         console.error("版本解析失败", e);
         return {
             main: 0,
@@ -90,8 +88,8 @@ async function _updateTo130FromUnder() {
     let results = new Array<ArticleIndex>();
     for (let articleIndex of records) {
         // 把属性加入
-        const base = await getFromOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + articleIndex.id, getDefaultArticleBase());
-        await saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + articleIndex.id, {
+        const base = await getFromOneWithDefaultByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + articleIndex.id, getDefaultArticleBase());
+        const baseNew: ArticleBase = {
             ...base.record,
             // @ts-ignore
             tags: articleIndex.tags,
@@ -99,7 +97,8 @@ async function _updateTo130FromUnder() {
             source: articleIndex.source,
             // @ts-ignore
             description: articleIndex.description
-        }, base.rev);
+        };
+        await saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + articleIndex.id, baseNew, base.rev);
         // 删除原有属性
         results.push({
             id: articleIndex.id,

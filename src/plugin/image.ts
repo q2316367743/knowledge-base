@@ -1,5 +1,4 @@
 import {useAuthStore} from "@/store/components/AuthStore";
-import {AuthType} from "@/entity/auth";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
@@ -12,12 +11,6 @@ import {RedirectPreload} from "@/plugin/utools";
  * @return 链接
  */
 export async function useImageUpload(data: Blob): Promise<string> {
-    if (useAuthStore().auth.type !== AuthType.UTOOLS) {
-        // 本地需要校验不是utools
-        if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
-            return Promise.reject("只有utools才能上传图片到内部");
-        }
-    }
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
         return useUtoolsImageUpload(data);
@@ -40,14 +33,11 @@ export async function useImageUpload(data: Blob): Promise<string> {
 async function useUtoolsImageUpload(data: Blob): Promise<string> {
     const id = new Date().getTime() + '';
 
-    const res = await useAuthStore().authDriver.postAttachment(
+    const url = await useAuthStore().authDriver.postAttachment(
         LocalNameEnum.ARTICLE_ATTACHMENT + id,
         data
     );
-    if (res.error) {
-        return Promise.reject(res.message);
-    }
-    return Promise.resolve("attachment:" + id);
+    return Promise.resolve(url);
 }
 
 /**

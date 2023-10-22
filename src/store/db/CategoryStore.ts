@@ -4,7 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {clone} from "xe-utils";
 import {listToTree} from "@/entity/ListTree";
-import {useAuthStore} from "@/store/components/AuthStore";
+import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 
 export const useCategoryStore = defineStore('category', {
@@ -17,14 +17,9 @@ export const useCategoryStore = defineStore('category', {
     },
     actions: {
         async init() {
-            const res = await useAuthStore().authDriver.get(LocalNameEnum.CATEGORY);
-            if (res) {
-                this.categories = res.value;
-                this.rev = res._rev
-            }else {
-                this.categories = new Array<Category>();
-                this.rev = undefined;
-            }
+            const res = await getFromOneWithDefaultByAsync(LocalNameEnum.CATEGORY, new Array<Category>());
+            this.categories = res.record;
+            this.rev = res.rev
         },
         async add(pid: number) {
             const name = await MessageBoxUtil.prompt("请输入分类名", "新增分类", {
@@ -72,7 +67,7 @@ export const useCategoryStore = defineStore('category', {
             await this._sync();
         },
         async drop(id: number, pid: number) {
-            for(let category of this.categories) {
+            for (let category of this.categories) {
                 if (category.id === id) {
                     category.pid = pid;
                     await this._sync();
@@ -82,15 +77,7 @@ export const useCategoryStore = defineStore('category', {
             return Promise.reject("未找到分类【" + id + "】");
         },
         async _sync() {
-            const res = await useAuthStore().authDriver.put({
-                _id: LocalNameEnum.CATEGORY,
-                _rev: this.rev,
-                value: clone(this.categories, true)
-            });
-            if (res.error) {
-                return Promise.reject(res.message);
-            }
-            this.rev = res.rev;
+            this.rev = await saveOneByAsync(LocalNameEnum.CATEGORY, clone(this.categories, true), this.rev);
         }
     }
 })

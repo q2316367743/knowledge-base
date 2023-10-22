@@ -33,7 +33,7 @@ import {useWindowSize} from "@vueuse/core";
 import {computed, onUnmounted, ref} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/MessageUtil";
-import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
@@ -77,7 +77,7 @@ async function _searchContent() {
         }
         text.value = `正在搜索 ${i + 1} / ${articles.length}`
         const article = articles[i];
-        const contentWrap = await getFromOneByAsync<ArticleContent<any>>(
+        const contentWrap = await getFromOneWithDefaultByAsync<ArticleContent<any>>(
             LocalNameEnum.ARTICLE_CONTENT + article.id, {content: ''});
         // 搜索
         const content = contentWrap.record.content;

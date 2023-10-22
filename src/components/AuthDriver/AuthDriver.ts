@@ -44,8 +44,9 @@ export interface AuthDriver {
      * 存储附件到新文档
      * @param docId 文档ID
      * @param attachment 附件 buffer
+     * @return 链接
      */
-    postAttachment(docId: string, attachment: Blob): Promise<DbReturn>;
+    postAttachment(docId: string, attachment: Blob): Promise<string>;
 
     /**
      * 获取附件

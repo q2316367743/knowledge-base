@@ -43,15 +43,14 @@
             </a-form-item>
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="disableImageInner">
+                    <a-radio :value="ImageStrategyEnum.INNER">
                         内部实现
                     </a-radio>
                     <a-radio :value="ImageStrategyEnum.IMAGE">插件【图床】</a-radio>
                 </a-radio-group>
                 <template #help>
                     <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
-                        <span v-if="disableImageInner">仅将存储设置为utools时可以使用</span>
-                        <span>上传到插件内部，占用个人存储空间，最大图片仅支持10m</span>
+                        上传到插件内部，占用个人存储空间，最大图片仅支持10m
                     </span>
                     <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
                         需要安装插件【图床】
@@ -82,7 +81,6 @@ import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/db
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
-import {AuthType} from "@/entity/auth";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -91,14 +89,10 @@ export default defineComponent({
         JsonTheme,
         ArticleThemeEnum,
         ImageStrategyEnum,
-        AuthType,
         instance: getDefaultBaseSetting()
     }),
     computed: {
         ...mapState(useBaseSettingStore, ['baseSetting']),
-        disableImageInner() {
-            return useAuthStore().auth.type !==AuthType.UTOOLS
-        }
     },
     created() {
         this.instance = Object.assign(this.instance, this.baseSetting);

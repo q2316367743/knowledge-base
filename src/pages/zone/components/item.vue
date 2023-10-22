@@ -2,12 +2,12 @@
     <a-card class="item" hoverable>
         <a-result v-if="loading" title="正在加载中" status="info">
             <template #icon>
-                <icon-refresh spin />
+                <icon-refresh spin/>
             </template>
         </a-result>
         <div class="header">
             <div class="create-time">{{ createTime }}</div>
-            <a-button-group type="text" size="mini"  v-if="ellipsis">
+            <a-button-group type="text" size="mini" v-if="ellipsis">
                 <a-button @click="openComment()">
                     <template #icon>
                         <icon-message/>
@@ -120,6 +120,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {statistics} from "@/global/BeanFactory";
 import {useGlobalStore} from "@/store/GlobalStore";
 import html2canvas from "html2canvas";
+import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useAuthStore} from "@/store/components/AuthStore";
 
 const props = defineProps({
@@ -165,27 +166,27 @@ const ellipsis = ref<boolean | {
 if (props.zone) {
     createTime.value = toDateString(props.zone.createTime, "yyyy-MM-dd HH:mm:ss");
     // 获取基础信息
-    useAuthStore().authDriver.get(LocalNameEnum.ZONE_BASE + props.zone.id)
+    getFromOneByAsync<ZoneBase>(LocalNameEnum.ZONE_BASE + props.zone.id)
         .then(res => {
-            if (res) {
-                base.value = res.value;
+            if (res.record) {
+                base.value = res.record;
             }
         });
     // 预览
-    useAuthStore().authDriver.get(LocalNameEnum.ZONE_PREVIEW + props.zone.id)
+    getFromOneByAsync<ZonePreview>(LocalNameEnum.ZONE_PREVIEW + props.zone.id)
         .then(res => {
-            if (res) {
-                preview.value = res.value;
+            if (res.record) {
+                preview.value = res.record;
             }
         })
         .finally(() => loading.value = false);
     // 评论
-    useAuthStore().authDriver.get(LocalNameEnum.ZONE_COMMENT + props.zone.id)
+    getFromOneByAsync<Array<ZoneComment>>(LocalNameEnum.ZONE_COMMENT + props.zone.id)
         .then(res => {
-            if (res) {
-                comments.value = res.value;
-                commentRev = res._rev;
+            if (res.record) {
+                comments.value = res.record;
             }
+            commentRev = res.rev;
         });
 
 }
@@ -199,10 +200,10 @@ function toDate(date: Date | string | number) {
 }
 
 function executeCopy() {
-    useAuthStore().authDriver.get(LocalNameEnum.ZONE_CONTENT + props.zone?.id)
+    getFromOneByAsync<ZoneContent>(LocalNameEnum.ZONE_CONTENT + props.zone?.id)
         .then(res => {
-            if (res) {
-                const content = res.value as ZoneContent;
+            if (res.record) {
+                const content = res.record;
                 utools.copyText(content.body);
                 MessageUtil.success("成功复制到剪切板");
             }
@@ -308,15 +309,7 @@ async function syncComment() {
         MessageUtil.error("动态不存在，请刷新后重试")
         return;
     }
-    const res = await useAuthStore().authDriver.put({
-        _id: LocalNameEnum.ZONE_COMMENT + props.zone.id,
-        _rev: commentRev,
-        value: toRaw(comments.value)
-    });
-    if (res.error) {
-        return Promise.reject(res.message);
-    }
-    commentRev = res.rev;
+    commentRev = await saveOneByAsync(LocalNameEnum.ZONE_COMMENT + props.zone.id, toRaw(comments.value), commentRev);
 }
 
 // =========================================================================

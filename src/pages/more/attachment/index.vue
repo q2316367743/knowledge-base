@@ -17,16 +17,16 @@ import {onUnmounted, ref} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
-import {useAuthStore} from "@/store/components/AuthStore";
+import {listRecordByAsync, removeOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 const attachments = ref(new Array<string>());
 let resources = new Array<string>();
 
 function fetchAttachment() {
     attachments.value = [];
-    useAuthStore().authDriver.allDocs(LocalNameEnum.ARTICLE_ATTACHMENT)
+    listRecordByAsync<any>(LocalNameEnum.ARTICLE_ATTACHMENT)
             .then(items => {
-                items.forEach(item => attachments.value.push(item._id))
+                items.forEach(item => attachments.value.push(item.id))
             })
 }
 
@@ -93,7 +93,7 @@ function remove() {
         cancelButtonText: "取消"
     }).then(() => {
         const item = document.querySelector(".more-attachment .item:nth-child(1)")!;
-        useAuthStore().authDriver.remove(item?.attributes.getNamedItem('data-id')?.value!)
+        removeOneByAsync(item?.attributes.getNamedItem('data-id')?.value!)
                 .then(() => {
                     if (side.value) {
                         side.value.removeChild(item);

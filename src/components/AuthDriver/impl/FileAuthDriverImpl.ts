@@ -51,7 +51,7 @@ export class FileAuthDriverImpl implements AuthDriver {
         return Promise.resolve(window.preload.pathJoin(this.root, docId + '.png'));
     }
 
-    async postAttachment(docId: string, attachment: Blob): Promise<DbReturn> {
+    async postAttachment(docId: string, attachment: Blob): Promise<string> {
 
         // 处理文件路径
         const fileName = docId + '.png';
@@ -59,11 +59,7 @@ export class FileAuthDriverImpl implements AuthDriver {
         const buffer = await attachment.arrayBuffer();
         await window.preload.saveFile(this.root, fileName, new Uint8Array(buffer));
 
-        return Promise.resolve({
-            id: docId,
-            error: false,
-            ok: true,
-        });
+        return Promise.resolve(window.preload.pathJoin(this.root, fileName));
     }
 
     async put(doc: DbDoc): Promise<DbReturn> {

@@ -11,7 +11,7 @@ import {
 } from "@/entity/todo/TodoItem";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {
-    getFromOneByAsync,
+    getFromOneWithDefaultByAsync,
     listByAsync,
     removeOneByAsync,
     saveListByAsync,
@@ -122,7 +122,7 @@ export const useTodoStore = defineStore('todo', {
                     })
                     .catch(e => MessageUtil.error("获取待办项失败", e))
                     .finally(() => useGlobalStore().closeLoading());
-                getFromOneByAsync<Array<number>>(LocalNameEnum.TODO_ARTICLE + id, new Array<number>())
+                getFromOneWithDefaultByAsync<Array<number>>(LocalNameEnum.TODO_ARTICLE + id, new Array<number>())
                     .then(articles => {
                         this.todoArticles = articles.record;
                         this.todoArticlesRev = articles.rev;
@@ -165,7 +165,7 @@ export const useTodoStore = defineStore('todo', {
                 return Promise.reject("待办项不存在");
             }
             const todoItem = this.todoItems[index];
-            const content = await getFromOneByAsync(
+            const content = await getFromOneWithDefaultByAsync(
                 LocalNameEnum.TODO_ITEM + todoItem.id,
                 getDefaultTodoItemContent(todoItem.id));
             // 内容备份
@@ -183,7 +183,7 @@ export const useTodoStore = defineStore('todo', {
             if (index === -1) {
                 return Promise.reject("待办项不存在");
             }
-            let attrDbRecord = await getFromOneByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+            let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
             return Promise.resolve(attrDbRecord.record);
         },
         /**
@@ -207,7 +207,7 @@ export const useTodoStore = defineStore('todo', {
             await this._sync();
             if (attr) {
                 // 由于数据量不大，就直接查询
-                let old = await getFromOneByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+                let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
                 // 如果存在内容，则一并更新
                 await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ATTR + id, {
                     ...old.record,

@@ -25,9 +25,13 @@ export class UtoolsAuthDriverImpl implements AuthDriver {
         return Promise.resolve(window.URL.createObjectURL(blob));
     }
 
-    async postAttachment(docId: string, attachment: Blob): Promise<DbReturn> {
+    async postAttachment(docId: string, attachment: Blob): Promise<string> {
         const buffer = await attachment.arrayBuffer();
-        return utools.db.promises.postAttachment(docId, new Uint8Array(buffer), "application/octet-stream");
+        const res = await utools.db.promises.postAttachment(docId, new Uint8Array(buffer), "application/octet-stream");
+        if (res.error) {
+            return Promise.reject(res.message);
+        }
+        return Promise.resolve("attachment:" + docId);
     }
 
     put(doc: DbDoc): Promise<DbReturn> {
