@@ -10,12 +10,20 @@ import {AlistAuthDriverImpl} from "@/components/AuthDriver/impl/AlistAuthDriverI
 import {useGlobalStore} from "@/store/GlobalStore";
 import {utools} from '@/plugin/utools';
 import {FileAuthDriverImpl} from "@/components/AuthDriver/impl/FileAuthDriverImpl";
+import {DockerAuthDriverImpl} from "@/components/AuthDriver/impl/DockerAuthDriverImpl";
+import Constant from "@/global/Constant";
+import PluginPlatformEnum from "@/enumeration/PluginPlatformEnum";
 
 /**
  * 获取认证驱动
  * @param auth 认证信息
  */
 async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
+
+    if (Constant.platform === PluginPlatformEnum.DOCKER) {
+        return Promise.resolve(new DockerAuthDriverImpl(auth.password));
+    }
+
     let driver: AuthDriver;
     switch (auth.type) {
         case AuthType.ALIST:
@@ -31,6 +39,10 @@ async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
         case AuthType.WEBDAV:
             // TODO: WebDAV
             driver = new UtoolsAuthDriverImpl();
+            break;
+        case AuthType.SERVER:
+            // TODO: WebDAV
+            driver = new DockerAuthDriverImpl(auth.password);
             break;
         default:
             MessageUtil.error("系统异常，未找到对应的认证驱动。将使用utools存储数据");
@@ -69,6 +81,15 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async save(auth: Auth) {
+
+            if (Constant.platform === PluginPlatformEnum.DOCKER) {
+                // 不能修改
+                if (auth.type !== AuthType.SERVER) {
+                    return Promise.reject("Docker不能修改认证类型");
+                }
+            }
+
+
             this.auth = auth;
             const res = await utools.db.promises.put({
                 _id: KEY,
