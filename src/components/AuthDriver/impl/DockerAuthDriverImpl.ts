@@ -19,7 +19,7 @@ export class DockerAuthDriverImpl implements AuthDriver {
         this.token = token;
         this.http = axios.create({
             headers: {
-                token: this.token
+                authorization: this.token
             }
         });
         this.http.interceptors.response.use(
@@ -35,7 +35,11 @@ export class DockerAuthDriverImpl implements AuthDriver {
     }
 
     allDocKeys(key?: string): Promise<Array<string>> {
-        return this.http.get<Result<Array<string>>>('/api/db/allDocKeys')
+        return this.http.get<Result<Array<string>>>('/api/db/allDocKeys',{
+            params: {
+                key: key
+            }
+        })
             .then(rsp => {
                 if (rsp.data.code === 200) {
                     return rsp.data.data;
@@ -57,7 +61,11 @@ export class DockerAuthDriverImpl implements AuthDriver {
     }
 
     get(id: string): Promise<DbDoc | null> {
-        return this.http.get<Result<DbDoc | null>>('/api/db/get')
+        return this.http.get<Result<DbDoc | null>>('/api/db/get', {
+            params: {
+                key: id
+            }
+        })
             .then(rsp => {
                 if (rsp.data.code === 200) {
                     return rsp.data.data;
@@ -72,7 +80,7 @@ export class DockerAuthDriverImpl implements AuthDriver {
     }
 
     init(): Promise<void> {
-        return this.http.get('/api/ping');
+        return Promise.resolve();
     }
 
 
@@ -124,7 +132,7 @@ export class DockerAuthDriverImpl implements AuthDriver {
     remove(doc: string | DbDoc): Promise<DbReturn> {
         const _id = typeof doc === 'string' ? doc : doc._id;
         return this.http.delete<Result<void>>('/api/db/remove', {
-            data: {
+            params: {
                 key: _id
             }
         })

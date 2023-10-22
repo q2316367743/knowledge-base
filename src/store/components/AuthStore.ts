@@ -18,10 +18,15 @@ import PluginPlatformEnum from "@/enumeration/PluginPlatformEnum";
  * 获取认证驱动
  * @param auth 认证信息
  */
-async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
+async function getAuthDriver(auth?: Auth): Promise<AuthDriver> {
 
-    if (Constant.platform === PluginPlatformEnum.DOCKER) {
-        return Promise.resolve(new DockerAuthDriverImpl(auth.password));
+    if (!auth) {
+
+        if (Constant.platform === PluginPlatformEnum.DOCKER) {
+            return Promise.resolve(new DockerAuthDriverImpl('123456'));
+        } else {
+            return Promise.resolve(new UtoolsAuthDriverImpl());
+        }
     }
 
     let driver: AuthDriver;
@@ -77,6 +82,8 @@ export const useAuthStore = defineStore('auth', {
                 this.auth = Object.assign(this.auth, res.value);
                 this.rev = res._rev;
                 this.authDriver = await getAuthDriver(this.auth);
+            }else {
+                this.authDriver = await getAuthDriver();
             }
         },
         async save(auth: Auth) {
@@ -105,7 +112,7 @@ export const useAuthStore = defineStore('auth', {
             useGlobalStore().startLoading("开始初始化数据...");
             initData(false)
                 .then(() => MessageUtil.success("数据初始化成功"))
-                .catch(e => MessageUtil.error("数据初始化失败",e))
+                .catch(e => MessageUtil.error("数据初始化失败", e))
                 .finally(() => useGlobalStore().closeLoading());
         },
     }
