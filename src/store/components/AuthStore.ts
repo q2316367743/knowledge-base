@@ -41,7 +41,6 @@ async function getAuthDriver(auth: Auth): Promise<AuthDriver> {
             driver = new UtoolsAuthDriverImpl();
             break;
         case AuthType.SERVER:
-            // TODO: WebDAV
             driver = new DockerAuthDriverImpl(auth.password);
             break;
         default:
