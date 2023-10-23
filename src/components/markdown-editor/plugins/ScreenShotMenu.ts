@@ -16,9 +16,8 @@ export const useScreenShotMenu = (editor: ShallowRef) => {
                 utools.hideMainWindow()
                 utools.screenCapture(base64 => {
                     utools.showMainWindow()
-                    const blob = base64toBlob(base64.replace("data:image/png;base64,", ""));
                     useGlobalStore().startLoading("开始文件上传");
-                    useImageUpload(blob)
+                    useImageUpload(base64)
                         .then(url => editor.value.insert('\n![截屏](' + url + ')'))
                         .catch(e => MessageUtil.error("截图失败", e))
                         .finally(() => useGlobalStore().closeLoading())

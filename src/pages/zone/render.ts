@@ -1,6 +1,7 @@
 import {VNode} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAuthStore} from "@/store/components/AuthStore";
+import {getAttachmentByAsync} from "@/utils/utools/DbStorageUtil";
 
 
 /**
@@ -25,7 +26,7 @@ export function transformUint8ArrayToBase64(array: Uint8Array): string {
 export function renderLazyByArcoImage(e: VNode, _id: string, callback?: () => void) {
     let el = e.el as HTMLDivElement;
     let img = el.querySelector('img');
-    useAuthStore().authDriver.getAttachment(_id)
+    getAttachmentByAsync(_id)
         .then(url => {
             if (url) {
                 if (img) {

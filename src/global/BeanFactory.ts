@@ -6,7 +6,6 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {useAuthStore} from "@/store/components/AuthStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {utools} from "@/plugin/utools";
 
@@ -17,11 +16,7 @@ export const useSearchEvent = useEventBus<void>('search');
 export const useTodoAddArticleEvent = useEventBus<void>('todo-add-article');
 
 
-export async function initData(needAuth: boolean = true): Promise<void> {
-    if (needAuth) {
-        // 先进行认证驱动
-        await useAuthStore().init();
-    }
+export async function initData(): Promise<void> {
     // 在进行数据初始化
     await Promise.all([
         useZoneStore().init(),

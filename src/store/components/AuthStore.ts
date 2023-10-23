@@ -91,7 +91,7 @@ export const useAuthStore = defineStore('auth', {
             this.authDriver = await getAuthDriver(this.auth);
             // 重新初始化数据
             useGlobalStore().startLoading("开始初始化数据...");
-            initData(false)
+            initData()
                 .then(() => MessageUtil.success("数据初始化成功"))
                 .catch(e => MessageUtil.error("数据初始化失败", e))
                 .finally(() => useGlobalStore().closeLoading());

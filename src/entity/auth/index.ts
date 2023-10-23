@@ -1,6 +1,3 @@
-import Constant from "@/global/Constant";
-import PluginPlatformEnum from "@/enumeration/PluginPlatformEnum";
-
 export interface Auth {
 
     /**
@@ -60,15 +57,11 @@ export enum AuthType {
 }
 
 export function getDefaultAuth(): Auth {
-    const record = {
+    return {
         type: AuthType.UTOOLS,
         host: '',
         path: '',
         username: '',
         password: ''
     };
-    if (Constant.platform === PluginPlatformEnum.DOCKER) {
-        record.type = AuthType.SERVER
-    }
-    return record;
 }

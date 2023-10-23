@@ -113,15 +113,14 @@ import {nextTick, PropType, ref, toRaw} from "vue";
 import {toDateString} from 'xe-utils'
 import MessageUtil from "@/utils/MessageUtil";
 import {renderImage} from "@/pages/zone/render";
-import {download, randomColor} from "@/utils/BrowserUtil";
+import {download, downloadByUrl, randomColor} from "@/utils/BrowserUtil";
 import {ZoneBase, ZoneComment, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {statistics} from "@/global/BeanFactory";
 import {useGlobalStore} from "@/store/GlobalStore";
 import html2canvas from "html2canvas";
-import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
-import {useAuthStore} from "@/store/components/AuthStore";
+import {getAttachmentByAsync, getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 const props = defineProps({
     zone: Object as PropType<ZoneIndex>
@@ -232,17 +231,13 @@ function removeZone() {
 // =========================================================================
 
 function showImagePreview(id: string, name: string) {
-    useAuthStore().authDriver.getAttachment('/zone/attachment/' + id)
-        .then(buffer => {
-            if (!buffer) {
-                MessageUtil.warning("图片未找到");
-                return;
-            }
+    getAttachmentByAsync('/zone/attachment/' + id)
+        .then(url => {
             imagePreview.value = {
                 id,
                 name,
                 dialog: true,
-                value: URL.createObjectURL(new Blob([buffer]))
+                value: url
             };
         });
 }
@@ -253,13 +248,9 @@ function releaseImagePreview() {
 }
 
 function downloadImage() {
-    useAuthStore().authDriver.getAttachment(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
-        .then(buffer => {
-            if (!buffer) {
-                MessageUtil.warning("图片未找到");
-                return;
-            }
-            download(buffer, imagePreview.value.name, 'image');
+    getAttachmentByAsync(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
+        .then(url => {
+            downloadByUrl(url, imagePreview.value.name);
         });
 }
 

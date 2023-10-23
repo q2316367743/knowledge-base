@@ -1,28 +1,31 @@
-import {useAuthStore} from "@/store/components/AuthStore";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {blobToBase64} from "@/utils/BrowserUtil";
+import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
 import {RedirectPreload} from "@/plugin/utools";
+import {getAttachmentByAsync, getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
 
 /**
  * 文件上传组件
  * @param data 图片数据
  * @return 链接
  */
-export async function useImageUpload(data: Blob): Promise<string> {
+export async function useImageUpload(data: Blob | string): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
+        if (typeof data === 'string') {
+            data = base64toBlob(data.replace("data:image/png;base64,", ""));
+        }
         return useUtoolsImageUpload(data);
-    }else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
+    } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
+        if (typeof data !== 'string') {
+            data = await blobToBase64(data);
+        }
         // 使用图床插件
-        blobToBase64(data).then(base64 => {
-            // 使用图床
-            utools.redirect(['图床', '上传到图床'], {
-                type: 'img',
-                data: base64
-            } as RedirectPreload);
-        })
+        utools.redirect(['图床', '上传到图床'], {
+            type: 'img',
+            data: data
+        } as RedirectPreload);
         return Promise.resolve("");
     }
 
@@ -33,7 +36,7 @@ export async function useImageUpload(data: Blob): Promise<string> {
 async function useUtoolsImageUpload(data: Blob): Promise<string> {
     const id = new Date().getTime() + '';
 
-    const url = await useAuthStore().authDriver.postAttachment(
+    const url = await postAttachment(
         LocalNameEnum.ARTICLE_ATTACHMENT + id,
         data
     );
@@ -46,13 +49,7 @@ async function useUtoolsImageUpload(data: Blob): Promise<string> {
  * @return 图片地址
  */
 export function useLoadImageBySync(id: string): string {
-    const data = utools.db.getAttachment(LocalNameEnum.ARTICLE_ATTACHMENT + id);
-    if (!data) {
-        console.error(`资源【${id}】加载失败`)
-        return 'file:////'+window.preload.pathJoin(useAuthStore().auth.path, '/article/attachment/' + id + '.png')
-    }
-    const blob = new Blob([data]);
-    return window.URL.createObjectURL(blob);
+    return getAttachmentBySync(id);
 }
 
 /**
@@ -61,6 +58,6 @@ export function useLoadImageBySync(id: string): string {
  * @return 图片地址
  */
 export async function useLoadImageByAsync(id: string): Promise<string> {
-    const data = await useAuthStore().authDriver.getAttachment(LocalNameEnum.ARTICLE_ATTACHMENT + id);
+    const data = await getAttachmentByAsync(id);
     return Promise.resolve(data);
 }

@@ -66,12 +66,11 @@ import {defineComponent} from "vue";
 import {ZoneAttachment} from "@/entity/zone";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import MessageUtil from "@/utils/MessageUtil";
-import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
 import {RequestOption} from "@arco-design/web-vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {FileItem} from "@arco-design/web-vue";
 import {statistics} from "@/global/BeanFactory";
-import {useAuthStore} from "@/store/components/AuthStore";
+import {postAttachment} from "@/utils/utools/DbStorageUtil";
 
 export default defineComponent({
     name: 'zone-add',
@@ -123,25 +122,15 @@ export default defineComponent({
 
             let now = new Date();
             let id = now.getTime() + '';
-            useAuthStore().authDriver.postAttachment(LocalNameEnum.ZONE_ATTACHMENT + id,
+            postAttachment(LocalNameEnum.ZONE_ATTACHMENT + id,
                 option.fileItem.file)
-                .then(res => {
+                .then(url => {
                     if (option.fileItem.file) {
-
                         this.zone.imageList.push({
                             uid: LocalNameEnum.ZONE_ATTACHMENT + id,
                             file: option.fileItem.file,
-                            url: window.URL.createObjectURL(option.fileItem.file)
+                            url: url
                         })
-                        if (res.error) {
-                            MessageUtil.error(res.message || '新增异常');
-                            return;
-                        }
-                        this.zone.image.push({
-                            id,
-                            type: ZoneAttachmentTypeEnum.IMAGE,
-                            name: option.fileItem.name || '未知文件',
-                        });
                     }
                 });
         },
