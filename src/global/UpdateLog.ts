@@ -15,6 +15,9 @@ export default [
             label: LogItemEnum.ADD,
             content: '【编辑器】截图是，如果未分离插件，插件将会隐藏'
         }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】搜索文章内容，可以在全部markdown笔记中从内容搜索关键字，只会显示每个文章的第一个出现关键字位置，位置在第五个菜单中'
+        }, {
             label: LogItemEnum.UPDATE,
             content: '【编辑器】修复富文本上传图片错误'
         }, {

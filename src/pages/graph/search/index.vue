@@ -3,7 +3,7 @@
         <header class="header">
             <a-input-group class="search" :style="{width: searchWidth + 'px'}">
                 <a-input-search v-model="keyword" placeholder="请输入关键内容" allow-clear :loading="loading"
-                                search-button @search="searchContent()"/>
+                                search-button @search="searchContent()" @clear="searchContent()"/>
                 <a-button type="primary" status="danger" :disabled="!loading" @click="stop()">
                     <template #icon>
                         <icon-close/>
@@ -62,6 +62,11 @@ function searchContent() {
     close.value = false;
     text.value = '';
     items.value = [];
+    if (keyword.value.trim() === '') {
+        loading.value = false;
+        close.value = true;
+        return;
+    }
     _searchContent()
         .then(() => MessageUtil.success("搜索完成"))
         .catch(e => MessageUtil.error("搜索失败", e))
