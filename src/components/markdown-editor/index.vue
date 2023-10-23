@@ -14,6 +14,7 @@ import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {usePanGu} from "@/components/markdown-editor/plugins/PanGuMenu";
 import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
 import MessageUtil from "@/utils/MessageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -54,7 +55,11 @@ const config: CherryConfig = {
                     if (url.startsWith("attachment:")) {
                         const id = url.replace("attachment:", "");
                         // TODO: 此种方法无法再web端使用
-                        return useLoadImageBySync(id)
+                        if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
+                            return useLoadImageBySync(id)
+                        }else {
+                            return useLoadImageBySync(LocalNameEnum.ARTICLE_ATTACHMENT + id)
+                        }
                     }
                 }
                 return url;
