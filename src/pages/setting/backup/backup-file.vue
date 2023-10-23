@@ -1,5 +1,5 @@
 <template>
-    <div class="backup">
+    <div>
         <a-alert title="文件备份设置">通过文件进行备份</a-alert>
         <a-button-group type="primary" style="margin: 14px 0;">
             <a-button :loading="loading.exec" @click="execFileBackup()">执行备份</a-button>
@@ -175,13 +175,4 @@ async function _restoreByFile() {
 
 </script>
 <style scoped>
-.backup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 7px;
-    overflow: auto;
-}
 </style>

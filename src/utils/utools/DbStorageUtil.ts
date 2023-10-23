@@ -1,6 +1,5 @@
 import {toRaw} from "vue";
 import {clone} from "xe-utils";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 // 对象
 
@@ -111,7 +110,7 @@ export async function getFromOneWithDefaultByAsync<T>(key: string, record: T): P
     });
 }
 
-export async function getFromOneByAsync<T extends Record<string, any>>(key: string): Promise<DbRecord<T | null>> {
+export async function getFromOneByAsync<T = any>(key: string): Promise<DbRecord<T | null>> {
     const res = await utools.db.promises.get(key);
     if (!res) {
         return {record: null, id: key}

@@ -2,6 +2,27 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.3.2',
+        sign: 132,
+        time: '2023-10-23',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【todo】待办自身也可以隐藏'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】关联文章使用树形结构'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】截图是，如果未分离插件，插件将会隐藏'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【编辑器】修复富文本上传图片错误'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【插件】删除自定义存储位置选项'
+        }]
+    },
+    {
         version: '1.3.1',
         sign: 131,
         time: '2023-10-16',

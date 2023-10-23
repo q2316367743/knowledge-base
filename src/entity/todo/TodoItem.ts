@@ -169,7 +169,8 @@ export function getDefaultTodoItemAttr(id?: number): TodoItemAttr {
 export function getDefaultTodoItem(): TodoItem {
     return {
         content: {
-            record: getDefaultTodoItemContent()
+            record: getDefaultTodoItemContent(),
+            id: ''
         },
         attr: getDefaultTodoItemAttr(),
         index: getDefaultTodoItemIndex()

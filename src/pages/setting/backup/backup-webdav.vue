@@ -1,5 +1,5 @@
 <template>
-    <div class="backup">
+    <div>
         <a-alert title="WebDAV备份设置">通过WebDAV进行备份</a-alert>
         <a-alert type="warning" style="margin-top: 14px;">恢复备份前请先备份当前数据，以免数据丢失</a-alert>
         <a-alert type="error" v-if="disabledBackup" style="margin-top: 14px;">请先设置备份信息</a-alert>
@@ -273,13 +273,4 @@ async function _restore(): Promise<void> {
 
 </script>
 <style scoped>
-.backup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 7px;
-    overflow: auto;
-}
 </style>
