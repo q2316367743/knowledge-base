@@ -78,3 +78,35 @@ export interface Item {
 }
 
 export type ItemType = 'string' | 'link';
+
+
+export interface Version {
+    main: number;
+    sub: number;
+    dot: number;
+}
+
+export function parseVersion(str: string): Version {
+    try {
+        if (str) {
+            const split = str.split('.');
+            return {
+                main: parseInt(split[0]),
+                sub: parseInt(split[0]),
+                dot: parseInt(split[0])
+            }
+        }
+        return {
+            main: 0,
+            sub: 0,
+            dot: 0
+        }
+    } catch (e) {
+        console.error("版本解析失败", e);
+        return {
+            main: 0,
+            sub: 0,
+            dot: 0
+        }
+    }
+}
