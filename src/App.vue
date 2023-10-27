@@ -77,15 +77,33 @@ utools.onMainPush(action => {
             storages.push(storage);
         }
     }
-    return storages.map(e => ({
+    const items = storages.slice(0, Math.min(5, storages.length)).map(e => ({
         icon: 'public/logo.png',
         text: e.name,
         title: e.id + ''
     }))
+    console.log(storages.length)
+    if (storages.length > 6) {
+        items.push({
+            icon: 'public/logo.png',
+            text: `更多${storages.length - 5}条记录请前往插件内搜索`,
+            title: ''
+        })
+    } else if (storages.length === 6) {
+        items.push({
+            icon: 'public/logo.png',
+            text: storages[5]['name'],
+            title: storages[5]['id'] + ''
+        })
+    }
+    return items;
 }, action => toArticle(action.option.title));
 
 //前往文章
 function toArticle(id?: string) {
+    if (!id) {
+        return;
+    }
     useHomeEditorStore().setId(parseInt(id || '0'));
     router.push('/home');
 }
@@ -112,7 +130,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
             useGlobalStore().startLoading("开始导入")
             htmlToArticle(extra)
                 .then(() => MessageUtil.success("导入成功"))
-                .catch(e => MessageUtil.error("导入失败",e))
+                .catch(e => MessageUtil.error("导入失败", e))
                 .finally(() => useGlobalStore().closeLoading());
         } else if (preload === 'editor') {
             statistics.access("进入", "前往编辑器");
