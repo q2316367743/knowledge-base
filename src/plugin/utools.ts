@@ -252,7 +252,7 @@ export const utools = {
         let nativeId = localStorage.getItem("nativeId");
         if (!nativeId) {
             nativeId = generateUUID();
-            localStorage.setItem("token", nativeId);
+            localStorage.setItem("nativeId", nativeId);
         }
         return nativeId;
     },
