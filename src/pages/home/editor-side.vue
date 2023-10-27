@@ -50,6 +50,43 @@
                     </template>
                 </a-dropdown>
             </template>
+            <template #title="nodeData">
+                <a-dropdown trigger="contextMenu">
+                    <span>{{nodeData.title}}</span>
+                    <template #content>
+                        <a-dsubmenu v-if="!nodeData.isLeaf">
+                            <template #icon>
+                                <icon-plus/>
+                            </template>
+                            新增笔记
+                            <template #content>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
+                            </template>
+                        </a-dsubmenu>
+
+                        <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
+                            <template #icon>
+                                <icon-plus/>
+                            </template>
+                            新建文件夹
+                        </a-doption>
+                        <a-doption v-if="!nodeData.isLeaf" @click="renameFolder(nodeData.key, nodeData.title)">
+                            <template #icon>
+                                <icon-edit/>
+                            </template>
+                            重命名
+                        </a-doption>
+                        <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
+                            <template #icon>
+                                <icon-delete/>
+                            </template>
+                            删除
+                        </a-doption>
+                    </template>
+                </a-dropdown>
+            </template>
         </a-tree>
     </div>
 </template>
