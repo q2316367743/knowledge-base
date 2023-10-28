@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { MongoClient, Db } from "mongodb";
+import multiparty from 'multiparty'
 import { Result } from "../domain/Result";
 
 const URL: string = process.env.URL || 'mongodb://192.168.31.31:27017';
+const IMAGE_PATH = './upload/';
 
 const app = Router();
 let db: Db;
@@ -20,7 +22,7 @@ MongoClient.connect(URL)
 app.get("/allDocKeys", async (req, res) => {
     const key: string = req.query.key as string || '';
     let query = {};
-    if (key){
+    if (key) {
         query = { 'name': { $regex: new RegExp('^' + key) } };
     }
 
@@ -33,7 +35,7 @@ app.get("/allDocKeys", async (req, res) => {
 app.get("/allDocs", async (req, res) => {
     const key: string = req.query.key as string || '';
     let query = {};
-    if (key){
+    if (key) {
         query = { 'name': { $regex: new RegExp('^' + key) } };
     }
     const items = await db.collection('db').find(query).toArray();
@@ -111,6 +113,57 @@ app.delete('/remove', (req, res) => {
     db.collection('db').deleteOne({ id: id })
         .then(() => res.json(Result.success()))
         .catch(e => res.json(Result.fail(e.message)));
-})
+});
+
+app.get("/postAttachment", (req, res) => {
+    // 上传文件
+    // 生成ID
+    // 新增附件记录
+    // 返回ID
+
+    var form = new multiparty.Form({
+        encoding: 'utf-8',
+        maxFilesSize: 20 * 1024 * 1024,
+        uploadDir: IMAGE_PATH
+    });
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            console.log('解析上传文件错误:', err);
+        } else {
+            var originalFilename = files.file[0].originalFilename;
+            var fileType = findFileType(originalFilename);
+            var fileName = originalFilename;
+            if (fields.name != null) {
+                fileName = fields.name[0] + fileType;
+            }
+
+            const now = new Date().getTime();
+            const path = IMAGE_PATH + now + "_" + fileName;
+
+            db.collection('image')
+            .updateOne({ id: now },
+                {
+                    $set: {
+                        id: now,
+                        rev: 1 + '-' + now,
+                        value: path
+                    }
+                },
+                { upsert: true })
+            .then(() =>  res.send(Result.success(path)))
+            .catch(e => res.json(Result.fail(e.message)));
+
+        }
+    });
+
+});
+
+function findFileType(originalFilename: string) {
+    var lastIndex = originalFilename.lastIndexOf('.');
+    if (lastIndex != -1) {
+        return originalFilename.substring(lastIndex);
+    }
+    return originalFilename;
+}
 
 export default app;
