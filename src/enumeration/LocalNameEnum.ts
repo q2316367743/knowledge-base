@@ -77,6 +77,11 @@ enum LocalNameEnum {
      */
     KEY_HOME_EDITOR_ID = '/key/home/editor/id',
 
+    /**
+     * 应用主题
+     */
+    KEY_APP_THEME = '/key/app/theme'
+
 }
 
 export default LocalNameEnum;

@@ -1,7 +1,7 @@
 <template>
     <a-layout class="todo">
         <a-layout-sider :width="270" :collapsed-width="0" :collapsed="collapsed">
-            <todo-side />
+            <todo-side v-show="!collapsed"/>
         </a-layout-sider>
         <a-layout-content>
             <todo-content />

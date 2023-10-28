@@ -79,11 +79,6 @@ export class DockerAuthDriverImpl implements AuthDriver {
         return Promise.resolve("./api/image/" + docId);
     }
 
-    init(): Promise<void> {
-        return Promise.resolve();
-    }
-
-
     put(doc: DbDoc): Promise<DbReturn> {
         return this.http.post<Result<string | undefined>>('/api/db/put', doc)
             .then(rsp => {

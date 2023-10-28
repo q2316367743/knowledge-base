@@ -77,12 +77,12 @@
                 </template>
                 推荐
             </a-menu-item>
-<!--            <a-menu-item key="/more/vip">-->
-<!--                <template #icon>-->
-<!--                    <icon-fire />-->
-<!--                </template>-->
-<!--                高级版-->
-<!--            </a-menu-item>-->
+            <!--            <a-menu-item key="/more/vip">-->
+            <!--                <template #icon>-->
+            <!--                    <icon-fire />-->
+            <!--                </template>-->
+            <!--                高级版-->
+            <!--            </a-menu-item>-->
             <a-menu-item key="/more/update">
                 <template #icon>
                     <icon-time-line/>
@@ -98,19 +98,33 @@
         </a-sub-menu>
     </a-menu>
     <div class="app-exit">
-        <a-button type="text" @click="useGlobalStore().switchDarkColors()">
-            <template #icon>
-                <icon-moon v-if="isDark"/>
-                <icon-sun v-else/>
+        <a-dropdown position="tl">
+            <a-button type="text">
+                <template #icon>
+                    <icon-palette/>
+                </template>
+            </a-button>
+            <template #content>
+                <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.DARK)">
+                    <icon-moon/>
+                    暗黑
+                </a-doption>
+                <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.LIGHT)">
+                    <icon-sun/>
+                    明亮
+                </a-doption>
+                <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.AUTO)">
+                    跟随系统
+                </a-doption>
             </template>
-        </a-button>
+        </a-dropdown>
     </div>
 </template>
 <script lang="ts" setup>
 import IconTimeLine from "@/icon/IconTimeLine.vue";
 import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {useGlobalStore} from "@/store/GlobalStore";
+import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 
 const route = useRoute();
 const router = useRouter();

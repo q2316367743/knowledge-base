@@ -1,6 +1,6 @@
 <template>
     <link :href="`./highlight.js/styles/${codeTheme}.css`" type="text/css" rel="stylesheet">
-    <div class="app">
+    <div class="app" :class="enableBackgroundImage ? 'customer-image' : 'default-color'" :style="style">
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout>
                 <a-layout-sider collapsed style="z-index: 50">
@@ -45,6 +45,15 @@ const preview = ref({
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
 const codeTheme = computed(() => useBaseSettingStore().codeTheme);
+const enableBackgroundImage = computed(() => useBaseSettingStore().enableBackgroundImage);
+const style = computed(() => {
+    if (enableBackgroundImage.value) {
+        return {
+            backgroundImage: `url(${useBaseSettingStore().backgroundImage})`
+        }
+    }
+});
+
 
 // 插件进入
 utools.onPluginEnter(action => {

@@ -71,24 +71,30 @@ pre code.hljs {
     color: var(--color-text-1) !important;
     background-color: var(--color-bg-1) !important;
     border: 1px solid var(--color-neutral-3) !important;
+
     .bytemd-toolbar, .CodeMirror {
         color: var(--color-text-1) !important;
         background-color: var(--color-bg-1) !important;
     }
+
     .bytemd-status {
         border-top: 1px solid var(--color-neutral-3) !important;
     }
+
     .bytemd-toolbar {
         border-bottom: 1px solid var(--color-neutral-3) !important;
     }
+
     .CodeMirror-cursor {
         border-left: 1px solid var(--color-text-2) !important;
     }
+
     .markdown-body {
         color: var(--color-text-1) !important;
         background-color: var(--color-bg-1) !important;
     }
 }
+
 body[arco-theme=dark] {
     .bytemd {
         .cm-s-default {
@@ -96,5 +102,63 @@ body[arco-theme=dark] {
                 color: rgb(var(--arcoblue-6)) !important;
             }
         }
+    }
+
+    .arco-card {
+        --color-bg-2: rgba(35, 35, 36, 0.3);
+    }
+
+    .arco-layout-sider {
+        background-color: rgba(0, 0, 0, 0.0) !important;
+    }
+}
+
+.arco-card {
+    --color-bg-2: rgba(255, 255, 255, 0.3);
+}
+
+.arco-layout-sider {
+    background-color: rgba(255, 255, 255, 0.0) !important;
+}
+
+
+.kb-wang-editor {
+    color: var(--color-text-1);
+    --w-e-toolbar-color: var(--color-text-1);
+    --w-e-toolbar-active-bg-color: var(--color-neutral-2);
+    --w-e-toolbar-active-color: var(--color-text-1);
+    --w-e-toolbar-bg-color: var(--color-neutral-2);
+    --w-e-toolbar-border-color: var(--color-neutral-3);
+
+
+    .w-e-text-container {
+        background-color: rgba(0, 0, 0, 0) !important;
+        color: var(--color-text-1);
+        height: 100%;
+    }
+
+    .w-e-toolbar {
+        background-color: rgba(0, 0, 0, 0) !important;
+        color: var(--color-text-1);
+    }
+    blockquote{
+        background-color: var(--color-neutral-2) !important;
+        color: var(--color-text-1);
+    }
+    .w-e-bar {
+        background-color: var(--color-bg-1);
+        color: var(--color-text-1);
+    }
+    .w-e-bar-item .disabled:hover {
+        background-color: var(--color-neutral-3);
+        color: var(--color-text-1);
+    }
+    .w-e-bar-item button:hover {
+        background-color: var(--color-neutral-3);
+        color: var(--color-text-1);
+    }
+    .w-e-menu-tooltip-v5:before {
+        background-color: var(--color-neutral-2) !important;
+        color: var(--color-text-1);
     }
 }

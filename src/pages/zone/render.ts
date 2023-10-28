@@ -1,6 +1,5 @@
 import {VNode} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useAuthStore} from "@/store/components/AuthStore";
 import {getAttachmentByAsync} from "@/utils/utools/DbStorageUtil";
 
 

@@ -108,8 +108,4 @@ export class FileAuthDriverImpl implements AuthDriver {
 
     }
 
-    init(): Promise<void> {
-        return Promise.resolve();
-    }
-
 }

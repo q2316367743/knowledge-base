@@ -10,6 +10,7 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {utools} from "@/plugin/utools";
 
 // utools注入
+export const isUtools: boolean = typeof window.utools !== 'undefined'
 window.utools = window.utools || utools;
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');

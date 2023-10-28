@@ -2,9 +2,6 @@ import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
 
 export class UtoolsAuthDriverImpl implements AuthDriver {
 
-    init(): Promise<void> {
-        return Promise.resolve();
-    }
     allDocs(key?: string): Promise<DbDoc[]> {
         return utools.db.promises.allDocs(key);
     }

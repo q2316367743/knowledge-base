@@ -1,4 +1,24 @@
 import {defineStore} from "pinia";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+
+export enum GlobalType {
+    DARK = 1,
+    LIGHT = 2,
+    AUTO = 3
+}
+
+function renderTheme(): boolean {
+    const globalType = getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO);
+    if (globalType === GlobalType.AUTO) {
+        return utools.isDarkColors();
+    } else if (globalType === GlobalType.DARK) {
+        return true;
+    } else if (globalType === GlobalType.LIGHT) {
+        return false;
+    }
+    return false;
+}
 
 export const useGlobalStore = defineStore('global', {
     state: () => ({
@@ -11,7 +31,7 @@ export const useGlobalStore = defineStore('global', {
          * 初始化主题、重置主题
          */
         initDarkColors() {
-            this.isDark = utools.isDarkColors();
+            this.isDark = renderTheme()
             if (this.isDark) {
                 // 设置为暗黑主题
                 document.body.setAttribute('arco-theme', 'dark');
@@ -23,8 +43,9 @@ export const useGlobalStore = defineStore('global', {
         /**
          * 切换主题
          */
-        switchDarkColors() {
-            this.isDark = !this.isDark;
+        switchDarkColors(type: GlobalType) {
+            setItem(LocalNameEnum.KEY_APP_THEME, type);
+            this.isDark = renderTheme()
             if (this.isDark) {
                 // 设置为暗黑主题
                 document.body.setAttribute('arco-theme', 'dark');

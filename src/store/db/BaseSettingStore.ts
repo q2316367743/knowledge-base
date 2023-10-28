@@ -4,7 +4,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getAttachmentBySync, getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -14,7 +14,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         articleHeaderVisible: true,
         codeWrap: false,
         imageStrategy: ImageStrategyEnum.IMAGE,
-        authCollapsed: true
+        authCollapsed: true,
+        backgroundImage: ''
     }
 }
 
@@ -42,7 +43,17 @@ export const useBaseSettingStore = defineStore('base-setting', {
         articleHeaderVisible: state => state.baseSetting.articleHeaderVisible,
         codeWrap: state => state.baseSetting.codeWrap,
         imageStrategy: state => state.baseSetting.imageStrategy,
-        authCollapsed: state => state.baseSetting.authCollapsed
+        authCollapsed: state => state.baseSetting.authCollapsed,
+        enableBackgroundImage: state => state.baseSetting.backgroundImage !== '',
+        backgroundImage: state => {
+            if (state.baseSetting.backgroundImage) {
+                if (state.baseSetting.backgroundImage.startsWith("attachment")) {
+                    const docId = state.baseSetting.backgroundImage.split(":")[1];
+                    return getAttachmentBySync(docId)
+                }
+            }
+            return state.baseSetting.backgroundImage;
+        }
     },
     actions: {
         async init() {

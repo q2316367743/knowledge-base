@@ -35,7 +35,7 @@
                     </template>
                 </a-dropdown>
             </header>
-            <main class="item-container">
+            <main class="item-container kb-wang-editor">
                 <div id="toolbar-container"></div>
                 <div id="todo-editor—wrapper">
                 </div>
@@ -344,13 +344,5 @@ function tagRemove(tag: string) {
 
     }
 
-}
-
-#todo-editor—wrapper {
-
-    .w-e-text-container {
-        background-color: var(--color-bg-1) !important;
-        color: var(--color-text-1) !important;
-    }
 }
 </style>

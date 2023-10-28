@@ -32,6 +32,12 @@
                     <span v-html="renderHelp(instance.articleTheme)"></span>
                 </template>
             </a-form-item>
+            <a-form-item label="背景图片">
+                <a-input-group>
+                    <a-input v-model="instance.backgroundImage" placeholder="图片地址" style="width: 400px;"/>
+                    <a-button type="primary">本地图片</a-button>
+                </a-input-group>
+            </a-form-item>
             <a-form-item label="文章头部是否显示">
                 <a-switch v-model="instance.articleHeaderVisible"/>
             </a-form-item>
@@ -80,7 +86,8 @@ import JsonTheme from "@/global/CodeTheme";
 import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import {useAuthStore} from "@/store/components/AuthStore";
+import {clone} from "xe-utils";
+import {isUtools} from '@/global/BeanFactory';
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -89,16 +96,16 @@ export default defineComponent({
         JsonTheme,
         ArticleThemeEnum,
         ImageStrategyEnum,
+        isUtools,
         instance: getDefaultBaseSetting()
     }),
     computed: {
         ...mapState(useBaseSettingStore, ['baseSetting']),
     },
     created() {
-        this.instance = Object.assign(this.instance, this.baseSetting);
+        this.instance = clone(this.baseSetting, true);
     },
     methods: {
-        useAuthStore,
         renderHelp,
         save() {
             useBaseSettingStore().save(this.instance)

@@ -132,11 +132,7 @@ export const utools = {
              * @param type 附件类型，示例：image/png, text/plain
              */
             async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
-                await set(docId, attachment);
-                return Promise.resolve({
-                    id: docId,
-                    rev: ''
-                });
+                return Promise.reject("web不支持上传附件")
             },
 
             /**
@@ -144,11 +140,7 @@ export const utools = {
              * @param docId 文档ID
              */
             async getAttachment(docId: string): Promise<Uint8Array | null> {
-                const res = await get(docId);
-                if (!res) {
-                    return Promise.resolve(null);
-                }
-                return Promise.resolve(res);
+                return Promise.reject("web不支持上传附件")
             },
 
             /**

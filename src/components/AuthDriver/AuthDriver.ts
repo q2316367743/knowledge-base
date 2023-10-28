@@ -7,11 +7,6 @@ import {DbDoc, DbReturn} from "@/plugin/utools";
 export interface AuthDriver {
 
     /**
-     * 初始化
-     */
-    init(): Promise<void>;
-
-    /**
      * 创建/更新文档
      * @param doc 文档
      */

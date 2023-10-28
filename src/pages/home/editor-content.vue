@@ -8,7 +8,8 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear :disabled="articleIndex.preview"
+                <div class="title" v-if="articleIndex.preview">{{title}}</div>
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-else
                          style="margin-left: 7px;"/>
             </div>
             <a-button-group type="text">
@@ -80,8 +81,12 @@
         <div class="ec-container">
             <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"
                              v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN && editorVisible"/>
-            <editor-js v-model="content" :read-only="articleIndex.preview"
-                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
+<!--            <editor-js v-model="content" :read-only="articleIndex.preview"-->
+<!--                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>-->
+
+            <wang-editor  v-model="content" :read-only="articleIndex.preview"
+                          v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
+
             <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
                            v-else-if="articleIndex.type === ArticleTypeEnum.CODE && editorVisible"/>
         </div>
@@ -113,6 +118,7 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import HeToc from "@/pages/home/components/he-toc.vue";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
+import WangEditor from "@/pages/home/editor/wang-editor.vue";
 
 const {ctrl, s} = useMagicKeys()
 
@@ -308,6 +314,17 @@ function renderToc(visible: boolean) {
         .left {
             display: flex;
             width: 70%;
+        }
+        .title {
+            height: 32px;
+            line-height: 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding-left: 7px;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 

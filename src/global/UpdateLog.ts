@@ -2,6 +2,21 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.4.0',
+        sign: 140,
+        time: '2023-10-28',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【编辑器】优化主程序推送，防止文档数量太多无法展示'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】修复markdown第一次展示的时候，预览超出的问题'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【编辑器】富文本编辑器变为wangEditor'
+        }]
+    },
+    {
         version: '1.3.2',
         sign: 132,
         time: '2023-10-23',
