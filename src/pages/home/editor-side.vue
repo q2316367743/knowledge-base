@@ -3,7 +3,7 @@
         <header style="margin: 7px;">
             <a-input-group style="width: 100%">
                 <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
-                <he-more />
+                <he-more/>
             </a-input-group>
         </header>
         <a-tree v-model:selected-keys="selectedKeys" :data="treeNodeData" :virtual-list-props="virtualListProps"
@@ -23,8 +23,10 @@
                             </template>
                             新增笔记
                             <template #content>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本
+                                </a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown
+                                </a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
                             </template>
                         </a-dsubmenu>
@@ -35,7 +37,7 @@
                             </template>
                             新建文件夹
                         </a-doption>
-                        <a-doption v-if="!nodeData.isLeaf" @click="renameFolder(nodeData.key, nodeData.title)">
+                        <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
@@ -52,7 +54,7 @@
             </template>
             <template #title="nodeData">
                 <a-dropdown trigger="contextMenu">
-                    <span>{{nodeData.title}}</span>
+                    <span>{{ nodeData.title }}</span>
                     <template #content>
                         <a-dsubmenu v-if="!nodeData.isLeaf">
                             <template #icon>
@@ -60,8 +62,10 @@
                             </template>
                             新增笔记
                             <template #content>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本
+                                </a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown
+                                </a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
                             </template>
                         </a-dsubmenu>
@@ -72,7 +76,7 @@
                             </template>
                             新建文件夹
                         </a-doption>
-                        <a-doption v-if="!nodeData.isLeaf" @click="renameFolder(nodeData.key, nodeData.title)">
+                        <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
@@ -133,9 +137,9 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                 icon: () => {
                     if (article.type === ArticleTypeEnum.CODE) {
                         return h(IconCode, {})
-                    }else if (article.type === ArticleTypeEnum.RICH_TEXT) {
+                    } else if (article.type === ArticleTypeEnum.RICH_TEXT) {
                         return h(IconBook, {})
-                    }else {
+                    } else {
                         return h(IconFile, {})
                     }
                 },
@@ -207,14 +211,21 @@ async function _remove(id: number, article: boolean) {
     }
 }
 
-function renameFolder(id: number, name: string) {
-    MessageBoxUtil.prompt("请输入新的文件夹名称", "重命名", {
+function rename(id: number, name: string, isLeaf: boolean) {
+    MessageBoxUtil.prompt(`请输入新的文件${isLeaf ? '' : '夹'}名称`, "重命名", {
         confirmButtonText: "确认",
         inputValue: name
     }).then(newName => {
-        useFolderStore().renameFolder(id, newName)
-            .then(() => MessageUtil.success("重命名成功"))
-            .catch(e => MessageUtil.error("重命名失败", e));
+        if (isLeaf) {
+            // 重命名文件
+            useArticleStore().updateIndex(id, {name: newName})
+                .then(() => MessageUtil.success("重命名成功"))
+                .catch(e => MessageUtil.error("重命名失败", e));
+        } else {
+            useFolderStore().renameFolder(id, newName)
+                .then(() => MessageUtil.success("重命名成功"))
+                .catch(e => MessageUtil.error("重命名失败", e));
+        }
     })
 }
 
@@ -235,7 +246,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
                 useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
                     .then(() => MessageUtil.success("移动成功"))
                     .catch(e => MessageUtil.error("移动失败", e));
-            }else {
+            } else {
                 useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
                     .then(() => MessageUtil.success("移动成功"))
                     .catch(e => MessageUtil.error("移动失败", e));

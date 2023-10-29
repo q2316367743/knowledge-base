@@ -8,9 +8,7 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <div class="title" v-if="articleIndex.preview">{{title}}</div>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-else
-                         style="margin-left: 7px;"/>
+                <div class="title">{{ title }}</div>
             </div>
             <a-button-group type="text">
                 <a-space>
@@ -81,11 +79,11 @@
         <div class="ec-container">
             <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"
                              v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN && editorVisible"/>
-<!--            <editor-js v-model="content" :read-only="articleIndex.preview"-->
-<!--                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>-->
+            <!--            <editor-js v-model="content" :read-only="articleIndex.preview"-->
+            <!--                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>-->
 
-            <wang-editor  v-model="content" :read-only="articleIndex.preview"
-                          v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
+            <wang-editor v-model="content" :read-only="articleIndex.preview"
+                         v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
 
             <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
                            v-else-if="articleIndex.type === ArticleTypeEnum.CODE && editorVisible"/>
@@ -101,7 +99,6 @@ import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleInde
 // 编辑器
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import EditorJs from '@/components/editor-js/index.vue';
 // 状态存储
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -315,6 +312,7 @@ function renderToc(visible: boolean) {
             display: flex;
             width: 70%;
         }
+
         .title {
             height: 32px;
             line-height: 32px;
