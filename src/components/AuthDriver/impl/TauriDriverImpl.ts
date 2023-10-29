@@ -1,6 +1,7 @@
-import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
+import {DbDriver} from "@/components/AuthDriver/DbDriver";
+import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 
-export default class TauriAuthDriverImpl implements AuthDriver {
+export default class TauriDriverImpl implements DbDriver, AttachmentDriver {
 
     private readonly path: string
 

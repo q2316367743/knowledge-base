@@ -1,17 +1,17 @@
 import {toRaw} from "vue";
 import {clone} from "xe-utils";
-import {UtoolsAuthDriverImpl} from "@/components/AuthDriver/impl/UtoolsAuthDriverImpl";
+import {UtoolsDriverImpl} from "@/components/AuthDriver/impl/UtoolsDriverImpl";
 import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
-import {DockerAuthDriverImpl} from "@/components/AuthDriver/impl/DockerAuthDriverImpl";
-import TauriAuthDriverImpl from "@/components/AuthDriver/impl/TauriAuthDriverImpl";
+import {DockerDriverImpl} from "@/components/AuthDriver/impl/DockerDriverImpl";
+import TauriDriverImpl from "@/components/AuthDriver/impl/TauriDriverImpl";
 
-let driver = new UtoolsAuthDriverImpl();
+let driver = new UtoolsDriverImpl();
 
 if (Constant.platform === PlatformTypeEnum.DOCKER) {
-    driver = new DockerAuthDriverImpl(localStorage.getItem("token") || "");
+    driver = new DockerDriverImpl(localStorage.getItem("token") || "");
 } else if (Constant.platform === PlatformTypeEnum.TAURI) {
-    driver = new TauriAuthDriverImpl(localStorage.getItem("path") || "");
+    driver = new TauriDriverImpl(localStorage.getItem("path") || "");
 }
 
 // 对象

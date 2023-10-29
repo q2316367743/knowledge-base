@@ -4,7 +4,7 @@ import {DbDoc, DbReturn} from "@/plugin/utools";
  * 认证驱动类
  * @since 1.1.0
  */
-export interface AuthDriver {
+export interface DbDriver {
 
     /**
      * 创建/更新文档
@@ -34,20 +34,5 @@ export interface AuthDriver {
      * @param key key的前缀
      */
     allDocKeys(key?: string): Promise<Array<string>>;
-
-    /**
-     * 存储附件到新文档
-     * @param docId 文档ID
-     * @param attachment 附件 buffer
-     * @return 链接
-     */
-    postAttachment(docId: string, attachment: Blob): Promise<string>;
-
-    /**
-     * 获取附件
-     * @param docId 文档ID
-     * @return 文件链接
-     */
-    getAttachment(docId: string): Promise<string>;
 
 }

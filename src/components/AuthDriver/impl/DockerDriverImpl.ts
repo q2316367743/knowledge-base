@@ -1,8 +1,9 @@
-import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
+import {DbDriver} from "@/components/AuthDriver/DbDriver";
 import {DbDoc} from "@/plugin/utools";
 import axios, {AxiosInstance} from "axios";
 import router from "@/plugin/router";
 import MessageUtil from "@/utils/MessageUtil";
+import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 
 interface Result<T> {
     code: number;
@@ -10,7 +11,7 @@ interface Result<T> {
     data: T;
 }
 
-export class DockerAuthDriverImpl implements AuthDriver {
+export class DockerDriverImpl implements DbDriver, AttachmentDriver {
 
     private readonly token: string;
     private readonly http: AxiosInstance
@@ -63,7 +64,7 @@ export class DockerAuthDriverImpl implements AuthDriver {
     get(id: string): Promise<DbDoc | null> {
         return this.http.get<Result<DbDoc | null>>('/api/db/get', {
             params: {
-                key: id
+                _id: id
             }
         })
             .then(rsp => {
@@ -74,11 +75,6 @@ export class DockerAuthDriverImpl implements AuthDriver {
                 }
             });
     }
-
-    getAttachment(docId: string): Promise<string> {
-        return Promise.resolve("./api/image/" + docId);
-    }
-
     put(doc: DbDoc): Promise<DbReturn> {
         return this.http.post<Result<string | undefined>>('/api/db/put', doc)
             .then(rsp => {
@@ -100,25 +96,11 @@ export class DockerAuthDriverImpl implements AuthDriver {
             });
     }
 
-    postAttachment(docId: string, attachment: Blob): Promise<string> {
-        const form = new FormData();
-        form.set('docId', docId);
-        form.set('file', attachment);
-        return this.http.post<Result<string | undefined>>('/api/db/postAttachment', form)
-            .then(rsp => {
-                if (rsp.data.code === 200) {
-                    return rsp.data.data + '';
-                } else {
-                    return Promise.reject(rsp.data.message)
-                }
-            });
-    }
-
     remove(doc: string | DbDoc): Promise<DbReturn> {
         const _id = typeof doc === 'string' ? doc : doc._id;
         return this.http.delete<Result<void>>('/api/db/remove', {
             params: {
-                key: _id
+                _id: _id
             }
         })
             .then(rsp => {
@@ -135,6 +117,24 @@ export class DockerAuthDriverImpl implements AuthDriver {
                         ok: false,
                         message: rsp.data.message
                     }
+                }
+            });
+    }
+
+    getAttachment(docId: string): Promise<string> {
+        return Promise.resolve("./api/attachment/get/" + docId);
+    }
+
+    postAttachment(docId: string, attachment: Blob): Promise<string> {
+        const form = new FormData();
+        form.set('key', docId);
+        form.set('file', attachment);
+        return this.http.post<Result<string | undefined>>('/api/attachment/post', form)
+            .then(rsp => {
+                if (rsp.data.code === 200) {
+                    return rsp.data.data + '';
+                } else {
+                    return Promise.reject(rsp.data.message)
                 }
             });
     }

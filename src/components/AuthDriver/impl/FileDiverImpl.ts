@@ -1,8 +1,9 @@
-import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
+import {DbDriver} from "@/components/AuthDriver/DbDriver";
 import {getRandomChar} from "@/utils/BrowserUtil";
+import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 
 
-export class FileAuthDriverImpl implements AuthDriver {
+export class FileDiverImpl implements DbDriver, AttachmentDriver {
 
     private readonly root: string;
 

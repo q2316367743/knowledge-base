@@ -1,6 +1,7 @@
-import {AuthDriver} from "@/components/AuthDriver/AuthDriver";
+import {DbDriver} from "@/components/AuthDriver/DbDriver";
+import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 
-export class UtoolsAuthDriverImpl implements AuthDriver {
+export class UtoolsDriverImpl implements DbDriver, AttachmentDriver {
 
     allDocs(key?: string): Promise<DbDoc[]> {
         return utools.db.promises.allDocs(key);
