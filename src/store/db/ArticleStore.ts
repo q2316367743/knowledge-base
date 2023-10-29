@@ -44,7 +44,7 @@ export const useArticleStore = defineStore('article', {
             this.rev = res.rev
         },
         async _sync() {
-            this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value);
+            this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value, this.rev);
         },
         addSimple(content: string, title?: string): Promise<number> {
             return this.add(getDefaultArticleIndex({
