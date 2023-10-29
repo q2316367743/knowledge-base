@@ -25,4 +25,3 @@ dist-ssr
 
 src-utools/dist
 src-utools/node_modules
-server/public
