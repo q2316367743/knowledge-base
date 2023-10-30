@@ -8,13 +8,12 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-show="titleEdit"
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-show="titleEdit && !articleIndex.preview"
                          @blur="titleEdit = false"
                          style="margin-left: 7px;" ref="titleInput"/>
                 <div class="title" v-if="!titleEdit">
                     <div class="title-wrap">{{ title }}</div>
-                    <a-button size="mini" style="margin-left: 7px;margin-top: 4px" type="text"
-                              @click="clickTitleEdit()">
+                    <a-button size="mini" style="margin-left: 7px;margin-top: 4px" type="text" @click="clickTitleEdit()" v-if="!articleIndex.preview">
                         <template #icon>
                             <icon-edit/>
                         </template>
@@ -93,7 +92,7 @@
             <!--            <editor-js v-model="content" :read-only="articleIndex.preview"-->
             <!--                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>-->
 
-            <wang-editor v-model="content" :read-only="articleIndex.preview"
+            <wang-editor v-model="content" :read-only="articleIndex.preview" ref="weEditor"
                          v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
 
             <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
@@ -136,6 +135,7 @@ let contentRev: string | undefined = undefined;
 const saveLoading = ref(false);
 const articleIndex = ref(getDefaultArticleIndex());
 const mdEditor = ref<any | null>(null);
+const weEditor = ref<any | null>(null);
 const extraVisible = ref(false);
 const editorVisible = ref(false);
 const titleEdit = ref(false)
@@ -297,7 +297,10 @@ function renderToc(visible: boolean) {
     if (visible) {
         if (mdEditor.value) {
             tocItems.value = mdEditor.value.getToc();
-        } else {
+        } else if (weEditor.value) {
+            tocItems.value = weEditor.value.getToc();
+            console.log(tocItems.value)
+        }else {
             tocItems.value = [];
         }
         if (articleIndex.value.type !== ArticleTypeEnum.RICH_TEXT) {
