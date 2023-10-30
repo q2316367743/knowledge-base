@@ -60,7 +60,7 @@ function toToc(id: string) {
     width: 250px;
     max-height: 70vh;
     overflow: auto;
-    background-color: var(--color-bg-1);
+    background-color: var(--color-neutral-3);
     color: var(--color-text-1);
     padding: 21px 14px 7px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
