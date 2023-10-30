@@ -104,72 +104,100 @@ body[arco-theme=dark] {
         }
     }
 
-    .arco-card {
-        --color-bg-2: rgba(35, 35, 36, 0.3);
+    .customer-image {
+        .arco-card {
+            --color-bg-2: rgba(35, 35, 36, 0.3);
+        }
+
+        .arco-layout-sider {
+            background-color: rgba(0, 0, 0, 0.0) !important;
+        }
     }
 
-    .arco-layout-sider {
-        background-color: rgba(0, 0, 0, 0.0) !important;
-    }
 }
 
 .arco-card {
-    --color-bg-2: rgba(255, 255, 255, 0.3);
+    --color-bg-2: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
 }
 
 .arco-layout-sider {
     background-color: rgba(255, 255, 255, 0.0) !important;
 }
-
-
 .kb-wang-editor {
-    color: var(--color-text-1);
     --w-e-toolbar-color: var(--color-text-1);
-    --w-e-toolbar-active-bg-color: var(--color-neutral-2);
+    --w-e-toolbar-active-bg-color: var(--color-neutral-3);
     --w-e-toolbar-active-color: var(--color-text-1);
     --w-e-toolbar-bg-color: var(--color-neutral-2);
-    --w-e-toolbar-border-color: var(--color-neutral-3);
+    --w-e-toolbar-border-color: var(--color-neutral-4);
+    --w-e-textarea-bg-color: var(--color-bg-1);
+    --w-e-textarea-color: var(--color-text-1);
+    --w-e-textarea-slight-bg-color: var(--color-neutral-3);
+    --w-e-textarea-slight-color: var(--color-text-1);
+    a {
+        color: rgb(var(--arcoblue-6));
+    }
+}
+
+body[arco-theme=dark] {
+    .w-e-text-container [data-slate-editor] pre>code {
+        text-shadow: 0 1px var(--color-neutral-2);
+    }
+}
+
+.customer-image {
+
+    .kb-wang-editor {
 
 
-    .w-e-text-container {
-        background-color: rgba(0, 0, 0, 0) !important;
-        color: var(--color-text-1);
-        height: 100%;
-    }
-
-    .w-e-toolbar {
-        background-color: rgba(0, 0, 0, 0) !important;
-        color: var(--color-text-1);
-    }
-    blockquote{
-        background-color: var(--color-neutral-2) !important;
-        color: var(--color-text-1);
-    }
-    pre{
-        background-color: var(--color-neutral-2) !important;
-        code{
-            background-color: var(--color-neutral-2) !important;
+        .w-e-text-container {
+            background-color: rgba(0, 0, 0, 0) !important;
+            color: var(--color-text-1);
+            height: 100%;
         }
-    }
-    .w-e-bar {
-        background-color: var(--color-bg-1);
-        color: var(--color-text-1);
-    }
-    .w-e-bar-item .disabled:hover {
-        background-color: var(--color-neutral-3);
-        color: var(--color-text-1);
-    }
-    .w-e-bar-item button:hover {
-        background-color: var(--color-neutral-3);
-        color: var(--color-text-1);
-    }
-    .w-e-menu-tooltip-v5:before {
-        background-color: var(--color-neutral-2) !important;
-        color: var(--color-text-1);
-    }
-    .button-container {
-        button{
-            background-color: var(--color-neutral-3) !important;
+
+        .w-e-toolbar {
+            background-color: rgba(0, 0, 0, 0) !important;
+            color: var(--color-text-1);
+        }
+
+        blockquote {
+            background-color: var(--color-neutral-2) !important;
+            color: var(--color-text-1);
+        }
+
+        pre {
+            background-color: var(--color-neutral-2) !important;
+
+            code {
+                background-color: var(--color-neutral-2) !important;
+            }
+        }
+
+        .w-e-bar {
+            background-color: var(--color-bg-1);
+            color: var(--color-text-1);
+        }
+
+        .w-e-bar-item .disabled:hover {
+            background-color: var(--color-neutral-3);
+            color: var(--color-text-1);
+        }
+
+        .w-e-bar-item button:hover {
+            background-color: var(--color-neutral-3);
+            color: var(--color-text-1);
+        }
+
+        .w-e-menu-tooltip-v5:before {
+            background-color: var(--color-neutral-2) !important;
+            color: var(--color-text-1);
+        }
+
+        .button-container {
+            button {
+                background-color: var(--color-neutral-3) !important;
+            }
         }
     }
 }

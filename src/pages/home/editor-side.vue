@@ -8,7 +8,9 @@
         </header>
         <a-tree v-model:selected-keys="selectedKeys" :data="treeNodeData" :virtual-list-props="virtualListProps"
                 :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable
-                @select="onSelect($event)" @drop="onDrop($event)" style="margin: 0 7px;">
+                :checkable="checkKeys.length > 0"
+                @select="onSelect($event)" @drop="onDrop($event)" style="margin: 0 7px;"
+                v-model:checked-keys="checkKeys">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -43,44 +45,11 @@
                             </template>
                             重命名
                         </a-doption>
-                        <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
-                            <template #icon>
-                                <icon-delete/>
-                            </template>
-                            删除
-                        </a-doption>
-                    </template>
-                </a-dropdown>
-            </template>
-            <template #title="nodeData">
-                <a-dropdown trigger="contextMenu">
-                    <span>{{ nodeData.title }}</span>
-                    <template #content>
-                        <a-dsubmenu v-if="!nodeData.isLeaf">
-                            <template #icon>
-                                <icon-plus/>
-                            </template>
-                            新增笔记
-                            <template #content>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本
-                                </a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown
-                                </a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
-                            </template>
-                        </a-dsubmenu>
-
-                        <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
-                            <template #icon>
-                                <icon-plus/>
-                            </template>
-                            新建文件夹
-                        </a-doption>
-                        <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                        <a-doption @click="multiCheckStart(nodeData.key)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
-                            重命名
+                            多选
                         </a-doption>
                         <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
                             <template #icon>
@@ -92,6 +61,20 @@
                 </a-dropdown>
             </template>
         </a-tree>
+        <div class="option" v-if="checkKeys.length > 0">
+            <a-button-group type="text" class="btn">
+                <a-button status="danger">
+                    <template #icon>
+                        <icon-delete/>
+                    </template>
+                </a-button>
+                <a-button @click="multiCheckStop()">
+                    <template #icon>
+                        <icon-close/>
+                    </template>
+                </a-button>
+            </a-button-group>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -116,6 +99,7 @@ const size = useWindowSize();
 
 const keyword = ref('');
 const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [useHomeEditorStore().id]);
+const checkKeys = ref<Array<number>>([]);
 
 const folderTree = computed(() => useFolderStore().folderTree);
 const folderMap = computed(() => useArticleStore().folderMap);
@@ -229,6 +213,15 @@ function rename(id: number, name: string, isLeaf: boolean) {
     })
 }
 
+function multiCheckStart(id: number) {
+    checkKeys.value.push(id);
+}
+
+function multiCheckStop() {
+    checkKeys.value = [];
+}
+
+
 /**
  * 检测节点是否允许被释放
  * @param options 参数
@@ -279,5 +272,34 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
     left: 0;
     bottom: 0;
     right: 0;
+
+    .option {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 14px;
+        display: flex;
+        justify-content: center;
+
+        .btn {
+            border: 1px solid var(--color-neutral-3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+    }
+}
+body[arco-theme=dark] {
+    .home-editor-side {
+
+        .option {
+
+            .btn {
+                background-color: rgba(0, 0, 0, 0.6);
+            }
+
+        }
+    }
+
 }
 </style>

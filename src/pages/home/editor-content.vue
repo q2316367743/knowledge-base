@@ -8,7 +8,18 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <div class="title">{{ title }}</div>
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-show="titleEdit"
+                         @blur="titleEdit = false"
+                         style="margin-left: 7px;" ref="titleInput"/>
+                <div class="title" v-if="!titleEdit">
+                    <div class="title-wrap">{{ title }}</div>
+                    <a-button size="mini" style="margin-left: 7px;margin-top: 4px" type="text"
+                              @click="clickTitleEdit()">
+                        <template #icon>
+                            <icon-edit/>
+                        </template>
+                    </a-button>
+                </div>
             </div>
             <a-button-group type="text">
                 <a-space>
@@ -92,7 +103,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {useMagicKeys} from "@vueuse/core";
 import MessageUtil from "@/utils/MessageUtil";
 import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
@@ -127,6 +138,8 @@ const articleIndex = ref(getDefaultArticleIndex());
 const mdEditor = ref<any | null>(null);
 const extraVisible = ref(false);
 const editorVisible = ref(false);
+const titleEdit = ref(false)
+const titleInput = ref<HTMLDivElement | null>(null)
 
 // 目录数据
 const tocItems = ref(new Array<TocItem>());
@@ -256,7 +269,11 @@ function autoSave() {
 }
 
 watch(() => content.value, () => autoSave());
-watch(() => title.value, () => autoSave());
+watch(() => titleEdit.value, value => {
+    if (!value) {
+        autoSave()
+    }
+});
 
 function sendTo(type: OneSendType) {
     try {
@@ -293,6 +310,15 @@ function renderToc(visible: boolean) {
     }
 }
 
+function clickTitleEdit() {
+    titleEdit.value = true;
+    nextTick(() => {
+        if (titleInput.value) {
+            titleInput.value.focus()
+        }
+    })
+}
+
 </script>
 <style lang="less">
 .he-editor {
@@ -320,9 +346,14 @@ function renderToc(visible: boolean) {
             font-weight: bold;
             padding-left: 7px;
             width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            display: flex;
+            flex-wrap: nowrap;
+
+            .title-wrap {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
         }
     }
 
