@@ -13,9 +13,4 @@ export default interface BaseSetting extends ArticleBaseSetting{
      */
     authCollapsed: boolean;
 
-    /**
-     * 背景图片
-     */
-    backgroundImage: string;
-
 }

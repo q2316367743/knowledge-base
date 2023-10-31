@@ -50,11 +50,14 @@
             <a-menu-item key="/setting/base">
                 基础设置
             </a-menu-item>
-            <a-menu-item key="/setting/category">
-                分类设置
+            <a-menu-item key="/setting/theme">
+                主题设置
             </a-menu-item>
             <a-menu-item key="/setting/backup">
                 备份设置
+            </a-menu-item>
+            <a-menu-item key="/setting/category">
+                分类设置
             </a-menu-item>
             <a-menu-item key="/setting/feature">
                 关键字设置

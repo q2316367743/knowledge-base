@@ -25,6 +25,8 @@ enum LocalNameEnum {
 
     SETTING_BACKUP = '/local/setting/backup',
 
+    SETTING_THEME = '/local/setting/theme',
+
     ZONE = '/local/zone',
 
     ZONE_BASE = '/zone/base/',

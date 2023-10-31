@@ -8,6 +8,7 @@ import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {utools} from "@/plugin/utools";
+import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
@@ -21,6 +22,7 @@ export async function initData(): Promise<void> {
     // 在进行数据初始化
     await Promise.all([
         useZoneStore().init(),
+        useThemeSettingStore().init(),
         useBaseSettingStore().init(),
         useArticleStore().init(),
         useCategoryStore().init(),

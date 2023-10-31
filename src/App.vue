@@ -1,6 +1,6 @@
 <template>
     <link :href="`./highlight.js/styles/${codeTheme}.css`" type="text/css" rel="stylesheet">
-    <div class="app" :class="enableBackgroundImage ? 'customer-image' : 'default-color'" :style="style">
+    <div class="app" :class="enableBackgroundImage ? 'customer-image' : 'default-color'" :style="customerImage">
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout>
                 <a-layout-sider collapsed style="z-index: 50">
@@ -30,6 +30,7 @@ import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
+import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -45,14 +46,8 @@ const preview = ref({
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
 const codeTheme = computed(() => useBaseSettingStore().codeTheme);
-const enableBackgroundImage = computed(() => useBaseSettingStore().enableBackgroundImage);
-const style = computed(() => {
-    if (enableBackgroundImage.value) {
-        return {
-            backgroundImage: `url(${useBaseSettingStore().backgroundImage})`
-        }
-    }
-});
+const enableBackgroundImage = computed(() => useThemeSettingStore().enableBackgroundImage);
+const customerImage = computed(() => useThemeSettingStore().customerImage);
 
 
 // 插件进入
@@ -167,4 +162,5 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
 }
 
 </script>
-<style lang="less"></style>
+<style lang="less">
+</style>

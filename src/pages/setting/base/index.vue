@@ -32,12 +32,6 @@
                     <span v-html="renderHelp(instance.articleTheme)"></span>
                 </template>
             </a-form-item>
-            <a-form-item label="背景图片">
-                <a-input-group>
-                    <a-input v-model="instance.backgroundImage" placeholder="图片地址" style="width: 400px;"/>
-                    <a-button type="primary">本地图片</a-button>
-                </a-input-group>
-            </a-form-item>
             <a-form-item label="文章头部是否显示">
                 <a-switch v-model="instance.articleHeaderVisible"/>
             </a-form-item>

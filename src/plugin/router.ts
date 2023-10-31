@@ -56,6 +56,10 @@ const router = createRouter({
         path: "/setting/backup",
         component: () => import("@/pages/setting/backup/index.vue")
     }, {
+        name: "主题设置",
+        path: "/setting/theme",
+        component: () => import("@/pages/setting/theme/index.vue")
+    }, {
         name: "关键字设置",
         path: "/setting/feature",
         component: () => import("@/pages/setting/feature/index.vue")

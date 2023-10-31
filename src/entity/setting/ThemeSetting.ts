@@ -21,3 +21,10 @@ export interface ThemeSetting {
     primaryColor: string;
 
 }
+
+export const getDefaultThemeSetting = (): ThemeSetting => ({
+    backgroundImage: "",
+    bgColor: "var(--color-bg-1)",
+    primaryColor: "rgb(var(--arcoblue-6))",
+    textColor: "var(--color-text-1)"
+})
