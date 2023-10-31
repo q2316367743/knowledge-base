@@ -39,17 +39,22 @@ export interface ArticleIndex {
      */
     type: ArticleTypeEnum;
 
+    /**
+     * 是否是删除的
+     */
+    isDelete: boolean;
+
 }
 
 export function getDefaultArticleIndex(source?: Partial<ArticleIndex>): ArticleIndex {
-    return Object.assign({
+    return Object.assign<ArticleIndex, Partial<ArticleIndex>>({
         id: 0,
         createTime: new Date(),
         updateTime: new Date(),
         name: '',
-        categoryId: null,
         folder: 0,
         preview: false,
-        type: ArticleTypeEnum.MARKDOWN
-    }, source);
+        type: ArticleTypeEnum.MARKDOWN,
+        isDelete: false
+    }, source || {});
 }

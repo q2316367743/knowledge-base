@@ -32,6 +32,10 @@ const router = createRouter({
         path: "/graph/search",
         component: () => import("@/pages/graph/search/index.vue")
     }, {
+        name: "图-回收站",
+        path: "/graph/recycle",
+        component: () => import("@/pages/graph/recycle/index.vue")
+    }, {
         name: "图-关联",
         path: "/graph/relation",
         component: () => import("@/pages/graph/relation/index.vue")

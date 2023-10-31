@@ -86,7 +86,6 @@ utools.onMainPush(action => {
         text: e.name,
         title: e.id + ''
     }))
-    console.log(storages.length)
     if (storages.length > 6) {
         items.push({
             icon: 'public/logo.png',

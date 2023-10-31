@@ -19,19 +19,21 @@ export const useArticleStore = defineStore('article', {
         rev: undefined as string | undefined
     }),
     getters: {
-        articles: state => state.value.sort((a, b) => b.id - a.id),
-        articleMap: (state): Map<number, ArticleIndex> => map(state.value, 'id'),
+        articles: state => state.value.filter(e => !e.isDelete).sort((a, b) => b.id - a.id),
+        articleDeletes: state => state.value.filter(e => e.isDelete),
+        articleMap: (state): Map<number, ArticleIndex> =>
+            map(state.value.filter(e => !e.isDelete), 'id'),
         categoryMap: (state): Map<number | null, Array<ArticleIndex>> => {
-            const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
+            const articles = state.value.filter(e => !e.isDelete).sort((a, b) => a.name.localeCompare(b.name));
             return group(articles, 'categoryId')
         },
         folderMap: (state): Map<number, Array<ArticleIndex>> => {
-            const articles = state.value.sort((a, b) => a.name.localeCompare(b.name));
+            const articles = state.value.filter(e => !e.isDelete).sort((a, b) => a.name.localeCompare(b.name));
             return group<ArticleIndex, 'folder', number>(articles, 'folder')
         },
         articleNames: (state): Set<string> => {
             const names = new Set<string>();
-            for (let item of state.value) {
+            for (let item of state.value.filter(e => !e.isDelete)) {
                 names.add(item.name);
             }
             return names;
@@ -65,16 +67,12 @@ export const useArticleStore = defineStore('article', {
             const now = new Date();
             const id = now.getTime();
             // 新增索引
-            this.value.push({
+            this.value.push(getDefaultArticleIndex({
                 id,
+                ...article,
                 createTime: now,
                 updateTime: now,
-                name: article.name,
-                categoryId: article.categoryId,
-                folder: article.folder,
-                preview: article.preview,
-                type: article.type
-            });
+            }));
             await this._sync();
             // 新增基础信息
             await saveOneByAsync(
@@ -158,6 +156,16 @@ export const useArticleStore = defineStore('article', {
             return saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, base, rev);
         },
         async removeById(id: number) {
+            await this.updateIndex(id, {
+                isDelete: true
+            });
+            // 如果当前就是这个文章，则清除
+            if (id === useHomeEditorStore().id) {
+                useHomeEditorStore().setId(0);
+            }
+            return Promise.resolve();
+        },
+        async removeRealById(id: number) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject("动态未找到，请刷新后重试！");
