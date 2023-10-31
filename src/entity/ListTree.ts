@@ -158,7 +158,7 @@ function _listToMap(
     const articles = articleListMap.get(pid);
     if (articles) {
         for (let article of articles) {
-            map.set(pathJoin(path, article.name) + '.md', article.id);
+            map.set(pathJoin(path, article.name), article.id);
         }
     }
 

@@ -299,7 +299,6 @@ function renderToc(visible: boolean) {
             tocItems.value = mdEditor.value.getToc();
         } else if (weEditor.value) {
             tocItems.value = weEditor.value.getToc();
-            console.log(tocItems.value)
         }else {
             tocItems.value = [];
         }

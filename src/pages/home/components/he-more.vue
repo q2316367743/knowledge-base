@@ -29,10 +29,26 @@
                 </template>
                 导入
                 <template #content>
-                    <a-doption @click="importArticleByMd()">markdown文件</a-doption>
-                    <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                        <a-doption @click="importArticleByDocx()">docx文件</a-doption>
-                    </a-tooltip>
+                    <a-dsubmenu>
+                        富文本
+                        <template #content>
+                            <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                                <a-doption @click="importArticleByDocx(ArticleTypeEnum.RICH_TEXT)">docx文件</a-doption>
+                            </a-tooltip>
+                            <a-doption @click="importTextToArticle(ArticleTypeEnum.RICH_TEXT)">html文件</a-doption>
+                        </template>
+                    </a-dsubmenu>
+                    <a-dsubmenu>
+                        Markdown
+                        <template #content>
+                            <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                                <a-doption @click="importArticleByDocx(ArticleTypeEnum.MARKDOWN)">docx文件</a-doption>
+                            </a-tooltip>
+                            <a-doption @click="importHtmlToMarkdown()">html文件</a-doption>
+                            <a-doption @click="importTextToArticle(ArticleTypeEnum.MARKDOWN)">markdown文件</a-doption>
+                        </template>
+                    </a-dsubmenu>
+                    <a-doption @click="importTextToArticle(ArticleTypeEnum.CODE)">代码文件</a-doption>
                     <a-tooltip content="导入压缩包中全部markdown文件，文件路径为文件名">
                         <a-doption @click="importArticleByZip()">zip文件</a-doption>
                     </a-tooltip>
@@ -60,11 +76,12 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {markdownToZip} from "@/components/export-component/markdownToZip";
 import {docxToArticle} from "@/components/export-component/docxToArticle";
-import {mdToArticle} from "@/components/export-component/mdToArticle";
+import {textToArticle} from "@/components/export-component/textToArticle";
 import {zipToArticle} from "@/components/export-component/zipToArticle";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {convert} from "@/global/BeanFactory";
+import {htmlToMarkdown} from "@/components/export-component/htmlToMarkdown";
 
 function addArticle(pid: number, type: ArticleTypeEnum) {
     useGlobalStore().startLoading("正在新增文章")
@@ -93,37 +110,17 @@ function addFolder(pid: number) {
     })
 }
 
-
-function importArticleByMd() {
-    _importArticleByMd()
-        .then(() => MessageUtil.success("导入成功"))
-        .catch(e => {
-            if (e.message !== 'The user aborted a request.') {
-                MessageUtil.error("导入失败", e)
-            }
-        })
-}
-
-async function _importArticleByMd() {
-    const article = await mdToArticle();
-    const articleId = await useArticleStore().add(getDefaultArticleIndex({
-        name: article.title,
-    }), getDefaultArticleBase(), article.content);
-    // 切换文章
-    useHomeEditorStore().setId(articleId);
-}
-
-function exportToMd() {
+function importHtmlToMarkdown() {
     useGlobalStore().startLoading("正在准备数据")
-    markdownToZip()
+    docxToArticle()
         .then(() => MessageUtil.success("导出成功"))
         .catch(e => MessageUtil.error("导出失败", e))
         .finally(() => useGlobalStore().closeLoading());
 }
 
 
-function importArticleByDocx() {
-    _importArticleByDocx()
+function importTextToArticle(type: ArticleTypeEnum) {
+    textToArticle(type)
         .then(() => MessageUtil.success("导入成功"))
         .catch(e => {
             if (e.message !== 'The user aborted a request.') {
@@ -132,15 +129,24 @@ function importArticleByDocx() {
         })
 }
 
-async function _importArticleByDocx() {
-    const article = await docxToArticle();
-    const articleId = await useArticleStore().add(getDefaultArticleIndex({
-        name: article.title,
-    }), getDefaultArticleBase(), article.content);
-    // 切换文章
-    useHomeEditorStore().setId(articleId);
+function exportToMd() {
+    useGlobalStore().startLoading("正在准备数据")
+    convert.articleToZip()
+        .then(() => MessageUtil.success("导出成功"))
+        .catch(e => MessageUtil.error("导出失败", e))
+        .finally(() => useGlobalStore().closeLoading());
 }
 
+
+function importArticleByDocx(type: ArticleTypeEnum) {
+    htmlToMarkdown(type)
+        .then(() => MessageUtil.success("导入成功"))
+        .catch(e => {
+            if (e.message !== 'The user aborted a request.') {
+                MessageUtil.error("导入失败", e)
+            }
+        })
+}
 
 function importArticleByZip() {
     zipToArticle()
