@@ -7,6 +7,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vue-tsc && vite build",
+        "build:docker": "vue-tsc && vite build -c config/vite.docker.ts --mode=docker",
         "preview": "vite preview"
     },
     "dependencies": {
