@@ -4,7 +4,15 @@
             <editor-side/>
         </template>
         <template #second>
-            <a-result title="请在左侧选择文章" subtitle="点击加号创建文章" status="404" v-if="id === 0"/>
+            <a-result title="请在左侧选择文章" subtitle="点击加号创建文章" status="404" v-if="id === 0">
+                <template #extra>
+                    <a-button type="primary" @click="switchCollapsed()">
+                        <template #icon>
+                            <icon-menu />
+                        </template>
+                    </a-button>
+                </template>
+            </a-result>
             <editor-content v-else/>
         </template>
     </a-split>
@@ -21,7 +29,7 @@ const windowSize = useWindowSize();
 const size = ref(useHomeEditorStore().width);
 const min = computed(() => useHomeEditorStore().collapsed ? "0px" : "270px");
 const max = computed(() => (windowSize.width.value - 350) + 'px');
-const disabled = computed(() => size.value === '0px' && useHomeEditorStore().id > 0);
+const disabled = computed(() => size.value === '0px');
 const id = computed(() => useHomeEditorStore().id)
 
 watch(() => size.value, value => useHomeEditorStore().setWidth(value));
@@ -30,6 +38,8 @@ watch(() => useHomeEditorStore().width, value => {
         size.value = value;
     }
 });
+
+const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
 </script>
 <style lang="less">
 .home-editor {
