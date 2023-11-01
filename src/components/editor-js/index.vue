@@ -3,7 +3,6 @@
 </template>
 <script lang="ts" setup>
 import {onMounted, onUnmounted, PropType, watch} from "vue";
-import './index.less';
 import EditorJS from '@editorjs/editorjs';
 import {useWindowSize} from "@vueuse/core";
 import NotificationUtil from "@/utils/NotificationUtil";
