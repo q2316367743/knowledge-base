@@ -14,7 +14,8 @@ export default [
         }, {
             label: LogItemEnum.UPDATE,
             content: '【编辑器】富文本编辑器变为wangEditor'
-        }]
+        }],
+        remark: "旧的富文本编辑器的内容还会保留一个版本，请大家及时迁移富文本编辑器的内容，下个版本将彻底删除，届时内容将无法访问。"
     },
     {
         version: '1.3.2',

@@ -7,7 +7,7 @@ import {
     getDefaultArticleIndex
 } from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {group, map} from "@/utils/ArrayUtil";
+import {contains, group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
@@ -110,6 +110,24 @@ export const useArticleStore = defineStore('article', {
 
             await this._sync();
         },
+        async updateMultiIndex(
+            articles: Array<Pick<ArticleIndex, 'id'> & Partial<ArticleIndex>>
+        ) {
+            for (let article of articles) {
+                const index = this.value.findIndex(e => e.id === article.id);
+                if (index === -1) {
+                    continue;
+                }
+                // 新增索引
+                this.value[index] = {
+                    ...this.value[index],
+                    ...article,
+                    updateTime: new Date(),
+                };
+            }
+
+            await this._sync();
+        },
         async update(
             id: number,
             article: Partial<ArticleIndex>,
@@ -155,16 +173,6 @@ export const useArticleStore = defineStore('article', {
             await this.updateIndex(id, article);
             return saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, base, rev);
         },
-        async removeById(id: number) {
-            await this.updateIndex(id, {
-                isDelete: true
-            });
-            // 如果当前就是这个文章，则清除
-            if (id === useHomeEditorStore().id) {
-                useHomeEditorStore().setId(0);
-            }
-            return Promise.resolve();
-        },
         async removeRealById(id: number) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
@@ -196,5 +204,26 @@ export const useArticleStore = defineStore('article', {
             // 同步
             await this._sync();
         },
+        async removeById(id: number) {
+            await this.updateIndex(id, {
+                isDelete: true
+            });
+            // 如果当前就是这个文章，则清除
+            if (id === useHomeEditorStore().id) {
+                useHomeEditorStore().setId(0);
+            }
+            return Promise.resolve();
+        },
+        async removeBatchByIds(ids: Array<number>) {
+            await this.updateMultiIndex(ids.map(id => ({
+                id: id,
+                isDelete: true
+            })));
+            // 如果当前就是这个文章，则清除
+            if (contains(ids, useHomeEditorStore().id)) {
+                useHomeEditorStore().setId(0);
+            }
+            return Promise.resolve();
+        }
     }
 });

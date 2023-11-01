@@ -62,18 +62,20 @@
             </template>
         </a-tree>
         <div class="option" v-if="checkKeys.length > 0">
-            <a-button-group type="text" class="btn">
-                <a-button status="danger">
-                    <template #icon>
-                        <icon-delete/>
-                    </template>
-                </a-button>
-                <a-button @click="multiCheckStop()">
+            <a-space class="btn">
+                <a-popconfirm content="确认删除这些文章，注意：不会删除目录" @ok="multiCheckDelete()">
+                    <a-button status="danger" type="text">
+                        <template #icon>
+                            <icon-delete/>
+                        </template>
+                    </a-button>
+                </a-popconfirm>
+                <a-button type="text" @click="multiCheckStop()">
                     <template #icon>
                         <icon-close/>
                     </template>
                 </a-button>
-            </a-button-group>
+            </a-space>
         </div>
     </div>
 </template>
@@ -221,6 +223,17 @@ function multiCheckStart(id: number) {
 
 function multiCheckStop() {
     checkKeys.value = [];
+}
+
+function multiCheckDelete() {
+    useGlobalStore().startLoading("开始删除")
+    useArticleStore().removeBatchByIds(checkKeys.value)
+        .then(() => MessageUtil.success("删除成功"))
+        .catch(e => MessageUtil.error("删除失败", e))
+        .finally(() => {
+            useGlobalStore().closeLoading();
+            checkKeys.value = [];
+        });
 }
 
 

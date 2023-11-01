@@ -8,12 +8,14 @@
                         <icon-menu/>
                     </template>
                 </a-button>
-                <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-show="titleEdit && !articleIndex.preview"
+                <a-input v-model="title" placeholder="请输入文章标题" allow-clear
+                         v-show="titleEdit && !articleIndex.preview"
                          @blur="titleEdit = false" @keydown.enter="titleEdit = false"
                          style="margin-left: 7px;" ref="titleInput"/>
                 <div class="title" v-if="!titleEdit">
                     <div class="title-wrap">{{ title }}</div>
-                    <a-button size="mini" style="margin-left: 7px;margin-top: 4px" type="text" @click="clickTitleEdit()" v-if="!articleIndex.preview">
+                    <a-button size="mini" style="margin-left: 7px;margin-top: 4px" type="text" @click="clickTitleEdit()"
+                              v-if="!articleIndex.preview">
                         <template #icon>
                             <icon-edit/>
                         </template>
@@ -89,12 +91,10 @@
         <div class="ec-container">
             <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"
                              v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN && editorVisible"/>
-            <!--            <editor-js v-model="content" :read-only="articleIndex.preview"-->
-            <!--                       v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>-->
-
+            <editor-js v-model="content" :read-only="articleIndex.preview"
+                       v-else-if="articleIndex.type === ArticleTypeEnum.EDITOR_JS && editorVisible"/>
             <wang-editor v-model="content" :read-only="articleIndex.preview" ref="weEditor"
                          v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
-
             <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
                            v-else-if="articleIndex.type === ArticleTypeEnum.CODE && editorVisible"/>
         </div>
@@ -108,7 +108,9 @@ import MessageUtil from "@/utils/MessageUtil";
 import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
 // 编辑器
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
+import EditorJs from "@/components/editor-js/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
+import WangEditor from "@/pages/home/editor/wang-editor.vue";
 // 状态存储
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -125,7 +127,7 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import HeToc from "@/pages/home/components/he-toc.vue";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
-import WangEditor from "@/pages/home/editor/wang-editor.vue";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 const {ctrl, s} = useMagicKeys()
 
@@ -172,6 +174,9 @@ async function _init(articleId: number) {
         return;
     }
     articleIndex.value = getDefaultArticleIndex(articleIndexWrap);
+    if (articleIndex.value.type === ArticleTypeEnum.EDITOR_JS) {
+        NotificationUtil.warning("下个版本将删除editorJs编辑器，届时将无法访问，请将内容及时迁移到新的编辑器");
+    }
     title.value = articleIndexWrap.name;
     // 内容
     editorVisible.value = false;
@@ -299,7 +304,7 @@ function renderToc(visible: boolean) {
             tocItems.value = mdEditor.value.getToc();
         } else if (weEditor.value) {
             tocItems.value = weEditor.value.getToc();
-        }else {
+        } else {
             tocItems.value = [];
         }
         if (articleIndex.value.type !== ArticleTypeEnum.RICH_TEXT) {
