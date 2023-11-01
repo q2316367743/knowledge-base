@@ -41,7 +41,8 @@ async function _updateTo130FromUnder() {
             categoryId: articleIndex.categoryId,
             folder: articleIndex.folder,
             preview: articleIndex.preview,
-            type: articleIndex.type
+            type: articleIndex.type,
+            isDelete: false
         })
     }
     // 更新

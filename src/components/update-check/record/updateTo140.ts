@@ -25,7 +25,7 @@ export function updateTo140FromUnder() {
 
 export async function _updateTo140FromUnder() {
     let articles = useArticleStore().articles;
-    articles = articles.filter(e => e.type === ArticleTypeEnum.RICH_TEXT);
+    articles = articles.filter(e => e.type === ArticleTypeEnum.EDITOR_JS);
     console.log(articles)
     // 循环
     for (let article of articles) {

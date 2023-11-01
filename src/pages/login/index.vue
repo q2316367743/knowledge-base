@@ -4,9 +4,6 @@
             <a-form-item label="token">
                 <a-input-password v-model="key"/>
             </a-form-item>
-        <a-form-item label="用户名" v-if="username">
-            <a-input v-model="auth.username"/>
-        </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="login()">登录</a-button>
             </a-form-item>

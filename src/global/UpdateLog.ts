@@ -12,8 +12,23 @@ export default [
             label: LogItemEnum.ADD,
             content: '【编辑器】修复markdown第一次展示的时候，预览超出的问题'
         }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】新增回收站功能，删除文章不会立即删除，而是会进入回收站，在回收站中可以强制删除。'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】新增批量删除功能'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【插件】新增主题设置，可以设置背景图片，可以切换暗黑/白天模式，也可以跟随系统。'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【插件】优化图片上传，下个版本会加入兰空图床，不是很建议将图片上传到utools中。'
+        }, {
             label: LogItemEnum.UPDATE,
             content: '【编辑器】富文本编辑器变为wangEditor'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【编辑器】设置里面可以设置分类'
         }],
         remark: "旧的富文本编辑器的内容还会保留一个版本，请大家及时迁移富文本编辑器的内容，下个版本将彻底删除，届时内容将无法访问。"
     },

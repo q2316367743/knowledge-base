@@ -25,7 +25,7 @@ export default function updateCheck(toUpdate?: () => void) {
                         }
                     }
                     if (oldVersion.main <= 1 && oldVersion.sub < 4) {
-                        if (newVersion.main > 1 || (newVersion.main == 1 && oldVersion.sub >= 4)) {
+                        if (newVersion.main > 1 || (newVersion.main == 1 && oldVersion.sub >= 4 && oldVersion.dot > 0)) {
                             // 执行
                             updateTo140FromUnder();
                         }
