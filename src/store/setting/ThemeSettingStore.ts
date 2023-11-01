@@ -7,7 +7,7 @@ import {StyleValue} from "vue";
 export const useThemeSettingStore = defineStore('theme-setting', {
     state: () => ({
         themeSetting: getDefaultThemeSetting(),
-        rev: undefined as undefined | string
+        rev: undefined as undefined | string,
     }),
     getters: {
         backgroundImage: state => state.themeSetting.backgroundImage,
@@ -18,10 +18,10 @@ export const useThemeSettingStore = defineStore('theme-setting', {
                 color: state.themeSetting.textColor,
                 backgroundColor: state.themeSetting.bgColor,
             };
-            if (!state.themeSetting.bgColor.startsWith('var')){
+            if (!state.themeSetting.bgColor.startsWith('var')) {
                 style['--color-bg-1'] = state.themeSetting.bgColor;
             }
-            if (!state.themeSetting.textColor.startsWith('var')){
+            if (!state.themeSetting.textColor.startsWith('var')) {
                 style['--color-text-1'] = state.themeSetting.textColor;
             }
             return style;
@@ -38,6 +38,6 @@ export const useThemeSettingStore = defineStore('theme-setting', {
         async save(themeSetting: ThemeSetting) {
             this.themeSetting = themeSetting;
             this.rev = await saveOneByAsync(LocalNameEnum.SETTING_THEME, this.themeSetting, this.rev);
-        }
+        },
     }
 })

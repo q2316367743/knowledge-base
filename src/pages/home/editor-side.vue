@@ -166,11 +166,13 @@ function addArticle(pid: number, type: ArticleTypeEnum) {
         name: type === ArticleTypeEnum.CODE ? ("新建代码" + new Date().getTime() + '.md') : ("新建文章" + new Date().getTime()),
         folder: pid,
         preview: false,
-        type
+        type,
+        isDelete: false
     }, getDefaultArticleBase(), "")
         .then(id => {
+            console.log(id)
             MessageUtil.success("新增成功");
-            useHomeEditorStore().setId(id);
+            // useHomeEditorStore().setId(id);
         })
         .catch(e => MessageUtil.error("新增失败", e))
         .finally(() => useGlobalStore().closeLoading());

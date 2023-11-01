@@ -29,6 +29,8 @@ export function parseFileExtra(fileName: string): string {
         return 'markdown';
     }else if (extra === 'ts') {
         return 'typescript';
+    }else if (extra === 'js') {
+        return 'javascript';
     }
     return extra;
 }

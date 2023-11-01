@@ -9,7 +9,7 @@
                     </template>
                 </a-button>
                 <a-input v-model="title" placeholder="请输入文章标题" allow-clear v-show="titleEdit && !articleIndex.preview"
-                         @blur="titleEdit = false"
+                         @blur="titleEdit = false" @keydown.enter="titleEdit = false"
                          style="margin-left: 7px;" ref="titleInput"/>
                 <div class="title" v-if="!titleEdit">
                     <div class="title-wrap">{{ title }}</div>

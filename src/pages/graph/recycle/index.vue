@@ -6,9 +6,6 @@
                     <icon-search/>
                 </template>
             </a-input>
-            <a-button type="primary" status="danger" disabled>
-                清空回收站
-            </a-button>
         </header>
         <a-list :data="results" :virtual-list-props="virtualListProps" style="margin: 0 7px;">
             <template #item="{ item }">

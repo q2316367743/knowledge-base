@@ -2,16 +2,13 @@
     <div class="more-setting-theme">
         <a-form :model="instance" layout="vertical">
             <a-form-item label="背景图片">
-                <a-input-group>
-                    <a-input v-model="instance.backgroundImage" placeholder="图片地址" style="width: 400px;"/>
-                    <a-button type="primary">本地图片</a-button>
-                </a-input-group>
+                <a-input v-model="instance.backgroundImage" placeholder="图片地址" style="width: 400px;"/>
             </a-form-item>
             <a-form-item label="背景颜色">
-                <color-picker v-model="instance.bgColor" />
+                <color-picker v-model="instance.bgColor"/>
             </a-form-item>
             <a-form-item label="文字">
-                <color-picker v-model="instance.textColor" />
+                <color-picker v-model="instance.textColor"/>
             </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
@@ -19,39 +16,35 @@
         </a-form>
     </div>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
-import {mapState} from "pinia";
+<script lang="ts" setup>
+import {ref} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
-import { renderHelp} from "@/store/db/BaseSettingStore";
 import {clone} from "xe-utils";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
-import {getDefaultThemeSetting} from "@/entity/setting/ThemeSetting";
 import ColorPicker from "@/components/color-picker/index.vue";
+import {useFileSystemAccess} from "@vueuse/core";
 
-export default defineComponent({
-    name: 'more-setting-theme',
-    components: {ColorPicker},
-    emits: ['save'],
-    data: () => ({
-        instance: getDefaultThemeSetting()
-    }),
-    computed: {
-        ...mapState(useThemeSettingStore, ['themeSetting']),
-    },
-    created() {
-        this.instance = clone(this.themeSetting, true);
-    },
-    methods: {
-        renderHelp,
-        save() {
-            useThemeSettingStore().save(this.instance)
-                .then(() => MessageUtil.success("保存成功"))
-                .catch(e => MessageUtil.error("保存失败", e))
-                .finally(() => this.$emit('save'));
+const emits = defineEmits(['save']);
+
+const instance = ref(clone(useThemeSettingStore().themeSetting, true));
+
+function save() {
+    useThemeSettingStore().save(instance.value)
+        .then(() => MessageUtil.success("保存成功"))
+        .catch(e => MessageUtil.error("保存失败", e))
+        .finally(() => emits('save'));
+}
+
+const file = useFileSystemAccess({
+    dataType: 'Blob',
+    types: [{
+        description: '图片',
+        accept: {
+            'image/*': ['.png', '.jpg', '.jpeg', '.webp'],
         }
-    }
-});
+    }]
+})
+
 </script>
 <style scoped>
 .more-setting-theme {

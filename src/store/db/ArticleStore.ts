@@ -68,10 +68,10 @@ export const useArticleStore = defineStore('article', {
             const id = now.getTime();
             // 新增索引
             this.value.push(getDefaultArticleIndex({
-                id,
                 ...article,
                 createTime: now,
                 updateTime: now,
+                id,
             }));
             await this._sync();
             // 新增基础信息

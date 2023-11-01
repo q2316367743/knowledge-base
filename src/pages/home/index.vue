@@ -21,7 +21,7 @@ const windowSize = useWindowSize();
 const size = ref(useHomeEditorStore().width);
 const min = computed(() => useHomeEditorStore().collapsed ? "0px" : "270px");
 const max = computed(() => (windowSize.width.value - 350) + 'px');
-const disabled = computed(() => size.value === '0px');
+const disabled = computed(() => size.value === '0px' && useHomeEditorStore().id > 0);
 const id = computed(() => useHomeEditorStore().id)
 
 watch(() => size.value, value => useHomeEditorStore().setWidth(value));

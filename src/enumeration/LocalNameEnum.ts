@@ -19,6 +19,9 @@ enum LocalNameEnum {
 
     ARTICLE_COMMENT = '/article/comment/',
 
+    /**
+     * 附件
+     */
     ARTICLE_ATTACHMENT = '/article/attachment/',
 
     SETTING_BASE = '/local/setting/base',
@@ -35,6 +38,9 @@ enum LocalNameEnum {
 
     ZONE_PREVIEW = '/zone/preview/',
 
+    /**
+     * 附件
+     */
     ZONE_ATTACHMENT = '/zone/attachment/',
 
     ZONE_COMMENT = '/zone/comment/',
@@ -58,6 +64,8 @@ enum LocalNameEnum {
      * 待办项的属性
      */
     TODO_ATTR = '/todo/attr/',
+
+    APP_ATTACHMENT = '/app/attachment/',
 
     /**
      * 版本
