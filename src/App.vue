@@ -124,7 +124,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     if (operate === 'article') {
         statistics.access("进入", "查看文章");
         toArticle(preload);
-    } else if (operate === 'todo') {
+    }else if (operate === 'todo') {
         statistics.access("进入", "查看待办");
         toTodo(preload);
     } else if (operate === 'function') {
@@ -138,7 +138,10 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         } else if (preload === 'editor') {
             statistics.access("进入", "前往编辑器");
             router.push('/home');
-        } else if (preload === 'todo') {
+        } else if (preload === 'zone') {
+            statistics.access("进入", "前往编辑器");
+            router.push('/zone');
+        }else if (preload === 'todo') {
             statistics.access("进入", "前往待办");
             router.push('/todo');
         } else if (preload === 'add') {

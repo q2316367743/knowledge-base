@@ -29,6 +29,19 @@
             ]
         },
         {
+            "code": "function:zone",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                "动态"
+            ]
+        },
+        {
             "code": "function:todo",
             "explain": "知识库",
             "icon": "public/logo.png",
