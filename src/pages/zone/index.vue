@@ -7,7 +7,7 @@
                 <zone-item v-for="item in items" :zone="item" @remove="init()" :key="item.id" :id="'zone-' + item.id"/>
                 <template #scroll-loading>
                     <div v-if="bottom">没有更多动态了</div>
-                    <a-spin v-else/>
+                    <a-button type="text" v-else @click="render()">显示更多</a-button>
                 </template>
             </a-list>
         </div>
