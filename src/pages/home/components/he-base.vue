@@ -11,11 +11,19 @@
             <a-form-item label="来源链接">
                 <a-input v-model="base.sourceUrl" :max-length="255"/>
             </a-form-item>
+            <a-form-item label="分类">
+                <a-tree-select v-model="categoryId" placeholder="请选择分类" scrollbar allow-clear
+                               :data="categoryTree" allow-search>
+                </a-tree-select>
+            </a-form-item>
             <a-form-item label="标签">
                 <a-select v-model="base.tags" placeholder="请输入标签" multiple scrollbar allow-clear
                           allow-search
                           allow-create>
                 </a-select>
+                <template #help>
+                    按回车新增标签
+                </template>
             </a-form-item>
             <a-form-item label="描述">
                 <a-textarea v-model="base.description" :auto-size="{minRows: 4}"
@@ -63,12 +71,13 @@
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import {renderHelp} from "@/store/db/BaseSettingStore";
 import {computed, ref, watch} from "vue";
-import {getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
+import {getDefaultArticleBaseByBaseSetting} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useCategoryStore} from "@/store/db/CategoryStore";
 
 const props = defineProps({
     modelValue: Boolean
@@ -76,18 +85,23 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const extraVisible = ref(false);
+const categoryId = ref<number | undefined>(undefined);
 const base = ref(getDefaultArticleBaseByBaseSetting());
 let rev: undefined | string = undefined;
 
-watch(() => useHomeEditorStore().id, value => init(value));
-
-init(useHomeEditorStore().id);
+const categoryTree = computed(() => useCategoryStore().categoryTree);
 
 function init(id: number) {
     if (id === 0) {
         base.value = getDefaultArticleBaseByBaseSetting();
         rev = undefined;
         return;
+    }
+    const articleIndex = useArticleStore().articleMap.get(id);
+    if (articleIndex) {
+        categoryId.value = articleIndex.categoryId;
+    } else {
+        categoryId.value = undefined;
     }
     getFromOneWithDefaultByAsync(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, getDefaultArticleBaseByBaseSetting())
         .then(res => {
@@ -96,7 +110,13 @@ function init(id: number) {
         });
 }
 
-watch(() => props.modelValue, value => extraVisible.value = (value || false));
+watch(() => props.modelValue, value => {
+    extraVisible.value = (value || false);
+    if (extraVisible.value) {
+        // 查询
+        init(useHomeEditorStore().id);
+    }
+});
 watch(() => extraVisible.value, value => emit('update:modelValue', value));
 
 function save() {
@@ -111,7 +131,9 @@ function save() {
 }
 
 async function _save() {
-    rev = await useArticleStore().updateBase(useHomeEditorStore().id, {}, base.value, rev);
+    rev = await useArticleStore().updateBase(useHomeEditorStore().id, {
+        categoryId: categoryId.value
+    }, base.value, rev);
 }
 </script>
 <style scoped>
