@@ -11,6 +11,7 @@ import {utools} from "@/plugin/utools";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {ConvertDriver} from "@/components/AuthDriver/ConvertDriver";
 import UtoolsConvertDriver from "@/components/AuthDriver/convert/UtoolsConvertDriver";
+import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
@@ -29,6 +30,7 @@ export async function initData(): Promise<void> {
         useZoneStore().init(),
         useThemeSettingStore().init(),
         useBaseSettingStore().init(),
+        useLskyProSettingStore().init(),
         useArticleStore().init(),
         useCategoryStore().init(),
         useBackupSettingStore().init(),

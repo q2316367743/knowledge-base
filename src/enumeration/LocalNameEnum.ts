@@ -30,6 +30,8 @@ enum LocalNameEnum {
 
     SETTING_THEME = '/local/setting/theme',
 
+    SETTING_LSKY_PRO = '/local/setting/lsky-pro',
+
     ZONE = '/local/zone',
 
     ZONE_BASE = '/zone/base/',

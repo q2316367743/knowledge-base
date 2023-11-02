@@ -91,8 +91,6 @@
         <div class="ec-container">
             <markdown-editor v-model="content" :preview="articleIndex.preview" ref="mdEditor"
                              v-if="articleIndex.type === ArticleTypeEnum.MARKDOWN && editorVisible"/>
-            <editor-js v-model="content" :read-only="articleIndex.preview"
-                       v-else-if="articleIndex.type === ArticleTypeEnum.EDITOR_JS && editorVisible"/>
             <wang-editor v-model="content" :read-only="articleIndex.preview" ref="weEditor"
                          v-else-if="articleIndex.type === ArticleTypeEnum.RICH_TEXT && editorVisible"/>
             <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
@@ -108,7 +106,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
 // 编辑器
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
-import EditorJs from "@/components/editor-js/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import WangEditor from "@/pages/home/editor/wang-editor.vue";
 // 状态存储
@@ -127,7 +124,6 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import HeToc from "@/pages/home/components/he-toc.vue";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
-import NotificationUtil from "@/utils/NotificationUtil";
 
 const {ctrl, s} = useMagicKeys()
 
@@ -175,7 +171,9 @@ async function _init(articleId: number) {
     }
     articleIndex.value = getDefaultArticleIndex(articleIndexWrap);
     if (articleIndex.value.type === ArticleTypeEnum.EDITOR_JS) {
-        NotificationUtil.warning("下个版本将删除editorJs编辑器，届时将无法访问，请将内容及时迁移到新的编辑器");
+        MessageUtil.error("EditorJS的富文本编辑器已不再支持！");
+        useHomeEditorStore().setId(0);
+        return;
     }
     title.value = articleIndexWrap.name;
     // 内容

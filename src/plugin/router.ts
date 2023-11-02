@@ -48,23 +48,27 @@ const router = createRouter({
         path: "/graph/timeline",
         component: () => import("@/pages/graph/timeline/index.vue")
     }, {
-        name: "基础设置",
+        name: "设置-基础",
         path: "/setting/base",
         component: () => import("@/pages/setting/base/index.vue")
     }, {
-        name: "分类设置",
-        path: "/setting/category",
-        component: () => import("@/pages/setting/category/index.vue")
-    }, {
-        name: "备份设置",
-        path: "/setting/backup",
-        component: () => import("@/pages/setting/backup/index.vue")
-    }, {
-        name: "主题设置",
+        name: "设置-主题",
         path: "/setting/theme",
         component: () => import("@/pages/setting/theme/index.vue")
     }, {
-        name: "关键字设置",
+        name: "设置-分类",
+        path: "/setting/category",
+        component: () => import("@/pages/setting/category/index.vue")
+    }, {
+        name: "设置-备份",
+        path: "/setting/backup",
+        component: () => import("@/pages/setting/backup/index.vue")
+    }, {
+        name: "设置-兰空图床",
+        path: "/setting/lsky-pro",
+        component: () => import("@/pages/setting/lsky-pro/index.vue")
+    }, {
+        name: "设置-关键字",
         path: "/setting/feature",
         component: () => import("@/pages/setting/feature/index.vue")
     }, {

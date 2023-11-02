@@ -56,6 +56,9 @@
             <a-menu-item key="/setting/theme">
                 主题设置
             </a-menu-item>
+            <a-menu-item key="/setting/lsky-pro">
+                兰空图床
+            </a-menu-item>
             <a-menu-item key="/setting/backup">
                 备份设置
             </a-menu-item>
