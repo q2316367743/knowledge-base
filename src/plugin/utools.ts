@@ -257,5 +257,12 @@ export const utools = {
     getFeatures(codes?: Array<string>): Array<any> {
         console.warn("web环境不支持feature功能");
         return [];
+    },
+    copyText(content: string){
+        navigator.clipboard.writeText(content)
+            .then(() => console.debug("写入剪切板"))
+            .catch(e => {
+                throw e;
+            })
     }
 }

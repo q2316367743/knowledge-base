@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from "axios";
+import axios, {AxiosRequestConfig, CancelToken} from "axios";
 
 /**
  * 兰空图床
@@ -110,19 +110,34 @@ export class LskyPro {
     /**
      * 上传
      * @param file 文件
+     * @param callback 回调函数
+     * @param error 异常回调
+     * @param config 自定义配置
      */
-    async upload(file: File): Promise<UploadResult> {
+    upload(file: File,
+           callback: (result: UploadResult) => void,
+           error: (message: string) => void,
+           config?: AxiosRequestConfig): UploadRequest {
         const formData = new FormData();
         formData.set("file", file);
-        if (this.option.strategyId > 0) {
+        if (this.option.strategyId) {
             formData.set("strategy_id", this.option.strategyId + '');
         }
-        const rsp = await axios.post<Result<UploadResult>>('/api/v1/upload', formData, this.config);
-        if (rsp.data.status) {
-            return rsp.data.data;
-        } else {
-            return Promise.reject(rsp.data.message);
-        }
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+        axios.post<Result<UploadResult>>('/api/v1/upload', formData, {
+            ...config,
+            ...this.config,
+            cancelToken: source.token
+        })
+            .then(rsp => {
+                if (rsp.data.status) {
+                    callback(rsp.data.data)
+                } else {
+                    error(rsp.data.message);
+                }
+            });
+        return {abort: () => source.cancel()}
     }
 
     /**
@@ -179,19 +194,18 @@ export interface LskyAuth {
     url: string;
     email: string;
     password: string;
+    token: string;
 }
 
 export interface LskyOption extends LskyAuth {
-    token: string;
-    strategyId: number;
+    strategyId?: number;
 }
 
 export const getDefaultLskyOption = (): LskyOption => ({
     url: '',
     email: '',
     password: '',
-    token: '',
-    strategyId: 0
+    token: ''
 });
 
 interface Result<T> {
@@ -343,4 +357,8 @@ export interface AlbumResult {
     intro: string;
     // 相册图片数量
     image_num: number;
+}
+
+export interface UploadRequest {
+    abort: () => void;
 }
