@@ -272,7 +272,7 @@ export interface UploadLinkResult {
     html: string;
     bbcode: string;
     markdown: string;
-    markdown_whit_link: string;
+    markdown_with_link: string;
     // 图片缩略图
     thumbnail_url: string;
 }

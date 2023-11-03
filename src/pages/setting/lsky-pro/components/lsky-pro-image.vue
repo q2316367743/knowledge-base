@@ -1,5 +1,5 @@
 <template>
-    <div class="lsky-pro-image">
+    <a-layout class="lsky-pro-image">
         <header class="image-header">
             <a-button @click="openAlbum()">{{ albumName }}</a-button>
             <a-input-group>
@@ -8,7 +8,7 @@
                     <a-option value="newest">最新</a-option>
                     <a-option value="earliest">最早</a-option>
                     <a-option value="utmost">最大</a-option>
-                    <a-option value="least">最下</a-option>
+                    <a-option value="least">最小</a-option>
                 </a-select>
                 <a-select v-model="permission" style="width: 140px" allow-clear placeholder="权限">
                     <a-option value="public">公开</a-option>
@@ -23,15 +23,41 @@
                 </template>
             </a-result>
             <a-image-preview-group infinite v-else-if="!isLoad && items.length > 0">
-                <a-image v-for="item in items" :src="item.links.url" :width="200" :title="item.name"
-                         :description='item.human_date'>
-                    <template #loader>
-                        <img alt="item.name" width="200" :src="item.links.thumbnail_url"/>
-                    </template>
-                </a-image>
+                <div class="images">
+                    <div v-for="item in items" class="image">
+                        <a-image :src="item.links.url" :alt="item.name" height="200px"/>
+                        <div class="title">{{ item.name }}</div>
+                        <div class="date">{{ item.human_date }}</div>
+                        <div class="action">
+                            <a-button-group type="text" size="mini">
+                                <a-tooltip content="复制链接">
+                                    <a-button @click="copyUrl(item)">
+                                        <template #icon>
+                                            <icon-link/>
+                                        </template>
+                                    </a-button>
+                                </a-tooltip>
+                                <a-tooltip content="复制markdown">
+                                    <a-button @click="copyMarkdown(item)">
+                                        <template #icon>
+                                            <icon-edit/>
+                                        </template>
+                                    </a-button>
+                                </a-tooltip>
+                                <a-tooltip content="查看详情">
+                                    <a-button @click="openInfo(item)">
+                                        <template #icon>
+                                            <icon-info-circle/>
+                                        </template>
+                                    </a-button>
+                                </a-tooltip>
+                            </a-button-group>
+                        </div>
+                    </div>
+                </div>
             </a-image-preview-group>
             <a-result status="404" title="没有图片" v-else/>
-            <a-pagination v-model:current="page" :page-size="size" :total="total"/>
+            <a-pagination v-model:current="page" :page-size="size" :total="total" style="margin-top: 7px"/>
         </main>
         <a-drawer v-model:visible="album.visible" title="全部相册" width="400px">
             <a-input-group>
@@ -68,14 +94,15 @@
                 </a-button>
             </template>
         </a-drawer>
-    </div>
+    </a-layout>
 </template>
 <script lang="ts" setup>
-
-import {ref, watch} from "vue";
+import {h, ref, watch} from "vue";
 import {AlbumResult, AlbumType, ImageOrder, ImagePermission, ImageResult} from "@/plugin/sdk/LskyPro";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
+import {Descriptions, DescriptionsItem, Link, Modal} from "@arco-design/web-vue";
+import {utools} from "@/plugin/utools";
 
 const page = ref(1);
 const size = ref(10);
@@ -108,6 +135,9 @@ const album = ref({
 })
 
 watch(() => page.value, () => render(), {immediate: true});
+watch(() => order.value, () => render());
+watch(() => permission.value, () => render());
+watch(() => albumId.value, () => render());
 watch(() => album.value.page, () => renderAlbum());
 
 function render() {
@@ -180,7 +210,6 @@ function chooseAlbum() {
         albumName.value = albumId.value + '';
     }
     page.value = 1;
-    render();
 }
 
 function clearAlbum() {
@@ -188,11 +217,91 @@ function clearAlbum() {
     albumId.value = undefined;
     albumName.value = "请选择相册";
     page.value = 1;
-    render();
 }
+
 function searchAlbum() {
     album.value.page = 1;
     renderAlbum();
+}
+
+function openInfo(item: ImageResult) {
+    Modal.open({
+        title: "图片信息",
+        width: "600px",
+        content: () => h(Descriptions, {
+            bordered: true,
+            column: 1,
+            width: 400,
+            footer: false
+        }, () => ([
+            h(DescriptionsItem, {
+                label: "图片唯一秘钥"
+            }, () => (item.key)),
+            h(DescriptionsItem, {
+                label: "图片名称"
+            }, () => (item.name)),
+            h(DescriptionsItem, {
+                label: "图片原始名称"
+            }, () => (item.origin_name)),
+            h(DescriptionsItem, {
+                label: "图片大小"
+            }, () => (item.size + " KB")),
+            h(DescriptionsItem, {
+                label: "图片尺寸"
+            }, () => (item.width + " * " + item.height)),
+            h(DescriptionsItem, {
+                label: "md5"
+            }, () => (item.md5)),
+            h(DescriptionsItem, {
+                label: "sha1"
+            }, () => (item.sha1)),
+            h(DescriptionsItem, {
+                label: "上传时间"
+            }, () => (item.human_date)),
+            h(DescriptionsItem, {
+                label: "上传日期"
+            }, () => (item.date)),
+            h(DescriptionsItem, {
+                label: "链接"
+            }, () => ([
+                h(Link, {
+                    onClick: () => {
+                        utools.copyText(item.links.url);
+                        MessageUtil.success("成功复制到剪切板");
+                    }
+                }, () => ("复制链接")),
+                h(Link, {
+                    onClick: () => {
+                        utools.copyText(item.links.html);
+                        MessageUtil.success("成功复制到剪切板");
+                    }
+                }, () => ("复制html")),
+                h(Link, {
+                    onClick: () => {
+                        utools.copyText(item.links.markdown);
+                        MessageUtil.success("成功复制到剪切板");
+                    }
+                }, () => ("复制markdown")),
+                h(Link, {
+                    onClick: () => {
+                        utools.copyText(item.links.markdown_with_link);
+                        MessageUtil.success("成功复制到剪切板");
+                    }
+                }, () => ("复制链接的markdown"))
+            ]))
+        ]))
+    })
+}
+
+
+function copyUrl(item: ImageResult) {
+    utools.copyText(item.links.url);
+    MessageUtil.success("成功复制到剪切板");
+}
+
+function copyMarkdown(item: ImageResult) {
+    utools.copyText(item.links.markdown);
+    MessageUtil.success("成功复制到剪切板");
 }
 
 </script>
@@ -216,6 +325,31 @@ function searchAlbum() {
         right: 0;
         bottom: 7px;
         overflow: auto;
+        .images {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            .image {
+                height: 200px;
+                position: relative;
+                margin: 4px;
+                .title {
+                    position: absolute;
+                    left: 7px;
+                    bottom: 30px;
+                }
+                .date {
+                    position: absolute;
+                    left: 7px;
+                    bottom: 7px;
+                }
+                .action {
+                    position: absolute;
+                    right: 7px;
+                    bottom: 7px;
+                }
+            }
+        }
     }
 }
 </style>
