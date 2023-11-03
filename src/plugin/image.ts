@@ -6,6 +6,9 @@ import {RedirectPreload} from "@/plugin/utools";
 import {getAttachmentByAsync, getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
+import Constant from "@/global/Constant";
+import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
+import {isUtools} from "@/global/BeanFactory";
 
 /**
  * 文件上传组件
@@ -30,11 +33,22 @@ export async function useImageUpload(data: Blob | string): Promise<string> {
 async function selfImageUpload(data: Blob | string): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
+
+        if (Constant.platform === PlatformTypeEnum.WEB) {
+            return Promise.reject("web版不支持上传图片到内部");
+        }
+
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
         return useUtoolsImageUpload(data);
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
+
+
+        if (Constant.platform === PlatformTypeEnum.WEB || !isUtools) {
+            return Promise.reject("web版不支持调用图床");
+        }
+
         if (typeof data !== 'string') {
             data = await blobToBase64(data);
         }

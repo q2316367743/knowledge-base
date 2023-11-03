@@ -43,10 +43,10 @@
             </a-form-item>
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.INNER">
+                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="isWeb">
                         内部实现
                     </a-radio>
-                    <a-radio :value="ImageStrategyEnum.IMAGE">插件【图床】</a-radio>
+                    <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="isWeb">插件【图床】</a-radio>
                     <a-radio :value="ImageStrategyEnum.LSKY_PRO">兰空图床(推荐)</a-radio>
                 </a-radio-group>
                 <template #help>
@@ -85,9 +85,10 @@ import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/db
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
-import {isUtools} from '@/global/BeanFactory';
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import Constant from "@/global/Constant";
+import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -96,11 +97,18 @@ export default defineComponent({
         JsonTheme,
         ArticleThemeEnum,
         ImageStrategyEnum,
-        isUtools,
         instance: getDefaultBaseSetting()
     }),
     computed: {
         ...mapState(useBaseSettingStore, ['baseSetting']),
+        isWeb() {
+            return Constant.platform === PlatformTypeEnum.WEB
+        }
+    },
+    watch: {
+        baseSetting() {
+            this.instance = clone(this.baseSetting, true);
+        }
     },
     created() {
         this.instance = clone(this.baseSetting, true);
@@ -117,9 +125,9 @@ export default defineComponent({
                 }
             }
             useBaseSettingStore().save(this.instance)
-                .then(() => MessageUtil.success("保存成功"))
-                .catch(e => MessageUtil.error("保存失败", e))
-                .finally(() => this.$emit('save'));
+                    .then(() => MessageUtil.success("保存成功"))
+                    .catch(e => MessageUtil.error("保存失败", e))
+                    .finally(() => this.$emit('save'));
         }
     }
 });

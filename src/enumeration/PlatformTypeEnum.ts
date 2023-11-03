@@ -2,7 +2,8 @@ enum PlatformTypeEnum {
 
     UTOOLS = 'utools',
     DOCKER = 'docker',
-    TAURI = 'tauri'
+    TAURI = 'tauri',
+    WEB = 'web'
 
 }
 
