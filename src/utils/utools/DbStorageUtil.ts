@@ -11,7 +11,7 @@ let driver = new UtoolsDriverImpl();
 if (Constant.platform === PlatformTypeEnum.DOCKER) {
     driver = new DockerDriverImpl(localStorage.getItem("token") || "");
 } else if (Constant.platform === PlatformTypeEnum.TAURI) {
-    driver = new TauriDriverImpl(localStorage.getItem("path") || "");
+    driver = new TauriDriverImpl();
 }
 
 // 对象
@@ -215,7 +215,7 @@ export function getStrBySession<T>(key: string): T | null {
     }
     try {
         return JSON.parse(item)['value'];
-    }catch (e){
+    } catch (e) {
         sessionStorage.removeItem(key);
         return null;
     }
@@ -233,7 +233,7 @@ export function setStrBySession(key: string, value: string) {
  * @param attachment 附件 buffer
  * @return url
  */
-export  function postAttachment(docId: string, attachment: Blob): Promise<string> {
+export function postAttachment(docId: string, attachment: Blob): Promise<string> {
     return driver.postAttachment(docId, attachment);
 }
 
@@ -257,11 +257,5 @@ export async function getAttachmentByAsync(docId: string): Promise<string> {
  * @return 文件链接
  */
 export function getAttachmentBySync(docId: string): string {
-    const data = utools.db.getAttachment(docId);
-    if (!data) {
-        console.error(`资源【${docId}】加载失败`)
-        return "./logo.png"
-    }
-    const blob = new Blob([data]);
-    return window.URL.createObjectURL(blob);
+    return driver.getAttachmentBy(docId)
 }

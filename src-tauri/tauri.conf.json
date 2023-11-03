@@ -1,0 +1,98 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "build": {
+    "beforeBuildCommand": "pnpm build:tauri",
+    "beforeDevCommand": "pnpm dev:tauri",
+    "devPath": "http://localhost:5173",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "knowledge-base",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "clipboard": {
+        "writeText": true
+      },
+      "notification": {
+        "all": true
+      },
+      "shell": {
+        "open": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "createDir": true,
+        "exists": true,
+        "writeFile": true,
+        "scope": ["$PICTURE/knowledge-base", "$PICTURE/knowledge-base/*"]
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["$PICTURE/knowledge-base", "$PICTURE/knowledge-base/*"]
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Education",
+      "copyright": "落雨不悔 © 2023",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "xyz.esion.knowledge-base",
+      "longDescription": "构建自己的知识库，笔记、动态、待办三合一，支持markdown笔记、富文本笔记和代码笔记，支持多种格式导入，支持zip导出，更多功能等你发现。",
+      "publisher": "落雨不悔",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "",
+      "targets": "all",
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        },
+        "wix": {
+          "license": "../LICENSE",
+          "language": "zh-CN"
+        }
+      }
+    },
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
+    },
+    "updater": {
+      "active": false
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "height": 770,
+        "width": 1080,
+        "minHeight": 770,
+        "minWidth": 1080,
+        "resizable": true,
+        "title": "知识库",
+        "center": true
+      }
+    ]
+  }
+}

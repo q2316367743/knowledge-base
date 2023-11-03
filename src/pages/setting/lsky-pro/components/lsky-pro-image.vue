@@ -333,10 +333,15 @@ function copyMarkdown(item: ImageResult) {
                 height: 200px;
                 position: relative;
                 margin: 4px;
+                overflow: hidden;
                 .title {
                     position: absolute;
                     left: 7px;
+                    right: 7px;
                     bottom: 30px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
                 .date {
                     position: absolute;

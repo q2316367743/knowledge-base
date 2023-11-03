@@ -2,6 +2,14 @@ import {DbDriver} from "@/components/AuthDriver/DbDriver";
 import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 
 export class UtoolsDriverImpl implements DbDriver, AttachmentDriver {
+    getAttachmentBy(docId: string): string {
+        const data = utools.db.getAttachment(docId);
+        if (!data){
+            return "./logo.png";
+        }
+        const blob = new Blob([data]);
+        return window.URL.createObjectURL(blob);
+    }
 
     allDocs(key?: string): Promise<DbDoc[]> {
         return utools.db.promises.allDocs(key);

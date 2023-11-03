@@ -13,6 +13,10 @@ interface Result<T> {
 
 export class DockerDriverImpl implements DbDriver, AttachmentDriver {
 
+    getAttachmentBy(docId: string): string {
+        return docId;
+    }
+
     private readonly token: string;
     private readonly http: AxiosInstance
 

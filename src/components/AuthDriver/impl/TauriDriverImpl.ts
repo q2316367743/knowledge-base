@@ -1,44 +1,49 @@
 import {DbDriver} from "@/components/AuthDriver/DbDriver";
 import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
+import {convertFileSrc} from '@tauri-apps/api/tauri';
+import {createDir, exists, writeBinaryFile} from '@tauri-apps/api/fs'
+import {join, pictureDir} from '@tauri-apps/api/path';
+import Constant from "@/global/Constant";
 
 export default class TauriDriverImpl implements DbDriver, AttachmentDriver {
 
-    private readonly path: string
-
-    constructor(path: string) {
-        this.path = path;
+    getAttachmentBy(docId: string): string {
+        return convertFileSrc(docId);
     }
 
-    allDocKeys(key?: string): Promise<Array<string>> {
-        return Promise.resolve([]);
+    allDocs(key?: string): Promise<DbDoc[]> {
+        return utools.db.promises.allDocs(key);
     }
 
-    allDocs(key?: string): Promise<Array<DbDoc>> {
-        return Promise.resolve([]);
+    allDocKeys(key?: string | undefined): Promise<string[]> {
+        return utools.db.promises.allDocs(key).then(docs => docs.map(doc => doc.id));
     }
 
     get(id: string): Promise<DbDoc | null> {
-        return Promise.resolve(null);
+        return utools.db.promises.get(id);
     }
 
-    getAttachment(docId: string): Promise<string> {
-        return Promise.resolve("");
+    async getAttachment(docId: string): Promise<string> {
+        return Promise.resolve(this.getAttachmentBy(docId));
     }
 
-    postAttachment(docId: string, attachment: Blob): Promise<string> {
-        return Promise.resolve("");
+    async postAttachment(docId: string, attachment: Blob): Promise<string> {
+        const dir = await pictureDir();
+        const now = new Date().getTime();
+        const basePath = await join(dir, Constant.id);
+        if (!await exists(basePath)) {
+            await createDir(basePath);
+        }
+        const path = await join(basePath, now + '.png');
+        await writeBinaryFile(path, new Uint8Array(await attachment.arrayBuffer()))
+        return this.getAttachmentBy(path);
     }
 
     put(doc: DbDoc): Promise<DbReturn> {
-        return Promise.resolve({
-            id: doc._id
-        });
+        return utools.db.promises.put(doc);
     }
 
     remove(doc: string | DbDoc): Promise<DbReturn> {
-        return Promise.resolve({
-            id: typeof doc === 'string' ? doc : doc._id
-        });
+        return utools.db.promises.remove(doc);
     }
-
 }

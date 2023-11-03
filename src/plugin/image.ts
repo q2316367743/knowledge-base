@@ -88,12 +88,3 @@ export function useLoadImageBySync(id: string): string {
     return getAttachmentBySync(id);
 }
 
-/**
- * 根据图片ID，获取图片连接（异步）
- * @param id 附件ID
- * @return 图片地址
- */
-export async function useLoadImageByAsync(id: string): Promise<string> {
-    const data = await getAttachmentByAsync(id);
-    return Promise.resolve(data);
-}

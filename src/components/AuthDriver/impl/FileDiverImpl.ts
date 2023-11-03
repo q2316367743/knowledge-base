@@ -4,6 +4,9 @@ import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 
 
 export class FileDiverImpl implements DbDriver, AttachmentDriver {
+    getAttachmentBy(docId: string): string {
+        return docId;
+    }
 
     private readonly root: string;
 

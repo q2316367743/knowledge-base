@@ -15,5 +15,11 @@ export interface AttachmentDriver {
      */
     getAttachment(docId: string): Promise<string>;
 
+    /**
+     * 获取附件
+     * @param docId 文档ID
+     * @return 文件链接
+     */
+    getAttachmentBy(docId: string): string;
 
 }
