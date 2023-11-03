@@ -5,6 +5,7 @@ import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
 import {RedirectPreload} from "@/plugin/utools";
 import {getAttachmentByAsync, getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 /**
  * 文件上传组件
@@ -12,6 +13,21 @@ import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
  * @return 链接
  */
 export async function useImageUpload(data: Blob | string): Promise<string> {
+
+    useGlobalStore().startLoading("开始上传图片");
+
+    try {
+        const url = await selfImageUpload(data);
+        return Promise.resolve(url);
+    }catch (e) {
+        return Promise.reject(e)
+    }finally {
+        useGlobalStore().closeLoading();
+    }
+
+}
+
+async function selfImageUpload(data: Blob | string): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
         if (typeof data === 'string') {
@@ -28,7 +44,7 @@ export async function useImageUpload(data: Blob | string): Promise<string> {
             data: data
         } as RedirectPreload);
         return Promise.resolve("");
-    }else  if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
+    } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
