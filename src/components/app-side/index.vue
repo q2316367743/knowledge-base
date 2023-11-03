@@ -74,7 +74,7 @@
                 <icon-more/>
             </template>
             <template #title>更多</template>
-            <a-menu-item key="/more/attachment">
+            <a-menu-item key="/more/attachment" v-if="useAttachment">
                 <template #icon>
                     <icon-attachment/>
                 </template>
@@ -134,6 +134,9 @@ import IconTimeLine from "@/icon/IconTimeLine.vue";
 import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
+import {isUtools} from "@/global/BeanFactory";
+import Constant from "@/global/Constant";
+import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 
 const route = useRoute();
 const router = useRouter();
@@ -147,7 +150,9 @@ watch(() => route.path, path => {
     if (selectedKeys.value[0] !== path) {
         selectedKeys.value[0] = path;
     }
-})
+});
+
+const useAttachment = computed(() => isUtools && Constant.platform === PlatformTypeEnum.UTOOLS);
 
 </script>
 <style scoped>

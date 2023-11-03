@@ -29,8 +29,13 @@ public class DbRecord implements Serializable {
     private String _rev;
 
     /**
+     * 所属用户
+     */
+    private String userId;
+
+    /**
      * 存储值
      */
-    private JSONObject value;
+    private String value;
 
 }
