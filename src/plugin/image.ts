@@ -4,6 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
 import {RedirectPreload} from "@/plugin/utools";
 import {getAttachmentByAsync, getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
+import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 
 /**
  * 文件上传组件
@@ -27,6 +28,11 @@ export async function useImageUpload(data: Blob | string): Promise<string> {
             data: data
         } as RedirectPreload);
         return Promise.resolve("");
+    }else  if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
+        if (typeof data === 'string') {
+            data = base64toBlob(data.replace("data:image/png;base64,", ""));
+        }
+        return useLskyProSettingStore().upload(data)
     }
 
     return Promise.reject("请在基础设置中选择图片上传策略")

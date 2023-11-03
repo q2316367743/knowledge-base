@@ -8,7 +8,12 @@ enum ImageStrategyEnum {
     /**
      * 图床
      */
-    IMAGE = 2
+    IMAGE = 2,
+
+    /**
+     * 兰空图床
+     */
+    LSKY_PRO = 3
 
 }
 

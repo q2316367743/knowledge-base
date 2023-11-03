@@ -67,9 +67,9 @@ export const useLskyProSettingStore = defineStore('lsky-pro-setting', {
             this.profile = null;
         },
         async getProfile(): Promise<ProfileResult> {
-            let profile = useLskyProSettingStore().profile
+            let profile = this.profile
             if (!profile) {
-                profile = await useLskyProSettingStore().instance.profile();
+                profile = await this.instance.profile();
             }
             return profile;
         },
@@ -79,6 +79,16 @@ export const useLskyProSettingStore = defineStore('lsky-pro-setting', {
                 ...record
             }
             await this._sync();
+        },
+        upload(file: Blob): Promise<string> {
+            if (!this.isAvailable) {
+                return Promise.reject("兰空图床不可用，无法上传")
+            }
+            return new Promise<string>((resolve, reject) => {
+                this.instance.upload(file,
+                    result => resolve(result.links.url),
+                    message => reject(message));
+            })
         }
     }
 })

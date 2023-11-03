@@ -47,6 +47,7 @@
                         内部实现
                     </a-radio>
                     <a-radio :value="ImageStrategyEnum.IMAGE">插件【图床】</a-radio>
+                    <a-radio :value="ImageStrategyEnum.LSKY_PRO">兰空图床(推荐)</a-radio>
                 </a-radio-group>
                 <template #help>
                     <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
@@ -54,6 +55,9 @@
                     </span>
                     <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
                         需要安装插件【图床】
+                    </span>
+                    <span v-else-if="instance.imageStrategy === ImageStrategyEnum.LSKY_PRO">
+                        推荐使用，需要自己部署图床服务器
                     </span>
                 </template>
             </a-form-item>
@@ -82,6 +86,8 @@ import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
 import {isUtools} from '@/global/BeanFactory';
+import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -102,6 +108,14 @@ export default defineComponent({
     methods: {
         renderHelp,
         save() {
+            // 校验图床
+            if (this.instance.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
+                if (!useLskyProSettingStore().isAvailable) {
+                    MessageBoxUtil.confirm("检测到您未配置兰空图床，是否立即前往配置?", "错误")
+                            .then(() => this.$router.push("/setting/lsky-pro"))
+                    return;
+                }
+            }
             useBaseSettingStore().save(this.instance)
                 .then(() => MessageUtil.success("保存成功"))
                 .catch(e => MessageUtil.error("保存失败", e))

@@ -114,7 +114,7 @@ export class LskyPro {
      * @param error 异常回调
      * @param config 自定义配置
      */
-    upload(file: File,
+    upload(file: Blob,
            callback: (result: UploadResult) => void,
            error: (message: string) => void,
            config?: AxiosRequestConfig): UploadRequest {
