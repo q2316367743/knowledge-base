@@ -91,6 +91,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useMagicKeys} from "@vueuse/core";
 import {randomColor} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
+import {useImageUpload} from "@/plugin/image";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 let lock = false;
@@ -114,6 +115,8 @@ const color = computed(() => handlePriorityColor(item.value.index.priority));
 const createTime = computed(() => toDateString(item.value.index.createTime, "yyyy-MM-dd HH:mm:ss"));
 const tags = computed(() => item.value.content.record.tags);
 
+type InsertFnType = (url: string, alt?: string, href?: string) => void
+
 const editorConfig: IEditorConfig = {
     placeholder: '请输入待办内容',
     onChange(editor: IDomEditor) {
@@ -126,6 +129,22 @@ const editorConfig: IEditorConfig = {
     scroll: false,
     readOnly: false,
     autoFocus: false,
+    MENU_CONF: {
+        uploadImage: {
+            customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
+                // async customUpload(file, insertFn) {                   // JS 语法
+                // file 即选中的文件
+                // 自己实现上传，并得到图片 url alt href
+                useImageUpload(file)
+                    .then(url => {
+                        if (url) {
+                            // 最后插入图片
+                            insertFn(url, file.name || "默认图片");
+                        }
+                    })
+            }
+        }
+    }
 }
 
 watch(() => itemId.value, value => init(value));

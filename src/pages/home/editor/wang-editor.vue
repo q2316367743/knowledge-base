@@ -50,15 +50,6 @@ const editorConfig: Partial<IEditorConfig> = {
     autoFocus: false,
     MENU_CONF: {
         uploadImage: {
-            // 自定义插入图片
-            customInsert(res: any, insertFn: InsertFnType) {  // TS 语法
-                // customInsert(res, insertFn) {                  // JS 语法
-                // res 即服务端的返回结果
-                console.log(res)
-
-                // 从 res 中找到 url alt href ，然后插入图片
-                insertFn("url", "alt", "href");
-            },
             customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
                 // async customUpload(file, insertFn) {                   // JS 语法
                 // file 即选中的文件
