@@ -6,7 +6,7 @@ export interface AttachmentDriver {
      * @param attachment 附件 buffer
      * @return 链接
      */
-    postAttachment(docId: string, attachment: Blob): Promise<string>;
+    postAttachment(docId: string, attachment: Blob | File): Promise<string>;
 
     /**
      * 获取附件

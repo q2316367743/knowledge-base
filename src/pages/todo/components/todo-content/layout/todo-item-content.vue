@@ -185,7 +185,7 @@ function create() {
         selector: '#todo-editor—wrapper',
         html: item.value.content.record.content,
         config: editorConfig,
-        mode: 'default', // or 'simple'
+        mode: 'simple', // or 'simple'
     });
     editor.setHtml(item.value.content.record.content);
     const toolbarConfig: Partial<IToolbarConfig> = {

@@ -29,7 +29,7 @@ watch(() => props.readOnly, value => {
     if (editor) {
         if (value) {
             editor.disable();
-        }else {
+        } else {
             editor.enable();
         }
     }
@@ -94,7 +94,6 @@ const toolbarConfig: Partial<IToolbarConfig> = {
         },
         "insertVideo", "insertTable", "codeBlock"]
 }
-
 
 
 function create() {

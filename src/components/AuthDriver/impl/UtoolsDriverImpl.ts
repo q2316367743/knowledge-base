@@ -31,7 +31,7 @@ export class UtoolsDriverImpl implements DbDriver, AttachmentDriver {
         return Promise.resolve(window.URL.createObjectURL(blob));
     }
 
-    async postAttachment(docId: string, attachment: Blob): Promise<string> {
+    async postAttachment(docId: string, attachment: Blob | File): Promise<string> {
         const buffer = await attachment.arrayBuffer();
         const res = await utools.db.promises.postAttachment(docId, new Uint8Array(buffer), "application/octet-stream");
         if (res.error) {

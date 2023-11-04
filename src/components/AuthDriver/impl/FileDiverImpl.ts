@@ -55,7 +55,7 @@ export class FileDiverImpl implements DbDriver, AttachmentDriver {
         return Promise.resolve(window.preload.pathJoin(this.root, docId + '.png'));
     }
 
-    async postAttachment(docId: string, attachment: Blob): Promise<string> {
+    async postAttachment(docId: string, attachment: Blob | File): Promise<string> {
 
         // 处理文件路径
         const fileName = docId + '.png';

@@ -129,7 +129,7 @@ export class DockerDriverImpl implements DbDriver, AttachmentDriver {
         return Promise.resolve("./api/attachment/get/" + docId);
     }
 
-    postAttachment(docId: string, attachment: Blob): Promise<string> {
+    postAttachment(docId: string, attachment: Blob | File): Promise<string> {
         const form = new FormData();
         form.set('key', docId);
         form.set('file', attachment);

@@ -8,13 +8,14 @@ import {CherryConfig, editorProps} from "@/components/markdown-editor/CherryMark
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
 import {useScreenShotMenu} from "@/components/markdown-editor/plugins/ScreenShotMenu";
-import {useLoadImageBySync, useImageUpload} from "@/plugin/image";
+import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {usePanGu} from "@/components/markdown-editor/plugins/PanGuMenu";
 import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
 import MessageUtil from "@/utils/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {isUtools} from "@/global/BeanFactory";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -57,7 +58,7 @@ const config: CherryConfig = {
                         // TODO: 此种方法无法再web端使用
                         if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
                             return useLoadImageBySync(id)
-                        }else {
+                        } else {
                             return useLoadImageBySync(LocalNameEnum.ARTICLE_ATTACHMENT + id)
                         }
                     }
@@ -81,7 +82,7 @@ const config: CherryConfig = {
             {
                 YangShi: [
                     'bold',
-                    'italic','strikethrough', 'underline', 'sub', 'sup', 'ruby'],
+                    'italic', 'strikethrough', 'underline', 'sub', 'sup', 'ruby'],
             },
             {
                 ZiTi: [
@@ -101,8 +102,7 @@ const config: CherryConfig = {
                 insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
             },
             'graph',
-            'export',
-            'ScreenShotMenu',
+            'export'
         ],
         toolbarRight: ['fullScreen', '|'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'], // array or false
@@ -153,7 +153,7 @@ const config: CherryConfig = {
                         return;
                     }
                     utools.shellOpenExternal(href);
-                }else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
+                } else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
                     const src = (aEle as HTMLImageElement).src;
                     window.onImagePreview(src);
                 }
@@ -165,13 +165,16 @@ const config: CherryConfig = {
         },
     },
     fileUpload(file, callback) {
-        useGlobalStore().startLoading("图片上传中...");
-        useImageUpload(file).then(url => callback(url))
+        useImageUpload(file)
+            .then(url => callback(url))
             .catch(e => MessageUtil.error("图片上传失败", e))
-            .finally(() => useGlobalStore().closeLoading());
 
     }
 };
+if (isUtools) {
+    // 只有是utools才需要截图
+    config.toolbars?.toolbar?.push('ScreenShotMenu')
+}
 
 const preview = computed(() => {
     if (props.preview) {
@@ -219,22 +222,7 @@ function handleTheme() {
     if (!instance.value) {
         return;
     }
-    const cherryTheme = localStorage.getItem('cherry-theme');
-    if (cherryTheme && ((cherryTheme === 'dark') !== useGlobalStore().isDark)) {
-        if (cherryTheme === 'dark') {
-            if (!useGlobalStore().isDark) {
-                // 记录是暗黑，但现在不是
-                instance.value.setTheme('default')
-            }
-        } else {
-            if (useGlobalStore().isDark) {
-                // 记录不是暗黑，但是现在是黑
-                instance.value.setTheme('default')
-            }
-        }
-    }else {
-        instance.value.setTheme(useGlobalStore().isDark ? 'dark' : 'default')
-    }
+    instance.value.setTheme(useGlobalStore().isDark ? 'dark' : 'default')
 }
 
 function exportFile(type: string, fileName: string) {
@@ -248,7 +236,7 @@ function exportFile(type: string, fileName: string) {
 function getToc(): Array<TocItem> {
     if (instance.value) {
         return instance.value.getToc();
-    }else {
+    } else {
         return [];
     }
 }
@@ -264,6 +252,7 @@ function getToc(): Array<TocItem> {
 .cherry {
     background-color: var(--color-bg-1);
     color: var(--color-text-1);
+
     .cherry-previewer {
         a {
             color: rgb(var(--arcoblue-6));

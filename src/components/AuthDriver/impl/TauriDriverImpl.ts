@@ -2,7 +2,7 @@ import {DbDriver} from "@/components/AuthDriver/DbDriver";
 import {AttachmentDriver} from "@/components/AuthDriver/AttachmentDriver";
 import {convertFileSrc} from '@tauri-apps/api/tauri';
 import {createDir, exists, writeBinaryFile} from '@tauri-apps/api/fs'
-import {join, pictureDir} from '@tauri-apps/api/path';
+import {extname, join, pictureDir} from '@tauri-apps/api/path';
 import Constant from "@/global/Constant";
 
 export default class TauriDriverImpl implements DbDriver, AttachmentDriver {
@@ -27,16 +27,22 @@ export default class TauriDriverImpl implements DbDriver, AttachmentDriver {
         return Promise.resolve(this.getAttachmentBy(docId));
     }
 
-    async postAttachment(docId: string, attachment: Blob): Promise<string> {
+    async postAttachment(docId: string, attachment: Blob | File): Promise<string> {
         const dir = await pictureDir();
         const now = new Date().getTime();
         const basePath = await join(dir, Constant.id);
         if (!await exists(basePath)) {
             await createDir(basePath);
         }
-        const path = await join(basePath, now + '.png');
+        let ext = 'png';
+        if (attachment instanceof File) {
+            if (attachment.name) {
+                ext = await extname(attachment.name)
+            }
+        }
+        const path = await join(basePath, now + '.' + ext);
         await writeBinaryFile(path, new Uint8Array(await attachment.arrayBuffer()))
-        return this.getAttachmentBy(path);
+        return path;
     }
 
     put(doc: DbDoc): Promise<DbReturn> {

@@ -3,7 +3,7 @@ import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
 import {RedirectPreload} from "@/plugin/utools";
-import {getAttachmentByAsync, getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
+import {getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import Constant from "@/global/Constant";
@@ -15,12 +15,15 @@ import {isUtools} from "@/global/BeanFactory";
  * @param data 图片数据
  * @return 链接
  */
-export async function useImageUpload(data: Blob | string): Promise<string> {
+export async function useImageUpload(data: File | string): Promise<string> {
 
     useGlobalStore().startLoading("开始上传图片");
 
     try {
-        const url = await selfImageUpload(data);
+        let url = await selfImageUpload(data);
+        if (Constant.platform === PlatformTypeEnum.TAURI) {
+            url = getAttachmentBySync(url);
+        }
         return Promise.resolve(url);
     }catch (e) {
         return Promise.reject(e)
@@ -30,7 +33,7 @@ export async function useImageUpload(data: Blob | string): Promise<string> {
 
 }
 
-async function selfImageUpload(data: Blob | string): Promise<string> {
+async function selfImageUpload(data: File | Blob | string): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
 
@@ -69,7 +72,7 @@ async function selfImageUpload(data: Blob | string): Promise<string> {
 
 }
 
-async function useUtoolsImageUpload(data: Blob): Promise<string> {
+async function useUtoolsImageUpload(data: Blob | File): Promise<string> {
     const id = new Date().getTime() + '';
 
     const url = await postAttachment(

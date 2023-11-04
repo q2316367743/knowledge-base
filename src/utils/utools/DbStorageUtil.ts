@@ -233,7 +233,7 @@ export function setStrBySession(key: string, value: string) {
  * @param attachment 附件 buffer
  * @return url
  */
-export function postAttachment(docId: string, attachment: Blob): Promise<string> {
+export function postAttachment(docId: string, attachment: Blob | File): Promise<string> {
     return driver.postAttachment(docId, attachment);
 }
 
