@@ -5,7 +5,6 @@
     "type": "module",
     "description": "知识库",
     "scripts": {
-
         "dev": "vite --mode=web",
         "dev:utools": "vite --mode=utools",
         "dev:docker": "vite --mode=docker",
@@ -26,6 +25,7 @@
         "@wangeditor/plugin-md": "^1.0.0",
         "axios": "^1.4.0",
         "cherry-markdown": "^0.8.26",
+        "dayjs": "^1.11.10",
         "fuse.js": "^6.6.2",
         "highlight.js": "^11.8.0",
         "html2canvas": "^1.4.1",

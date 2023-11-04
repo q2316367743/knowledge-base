@@ -97,7 +97,7 @@
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {h, ref, watch} from "vue";
+import {computed, h, ref, watch} from "vue";
 import {AlbumResult, AlbumType, ImageOrder, ImagePermission, ImageResult} from "@/plugin/sdk/LskyPro";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageUtil from "@/utils/MessageUtil";

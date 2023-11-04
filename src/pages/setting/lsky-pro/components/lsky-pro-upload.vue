@@ -15,7 +15,7 @@
                 </template>
             </a-button>
         </a-space>
-        <a-upload draggable style="margin-top: 7px;" list-type="picture" :custom-request="customerUpload" :file-list="fileList"/>
+        <a-upload :disabled="invalid" draggable style="margin-top: 7px;" list-type="picture" :custom-request="customerUpload" :file-list="fileList"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -32,6 +32,7 @@ const strategyLoad = ref(false);
 const fileList = ref(new Array<FileItem>());
 
 const disabled = computed(() => !useLskyProSettingStore().isLogin || strategyLoad.value);
+const invalid = computed(() => !useLskyProSettingStore().isAvailable);
 
 watch(() => strategyId.value, value => useLskyProSettingStore().update({strategyId: value}))
 
@@ -86,5 +87,6 @@ function customerUpload(option: RequestOption): UploadRequest {
     right: 0;
     bottom: 0;
     overflow: auto;
+    overflow-x: hidden;
 }
 </style>

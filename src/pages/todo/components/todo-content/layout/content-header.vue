@@ -65,12 +65,19 @@
                             </template>
                             关联文章
                         </a-doption>
+                        <a-doption :disabled="disabled" @click="open()">
+                            <template #icon>
+                                <icon-export/>
+                            </template>
+                            导出
+                        </a-doption>
                     </template>
                 </a-dropdown>
             </a-button-group>
         </header>
         <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
                  :disabled="id === 0"/>
+        <todo-export v-model:visible="exportVisible" />
     </div>
 </template>
 <script lang="ts" setup>
@@ -81,6 +88,7 @@ import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 import {useTodoAddArticleEvent} from "@/global/BeanFactory";
+import TodoExport from "@/pages/todo/components/todo-content/components/todo-export.vue";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
@@ -98,6 +106,7 @@ const disabled = computed(() => useTodoStore().id === 0);
 
 const titleWrap = ref("");
 const todoListSort = ref<TodoListSortEnum>(TodoListSortEnum.PRIORITY);
+const exportVisible = ref(false);
 
 watch(() => useTodoStore().id, value => getTodoListSort(value), {immediate: true});
 
@@ -137,6 +146,10 @@ const setTodoListSort = (value: any) => {
 
 function association() {
     useTodoAddArticleEvent.emit();
+}
+
+function open() {
+    exportVisible.value = true;
 }
 
 </script>
