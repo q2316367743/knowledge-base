@@ -78,6 +78,7 @@ import {useWindowSize} from "@vueuse/core";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 
 const size = useWindowSize();
 
@@ -104,7 +105,7 @@ watch(() => selectKeys.value, value => {
     let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
     if (category && category.type === TodoCategoryTypeEnum.TODO) {
         useTodoStore().setId(categoryId);
-        if (size.width.value < Constant.autoCollapsedWidth) {
+        if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
             useTodoStore().switchCollapsed();
         }
     } else {
@@ -134,8 +135,8 @@ function add(pid: number) {
 function submit() {
     // 新增
     useTodoCategoryStore().add(todoCategory.value.record)
-        .then(() => MessageUtil.success("新增成功"))
-        .catch(e => MessageUtil.error("新增失败", e));
+            .then(() => MessageUtil.success("新增成功"))
+            .catch(e => MessageUtil.error("新增失败", e));
 }
 
 function rename(id: number, name: string) {
@@ -144,8 +145,8 @@ function rename(id: number, name: string) {
         cancelButtonText: "取消",
         inputValue: name
     }).then(newName => useTodoCategoryStore().rename(id, newName)
-        .then(() => MessageUtil.success("重命名成功"))
-        .catch(e => MessageUtil.error("重命名失败", e)))
+            .then(() => MessageUtil.success("重命名成功"))
+            .catch(e => MessageUtil.error("重命名失败", e)))
 }
 
 function remove(id: number, title: string) {
@@ -153,8 +154,8 @@ function remove(id: number, title: string) {
         confirmButtonText: "删除",
         cancelButtonText: "取消"
     }).then(() => useTodoCategoryStore().remove(id)
-        .then(() => MessageUtil.success("删除成功"))
-        .catch(e => MessageUtil.error("删除失败", e)));
+            .then(() => MessageUtil.success("删除成功"))
+            .catch(e => MessageUtil.error("删除失败", e)));
 
 }
 
@@ -168,19 +169,19 @@ function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 
 
 function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
     if (typeof data.dragNode.key !== 'undefined' &&
-        typeof data.dropNode.key !== 'undefined') {
+            typeof data.dropNode.key !== 'undefined') {
         if (data.dropPosition === 0) {
             useTodoCategoryStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-                .then(() => MessageUtil.success("移动成功"))
-                .catch(e => MessageUtil.error("移动失败", e));
-        }else {
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
+        } else {
             const target = useTodoCategoryStore().todoCategoryMap.get(data.dropNode.key as number);
             if (!target) {
                 return;
             }
             useTodoCategoryStore().drop(data.dragNode.key as number, target.pid)
-                .then(() => MessageUtil.success("移动成功"))
-                .catch(e => MessageUtil.error("移动失败", e));
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
         }
     }
 }

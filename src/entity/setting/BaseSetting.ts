@@ -11,6 +11,11 @@ export default interface BaseSetting extends ArticleBaseSetting{
     /**
      * 当屏幕太小时，是否自动收起
      */
-    authCollapsed: boolean;
+    autoCollapsedByEditor: boolean;
+
+    /**
+     * 当屏幕太小时，是否自动收起
+     */
+    autoCollapsedByTodo: boolean;
 
 }

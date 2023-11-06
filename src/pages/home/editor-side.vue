@@ -145,7 +145,7 @@ function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
     if (useArticleStore().articleMap.has(id)) {
         useHomeEditorStore().setId(id);
-        if (useBaseSettingStore().authCollapsed && size.width.value < Constant.autoCollapsedWidth) {
+        if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
             useHomeEditorStore().switchCollapsed();
         }
     }

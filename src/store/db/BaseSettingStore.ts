@@ -16,7 +16,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         articleHeaderVisible: true,
         codeWrap: false,
         imageStrategy: ImageStrategyEnum.INNER,
-        authCollapsed: true
+        autoCollapsedByEditor: true,
+        autoCollapsedByTodo: true
     }
 }
 
@@ -44,7 +45,8 @@ export const useBaseSettingStore = defineStore('base-setting', {
         articleHeaderVisible: state => state.baseSetting.articleHeaderVisible,
         codeWrap: state => state.baseSetting.codeWrap,
         imageStrategy: state => state.baseSetting.imageStrategy,
-        authCollapsed: state => state.baseSetting.authCollapsed
+        autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
+        autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo
     },
     actions: {
         async init() {
