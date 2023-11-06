@@ -79,6 +79,12 @@
                     当插件宽度小于1080px时生效
                 </template>
             </a-form-item>
+            <a-form-item label="新建文章名模板">
+                <a-input v-model="instance.newArticleTemplateByName"/>
+                <template #help>
+                    当插件宽度小于1080px时生效
+                </template>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>

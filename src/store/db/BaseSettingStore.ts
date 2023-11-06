@@ -17,7 +17,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         codeWrap: false,
         imageStrategy: ImageStrategyEnum.INNER,
         autoCollapsedByEditor: true,
-        autoCollapsedByTodo: true
+        autoCollapsedByTodo: true,
+        newArticleTemplateByName: "新建文章 (yyyy/MM/DD)"
     }
 }
 
@@ -46,7 +47,8 @@ export const useBaseSettingStore = defineStore('base-setting', {
         codeWrap: state => state.baseSetting.codeWrap,
         imageStrategy: state => state.baseSetting.imageStrategy,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
-        autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo
+        autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
+        newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName
     },
     actions: {
         async init() {

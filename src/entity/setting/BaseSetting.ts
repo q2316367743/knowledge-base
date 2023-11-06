@@ -18,4 +18,9 @@ export default interface BaseSetting extends ArticleBaseSetting{
      */
     autoCollapsedByTodo: boolean;
 
+    /**
+     * 新建文章的文件名模板
+     */
+    newArticleTemplateByName: string;
+
 }
