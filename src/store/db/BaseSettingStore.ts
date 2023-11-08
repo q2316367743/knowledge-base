@@ -7,6 +7,8 @@ import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import dayjs from "dayjs";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -18,7 +20,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         imageStrategy: ImageStrategyEnum.INNER,
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
-        newArticleTemplateByName: "新建文章 (yyyy/MM/DD)"
+        newArticleTemplateByName: "[新建文章] (YYYY/MM/DD)",
+        codeExtraName: 'ts'
     }
 }
 
@@ -48,7 +51,8 @@ export const useBaseSettingStore = defineStore('base-setting', {
         imageStrategy: state => state.baseSetting.imageStrategy,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
-        newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName
+        newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName,
+        codeExtraName: state => state.baseSetting.codeExtraName
     },
     actions: {
         async init() {
@@ -65,4 +69,12 @@ export const useBaseSettingStore = defineStore('base-setting', {
             this.rev = await saveOneByAsync(LocalNameEnum.SETTING_BASE, this.baseSetting, this.rev);
         }
     }
-})
+});
+
+export function buildArticleName(type: ArticleTypeEnum): string {
+    const name = dayjs().format(useBaseSettingStore().newArticleTemplateByName);
+    if (type === ArticleTypeEnum.CODE) {
+        return `${name}.${useBaseSettingStore().codeExtraName}`;
+    }
+    return name;
+}

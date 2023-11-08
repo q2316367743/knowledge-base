@@ -23,4 +23,10 @@ export default interface BaseSetting extends ArticleBaseSetting{
      */
     newArticleTemplateByName: string;
 
+    /**
+     * 代码拓展名
+     */
+    codeExtraName: string;
+
+
 }

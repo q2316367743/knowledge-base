@@ -90,7 +90,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {buildArticleName, useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import HeMore from "@/pages/home/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {getDefaultArticleBase} from "@/entity/article";
@@ -165,7 +165,7 @@ function addFolder(pid: number) {
 function addArticle(pid: number, type: ArticleTypeEnum) {
     useGlobalStore().startLoading("正在新增文章")
     useArticleStore().add({
-        name: type === ArticleTypeEnum.CODE ? ("新建代码" + new Date().getTime() + '.md') : ("新建文章" + new Date().getTime()),
+        name: buildArticleName(type),
         folder: pid,
         preview: false,
         type,

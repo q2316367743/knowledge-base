@@ -82,8 +82,11 @@
             <a-form-item label="新建文章名模板">
                 <a-input v-model="instance.newArticleTemplateByName"/>
                 <template #help>
-                    当插件宽度小于1080px时生效
+                    [YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z] => YYYYescape 2019-01-25T00:00:00-02:00Z
                 </template>
+            </a-form-item>
+            <a-form-item label="默认代码拓展名">
+                <a-input v-model="instance.codeExtraName"/>
             </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>

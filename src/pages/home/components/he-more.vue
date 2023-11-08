@@ -82,11 +82,12 @@ import {zipToArticle} from "@/components/export-component/zipToArticle";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {convert} from "@/global/BeanFactory";
 import {htmlToMarkdown} from "@/components/export-component/htmlToMarkdown";
+import {buildArticleName} from "@/store/db/BaseSettingStore";
 
 function addArticle(pid: number, type: ArticleTypeEnum) {
     useGlobalStore().startLoading("正在新增文章")
     useArticleStore().add(getDefaultArticleIndex({
-        name: type === ArticleTypeEnum.CODE ? ("新建代码" + new Date().getTime() + '.md') : ("新建文章" + new Date().getTime()),
+        name: buildArticleName(type),
         folder: pid,
         type,
     }), getDefaultArticleBase(), "")

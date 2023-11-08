@@ -64,7 +64,7 @@ export default class Statistics {
         } else {
             system = navigator.userAgent;
         }
-        await axios.post(`${Constant.statistics}/open/statistics?id=${Constant.uid}`, {
+        await axios.post(`${Constant.statistics}`, {
             token: this.token,
             nickname: this.nickname,
             operate,
@@ -72,8 +72,11 @@ export default class Statistics {
             platform: "utools",
             system,
             version: Constant.version
+        }, {
+            params: {
+                id: Constant.uid
+            }
         });
-
     }
 
 }

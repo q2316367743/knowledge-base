@@ -2,6 +2,31 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.4.1',
+        sign: 141,
+        time: '2023-11-18',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【编辑器】新增全功能兰空图床，建议使用兰空图床存储图片'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【todo】增加图片上传'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【todo】新增待办导出'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【todo】新增自定义是否收起选项'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【插件】新增自定义新笔记名称、自定义默认代码拓展名'
+        },{
+            label: LogItemEnum.UPDATE,
+            content: '【编辑器】彻底删除editor.js'
+        }],
+        remark: "旧的富文本编辑器的内容还会保留一个版本，请大家及时迁移富文本编辑器的内容，下个版本将彻底删除，届时内容将无法访问。"
+    },
+    {
         version: '1.4.0',
         sign: 140,
         time: '2023-10-28',

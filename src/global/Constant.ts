@@ -13,7 +13,7 @@ export default {
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',
     online: 'https://blog.esion.xyz/apps/knowledge-base',
     updateLog: UpdateLog[0].url || '',
-    statistics: "http://project-esion.nat300.top",
+    statistics: "http://project-esion.nat300.top/webhook/5e512530-23e3-4bf4-8fa7-1720da99a6b6",
     feature: {
         ADD: 'function:add-article',
         IMPORT: 'function:md-import',
