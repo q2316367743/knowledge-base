@@ -39,6 +39,7 @@
                 <div id="toolbar-container"></div>
                 <div id="todo-editor—wrapper">
                 </div>
+                <!-- 标签 -->
                 <div class="todo-item-tags">
                     <a-tag v-for="tag in tags" :key="tag" :color="randomColor(tag)" closable
                            @close="tagRemove(tag)">{{ tag }}
@@ -81,7 +82,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, nextTick, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
-import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig} from '@wangeditor/editor';
+import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, Toolbar} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -99,6 +100,7 @@ let todo = false;
 
 const {ctrl, s} = useMagicKeys();
 
+let isInit = false;
 
 const item = ref<TodoItem>(getDefaultTodoItem());
 const autoSaveLoading = ref(false);
@@ -109,6 +111,7 @@ const tag = ref({
 });
 
 let editor: IDomEditor | null = null;
+let toolbar: Toolbar | null = null;
 
 const itemId = computed(() => useTodoStore().itemId);
 const color = computed(() => handlePriorityColor(item.value.index.priority));
@@ -136,18 +139,17 @@ const editorConfig: IEditorConfig = {
                 // file 即选中的文件
                 // 自己实现上传，并得到图片 url alt href
                 useImageUpload(file)
-                    .then(url => {
-                        if (url) {
-                            // 最后插入图片
-                            insertFn(url, file.name || "默认图片");
-                        }
-                    })
+                        .then(url => {
+                            if (url) {
+                                // 最后插入图片
+                                insertFn(url, file.name || "默认图片");
+                            }
+                        })
             }
         }
     }
 }
 
-watch(() => itemId.value, value => init(value));
 init(itemId.value);
 
 function init(id: number) {
@@ -155,28 +157,30 @@ function init(id: number) {
         return;
     }
     // 获取内容
-    useGlobalStore().startLoading("获取待办内容中");
     useTodoStore().getTodoItem(id)
-        .then(value => {
-            item.value = value;
-            // 重新设置编辑器的值
-            if (editor) {
-                try {
-                    editor.setHtml("<p></p>")
-                    editor.setHtml(item.value.content.record.content);
-                } catch (e) {
-                    console.error("编辑器赋值错误，重新创建");
-                    editor.destroy();
-                    create();
+            .then(value => {
+                item.value = value;
+                // 重新设置编辑器的值
+                if (editor) {
+                    try {
+                        editor.setHtml(item.value.content.record.content);
+                    } catch (e) {
+                        console.error("编辑器赋值错误，重新创建");
+                        editor.destroy();
+                        create();
+                    }
                 }
-            }
-        })
-        .catch(e => MessageUtil.error("获取待办内容失败", e))
-        .finally(() => useGlobalStore().closeLoading());
+                isInit = true;
+            })
+            .catch(e => MessageUtil.error("获取待办内容失败", e))
 }
 
 // 内容的自动保存
 const autoSave = () => {
+    if (!isInit) {
+        // 未初始化，不进行保存
+        return;
+    }
     if (lock) {
         todo = true;
         return;
@@ -187,16 +191,16 @@ const autoSave = () => {
         ...item.value.content.record,
         tags: toRaw(item.value.content.record.tags)
     }, item.value.content.rev)
-        .then(rev => {
-            item.value.content.rev = rev;
-            lock = false;
-            if (todo) {
-                todo = false;
-                autoSave()
-            }
-        })
-        .catch(e => MessageUtil.error("自动保存内容失败", e))
-        .finally(() => autoSaveLoading.value = false);
+            .then(rev => {
+                item.value.content.rev = rev;
+                lock = false;
+                if (todo) {
+                    todo = false;
+                    autoSave()
+                }
+            })
+            .catch(e => MessageUtil.error("自动保存内容失败", e))
+            .finally(() => autoSaveLoading.value = false);
 };
 
 function create() {
@@ -227,7 +231,7 @@ function create() {
             "insertVideo", "insertTable", "codeBlock"]
     }
 
-    const toolbar = createToolbar({
+    toolbar = createToolbar({
         editor,
         selector: '#toolbar-container',
         config: toolbarConfig,
@@ -242,19 +246,22 @@ onUnmounted(() => {
     if (editor) {
         editor.destroy();
     }
+    if (toolbar) {
+        toolbar.destroy();
+    }
 });
 
 function updatePriority(priority: any) {
     useGlobalStore().startLoading("开始更新待办项");
     useTodoStore().updateById(itemId.value, {priority})
-        .then(() => MessageUtil.success("更新成功"))
-        .catch(e => MessageUtil.error("更新失败", e))
-        .finally(() => useGlobalStore().closeLoading());
+            .then(() => MessageUtil.success("更新成功"))
+            .catch(e => MessageUtil.error("更新失败", e))
+            .finally(() => useGlobalStore().closeLoading());
 }
 
 function updateTitle() {
     useTodoStore().updateById(item.value.index.id, {title: item.value.index.title})
-        .catch(e => MessageUtil.error("更新标题失败", e));
+            .catch(e => MessageUtil.error("更新标题失败", e));
 }
 
 watch(() => s.value, value => {

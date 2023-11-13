@@ -5,8 +5,8 @@
     "type": "module",
     "description": "知识库",
     "scripts": {
-        "dev": "vite --mode=web",
-        "dev:utools": "vite --mode=utools",
+        "dev": "vite --mode=utools",
+        "dev:web": "vite --mode=web",
         "dev:docker": "vite --mode=docker",
         "dev:tauri": "vite --mode=tauri",
         "tauri:dev": "tauri dev",
