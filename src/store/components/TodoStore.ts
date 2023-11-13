@@ -137,8 +137,11 @@ export const useTodoStore = defineStore('todo', {
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
         },
-        async addSimple(title: string) {
-            if (title.trim() === '') {
+        async addSimple(record: Partial<TodoItemIndex>) {
+            if (!record.title) {
+                return Promise.reject("请输入内容");
+            }
+            if (record.title.trim() === '') {
                 return Promise.reject("请输入内容");
             }
             if (this.id === 0) {
@@ -147,7 +150,7 @@ export const useTodoStore = defineStore('todo', {
             const id = new Date().getTime();
             const item: TodoItemIndex = {
                 ...getDefaultTodoItemIndex(id),
-                title
+                ...record
             };
             // 新增到当前列表
             this.todoItems.push(item);

@@ -340,6 +340,7 @@ function tagRemove(tag: string) {
         right: 7px;
         bottom: 46px;
         overflow: auto;
+        overflow-x: hidden;
 
 
         .todo-item-tags {
