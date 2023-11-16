@@ -372,4 +372,9 @@ function tagRemove(tag: string) {
     }
 
 }
+#todo-editor—wrapper {
+    p:last-child {
+        padding-bottom: 15px;
+    }
+}
 </style>
