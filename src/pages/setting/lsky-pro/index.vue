@@ -61,8 +61,9 @@ import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import LskyProImage from "@/pages/setting/lsky-pro/components/lsky-pro-image.vue";
-import {Descriptions, DescriptionsItem, Modal} from "@arco-design/web-vue";
+import {Descriptions, DescriptionsItem, Modal, Progress} from "@arco-design/web-vue";
 import LskyProUpload from "@/pages/setting/lsky-pro/components/lsky-pro-upload.vue";
+import {prettyDataUnit} from "@/utils/BrowserUtil";
 
 const activeKey = ref('1');
 const auth = ref({
@@ -141,11 +142,19 @@ function showProfile() {
                             label: "邮箱地址"
                         }, {default: () => profile.email}),
                         h(DescriptionsItem, {
-                            label: "总容量"
-                        }, {default: () => profile.capacity + "KB"}),
-                        h(DescriptionsItem, {
-                            label: "已使用容量"
-                        }, {default: () => profile.used_capacity + "KB"}),
+                            label: "容量"
+                        }, {
+                            default: () => ([
+                                h(Progress, {
+                                    percent: profile.used_capacity / profile.capacity
+                                }, {
+                                    text: () => {
+                                        return prettyDataUnit(profile.used_capacity * 1024) + "/" +
+                                            prettyDataUnit(profile.capacity * 1024)
+                                    }
+                                })
+                            ])
+                        }),
                         h(DescriptionsItem, {
                             label: "个人主页地址"
                         }, {default: () => profile.url}),
