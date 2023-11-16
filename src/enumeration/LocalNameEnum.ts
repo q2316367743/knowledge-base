@@ -6,6 +6,8 @@ enum LocalNameEnum {
 
     FOLDER = '/local/folder',
 
+    EDITOR = '/local/editor',
+
     /**
      * 待办分类，此处保存了文件夹/清单
      */
@@ -76,6 +78,7 @@ enum LocalNameEnum {
 
     /**
      * 临时编辑器内容
+     * TODO: 此处需要清洗
      */
     KEY_EDITOR_CONTENT = '/key/editor/content',
 
@@ -92,7 +95,17 @@ enum LocalNameEnum {
     /**
      * 应用主题
      */
-    KEY_APP_THEME = '/key/app/theme'
+    KEY_APP_THEME = '/key/app/theme',
+
+    /**
+     * 上一次驱动
+     */
+    KEY_EDITOR_DRIVER_ID = '/key/editor/driver/id',
+
+    /**
+     * 首页宽度
+     */
+    KEY_EDITOR_WIDTH = '/key/editor/width',
 
 }
 
