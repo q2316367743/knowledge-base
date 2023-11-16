@@ -1,9 +1,9 @@
-import {useFileSystemAccess, } from "@vueuse/core";
+import {useFileSystemAccess,} from "@vueuse/core";
 import {convert} from "@/global/BeanFactory";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
-export async function textToArticle(type: ArticleTypeEnum): Promise<void> {
-    const option: any  = {
+export async function textToArticle(folder: number, type: ArticleTypeEnum): Promise<void> {
+    const option: any = {
         dataType: 'Text',
         types: new Array<any>()
     }
@@ -41,6 +41,6 @@ export async function textToArticle(type: ArticleTypeEnum): Promise<void> {
         return Promise.reject("文章内容不存在")
     }
 
-    return convert.textToArticle(content, type, title);
+    return convert.textToArticle(folder, content, type, title);
 
 }

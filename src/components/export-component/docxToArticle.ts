@@ -2,7 +2,7 @@ import {useFileSystemAccess} from "@vueuse/core";
 import {convert} from "@/global/BeanFactory";
 
 
-export const docxToArticle = async (): Promise<void> => {
+export const docxToArticle = async (folder: number): Promise<void> => {
 
     const html = useFileSystemAccess({
         dataType: 'Text',
@@ -22,5 +22,5 @@ export const docxToArticle = async (): Promise<void> => {
     const title = html.fileName.value;
 
 
-    return convert.htmlToMarkdown(contentWrap, title);
+    return convert.htmlToMarkdown(folder, contentWrap, title);
 }

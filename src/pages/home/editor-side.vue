@@ -35,7 +35,7 @@
 
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
                             <template #icon>
-                                <icon-plus/>
+                                <icon-folder-add/>
                             </template>
                             新建文件夹
                         </a-doption>
@@ -45,18 +45,60 @@
                             </template>
                             重命名
                         </a-doption>
-                        <a-doption @click="multiCheckStart(nodeData.key)">
-                            <template #icon>
-                                <icon-edit/>
-                            </template>
-                            多选
-                        </a-doption>
                         <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
                             <template #icon>
                                 <icon-delete/>
                             </template>
                             删除
                         </a-doption>
+                        <a-doption @click="multiCheckStart(nodeData.key)">
+                            <template #icon>
+                                <icon-edit/>
+                            </template>
+                            多选
+                        </a-doption>
+                        <a-dsubmenu v-if="!nodeData.isLeaf">
+                            <template #icon>
+                                <icon-import/>
+                            </template>
+                            导入
+                            <template #content>
+                                <a-dsubmenu>
+                                    富文本
+                                    <template #content>
+                                        <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                                            <a-doption @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.RICH_TEXT)">docx文件</a-doption>
+                                        </a-tooltip>
+                                        <a-doption @click="importTextToArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">html文件</a-doption>
+                                    </template>
+                                </a-dsubmenu>
+                                <a-dsubmenu>
+                                    Markdown
+                                    <template #content>
+                                        <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                                            <a-doption @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.MARKDOWN)">docx文件</a-doption>
+                                        </a-tooltip>
+                                        <a-doption @click="importHtmlToMarkdown(nodeData.key)">html文件</a-doption>
+                                        <a-doption @click="importTextToArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown文件</a-doption>
+                                    </template>
+                                </a-dsubmenu>
+                                <a-doption @click="importTextToArticle(nodeData.key, ArticleTypeEnum.CODE)">代码文件</a-doption>
+                                <a-tooltip content="导入压缩包中全部markdown文件，文件路径为文件名">
+                                    <a-doption @click="importArticleByZip(nodeData.key)">zip文件</a-doption>
+                                </a-tooltip>
+                            </template>
+                        </a-dsubmenu>
+                        <a-dsubmenu v-if="!nodeData.isLeaf">
+                            <template #icon>
+                                <icon-export/>
+                            </template>
+                            导出
+                            <template #content>
+                                <a-tooltip content="将全部笔记保存为ZIP，并保留目录结构">
+                                    <a-doption @click="exportToMd(nodeData.key)">导出为ZIP</a-doption>
+                                </a-tooltip>
+                            </template>
+                        </a-dsubmenu>
                     </template>
                 </a-dropdown>
             </template>
@@ -87,15 +129,21 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
-import {buildArticleName, useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import HeMore from "@/pages/home/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {getDefaultArticleBase} from "@/entity/article";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {IconBook, IconCode, IconFile} from "@arco-design/web-vue/es/icon";
+import {
+    addArticle,
+    addFolder,
+    exportToMd,
+    importArticleByDocx, importArticleByZip, importHtmlToMarkdown, importTextToArticle,
+    remove,
+    rename
+} from "@/pages/home/components/he-context";
 
 const size = useWindowSize();
 
@@ -151,71 +199,6 @@ function onSelect(selectKeys: Array<number | string>) {
     }
 }
 
-function addFolder(pid: number) {
-    MessageBoxUtil.prompt("请输入文件夹名称", "新建文件夹", {
-        confirmButtonText: "新增",
-        cancelButtonText: "取消"
-    }).then(name => {
-        useFolderStore().addFolder(pid, name)
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => MessageUtil.error("新增失败", e));
-    })
-}
-
-function addArticle(pid: number, type: ArticleTypeEnum) {
-    useGlobalStore().startLoading("正在新增文章")
-    useArticleStore().add({
-        name: buildArticleName(type),
-        folder: pid,
-        preview: false,
-        type,
-        isDelete: false
-    }, getDefaultArticleBase(), "")
-        .then(id => {
-            console.log(id)
-            MessageUtil.success("新增成功");
-            // useHomeEditorStore().setId(id);
-        })
-        .catch(e => MessageUtil.error("新增失败", e))
-        .finally(() => useGlobalStore().closeLoading());
-}
-
-function remove(id: number, name: string, article: boolean) {
-    MessageBoxUtil.confirm(`确认删除${article ? '文章' : '文件夹'}【${name}】？`, "删除提示", {
-        confirmButtonText: "删除"
-    }).then(() => {
-        _remove(id, article)
-            .then(() => MessageUtil.success("删除成功"))
-            .catch(e => MessageUtil.error("删除失败", e));
-    })
-}
-
-async function _remove(id: number, article: boolean) {
-    if (article) {
-        await useArticleStore().removeById(id)
-    } else {
-        // 删除文件夹
-        await useFolderStore().removeFolder(id)
-    }
-}
-
-function rename(id: number, name: string, isLeaf: boolean) {
-    MessageBoxUtil.prompt(`请输入新的文件${isLeaf ? '' : '夹'}名称`, "重命名", {
-        confirmButtonText: "确认",
-        inputValue: name
-    }).then(newName => {
-        if (isLeaf) {
-            // 重命名文件
-            useArticleStore().updateIndex(id, {name: newName})
-                .then(() => MessageUtil.success("重命名成功"))
-                .catch(e => MessageUtil.error("重命名失败", e));
-        } else {
-            useFolderStore().renameFolder(id, newName)
-                .then(() => MessageUtil.success("重命名成功"))
-                .catch(e => MessageUtil.error("重命名失败", e));
-        }
-    })
-}
 
 function multiCheckStart(id: number) {
     checkKeys.value.push(id);
@@ -228,12 +211,12 @@ function multiCheckStop() {
 function multiCheckDelete() {
     useGlobalStore().startLoading("开始删除")
     useArticleStore().removeBatchByIds(checkKeys.value)
-        .then(() => MessageUtil.success("删除成功"))
-        .catch(e => MessageUtil.error("删除失败", e))
-        .finally(() => {
-            useGlobalStore().closeLoading();
-            checkKeys.value = [];
-        });
+            .then(() => MessageUtil.success("删除成功"))
+            .catch(e => MessageUtil.error("删除失败", e))
+            .finally(() => {
+                useGlobalStore().closeLoading();
+                checkKeys.value = [];
+            });
 }
 
 
@@ -247,17 +230,17 @@ function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 
 
 function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
     if (typeof data.dragNode.key !== 'undefined' &&
-        typeof data.dropNode.key !== 'undefined') {
+            typeof data.dropNode.key !== 'undefined') {
         if (data.dropPosition === 0) {
             if (data.dragNode.isLeaf) {
                 // 文章
                 useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-                    .then(() => MessageUtil.success("移动成功"))
-                    .catch(e => MessageUtil.error("移动失败", e));
+                        .then(() => MessageUtil.success("移动成功"))
+                        .catch(e => MessageUtil.error("移动失败", e));
             } else {
                 useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-                    .then(() => MessageUtil.success("移动成功"))
-                    .catch(e => MessageUtil.error("移动失败", e));
+                        .then(() => MessageUtil.success("移动成功"))
+                        .catch(e => MessageUtil.error("移动失败", e));
             }
         } else {
             // 上或者下
@@ -268,12 +251,12 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
             if (data.dragNode.isLeaf) {
                 // 文章
                 useArticleStore().drop(data.dragNode.key as number, target.pid)
-                    .then(() => MessageUtil.success("移动成功"))
-                    .catch(e => MessageUtil.error("移动失败", e));
+                        .then(() => MessageUtil.success("移动成功"))
+                        .catch(e => MessageUtil.error("移动失败", e));
             } else {
                 useFolderStore().drop(data.dragNode.key as number, target.pid)
-                    .then(() => MessageUtil.success("移动成功"))
-                    .catch(e => MessageUtil.error("移动失败", e));
+                        .then(() => MessageUtil.success("移动成功"))
+                        .catch(e => MessageUtil.error("移动失败", e));
             }
         }
     }
@@ -304,6 +287,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
 
     }
 }
+
 body[arco-theme=dark] {
     .home-editor-side {
 

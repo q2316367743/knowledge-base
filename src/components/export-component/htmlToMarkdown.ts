@@ -3,7 +3,7 @@ import {convert} from "@/global/BeanFactory";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
 
-export const htmlToMarkdown = async (type: ArticleTypeEnum): Promise<void> => {
+export const htmlToMarkdown = async (folder: number, type: ArticleTypeEnum): Promise<void> => {
 
     const docx = useFileSystemAccess({
         dataType: 'ArrayBuffer',
@@ -23,9 +23,9 @@ export const htmlToMarkdown = async (type: ArticleTypeEnum): Promise<void> => {
     const title = docx.fileName.value;
 
     if (type === ArticleTypeEnum.MARKDOWN) {
-        return convert.docxToMarkdown(contentWrap, title);
+        return convert.docxToMarkdown(folder, contentWrap, title);
     }else if (type === ArticleTypeEnum.RICH_TEXT) {
-        return convert.docxToRichText(contentWrap, title);
+        return convert.docxToRichText(folder, contentWrap, title);
     }
 
 

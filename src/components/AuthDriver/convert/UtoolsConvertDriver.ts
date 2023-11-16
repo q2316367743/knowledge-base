@@ -16,7 +16,7 @@ import {turndownService} from "@/plugin/sdk/Turndown";
 
 export default class UtoolsConvertDriver implements ConvertDriver {
 
-    async docxToMarkdown(file: ArrayBuffer, title?: string): Promise<void> {
+    async docxToMarkdown(folder: number, file: ArrayBuffer, title?: string): Promise<void> {
         // docx转html
         const resultObject = await Mammoth.convertToHtml({arrayBuffer: file})
         const html = resultObject.value;
@@ -25,62 +25,68 @@ export default class UtoolsConvertDriver implements ConvertDriver {
 
         const articleId = await useArticleStore().add(getDefaultArticleIndex({
             name: parseFileName(title || '') || '导入文章-' + new Date().getTime(),
+            folder
         }), getDefaultArticleBase(), content);
         // 切换文章
         useHomeEditorStore().setId(articleId);
         return Promise.resolve();
     }
 
-    async docxToRichText(file: ArrayBuffer, title?: string): Promise<void> {
+    async docxToRichText(folder: number, file: ArrayBuffer, title?: string): Promise<void> {
         // docx转html
         const resultObject = await Mammoth.convertToHtml({arrayBuffer: file})
         const articleId = await useArticleStore().add(getDefaultArticleIndex({
             name: parseFileName(title || '') || '导入文章-' + new Date().getTime(),
-            type: ArticleTypeEnum.RICH_TEXT
+            type: ArticleTypeEnum.RICH_TEXT,
+            folder
         }), getDefaultArticleBase(), resultObject.value);
         // 切换文章
         useHomeEditorStore().setId(articleId);
         return Promise.resolve();
     }
 
-    async htmlToMarkdown(html: string, title?: string): Promise<void> {
+    async htmlToMarkdown(folder: number, html: string, title?: string): Promise<void> {
         // html转markdown
         const content = turndownService.turndown(html);
 
         const articleId = await useArticleStore().add(getDefaultArticleIndex({
             name: parseFileName(title || '') || '导入文章-' + new Date().getTime(),
+            folder
         }), getDefaultArticleBase(), content);
         // 切换文章
         useHomeEditorStore().setId(articleId);
         return Promise.resolve();
     }
 
-    async textToArticle(content: string, type: ArticleTypeEnum, title?: string): Promise<void> {
+    async textToArticle(folder: number, content: string, type: ArticleTypeEnum, title?: string): Promise<void> {
         let name = title || '导入文章-' + new Date().getTime();
         if (type !== ArticleTypeEnum.CODE) {
             name = parseFileName(title || '')
         }
         const articleId = await useArticleStore().add(getDefaultArticleIndex({
-            name, type
+            name, type, folder
         }), getDefaultArticleBase(), content);
         // 切换文章
         useHomeEditorStore().setId(articleId);
         return Promise.resolve();
     }
 
-    async zipToArticle(file: Blob): Promise<void> {
+    async zipToArticle(folder: number, file: Blob): Promise<void> {
         const instance = await JSZip.loadAsync(await file.arrayBuffer());
         let lastId = 0;
         for (let title in instance.files) {
-            if (!title.endsWith(".md") && !title.endsWith(".markdown")) {
-                // 既不是markdown结尾，也不是md结尾
-                continue;
-            }
             const text = await instance.files[title].async('text');
             await sleep(100);
 
+            let type = ArticleTypeEnum.MARKDOWN;
+
+            if (!title.endsWith(".md") && !title.endsWith(".markdown")) {
+                // 既不是markdown结尾，也不是md结尾，那就是code
+                type = ArticleTypeEnum.CODE;
+            }
+
             lastId = await useArticleStore().add(getDefaultArticleIndex({
-                name: parseFileName(title),
+                type, folder, name: parseFileName(title),
             }), getDefaultArticleBase({source: '导入文章'}), text);
 
         }
@@ -89,11 +95,11 @@ export default class UtoolsConvertDriver implements ConvertDriver {
         return Promise.resolve();
     }
 
-    async articleToZip(): Promise<void> {
+    async articleToZip(folder: number): Promise<void> {
         const articleMap = useArticleStore().articleMap;
         const zip = new JSZip();
         // 查询全部目录结构
-        let map = listToList(useFolderStore().folders, useArticleStore().folderMap);
+        let map = listToList(useFolderStore().folders, useArticleStore().folderMap, folder);
         // 获取markdown内容
         for (let path of map.keys()) {
             const articleId = map.get(path);
@@ -103,7 +109,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
                 if (content.record) {
                     const articleIndex = articleMap.get(articleId);
                     if (articleIndex) {
-                        if (articleIndex.type === ArticleTypeEnum.MARKDOWN) {
+                        if (articleIndex.type === ArticleTypeEnum.MARKDOWN || typeof articleIndex.type === 'undefined') {
                             path = path + '.md'
                         } else if (articleIndex.type === ArticleTypeEnum.RICH_TEXT) {
                             path = path + '.html';

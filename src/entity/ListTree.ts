@@ -140,9 +140,9 @@ export function searchData(keyword: string, tree: Array<TreeNodeData>): Array<Tr
     return loop(tree);
 }
 
-export function listToList(list: Array<ListTree>, articleListMap: Map<number, Array<ArticleIndex>>): Map<string, number> {
+export function listToList(list: Array<ListTree>, articleListMap: Map<number, Array<ArticleIndex>>, pid: number = 0): Map<string, number> {
     const map = new Map<string, number>();
-    _listToMap(list, map, articleListMap, '', 0);
+    _listToMap(list, map, articleListMap, '', pid);
     return map;
 }
 

@@ -5,10 +5,11 @@ import {parseFileName} from "@/utils/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {convert} from "@/global/BeanFactory";
 
-export async function zipToArticle() {
+export async function zipToArticle(folder: number) {
     const zip = useFileSystemAccess({
-        dataType: 'ArrayBuffer',
+        dataType: 'Blob',
         types: [{
             description: 'ZIP文件',
             accept: {
@@ -24,22 +25,6 @@ export async function zipToArticle() {
         return Promise.reject("文章内容不存在")
     }
 
-    const instance = await JSZip.loadAsync(contentWrap);
-    let lastId = 0;
-    for (let title in instance.files) {
-        if (!title.endsWith(".md") && !title.endsWith(".markdown")) {
-            // 既不是markdown结尾，也不是md结尾
-            continue;
-        }
-        const text = await instance.files[title].async('text');
-        await sleep(100);
-
-        lastId = await useArticleStore().add(getDefaultArticleIndex({
-            name: parseFileName(title),
-        }), getDefaultArticleBase({source: '导入文章'}), text);
-
-    }
-    // 切换文章
-    useHomeEditorStore().setId(lastId);
+    await convert.zipToArticle(folder, contentWrap);
 
 }
