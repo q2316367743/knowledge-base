@@ -30,48 +30,12 @@
                             placeholder="请输入描述，不能超过64个字"
                             allow-clear :max-length="64" show-word-limit/>
             </a-form-item>
-            <a-divider>额外信息</a-divider>
-            <a-form-item label="自定义设置">
-                <a-switch v-model="base.customer"/>
-            </a-form-item>
-            <a-form-item v-if="base.customer" label="文章主题">
-                <a-select v-model="base.articleTheme" style="width: 200px">
-                    <a-option :value="ArticleThemeEnum.TAILWIND_BLUE">天空蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.JUE_JIN">掘金</a-option>
-                    <a-option :value="ArticleThemeEnum.CHANNING_CYAN">柠青</a-option>
-                    <a-option :value="ArticleThemeEnum.CHINESE_RED">中国红</a-option>
-                    <a-option :value="ArticleThemeEnum.CONDENSED_NIGHT_PURPLE">凝夜紫</a-option>
-                    <a-option :value="ArticleThemeEnum.DEVUI_BLUE">科技蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.GEEK_BLACK">极客黑</a-option>
-                    <a-option :value="ArticleThemeEnum.JZMAN">jzman</a-option>
-                    <a-option :value="ArticleThemeEnum.SMART_BLUE">灵动蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.V_GREEN">微绿</a-option>
-                    <a-option :value="ArticleThemeEnum.VUEPRESS">vuepress</a-option>
-                    <a-option :value="ArticleThemeEnum.HE_TI">赫蹏</a-option>
-                    <a-option :value="ArticleThemeEnum.GITHUB">Github</a-option>
-                    <a-option :value="ArticleThemeEnum.ZUI">Zui</a-option>
-                </a-select>
-                <template #help>
-                    <span v-html="renderHelp(base.articleTheme)"></span>
-                </template>
-            </a-form-item>
-            <a-form-item v-if="base.customer" label="文章头部是否显示">
-                <a-switch v-model="base.articleHeaderVisible"/>
-            </a-form-item>
-            <a-form-item v-if="base.customer" label="代码是否换行">
-                <a-switch v-model="base.codeWrap">
-                    <template #checked>换行</template>
-                    <template #unchecked>滚动</template>
-                </a-switch>
-            </a-form-item>
         </a-form>
     </a-drawer>
 </template>
 <script lang="ts" setup>
-import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
-import {renderHelp} from "@/store/db/BaseSettingStore";
 import {computed, ref, watch} from "vue";
-import {getDefaultArticleBaseByBaseSetting} from "@/entity/article";
+import {getDefaultArticleBase} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/MessageUtil";
@@ -86,14 +50,14 @@ const emit = defineEmits(['update:modelValue']);
 
 const extraVisible = ref(false);
 const categoryId = ref<number | undefined>(undefined);
-const base = ref(getDefaultArticleBaseByBaseSetting());
+const base = ref(getDefaultArticleBase());
 let rev: undefined | string = undefined;
 
 const categoryTree = computed(() => useCategoryStore().categoryTree);
 
 function init(id: number) {
     if (id === 0) {
-        base.value = getDefaultArticleBaseByBaseSetting();
+        base.value = getDefaultArticleBase();
         rev = undefined;
         return;
     }
@@ -103,7 +67,7 @@ function init(id: number) {
     } else {
         categoryId.value = undefined;
     }
-    getFromOneWithDefaultByAsync(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, getDefaultArticleBaseByBaseSetting())
+    getFromOneWithDefaultByAsync(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, getDefaultArticleBase())
         .then(res => {
             base.value = res.record;
             rev = res.rev;

@@ -103,7 +103,7 @@
 import {computed, nextTick, ref, watch} from "vue";
 import {useMagicKeys} from "@vueuse/core";
 import MessageUtil from "@/utils/MessageUtil";
-import {ArticleSource, getDefaultArticleBaseByBaseSetting, getDefaultArticleIndex} from "@/entity/article";
+import {ArticleSource, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 // 编辑器
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
@@ -208,7 +208,7 @@ function save() {
     if (id.value === 0) {
         useArticleStore().add(getDefaultArticleIndex({
             name: title.value,
-        }), getDefaultArticleBaseByBaseSetting(), content.value)
+        }), getDefaultArticleBase(), content.value)
             .then(idWrap => {
                 useHomeEditorStore().setId(idWrap);
                 MessageUtil.success("保存文章成功");

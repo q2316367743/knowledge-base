@@ -1,7 +1,12 @@
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import { ArticleBaseSetting} from "@/entity/article";
+import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 
-export default interface BaseSetting extends ArticleBaseSetting{
+export default interface BaseSetting {
+
+    /**
+     * 文章主题
+     */
+    articleTheme: ArticleThemeEnum;
 
     /**
      * 图片策略

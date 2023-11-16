@@ -1,5 +1,4 @@
 <template>
-    <link :href="`./highlight.js/styles/${codeTheme}.css`" type="text/css" rel="stylesheet">
     <div class="app" :class="enableBackgroundImage ? 'customer-image' : 'default-color'" :style="customerImage">
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout>
@@ -21,7 +20,6 @@ import {statistics} from "@/global/BeanFactory";
 // 存储
 import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
 import {ArticleIndex} from "@/entity/article";
@@ -45,7 +43,6 @@ const preview = ref({
 
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
-const codeTheme = computed(() => useBaseSettingStore().codeTheme);
 const enableBackgroundImage = computed(() => useThemeSettingStore().enableBackgroundImage);
 const customerImage = computed(() => useThemeSettingStore().customerImage);
 

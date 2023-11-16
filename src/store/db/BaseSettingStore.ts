@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import BaseSetting from "@/entity/setting/BaseSetting";
-import {useGlobalStore} from "@/store/GlobalStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
@@ -12,11 +11,7 @@ import dayjs from "dayjs";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
-        codeLightTheme: 'github',
-        codeDarkTheme: 'github-dark',
         articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
-        articleHeaderVisible: true,
-        codeWrap: false,
         imageStrategy: ImageStrategyEnum.INNER,
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
@@ -38,16 +33,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
         rev: undefined as string | undefined
     }),
     getters: {
-        codeTheme: (state) => {
-            if (useGlobalStore().isDark) {
-                return state.baseSetting.codeDarkTheme;
-            } else {
-                return state.baseSetting.codeLightTheme;
-            }
-        },
         articleTheme: state => state.baseSetting.articleTheme,
-        articleHeaderVisible: state => state.baseSetting.articleHeaderVisible,
-        codeWrap: state => state.baseSetting.codeWrap,
         imageStrategy: state => state.baseSetting.imageStrategy,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
