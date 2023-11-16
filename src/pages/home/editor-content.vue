@@ -144,12 +144,11 @@ const tocItems = ref(new Array<TocItem>());
 const length = ref(0);
 const line = ref(0);
 
-const id = computed(() => useHomeEditorStore().id);
 const language = computed(() => parseFileExtra(title.value));
 
-watch(() => id.value, value => init(value));
+watch(() => useHomeEditorStore().id, value => init(value));
 
-init(id.value);
+init(useHomeEditorStore().id);
 
 function init(articleId: number) {
     // 清空数据
@@ -164,7 +163,7 @@ function init(articleId: number) {
 }
 
 async function _init(articleId: number) {
-    const articleIndexWrap = useArticleStore().articleMap.get(id.value);
+    const articleIndexWrap = useArticleStore().articleMap.get(useHomeEditorStore().id);
     if (!articleIndexWrap) {
         MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
         return;
@@ -179,7 +178,7 @@ async function _init(articleId: number) {
     // 内容
     editorVisible.value = false;
     try {
-        const contentWrap = await getFromOneByAsync<ArticleSource>(LocalNameEnum.ARTICLE_CONTENT + id.value);
+        const contentWrap = await getFromOneByAsync<ArticleSource>(LocalNameEnum.ARTICLE_CONTENT + useHomeEditorStore().id);
         if (contentWrap.record) {
             content.value = contentWrap.record.content;
         }
@@ -192,7 +191,7 @@ async function _init(articleId: number) {
 }
 
 const switchCollapsed = () => useHomeEditorStore().switchCollapsed();
-const setPreview = () => useArticleStore().updateIndex(id.value, {preview: !articleIndex.value.preview})
+const setPreview = () => useArticleStore().updateIndex(useHomeEditorStore().id, {preview: !articleIndex.value.preview})
     .then(() => {
         if (articleIndex.value.preview) {
             MessageUtil.success("切换为编辑模式");
@@ -205,7 +204,7 @@ const setPreview = () => useArticleStore().updateIndex(id.value, {preview: !arti
 
 function save() {
     saveLoading.value = true;
-    if (id.value === 0) {
+    if (useHomeEditorStore().id === 0) {
         useArticleStore().add(getDefaultArticleIndex({
             name: title.value,
         }), getDefaultArticleBase(), content.value)
@@ -216,7 +215,7 @@ function save() {
             .catch(e => MessageUtil.error("保存文章失败", e))
             .finally(() => saveLoading.value = false);
     } else {
-        useArticleStore().updateContent(id.value, {
+        useArticleStore().updateContent(useHomeEditorStore().id, {
             name: title.value,
         }, content.value, contentRev)
             .then(rev => {
@@ -246,7 +245,7 @@ let lock = false;
 let todo = false;
 
 function autoSave() {
-    if (id.value === 0) {
+    if (useHomeEditorStore().id === 0) {
         return;
     }
     if (lock) {
@@ -255,7 +254,7 @@ function autoSave() {
     }
     lock = true;
     saveLoading.value = true;
-    useArticleStore().updateContent(id.value, {
+    useArticleStore().updateContent(useHomeEditorStore().id, {
         name: title.value,
     }, content.value, contentRev)
         .then(rev => {

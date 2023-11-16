@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import {getDefaultZoneBase, ZoneBase, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import md from "@/plugin/markdown";
+import md from "@/plugin/sdk/markdown";
 import {
     getFromOneWithDefaultByAsync,
     listByAsync,

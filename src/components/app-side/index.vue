@@ -115,11 +115,15 @@
             </a-button>
             <template #content>
                 <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.DARK)">
-                    <icon-moon/>
+                    <template #icon>
+                        <icon-moon/>
+                    </template>
                     暗黑
                 </a-doption>
                 <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.LIGHT)">
-                    <icon-sun/>
+                    <template #icon>
+                        <icon-sun/>
+                    </template>
                     明亮
                 </a-doption>
                 <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.AUTO)">
