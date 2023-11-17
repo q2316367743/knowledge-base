@@ -23,6 +23,7 @@ import ZoneAdd from "@/pages/zone/components/add.vue";
 import ZoneItem from "@/pages/zone/components/item.vue";
 import {ZoneIndex} from "@/entity/zone";
 import {useWindowSize} from "@vueuse/core";
+import {statistics} from "@/global/BeanFactory";
 
 const size = useWindowSize()
 
@@ -32,6 +33,7 @@ let lock = false;
 let num = 1;
 let pageSize = 5;
 
+statistics.access("使用", "空间")
 
 async function render() {
     if (bottom) {

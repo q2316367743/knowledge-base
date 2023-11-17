@@ -1,0 +1,93 @@
+import {EditorDriver} from "@/entity/editor/EditorDriver";
+import {defineStore} from "pinia";
+import {getItemByDefault, listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {TreeNodeData} from "@arco-design/web-vue";
+import DefaultArticleServiceImpl from "@/pages/editor/driver/impl/DefaultArticleServiceImpl";
+import {ArticleService} from "@/pages/editor/driver/ArticleService";
+import EditorDriverTypeEnum from "@/enumeration/EditorDriverTypeEnum";
+import {FileArticleServiceImpl} from "@/pages/editor/driver/impl/FileArticleServiceImpl";
+
+let isInit = false;
+
+export const useEditorDriverStore = defineStore('editor-driver', {
+    state: () => ({
+        drivers: new Array<EditorDriver>(),
+        rev: undefined as string | undefined,
+        // 根节点
+        items: new Array<TreeNodeData>(),
+        // 子节点
+        itemsMap: new Map<string, Array<TreeNodeData>>(),
+        // 当前节点
+        selectKey: '',
+        service: new DefaultArticleServiceImpl() as ArticleService,
+
+        // 驱动ID
+        driverId: getItemByDefault<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, 0),
+
+
+        collapsed: false,
+        widthWrap: getItemByDefault<string>(LocalNameEnum.KEY_EDITOR_WIDTH, '264px')
+    }),
+    getters: {
+        width: (state): string => {
+            if (state.collapsed) {
+                return '0px';
+            } else {
+                return state.widthWrap
+            }
+        }
+    },
+    actions: {
+        async init() {
+            if (isInit) {
+                return;
+            }
+            isInit = true;
+            const res = await listByAsync<EditorDriver>(LocalNameEnum.EDITOR);
+            this.drivers = res.list;
+            this.rev = res.rev;
+            if (this.driverId > 0) {
+                await this.setEditorDriver(this.driverId);
+            }
+        },
+        async setItems(key: string, items: Array<TreeNodeData>) {
+            this.itemsMap.set(key, items);
+        },
+        folders(): Array<TreeNodeData> {
+            return [];
+        },
+        async setEditorDriver(driverId: number) {
+            const index = this.drivers.findIndex(e => e.id === driverId);
+            if (index !== -1) {
+                throw new Error("驱动未找到");
+            }
+
+            const driver = this.drivers[index];
+
+            setItem<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, driver.id);
+
+            if (driver.type === EditorDriverTypeEnum.LOCAL) {
+                this.service = new FileArticleServiceImpl(driver);
+            } else {
+                this.service = new DefaultArticleServiceImpl();
+            }
+            //初始化
+            this.items = await this.service.initToc();
+            this.itemsMap = new Map<string, Array<TreeNodeData>>();
+            this.selectKey = '';
+        },
+
+
+        switchCollapsed(collapsed?: boolean) {
+            this.collapsed = typeof collapsed === 'undefined' ? !this.collapsed : collapsed;
+        },
+        setWidth(width: string) {
+            if (width === '0px' && this.collapsed) {
+                return;
+            }
+            this.widthWrap = width;
+            setItem<string>(LocalNameEnum.KEY_EDITOR_WIDTH, this.widthWrap);
+        }
+    }
+});
