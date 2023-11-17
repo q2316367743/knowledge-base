@@ -2,7 +2,6 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {convert} from "@/global/BeanFactory";
 
 export async function htmlToArticle(content: string) {
     const zone = JSON.parse(content);
@@ -25,5 +24,4 @@ export async function htmlToArticle(content: string) {
         sourceUrl: zone.sourceUrl || ''
     }), zone.content);
     useHomeEditorStore().setId(id);
-    return convert.htmlToMarkdown(content);
 }

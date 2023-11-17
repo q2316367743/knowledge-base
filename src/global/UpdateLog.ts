@@ -2,9 +2,36 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.4.2',
+        sign: 142,
+        time: '2023-11-16',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【todo】增加导出类型选择'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【todo】新增待办时增加优先级选择'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【编辑器】优化导入导出，可以在文件夹层面上导入导出'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【todo】优化自动保存，优化加载动画'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '【todo】优化编辑器内边距'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '【todo】细节优化，去除无效基础设置'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '【编辑器】修复从插件【网页剪报】导入异常的问题'
+        }]
+    },
+    {
         version: '1.4.1',
         sign: 141,
-        time: '2023-11-18',
+        time: '2023-11-08',
         items: [{
             label: LogItemEnum.ADD,
             content: '【编辑器】新增全功能兰空图床，建议使用兰空图床存储图片'
@@ -20,7 +47,7 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: '【插件】新增自定义新笔记名称、自定义默认代码拓展名'
-        },{
+        }, {
             label: LogItemEnum.UPDATE,
             content: '【编辑器】彻底删除editor.js'
         }]
@@ -211,7 +238,7 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: '分类升级；现在的分类为多级分类，可以创建无限多的子分类'
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: '新增文件备份功能'
         }],
@@ -247,10 +274,10 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: '动态新增分享功能，可以导出为图片进行分享'
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: '图：新增点击文章进行打开，点击分类、标签跳转搜索'
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: '新增控制台，用于查找异常错误'
         }, {
@@ -319,13 +346,13 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: '保存文章后会自动跳转列表页'
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: ' 优化目录'
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: '分类增加排序'
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: '编辑器代码主题优化，使用设置的主题'
         }]

@@ -1,16 +1,6 @@
 <template>
     <div class="more-setting-base">
         <a-form :model="instance" layout="vertical">
-            <a-form-item label="JSON视图白天主题">
-                <a-select v-model="instance.codeLightTheme" style="width: 200px">
-                    <a-option v-for="theme in JsonTheme.light" :label="theme" :value="theme"/>
-                </a-select>
-            </a-form-item>
-            <a-form-item label="JSON视图黑夜主题">
-                <a-select v-model="instance.codeDarkTheme" style="width: 200px">
-                    <a-option v-for="theme in JsonTheme.dark" :label="theme" :value="theme"/>
-                </a-select>
-            </a-form-item>
             <a-form-item label="文章主题">
                 <a-select v-model="instance.articleTheme" style="width: 200px">
                     <a-option :value="ArticleThemeEnum.TAILWIND_BLUE">天空蓝</a-option>
@@ -31,15 +21,6 @@
                 <template #help>
                     <span v-html="renderHelp(instance.articleTheme)"></span>
                 </template>
-            </a-form-item>
-            <a-form-item label="文章头部是否显示">
-                <a-switch v-model="instance.articleHeaderVisible"/>
-            </a-form-item>
-            <a-form-item label="代码是否换行">
-                <a-switch v-model="instance.codeWrap">
-                    <template #checked>换行</template>
-                    <template #unchecked>滚动</template>
-                </a-switch>
             </a-form-item>
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
