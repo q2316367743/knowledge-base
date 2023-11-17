@@ -10,6 +10,7 @@
                         </template>
                     </a-button>
                 </a-tooltip>
+                <es-setting />
                 <a-dropdown>
                     <a-button type="primary" :disabled="driverId === 0">
                         <template #icon>
@@ -34,6 +35,7 @@ import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import EsWorkspace from "@/pages/editor/components/editor-side/es-workspace.vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {useWindowSize} from "@vueuse/core";
+import EsSetting from "@/pages/editor/components/editor-side/es-setting.vue";
 
 const size = useWindowSize();
 
