@@ -12,7 +12,6 @@
                 </template>
                 <span>清空</span>
             </a-doption>
-
             <a-doption v-for="driver in drivers" :key="driver.id" :disabled="driver.id === driverId"
                        @click="setDriverId(driver.id)">
                 <template #icon>

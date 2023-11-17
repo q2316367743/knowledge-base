@@ -6,7 +6,7 @@ export function parseFileName(fileName: string): string {
     const indexOf = fileName.lastIndexOf(".");
     if (indexOf > -1) {
         return fileName.substring(0, indexOf);
-    }else {
+    } else {
         return fileName;
     }
 }
@@ -23,14 +23,24 @@ export function parseFileExtra(fileName: string): string {
         extra = fileName.substring(indexOf + 1);
     }
     // 部分后缀名与语言不符
-    if (extra === 'vue') {
+    return renderLanguage(extra);
+}
+
+export function renderLanguage(ext: string): string {
+    ext = ext.trim();
+    if (ext.startsWith(".")) {
+        ext = ext.substring(1, ext.length);
+    }
+    // 部分后缀名与语言不符
+    if (ext === 'vue') {
         return 'html';
-    }else if (extra === 'md') {
+    } else if (ext === 'md') {
         return 'markdown';
-    }else if (extra === 'ts') {
+    } else if (ext === 'ts') {
         return 'typescript';
-    }else if (extra === 'js') {
+    } else if (ext === 'js') {
         return 'javascript';
     }
-    return extra;
+    return ext;
+
 }

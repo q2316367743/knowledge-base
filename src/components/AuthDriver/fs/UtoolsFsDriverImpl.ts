@@ -1,0 +1,52 @@
+import {FileItem, FsBinaryFileContents, FsDriver} from "@/components/AuthDriver/FsDriver";
+
+/**
+ * utools文件相关操作
+ */
+export class UtoolsFsDriverImpl implements FsDriver {
+
+    copyFile(source: string, destination: string): Promise<void> {
+        return window.fs.copyFile(source, destination);
+    }
+
+    createDir(dir: string): Promise<void> {
+        return window.fs.createDir(dir);
+    }
+
+    exists(path: string): Promise<boolean> {
+        return window.fs.exists(path);
+    }
+
+    readBinaryFile(filePath: string): Promise<Uint8Array> {
+        return window.fs.readBinaryFile(filePath);
+    }
+
+    async readDir(dir: string): Promise<FileItem[]> {
+        return window.fs.readDir(dir);
+    }
+
+    readTextFile(filePath: string): Promise<string> {
+        return window.fs.readTextFile(filePath);
+    }
+
+    removeDir(dir: string, recursive?: boolean): Promise<void> {
+        return window.fs.removeDir(dir, recursive);
+    }
+
+    removeFile(file: string): Promise<void> {
+        return window.fs.removeFile(file);
+    }
+
+    renameFile(oldPath: string, newPath: string): Promise<void> {
+        return window.fs.renameFile(oldPath, newPath);
+    }
+
+    writeBinaryFile(path: string, contents: FsBinaryFileContents): Promise<void> {
+        return window.fs.writeBinaryFile(path, contents);
+    }
+
+    writeTextFile(path: string, contents: string): Promise<void> {
+        return window.fs.writeTextFile(path, contents);
+    }
+
+}

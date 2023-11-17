@@ -7,6 +7,7 @@ import DefaultArticleServiceImpl from "@/pages/editor/driver/impl/DefaultArticle
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
 import EditorDriverTypeEnum from "@/enumeration/EditorDriverTypeEnum";
 import {FileArticleServiceImpl} from "@/pages/editor/driver/impl/FileArticleServiceImpl";
+import {keys} from "idb-keyval";
 
 let isInit = false;
 
@@ -89,8 +90,10 @@ export const useEditorDriverStore = defineStore('editor-driver', {
         },
 
 
-        async setItems(key: string, items: Array<TreeNodeData>) {
-            this.itemsMap.set(key, items);
+        async getNodes(key: string): Promise<Array<TreeNodeData>> {
+            const nodes = await this.service.loadToc(key);
+            this.itemsMap.set(key, nodes);
+            return Promise.resolve(nodes);
         },
         async folders(): Promise<TreeNodeData[]> {
             if (this.driverId === 0) {
@@ -99,10 +102,15 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             }
             let root = this.itemsMap.get("");
             if (!root) {
-                root = await this.service.initToc();
+                root = await this.service.loadToc("");
                 this.itemsMap.set("", root);
             }
-            return [];
+            return buildTree(this.itemsMap, "")
+        },
+
+
+        setSelectKey(selectKey: string) {
+            this.selectKey = selectKey;
         },
         async setEditorDriver(driverId: number) {
 
@@ -124,7 +132,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             }
             //初始化
             this.itemsMap = new Map<string, Array<TreeNodeData>>();
-            this.itemsMap.set("", await this.service.initToc());
+            this.itemsMap.set("", await this.service.loadToc(""));
             this.selectKey = '';
         },
 
@@ -150,3 +158,32 @@ export const useEditorDriverStore = defineStore('editor-driver', {
         }
     }
 });
+
+function buildTree(itemMap: Map<string, Array<TreeNodeData>>, pid: string): Array<TreeNodeData> {
+    const items = itemMap.get(pid);
+    const nodes = new Array<TreeNodeData>();
+    if (!items) {
+        return nodes;
+    }
+    _buildTree(items, itemMap, nodes);
+    return nodes;
+}
+
+function _buildTree(items: Array<TreeNodeData>, itemMap: Map<string, Array<TreeNodeData>>, nodes: Array<TreeNodeData>) {
+    items = items.sort((a, b) => (a.key as string).localeCompare(b.key as string));
+    for (let item of items) {
+        if (!item.isLeaf) {
+            const children = itemMap.get(item.key as string);
+            const nodeChildren = new Array<TreeNodeData>();
+            if (children) {
+                _buildTree(children, itemMap, nodeChildren);
+                nodes.push({
+                    ...item,
+                    children: nodeChildren
+                });
+                continue;
+            }
+        }
+        nodes.push(item);
+    }
+}

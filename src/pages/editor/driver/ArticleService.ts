@@ -6,12 +6,6 @@ import {TreeNodeData} from "@arco-design/web-vue";
 export interface ArticleService {
 
     /**
-     * 初始化文章目录
-     * @return 目录
-     */
-    initToc(): Promise<Array<TreeNodeData>>;
-
-    /**
      * 加载目录
      * @param key 目录关键字
      * @return 目录

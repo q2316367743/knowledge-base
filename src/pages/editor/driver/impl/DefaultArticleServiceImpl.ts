@@ -7,10 +7,6 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return Promise.resolve("");
     }
 
-    initToc(): Promise<Array<TreeNodeData>> {
-        return Promise.resolve([]);
-    }
-
     loadToc(key: string): Promise<Array<TreeNodeData>> {
         return Promise.resolve([]);
     }
