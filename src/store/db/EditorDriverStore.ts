@@ -1,4 +1,4 @@
-import {EditorDriver, getDefaultEditorDriver} from "@/entity/editor/EditorDriver";
+import {EditorDriver} from "@/entity/editor/EditorDriver";
 import {defineStore} from "pinia";
 import {getItemByDefault, listByAsync, saveListByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
@@ -7,7 +7,6 @@ import DefaultArticleServiceImpl from "@/pages/editor/driver/impl/DefaultArticle
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
 import EditorDriverTypeEnum from "@/enumeration/EditorDriverTypeEnum";
 import {FileArticleServiceImpl} from "@/pages/editor/driver/impl/FileArticleServiceImpl";
-import {keys} from "idb-keyval";
 
 let isInit = false;
 
@@ -35,6 +34,15 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             } else {
                 return state.widthWrap
             }
+        },
+        rootPath: state => {
+            if (state.driverId > 0) {
+                const index = state.drivers.findIndex(e => e.id === state.driverId);
+                if (index > -1) {
+                    return state.drivers[index].path;
+                }
+            }
+            return "";
         }
     },
     actions: {
@@ -95,7 +103,10 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             this.itemsMap.set(key, nodes);
             return Promise.resolve(nodes);
         },
-        async folders(): Promise<TreeNodeData[]> {
+        async folders(init: boolean = false): Promise<TreeNodeData[]> {
+            if (init) {
+                this.itemsMap = new Map<string, Array<TreeNodeData>>();
+            }
             if (this.driverId === 0) {
                 // 没有选择
                 return [];
@@ -107,8 +118,6 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             }
             return buildTree(this.itemsMap, "")
         },
-
-
         setSelectKey(selectKey: string) {
             this.selectKey = selectKey;
         },

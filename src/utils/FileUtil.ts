@@ -40,6 +40,8 @@ export function renderLanguage(ext: string): string {
         return 'typescript';
     } else if (ext === 'js') {
         return 'javascript';
+    }else if (ext === 'py') {
+        return 'python';
     }
     return ext;
 

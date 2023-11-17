@@ -3,7 +3,8 @@
         <header class="ec-header" v-if="isInit">
             <a-button type="text" @click="switchCollapsed()">
                 <template #icon>
-                    <icon-menu/>
+                    <icon-menu-unfold v-if="collapsed" />
+                    <icon-menu-fold v-else/>
                 </template>
             </a-button>
             <div class="title">{{ title }}</div>
@@ -38,7 +39,7 @@
 <script lang="ts" setup>
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {renderLanguage} from "@/utils/FileUtil";
 import MessageUtil from "@/utils/MessageUtil";
@@ -50,8 +51,9 @@ const selectKey = useEditorDriverStore().selectKey;
 const title = window.path.basename(selectKey);
 const language = renderLanguage(window.path.extname(selectKey));
 const isMarkdown = language === 'md' || language === 'markdown';
+const collapsed = computed(() => useEditorDriverStore().collapsed);
 
-useEditorDriverStore().service.getArticle(selectKey)
+useEditorDriverStore().service.getFile(selectKey)
         .then(text => {
             content.value = text;
             isInit.value = true;
@@ -61,7 +63,7 @@ const switchCollapsed = () => useEditorDriverStore().switchCollapsed();
 
 function save() {
     saveLoading.value = true;
-    useEditorDriverStore().service.saveArticle(selectKey, content.value)
+    useEditorDriverStore().service.saveFile(selectKey, content.value)
             .then(() => MessageUtil.success("保存成功"))
             .catch(e => MessageUtil.error("保存失败", e))
             .finally(() => saveLoading.value = false);
@@ -78,7 +80,7 @@ function save() {
 
     .ec-header {
         display: flex;
-        padding: 7px;
+        padding: 4px;
 
         .title {
             line-height: 28px;
@@ -93,14 +95,14 @@ function save() {
 
         .btn {
             position: absolute;
-            top: 7px;
-            right: 7px;
+            top: 4px;
+            right: 4px;
         }
     }
 
     .ec-container {
         position: absolute;
-        top: 46px;
+        top: 40px;
         right: 7px;
         left: 7px;
         bottom: 7px;

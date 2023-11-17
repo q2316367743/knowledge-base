@@ -17,13 +17,26 @@ export interface ArticleService {
      * @param key 文章key
      * @return 文章内容
      */
-    getArticle(key: string): Promise<string>;
+    getFile(key: string): Promise<string>;
 
     /**
      * 保存文章
      * @param key 文章key
      * @param content 文章内容
      */
-    saveArticle(key: string, content: string): Promise<void>;
+    saveFile(key: string, content: string): Promise<void>;
+
+    /**
+     * 新建文件
+     * @param path 文件路径
+     * @param name 文件名
+     */
+    addFile(path: string, name: string): Promise<void>;
+
+    /**
+     * 删除文件
+     * @param path 文件路径
+     */
+    removeFile(path: string): Promise<void>;
 
 }

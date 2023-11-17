@@ -27,10 +27,10 @@
 <script lang="ts" setup>
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {useWindowSize} from "@vueuse/core";
-import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import EditorSide from "@/pages/editor/components/editor-side/index.vue";
 import MessageUtil from "@/utils/MessageUtil";
-import EditorContainer from "@/pages/editor/components/editor-container.vue";
+import EditorContainer from "@/pages/editor/components/editor-container/index.vue";
 
 const isInit = ref(false);
 

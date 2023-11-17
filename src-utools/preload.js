@@ -3,7 +3,7 @@ const {
     join,
     dirname,
     extname,
-    basename
+    basename,
 } = require('path');
 
 /**
@@ -238,5 +238,6 @@ window.fs = {
 
 window.path = {
     extname: extname,
-    basename: basename
+    basename: basename,
+    join: join
 }

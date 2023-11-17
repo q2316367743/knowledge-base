@@ -34,12 +34,20 @@ export class FileArticleServiceImpl implements ArticleService {
         return Promise.resolve(nodes);
     }
 
-    getArticle(key: string): Promise<string> {
+    getFile(key: string): Promise<string> {
         return Promise.resolve(this.fsDriver.readTextFile(key));
     }
 
-    saveArticle(key: string, content: string): Promise<void> {
+    saveFile(key: string, content: string): Promise<void> {
         return this.fsDriver.writeTextFile(key, content);
+    }
+
+    addFile(path: string, name: string): Promise<void> {
+        return this.fsDriver.writeTextFile(window.path.join(path, name), '');
+    }
+
+    removeFile(path: string): Promise<void> {
+        return this.fsDriver.removeFile(path);
     }
 
 }

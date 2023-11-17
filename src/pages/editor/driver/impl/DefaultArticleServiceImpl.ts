@@ -3,7 +3,7 @@ import {TreeNodeData} from "@arco-design/web-vue";
 
 export default class DefaultArticleServiceImpl implements ArticleService {
 
-    getArticle(key: string): Promise<string> {
+    getFile(key: string): Promise<string> {
         return Promise.resolve("");
     }
 
@@ -11,8 +11,16 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return Promise.resolve([]);
     }
 
-    saveArticle(key: string, content: string): Promise<void> {
+    saveFile(key: string, content: string): Promise<void> {
         return Promise.resolve(undefined);
+    }
+
+    addFile(path: string, name: string): Promise<void> {
+        return Promise.resolve();
+    }
+
+    removeFile(path: string): Promise<void> {
+        return Promise.resolve();
     }
 
 }

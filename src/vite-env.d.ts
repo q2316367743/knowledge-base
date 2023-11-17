@@ -62,5 +62,6 @@ declare interface Window {
     path: {
         extname(path: string): string;
         basename(path: string): string;
+        join(...paths: string[]): string;
     }
 }
