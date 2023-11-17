@@ -14,7 +14,12 @@ export interface EditorDriver {
     /**
      * 编辑器驱动类型
      */
-    type: EditorDriverTypeEnum
+    type: EditorDriverTypeEnum;
+
+    /**
+     * 驱动名字
+     */
+    name: string;
 
     /**
      * 路径
@@ -23,3 +28,14 @@ export interface EditorDriver {
 
 }
 
+export function getDefaultEditorDriver(): EditorDriver {
+    const now = new Date();
+    return {
+        id: now.getTime(),
+        createTime: now,
+        updateTime: now,
+        name: '',
+        type: EditorDriverTypeEnum.LOCAL,
+        path: ''
+    }
+}

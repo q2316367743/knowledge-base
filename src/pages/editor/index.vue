@@ -1,10 +1,11 @@
 <template>
-    <a-split class="editor" v-model:size="size" :min="min" :max="max" :disabled="disabled">
+    <a-split class="editor" v-model:size="size" :min="min" :max="max" :disabled="disabled" v-if="isInit">
         <template #first>
-            <div>侧边栏</div>
+            <editor-side/>
         </template>
         <template #second>
-            <a-result title="请在左侧选择文章" subtitle="点击文章进行编辑" status="404" v-if="selectKey === ''" style="margin-top: 20vh;">
+            <a-result :title="title" subtitle="点击文章进行编辑" status="404" v-if="selectKey === ''"
+                      style="margin-top: 20vh;">
                 <template #extra>
                     <a-button type="primary" @click="switchCollapsed()">
                         <template #icon>
@@ -16,21 +17,37 @@
             <div v-else/>
         </template>
     </a-split>
+    <a-result title="正在初始化编辑器驱动，请稍等" subtitle="点击文章进行编辑" status="info"
+              style="margin-top: 20vh;" v-else>
+        <template #icon>
+            <icon-refresh spin/>
+        </template>
+    </a-result>
 </template>
 <script lang="ts" setup>
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {useWindowSize} from "@vueuse/core";
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
+import EditorSide from "@/pages/editor/components/editor-side/index.vue";
+import MessageUtil from "@/utils/MessageUtil";
 
-useEditorDriverStore().init();
+const isInit = ref(false);
+
+useEditorDriverStore().init()
+        .then(rsp => console.log("是否实际完成初始化：", rsp))
+        .catch(e => MessageUtil.error("初始化编辑器驱动失败", e))
+        .finally(() => isInit.value = true);
 
 const windowSize = useWindowSize();
 
 const size = ref(useEditorDriverStore().width);
+
 const min = computed(() => useEditorDriverStore().collapsed ? "0px" : "270px");
 const max = computed(() => (windowSize.width.value - 350) + 'px');
 const disabled = computed(() => size.value === '0px');
 const selectKey = computed(() => useEditorDriverStore().selectKey);
+const driverId = computed(() => useEditorDriverStore().driverId);
+const title = computed(() => driverId.value === 0 ? '请现在左上角选择工作空间' : '请在左侧选择文章')
 
 watch(() => size.value, value => useEditorDriverStore().setWidth(value));
 watch(() => useEditorDriverStore().width, value => {

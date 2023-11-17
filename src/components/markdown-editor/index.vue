@@ -124,7 +124,6 @@ const config: CherryConfig = {
             if (aEle) {
                 if (aEle.tagName === 'A') {
                     const href = (aEle as HTMLLinkElement).href;
-                    console.log(href);
                     if (href.startsWith(DEV_URL)) {
                         // hash定位
                         event.preventDefault();

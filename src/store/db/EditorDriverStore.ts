@@ -1,6 +1,6 @@
-import {EditorDriver} from "@/entity/editor/EditorDriver";
+import {EditorDriver, getDefaultEditorDriver} from "@/entity/editor/EditorDriver";
 import {defineStore} from "pinia";
-import {getItemByDefault, listByAsync, setItem} from "@/utils/utools/DbStorageUtil";
+import {getItemByDefault, listByAsync, saveListByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {TreeNodeData} from "@arco-design/web-vue";
 import DefaultArticleServiceImpl from "@/pages/editor/driver/impl/DefaultArticleServiceImpl";
@@ -14,8 +14,6 @@ export const useEditorDriverStore = defineStore('editor-driver', {
     state: () => ({
         drivers: new Array<EditorDriver>(),
         rev: undefined as string | undefined,
-        // 根节点
-        items: new Array<TreeNodeData>(),
         // 子节点
         itemsMap: new Map<string, Array<TreeNodeData>>(),
         // 当前节点
@@ -39,9 +37,9 @@ export const useEditorDriverStore = defineStore('editor-driver', {
         }
     },
     actions: {
-        async init() {
+        async init(): Promise<boolean> {
             if (isInit) {
-                return;
+                return false;
             }
             isInit = true;
             const res = await listByAsync<EditorDriver>(LocalNameEnum.EDITOR);
@@ -50,16 +48,68 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             if (this.driverId > 0) {
                 await this.setEditorDriver(this.driverId);
             }
+            return true;
         },
+        async _sync() {
+            this.rev = await saveListByAsync(LocalNameEnum.EDITOR, this.drivers, this.rev);
+        },
+        async add(driver: Omit<EditorDriver, 'id' | 'createTime' | 'updateTime'>) {
+            const now = new Date();
+            this.drivers.push({
+                ...driver,
+                id: now.getTime(),
+                createTime: now,
+                updateTime: now,
+            });
+            await this._sync();
+        },
+        async update(id: number, driver: Omit<EditorDriver, 'id' | 'createTime' | 'updateTime'>) {
+            const index = this.drivers.findIndex(e => e.id === id);
+            if (index === -1) {
+                throw new Error("驱动未找到");
+            }
+            this.drivers[index] = {
+                ...this.drivers[index],
+                ...driver,
+                updateTime: new Date(),
+            }
+            await this._sync();
+        },
+        async remove(id: number) {
+            const index = this.drivers.findIndex(e => e.id === id);
+            if (index === -1) {
+                throw new Error("驱动未找到");
+            }
+            this.drivers.splice(index, 1);
+            await this._sync();
+            if (this.driverId === id) {
+                // 删除的是当前的
+
+            }
+        },
+
+
         async setItems(key: string, items: Array<TreeNodeData>) {
             this.itemsMap.set(key, items);
         },
-        folders(): Array<TreeNodeData> {
+        async folders(): Promise<TreeNodeData[]> {
+            if (this.driverId === 0) {
+                // 没有选择
+                return [];
+            }
+            let root = this.itemsMap.get("");
+            if (!root) {
+                root = await this.service.initToc();
+                this.itemsMap.set("", root);
+            }
             return [];
         },
         async setEditorDriver(driverId: number) {
+
+            this.driverId = driverId;
+
             const index = this.drivers.findIndex(e => e.id === driverId);
-            if (index !== -1) {
+            if (index === -1) {
                 throw new Error("驱动未找到");
             }
 
@@ -73,7 +123,16 @@ export const useEditorDriverStore = defineStore('editor-driver', {
                 this.service = new DefaultArticleServiceImpl();
             }
             //初始化
-            this.items = await this.service.initToc();
+            this.itemsMap = new Map<string, Array<TreeNodeData>>();
+            this.itemsMap.set("", await this.service.initToc());
+            this.selectKey = '';
+        },
+
+        clear() {
+            this.driverId = 0;
+            setItem<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, 0);
+            this.service = new DefaultArticleServiceImpl();
+            //初始化
             this.itemsMap = new Map<string, Array<TreeNodeData>>();
             this.selectKey = '';
         },
