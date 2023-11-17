@@ -1,6 +1,6 @@
 <template>
     <div class="editor-container">
-        <header class="ec-header">
+        <header class="ec-header" v-if="isInit">
             <a-button type="text" @click="switchCollapsed()">
                 <template #icon>
                     <icon-menu/>
@@ -15,12 +15,24 @@
                 </a-button>
             </a-button-group>
         </header>
-        <main class="ec-container">
+        <main class="ec-container" v-if="isInit">
             <markdown-editor v-model="content" :preview="false" ref="mdEditor"
                              v-if="isMarkdown && isInit"/>
             <monaco-editor v-model="content" :language="language" :read-only="false"
                            v-else-if="isInit"/>
         </main>
+        <a-result v-if="!isInit" title="正在获取文章内容" style="margin-top: 20vh;">
+            <template #icon>
+                <icon-loading spin/>
+            </template>
+            <template #extra>
+                <a-button type="primary" @click="switchCollapsed()">
+                    <template #icon>
+                        <icon-menu/>
+                    </template>
+                </a-button>
+            </template>
+        </a-result>
     </div>
 </template>
 <script lang="ts" setup>

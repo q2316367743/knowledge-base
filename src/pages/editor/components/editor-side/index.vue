@@ -10,7 +10,7 @@
                         </template>
                     </a-button>
                 </a-tooltip>
-                <es-setting />
+                <es-setting/>
                 <a-dropdown>
                     <a-button type="primary" :disabled="driverId === 0">
                         <template #icon>
@@ -25,7 +25,46 @@
             </a-space>
         </header>
         <main class="container">
-            <a-tree :selected-keys="[selectKey]" :data="folder" :load-more="loadMore" :virtual-list-props="virtualListProps" @select="onSelect"/>
+            <a-tree :selected-keys="[selectKey]" :data="folder" :load-more="loadMore" block-node
+                    :virtual-list-props="virtualListProps" @select="onSelect">
+                <template #extra="nodeData">
+                    <a-dropdown>
+                        <a-button type="text">
+                            <template #icon>
+                                <icon-more/>
+                            </template>
+                        </a-button>
+                        <template #content>
+                            <a-doption v-if="!nodeData.isLeaf">
+                                <template #icon>
+                                    <icon-file/>
+                                </template>
+                                新增文件
+                            </a-doption>
+
+                            <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
+                                <template #icon>
+                                    <icon-folder-add/>
+                                </template>
+                                新建文件夹
+                            </a-doption>
+                            <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                                <template #icon>
+                                    <icon-edit/>
+                                </template>
+                                重命名
+                            </a-doption>
+                            <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)"
+                                       style="color: red;">
+                                <template #icon>
+                                    <icon-delete/>
+                                </template>
+                                删除
+                            </a-doption>
+                        </template>
+                    </a-dropdown>
+                </template>
+            </a-tree>
         </main>
     </div>
 </template>
@@ -74,6 +113,14 @@ function onSelect(keys: Array<any>, data: any) {
         useEditorDriverStore().setSelectKey("");
     }
 }
+
+function addFile(folder: string) {}
+
+function addFolder(folder: string) {}
+
+function rename(path: string, name: string, file: boolean) {}
+
+function remove(path: string, name: string, file: boolean) {}
 
 </script>
 <style scoped lang="less">

@@ -4,7 +4,7 @@
             <editor-side/>
         </template>
         <template #second>
-            <a-result :title="title" subtitle="点击文章进行编辑" status="404" v-if="selectKey === ''"
+            <a-result :title="title" subtitle="点击文件进行编辑" status="404" v-if="selectKey === ''"
                       style="margin-top: 20vh;">
                 <template #extra>
                     <a-button type="primary" @click="switchCollapsed()">
@@ -17,7 +17,7 @@
             <editor-container v-else-if="editorVisible"/>
         </template>
     </a-split>
-    <a-result title="正在初始化编辑器驱动，请稍等" subtitle="点击文章进行编辑" status="info"
+    <a-result title="正在初始化编辑器驱动，请稍等" subtitle="点击文件进行编辑" status="info"
               style="margin-top: 20vh;" v-else>
         <template #icon>
             <icon-refresh spin/>
@@ -49,7 +49,7 @@ const max = computed(() => (windowSize.width.value - 350) + 'px');
 const disabled = computed(() => size.value === '0px');
 const selectKey = computed(() => useEditorDriverStore().selectKey);
 const driverId = computed(() => useEditorDriverStore().driverId);
-const title = computed(() => driverId.value === 0 ? '请现在左上角选择工作空间' : '请在左侧选择文章');
+const title = computed(() => driverId.value === 0 ? '请现在左上角选择工作空间' : '请在左侧选择文件');
 
 watch(() => size.value, value => useEditorDriverStore().setWidth(value));
 watch(() => useEditorDriverStore().width, value => {
