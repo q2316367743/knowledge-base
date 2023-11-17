@@ -8,7 +8,7 @@
             </a-button>
             <div class="title">{{ title }}</div>
             <a-button-group class="btn">
-                <a-button type="primary">
+                <a-button type="primary" :loading="saveLoading" @click="save()">
                     <template #icon>
                         <icon-save/>
                     </template>
@@ -29,13 +29,15 @@ import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {ref} from "vue";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {renderLanguage} from "@/utils/FileUtil";
+import MessageUtil from "@/utils/MessageUtil";
 
 const isInit = ref(false);
 const content = ref('');
+const saveLoading = ref(false);
 const selectKey = useEditorDriverStore().selectKey;
 const title = window.path.basename(selectKey);
 const language = renderLanguage(window.path.extname(selectKey));
-const isMarkdown = language === 'md' || language === 'markdown'
+const isMarkdown = language === 'md' || language === 'markdown';
 
 useEditorDriverStore().service.getArticle(selectKey)
         .then(text => {
@@ -44,6 +46,14 @@ useEditorDriverStore().service.getArticle(selectKey)
         });
 
 const switchCollapsed = () => useEditorDriverStore().switchCollapsed();
+
+function save() {
+    saveLoading.value = true;
+    useEditorDriverStore().service.saveArticle(selectKey, content.value)
+            .then(() => MessageUtil.success("保存成功"))
+            .catch(e => MessageUtil.error("保存失败", e))
+            .finally(() => saveLoading.value = false);
+}
 
 </script>
 <style lang="less">
