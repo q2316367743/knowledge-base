@@ -69,7 +69,7 @@ function save() {
         padding: 7px;
 
         .title {
-            line-height: 32px;
+            line-height: 28px;
             font-size: 1.1em;
             font-weight: bold;
             padding-left: 7px;
