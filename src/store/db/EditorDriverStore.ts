@@ -10,6 +10,10 @@ import {TreeNode} from "@/plugin/sdk/ZTree";
 
 let isInit = false;
 
+function getEditorDriverId(){
+    return LocalNameEnum.KEY_EDITOR_DRIVER_ID + utools.getNativeId();
+}
+
 export const useEditorDriverStore = defineStore('editor-driver', {
     state: () => ({
         drivers: new Array<EditorDriver>(),
@@ -21,7 +25,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
         service: new DefaultArticleServiceImpl() as ArticleService,
 
         // 驱动ID
-        driverId: getItemByDefault<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, 0),
+        driverId: getItemByDefault<number>(getEditorDriverId(), 0),
 
 
         collapsed: false,
@@ -132,7 +136,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
 
             const driver = this.drivers[index];
 
-            setItem<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, driver.id);
+            setItem<number>(getEditorDriverId(), driver.id);
 
             if (driver.type === EditorDriverTypeEnum.LOCAL) {
                 this.service = new FileArticleServiceImpl(driver);
@@ -147,7 +151,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
 
         clear() {
             this.driverId = 0;
-            setItem<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, 0);
+            setItem<number>(getEditorDriverId(), 0);
             this.service = new DefaultArticleServiceImpl();
             //初始化
             this.itemsMap = new Map<string, Array<TreeNode>>();

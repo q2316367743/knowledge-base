@@ -100,7 +100,7 @@ enum LocalNameEnum {
     /**
      * 上一次驱动
      */
-    KEY_EDITOR_DRIVER_ID = '/key/editor/driver/id',
+    KEY_EDITOR_DRIVER_ID = '/key/editor/driver/id/',
 
     /**
      * 首页宽度
