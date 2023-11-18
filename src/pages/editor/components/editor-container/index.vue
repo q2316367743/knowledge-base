@@ -41,15 +41,15 @@ import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {computed, ref} from "vue";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
-import {renderLanguage} from "@/utils/FileUtil";
+import {basename, extname, renderLanguage} from "@/utils/FileUtil";
 import MessageUtil from "@/utils/MessageUtil";
 
 const isInit = ref(false);
 const content = ref('');
 const saveLoading = ref(false);
 const selectKey = useEditorDriverStore().selectKey;
-const title = window.path.basename(selectKey);
-const language = renderLanguage(window.path.extname(selectKey));
+const title = basename(selectKey);
+const language = renderLanguage(extname(selectKey));
 const isMarkdown = language === 'md' || language === 'markdown';
 const collapsed = computed(() => useEditorDriverStore().collapsed);
 

@@ -1,10 +1,8 @@
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
-import {TreeNodeData} from "@arco-design/web-vue";
 import {EditorDriver} from "@/entity/editor/EditorDriver";
 import {FsDriver} from "@/components/AuthDriver/FsDriver";
 import {UtoolsFsDriverImpl} from "@/components/AuthDriver/fs/UtoolsFsDriverImpl";
-import {h} from "vue";
-import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
+import {TreeNode} from "@/plugin/sdk/ZTree";
 
 export class FileArticleServiceImpl implements ArticleService {
 
@@ -16,19 +14,18 @@ export class FileArticleServiceImpl implements ArticleService {
         this.driver = driver;
     }
 
-    async loadToc(key: string): Promise<Array<TreeNodeData>> {
+    async loadToc(key: string): Promise<Array<TreeNode>> {
         if (key === '') {
             key = this.driver.path;
         }
         const items = await this.fsDriver.readDir(key);
-        const nodes = new Array<TreeNodeData>();
+        const nodes = new Array<TreeNode>();
         for (let item of items) {
             nodes.push({
                 key: item.path,
                 isLeaf: !item.dir,
                 children: item.dir ? [] : undefined,
-                title: item.name,
-                icon: () => item.dir ? h(IconFolder) : h(IconFile)
+                name: item.name
             })
         }
         return Promise.resolve(nodes);

@@ -1,4 +1,4 @@
-import {TreeNodeData} from "@arco-design/web-vue";
+import {TreeNode} from "@/plugin/sdk/ZTree";
 
 /**
  * 文章驱动
@@ -10,7 +10,7 @@ export interface ArticleService {
      * @param key 目录关键字
      * @return 目录
      */
-    loadToc(key: string): Promise<Array<TreeNodeData>>;
+    loadToc(key: string): Promise<Array<TreeNode>>;
 
     /**
      * 获取文章内容

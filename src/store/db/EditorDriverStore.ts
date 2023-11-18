@@ -2,11 +2,11 @@ import {EditorDriver} from "@/entity/editor/EditorDriver";
 import {defineStore} from "pinia";
 import {getItemByDefault, listByAsync, saveListByAsync, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {TreeNodeData} from "@arco-design/web-vue";
 import DefaultArticleServiceImpl from "@/pages/editor/driver/impl/DefaultArticleServiceImpl";
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
 import EditorDriverTypeEnum from "@/enumeration/EditorDriverTypeEnum";
 import {FileArticleServiceImpl} from "@/pages/editor/driver/impl/FileArticleServiceImpl";
+import {TreeNode} from "@/plugin/sdk/ZTree";
 
 let isInit = false;
 
@@ -15,7 +15,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
         drivers: new Array<EditorDriver>(),
         rev: undefined as string | undefined,
         // 子节点
-        itemsMap: new Map<string, Array<TreeNodeData>>(),
+        itemsMap: new Map<string, Array<TreeNode>>(),
         // 当前节点
         selectKey: '',
         service: new DefaultArticleServiceImpl() as ArticleService,
@@ -98,14 +98,14 @@ export const useEditorDriverStore = defineStore('editor-driver', {
         },
 
 
-        async getNodes(key: string): Promise<Array<TreeNodeData>> {
+        async getNodes(key: string): Promise<Array<TreeNode>> {
             const nodes = await this.service.loadToc(key);
             this.itemsMap.set(key, nodes);
             return Promise.resolve(nodes);
         },
-        async folders(init: boolean = false): Promise<TreeNodeData[]> {
+        async folders(init: boolean = false): Promise<TreeNode[]> {
             if (init) {
-                this.itemsMap = new Map<string, Array<TreeNodeData>>();
+                this.itemsMap = new Map<string, Array<TreeNode>>();
             }
             if (this.driverId === 0) {
                 // 没有选择
@@ -140,7 +140,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
                 this.service = new DefaultArticleServiceImpl();
             }
             //初始化
-            this.itemsMap = new Map<string, Array<TreeNodeData>>();
+            this.itemsMap = new Map<string, Array<TreeNode>>();
             this.itemsMap.set("", await this.service.loadToc(""));
             this.selectKey = '';
         },
@@ -150,7 +150,7 @@ export const useEditorDriverStore = defineStore('editor-driver', {
             setItem<number>(LocalNameEnum.KEY_EDITOR_DRIVER_ID, 0);
             this.service = new DefaultArticleServiceImpl();
             //初始化
-            this.itemsMap = new Map<string, Array<TreeNodeData>>();
+            this.itemsMap = new Map<string, Array<TreeNode>>();
             this.selectKey = '';
         },
 
@@ -168,9 +168,9 @@ export const useEditorDriverStore = defineStore('editor-driver', {
     }
 });
 
-function buildTree(itemMap: Map<string, Array<TreeNodeData>>, pid: string): Array<TreeNodeData> {
+function buildTree(itemMap: Map<string, Array<TreeNode>>, pid: string): Array<TreeNode> {
     const items = itemMap.get(pid);
-    const nodes = new Array<TreeNodeData>();
+    const nodes = new Array<TreeNode>();
     if (!items) {
         return nodes;
     }
@@ -178,12 +178,12 @@ function buildTree(itemMap: Map<string, Array<TreeNodeData>>, pid: string): Arra
     return nodes;
 }
 
-function _buildTree(items: Array<TreeNodeData>, itemMap: Map<string, Array<TreeNodeData>>, nodes: Array<TreeNodeData>) {
+function _buildTree(items: Array<TreeNode>, itemMap: Map<string, Array<TreeNode>>, nodes: Array<TreeNode>) {
     items = items.sort((a, b) => (a.key as string).localeCompare(b.key as string));
     for (let item of items) {
         if (!item.isLeaf) {
             const children = itemMap.get(item.key as string);
-            const nodeChildren = new Array<TreeNodeData>();
+            const nodeChildren = new Array<TreeNode>();
             if (children) {
                 _buildTree(children, itemMap, nodeChildren);
                 nodes.push({

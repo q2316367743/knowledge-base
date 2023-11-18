@@ -17,13 +17,18 @@ export function pathJoin(...paths: string[]): string {
 }
 
 export function parseFileExtra(fileName: string): string {
-    const indexOf = fileName.lastIndexOf(".");
-    let extra = 'text'
-    if (indexOf > -1) {
-        extra = fileName.substring(indexOf + 1);
-    }
     // 部分后缀名与语言不符
-    return renderLanguage(extra);
+    return renderLanguage(extname(fileName));
+}
+
+export function extname(fileName: string): string {
+    return fileName.split('.').pop() || '';
+}
+
+export function basename(fileName: string): string {
+    const s = fileName.split('/').pop() || '';
+    const t = fileName.split("\\").pop() || '';
+    return s.length > t.length ? t : s;
 }
 
 export function renderLanguage(ext: string): string {
@@ -40,7 +45,7 @@ export function renderLanguage(ext: string): string {
         return 'typescript';
     } else if (ext === 'js') {
         return 'javascript';
-    }else if (ext === 'py') {
+    } else if (ext === 'py') {
         return 'python';
     }
     return ext;

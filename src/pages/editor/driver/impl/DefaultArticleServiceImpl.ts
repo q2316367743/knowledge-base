@@ -1,5 +1,5 @@
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
-import {TreeNodeData} from "@arco-design/web-vue";
+import {TreeNode} from "@/plugin/sdk/ZTree";
 
 export default class DefaultArticleServiceImpl implements ArticleService {
 
@@ -7,7 +7,7 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return Promise.resolve("");
     }
 
-    loadToc(key: string): Promise<Array<TreeNodeData>> {
+    loadToc(key: string): Promise<Array<TreeNode>> {
         return Promise.resolve([]);
     }
 
