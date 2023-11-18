@@ -49,14 +49,7 @@ const folder = ref<TreeNode | null>(null);
 const driverId = computed(() => useEditorDriverStore().driverId);
 const selectKey = computed(() => useEditorDriverStore().selectKey);
 
-watch(() => useEditorDriverStore().driverId,
-    value => {
-        if (value === 0) {
-            // TODO: 清空
-        } else {
-            // TODO: 重新获取
-        }
-    });
+watch(() => useEditorDriverStore().driverId, init);
 
 
 // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
