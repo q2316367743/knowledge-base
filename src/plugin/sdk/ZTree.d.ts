@@ -43,7 +43,18 @@ export interface ZTreeSetting {
 
     edit?: ZTreeSettingEdit;
 
-    callback?: ZTreeSettingCallback
+    callback?: ZTreeSettingCallback;
+
+    data?: ZTreeSettingData;
+}
+
+interface ZTreeSettingData {
+    keep?: ZTreeSettingDataKeep;
+}
+
+interface ZTreeSettingDataKeep {
+    parent?: boolean;
+    leaf?: boolean;
 }
 
 interface ZTreeSettingEdit {

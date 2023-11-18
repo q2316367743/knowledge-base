@@ -3,6 +3,7 @@
         <header class="header">
             <a-space>
                 <es-workspace/>
+                <es-setting/>
                 <a-tooltip content="重置目录">
                     <a-button type="primary" :disabled="disabled" @click="refresh()">
                         <template #icon>
@@ -10,7 +11,6 @@
                         </template>
                     </a-button>
                 </a-tooltip>
-                <es-setting/>
                 <a-dropdown>
                     <a-button type="primary" :disabled="disabled">
                         <template #icon>
@@ -71,6 +71,11 @@ const setting: ZTreeSetting = {
         showRenameBtn: true,
         removeTitle: "删除",
         renameTitle: "重命名"
+    },
+    data: {
+        keep: {
+            parent: true
+        }
     },
     callback: {
         beforeExpand(treeId: string, treeNode: TreeNode): boolean {
