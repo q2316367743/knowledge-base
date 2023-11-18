@@ -239,5 +239,6 @@ window.fs = {
 window.path = {
     extname: extname,
     basename: basename,
+    dirname: dirname,
     join: join
 }

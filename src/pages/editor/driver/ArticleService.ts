@@ -52,4 +52,11 @@ export interface ArticleService {
      */
     removeDir(path: string): Promise<void>;
 
+    /**
+     * 重命名文件
+     * @param path 目录
+     * @param name 新文件名
+     */
+    rename(path: string, name: string): Promise<string>;
+
 }

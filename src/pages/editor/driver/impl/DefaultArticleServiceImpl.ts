@@ -31,4 +31,8 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return Promise.resolve(undefined);
     }
 
+    rename(path: string, name: string): Promise<string> {
+        return Promise.resolve("");
+    }
+
 }

@@ -4,7 +4,7 @@
             <a-space>
                 <es-workspace/>
                 <a-tooltip content="重置目录">
-                    <a-button type="primary" :disabled="driverId === 0" @click="refresh()">
+                    <a-button type="primary" :disabled="disabled" @click="refresh()">
                         <template #icon>
                             <icon-refresh/>
                         </template>
@@ -12,7 +12,7 @@
                 </a-tooltip>
                 <es-setting/>
                 <a-dropdown>
-                    <a-button type="primary" :disabled="driverId === 0">
+                    <a-button type="primary" :disabled="disabled">
                         <template #icon>
                             <icon-plus/>
                         </template>
@@ -48,6 +48,10 @@ const folder = ref<TreeNode | null>(null);
 
 const driverId = computed(() => useEditorDriverStore().driverId);
 const selectKey = computed(() => useEditorDriverStore().selectKey);
+const disabled = computed<boolean>(() => {
+    return driverId.value === 0 || !!(folder.value && folder.value.isLeaf);
+
+})
 
 watch(() => useEditorDriverStore().driverId, init);
 
@@ -92,7 +96,7 @@ const setting: ZTreeSetting = {
             return true;
         },
         onClick(e, treeId, treeNode, clickFlag) {
-            folder.value = treeNode.isLeaf || clickFlag !== 1 ? null : treeNode;
+            folder.value = clickFlag === 1 ? treeNode : null;
             if (clickFlag === 1) {
                 if (treeNode.isLeaf) {
                     useEditorDriverStore().setSelectKey(treeNode.key);
@@ -126,6 +130,15 @@ const setting: ZTreeSetting = {
                     }).catch(e => MessageUtil.error("删除失败", e))
                 });
             return false;
+        },
+        onRename(e, treeId, treeNode, isCancel) {
+            if (isCancel) {
+                return;
+            }
+            useEditorDriverStore().service.rename(treeNode.key, treeNode.name)
+                .then(path => treeNode.key = path)
+                .catch(e => MessageUtil.error("重命名失败", e));
+
         }
     }
 };
@@ -219,8 +232,6 @@ async function _addFolder(name: string) {
     renderFolder(folder.value || root());
 }
 
-function rename(path: string, name: string, file: boolean) {
-}
 
 </script>
 <style lang="less">

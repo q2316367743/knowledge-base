@@ -55,4 +55,11 @@ export class FileArticleServiceImpl implements ArticleService {
         return this.fsDriver.removeDir(path, true);
     }
 
+    async rename(path: string, name: string): Promise<string> {
+        const dir = window.path.dirname(path);
+        const newPath = window.path.join(dir, name);
+        await this.fsDriver.renameFile(path, newPath);
+        return Promise.resolve(newPath);
+    }
+
 }
