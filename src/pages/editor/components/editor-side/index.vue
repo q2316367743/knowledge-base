@@ -18,8 +18,8 @@
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption @click="addFile()">新增文件</a-doption>
-                        <a-doption>新建文件夹</a-doption>
+                        <a-doption @click="addFile()">新建文件</a-doption>
+                        <a-doption @click="addFolder()">新建文件夹</a-doption>
                     </template>
                 </a-dropdown>
             </a-space>
@@ -115,8 +115,11 @@ const setting: ZTreeSetting = {
             const file = treeNode.isLeaf;
             const name = treeNode.name;
             MessageBoxUtil.confirm(`是否删除文件${file ? "" : "夹"}【${name}】？`, `删除文件${file ? "" : "夹"}`)
-                .then(() => useEditorDriverStore().service.removeFile(path)
-                    .then(() => {
+                .then(() => {
+                    const rsp: Promise<void> = file ?
+                        useEditorDriverStore().service.removeFile(path) :
+                        useEditorDriverStore().service.removeDir(path);
+                    rsp.then(() => {
                         MessageUtil.success("删除成功");
                         // 重新获取目录
                         if (path === useEditorDriverStore().selectKey) {
@@ -127,8 +130,8 @@ const setting: ZTreeSetting = {
                         if (zTreeObj) {
                             zTreeObj.removeNode(treeNode, false);
                         }
-                    })
-                    .catch(e => MessageUtil.error("删除失败", e)));
+                    }).catch(e => MessageUtil.error("删除失败", e))
+                });
             return false;
         }
     }
@@ -190,7 +193,7 @@ function renderFolder(node: TreeNode) {
 
 function addFile() {
     // 创建文件
-    MessageBoxUtil.prompt("请输入文件名", "添加文件", {
+    MessageBoxUtil.prompt("请输入文件名", "新建文件", {
         confirmButtonText: "新增"
     }).then(name => _addFile(name))
         .then(() => MessageUtil.success("新增成功"))
@@ -206,7 +209,21 @@ async function _addFile(name: string) {
 }
 
 
-function addFolder(folder: string) {
+function addFolder() {
+    // 创建文件
+    MessageBoxUtil.prompt("请输入文件夹名", "新建文件夹", {
+        confirmButtonText: "新增"
+    }).then(name => _addFolder(name))
+        .then(() => MessageUtil.success("新增成功"))
+        .catch(e => MessageUtil.error("新增失败", e))
+}
+
+async function _addFolder(name: string) {
+    // 创建文件
+    const path = folder.value ? folder.value.key : useEditorDriverStore().rootPath;
+    await useEditorDriverStore().service.addFolder(path, name);
+    // 刷新目录
+    renderFolder(folder.value || root());
 }
 
 function rename(path: string, name: string, file: boolean) {

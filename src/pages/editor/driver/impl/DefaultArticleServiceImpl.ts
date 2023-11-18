@@ -23,4 +23,12 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return Promise.resolve();
     }
 
+    addFolder(path: string, name: string): Promise<void> {
+        return Promise.resolve();
+    }
+
+    removeDir(path: string): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
 }

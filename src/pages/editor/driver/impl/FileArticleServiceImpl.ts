@@ -47,4 +47,12 @@ export class FileArticleServiceImpl implements ArticleService {
         return this.fsDriver.removeFile(path);
     }
 
+    addFolder(path: string, name: string): Promise<void> {
+        return this.fsDriver.createDir(window.path.join(path, name))
+    }
+
+    removeDir(path: string): Promise<void> {
+        return this.fsDriver.removeDir(path, true);
+    }
+
 }

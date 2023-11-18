@@ -39,4 +39,17 @@ export interface ArticleService {
      */
     removeFile(path: string): Promise<void>;
 
+    /**
+     * 新建文件
+     * @param path 文件路径
+     * @param name 文件名
+     */
+    addFolder(path: string, name: string): Promise<void>;
+
+    /**
+     * 删除目录
+     * @param path 目录
+     */
+    removeDir(path: string): Promise<void>;
+
 }
