@@ -70,7 +70,14 @@ const setting: ZTreeSetting = {
         },
         showRenameBtn: true,
         removeTitle: "删除",
-        renameTitle: "重命名"
+        renameTitle: "重命名",
+        drag: {
+            isCopy: false,
+            isMove: true,
+            prev: false,
+            inner: true,
+            next: true
+        }
     },
     data: {
         keep: {
@@ -99,6 +106,9 @@ const setting: ZTreeSetting = {
                 return false;
             }
             return true;
+        },
+        beforeDrop(treeId, treeNodes, targetNode, moveType, isCopy) {
+            return !targetNode.isLeaf;
         },
         onClick(e, treeId, treeNode, clickFlag) {
             folder.value = clickFlag === 1 ? treeNode : null;
@@ -143,7 +153,17 @@ const setting: ZTreeSetting = {
             useEditorDriverStore().service.rename(treeNode.key, treeNode.name)
                 .then(path => treeNode.key = path)
                 .catch(e => MessageUtil.error("重命名失败", e));
-
+        },
+        onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
+            if (moveType !== 'inner') {
+                // 只处理移动到内部
+                return;
+            }
+            if (isCopy) {
+                useEditorDriverStore().service.copy(treeNodes.map(e => e.key), targetNode.key)
+            }else {
+                useEditorDriverStore().service.move(treeNodes.map(e => e.key), targetNode.key)
+            }
         }
     }
 };

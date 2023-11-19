@@ -64,11 +64,20 @@ interface ZTreeSettingEdit {
     showRenameBtn?: boolean | showBtnFunc;
     removeTitle?: string;
     renameTitle?: string;
+    drag?: ZTreeSettingEditDrag
+}
+
+interface ZTreeSettingEditDrag {
+    isCopy?: boolean;
+    isMove?: boolean;
+    prev?: boolean;
+    inner?: boolean;
+    next?: boolean;
 }
 
 type showBtnFunc = (treeId: string, treeNode: TreeNode) => boolean;
 
-interface ZTreeSettingCallback{
+interface ZTreeSettingCallback {
 
     /**
      * 展开前回调
@@ -84,7 +93,18 @@ interface ZTreeSettingCallback{
      * @param treeNode 被点击的树的节点
      * @param clickFlag 节点被点击后的选中操作类型
      */
-    beforeClick?: (treeId: string, treeNode: TreeNode, clickFlag: number) => boolean
+    beforeClick?: (treeId: string, treeNode: TreeNode, clickFlag: number) => boolean;
+
+    /**
+     * 用于捕获节点拖拽操作结束之前的事件回调函数，并且根据返回值确定是否允许此拖拽操作
+     *
+     * @param treeId 目标节点`targetNode`所在`zTree`的`treeId`，便于用户操控
+     * @param treeNodes 被拖拽的节点 JSON 数据集合
+     * @param treeNode treeNodes 被拖拽放开的目标节点 JSON 数据对象。
+     * @param moveType 指定移动到目标节点的相对位置
+     * @param isCopy 拖拽节点操作是 复制 或 移动
+     */
+    beforeDrop?: (treeId: string, treeNodes: Array<TreeNode>, treeNode: TreeNode, moveType: MoveType, isCopy: boolean) => void;
 
     /**
      * 移除前回调
@@ -92,7 +112,7 @@ interface ZTreeSettingCallback{
      * @param treeNode 被点击的树的节点
      * @param clickFlag 节点被点击后的选中操作类型
      */
-    beforeRemove?: (treeId: string, treeNode: TreeNode) => boolean
+    beforeRemove?: (treeId: string, treeNode: TreeNode) => boolean;
 
     /**
      * 点击事件
@@ -102,6 +122,17 @@ interface ZTreeSettingCallback{
      * @param clickFlag 节点被点击后的选中操作类型
      */
     onClick?: (event: Event, treeId: string, treeNode: TreeNode, clickFlag: number) => void;
+
+    /**
+     * 用于捕获节点拖拽操作结束的事件回调函数
+     * @param event
+     * @param treeId 目标节点`targetNode`所在`zTree`的`treeId`，便于用户操控
+     * @param treeNodes 被拖拽的节点 JSON 数据集合
+     * @param targetNode treeNodes 被拖拽放开的目标节点 JSON 数据对象。
+     * @param moveType 指定移动到目标节点的相对位置
+     * @param isCopy 拖拽节点操作是 复制 或 移动
+     */
+    onDrop?:(event: Event, treeId: string, treeNodes: Array<TreeNode>, targetNode: TreeNode, moveType: MoveType, isCopy: boolean) => void;
 
     /**
      * 删除
@@ -121,3 +152,6 @@ interface ZTreeSettingCallback{
     onRename?: (event: Event, treeId: string, treeNode: TreeNode, isCancel: boolean) => void;
 
 }
+
+
+type MoveType = 'inner' | 'prev' | 'next' | null;

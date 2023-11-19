@@ -91,4 +91,14 @@ export class FileArticleServiceImpl implements ArticleService {
         return `file://${utools.isWindows() ? ('/' + target.replaceAll("\\", "/")) : target}`;
     }
 
+    copy(sources: Array<string>, target: string): Promise<void> {
+        // TODO: 拷贝
+        return Promise.resolve(undefined);
+    }
+
+    move(sources: Array<string>, target: string): Promise<void> {
+        // TODO: 移动
+        return Promise.resolve(undefined);
+    }
+
 }

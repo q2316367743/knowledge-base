@@ -74,4 +74,18 @@ export interface ArticleService {
      */
     renderImageUrl(path: string, url: string): string;
 
+    /**
+     * 拷贝目录
+     * @param sources 来源文件
+     * @param target 目标文件夹
+     */
+    copy(sources: Array<string>, target: string): Promise<void>;
+
+    /**
+     * 移动目录
+     * @param sources 来源文件
+     * @param target 目标文件夹
+     */
+    move(sources: Array<string>, target: string): Promise<void>;
+
 }

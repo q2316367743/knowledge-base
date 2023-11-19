@@ -43,4 +43,12 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return url;
     }
 
+    copy(sources: Array<string>, target: string): Promise<void> {
+        return Promise.resolve();
+    }
+
+    move(sources: Array<string>, target: string): Promise<void> {
+        return Promise.resolve();
+    }
+
 }
