@@ -25,15 +25,15 @@ export async function useImageUpload(data: File | string): Promise<string> {
             url = getAttachmentBySync(url);
         }
         return Promise.resolve(url);
-    }catch (e) {
+    } catch (e) {
         return Promise.reject(e)
-    }finally {
+    } finally {
         useGlobalStore().closeLoading();
     }
 
 }
 
-async function selfImageUpload(data: File | Blob | string): Promise<string> {
+function selfImageUpload(data: File | Blob | string): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
 
@@ -46,31 +46,38 @@ async function selfImageUpload(data: File | Blob | string): Promise<string> {
         }
         return useUtoolsImageUpload(data);
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
-
-
-        if (Constant.platform === PlatformTypeEnum.WEB || !isUtools) {
-            return Promise.reject("web版不支持调用图床");
-        }
-
-        if (typeof data !== 'string') {
-            data = await blobToBase64(data);
-        }
-        // 使用图床插件
-        utools.redirect(['图床', '上传到图床'], {
-            type: 'img',
-            data: data
-        } as RedirectPreload);
-        return Promise.resolve("");
+        return useImageUploadByPlugin(data).then(() => (""));
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
         return useLskyProSettingStore().upload(data)
     }
-
     return Promise.reject("请在基础设置中选择图片上传策略")
 
 }
+
+/**
+ * 图片上传使用插件
+ * @param data 图片数据
+ */
+export async function useImageUploadByPlugin(data: File | Blob | string): Promise<void> {
+
+    if (Constant.platform === PlatformTypeEnum.WEB || !isUtools) {
+        return Promise.reject("web版不支持调用图床");
+    }
+
+    if (typeof data !== 'string') {
+        data = await blobToBase64(data);
+    }
+    // 使用图床插件
+    utools.redirect(['图床', '上传到图床'], {
+        type: 'img',
+        data: data
+    } as RedirectPreload);
+    return Promise.resolve();
+}
+
 
 async function useUtoolsImageUpload(data: Blob | File): Promise<string> {
     const id = new Date().getTime() + '';

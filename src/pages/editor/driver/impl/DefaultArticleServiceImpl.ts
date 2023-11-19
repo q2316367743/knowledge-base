@@ -35,4 +35,12 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return Promise.resolve("");
     }
 
+    upload(path: string,file: File | Blob | string): Promise<string> {
+        return Promise.resolve("");
+    }
+
+    renderImageUrl(path: string, url: string): string {
+        return url;
+    }
+
 }

@@ -17,8 +17,8 @@
             </a-button-group>
         </header>
         <main class="ec-container" v-if="isInit">
-            <markdown-editor v-model="content" :preview="false" ref="mdEditor"
-                             v-if="isMarkdown && isInit"/>
+            <ec-markdown v-model="content" :preview="false" ref="mdEditor"
+                         v-if="isMarkdown && isInit"/>
             <monaco-editor v-model="content" :language="language" :read-only="false"
                            v-else-if="isInit"/>
         </main>
@@ -37,12 +37,12 @@
     </div>
 </template>
 <script lang="ts" setup>
-import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
 import {computed, ref} from "vue";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {basename, extname, renderLanguage} from "@/utils/FileUtil";
 import MessageUtil from "@/utils/MessageUtil";
+import EcMarkdown from "@/pages/editor/components/editor-container/ec-markdown.vue";
 
 const isInit = ref(false);
 const content = ref('');

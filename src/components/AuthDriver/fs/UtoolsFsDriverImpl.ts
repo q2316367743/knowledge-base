@@ -41,8 +41,9 @@ export class UtoolsFsDriverImpl implements FsDriver {
         return window.fs.renameFile(oldPath, newPath);
     }
 
-    writeBinaryFile(path: string, contents: FsBinaryFileContents): Promise<void> {
-        return window.fs.writeBinaryFile(path, contents);
+    async writeBinaryFile(path: string, contents: FsBinaryFileContents): Promise<void> {
+        const data = contents instanceof Blob ? await contents.arrayBuffer() : contents;
+        return window.fs.writeBinaryFile(path, new Uint8Array(data));
     }
 
     writeTextFile(path: string, contents: string): Promise<void> {

@@ -59,7 +59,7 @@ export interface FsDriver {
     exists(path: string): Promise<boolean>;
 }
 
-export type FsBinaryFileContents = Iterable<number> | ArrayLike<number> | ArrayBuffer;
+export type FsBinaryFileContents = Blob | ArrayBuffer;
 
 export interface FileItem {
     path: string;

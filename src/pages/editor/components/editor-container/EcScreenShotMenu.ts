@@ -1,13 +1,14 @@
 import Cherry from "cherry-markdown";
-import {useImageUpload} from "@/plugin/image";
 import MessageUtil from "@/utils/MessageUtil";
 import {ShallowRef} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
+import {useEcImageUpload} from "@/pages/editor/components/editor-container/EcImageUpload";
+import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 
 /**
  * 截屏菜单
  */
-export const useScreenShotMenu = (editor: ShallowRef) => {
+export const useEcScreenShotMenu = (editor: ShallowRef) => {
     return Cherry.createMenuHook('截屏',  {
         name: '截图',
         onClick: function() {
@@ -16,7 +17,7 @@ export const useScreenShotMenu = (editor: ShallowRef) => {
                 utools.screenCapture(base64 => {
                     utools.showMainWindow()
                     useGlobalStore().startLoading("开始文件上传");
-                    useImageUpload(base64)
+                    useEcImageUpload(useEditorDriverStore().selectKey, base64)
                         .then(url => editor.value.insert('\n![截屏](' + url + ')'))
                         .catch(e => MessageUtil.error("截图失败", e))
                         .finally(() => useGlobalStore().closeLoading())

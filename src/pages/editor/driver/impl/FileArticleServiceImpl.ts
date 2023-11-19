@@ -3,6 +3,7 @@ import {EditorDriver} from "@/entity/editor/EditorDriver";
 import {FsDriver} from "@/components/AuthDriver/FsDriver";
 import {UtoolsFsDriverImpl} from "@/components/AuthDriver/fs/UtoolsFsDriverImpl";
 import {TreeNode} from "@/plugin/sdk/ZTree";
+import {base64toBlob} from "@/utils/BrowserUtil";
 
 export class FileArticleServiceImpl implements ArticleService {
 
@@ -60,6 +61,34 @@ export class FileArticleServiceImpl implements ArticleService {
         const newPath = window.path.join(dir, name);
         await this.fsDriver.renameFile(path, newPath);
         return Promise.resolve(newPath);
+    }
+
+    // 上传到文章路径下的image目录
+    async upload(path: string, file: File | Blob | string): Promise<string> {
+        // 获取根目录
+        const dir = window.path.dirname(path);
+        const image = window.path.join(dir, "image");
+        if (!await this.fsDriver.exists(image)) {
+            // 不存在目录，创建
+            await this.fsDriver.createDir(image);
+        }
+        // 获取文件名
+        const fileName = file instanceof File ? file.name : (new Date().getTime() + '.png');
+        // 否在目标文件路径
+        const target = window.path.join(image, fileName);
+        // 转换文件内容类型
+        const data = typeof file === 'string' ? base64toBlob(file.replace("data:image/png;base64,", "")) : file;
+        // 写入二进制文件
+        await this.fsDriver.writeBinaryFile(target, data);
+        return Promise.resolve(`./image/${fileName}`);
+    }
+
+    renderImageUrl(path: string, url: string): string {
+        // 获取根目录
+        const dir = window.path.dirname(path);
+        // 否在目标文件路径
+        const target = window.path.join(dir, url);
+        return `file://${utools.isWindows() ? ('/' + target.replaceAll("\\", "/")) : target}`;
     }
 
 }

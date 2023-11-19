@@ -59,4 +59,19 @@ export interface ArticleService {
      */
     rename(path: string, name: string): Promise<string>;
 
+    /**
+     * 上传文件
+     * @param path 文章文件路径
+     * @param file 图片文件
+     * @return 文件url
+     */
+    upload(path: string, file: File | Blob | string): Promise<string>;
+
+    /**
+     * 渲染图片URL
+     * @param path 当前文件路径
+     * @param url 文件url
+     */
+    renderImageUrl(path: string, url: string): string;
+
 }

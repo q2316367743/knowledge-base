@@ -22,7 +22,7 @@ declare interface Window {
         /**
          * 写入二进制文件
          */
-        writeBinaryFile(path: string, contents: FsBinaryFileContents): Promise<void>;
+        writeBinaryFile(path: string, contents: Uint8Array): Promise<void>;
 
         /**
          * 读取一个目录
