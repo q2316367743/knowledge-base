@@ -80,7 +80,8 @@ export class FileArticleServiceImpl implements ArticleService {
         const data = typeof file === 'string' ? base64toBlob(file.replace("data:image/png;base64,", "")) : file;
         // 写入二进制文件
         await this.fsDriver.writeBinaryFile(target, data);
-        return Promise.resolve(`./image/${fileName}`);
+        console.log(fileName, encodeURIComponent(fileName))
+        return Promise.resolve(`./image/${encodeURIComponent(fileName)}`);
     }
 
     renderImageUrl(path: string, url: string): string {
