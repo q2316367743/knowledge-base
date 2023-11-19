@@ -34,6 +34,8 @@ enum LocalNameEnum {
 
     SETTING_LSKY_PRO = '/local/setting/lsky-pro',
 
+    SETTING_WORKSPACE = '/local/setting/workspace',
+
     ZONE = '/local/zone',
 
     ZONE_BASE = '/zone/base/',

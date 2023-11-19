@@ -15,6 +15,7 @@ import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import {tauri} from "@/plugin/sdk/tauri";
+import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
@@ -41,6 +42,8 @@ export async function initData(): Promise<void> {
         useThemeSettingStore().init(),
         useBaseSettingStore().init(),
         useLskyProSettingStore().init(),
+        useWorkspaceSettingStore().init(),
+
         useArticleStore().init(),
         useCategoryStore().init(),
         useBackupSettingStore().init(),

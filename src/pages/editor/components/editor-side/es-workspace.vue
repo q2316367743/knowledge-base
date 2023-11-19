@@ -97,7 +97,7 @@ const editDriver = ref({
 
 const drivers = computed(() => useEditorDriverStore().drivers);
 const driverId = computed(() => useEditorDriverStore().driverId);
-const type = computed(() => {
+const type = computed<number | undefined>(() => {
     if (driverId.value > 0) {
         for (let valueElement of drivers.value) {
             if (valueElement.id === driverId.value) {

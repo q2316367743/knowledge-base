@@ -22,7 +22,7 @@
             <template #icon>
                 <icon-edit/>
             </template>
-            草稿箱
+            工作空间
         </a-menu-item>
         <a-sub-menu key="/graph">
             <template #icon>

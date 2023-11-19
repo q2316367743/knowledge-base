@@ -18,7 +18,7 @@
         </header>
         <main class="ec-container" v-if="isInit">
             <ec-markdown v-model="content" :preview="false" ref="mdEditor"
-                         v-if="isMarkdown && isInit"/>
+                         v-if="isMarkdown && isInit && customerMarkdown"/>
             <monaco-editor v-model="content" :language="language" :read-only="false"
                            v-else-if="isInit"/>
         </main>
@@ -43,6 +43,7 @@ import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {basename, extname, renderLanguage} from "@/utils/FileUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import EcMarkdown from "@/pages/editor/components/editor-container/ec-markdown.vue";
+import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
 
 const isInit = ref(false);
 const content = ref('');
@@ -52,6 +53,7 @@ const title = basename(selectKey);
 const language = renderLanguage(extname(selectKey));
 const isMarkdown = language === 'md' || language === 'markdown';
 const collapsed = computed(() => useEditorDriverStore().collapsed);
+const customerMarkdown = computed(() => useWorkspaceSettingStore().customerMarkdown);
 
 useEditorDriverStore().service.getFile(selectKey)
         .then(text => {

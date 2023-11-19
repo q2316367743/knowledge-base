@@ -14,6 +14,7 @@ import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
 import {useEcImageUpload} from "@/pages/editor/components/editor-container/EcImageUpload";
 import {useEcScreenShotMenu} from "@/pages/editor/components/editor-container/EcScreenShotMenu";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
+import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -57,7 +58,7 @@ const config: CherryConfig = {
         }
     },
     editor: {
-        defaultModel: "edit&preview",
+        defaultModel: useWorkspaceSettingStore().markdownEditOnly ? "editOnly" : "edit&preview",
         codemirror: {
             theme: useGlobalStore().isDark ? 'material-ocean' : 'default',
         },
