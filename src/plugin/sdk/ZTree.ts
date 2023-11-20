@@ -37,6 +37,14 @@ export interface ZTreeInstance {
      */
     removeNode(treeNode: TreeNode, callbackFlag: boolean): void;
 
+    /**
+     * 根据节点数据的属性进行搜索，获取条件完全匹配的节点数据对象
+     * @param key 需要精确匹配的属性名称
+     * @param value 需要紧缺匹配的属性值
+     * @param parentNode 搜索范围，值定在某个父节点下的子节点进行搜索
+     */
+    getNodeByParam(key: string, value: any, parentNode: TreeNode | null): TreeNode | null;
+
 }
 
 export interface ZTreeSetting {

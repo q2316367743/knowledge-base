@@ -124,6 +124,7 @@ const setting: ZTreeSetting = {
             }
         },
         beforeRemove(treeId, treeNode) {
+            // TODO: 此处需要优化父文件夹
             const path = treeNode.key;
             const file = treeNode.isLeaf;
             const name = treeNode.name;
@@ -212,6 +213,7 @@ useEditorRefreshFolder.on(node => renderFolder(node));
  * @param node 节点
  */
 function renderFolder(node: TreeNode) {
+    // TODO: 此处需要使用命令设计模式
     if (node.key === '') {
         // 清空全部缓存
         useEditorDriverStore().itemsMap.clear();
@@ -222,10 +224,11 @@ function renderFolder(node: TreeNode) {
             MessageUtil.warning("系统异常，树未初始化");
             return;
         }
+        const target = zTreeObj.getNodeByParam('key', node.key, null);
         // 先移除缓存
         useEditorDriverStore().itemsMap.delete(node.key);
         // 再删除子节点
-        zTreeObj.removeChildNodes(node);
+        zTreeObj.removeChildNodes(target || node);
         // 在重新获取
         useEditorDriverStore().getNodes(node.key)
                 .then(nodes => {
@@ -233,7 +236,7 @@ function renderFolder(node: TreeNode) {
                         MessageUtil.warning("系统异常，树未初始化");
                         return;
                     }
-                    zTreeObj.addNodes(node, 0, nodes, false);
+                    zTreeObj.addNodes(target || node, 0, nodes, false);
                 })
     }
 }

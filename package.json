@@ -24,7 +24,7 @@
         "@wangeditor/editor": "^5.1.23",
         "@wangeditor/plugin-md": "^1.0.0",
         "axios": "^1.4.0",
-        "cherry-markdown": "^0.8.26",
+        "cherry-markdown": "^0.8.27",
         "dayjs": "^1.11.10",
         "fuse.js": "^6.6.2",
         "highlight.js": "^11.8.0",
