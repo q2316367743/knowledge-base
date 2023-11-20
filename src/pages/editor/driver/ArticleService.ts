@@ -68,6 +68,20 @@ export interface ArticleService {
     upload(path: string, file: File | Blob | string): Promise<string>;
 
     /**
+     * 拷贝目录
+     * @param sources 来源文件
+     * @param target 目标文件夹
+     */
+    copy(sources: Array<TreeNode>, target: TreeNode): Promise<void>;
+
+    /**
+     * 移动目录
+     * @param sources 来源文件
+     * @param target 目标文件夹
+     */
+    move(sources: Array<TreeNode>, target: TreeNode): Promise<void>;
+
+    /**
      * 渲染图片URL
      * @param path 当前文件路径
      * @param url 文件url
@@ -75,17 +89,9 @@ export interface ArticleService {
     renderImageUrl(path: string, url: string): string;
 
     /**
-     * 拷贝目录
-     * @param sources 来源文件
-     * @param target 目标文件夹
+     * 寻找父节点
+     * @param node 当前子节点
      */
-    copy(sources: Array<string>, target: string): Promise<void>;
-
-    /**
-     * 移动目录
-     * @param sources 来源文件
-     * @param target 目标文件夹
-     */
-    move(sources: Array<string>, target: string): Promise<void>;
+    findFolder(node: TreeNode): TreeNode;
 
 }

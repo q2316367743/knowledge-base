@@ -15,6 +15,6 @@ export interface WorkspaceSetting {
 export function getDefaultWorkspaceSetting(): WorkspaceSetting {
     return {
         customerMarkdown: true,
-        markdownEditOnly: false
+        markdownEditOnly: true
     }
 }

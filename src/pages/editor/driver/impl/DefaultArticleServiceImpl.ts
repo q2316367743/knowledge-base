@@ -1,7 +1,11 @@
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
-import {TreeNode} from "@/plugin/sdk/ZTree";
+import {getRoot, TreeNode} from "@/plugin/sdk/ZTree";
 
 export default class DefaultArticleServiceImpl implements ArticleService {
+
+    findFolder(node: TreeNode): TreeNode {
+        return getRoot();
+    }
 
     getFile(key: string): Promise<string> {
         return Promise.resolve("");
@@ -43,11 +47,11 @@ export default class DefaultArticleServiceImpl implements ArticleService {
         return url;
     }
 
-    copy(sources: Array<string>, target: string): Promise<void> {
+    copy(sources: Array<TreeNode>, target: TreeNode): Promise<void> {
         return Promise.resolve();
     }
 
-    move(sources: Array<string>, target: string): Promise<void> {
+    move(sources: Array<TreeNode>, target: TreeNode): Promise<void> {
         return Promise.resolve();
     }
 

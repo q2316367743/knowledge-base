@@ -33,6 +33,22 @@ function writeFile(path, contents) {
     })
 }
 
+/**
+ * 读取
+ * @param {string} path 文件夹目录
+ * @return {Promise<Array<string>>} 所有的文件
+ */
+function readFolderAsync(path) {
+    return new Promise((resolve, reject) => {
+        fs.readdir(path, (e, files) => {
+            if (e) {
+                reject(e);
+                return;
+            }
+            resolve(files);
+        })
+    })
+}
 
 window.fs = {
     /**
@@ -102,21 +118,20 @@ window.fs = {
      * @param {string} dir 目录路径
      * @return {Promise<{path: string, name: string, ext: string, dir:boolean}>} 全部的文件
      */
-    readDir(dir) {
-        return new Promise(resolve => {
-            const items = [];
-            fs.readdirSync(dir).forEach(file => {
-                const fullPath = join(dir, file);
-                const stat = fs.statSync(fullPath);
-                items.push({
-                    path: fullPath,
-                    name: file,
-                    ext: extname(file),
-                    dir: stat.isDirectory()
-                })
-            });
-            resolve(items);
-        });
+    async readDir(dir) {
+        const items = [];
+        const files = await readFolderAsync(dir);
+        for (let file of files) {
+            const fullPath = join(dir, file);
+            const stat = fs.statSync(fullPath);
+            items.push({
+                path: fullPath,
+                name: file,
+                ext: extname(file),
+                dir: stat.isDirectory()
+            })
+        }
+        return Promise.resolve(items);
     },
 
     /**
@@ -160,8 +175,8 @@ window.fs = {
     },
 
     /**
-     * 拷贝一个文件、文件夹到目标目录
-     * @param {string} source 文件、文件夹目录
+     * 拷贝一个文件到目标目录
+     * @param {string} source 文件目录
      * @param {string} destination  目标目录
      * @return {Promise<void>} 完成
      */
@@ -176,6 +191,60 @@ window.fs = {
             fs.copyFile(source, destination, e => {
                 if (e) {
                     reject(e);
+                    return;
+                }
+                resolve();
+            })
+        })
+    },
+
+    /**
+     * 拷贝一个文件夹到目标目录
+     * @param {string} source 文件夹目录
+     * @param {string} target  目标目录
+     * @return {Promise<void>} 完成
+     */
+    async copyFolder(source, target) {
+        // 创建目标文件夹
+        if (!fs.existsSync(target)) {
+            fs.mkdirSync(target);
+        }
+        // 遍历源文件夹中的每个文件或子文件夹
+        const files = await readFolderAsync(source);
+        for (let file of files) {
+            // 构造源文件/文件夹的完整路径
+            const sourcePath = join(source, file);
+
+            // 构造目标文件/文件夹的完整路径
+            const targetPath = join(target, file);
+            // 获取文件/文件夹的详细信息
+            const stat = fs.statSync(sourcePath);
+
+            if (stat.isFile()) {
+                // 如果是文件，则直接复制文件
+                fs.copyFileSync(sourcePath, targetPath);
+            } else if (stat.isDirectory()) {
+                // 如果是文件夹，则递归复制文件夹
+                await this.copyFolder(sourcePath, targetPath);
+            }
+        }
+
+        return Promise.resolve();
+    },
+
+    /**
+     * 移动一个文件、文件夹到目标目录
+     * @param {string} source 文件、文件夹目录
+     * @param {string} destination  目标目录
+     * @return {Promise<void>} 完成
+     */
+    move(source, destination) {
+        const file = basename(source);
+        const target = join(destination, file)
+        return new Promise((resolve, reject) => {
+            fs.rename(source, target, e => {
+                if (e) {
+                    reject(e)
                     return;
                 }
                 resolve();
@@ -210,7 +279,7 @@ window.fs = {
      * @param {string} newPath 新的路径
      * @return {Promise<void>} 完成
      */
-    renameFile(oldPath, newPath) {
+    rename(oldPath, newPath) {
         return new Promise((resolve, reject) => {
             fs.rename(oldPath, newPath, e => {
                 if (e) {

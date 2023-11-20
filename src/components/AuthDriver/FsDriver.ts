@@ -39,9 +39,19 @@ export interface FsDriver {
     removeDir(dir: string, recursive?: boolean): Promise<void>;
 
     /**
-     * 拷贝一个文件、文件夹到目标目录
+     * 拷贝一个文件到目标目录
      */
     copyFile(source: string, destination: string): Promise<void>;
+
+    /**
+     * 拷贝一个文件夹到目标目录
+     */
+    copyFolder(source: string, destination: string): Promise<void>;
+
+    /**
+     * 移动贝一个文件、文件夹到目标目录
+     */
+    move(source: string, destination: string): Promise<void>;
 
     /**
      * 删除文件
@@ -51,7 +61,7 @@ export interface FsDriver {
     /**
      * 重命名文件
      */
-    renameFile(oldPath: string, newPath: string): Promise<void>;
+    rename(oldPath: string, newPath: string): Promise<void>;
 
     /**
      * 判断一个文件是否存在

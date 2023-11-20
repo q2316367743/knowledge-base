@@ -45,6 +45,16 @@ declare interface Window {
         copyFile(source: string, destination: string): Promise<void>;
 
         /**
+         * 拷贝一个文件、文件夹到目标目录
+         */
+        copyFolder(source: string, destination: string): Promise<void>;
+
+        /**
+         * 移动一个文件、文件夹到目标目录
+         */
+         move(source: string, destination: string): Promise<void>;
+
+        /**
          * 删除文件
          */
         removeFile(file: string): Promise<void>;
@@ -52,7 +62,7 @@ declare interface Window {
         /**
          * 重命名文件
          */
-        renameFile(oldPath: string, newPath: string): Promise<void>;
+        rename(oldPath: string, newPath: string): Promise<void>;
 
         /**
          * 判断一个文件是否存在

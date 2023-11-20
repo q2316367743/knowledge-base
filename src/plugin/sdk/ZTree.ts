@@ -35,7 +35,7 @@ export interface ZTreeInstance {
      * @param treeNode 要删除的阶段数据
      * @param callbackFlag true：触发回调，false：不触发回调
      */
-    removeNode(treeNode: TreeNode, callbackFlag: boolean);
+    removeNode(treeNode: TreeNode, callbackFlag: boolean): void;
 
 }
 
@@ -155,3 +155,5 @@ interface ZTreeSettingCallback {
 
 
 type MoveType = 'inner' | 'prev' | 'next' | null;
+
+export const getRoot = (): TreeNode => ({key: "", isLeaf: false, name: '', children: []});

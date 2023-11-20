@@ -2,7 +2,7 @@ import {ArticleService} from "@/pages/editor/driver/ArticleService";
 import {EditorDriver} from "@/entity/editor/EditorDriver";
 import {FsDriver} from "@/components/AuthDriver/FsDriver";
 import {UtoolsFsDriverImpl} from "@/components/AuthDriver/fs/UtoolsFsDriverImpl";
-import {TreeNode} from "@/plugin/sdk/ZTree";
+import {getRoot, TreeNode} from "@/plugin/sdk/ZTree";
 import {base64toBlob} from "@/utils/BrowserUtil";
 
 export class FileArticleServiceImpl implements ArticleService {
@@ -59,7 +59,7 @@ export class FileArticleServiceImpl implements ArticleService {
     async rename(path: string, name: string): Promise<string> {
         const dir = window.path.dirname(path);
         const newPath = window.path.join(dir, name);
-        await this.fsDriver.renameFile(path, newPath);
+        await this.fsDriver.rename(path, newPath);
         return Promise.resolve(newPath);
     }
 
@@ -91,14 +91,30 @@ export class FileArticleServiceImpl implements ArticleService {
         return `file://${utools.isWindows() ? ('/' + target.replaceAll("\\", "/")) : target}`;
     }
 
-    copy(sources: Array<string>, target: string): Promise<void> {
-        // TODO: 拷贝
-        return Promise.resolve(undefined);
+    async copy(sources: Array<TreeNode>, target: TreeNode): Promise<void> {
+        for (let source of sources) {
+            // 一个一个拷贝
+            if (source.isLeaf) {
+                await this.fsDriver.copyFile(source.key, target.key || this.driver.path);
+            }else {
+                // 复制目录
+                await this.fsDriver.copyFolder(source.key, target.key || this.driver.path);
+            }
+        }
+        return Promise.resolve();
     }
 
-    move(sources: Array<string>, target: string): Promise<void> {
-        // TODO: 移动
-        return Promise.resolve(undefined);
+    async move(sources: Array<TreeNode>, target: TreeNode): Promise<void> {
+        for (let source of sources) {
+            // 一个一个拷贝
+            await this.fsDriver.move(source.key, target.key || this.driver.path);
+        }
+        return Promise.resolve();
+    }
+
+    findFolder(node: TreeNode): TreeNode {
+        const folder = window.path.dirname(node.key);
+        return folder === this.driver.path ? getRoot() : {key: folder, isLeaf: false, name: "", children: []};
     }
 
 }

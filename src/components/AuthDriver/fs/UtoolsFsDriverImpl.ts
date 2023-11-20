@@ -4,9 +4,16 @@ import {FileItem, FsBinaryFileContents, FsDriver} from "@/components/AuthDriver/
  * utools文件相关操作
  */
 export class UtoolsFsDriverImpl implements FsDriver {
+    move(source: string, destination: string): Promise<void> {
+        return window.fs.move(source, destination);
+    }
 
     copyFile(source: string, destination: string): Promise<void> {
         return window.fs.copyFile(source, destination);
+    }
+
+    copyFolder(source: string, destination: string): Promise<void> {
+        return window.fs.copyFolder(source, destination);
     }
 
     createDir(dir: string): Promise<void> {
@@ -37,8 +44,8 @@ export class UtoolsFsDriverImpl implements FsDriver {
         return window.fs.removeFile(file);
     }
 
-    renameFile(oldPath: string, newPath: string): Promise<void> {
-        return window.fs.renameFile(oldPath, newPath);
+    rename(oldPath: string, newPath: string): Promise<void> {
+        return window.fs.rename(oldPath, newPath);
     }
 
     async writeBinaryFile(path: string, contents: FsBinaryFileContents): Promise<void> {

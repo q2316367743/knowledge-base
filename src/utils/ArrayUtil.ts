@@ -154,5 +154,21 @@ export function startWith(arr: Array<string>, keyword: string, ignoreCase: boole
         }
     }
     return false;
+}
 
+/**
+ * 对数组进行去重
+ * @param items 数据项
+ * @param key 根据的key
+ */
+export function distinct<T extends Record<string, any>, K extends keyof T>(items: Array<T>, key: K): Array<T> {
+    const keys = new Set<T[K]>();
+    const results = new Array<T>();
+    for (let item of items) {
+        if (!keys.has(item[key])) {
+            results.push(item);
+            keys.add(item[key]);
+        }
+    }
+    return results;
 }
