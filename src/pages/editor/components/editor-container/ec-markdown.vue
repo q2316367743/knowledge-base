@@ -55,6 +55,10 @@ const config: CherryConfig = {
             urlProcessor(url) {
                 if (url.startsWith("./image")) {
                     return useEditorDriverStore().service.renderImageUrl(useEditorDriverStore().selectKey, url);
+                } else if (!url.startsWith("http")) {
+                    // 如果不是http的图片，可能是本地图片，
+                    return useEditorDriverStore().service.renderImageUrl("", url);
+
                 }
                 return url;
             }
@@ -90,7 +94,6 @@ const config: CherryConfig = {
             'justify',
             'detail',
             '|',
-            'formula',
             {
                 insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
             },
@@ -101,9 +104,9 @@ const config: CherryConfig = {
             'export',
             'ScreenShotMenu'
         ],
-        toolbarRight: ['fullScreen', '|'],
+        toolbarRight: ['switchModel'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'],
-        sidebar: ['theme', 'settings',],
+        sidebar: ['togglePreview', 'mobilePreview', 'theme', 'settings',],
         customMenu: {
             ScreenShotMenu: useEcScreenShotMenu(instance),
             PanGu: usePanGu(),

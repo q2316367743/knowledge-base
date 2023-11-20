@@ -8,6 +8,8 @@ import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {getAttachmentBySync} from "@/utils/utools/DbStorageUtil";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {useImageUploadByPlugin} from "@/plugin/image";
+import {useEditorRefreshFolder} from "@/global/BeanFactory";
+import {TreeNode} from "@/plugin/sdk/ZTree";
 
 /**
  * 文件上传组件
@@ -33,19 +35,32 @@ export async function useEcImageUpload(path: string, data: File | string): Promi
 
 }
 
+function renderToc(path: string) {
+    // 此处判断刷新目录
+    const current: TreeNode = {key: path, name: "", isLeaf: true};
+    const folder = useEditorDriverStore().service.findFolder(current);
+    const treeNodes = useEditorDriverStore().itemsMap.get(folder.key);
+    if (treeNodes && treeNodes.findIndex(e => e.name === "image") === -1) {
+        // 刷新父节点
+        useEditorRefreshFolder.emit(folder);
+    }
+    const treeNode = useEditorDriverStore().service.findImageFolder(current);
+    useEditorRefreshFolder.emit(treeNode);
+}
+
 async function selfImageUpload(path: string, data: File | Blob | string): Promise<string> {
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
-        if (typeof data === 'string') {
-            data = base64toBlob(data.replace("data:image/png;base64,", ""));
-        }
-        return useEditorDriverStore().service.upload(path, data);
-    } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
-        return useImageUploadByPlugin(data).then(() => (""));
+        const url = await useEditorDriverStore().service.upload(path, data);
+        // 上传到内部，需要判断是否刷新目录
+        renderToc(path);
+        return url;
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
         return useLskyProSettingStore().upload(data)
+    } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
+        return useImageUploadByPlugin(data).then(() => (""));
     }
     return Promise.reject("请在基础设置中选择图片上传策略")
 

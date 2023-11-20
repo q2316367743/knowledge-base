@@ -68,6 +68,7 @@ declare interface Window {
          * 判断一个文件是否存在
          */
         exists(path: string): Promise<boolean>;
+        
     },
     path: {
         extname(path: string): string;

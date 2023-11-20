@@ -92,8 +92,8 @@ export function parseVersion(str: string): Version {
             const split = str.split('.');
             return {
                 main: parseInt(split[0]),
-                sub: parseInt(split[0]),
-                dot: parseInt(split[0])
+                sub: parseInt(split[1]),
+                dot: parseInt(split[2])
             }
         }
         return {

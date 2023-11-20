@@ -94,4 +94,10 @@ export interface ArticleService {
      */
     findFolder(node: TreeNode): TreeNode;
 
+    /**
+     * 寻找文章的图片节点
+     * @param node 图片节点
+     */
+    findImageFolder(node: TreeNode): TreeNode;
+
 }

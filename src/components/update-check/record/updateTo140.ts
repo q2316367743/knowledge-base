@@ -14,16 +14,7 @@ import {ArticleContent} from "@/entity/article/ArticleContent";
 列表：<ol></ol>
 标题：<h2></h2>
 */
-
-export function updateTo140FromUnder() {
-    useGlobalStore().startLoading("数据开始迁移");
-    _updateTo140FromUnder()
-        .then(() => MessageUtil.success("数据迁移完成"))
-        .catch(e => MessageUtil.error("数据迁移失败", e))
-        .finally(() => useGlobalStore().closeLoading());
-}
-
-export async function _updateTo140FromUnder() {
+export async function updateTo140FromUnder() {
     let articles = useArticleStore().articles;
     articles = articles.filter(e => e.type === ArticleTypeEnum.EDITOR_JS);
     console.log(articles)

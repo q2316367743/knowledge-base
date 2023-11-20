@@ -54,8 +54,8 @@ import {toDateString} from "xe-utils";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
-import {initData} from "@/global/BeanFactory";
 import {listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import updateCheck from "@/components/update-check/UpdateCheck";
 
 
 const FOLDER = Constant.id;
@@ -250,11 +250,14 @@ function restore() {
         .then(() => {
             MessageUtil.success("恢复成功");
             // 重新初始化数据
-            useGlobalStore().startLoading("开始初始化数据...");
-            initData()
-                .then(() => MessageUtil.success("数据初始化成功"))
-                .catch(e => MessageUtil.error("数据初始化失败", e))
-                .finally(() => useGlobalStore().closeLoading());
+            import('@/global/BeanFactory').then(data => {
+                useGlobalStore().startLoading("开始初始化数据...");
+                // 检查更新、执行更新
+                updateCheck().catch(e => MessageUtil.error("更新失败", e))
+                        .finally(() =>
+                                data.initData().catch(e => MessageUtil.error("数据初始化失败", e))
+                                        .finally(() => useGlobalStore().closeLoading()))
+            });
         })
         .catch(e => MessageUtil.error("恢复失败", e));
 }

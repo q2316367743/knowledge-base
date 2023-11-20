@@ -5,6 +5,8 @@ import {UtoolsFsDriverImpl} from "@/components/AuthDriver/fs/UtoolsFsDriverImpl"
 import {getRoot, TreeNode} from "@/plugin/sdk/ZTree";
 import {base64toBlob} from "@/utils/BrowserUtil";
 
+const IMAGE_PATH: string = "image";
+
 export class FileArticleServiceImpl implements ArticleService {
 
     private readonly fsDriver: FsDriver;
@@ -80,14 +82,12 @@ export class FileArticleServiceImpl implements ArticleService {
         const data = typeof file === 'string' ? base64toBlob(file.replace("data:image/png;base64,", "")) : file;
         // 写入二进制文件
         await this.fsDriver.writeBinaryFile(target, data);
-        return Promise.resolve(`./image/${encodeURIComponent(fileName)}`);
+        return Promise.resolve(`./${IMAGE_PATH}/${encodeURIComponent(fileName)}`);
     }
 
     renderImageUrl(path: string, url: string): string {
-        // 获取根目录
-        const dir = window.path.dirname(path);
-        // 否在目标文件路径
-        const target = window.path.join(dir, url);
+        // 获取实际目录
+        const target = path === "" ? url : window.path.join(window.path.dirname(path), url);
         return `file://${utools.isWindows() ? ('/' + target.replaceAll("\\", "/")) : target}`;
     }
 
@@ -96,7 +96,7 @@ export class FileArticleServiceImpl implements ArticleService {
             // 一个一个拷贝
             if (source.isLeaf) {
                 await this.fsDriver.copyFile(source.key, target.key || this.driver.path);
-            }else {
+            } else {
                 // 复制目录
                 await this.fsDriver.copyFolder(source.key, target.key || this.driver.path);
             }
@@ -115,6 +115,12 @@ export class FileArticleServiceImpl implements ArticleService {
     findFolder(node: TreeNode): TreeNode {
         const folder = window.path.dirname(node.key);
         return folder === this.driver.path ? getRoot() : {key: folder, isLeaf: false, name: "", children: []};
+    }
+
+    findImageFolder(node: TreeNode): TreeNode {
+        const folder = window.path.dirname(node.key);
+        const image = window.path.join(folder, IMAGE_PATH);
+        return {key: image, isLeaf: false, name: IMAGE_PATH};
     }
 
 }

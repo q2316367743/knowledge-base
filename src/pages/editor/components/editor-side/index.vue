@@ -39,6 +39,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import {getRoot, TreeNode, ZTreeInstance, ZTreeSetting} from "@/plugin/sdk/ZTree";
 import {distinct} from "@/utils/ArrayUtil";
+import {useEditorRefreshFolder} from "@/global/BeanFactory";
 
 const size = useWindowSize();
 
@@ -202,6 +203,9 @@ function refresh() {
         renderFolder(getRoot());
     }
 }
+
+useEditorRefreshFolder.reset();
+useEditorRefreshFolder.on(node => renderFolder(node));
 
 /**
  * 刷新某个节点

@@ -1,5 +1,7 @@
 import {ArticleService} from "@/pages/editor/driver/ArticleService";
 import {getRoot, TreeNode} from "@/plugin/sdk/ZTree";
+import File from "cherry-markdown/dist/types/toolbars/hooks/File";
+import * as url from "url";
 
 export default class DefaultArticleServiceImpl implements ArticleService {
 
@@ -53,6 +55,10 @@ export default class DefaultArticleServiceImpl implements ArticleService {
 
     move(sources: Array<TreeNode>, target: TreeNode): Promise<void> {
         return Promise.resolve();
+    }
+
+    findImageFolder(node: TreeNode): TreeNode {
+        return getRoot();
     }
 
 }
