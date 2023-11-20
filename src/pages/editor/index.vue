@@ -44,7 +44,7 @@ const windowSize = useWindowSize();
 const size = ref(useEditorDriverStore().width);
 const editorVisible = ref(useEditorDriverStore().selectKey !== '');
 
-const min = computed(() => useEditorDriverStore().collapsed ? "0px" : "270px");
+const min = computed(() => useEditorDriverStore().collapsed ? "0px" : "200px");
 const max = computed(() => (windowSize.width.value - 350) + 'px');
 const disabled = computed(() => size.value === '0px');
 const selectKey = computed(() => useEditorDriverStore().selectKey);

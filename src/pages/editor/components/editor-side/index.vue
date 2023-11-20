@@ -92,11 +92,11 @@ const setting: ZTreeSetting = {
                 if (!treeNode.isLeaf) {
                     // 文件夹
                     useEditorDriverStore().getNodes(treeNode.key)
-                            .then(nodes => {
-                                if (zTreeObj) {
-                                    zTreeObj.addNodes(treeNode, 0, nodes, false);
-                                }
-                            })
+                        .then(nodes => {
+                            if (zTreeObj) {
+                                zTreeObj.addNodes(treeNode, 0, nodes, false);
+                            }
+                        })
                 }
             }
             return true;
@@ -129,23 +129,23 @@ const setting: ZTreeSetting = {
             const file = treeNode.isLeaf;
             const name = treeNode.name;
             MessageBoxUtil.confirm(`是否删除文件${file ? "" : "夹"}【${name}】？`, `删除文件${file ? "" : "夹"}`)
-                    .then(() => {
-                        const rsp: Promise<void> = file ?
-                                useEditorDriverStore().service.removeFile(path) :
-                                useEditorDriverStore().service.removeDir(path);
-                        rsp.then(() => {
-                            MessageUtil.success("删除成功");
-                            // 重新获取目录
-                            if (path === useEditorDriverStore().selectKey) {
-                                // 当前目录就是删除的
-                                useEditorDriverStore().setSelectKey("");
-                            }
-                            // 删除节点
-                            if (zTreeObj) {
-                                zTreeObj.removeNode(treeNode, false);
-                            }
-                        }).catch(e => MessageUtil.error("删除失败", e))
-                    });
+                .then(() => {
+                    const rsp: Promise<void> = file ?
+                        useEditorDriverStore().service.removeFile(path) :
+                        useEditorDriverStore().service.removeDir(path);
+                    rsp.then(() => {
+                        MessageUtil.success("删除成功");
+                        // 重新获取目录
+                        if (path === useEditorDriverStore().selectKey) {
+                            // 当前目录就是删除的
+                            useEditorDriverStore().setSelectKey("");
+                        }
+                        // 删除节点
+                        if (zTreeObj) {
+                            zTreeObj.removeNode(treeNode, false);
+                        }
+                    }).catch(e => MessageUtil.error("删除失败", e))
+                });
             return false;
         },
         onRename(e, treeId, treeNode, isCancel) {
@@ -153,8 +153,8 @@ const setting: ZTreeSetting = {
                 return;
             }
             useEditorDriverStore().service.rename(treeNode.key, treeNode.name)
-                    .then(path => treeNode.key = path)
-                    .catch(e => MessageUtil.error("重命名失败", e));
+                .then(path => treeNode.key = path)
+                .catch(e => MessageUtil.error("重命名失败", e));
         },
         onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
             if (!moveType) {
@@ -166,8 +166,8 @@ const setting: ZTreeSetting = {
                 targetNode = useEditorDriverStore().service.findFolder(targetNode)
             }
             const result = isCopy ?
-                    useEditorDriverStore().service.copy(treeNodes, targetNode) :
-                    useEditorDriverStore().service.move(treeNodes, targetNode)
+                useEditorDriverStore().service.copy(treeNodes, targetNode) :
+                useEditorDriverStore().service.move(treeNodes, targetNode)
             result.then(() => {
                 MessageUtil.success((isCopy ? "复制" : "移动") + "成功");
             }).catch(e => {
@@ -186,13 +186,16 @@ const setting: ZTreeSetting = {
 onMounted(init);
 
 function init() {
+    _init();
+}
+
+async function _init() {
     // @ts-ignore
     zTreeObj = $.fn.zTree.init($("#editor-tree"), setting, null);
-    useEditorDriverStore().folders().then(items => {
-        if (zTreeObj) {
-            zTreeObj.addNodes(null, 0, items, false);
-        }
-    })
+    const items = await useEditorDriverStore().folders()
+    if (zTreeObj) {
+        zTreeObj.addNodes(null, 0, items, false);
+    }
 }
 
 function refresh() {
@@ -206,19 +209,24 @@ function refresh() {
 }
 
 useEditorRefreshFolder.reset();
-useEditorRefreshFolder.on(node => renderFolder(node));
+useEditorRefreshFolder.on(async nodes => {
+    for (let node of nodes) {
+        await renderFolder(node)
+    }
+});
+
+const nodes = new Set<TreeNode>();
 
 /**
  * 刷新某个节点
  * @param node 节点
  */
-function renderFolder(node: TreeNode) {
-    // TODO: 此处需要使用命令设计模式
+async function renderFolder(node: TreeNode) {
     if (node.key === '') {
         // 清空全部缓存
         useEditorDriverStore().itemsMap.clear();
         // 重新初始化
-        init();
+        await _init();
     } else {
         if (!zTreeObj) {
             MessageUtil.warning("系统异常，树未初始化");
@@ -230,14 +238,12 @@ function renderFolder(node: TreeNode) {
         // 再删除子节点
         zTreeObj.removeChildNodes(target || node);
         // 在重新获取
-        useEditorDriverStore().getNodes(node.key)
-                .then(nodes => {
-                    if (!zTreeObj) {
-                        MessageUtil.warning("系统异常，树未初始化");
-                        return;
-                    }
-                    zTreeObj.addNodes(target || node, 0, nodes, false);
-                })
+        const nodes = await useEditorDriverStore().getNodes(node.key)
+        if (!zTreeObj) {
+            MessageUtil.warning("系统异常，树未初始化");
+            return;
+        }
+        zTreeObj.addNodes(target || node, 0, nodes, false);
     }
 }
 
@@ -247,8 +253,8 @@ function addFile() {
     MessageBoxUtil.prompt("请输入文件名", "新建文件", {
         confirmButtonText: "新增"
     }).then(name => _addFile(name))
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => MessageUtil.error("新增失败", e))
+        .then(() => MessageUtil.success("新增成功"))
+        .catch(e => MessageUtil.error("新增失败", e))
 }
 
 async function _addFile(name: string) {
@@ -265,8 +271,8 @@ function addFolder() {
     MessageBoxUtil.prompt("请输入文件夹名", "新建文件夹", {
         confirmButtonText: "新增"
     }).then(name => _addFolder(name))
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => MessageUtil.error("新增失败", e))
+        .then(() => MessageUtil.success("新增成功"))
+        .catch(e => MessageUtil.error("新增失败", e))
 }
 
 async function _addFolder(name: string) {

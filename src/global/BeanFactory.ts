@@ -31,7 +31,7 @@ if (Constant.platform === PlatformTypeEnum.TAURI) {
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
 export const useTodoAddArticleEvent = useEventBus<void>('todo-add-article');
-export const useEditorRefreshFolder = useEventBus<TreeNode>('editor-refresh-folder')
+export const useEditorRefreshFolder = useEventBus<Array<TreeNode>>('editor-refresh-folder')
 
 let convertDriver: ConvertDriver = new UtoolsConvertDriver();
 

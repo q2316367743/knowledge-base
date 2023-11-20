@@ -37,15 +37,17 @@ export async function useEcImageUpload(path: string, data: File | string): Promi
 
 function renderToc(path: string) {
     // 此处判断刷新目录
+    const nodes = new Array<TreeNode>()
     const current: TreeNode = {key: path, name: "", isLeaf: true};
     const folder = useEditorDriverStore().service.findFolder(current);
     const treeNodes = useEditorDriverStore().itemsMap.get(folder.key);
     if (treeNodes && treeNodes.findIndex(e => e.name === "image") === -1) {
         // 刷新父节点
-        useEditorRefreshFolder.emit(folder);
+        nodes.push(folder);
     }
     const treeNode = useEditorDriverStore().service.findImageFolder(current);
-    useEditorRefreshFolder.emit(treeNode);
+    nodes.push(treeNode);
+    useEditorRefreshFolder.emit(nodes);
 }
 
 async function selfImageUpload(path: string, data: File | Blob | string): Promise<string> {

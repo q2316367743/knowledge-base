@@ -181,7 +181,7 @@ const config: CherryConfig = {
 };
 
 onMounted(() => {
-    instance.value = new Cherry(config);
+    instance.value = new Cherry(config as any);
     handleTheme()
 });
 
