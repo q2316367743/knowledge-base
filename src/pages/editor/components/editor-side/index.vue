@@ -159,12 +159,10 @@ const setting: ZTreeSetting = {
                 // 移动取消
                 return;
             }
-            console.log(treeNodes, targetNode, moveType)
             if (moveType !== 'inner') {
                 // 如果不是移动到内部，则是移动到父节点
                 targetNode = useEditorDriverStore().service.findFolder(targetNode)
             }
-            console.log(treeNodes, targetNode, moveType)
             const result = isCopy ?
                     useEditorDriverStore().service.copy(treeNodes, targetNode) :
                     useEditorDriverStore().service.move(treeNodes, targetNode)

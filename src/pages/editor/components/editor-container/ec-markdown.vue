@@ -15,6 +15,9 @@ import {useEcImageUpload} from "@/pages/editor/components/editor-container/EcIma
 import {useEcScreenShotMenu} from "@/pages/editor/components/editor-container/EcScreenShotMenu";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
+import {
+    useAnWeiMenu, useMingRenMingYanMenu, usePyqMenu, useQingGanMenu, useTianGouRiJiMenu, useYiYanMenu
+} from "@/components/markdown-editor/plugins/XiaRouMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -49,7 +52,7 @@ const config: CherryConfig = {
             }
         },
         global: {
-            urlProcessor(url, type) {
+            urlProcessor(url) {
                 if (url.startsWith("./image")) {
                     return useEditorDriverStore().service.renderImageUrl(useEditorDriverStore().selectKey, url);
                 }
@@ -91,19 +94,31 @@ const config: CherryConfig = {
             {
                 insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
             },
+            {
+                WenAn: ['YiYan', 'AnWei', 'Pyq', 'TianGouRiJi', 'QingGan', 'MingRenMingYan']
+            },
             'graph',
             'export',
             'ScreenShotMenu'
         ],
         toolbarRight: ['fullScreen', '|'],
-        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'], // array or false
+        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'],
         sidebar: ['theme', 'settings',],
         customMenu: {
             ScreenShotMenu: useEcScreenShotMenu(instance),
             PanGu: usePanGu(),
             FanYi: useFanYi(),
+            // 夏柔API
+            YiYan: useYiYanMenu(instance),
+            AnWei: useAnWeiMenu(instance),
+            Pyq: usePyqMenu(instance),
+            TianGouRiJi: useTianGouRiJiMenu(instance),
+            QingGan: useQingGanMenu(instance),
+            MingRenMingYan: useMingRenMingYanMenu(instance),
+            // 分组
             YangShi: Cherry.createMenuHook("样式", {}),
-            ZiTi: Cherry.createMenuHook("字体", {})
+            ZiTi: Cherry.createMenuHook("字体", {}),
+            WenAn: Cherry.createMenuHook("文案", {})
         },
     },
     callback: {
@@ -156,8 +171,8 @@ const config: CherryConfig = {
     },
     fileUpload(file, callback) {
         useEcImageUpload(useEditorDriverStore().selectKey, file)
-            .then(url => callback(url))
-            .catch(e => MessageUtil.error("图片上传失败", e))
+                .then(url => callback(url))
+                .catch(e => MessageUtil.error("图片上传失败", e))
 
     }
 };

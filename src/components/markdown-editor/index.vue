@@ -16,6 +16,12 @@ import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
 import MessageUtil from "@/utils/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {isUtools} from "@/global/BeanFactory";
+import {
+    useAnWeiMenu, useMingRenMingYanMenu,
+    usePyqMenu, useQingGanMenu,
+    useTianGouRiJiMenu,
+    useYiYanMenu
+} from "@/components/markdown-editor/plugins/XiaRouMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -55,7 +61,6 @@ const config: CherryConfig = {
                 if (srcType === 'image') {
                     if (url.startsWith("attachment:")) {
                         const id = url.replace("attachment:", "");
-                        // TODO: 此种方法无法再web端使用
                         if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
                             return useLoadImageBySync(id)
                         } else {
@@ -101,6 +106,9 @@ const config: CherryConfig = {
             {
                 insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
             },
+            {
+                WenAn: ['YiYan', 'AnWei', 'Pyq', 'TianGouRiJi', 'QingGan', 'MingRenMingYan']
+            },
             'graph',
             'export'
         ],
@@ -111,8 +119,17 @@ const config: CherryConfig = {
             ScreenShotMenu: useScreenShotMenu(instance),
             PanGu: usePanGu(),
             FanYi: useFanYi(),
+            // 夏柔API
+            YiYan: useYiYanMenu(instance),
+            AnWei: useAnWeiMenu(instance),
+            Pyq: usePyqMenu(instance),
+            TianGouRiJi: useTianGouRiJiMenu(instance),
+            QingGan: useQingGanMenu(instance),
+            MingRenMingYan: useMingRenMingYanMenu(instance),
+            // 分组
             YangShi: Cherry.createMenuHook("样式", {}),
-            ZiTi: Cherry.createMenuHook("字体", {})
+            ZiTi: Cherry.createMenuHook("字体", {}),
+            WenAn: Cherry.createMenuHook("文案", {})
         },
     },
     callback: {
