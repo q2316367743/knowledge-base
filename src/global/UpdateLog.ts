@@ -8,11 +8,15 @@ export default [
         items: [{
             label: LogItemEnum.ADD,
             content: '【工作空间】新增本地工作空间'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '【设置】修复备份异常的问题'
         }],
         remark: "之前的草稿箱现在升级为工作空间，有一部分用户在本地维护了一套文件系统，比如hexo或者vuepress之类的静态网站，" +
             "在使用本插件时会经常导入导出文件，给一部分用户造成了不变，此次的工作空间可以直接选择本地目录进行编辑，不仅体验了更加高效的编辑，" +
             "也将内容维护在本地。第一个版本只出了本地工作空间，下个版本会增加gitee的工作空间。如果是图片策略是内部实现，" +
-            "则会上传到文章所在目录的image目录下。"
+            "则会上传到文章所在目录的image目录下。",
+        url: 'https://blog.esion.xyz/index.php/2023/11/22/知识库-1-5-0版本更新/'
     },
     {
         version: '1.4.2',

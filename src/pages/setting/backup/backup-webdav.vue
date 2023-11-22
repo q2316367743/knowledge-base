@@ -63,7 +63,6 @@ const FOLDER_PATH = '/' + FOLDER;
 
 const notBackup = new Set<string>();
 notBackup.add(LocalNameEnum.SETTING_BACKUP);
-notBackup.add(LocalNameEnum.VERSION);
 
 const instance = ref({
     visible: false,

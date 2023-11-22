@@ -314,6 +314,10 @@ async function _addFolder(name: string) {
     li a {
         width: calc(100% - 19px);
         padding-left: 0;
+        &.curSelectedNode {
+            background-color: rgb(var(--orange-2));
+            border: 1px rgb(var(--orange-6));
+        }
     }
 
     .node_name {

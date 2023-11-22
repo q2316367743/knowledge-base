@@ -200,7 +200,7 @@ const preview = computed(() => {
 })
 
 onMounted(() => {
-    instance.value = new Cherry(config);
+    instance.value = new Cherry(config as any);
     handleToolbar(preview.value);
     handleTheme()
 });
@@ -241,7 +241,7 @@ function handleTheme() {
     instance.value.setTheme(useGlobalStore().isDark ? 'dark' : 'default')
 }
 
-function exportFile(type: string, fileName: string) {
+function exportFile(type: any, fileName: string) {
     if (instance.value) {
         console.log(type, fileName)
         instance.value.export(type, fileName);
