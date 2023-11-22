@@ -3,11 +3,14 @@
         <header class="ec-header" v-if="isInit">
             <a-button type="text" @click="switchCollapsed()">
                 <template #icon>
-                    <icon-menu-unfold v-if="collapsed" />
+                    <icon-menu-unfold v-if="collapsed"/>
                     <icon-menu-fold v-else/>
                 </template>
             </a-button>
-            <div class="title">{{ title }}</div>
+            <div class="title">
+                <span style="margin-right: 7px;color: rgb(var(--red-6));">{{ isSave ? "" : "*" }}</span>
+                <span>{{ title }}</span>
+            </div>
             <a-button-group class="btn">
                 <a-button type="primary" :loading="saveLoading" @click="save()">
                     <template #icon>
@@ -38,16 +41,20 @@
 </template>
 <script lang="ts" setup>
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {useEditorDriverStore} from "@/store/db/EditorDriverStore";
 import {basename, extname, renderLanguage} from "@/utils/FileUtil";
 import MessageUtil from "@/utils/MessageUtil";
 import EcMarkdown from "@/pages/editor/components/editor-container/ec-markdown.vue";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
+import {useMagicKeys} from "@vueuse/core";
+
+const {ctrl, s} = useMagicKeys();
 
 const isInit = ref(false);
 const content = ref('');
 const saveLoading = ref(false);
+const isSave = ref(true);
 const selectKey = useEditorDriverStore().selectKey;
 const title = basename(selectKey);
 const language = renderLanguage(extname(selectKey));
@@ -55,20 +62,35 @@ const isMarkdown = language === 'md' || language === 'markdown';
 const collapsed = computed(() => useEditorDriverStore().collapsed);
 const customerMarkdown = computed(() => useWorkspaceSettingStore().customerMarkdown);
 
+watch(() => content.value, () => {
+    if (isInit.value) {
+        isSave.value = false
+    }
+});
+
+watch(() => s.value, value => {
+    if (value && ctrl.value) {
+        save();
+    }
+})
+
 useEditorDriverStore().service.getFile(selectKey)
-        .then(text => {
-            content.value = text;
-            isInit.value = true;
-        });
+    .then(text => {
+        content.value = text;
+        nextTick(() => isInit.value = true);
+    });
 
 const switchCollapsed = () => useEditorDriverStore().switchCollapsed();
 
 function save() {
     saveLoading.value = true;
     useEditorDriverStore().service.saveFile(selectKey, content.value)
-            .then(() => MessageUtil.success("保存成功"))
-            .catch(e => MessageUtil.error("保存失败", e))
-            .finally(() => saveLoading.value = false);
+        .then(() => {
+            MessageUtil.success("保存成功");
+            isSave.value = true;
+        })
+        .catch(e => MessageUtil.error("保存失败", e))
+        .finally(() => saveLoading.value = false);
 }
 
 </script>
