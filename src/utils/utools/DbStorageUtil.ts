@@ -62,7 +62,7 @@ export async function listByAsync<T = any>(key: string): Promise<DbList<T>> {
     const res = await driver.get(key);
     if (res) {
         return {
-            list: res.value,
+            list: res.value || new Array<T>(),
             rev: res._rev
         };
     }

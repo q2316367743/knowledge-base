@@ -22,6 +22,7 @@ import Constant from "@/global/Constant";
 import {useFileSystemAccess} from "@vueuse/core";
 import {listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import updateCheck from "@/components/update-check/UpdateCheck";
+import {buildBackup, restoreBackup} from "@/pages/setting/backup/func";
 
 
 const FOLDER = Constant.id;
@@ -49,71 +50,6 @@ function save() {
         .finally(() => instance.value.loading = false);
 }
 
-// -------------------------------------- 基础方法 --------------------------------------
-
-async function buildBackup(): Promise<ArrayBuffer> {
-    const zip = new JSZip();
-    const items = await listRecordByAsync<any>();
-    for (let item of items) {
-        // 备份时，全部备份
-        zip.file(item.id, JSON.stringify(item));
-    }
-    return await zip.generateAsync({type: "arraybuffer"});
-}
-
-/**
- * 恢复备份
- * @param backup 备份文件
- */
-async function restoreBackup(backup: ArrayBuffer): Promise<void> {
-    const zip = await JSZip.loadAsync(backup);
-
-    // 删除当前存储
-    const oldFiles = await listRecordByAsync<any>();
-    for (let oldFile of oldFiles) {
-        if (notBackup.has(oldFile.id)) {
-            continue;
-        }
-        // 删除时有选择删除
-        await removeOneByAsync(oldFile.id, true);
-    }
-
-    return new Promise<void>(async resolve => {
-        const len = Object.keys(zip.files).length;
-        let index = 0;
-        for (let path in zip.files) {
-            if (notBackup.has(path)) {
-                // 恢复时，有选择恢复
-                index += 1;
-                continue;
-            }
-            const file = zip.file(path);
-            if (!file) {
-                index += 1;
-                continue;
-            }
-            const blob = await file.async('blob');
-            const fileReader = new FileReader();
-
-            fileReader.readAsText(blob, 'utf-8');
-
-            fileReader.onload = async () => {
-                index += 1;
-                if (!fileReader.result) {
-                    MessageUtil.warning("文件读取失败", path);
-                    if (index >= len) {
-                        resolve();
-                    }
-                    return;
-                }
-                await saveOneByAsync<any>(path, JSON.parse(fileReader.result as string).value);
-                if (index >= len) {
-                    resolve();
-                }
-            }
-        }
-    });
-}
 
 // -------------------------------------- 文件备份 --------------------------------------
 

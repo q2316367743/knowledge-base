@@ -2,6 +2,15 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.5.1',
+        sign: 151,
+        time: '2023-11-24',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '【设置】修复备份恢复错误的问题'
+        }],
+    },
+    {
         version: '1.5.0',
         sign: 150,
         time: '2023-11-20',
