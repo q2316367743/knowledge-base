@@ -1,12 +1,8 @@
 enum LocalNameEnum {
 
-    AUTH = '/local/auth/',
-
     CATEGORY = '/local/category',
 
     FOLDER = '/local/folder',
-
-    EDITOR = '/local/editor',
 
     /**
      * 待办分类，此处保存了文件夹/清单
@@ -71,8 +67,6 @@ enum LocalNameEnum {
      */
     TODO_ATTR = '/todo/attr/',
 
-    APP_ATTACHMENT = '/app/attachment/',
-
     /**
      * 版本
      */
@@ -98,16 +92,6 @@ enum LocalNameEnum {
      * 应用主题
      */
     KEY_APP_THEME = '/key/app/theme',
-
-    /**
-     * 上一次驱动
-     */
-    KEY_EDITOR_DRIVER_ID = '/key/editor/driver/id/',
-
-    /**
-     * 首页宽度
-     */
-    KEY_EDITOR_WIDTH = '/key/editor/width',
 
 }
 

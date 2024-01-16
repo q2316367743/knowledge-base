@@ -16,7 +16,6 @@ import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import {tauri} from "@/plugin/sdk/tauri";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
-import {TreeNode} from "@/plugin/sdk/ZTree";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
@@ -31,7 +30,6 @@ if (Constant.platform === PlatformTypeEnum.TAURI) {
 export const statistics = new Statistics()
 export const useSearchEvent = useEventBus<void>('search');
 export const useTodoAddArticleEvent = useEventBus<void>('todo-add-article');
-export const useEditorRefreshFolder = useEventBus<Array<TreeNode>>('editor-refresh-folder')
 
 let convertDriver: ConvertDriver = new UtoolsConvertDriver();
 

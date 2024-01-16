@@ -18,12 +18,6 @@
             </template>
             待办
         </a-menu-item>
-        <a-menu-item key="/editor">
-            <template #icon>
-                <icon-edit/>
-            </template>
-            工作空间
-        </a-menu-item>
         <a-sub-menu key="/graph">
             <template #icon>
                 <icon-mind-mapping/>

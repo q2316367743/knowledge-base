@@ -1,0 +1,61 @@
+{
+	"name": "知识库",
+	"package": "xyz.esion.knowledge-base",
+	"author": "落雨不悔",
+	"site": "https://blog.esion.xyz",
+	"summary": "构建自己的知识库，高效便捷的知识管理工具",
+	"type": "web",
+	"file_assign": [],
+	"url": "https://blog.esion.xyz/apps/knowledge-base",
+	"preload": "",
+	"logo": "local|D:\\Documents\\app\\knowledge-base\\src-ts\\logo.png?t=1705375681975",
+	"theme_color": "#f1f1f1",
+	"window": {
+		"defaultType": "frameWindow",
+		"frameWindow": {
+			"enable": true,
+			"width": 1000,
+			"height": 800,
+			"controllers": {
+				"goBack": true,
+				"goForward": true,
+				"refresh": true,
+				"home": true
+			},
+			"canResize": true,
+			"minWidth": "1000",
+			"minHeight": "800"
+		},
+		"window": {
+			"enable": false,
+			"width": 400,
+			"minWidth": 300,
+			"maxWidth": 600,
+			"canResize": true,
+			"height": 400,
+			"minHeight": 300,
+			"maxHeight": 600,
+			"top": false,
+			"blurAction": "none"
+		},
+		"attach": {
+			"enable": false,
+			"width": 320,
+			"minWidth": 320,
+			"maxWidth": 320,
+			"canResize": true
+		}
+	},
+	"auth": {
+		"base": {
+			"webSecure": true
+		},
+		"api": {
+			"enable": false
+		},
+		"ability": {}
+	},
+	"open_source": true,
+	"csv_url": "https://gitee.com/qiaoshengda/knowledge-base",
+	"os_summary": "Apache-2.0"
+}

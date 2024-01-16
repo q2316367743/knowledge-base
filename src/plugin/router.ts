@@ -20,10 +20,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: '/todo',
     component: () => import("@/pages/todo/index.vue")
 }, {
-    name: "临时编辑器",
-    path: '/editor',
-    component: () => import("@/pages/editor/index.vue")
-}, {
     name: "图-搜索",
     path: "/graph/search",
     component: () => import("@/pages/graph/search/index.vue")
