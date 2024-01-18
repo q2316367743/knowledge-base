@@ -15,24 +15,64 @@
                 </template>
             </a-button>
         </a-space>
-        <a-upload :disabled="invalid" draggable style="margin-top: 7px;" list-type="picture" :custom-request="customerUpload" :file-list="fileList"/>
+        <a-upload :disabled="invalid" draggable style="margin-top: 7px;" :custom-request="customerUpload"
+                  :show-file-list="false"/>
+        <a-alert :type="uploading ? 'info' :'success'" style="margin: 7px 0;">{{
+                uploading ? '正在上传中' : '上传完成'
+            }}
+        </a-alert>
+        <a-list :bordered="false" :max-height="maxHeight">
+            <a-list-item v-for="item in files">
+                <a-link :href="item.links.url">{{ item.name }}</a-link>
+                <template #actions>
+                    <a-button-group type="text">
+                        <a-tooltip content="复制链接">
+                            <a-button @click="copyUrl(item)">
+                                <template #icon>
+                                    <icon-link/>
+                                </template>
+                            </a-button>
+                        </a-tooltip>
+                        <a-tooltip content="复制markdown">
+                            <a-button @click="copyMarkdown(item)">
+                                <template #icon>
+                                    <icon-edit/>
+                                </template>
+                            </a-button>
+                        </a-tooltip>
+                        <a-tooltip content="查看详情">
+                            <a-button @click="openInfo(item)">
+                                <template #icon>
+                                    <icon-info-circle/>
+                                </template>
+                            </a-button>
+                        </a-tooltip>
+                    </a-button-group>
+                </template>
+            </a-list-item>
+        </a-list>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {StrategyResult} from "@/plugin/sdk/LskyPro";
+import {CommonResult, StrategyResult} from "@/plugin/sdk/LskyPro";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import {FileItem, RequestOption, UploadRequest} from "@arco-design/web-vue";
+import {RequestOption, UploadRequest} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/MessageUtil";
+import {copyMarkdown, copyUrl, openInfo} from "@/pages/setting/lsky-pro/domain/func";
+import {useWindowSize} from "@vueuse/core";
 
+const size = useWindowSize();
 
 const strategies = ref(new Array<StrategyResult>());
 const strategyId = ref(useLskyProSettingStore().option.strategyId);
 const strategyLoad = ref(false);
-const fileList = ref(new Array<FileItem>());
+const files = ref(new Array<CommonResult>());
+const uploading = ref(false);
 
 const disabled = computed(() => !useLskyProSettingStore().isLogin || strategyLoad.value);
 const invalid = computed(() => !useLskyProSettingStore().isAvailable);
+const maxHeight = computed(() => size.height.value - 46 - 7 - 32 - 170 - 40-14);
 
 watch(() => strategyId.value, value => useLskyProSettingStore().update({strategyId: value}))
 
@@ -42,9 +82,9 @@ function renderStrategy() {
     if (useLskyProSettingStore().isLogin) {
         strategyLoad.value = true;
         useLskyProSettingStore().instance.strategies()
-                .then(rsp => strategies.value = rsp)
-                .catch(e => MessageUtil.error("策略获取失败", e))
-                .finally(() => strategyLoad.value = false);
+            .then(rsp => strategies.value = rsp)
+            .catch(e => MessageUtil.error("策略获取失败", e))
+            .finally(() => strategyLoad.value = false);
     }
 }
 
@@ -60,21 +100,23 @@ function customerUpload(option: RequestOption): UploadRequest {
             }
         };
     }
+    uploading.value = true;
     const result = useLskyProSettingStore().instance.upload(option.fileItem.file,
-            rsp => {
-                option.onSuccess();
-                fileList.value.push({
-                    uid: rsp.key,
-                    name: rsp.name,
-                    url: rsp.links.url,
-                })
-            },
-            msg => MessageUtil.error("上传失败", msg),
-            {
-                onUploadProgress: progressEvent => {
-                    option.onProgress(progressEvent.progress || 0)
-                }
+        rsp => {
+            option.onSuccess();
+            files.value.push(rsp);
+            uploading.value = false;
+            console.log(files.value)
+        },
+        msg => {
+            MessageUtil.error("上传失败", msg);
+            uploading.value = false;
+        },
+        {
+            onUploadProgress: progressEvent => {
+                option.onProgress(progressEvent.progress || 0)
             }
+        }
     )
     return {abort: result.abort};
 }

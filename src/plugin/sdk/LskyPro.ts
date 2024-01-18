@@ -244,7 +244,7 @@ export interface StrategyResult {
     name: string;
 }
 
-export interface UploadResult {
+export interface CommonResult {
     // 图片唯一秘钥
     key: string;
     // 图片名称
@@ -255,16 +255,20 @@ export interface UploadResult {
     origin_name: string;
     // 图片大小，单位kb
     size: number;
-    // 图片类型
-    mimetype: string;
-    // 图片拓展名
-    extension: string;
     // 图片 md5 值
     md5: string;
     // 图片 sha1 值
     sha1: string;
     // 链接
     links: UploadLinkResult;
+
+}
+
+export interface UploadResult extends CommonResult{
+    // 图片类型
+    mimetype: string;
+    // 图片拓展名
+    extension: string;
 }
 
 export interface UploadLinkResult {
@@ -309,31 +313,15 @@ export interface PageResult<T> {
     data: Array<T>;
 }
 
-export interface ImageResult {
-    // 图片唯一秘钥
-    key: string;
-    // 图片名称
-    name: string;
-    // 图片原始名称
-    origin_name: string;
-    // 图片路径名
-    pathname: string;
-    // 图片大小，单位KB
-    size: number;
+export interface ImageResult extends CommonResult{
     // 图片宽度
     width: number;
     // 图片高度
     height: number;
-    // 图片 md5 值
-    md5: string;
-    // 图片 sha1 值
-    sha1: string;
     // 上传时间（友好格式）
     human_date: string;
     // 上传日期（yyyy-MM-dd HH:mm:ss）
     date: string;
-    // 链接
-    links: UploadLinkResult;
 }
 
 // 排序方式，newest=最新，earliest=最早，most=图片最多，least=图片最少
