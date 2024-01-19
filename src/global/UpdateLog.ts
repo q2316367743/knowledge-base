@@ -2,12 +2,15 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
-        version: '1.5.1',
-        sign: 151,
-        time: '2023-11-24',
+        version: '1.5.2',
+        sign: 152,
+        time: '2024-01-19',
         items: [{
-            label: LogItemEnum.REPAIR,
-            content: '【设置】修复备份恢复错误的问题'
+            label: LogItemEnum.UPDATE,
+            content: '【设置】优化兰空图床上传'
+        },{
+            label: LogItemEnum.UPDATE,
+            content: "【插件】升级依赖，主要升级了markdown编辑器的依赖，修复了一些已知问题"
         }],
     },
     {
