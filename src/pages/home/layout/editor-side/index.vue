@@ -146,7 +146,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
-import HeMore from "@/pages/home/components/he-more.vue";
+import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {IconBook, IconCode, IconFile} from "@arco-design/web-vue/es/icon";
@@ -210,6 +210,8 @@ function onSelect(selectKeys: Array<number | string>) {
         if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
             useHomeEditorStore().switchCollapsed();
         }
+    }else{
+        useHomeEditorStore().setId(0);
     }
 }
 

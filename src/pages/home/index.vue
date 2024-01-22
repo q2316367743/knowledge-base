@@ -19,8 +19,8 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import EditorSide from '@/pages/home/editor-side.vue';
-import EditorContent from "@/pages/home/editor-content.vue";
+import EditorSide from '@/pages/home/layout/editor-side/index.vue';
+import EditorContent from "@/pages/home/layout/editor-content/index.vue";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useWindowSize} from "@vueuse/core";
 

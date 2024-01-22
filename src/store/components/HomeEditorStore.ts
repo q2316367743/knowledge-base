@@ -4,6 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 export const useHomeEditorStore = defineStore('home-editor', {
     state: () => ({
+        // 当前的文章ID
         id: getItemByDefault<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, 0),
         collapsed: false,
         widthWrap: getItemByDefault<string>(LocalNameEnum.KEY_HOME_WIDTH, '264px')

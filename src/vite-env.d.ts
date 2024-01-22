@@ -1,79 +1,100 @@
 /// <reference types="vite/client" />
+import {VNode,VueElement} from 'vue';
 
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            [elementName: string]: any;
+        }
+    }
 
-declare interface Window {
-    onImagePreview: (src: string) => void,
-    fs: {
-        /**
-         * 读取文本文件
-         */
-        readTextFile(filePath: string): Promise<string>;
+    interface Element extends VNode {
+    }
 
-        /**
-         * 读取二进制文件
-         */
-        readBinaryFile(filePath: string): Promise<Uint8Array>;
+    interface ElementClass extends VueElement {
+    }
 
-        /**
-         * 写入文本文件
-         */
-        writeTextFile(path: string, contents: string): Promise<void>;
+    interface IntrinsicAttributes {
+        [attr: string]: any;
+    }
 
-        /**
-         * 写入二进制文件
-         */
-        writeBinaryFile(path: string, contents: Uint8Array): Promise<void>;
+    interface IntrinsicClassAttributes<T> extends VueClass<T> {
+    }
 
-        /**
-         * 读取一个目录
-         */
-        readDir(dir: string): Promise<any[]>;
+    declare interface Window {
+        onImagePreview: (src: string) => void,
+        fs: {
+            /**
+             * 读取文本文件
+             */
+            readTextFile(filePath: string): Promise<string>;
 
-        /**
-         * 创建目录
-         */
-        createDir(dir: string): Promise<void>;
+            /**
+             * 读取二进制文件
+             */
+            readBinaryFile(filePath: string): Promise<Uint8Array>;
 
-        /**
-         * 删除目录
-         */
-        removeDir(dir: string, recursive?: boolean): Promise<void>;
+            /**
+             * 写入文本文件
+             */
+            writeTextFile(path: string, contents: string): Promise<void>;
 
-        /**
-         * 拷贝一个文件、文件夹到目标目录
-         */
-        copyFile(source: string, destination: string): Promise<void>;
+            /**
+             * 写入二进制文件
+             */
+            writeBinaryFile(path: string, contents: Uint8Array): Promise<void>;
 
-        /**
-         * 拷贝一个文件、文件夹到目标目录
-         */
-        copyFolder(source: string, destination: string): Promise<void>;
+            /**
+             * 读取一个目录
+             */
+            readDir(dir: string): Promise<any[]>;
 
-        /**
-         * 移动一个文件、文件夹到目标目录
-         */
-         move(source: string, destination: string): Promise<void>;
+            /**
+             * 创建目录
+             */
+            createDir(dir: string): Promise<void>;
 
-        /**
-         * 删除文件
-         */
-        removeFile(file: string): Promise<void>;
+            /**
+             * 删除目录
+             */
+            removeDir(dir: string, recursive?: boolean): Promise<void>;
 
-        /**
-         * 重命名文件
-         */
-        rename(oldPath: string, newPath: string): Promise<void>;
+            /**
+             * 拷贝一个文件、文件夹到目标目录
+             */
+            copyFile(source: string, destination: string): Promise<void>;
 
-        /**
-         * 判断一个文件是否存在
-         */
-        exists(path: string): Promise<boolean>;
-        
-    },
-    path: {
-        extname(path: string): string;
-        basename(path: string): string;
-        dirname(path: string): string;
-        join(...paths: string[]): string;
+            /**
+             * 拷贝一个文件、文件夹到目标目录
+             */
+            copyFolder(source: string, destination: string): Promise<void>;
+
+            /**
+             * 移动一个文件、文件夹到目标目录
+             */
+            move(source: string, destination: string): Promise<void>;
+
+            /**
+             * 删除文件
+             */
+            removeFile(file: string): Promise<void>;
+
+            /**
+             * 重命名文件
+             */
+            rename(oldPath: string, newPath: string): Promise<void>;
+
+            /**
+             * 判断一个文件是否存在
+             */
+            exists(path: string): Promise<boolean>;
+
+        },
+        path: {
+            extname(path: string): string;
+            basename(path: string): string;
+            dirname(path: string): string;
+            join(...paths: string[]): string;
+        }
     }
 }

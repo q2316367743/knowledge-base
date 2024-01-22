@@ -64,7 +64,7 @@
                                     <a-doption>博客园</a-doption>
                                 </template>
                             </a-dsubmenu>
-                            <a-doption @click="extraVisible = true" :disabled="articleIndex.preview">
+                            <a-doption @click="openHeExtra(useHomeEditorStore().id)" :disabled="articleIndex.preview">
                                 <template #icon>
                                     <icon-settings/>
                                 </template>
@@ -96,7 +96,6 @@
             <monaco-editor v-model="content" :language="language" :read-only="articleIndex.preview"
                            v-else-if="articleIndex.type === ArticleTypeEnum.CODE && editorVisible"/>
         </div>
-        <he-base v-model="extraVisible"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -116,7 +115,6 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {parseFileExtra} from "@/utils/FileUtil";
 import {download} from "@/utils/BrowserUtil";
 // 组件
-import HeBase from "@/pages/home/components/he-base.vue";
 import {getOneSend, OneSendType} from "@/components/one-send/OneSend";
 // 枚举
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
@@ -124,6 +122,7 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import HeToc from "@/pages/home/components/he-toc.vue";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
 
 const {ctrl, s} = useMagicKeys()
 
@@ -134,7 +133,6 @@ const saveLoading = ref(false);
 const articleIndex = ref(getDefaultArticleIndex());
 const mdEditor = ref<any | null>(null);
 const weEditor = ref<any | null>(null);
-const extraVisible = ref(false);
 const editorVisible = ref(false);
 const titleEdit = ref(false)
 const titleInput = ref<HTMLDivElement | null>(null)
