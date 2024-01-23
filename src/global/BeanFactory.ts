@@ -1,6 +1,6 @@
 import Statistics from '@/plugin/Statistics';
 import {useEventBus} from "@vueuse/core";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";

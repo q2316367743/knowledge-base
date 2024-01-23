@@ -145,7 +145,7 @@ import {useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/MessageUtil";
 import Constant from "@/global/Constant";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";

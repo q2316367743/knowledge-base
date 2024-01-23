@@ -3,13 +3,13 @@
 </template>
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
-import {computed, onMounted, shallowRef, watch} from "vue";
+import {onMounted, shallowRef, watch} from "vue";
 import {CherryConfig, editorProps} from "@/components/markdown-editor/CherryMarkdownOption";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
 import {useScreenShotMenu} from "@/components/markdown-editor/plugins/ScreenShotMenu";
 import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {usePanGu} from "@/components/markdown-editor/plugins/PanGuMenu";
 import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
@@ -22,6 +22,7 @@ import {
     useTianGouRiJiMenu,
     useYiYanMenu
 } from "@/components/markdown-editor/plugins/XiaRouMenu";
+import Constant from "@/global/Constant";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -73,7 +74,7 @@ const config: CherryConfig = {
         }
     },
     editor: {
-        defaultModel: props.preview ? 'previewOnly' : props.defaultModel,
+        defaultModel: props.preview ? 'previewOnly' : useBaseSettingStore().defaultModel,
         codemirror: {
             theme: useGlobalStore().isDark ? 'material-ocean' : 'default',
         },
@@ -140,6 +141,10 @@ const config: CherryConfig = {
             const aEle = event.target as HTMLElement;
             if (aEle) {
                 if (aEle.tagName === 'A') {
+                    // 阻止默认行为和事件冒泡
+                    event.preventDefault();
+                    event.stopPropagation();
+                    // @ts-ignore
                     const href = (aEle as HTMLLinkElement).href;
                     if (href.startsWith(DEV_URL)) {
                         // hash定位
@@ -192,24 +197,17 @@ if (isUtools) {
     config.toolbars?.toolbar?.push('ScreenShotMenu')
 }
 
-const preview = computed(() => {
-    if (props.preview) {
-        return true;
-    }
-    return props.defaultModel === 'previewOnly';
-})
 
 onMounted(() => {
     instance.value = new Cherry(config as any);
-    handleToolbar(preview.value);
     handleTheme()
 });
 
-watch(() => preview.value, value => handleToolbar(value));
+watch(() => props.preview, value => handleToolbar(value));
 watch(() => size.width.value, value => {
     if (instance.value) {
-        if (!props.preview) {
-            instance.value.switchModel(value > 1080 ? 'edit&preview' : 'editOnly');
+        if (useBaseSettingStore().mdEditorAutoMode) {
+            instance.value.switchModel(value > Constant.autoCollapsedWidth ? 'edit&preview' : 'editOnly');
         }
     }
 });

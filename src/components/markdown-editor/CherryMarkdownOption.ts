@@ -1,6 +1,6 @@
 import {PropType} from "vue";
 
-export interface CherryConfig {
+export interface CherryConfig{
     // 选择器
     id: string;
     // 初始值
@@ -232,10 +232,5 @@ export const editorProps = {
         type: Boolean,
         required: false,
         default: false
-    },
-    defaultModel: {
-        type: String as PropType<EditorDefaultModel>,
-        required: false,
-        default: 'editOnly'
-    },
+    }
 }

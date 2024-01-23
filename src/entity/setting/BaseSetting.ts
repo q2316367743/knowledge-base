@@ -1,5 +1,6 @@
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
 export default interface BaseSetting {
 
@@ -33,5 +34,9 @@ export default interface BaseSetting {
      */
     codeExtraName: string;
 
+    /**
+     * markdown编辑器编辑模式
+     */
+    mdEditorEditMode: MdEditorEditModeEnum;
 
 }

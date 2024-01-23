@@ -78,7 +78,7 @@ import {useWindowSize} from "@vueuse/core";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 
 const size = useWindowSize();
 

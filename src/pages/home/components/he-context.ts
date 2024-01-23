@@ -2,7 +2,7 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
-import {buildArticleName} from "@/store/db/BaseSettingStore";
+import {buildArticleName} from "@/store/setting/BaseSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";

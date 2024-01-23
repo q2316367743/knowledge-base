@@ -1,4 +1,4 @@
-import {useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";

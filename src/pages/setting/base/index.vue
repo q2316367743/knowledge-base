@@ -69,6 +69,19 @@
             <a-form-item label="默认代码拓展名">
                 <a-input v-model="instance.codeExtraName"/>
             </a-form-item>
+            <a-form-item label="md编辑器默认编辑模式">
+                <a-select v-model="instance.mdEditorEditMode">
+                    <a-option :value="MdEditorEditModeEnum.EDIT_ONLY">仅编辑</a-option>
+                    <a-option :value="MdEditorEditModeEnum.EDIT_PREVIEW">编辑和预览</a-option>
+                    <a-option :value="MdEditorEditModeEnum.AUTO">自动切换</a-option>
+                </a-select>
+                <template #help>
+                    <span v-if="instance.mdEditorEditMode === MdEditorEditModeEnum.AUTO">
+                        当插件宽度小于{{ Constant.autoCollapsedWidth }}px时切换为【仅编辑】，
+                        大于{{ Constant.autoCollapsedWidth }}px时切换为【编辑和预览】
+                    </span>
+                </template>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>
@@ -80,7 +93,7 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
-import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/db/BaseSettingStore";
+import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
@@ -88,17 +101,21 @@ import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
 export default defineComponent({
     name: 'more-setting-base',
     emits: ['save'],
     data: () => ({
-        JsonTheme,
+        JsonTheme, Constant,
         ArticleThemeEnum,
         ImageStrategyEnum,
         instance: getDefaultBaseSetting()
     }),
     computed: {
+        MdEditorEditModeEnum() {
+            return MdEditorEditModeEnum
+        },
         ...mapState(useBaseSettingStore, ['baseSetting']),
         isWeb() {
             return Constant.platform === PlatformTypeEnum.WEB
@@ -119,14 +136,14 @@ export default defineComponent({
             if (this.instance.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
                 if (!useLskyProSettingStore().isAvailable) {
                     MessageBoxUtil.confirm("检测到您未配置兰空图床，是否立即前往配置?", "错误")
-                            .then(() => this.$router.push("/setting/lsky-pro"))
+                        .then(() => this.$router.push("/setting/lsky-pro"))
                     return;
                 }
             }
             useBaseSettingStore().save(this.instance)
-                    .then(() => MessageUtil.success("保存成功"))
-                    .catch(e => MessageUtil.error("保存失败", e))
-                    .finally(() => this.$emit('save'));
+                .then(() => MessageUtil.success("保存成功"))
+                .catch(e => MessageUtil.error("保存失败", e))
+                .finally(() => this.$emit('save'));
         }
     }
 });

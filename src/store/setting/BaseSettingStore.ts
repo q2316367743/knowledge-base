@@ -8,6 +8,7 @@ import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import dayjs from "dayjs";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -16,7 +17,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
         newArticleTemplateByName: "[新建文章] (YYYY/MM/DD)",
-        codeExtraName: 'ts'
+        codeExtraName: 'ts',
+        mdEditorEditMode: MdEditorEditModeEnum.AUTO
     }
 }
 
@@ -38,7 +40,21 @@ export const useBaseSettingStore = defineStore('base-setting', {
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
         newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName,
-        codeExtraName: state => state.baseSetting.codeExtraName
+        codeExtraName: state => state.baseSetting.codeExtraName,
+        mdEditorAutoMode: (state): boolean => state.baseSetting.mdEditorEditMode === MdEditorEditModeEnum.AUTO,
+        defaultModel: (state): 'editOnly' | 'edit&preview' => {
+            switch (state.baseSetting.mdEditorEditMode) {
+                case MdEditorEditModeEnum.EDIT_ONLY:
+                    return 'editOnly';
+                case MdEditorEditModeEnum.EDIT_PREVIEW:
+                    return 'edit&preview';
+                default:
+                    if (window.innerWidth > Constant.autoCollapsedWidth) {
+                        return 'edit&preview';
+                    }
+                    return 'editOnly';
+            }
+        }
     },
     actions: {
         async init() {
