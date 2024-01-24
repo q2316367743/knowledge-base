@@ -106,7 +106,7 @@ import {ArticleSource, getDefaultArticleBase, getDefaultArticleIndex} from "@/en
 // 编辑器
 import MarkdownEditor from "@/components/markdown-editor/index.vue";
 import MonacoEditor from "@/components/monaco-editor/index.vue";
-import WangEditor from "@/pages/home/editor/wang-editor.vue";
+import WangEditor from "@/pages/home/layout/editor-content/editor/wang-editor.vue";
 // 状态存储
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useGlobalStore} from "@/store/GlobalStore";

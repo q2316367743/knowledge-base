@@ -8,6 +8,7 @@
             </a-timeline-item>
         </a-timeline>
     </div>
+    <a-back-top target-container=".more-update-log" />
 </template>
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";

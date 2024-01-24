@@ -91,5 +91,8 @@ export default defineComponent({
     .arco-alert-body {
         margin: 0;
     }
+    li {
+        margin: 4px 0;
+    }
 }
 </style>

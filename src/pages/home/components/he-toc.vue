@@ -14,7 +14,6 @@
                 {{ props.line }}
             </a-descriptions-item>
         </a-descriptions>
-        <a-divider v-if="props.toc?.length > 0"/>
         <div v-for="item in props.toc" :key="item.id">
             <a-link :style="{marginLeft: (item.level * 15) + 'px'}" v-html="item.text" @click.stop="toToc(item.id)"/>
         </div>

@@ -206,7 +206,7 @@ onMounted(() => {
 watch(() => props.preview, value => handleToolbar(value));
 watch(() => size.width.value, value => {
     if (instance.value) {
-        if (useBaseSettingStore().mdEditorAutoMode) {
+        if (useBaseSettingStore().mdEditorAutoMode && !props.preview) {
             instance.value.switchModel(value > Constant.autoCollapsedWidth ? 'edit&preview' : 'editOnly');
         }
     }

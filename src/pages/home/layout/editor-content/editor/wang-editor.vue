@@ -1,16 +1,17 @@
 <template>
-    <main class="edit-wang-editor kb-wang-editor">
+    <main class="edit-wang-editor kb-wang-editor" ref="wangEditorEl">
         <div id="editor-toolbar" v-show="!props.readOnly"></div>
-        <div id="editor—wrapper" :style="{height: props.readOnly ? '100%': 'calc(100% - 40px)'}">
+        <div id="editor—wrapper" :style="editorWrapperStyle">
         </div>
     </main>
 </template>
 <script lang="ts" setup>
 import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, SlateNode} from "@wangeditor/editor";
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import {TocItem} from "@/components/markdown-editor/common/TocItem";
 import {useImageUpload} from "@/plugin/image";
+import {useElementSize} from "@vueuse/core";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 
@@ -22,6 +23,24 @@ const emits = defineEmits(['update:modelValue']);
 defineExpose({getToc})
 
 const content = ref(`${props.modelValue}` || '');
+const wangEditorEl = ref<HTMLElement | null>(null);
+
+const size = useElementSize(wangEditorEl);
+
+const editorWrapperStyle = computed(() => {
+    let height = '100%';
+    if (!props.readOnly) {
+        if (size.width.value < 891) {
+            // 双层
+            height = 'calc(100% - 80px)';
+        } else {
+            height = 'calc(100% - 40px)';
+        }
+    }
+    return {
+        height: height
+    }
+})
 
 watch(() => content.value, value => emits('update:modelValue', value));
 watch(() => props.modelValue, value => content.value = value || '');

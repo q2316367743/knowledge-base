@@ -71,6 +71,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {FileItem} from "@arco-design/web-vue";
 import {statistics} from "@/global/BeanFactory";
 import {postAttachment} from "@/utils/utools/DbStorageUtil";
+import {openAddDialog} from "@/pages/zone/components/add";
 
 export default defineComponent({
     name: 'zone-add',
@@ -162,19 +163,20 @@ export default defineComponent({
             // TODO: 获取声音
         },
         openAdd() {
-            this.zone = {
-                dialog: true,
-                content: '',
-                tags: new Array<string>(),
-                location: '',
-                type: 0,
-                showTagInput: false,
-                tagInputVal: '',
-                showLocationInput: false,
-                imageList: [],
-                showImageBtn: false,
-                image: new Array<ZoneAttachment>()
-            }
+            openAddDialog()
+            // this.zone = {
+            //     dialog: true,
+            //     content: '',
+            //     tags: new Array<string>(),
+            //     location: '',
+            //     type: 0,
+            //     showTagInput: false,
+            //     tagInputVal: '',
+            //     showLocationInput: false,
+            //     imageList: [],
+            //     showImageBtn: false,
+            //     image: new Array<ZoneAttachment>()
+            // }
         },
     }
 });
