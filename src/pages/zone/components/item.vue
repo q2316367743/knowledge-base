@@ -48,17 +48,6 @@
                 <div v-html="preview.html"></div>
             </a-typography-paragraph>
         </div>
-        <!-- 图片 -->
-        <div class="image" v-if="base.image.length > 0">
-            <a-row :gutter="7">
-                <a-col v-for="image in base.image" :span="8">
-                    <a-image :alt="image.name" height="150px" width="150px"
-                             @vue:mounted="renderImage($event, image.id)" fit="cover" show-loader
-                             :preview="false" @click="showImagePreview(image.id, image.name)"
-                             style="cursor: pointer;"/>
-                </a-col>
-            </a-row>
-        </div>
         <!-- 标签 -->
         <div class="tags" v-if="base.tags.length > 0">
             <a-tag v-for="tag of base.tags" :key="tag" style="margin-right: 7px;" :color="randomColor(tag)">
@@ -98,29 +87,20 @@
                         :max-length="100"
                         placeholder="评论不能超过100个字"/>
         </a-modal>
-        <!-- 图片预览组件 -->
-        <a-image-preview :src="imagePreview.value" v-model:visible="imagePreview.dialog" @close="releaseImagePreview">
-            <template #actions>
-                <a-image-preview-action name="下载" @click="downloadImage">
-                    <icon-download/>
-                </a-image-preview-action>
-            </template>
-        </a-image-preview>
     </a-card>
 </template>
 <script lang="ts" setup>
 import {nextTick, PropType, ref, toRaw} from "vue";
 import {toDateString} from 'xe-utils'
 import MessageUtil from "@/utils/MessageUtil";
-import {renderImage} from "@/pages/zone/render";
-import {download, downloadByUrl, randomColor} from "@/utils/BrowserUtil";
+import {download, randomColor} from "@/utils/BrowserUtil";
 import {ZoneBase, ZoneComment, ZoneContent, ZoneIndex, ZonePreview} from "@/entity/zone";
 import {useZoneStore} from "@/store/db/ZoneStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {statistics} from "@/global/BeanFactory";
 import {useGlobalStore} from "@/store/GlobalStore";
 import html2canvas from "html2canvas";
-import {getAttachmentByAsync, getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 const props = defineProps({
     zone: Object as PropType<ZoneIndex>
@@ -129,8 +109,6 @@ const emits = defineEmits(['remove']);
 
 const loading = ref(true);
 const base = ref<ZoneBase>({
-    image: [],
-    attachments: [],
     tags: [],
     location: ''
 });
@@ -139,12 +117,6 @@ const preview = ref<ZonePreview>({
 });
 const comments = ref<Array<ZoneComment>>([]);
 let commentRev = undefined as string | undefined;
-const imagePreview = ref({
-    id: '',
-    name: '',
-    dialog: false,
-    value: ''
-})
 const comment = ref({
     dialog: false,
     content: ''
@@ -223,34 +195,6 @@ function removeZone() {
             if (e !== 'cancel') {
                 MessageUtil.error("删除失败", e);
             }
-        });
-}
-
-// =========================================================================
-// ---------------------------------- 图片 ----------------------------------
-// =========================================================================
-
-function showImagePreview(id: string, name: string) {
-    getAttachmentByAsync('/zone/attachment/' + id)
-        .then(url => {
-            imagePreview.value = {
-                id,
-                name,
-                dialog: true,
-                value: url
-            };
-        });
-}
-
-function releaseImagePreview() {
-    URL.revokeObjectURL(imagePreview.value.value);
-    imagePreview.value.value = '';
-}
-
-function downloadImage() {
-    getAttachmentByAsync(LocalNameEnum.ZONE_ATTACHMENT + imagePreview.value.id)
-        .then(url => {
-            downloadByUrl(url, imagePreview.value.name);
         });
 }
 

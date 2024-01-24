@@ -12,18 +12,21 @@
             </a-list>
         </div>
         <!-- 新增动态 -->
-        <zone-add @add="init()"/>
+
+        <div class="add" @click="openAddDialog()">
+            <icon-plus :size="14" style="margin: 13px;"/>
+        </div>
         <a-back-top target-container=".zone .arco-scrollbar-container"/>
     </div>
 </template>
 <script lang="ts" setup>
 import {ref} from 'vue';
 import {useZoneStore} from "@/store/db/ZoneStore";
-import ZoneAdd from "@/pages/zone/components/add.vue";
 import ZoneItem from "@/pages/zone/components/item.vue";
 import {ZoneIndex} from "@/entity/zone";
 import {useWindowSize} from "@vueuse/core";
 import {statistics} from "@/global/BeanFactory";
+import {openAddDialog} from "@/pages/zone/components/add";
 
 const size = useWindowSize()
 

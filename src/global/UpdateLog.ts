@@ -2,6 +2,24 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.5.3',
+        sign: 1523,
+        time: '2024-01-24',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '【设置】增加编辑器编辑模式设置'
+        },{
+            label: LogItemEnum.UPDATE,
+            content: "【动态】优化颜色秀按时"
+        },{
+            label: LogItemEnum.UPDATE,
+            content: "【编辑器】优化富文本编辑器的显示问题，修复了当宽度太小导致部分内容不显示问题"
+        },{
+            label: LogItemEnum.UPDATE,
+            content: "【编辑器】优化编辑器目录显示问题"
+        }],
+    },
+    {
         version: '1.5.2',
         sign: 152,
         time: '2024-01-19',

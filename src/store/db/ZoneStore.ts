@@ -28,8 +28,6 @@ export const useZoneStore = defineStore('zone', {
         },
         addSimple(content: string): Promise<ZoneIndex> {
             return this.add({
-                image: [],
-                attachments: [],
                 tags: [],
                 location: ''
             }, {
@@ -82,13 +80,6 @@ export const useZoneStore = defineStore('zone', {
             // 删除基本信息
             const baseWrap = await getFromOneWithDefaultByAsync(LocalNameEnum.ZONE_BASE + id, getDefaultZoneBase());
             await removeOneByAsync(LocalNameEnum.ZONE_BASE + id, true);
-            //  删除附件
-            if (baseWrap) {
-                const base = baseWrap.record;
-                for (let image of base.image) {
-                    await removeOneByAsync(LocalNameEnum.ZONE_ATTACHMENT + image.id, true)
-                }
-            }
             // 删除内容
             await removeOneByAsync(LocalNameEnum.ZONE_CONTENT + id, true);
             // 删除预览
@@ -99,12 +90,7 @@ export const useZoneStore = defineStore('zone', {
             this.rev = await saveListByAsync(LocalNameEnum.ZONE, this.value, this.rev);
         }
         ,
-        async page(num
-                       :
-                       number, size
-                       :
-                       number
-        ):
+        async page(num: number, size: number):
             Promise<Array<ZoneIndex>> {
             const startIndex = Math.max((num - 1) * size, 0);
             const endIndex = Math.min(num * size, this.value.length);
