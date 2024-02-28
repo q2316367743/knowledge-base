@@ -47,9 +47,6 @@
             <a-menu-item key="/setting/lsky-pro">
                 兰空图床
             </a-menu-item>
-            <a-menu-item key="/setting/backup">
-                备份设置
-            </a-menu-item>
             <a-menu-item key="/setting/category">
                 分类设置
             </a-menu-item>
@@ -62,6 +59,12 @@
                 <icon-more/>
             </template>
             <template #title>更多</template>
+            <a-menu-item key="/more/backup">
+                <template #icon>
+                    <icon-sync/>
+                </template>
+                备份
+            </a-menu-item>
             <a-menu-item key="/more/attachment" v-if="useAttachment">
                 <template #icon>
                     <icon-attachment/>

@@ -10,13 +10,13 @@
 </template>
 <script lang="ts" setup>
 import {getFromOneByAsync, getFromOneWithDefaultByAsync, listByAsync} from "@/utils/utools/DbStorageUtil";
-import {ZoneContent} from "@/pages/setting/backup/BackupExport/ZoneContent";
-import {ZoneIndex} from "@/pages/setting/backup/BackupExport/ZoneIndex";
-import {NoteContent, NoteIndex, NoteRelation} from "@/pages/setting/backup/BackupExport/Note";
-import {ZoneBase} from "@/pages/setting/backup/BackupExport/ZoneBase";
+import {ZoneContent} from "@/pages/more/backup/BackupExport/ZoneContent";
+import {ZoneIndex} from "@/pages/more/backup/BackupExport/ZoneIndex";
+import {NoteContent, NoteIndex, NoteRelation} from "@/pages/more/backup/BackupExport/Note";
+import {ZoneBase} from "@/pages/more/backup/BackupExport/ZoneBase";
 import JSZip from "jszip";
 import {download} from "@/utils/BrowserUtil";
-import {ZoneComment} from "@/pages/setting/backup/BackupExport/ZoneComment";
+import {ZoneComment} from "@/pages/more/backup/BackupExport/ZoneComment";
 
 
 

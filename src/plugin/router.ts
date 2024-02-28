@@ -48,10 +48,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/setting/category",
     component: () => import("@/pages/setting/category/index.vue")
 }, {
-    name: "设置-备份",
-    path: "/setting/backup",
-    component: () => import("@/pages/setting/backup/index.vue")
-}, {
     name: "设置-兰空图床",
     path: "/setting/lsky-pro",
     component: () => import("@/pages/setting/lsky-pro/index.vue")
@@ -60,15 +56,19 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/setting/feature",
     component: () => import("@/pages/setting/feature/index.vue")
 }, {
-    name: "附件管理",
+    name: "更多-备份",
+    path: "/more/backup",
+    component: () => import("@/pages/more/backup/index.vue")
+}, {
+    name: "更多-附件管理",
     path: "/more/attachment",
     component: () => import("@/pages/more/attachment/index.vue")
 }, {
-    name: "推荐",
+    name: "更多-推荐",
     path: "/more/recommend",
     component: () => import("@/pages/more/recommend/index.vue")
 }, {
-    name: "vip",
+    name: "更多-vip",
     path: "/more/vip",
     component: () => import("@/pages/more/vip/index.vue")
 }, {

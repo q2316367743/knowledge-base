@@ -7,9 +7,9 @@
 </template>
 <script lang="ts" setup>
 
-import BackupWebdav from "@/pages/setting/backup/backup-webdav.vue";
-import BackupFile from "@/pages/setting/backup/backup-file.vue";
-import BackupExport from "@/pages/setting/backup/BackupExport/index.vue";
+import BackupWebdav from "@/pages/more/backup/backup-webdav.vue";
+import BackupFile from "@/pages/more/backup/backup-file.vue";
+import BackupExport from "@/pages/more/backup/BackupExport/index.vue";
 </script>
 <style scoped>
 .backup {

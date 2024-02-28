@@ -22,7 +22,7 @@ import Constant from "@/global/Constant";
 import {useFileSystemAccess} from "@vueuse/core";
 import {listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import updateCheck from "@/components/update-check/UpdateCheck";
-import {buildBackup, restoreBackup} from "@/pages/setting/backup/func";
+import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
 
 
 const FOLDER = Constant.id;

@@ -130,7 +130,7 @@ export default defineComponent({
         },
         toApp(name: string) {
             statistics.access("通过推荐前往：" + name)
-            utools.redirect(name, '');
+            utools.redirect([name, name], '');
         }
     }
 });
