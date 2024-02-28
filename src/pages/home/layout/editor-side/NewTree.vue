@@ -25,6 +25,7 @@ const zTreeObj = shallowRef<null | ZTreeInstance>(null)
 onMounted(_init);
 
 async function _init() {
+    // @ts-ignore
     zTreeObj.value = window.$.fn.zTree.init(window.$("#editor-tree"), buildZTreeSetting(zTreeObj), null);
     zTreeObj.value && zTreeObj.value.addNodes(null, 0, getTreeNodes(0), false);
 }

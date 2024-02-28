@@ -2,19 +2,31 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.5.4',
+        sign: 154,
+        time: '2024-02-28',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '【空间】去除空间功能，空间功能已下线，已合并到新的插件【卡片笔记】中，可以在设置中导出空间数据，在卡片笔记中导入数据。'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【设置】优化设置页面，备份移动到【更多】中"
+        }],
+    },
+    {
         version: '1.5.3',
-        sign: 1523,
+        sign: 153,
         time: '2024-01-24',
         items: [{
             label: LogItemEnum.UPDATE,
             content: '【设置】增加编辑器编辑模式设置'
-        },{
+        }, {
             label: LogItemEnum.UPDATE,
             content: "【动态】优化颜色秀按时"
-        },{
+        }, {
             label: LogItemEnum.UPDATE,
             content: "【编辑器】优化富文本编辑器的显示问题，修复了当宽度太小导致部分内容不显示问题"
-        },{
+        }, {
             label: LogItemEnum.UPDATE,
             content: "【编辑器】优化编辑器目录显示问题"
         }],
@@ -26,7 +38,7 @@ export default [
         items: [{
             label: LogItemEnum.UPDATE,
             content: '【设置】优化兰空图床上传'
-        },{
+        }, {
             label: LogItemEnum.UPDATE,
             content: "【插件】升级依赖，主要升级了markdown编辑器的依赖，修复了一些已知问题"
         }],

@@ -79,7 +79,7 @@ export function set<T extends S[A], S extends Record<string, any>, A extends key
  * @param attrName 属性名
  * @returns 分组后的结果
  */
-export function group<T extends Record<string, any>, K extends T[A], A extends keyof T>(arr: T[], attrName: A): Map<K, T[]> {
+export function group<T extends Record<any, any>, K extends T[A], A extends keyof T>(arr: T[], attrName: A): Map<K, T[]> {
     let result = new Map<K, T[]>();
     for (let item of arr) {
         const key = item[attrName];

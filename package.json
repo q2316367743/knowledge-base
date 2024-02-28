@@ -1,11 +1,11 @@
 {
     "name": "knowledge-base",
     "private": true,
-    "version": "1.5.3",
+    "version": "1.5.4",
     "type": "module",
     "description": "知识库",
     "scripts": {
-        "dev": "vite --mode=utools",
+        "dev": "vite",
         "dev:web": "vite --mode=web",
         "dev:docker": "vite --mode=docker",
         "dev:tauri": "vite --mode=tauri",

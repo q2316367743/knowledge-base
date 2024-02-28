@@ -176,6 +176,7 @@ const config: CherryConfig = {
                     utools.shellOpenExternal(href);
                 } else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
                     const src = (aEle as HTMLImageElement).src;
+                    // @ts-ignore
                     window.onImagePreview(src);
                 }
             }

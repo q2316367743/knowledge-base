@@ -23,8 +23,9 @@ export const useArticleStore = defineStore('article', {
         articleDeletes: state => state.value.filter(e => e.isDelete),
         articleMap: (state): Map<number, ArticleIndex> =>
             map(state.value.filter(e => !e.isDelete), 'id'),
-        categoryMap: (state): Map<number, Array<ArticleIndex>> => {
+        categoryMap: (state): Map<number | null, Array<ArticleIndex>> => {
             const articles = state.value.filter(e => !e.isDelete).sort((a, b) => a.name.localeCompare(b.name));
+            // @ts-ignore
             return group(articles, 'categoryId')
         },
         folderMap: (state): Map<number, Array<ArticleIndex>> => {
