@@ -3,7 +3,7 @@ import {Folder} from "@/entity/folder";
 import {listToTree} from "@/entity/ListTree";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
-import {map} from "@/utils/ArrayUtil";
+import {group, map} from "@/utils/ArrayUtil";
 
 export const useFolderStore = defineStore('folder', {
     state: () => ({
@@ -13,7 +13,8 @@ export const useFolderStore = defineStore('folder', {
     getters: {
         folderTree: state => listToTree(state.folders, "全部文件夹"),
         folderIds: state => state.folders.map(folder => folder.id),
-        folderMap: state => map(state.folders, 'id')
+        folderMap: state => map(state.folders, 'id'),
+        folderGroupMap: state => group(state.folders, 'pid')
     },
     actions: {
         async init() {

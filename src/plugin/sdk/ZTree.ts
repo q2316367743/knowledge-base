@@ -45,6 +45,16 @@ export interface ZTreeInstance {
      */
     getNodeByParam(key: string, value: any, parentNode: TreeNode | null): TreeNode | null;
 
+    /**
+     * 选中制定节点
+     * @param treeNode 需要被选中的节点 JSON 数据对象
+     * @param addFlag   <p>addFlag = true 表示追加选中，会出现多点同时被选中的情况</p>
+     *                  <p>addFlag = false （默认）表示单独选中，原先被选中的节点会被取消选中状态</p>
+     *                  <p>setting.view.selectedMulti = false 时，此参数无效，始终进行单独选中</p>
+     * @param isSilent 是否不滚动到可视区域，默认false
+     */
+    selectNode(treeNode: TreeNode, addFlag?: boolean, isSilent?: boolean): void;
+
 }
 
 export interface ZTreeSetting {

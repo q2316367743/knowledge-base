@@ -28,7 +28,7 @@
                         内部实现
                     </a-radio>
                     <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="isWeb">插件【图床】</a-radio>
-                    <a-radio :value="ImageStrategyEnum.LSKY_PRO">兰空图床(推荐)</a-radio>
+                    <a-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="!isAvailable">兰空图床(推荐)</a-radio>
                 </a-radio-group>
                 <template #help>
                     <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
@@ -102,6 +102,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Constant from "@/global/Constant";
 import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import {isUtools} from "@/global/BeanFactory";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -117,8 +118,9 @@ export default defineComponent({
             return MdEditorEditModeEnum
         },
         ...mapState(useBaseSettingStore, ['baseSetting']),
+        ...mapState(useLskyProSettingStore, ['isAvailable']),
         isWeb() {
-            return Constant.platform === PlatformTypeEnum.WEB
+            return !isUtools
         }
     },
     watch: {

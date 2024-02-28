@@ -23,13 +23,13 @@ export const useArticleStore = defineStore('article', {
         articleDeletes: state => state.value.filter(e => e.isDelete),
         articleMap: (state): Map<number, ArticleIndex> =>
             map(state.value.filter(e => !e.isDelete), 'id'),
-        categoryMap: (state): Map<number | null, Array<ArticleIndex>> => {
+        categoryMap: (state): Map<number, Array<ArticleIndex>> => {
             const articles = state.value.filter(e => !e.isDelete).sort((a, b) => a.name.localeCompare(b.name));
             return group(articles, 'categoryId')
         },
         folderMap: (state): Map<number, Array<ArticleIndex>> => {
             const articles = state.value.filter(e => !e.isDelete).sort((a, b) => a.name.localeCompare(b.name));
-            return group<ArticleIndex, 'folder', number>(articles, 'folder')
+            return group(articles, 'folder')
         },
         articleNames: (state): Set<string> => {
             const names = new Set<string>();

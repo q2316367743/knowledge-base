@@ -154,10 +154,9 @@ function init(articleId: number) {
     if (articleId === 0) {
         return;
     }
-    useGlobalStore().startLoading("正在获取文章内容");
+    // TODO: 此处需要优化，应该增加加载框
     _init(articleId)
-        .catch(e => MessageUtil.error("获取内容失败", e))
-        .finally(() => useGlobalStore().closeLoading());
+        .catch(e => MessageUtil.error("获取内容失败", e));
 }
 
 async function _init(articleId: number) {
