@@ -6,6 +6,25 @@
                     <template #header>
                         推荐
                     </template>
+                    <!-- 卡片笔记 -->
+                    <a-list-item action-layout="vertical">
+                        <template #actions>
+                            <a-link target="_blank"
+                                    @click="openLink('https://gitee.com/qiaoshengda/card-note')">Gitee仓库
+                            </a-link>
+                        </template>
+                        <template #extra>
+                            <a-link @click="toApp('卡片笔记')" style="margin-top: 40px;">立即使用</a-link>
+                        </template>
+                        <a-list-item-meta title="卡片笔记"
+                                          description="卡片笔记是一种用于记录和存储信息的文本文件，它可以帮助人们记录重要的想法、日志、备忘录或其他内容。">
+                            <template #avatar>
+                                <a-avatar shape="square">
+                                    <img alt="es-client" src="@/assets/logo/card-note.png"/>
+                                </a-avatar>
+                            </template>
+                        </a-list-item-meta>
+                    </a-list-item>
                     <!-- 代码管家 -->
                     <a-list-item action-layout="vertical">
                         <template #extra>
@@ -71,24 +90,6 @@
                             <template #avatar>
                                 <a-avatar shape="square">
                                     <img alt="es-client" src="@/assets/logo/es-client.png"/>
-                                </a-avatar>
-                            </template>
-                        </a-list-item-meta>
-                    </a-list-item>
-                    <!-- 阅读 -->
-                    <a-list-item action-layout="vertical">
-                        <template #actions>
-                            <a-link target="_blank"
-                                    @click="openLink('https://www.yuque.com/baozhiyige-tewwf/gfbte7')">官网
-                            </a-link>
-                        </template>
-                        <template #extra>
-                            <a-link @click="toApp('阅读')" style="margin-top: 40px;">立即使用</a-link>
-                        </template>
-                        <a-list-item-meta title="阅读" description="阅读小说、看视频、看资源、看订阅，一网打尽。">
-                            <template #avatar>
-                                <a-avatar shape="square">
-                                    <img alt="阅读" src="@/assets/logo/read.png"/>
                                 </a-avatar>
                             </template>
                         </a-list-item-meta>
