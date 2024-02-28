@@ -32,21 +32,6 @@ enum LocalNameEnum {
 
     SETTING_WORKSPACE = '/local/setting/workspace',
 
-    ZONE = '/local/zone',
-
-    ZONE_BASE = '/zone/base/',
-
-    ZONE_CONTENT = '/zone/content/',
-
-    ZONE_PREVIEW = '/zone/preview/',
-
-    /**
-     * 附件
-     */
-    ZONE_ATTACHMENT = '/zone/attachment/',
-
-    ZONE_COMMENT = '/zone/comment/',
-
     /**
      * 待办清单中待办项索引，内部保存了全部的待办项
      */
@@ -74,7 +59,6 @@ enum LocalNameEnum {
 
     /**
      * 临时编辑器内容
-     * TODO: 此处需要清洗
      */
     KEY_EDITOR_CONTENT = '/key/editor/content',
 

@@ -18,7 +18,6 @@
 import {computed, defineAsyncComponent, ref,} from "vue";
 import {statistics} from "@/global/BeanFactory";
 // 存储
-import {useZoneStore} from "@/store/db/ZoneStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
@@ -59,7 +58,7 @@ utools.onPluginEnter(action => {
 useGlobalStore().initDarkColors();
 
 // 全局事件
-window.onImagePreview = (src) => {
+window.onImagePreview = (src: string) => {
     preview.value = {
         visible: true,
         src
@@ -121,7 +120,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     if (operate === 'article') {
         statistics.access("进入", "查看文章");
         toArticle(preload);
-    }else if (operate === 'todo') {
+    } else if (operate === 'todo') {
         statistics.access("进入", "查看待办");
         toTodo(preload);
     } else if (operate === 'function') {
@@ -135,27 +134,13 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         } else if (preload === 'editor') {
             statistics.access("进入", "前往编辑器");
             router.push('/home');
-        } else if (preload === 'zone') {
-            statistics.access("进入", "前往编辑器");
-            router.push('/zone');
-        }else if (preload === 'todo') {
+        } else if (preload === 'todo') {
             statistics.access("进入", "前往待办");
             router.push('/todo');
         } else if (preload === 'add') {
             statistics.access("进入", "新增文章");
             useArticleStore().addSimple(extra)
                 .then(id => useHomeEditorStore().setId(id));
-        } else if (preload === 'add-zone') {
-            statistics.access("进入", "新增动态");
-            useZoneStore().addSimple(extra)
-                .then(() => {
-                    // 隐藏插件
-                    utools.hideMainWindow();
-                    utools.outPlugin();
-                    // 显示提示
-                    utools.showNotification("新增动态成功");
-                })
-                .catch(e => MessageUtil.error("新增动态失败", e));
         }
     }
 }

@@ -6,12 +6,6 @@
             </template>
             主页
         </a-menu-item>
-        <a-menu-item key="/zone">
-            <template #icon>
-                <icon-qq-zone/>
-            </template>
-            空间
-        </a-menu-item>
         <a-menu-item key="/todo">
             <template #icon>
                 <icon-check-square/>

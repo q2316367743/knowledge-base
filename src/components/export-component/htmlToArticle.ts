@@ -4,24 +4,24 @@ import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 export async function htmlToArticle(content: string) {
-    const zone = JSON.parse(content);
-    if (typeof zone.title === 'undefined' || zone.title.trim() === '') {
+    const article = JSON.parse(content);
+    if (typeof article.title === 'undefined' || article.title.trim() === '') {
         MessageUtil.error("文章标题为必填！");
         return;
     }
-    if (typeof zone.content === 'undefined' || zone.content.trim() === '') {
+    if (typeof article.content === 'undefined' || article.content.trim() === '') {
         MessageUtil.error("文章内容为必填！");
         return;
     }
     const id = await useArticleStore().add(getDefaultArticleIndex({
-        name: zone.title,
+        name: article.title,
         folder: 0,
         preview: false
     }), getDefaultArticleBase({
-        tags: zone.tags || [],
-        source: zone.source || '',
-        description: zone.description || '',
-        sourceUrl: zone.sourceUrl || ''
-    }), zone.content);
+        tags: article.tags || [],
+        source: article.source || '',
+        description: article.description || '',
+        sourceUrl: article.sourceUrl || ''
+    }), article.content);
     useHomeEditorStore().setId(id);
 }

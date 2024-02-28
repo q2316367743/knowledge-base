@@ -1,28 +1,8 @@
 /// <reference types="vite/client" />
-import {VNode,VueElement} from 'vue';
 
 declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            [elementName: string]: any;
-        }
-    }
-
-    interface Element extends VNode {
-    }
-
-    interface ElementClass extends VueElement {
-    }
-
-    interface IntrinsicAttributes {
-        [attr: string]: any;
-    }
-
-    interface IntrinsicClassAttributes<T> extends VueClass<T> {
-    }
-
-    declare interface Window {
-        onImagePreview: (src: string) => void,
+    interface Window {
+        onImagePreview: (src: string) => void;
         fs: {
             /**
              * 读取文本文件

@@ -17,7 +17,6 @@ export default {
     feature: {
         ADD: 'function:add-article',
         IMPORT: 'function:md-import',
-        ADD_ZONE: 'function:add-zone',
         TODO_CATEGORY: 'todo:'
     },
     autoCollapsedWidth: 1080,

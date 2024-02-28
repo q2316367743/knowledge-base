@@ -1,4 +1,9 @@
-import ZoneAttachmentTypeEnum from "@/enumeration/ZoneAttachmentTypeEnum";
+
+export enum ZoneAttachmentTypeEnum {
+
+    IMAGE = 1
+
+}
 
 export interface ZoneAttachment {
 

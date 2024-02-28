@@ -1,7 +1,6 @@
 import Statistics from '@/plugin/Statistics';
 import {useEventBus} from "@vueuse/core";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {useZoneStore} from "@/store/db/ZoneStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
@@ -38,7 +37,6 @@ export const convert = convertDriver;
 export async function initData(): Promise<void> {
     // 在进行数据初始化
     await Promise.all([
-        useZoneStore().init(),
         useThemeSettingStore().init(),
         useBaseSettingStore().init(),
         useLskyProSettingStore().init(),

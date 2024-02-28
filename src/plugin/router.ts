@@ -12,10 +12,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: '/home',
     component: () => import('@/pages/home/index.vue')
 }, {
-    name: "空间",
-    path: '/zone',
-    component: () => import("@/pages/zone/index.vue")
-}, {
     name: "待办",
     path: '/todo',
     component: () => import("@/pages/todo/index.vue")

@@ -4,14 +4,11 @@
         <feature-add-article />
         <a-divider>markdown文章导入</a-divider>
         <feature-markdown-import />
-        <a-divider>新增动态</a-divider>
-        <feature-add-zone />
     </div>
 </template>
 <script lang="ts" setup>
 import FeatureAddArticle from "@/pages/setting/feature/components/feature-add-article.vue";
 import FeatureMarkdownImport from "@/pages/setting/feature/components/feature-markdown-import.vue";
-import FeatureAddZone from "@/pages/setting/feature/components/feature-add-zone.vue";
 </script>
 <style scoped>
 .feature {
