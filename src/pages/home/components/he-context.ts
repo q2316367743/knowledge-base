@@ -24,7 +24,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
         name: buildArticleName(type),
         folder: pid,
         type,
-    }), getDefaultArticleBase(), "")
+    }), getDefaultArticleBase(), type === ArticleTypeEnum.EXCEL ? {} : "")
         .then(id => {
             MessageUtil.success("新增成功");
             useHomeEditorStore().setId(id);

@@ -4,15 +4,15 @@
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
 import {onMounted, shallowRef, watch} from "vue";
-import {CherryConfig, editorProps} from "@/components/markdown-editor/CherryMarkdownOption";
+import {CherryConfig, editorProps} from "@/pages/home/layout/editor-content/editor/markdown-editor/CherryMarkdownOption";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
-import {useScreenShotMenu} from "@/components/markdown-editor/plugins/ScreenShotMenu";
+import {useScreenShotMenu} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/ScreenShotMenu";
 import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {TocItem} from "@/components/markdown-editor/common/TocItem";
-import {usePanGu} from "@/components/markdown-editor/plugins/PanGuMenu";
-import {useFanYi} from "@/components/markdown-editor/plugins/FanYiMenu";
+import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
+import {usePanGu} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/PanGuMenu";
+import {useFanYi} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/FanYiMenu";
 import MessageUtil from "@/utils/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {isUtools} from "@/global/BeanFactory";
@@ -21,7 +21,7 @@ import {
     usePyqMenu, useQingGanMenu,
     useTianGouRiJiMenu,
     useYiYanMenu
-} from "@/components/markdown-editor/plugins/XiaRouMenu";
+} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/XiaRouMenu";
 import Constant from "@/global/Constant";
 
 const DEV_URL = "http://localhost:5173/#";

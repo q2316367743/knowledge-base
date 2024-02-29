@@ -2,47 +2,28 @@
     <a-typography class="he-toc">
         <a-descriptions :column="1">
             <a-descriptions-item label="创建时间">
-                {{ toDateString(props.index.createTime) }}
+                {{ createTime }}
             </a-descriptions-item>
             <a-descriptions-item label="更新时间">
-                {{ toDateString(props.index.updateTime) }}
+                {{ updateTime }}
             </a-descriptions-item>
-            <a-descriptions-item label="字符数" v-if="props.length > -1">
-                {{ props.length }}
+            <a-descriptions-item label="字符数" v-if="length > -1">
+                {{ length }}
             </a-descriptions-item>
-            <a-descriptions-item label="行数" v-if="props.line > -1">
-                {{ props.line }}
+            <a-descriptions-item label="行数" v-if="lines > -1">
+                {{ lines }}
             </a-descriptions-item>
         </a-descriptions>
-        <div v-for="item in props.toc" :key="item.id">
+        <div v-for="item in toc" :key="item.id">
             <a-link :style="{marginLeft: (item.level * 15) + 'px'}" v-html="item.text" @click.stop="toToc(item.id)"/>
         </div>
     </a-typography>
 </template>
 <script lang="ts" setup>
-import {PropType} from "vue";
-import {TocItem} from "@/components/markdown-editor/common/TocItem";
-import {ArticleIndex, getDefaultArticleIndex} from "@/entity/article";
+import {computed} from "vue";
 import {toDateString} from "xe-utils";
+import {articleIndex, getLineLength, getTextCount, getToc} from "@/store/components/HomeEditorStore";
 
-const props = defineProps({
-    index: {
-        type: Object as PropType<ArticleIndex>,
-        default: getDefaultArticleIndex()
-    },
-    toc: {
-        type: Object as PropType<Array<TocItem>>,
-        default: new Array<TocItem>()
-    },
-    length: {
-        type: Number,
-        default: -1
-    },
-    line: {
-        type: Number,
-        default: -1
-    }
-});
 const emits = defineEmits(['hide']);
 
 function toToc(id: string) {
@@ -52,6 +33,13 @@ function toToc(id: string) {
     }
     emits('hide');
 }
+
+const createTime = computed(() => articleIndex.value ? toDateString(articleIndex.value.createTime) : '');
+const updateTime = computed(() => articleIndex.value ? toDateString(articleIndex.value.updateTime) : '');
+
+const length = getTextCount.value();
+const lines = getLineLength.value();
+const toc = getToc.value();
 
 </script>
 <style scoped>

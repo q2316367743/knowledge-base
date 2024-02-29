@@ -30,6 +30,7 @@
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown
                                 </a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.EXCEL)">表格</a-doption>
                             </template>
                         </a-dsubmenu>
 
@@ -67,14 +68,14 @@
                                     富文本
                                     <template #content>
                                         <a-tooltip
-                                                content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                                            content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
                                             <a-doption
-                                                    @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.RICH_TEXT)">
+                                                @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.RICH_TEXT)">
                                                 docx文件
                                             </a-doption>
                                         </a-tooltip>
                                         <a-doption
-                                                @click="importTextToArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">
+                                            @click="importTextToArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">
                                             html文件
                                         </a-doption>
                                     </template>
@@ -83,9 +84,9 @@
                                     Markdown
                                     <template #content>
                                         <a-tooltip
-                                                content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
+                                            content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
                                             <a-doption
-                                                    @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.MARKDOWN)">
+                                                @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.MARKDOWN)">
                                                 docx文件
                                             </a-doption>
                                         </a-tooltip>
@@ -149,7 +150,7 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import {IconBook, IconCode, IconFile} from "@arco-design/web-vue/es/icon";
+import {IconBook, IconCode, IconFile, IconNav} from "@arco-design/web-vue/es/icon";
 import {
     addArticle,
     addFolder,
@@ -187,6 +188,8 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                         return h(IconCode, {})
                     } else if (article.type === ArticleTypeEnum.RICH_TEXT) {
                         return h(IconBook, {})
+                    } else if (article.type === ArticleTypeEnum.EXCEL) {
+                        return h(IconNav, {})
                     } else {
                         return h(IconFile, {})
                     }
@@ -210,7 +213,7 @@ function onSelect(selectKeys: Array<number | string>) {
         if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
             useHomeEditorStore().switchCollapsed();
         }
-    }else{
+    } else {
         useHomeEditorStore().setId(0);
     }
 }
@@ -227,12 +230,12 @@ function multiCheckStop() {
 function multiCheckDelete() {
     useGlobalStore().startLoading("开始删除")
     useArticleStore().removeBatchByIds(checkKeys.value)
-            .then(() => MessageUtil.success("删除成功"))
-            .catch(e => MessageUtil.error("删除失败", e))
-            .finally(() => {
-                useGlobalStore().closeLoading();
-                checkKeys.value = [];
-            });
+        .then(() => MessageUtil.success("删除成功"))
+        .catch(e => MessageUtil.error("删除失败", e))
+        .finally(() => {
+            useGlobalStore().closeLoading();
+            checkKeys.value = [];
+        });
 }
 
 
@@ -246,17 +249,17 @@ function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 
 
 function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
     if (typeof data.dragNode.key !== 'undefined' &&
-            typeof data.dropNode.key !== 'undefined') {
+        typeof data.dropNode.key !== 'undefined') {
         if (data.dropPosition === 0) {
             if (data.dragNode.isLeaf) {
                 // 文章
                 useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-                        .then(() => MessageUtil.success("移动成功"))
-                        .catch(e => MessageUtil.error("移动失败", e));
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
             } else {
                 useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-                        .then(() => MessageUtil.success("移动成功"))
-                        .catch(e => MessageUtil.error("移动失败", e));
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
             }
         } else {
             // 上或者下
@@ -267,12 +270,12 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
             if (data.dragNode.isLeaf) {
                 // 文章
                 useArticleStore().drop(data.dragNode.key as number, target.pid)
-                        .then(() => MessageUtil.success("移动成功"))
-                        .catch(e => MessageUtil.error("移动失败", e));
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
             } else {
                 useFolderStore().drop(data.dragNode.key as number, target.pid)
-                        .then(() => MessageUtil.success("移动成功"))
-                        .catch(e => MessageUtil.error("移动失败", e));
+                    .then(() => MessageUtil.success("移动成功"))
+                    .catch(e => MessageUtil.error("移动失败", e));
             }
         }
     }

@@ -13,6 +13,8 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
+let isInit = false;
+
 export const useArticleStore = defineStore('article', {
     state: () => ({
         value: new Array<ArticleIndex>(),
@@ -41,7 +43,11 @@ export const useArticleStore = defineStore('article', {
         }
     },
     actions: {
-        async init() {
+        async init(force: boolean = false) {
+            if (isInit && !force) {
+                return;
+            }
+            isInit = true;
             const res = await listByAsync<ArticleIndex>(LocalNameEnum.ARTICLE);
             this.value = res.list;
             this.rev = res.rev
@@ -57,7 +63,7 @@ export const useArticleStore = defineStore('article', {
         async add(
             article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
             base: ArticleBase,
-            content: string): Promise<number> {
+            content: any): Promise<number> {
             // 校验
             if (article.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
@@ -155,11 +161,11 @@ export const useArticleStore = defineStore('article', {
         },
         async updateContent(
             id: number,
-            article: Partial<ArticleIndex>,
             content: string,
-            rev: undefined | string
+            rev?: undefined | string,
+            article?: Partial<ArticleIndex>,
         ): Promise<undefined | string> {
-            await this.updateIndex(id, article);
+            await this.updateIndex(id, article || {});
             // 新增内容
             return saveOneByAsync<ArticleSource>(LocalNameEnum.ARTICLE_CONTENT + id, {
                 content

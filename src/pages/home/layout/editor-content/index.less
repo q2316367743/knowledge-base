@@ -1,0 +1,45 @@
+.he-editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+
+    .header {
+        padding: 4px 7px;
+        display: flex;
+        justify-content: space-between;
+
+        .left {
+            display: flex;
+            width: 70%;
+        }
+
+        .title {
+            height: 32px;
+            line-height: 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding-left: 7px;
+            width: 100%;
+            display: flex;
+            flex-wrap: nowrap;
+
+            .title-wrap {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .ec-container {
+        position: absolute;
+        top: 43px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+
+    }
+}

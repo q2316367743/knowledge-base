@@ -1,6 +1,6 @@
 <template>
     <main class="edit-wang-editor kb-wang-editor" ref="wangEditorEl">
-        <div id="editor-toolbar" v-show="!props.readOnly"></div>
+        <div id="editor-toolbar" v-show="!props.readOnly" ref="wangEditorToolbar"></div>
         <div id="editor—wrapper" :style="editorWrapperStyle">
         </div>
     </main>
@@ -9,9 +9,10 @@
 import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, SlateNode} from "@wangeditor/editor";
 import {computed, onMounted, ref, watch} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
-import {TocItem} from "@/components/markdown-editor/common/TocItem";
+import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
 import {useImageUpload} from "@/plugin/image";
 import {useElementSize} from "@vueuse/core";
+import {getLineLength, getTextCount} from "@/store/components/HomeEditorStore";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 
@@ -24,18 +25,15 @@ defineExpose({getToc})
 
 const content = ref(`${props.modelValue}` || '');
 const wangEditorEl = ref<HTMLElement | null>(null);
+const wangEditorToolbar = ref<HTMLElement | null>(null);
 
-const size = useElementSize(wangEditorEl);
+const size = useElementSize(wangEditorToolbar);
 
 const editorWrapperStyle = computed(() => {
     let height = '100%';
     if (!props.readOnly) {
-        if (size.width.value < 891) {
-            // 双层
-            height = 'calc(100% - 80px)';
-        } else {
-            height = 'calc(100% - 40px)';
-        }
+        // 双层
+        height = `calc(100% - ${size.height.value}px)`;
     }
     return {
         height: height
@@ -107,18 +105,22 @@ const toolbarConfig: Partial<IToolbarConfig> = {
 
 
 function create() {
-    editor = createEditor({
+    const instance = createEditor({
         selector: '#editor—wrapper',
         html: content.value,
         config: editorConfig,
         mode: 'default', // or 'simple'
     });
     const toolbar = createToolbar({
-        editor,
+        editor: instance,
         selector: '#editor-toolbar',
         config: toolbarConfig,
         mode: 'simple', // 'default' or 'simple'
     });
+    getTextCount.value = () => instance.getText().length;
+    getLineLength.value = () => instance.getText().split("\n").length;
+
+    editor = instance;
 }
 
 onMounted(() => create());

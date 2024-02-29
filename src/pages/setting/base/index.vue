@@ -70,11 +70,11 @@
                 <a-input v-model="instance.codeExtraName"/>
             </a-form-item>
             <a-form-item label="md编辑器默认编辑模式">
-                <a-select v-model="instance.mdEditorEditMode">
-                    <a-option :value="MdEditorEditModeEnum.EDIT_ONLY">仅编辑</a-option>
-                    <a-option :value="MdEditorEditModeEnum.EDIT_PREVIEW">编辑和预览</a-option>
-                    <a-option :value="MdEditorEditModeEnum.AUTO">自动切换</a-option>
-                </a-select>
+                <a-radio-group v-model="instance.mdEditorEditMode">
+                    <a-radio :value="MdEditorEditModeEnum.EDIT_ONLY">仅编辑</a-radio>
+                    <a-radio :value="MdEditorEditModeEnum.EDIT_PREVIEW">编辑和预览</a-radio>
+                    <a-radio :value="MdEditorEditModeEnum.AUTO">自动切换</a-radio>
+                </a-radio-group>
                 <template #help>
                     <span v-if="instance.mdEditorEditMode === MdEditorEditModeEnum.AUTO">
                         当插件宽度小于{{ Constant.autoCollapsedWidth }}px时切换为【仅编辑】，

@@ -57,6 +57,8 @@ utools.onPluginEnter(action => {
 // 主题
 useGlobalStore().initDarkColors();
 
+useHomeEditorStore().init();
+
 // @ts-ignore 全局事件
 window.onImagePreview = (src: string) => {
     preview.value = {
