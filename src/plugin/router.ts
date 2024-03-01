@@ -1,6 +1,4 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
-import Constant from "@/global/Constant";
-import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 // 引入路由
 
 const routers: Array<RouteRecordRaw> = [{

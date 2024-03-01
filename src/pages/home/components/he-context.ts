@@ -88,7 +88,10 @@ export function rename(id: number, name: string, article: boolean) {
         if (article) {
             // 重命名文件
             useArticleStore().updateIndex(id, {name: newName})
-                .then(() => MessageUtil.success("重命名成功"))
+                .then(() => {
+                    MessageUtil.success("重命名成功");
+                    useHomeEditorStore().updateTitle(id, newName);
+                })
                 .catch(e => MessageUtil.error("重命名失败", e));
         } else {
             useFolderStore().renameFolder(id, newName)

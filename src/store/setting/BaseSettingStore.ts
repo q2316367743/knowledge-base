@@ -5,10 +5,10 @@ import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import Constant from "@/global/Constant";
-import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import dayjs from "dayjs";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import {isUtools} from "@/global/BeanFactory";
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
@@ -61,7 +61,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
             const res = await getFromOneWithDefaultByAsync(LocalNameEnum.SETTING_BASE, getDefaultBaseSetting());
             this.baseSetting = res.record;
             this.rev = res.rev;
-            if (Constant.platform == PlatformTypeEnum.WEB) {
+            if (!isUtools) {
                 // web版只能用兰空图床
                 this.baseSetting.imageStrategy = ImageStrategyEnum.LSKY_PRO;
             }

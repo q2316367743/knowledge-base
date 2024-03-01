@@ -42,12 +42,11 @@
                                     </template>
                                     导出
                                     <template #content>
-                                        <a-doption @click="exportFile('md')" v-if="editorType === ArticleTypeEnum.MARKDOWN">
+                                        <a-doption @click="exportFile('md')" v-if="isNote">
                                             markdown文件
                                         </a-doption>
-                                        <a-doption @click="exportFile('md')"
-                                                   v-if="editorType === ArticleTypeEnum.RICH_TEXT">
-                                            网页
+                                        <a-doption @click="exportFile('md')" v-if="isNote">
+                                            Word文件
                                         </a-doption>
                                         <a-doption @click="exportFile('pdf')">pdf文件</a-doption>
                                         <a-doption @click="exportFile('img')">图片</a-doption>
@@ -81,6 +80,7 @@ const switchCollapsed = useHomeEditorStore().switchCollapsed;
 
 const indexes = computed(() => useHomeEditorStore().indexes);
 const disabled = computed(() => useHomeEditorStore().indexes.length === 0);
+const isNote = computed(() => editorType.value === ArticleTypeEnum.RICH_TEXT || editorType.value === ArticleTypeEnum.MARKDOWN);
 
 watch(() => activeKey.value, value => useHomeEditorStore().setId(value));
 watch(() => useHomeEditorStore().id, value => activeKey.value = value);

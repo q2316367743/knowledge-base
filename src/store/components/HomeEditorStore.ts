@@ -96,6 +96,15 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         setItem<string>(LocalNameEnum.KEY_HOME_WIDTH, widthWrap.value);
     }
 
+    function updateTitle(id: number, title: string) {
+        for (let valueElement of indexes.value) {
+            if (valueElement.id === id) {
+                valueElement.name = title;
+                return;
+            }
+        }
+    }
+
     function openArticle(res: number | ArticleIndex | undefined) {
         if (!res) {
             return;
@@ -153,6 +162,7 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         switchCollapsed,
         setId,
         setWidth,
+        updateTitle,
 
         indexes,
         openArticle,

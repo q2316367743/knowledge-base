@@ -65,7 +65,7 @@
                 </template>
                 备份
             </a-menu-item>
-            <a-menu-item key="/more/attachment" v-if="useAttachment">
+            <a-menu-item key="/more/attachment" v-if="isUtools">
                 <template #icon>
                     <icon-attachment/>
                 </template>
@@ -126,19 +126,15 @@
 </template>
 <script lang="ts" setup>
 import IconTimeLine from "@/icon/IconTimeLine.vue";
-import {computed, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
-import Constant from "@/global/Constant";
-import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 
 const route = useRoute();
 const router = useRouter();
 
 const selectedKeys = ref(['/dashboard']);
-
-const isDark = computed(() => useGlobalStore().isDark);
 
 watch(() => selectedKeys.value, value => router.push(value[0]));
 watch(() => route.path, path => {
@@ -147,7 +143,6 @@ watch(() => route.path, path => {
     }
 });
 
-const useAttachment = computed(() => isUtools && Constant.platform === PlatformTypeEnum.UTOOLS);
 
 </script>
 <style scoped>

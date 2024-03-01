@@ -61,11 +61,14 @@ const config: CherryConfig = {
             urlProcessor: (url, srcType) => {
                 if (srcType === 'image') {
                     if (url.startsWith("attachment:")) {
-                        const id = url.replace("attachment:", "");
-                        if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
-                            return useLoadImageBySync(id)
-                        } else {
-                            return useLoadImageBySync(LocalNameEnum.ARTICLE_ATTACHMENT + id)
+
+                        if (isUtools) {
+                            const id = url.replace("attachment:", "");
+                            if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
+                                return useLoadImageBySync(id)
+                            } else {
+                                return useLoadImageBySync(LocalNameEnum.ARTICLE_ATTACHMENT + id)
+                            }
                         }
                     }
                 }
