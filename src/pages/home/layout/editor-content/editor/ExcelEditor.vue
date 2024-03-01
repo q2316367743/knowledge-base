@@ -9,17 +9,18 @@ import "@univerjs/sheets-ui/lib/index.css";
 import "@univerjs/sheets-formula/lib/index.css";
 
 import {IWorkbookData, Univer} from "@univerjs/core";
-import { defaultTheme } from "@univerjs/design";
-import { UniverDocsPlugin } from "@univerjs/docs";
-import { UniverDocsUIPlugin } from "@univerjs/docs-ui";
-import { UniverFormulaEnginePlugin } from "@univerjs/engine-formula";
-import { UniverRenderEnginePlugin } from "@univerjs/engine-render";
-import { UniverSheetsPlugin } from "@univerjs/sheets";
-import { UniverSheetsFormulaPlugin } from "@univerjs/sheets-formula";
-import { UniverSheetsUIPlugin } from "@univerjs/sheets-ui";
-import { UniverUIPlugin } from "@univerjs/ui";
-import {onMounted, PropType} from "vue";
-import {content, getContent} from "@/store/components/HomeEditorStore";
+import {defaultTheme} from "@univerjs/design";
+import {UniverDocsPlugin} from "@univerjs/docs";
+import {UniverDocsUIPlugin} from "@univerjs/docs-ui";
+import {UniverFormulaEnginePlugin} from "@univerjs/engine-formula";
+import {UniverRenderEnginePlugin} from "@univerjs/engine-render";
+import {UniverSheetsPlugin} from "@univerjs/sheets";
+import {UniverSheetsFormulaPlugin} from "@univerjs/sheets-formula";
+import {UniverSheetsUIPlugin} from "@univerjs/sheets-ui";
+import {UniverUIPlugin} from "@univerjs/ui";
+import {onMounted, onUnmounted, PropType} from "vue";
+import { useSaveContentEvent} from "@/store/components/HomeEditorStore";
+import type {Workbook} from "@univerjs/core/lib/types/sheets/workbook";
 
 const props = defineProps({
     modelValue: {
@@ -31,11 +32,14 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue']);
 
-onMounted(() => {
 
-    const univer = new Univer({
-        theme: defaultTheme,
-    });
+const univer = new Univer({
+    theme: defaultTheme,
+});
+
+let workbook: Workbook;
+
+onMounted(() => {
 
     // core plugins
     univer.registerPlugin(UniverRenderEnginePlugin);
@@ -59,12 +63,20 @@ onMounted(() => {
     univer.registerPlugin(UniverSheetsFormulaPlugin);
 
 
-    const workbook = univer.createUniverSheet(props.modelValue);
-
-
-    getContent.value = () => workbook.save();
+    workbook = univer.createUniverSheet(props.modelValue);
 
 });
+
+onUnmounted(() => useSaveContentEvent.off(onSave));
+
+useSaveContentEvent.on(onSave);
+
+function onSave() {
+    if (workbook) {
+        emits("update:modelValue", workbook.save());
+    }
+}
+
 
 </script>
 <style>

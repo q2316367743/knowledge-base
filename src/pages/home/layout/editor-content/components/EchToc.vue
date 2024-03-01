@@ -21,8 +21,7 @@
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
-import {toDateString} from "xe-utils";
-import {articleIndex, getLineLength, getTextCount, getToc} from "@/store/components/HomeEditorStore";
+import {getLineLength, getTextCount, getToc} from "@/store/components/HomeEditorStore";
 
 const emits = defineEmits(['hide']);
 
@@ -34,8 +33,8 @@ function toToc(id: string) {
     emits('hide');
 }
 
-const createTime = computed(() => articleIndex.value ? toDateString(articleIndex.value.createTime) : '');
-const updateTime = computed(() => articleIndex.value ? toDateString(articleIndex.value.updateTime) : '');
+const createTime = computed(() => '');
+const updateTime = computed(() => '');
 
 const length = getTextCount.value();
 const lines = getLineLength.value();

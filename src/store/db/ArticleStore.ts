@@ -43,14 +43,15 @@ export const useArticleStore = defineStore('article', {
         }
     },
     actions: {
-        async init(force: boolean = false) {
+        async init(force: boolean = false): Promise<Array<ArticleIndex>> {
             if (isInit && !force) {
-                return;
+                return this.value;
             }
-            isInit = true;
             const res = await listByAsync<ArticleIndex>(LocalNameEnum.ARTICLE);
             this.value = res.list;
-            this.rev = res.rev
+            this.rev = res.rev;
+            isInit = true;
+            return this.value;
         },
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value, this.rev);
@@ -178,7 +179,7 @@ export const useArticleStore = defineStore('article', {
             rev: undefined | string
         ): Promise<string | undefined> {
             await this.updateIndex(id, article);
-            return saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + useHomeEditorStore().id, base, rev);
+            return saveOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + id, base, rev);
         },
         async removeRealById(id: number) {
             const index = this.value.findIndex(e => e.id === id);
@@ -194,9 +195,7 @@ export const useArticleStore = defineStore('article', {
             await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
             // TODO: 删除附件
             // 如果当前就是这个文章，则清除
-            if (id === useHomeEditorStore().id) {
-                useHomeEditorStore().setId(0);
-            }
+            useHomeEditorStore().closeArticle(id);
         },
         async drop(id: number, pid: number) {
             const index = this.value.findIndex(e => e.id === id);
@@ -215,10 +214,7 @@ export const useArticleStore = defineStore('article', {
             await this.updateIndex(id, {
                 isDelete: true
             });
-            // 如果当前就是这个文章，则清除
-            if (id === useHomeEditorStore().id) {
-                useHomeEditorStore().setId(0);
-            }
+            useHomeEditorStore().closeArticle(id);
             return Promise.resolve();
         },
         async removeBatchByIds(ids: Array<number>) {
@@ -227,9 +223,7 @@ export const useArticleStore = defineStore('article', {
                 isDelete: true
             })));
             // 如果当前就是这个文章，则清除
-            if (contains(ids, useHomeEditorStore().id)) {
-                useHomeEditorStore().setId(0);
-            }
+            useHomeEditorStore().closeArticle(...ids);
             return Promise.resolve();
         }
     }

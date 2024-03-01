@@ -23,5 +23,5 @@ export async function htmlToArticle(content: string) {
         description: article.description || '',
         sourceUrl: article.sourceUrl || ''
     }), article.content);
-    useHomeEditorStore().setId(id);
+    useHomeEditorStore().openArticle(id);
 }

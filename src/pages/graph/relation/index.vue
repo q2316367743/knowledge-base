@@ -77,7 +77,7 @@ onMounted(() => {
 
 function onNodeClick(nodeObject: any): boolean {
     if (nodeObject.color === ARTICLE) {
-        useHomeEditorStore().setId(parseInt(nodeObject.id));
+        useHomeEditorStore().openArticle(parseInt(nodeObject.id));
         router.push('/home');
     } else if (nodeObject.color === TAG) {
         router.push({

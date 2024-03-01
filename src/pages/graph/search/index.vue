@@ -117,7 +117,7 @@ function stop() {
 }
 
 function toArticle(id: number) {
-    useHomeEditorStore().setId(id);
+    useHomeEditorStore().openArticle(id);
     router.push('/home')
 
 }

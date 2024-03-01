@@ -27,7 +27,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
     }), getDefaultArticleBase(), type === ArticleTypeEnum.EXCEL ? {} : "")
         .then(id => {
             MessageUtil.success("新增成功");
-            useHomeEditorStore().setId(id);
+            useHomeEditorStore().openArticle(id);
             // 树选择
         })
         .catch(e => MessageUtil.error("新增失败", e))
