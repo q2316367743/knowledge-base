@@ -17,7 +17,7 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import WangEditor from "@/pages/home/layout/editor-content/editor/wang-editor.vue";
 import MonacoEditor from "@/pages/home/layout/editor-content/editor/monaco-editor/index.vue";
 import MarkdownEditor from "@/pages/home/layout/editor-content/editor/markdown-editor/index.vue";
-import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor.vue";
+import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";
@@ -26,7 +26,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useHomeEditorStore, useSaveContentEvent} from "@/store/components/HomeEditorStore";
+import {useHomeEditorStore, useSaveContentEvent, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -110,11 +110,16 @@ onMounted(() => {
     }
     initArticle(props.articleIndex.id);
 
+    useSaveContentEvent.off(onSave);
+    useUpdatePreviewEvent.off(onPreview);
     useSaveContentEvent.on(onSave);
+    useUpdatePreviewEvent.on(onPreview);
 });
 
-onUnmounted(() => useSaveContentEvent.off(onSave));
-
+onUnmounted(() => {
+    useSaveContentEvent.off(onSave);
+    useUpdatePreviewEvent.off(onPreview);
+});
 
 function onSave() {
     if (props.articleIndex) {
@@ -122,6 +127,14 @@ function onSave() {
             if (useHomeEditorStore().id === props.articleIndex.id) {
                 saveContent(content.value);
             }
+        }
+    }
+}
+
+function onPreview(data: { id: number, preview: boolean }) {
+    if (props.articleIndex) {
+        if (props.articleIndex.id === data.id) {
+            props.articleIndex.preview = data.preview;
         }
     }
 }

@@ -204,7 +204,7 @@ onMounted(() => {
     handleTheme()
 });
 
-watch(() => props.preview, value => handleToolbar(value));
+watch(() => props.preview, handleToolbar);
 watch(() => size.width.value, value => {
     if (instance.value) {
         if (useBaseSettingStore().mdEditorAutoMode && !props.preview) {

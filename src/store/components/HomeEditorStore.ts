@@ -11,14 +11,12 @@ import {useEventBus} from "@vueuse/core";
 
 // 当前是否预览
 export const preview = computed(() => {
-
     if (useHomeEditorStore().id) {
         const articleIndex = useArticleStore().articleMap.get(useHomeEditorStore().id);
         if (articleIndex) {
             return articleIndex.preview;
         }
     }
-
     return false;
 });
 // 当前编辑器类型
@@ -29,26 +27,23 @@ export const editorType = computed(() => {
             return articleIndex.type;
         }
     }
-
     return null;
 });
 
 // 一些事件
 export const useSaveContentEvent = useEventBus('save-content');
+export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
 
 
 // 一些特殊的方法
 export const getTextCount = ref<() => number>(() => 0);
 export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
-export const getContent = ref<() => any>(() => 0);
 
-export async function saveContent(content: any) {
-
-}
 
 export function switchPreview() {
-    useArticleStore().updateIndex(useHomeEditorStore().id, {preview: preview.value})
+    useUpdatePreviewEvent.emit({id: useHomeEditorStore().id, preview: !preview.value});
+    useArticleStore().updateIndex(useHomeEditorStore().id, {preview: !preview.value})
         .then(() => console.debug("自动更新文章预览状态"))
         .catch(e => MessageUtil.error("自动更新文章预览状态失败", e));
 }

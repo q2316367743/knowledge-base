@@ -22,6 +22,8 @@ import {onMounted, onUnmounted, PropType} from "vue";
 import { useSaveContentEvent} from "@/store/components/HomeEditorStore";
 import type {Workbook} from "@univerjs/core/lib/types/sheets/workbook";
 
+ import  './darkTheme.less';
+
 const props = defineProps({
     modelValue: {
         type: Object as PropType<IWorkbookData>,
@@ -67,7 +69,10 @@ onMounted(() => {
 
 });
 
-onUnmounted(() => useSaveContentEvent.off(onSave));
+onUnmounted(() => {
+    useSaveContentEvent.off(onSave);
+    univer.dispose();
+});
 
 useSaveContentEvent.on(onSave);
 

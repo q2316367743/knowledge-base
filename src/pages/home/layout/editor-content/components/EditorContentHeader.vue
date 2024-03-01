@@ -23,7 +23,7 @@
                                 </template>
                             </a-button>
                             <template #content>
-                                <a-doption @click="switchPreview()">
+                                <a-doption @click="switchPreview()" :disabled="editorType === ArticleTypeEnum.EXCEL">
                                     <template #icon>
                                         <icon-edit v-if="preview"/>
                                         <icon-lock v-else/>
@@ -67,11 +67,13 @@
 import {computed, ref, watch} from "vue";
 import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
 import {
-    editorType, getContent, preview,
-    saveContent, switchPreview, useHomeEditorStore, useSaveContentEvent
+    editorType,
+    preview,
+    switchPreview,
+    useHomeEditorStore,
+    useSaveContentEvent
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import MessageUtil from "@/utils/MessageUtil";
 
 const activeKey = ref(useHomeEditorStore().id);
 
@@ -92,10 +94,8 @@ function exportFile(type: string) {
 }
 
 function onSave() {
+    // 触发保存
     useSaveContentEvent.emit();
-    saveContent(getContent.value())
-        .then(() => MessageUtil.success("保存成功"))
-        .catch(e => MessageUtil.error("保存失败", e));
 }
 
 </script>
