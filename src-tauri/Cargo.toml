@@ -1,6 +1,6 @@
 [package]
 name = "knowledge-base"
-version = "1.5.4"
+version = "1.6.0"
 description = "构建自己的知识库，笔记、动态、待办三合一，支持markdown笔记、富文本笔记和代码笔记，支持多种格式导入，支持zip导出，更多功能等你发现。"
 authors = ["落雨不悔"]
 license = "Apache-2.0"

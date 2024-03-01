@@ -2,6 +2,19 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.6.0',
+        sign: 160,
+        time: '2024-02-29',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【笔记】新增表格笔记'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【笔记】新增标签栏，可以同时编辑多个笔记"
+        }],
+        url: 'https://blog.esion.xyz/index.php/2024/03/01/知识库-1-6-0更新/'
+    },
+    {
         version: '1.5.4',
         sign: 154,
         time: '2024-02-28',

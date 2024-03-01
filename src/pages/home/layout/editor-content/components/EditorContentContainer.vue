@@ -51,7 +51,7 @@ const editorType = computed(() => {
     if (!props.articleIndex) {
         return null;
     }
-    return props.articleIndex.type;
+    return props.articleIndex.type || ArticleTypeEnum.MARKDOWN;
 });
 
 

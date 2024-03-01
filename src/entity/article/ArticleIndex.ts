@@ -36,6 +36,8 @@ export interface ArticleIndex {
 
     /**
      * 文章类型
+     *
+     * @default ArticleTypeEnum.MARKDOWN
      */
     type: ArticleTypeEnum;
 

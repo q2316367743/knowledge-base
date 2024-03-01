@@ -8,6 +8,7 @@ import {ArticleIndex} from "@/entity/article";
 import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
 import {map} from "@/utils/ArrayUtil";
 import {useEventBus} from "@vueuse/core";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
 // 当前是否预览
 export const preview = computed(() => {
@@ -24,7 +25,7 @@ export const editorType = computed(() => {
     if (useHomeEditorStore().id) {
         const articleIndex = useArticleStore().articleMap.get(useHomeEditorStore().id);
         if (articleIndex) {
-            return articleIndex.type;
+            return articleIndex.type || ArticleTypeEnum.MARKDOWN;
         }
     }
     return null;

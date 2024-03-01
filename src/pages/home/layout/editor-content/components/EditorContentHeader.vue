@@ -36,7 +36,7 @@
                                     </template>
                                     设置
                                 </a-doption>
-                                <a-dsubmenu>
+                                <a-dsubmenu disabled>
                                     <template #icon>
                                         <icon-export/>
                                     </template>

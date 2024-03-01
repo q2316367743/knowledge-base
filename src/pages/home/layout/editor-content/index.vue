@@ -4,6 +4,9 @@
         <div class="ec-container">
             <editor-content-container v-for="article in indexes" :key="article.id" :article-index="article"
                                       v-show="article.id === id"/>
+            <a-result title="请在左侧选择文章" subtitle="点击加号创建文章" status="404" v-if="indexes.length === 0"
+                      style="margin-top: 20vh">
+            </a-result>
         </div>
     </div>
 </template>
