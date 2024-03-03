@@ -68,6 +68,11 @@ enum LocalNameEnum {
     KEY_HOME_WIDTH = '/key/home/width',
 
     /**
+     * 首页排序
+     */
+    KEY_HOME_SORT = '/key/home/sort',
+
+    /**
      * 上一次的文章ID
      */
     KEY_HOME_EDITOR_ID = '/key/home/editor/id',

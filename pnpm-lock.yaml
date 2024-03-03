@@ -92,9 +92,6 @@ dependencies:
   relation-graph:
     specifier: ^2.1.31
     version: 2.1.31
-  tippy.js:
-    specifier: ^6.3.7
-    version: 6.3.7
   turndown:
     specifier: ^7.1.2
     version: 7.1.2
@@ -107,9 +104,6 @@ dependencies:
   vue-router:
     specifier: ^4.3.0
     version: 4.3.0(vue@3.4.21)
-  vue3-calendar-heatmap:
-    specifier: ^2.0.5
-    version: 2.0.5(tippy.js@6.3.7)(vue@3.4.21)
   webdav:
     specifier: ^5.4.0
     version: 5.4.0
@@ -711,10 +705,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  /@popperjs/core@2.11.8:
-    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
-    dev: false
 
   /@rc-component/color-picker@1.5.2(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-YJXujYzYFAEtlXJXy0yJUhwzUWPTcniBZto+wZ/vnACmFnUTNR7dH+NOeqSwMMsssh74e9H5Jfpr5LAH2PYqUw==}
@@ -4010,12 +4000,6 @@ packages:
     resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
     dev: false
 
-  /tippy.js@6.3.7:
-    resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
-    dependencies:
-      '@popperjs/core': 2.11.8
-    dev: false
-
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
@@ -4229,17 +4213,6 @@ packages:
       semver: 7.6.0
       typescript: 4.9.5
     dev: true
-
-  /vue3-calendar-heatmap@2.0.5(tippy.js@6.3.7)(vue@3.4.21):
-    resolution: {integrity: sha512-qvveNQlTS5Aw7AvRLs0zOyu3uP5iGJlXJAnkrkG2ElDdyQ8H1TJhQ8rL702CROjAg16ezIveUY10nCO7lqZ25w==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      tippy.js: ^6.3.7
-      vue: ^3.2.29
-    dependencies:
-      tippy.js: 6.3.7
-      vue: 3.4.21(typescript@4.9.5)
-    dev: false
 
   /vue@3.4.21(typescript@4.9.5):
     resolution: {integrity: sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==}

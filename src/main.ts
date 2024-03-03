@@ -12,7 +12,6 @@ import '@/less/customer.less';
 import '@/less/index.less';
 import "@/less/post.css"
 import "@/less/typo.less"
-import 'vue3-calendar-heatmap/dist/style.css';
 import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 

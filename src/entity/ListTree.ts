@@ -4,6 +4,7 @@ import {IconBook, IconCode, IconFile, IconFolder, IconNav} from "@arco-design/we
 import {ArticleIndex} from "@/entity/article";
 import {pathJoin} from "@/utils/FileUtil";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 
 /**
  * 基础列表树
@@ -58,7 +59,8 @@ function _listToTree(tree: TreeNodeData, pid: number, categories: Array<ListTree
  * @param map 映射函数
  */
 export function treeEach(
-    list: Array<TreeNodeData>, treeData: Array<TreeNodeData>,
+    list: Array<TreeNodeData>,
+    treeData: Array<TreeNodeData>,
     articleListMap: Map<number | null, Array<ArticleIndex>>,
     map?: (data: TreeNodeData) => TreeNodeData
 ) {
@@ -170,4 +172,24 @@ function _listToMap(
         // 此目录下的目录
         _listToMap(list, map, articleListMap, pathJoin(path, item.name), item.id);
     }
+}
+
+/**
+ * 树排序
+ *
+ * @param treeNodes 树节点
+ * @param sortType 排序类型
+ */
+export function treeSort(treeNodes: Array<TreeNodeData>, sortType: ArticleSortEnum) {
+    treeNodes.sort((a, b) => {
+        if (sortType === ArticleSortEnum.CREATE_TiME_DESC) {
+            return (b.key as number) - (a.key as number);
+        } else if (sortType === ArticleSortEnum.NAME_ASC) {
+            return (a.title as string).localeCompare(b.title as string);
+        }else if (sortType === ArticleSortEnum.NAME_DESC) {
+            return (b.title as string).localeCompare(a.title as string);
+        } else {
+            return (a.key as number) - (b.key as number);
+        }
+    })
 }

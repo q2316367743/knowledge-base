@@ -30,10 +30,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/graph/category",
     component: () => import("@/pages/graph/category/index.vue")
 }, {
-    name: "图-时间线",
-    path: "/graph/timeline",
-    component: () => import("@/pages/graph/timeline/index.vue")
-}, {
     name: "设置-基础",
     path: "/setting/base",
     component: () => import("@/pages/setting/base/index.vue")

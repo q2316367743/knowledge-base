@@ -34,7 +34,8 @@
                         富文本
                         <template #content>
                             <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                                <a-doption @click="importArticleByDocx(0, ArticleTypeEnum.RICH_TEXT)">docx文件</a-doption>
+                                <a-doption @click="importArticleByDocx(0, ArticleTypeEnum.RICH_TEXT)">docx文件
+                                </a-doption>
                             </a-tooltip>
                             <a-doption @click="importTextToArticle(0, ArticleTypeEnum.RICH_TEXT)">html文件</a-doption>
                         </template>
@@ -43,10 +44,12 @@
                         Markdown
                         <template #content>
                             <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                                <a-doption @click="importArticleByDocx(0, ArticleTypeEnum.MARKDOWN)">docx文件</a-doption>
+                                <a-doption @click="importArticleByDocx(0, ArticleTypeEnum.MARKDOWN)">docx文件
+                                </a-doption>
                             </a-tooltip>
                             <a-doption @click="importHtmlToMarkdown(0)">html文件</a-doption>
-                            <a-doption @click="importTextToArticle(0, ArticleTypeEnum.MARKDOWN)">markdown文件</a-doption>
+                            <a-doption @click="importTextToArticle(0, ArticleTypeEnum.MARKDOWN)">markdown文件
+                            </a-doption>
                         </template>
                     </a-dsubmenu>
                     <a-doption @click="importTextToArticle(0, ArticleTypeEnum.CODE)">代码文件</a-doption>
@@ -66,6 +69,18 @@
                     </a-tooltip>
                 </template>
             </a-dsubmenu>
+            <a-dsubmenu>
+                <template #icon>
+                    <icon-sort/>
+                </template>
+                排序
+                <template #content>
+                    <a-doption v-for="item in items" :style="renderSort(item.key)" :key="item.key"
+                               @click="setSort(item.key)">
+                        {{ item.name }}
+                    </a-doption>
+                </template>
+            </a-dsubmenu>
         </template>
     </a-dropdown>
 </template>
@@ -74,10 +89,44 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {
     addArticle,
     addFolder,
-    exportToMd, importArticleByDocx, importArticleByZip,
+    exportToMd,
+    importArticleByDocx,
+    importArticleByZip,
     importHtmlToMarkdown,
     importTextToArticle
 } from "@/pages/home/components/he-context";
+import {computed} from "vue";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
+
+const items = [{
+    key: ArticleSortEnum.CREATE_TIME_ASC,
+    name: '创建时间正序'
+}, {
+    key: ArticleSortEnum.CREATE_TiME_DESC,
+    name: '创建时间倒序'
+}, {
+    key: ArticleSortEnum.NAME_ASC,
+    name: '名字正序'
+}, {
+    key: ArticleSortEnum.NAME_DESC,
+    name: '名字倒序'
+}]
+
+const articleSort = computed(() => useHomeEditorStore().articleSort);
+const setSort = useHomeEditorStore().setSort;
+
+function renderSort(sort: ArticleSortEnum) {
+    if (articleSort.value === sort) {
+        return {
+            color: 'green'
+        }
+    } else {
+        return {
+            color: 'var(--color-text-1)'
+        }
+    }
+}
 </script>
 <style scoped>
 

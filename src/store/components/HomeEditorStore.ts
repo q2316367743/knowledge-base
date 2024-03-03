@@ -9,6 +9,7 @@ import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor
 import {map} from "@/utils/ArrayUtil";
 import {useEventBus} from "@vueuse/core";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 
 // 当前是否预览
 export const preview = computed(() => {
@@ -54,6 +55,7 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
     // 打开的文章
     const indexes = ref(new Array<ArticleIndex>());
+    const articleSort = ref(ArticleSortEnum.CREATE_TIME_ASC)
 
     const id = ref(0);
     const collapsed = ref(false);
@@ -71,6 +73,7 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         id.value = getItemByDefault(LocalNameEnum.KEY_HOME_EDITOR_ID, 0);
         widthWrap.value = getItemByDefault(LocalNameEnum.KEY_HOME_WIDTH, '264px');
         collapsed.value = widthWrap.value === '0px';
+        articleSort.value = getItemByDefault(LocalNameEnum.KEY_HOME_SORT, ArticleSortEnum.CREATE_TIME_ASC);
 
         useArticleStore().init().then(items => {
             const tempMap = map(items.filter(e => !e.isDelete), 'id');
@@ -94,6 +97,11 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         }
         widthWrap.value = width;
         setItem<string>(LocalNameEnum.KEY_HOME_WIDTH, widthWrap.value);
+    }
+
+    function setSort(res: ArticleSortEnum) {
+        articleSort.value = res;
+        setItem(LocalNameEnum.KEY_HOME_SORT, articleSort.value);
     }
 
     function updateTitle(id: number, title: string) {
@@ -158,10 +166,13 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         collapsed,
         width,
         widthWrap,
+        articleSort,
+
         init,
         switchCollapsed,
         setId,
         setWidth,
+        setSort,
         updateTitle,
 
         indexes,

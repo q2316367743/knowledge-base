@@ -1,6 +1,9 @@
 import MessageUtil from '@/utils/MessageUtil';
 import {generateUUID} from "@/utils/BrowserUtil";
-import {del, get, getMany, keys, set} from 'idb-keyval';
+import {createStore, del, get, getMany, keys, set} from 'idb-keyval';
+import Constant from "@/global/Constant";
+
+const store = createStore(Constant.id, "store");
 
 // 模拟utools声明
 
@@ -69,7 +72,7 @@ export const utools = {
              */
             async put(doc: DbDoc): Promise<DbReturn> {
                 try {
-                    await set(doc._id, doc)
+                    await set(doc._id, doc, store)
                     return Promise.resolve({
                         id: doc._id,
                         rev: ''
@@ -87,14 +90,14 @@ export const utools = {
              * 获取文档
              */
             get(id: string): Promise<DbDoc | undefined> {
-                return get(id)
+                return get(id, store)
             },
             /**
              * 删除文档
              */
             async remove(id: string): Promise<DbReturn> {
                 try {
-                    await del(id);
+                    await del(id, store);
                     return Promise.resolve({
                         id,
                         rev: ''
@@ -113,7 +116,7 @@ export const utools = {
              * 获取所有文档 可根据文档id前缀查找
              */
             async allDocs(key?: string): Promise<DbDoc[]> {
-                let itemKeys = await keys();
+                let itemKeys = await keys(store);
                 if (key) {
                     itemKeys = itemKeys.filter(itemKey => {
                         if (typeof itemKey === 'string') {
@@ -171,8 +174,13 @@ export const utools = {
             if (!value) {
                 return null;
             }
-            const valueWrap = JSON.parse(value);
-            return valueWrap['value'];
+            try {
+                const valueWrap = JSON.parse(value);
+                return valueWrap['value'];
+            } catch (e) {
+                console.error(e);
+                return null;
+            }
         },
         /**
          * 删除键值对(删除文档)
@@ -248,7 +256,16 @@ export const utools = {
         }
         return nativeId;
     },
-    onMainPush(callback: (action: {code: string, type: string, payload: any }) => { icon?: string, text: string, title?: string }[], selectCallback: (action: {code: string, type: string, payload: any,  option: { icon?: string, text: string, title?: string }}) => void): void{
+    onMainPush(callback: (action: { code: string, type: string, payload: any }) => {
+        icon?: string,
+        text: string,
+        title?: string
+    }[], selectCallback: (action: {
+        code: string,
+        type: string,
+        payload: any,
+        option: { icon?: string, text: string, title?: string }
+    }) => void): void {
         console.warn("web环境不支持主程序推送事件");
     },
     removeSubInput() {
@@ -258,7 +275,7 @@ export const utools = {
         console.warn("web环境不支持feature功能");
         return [];
     },
-    copyText(content: string){
+    copyText(content: string) {
         navigator.clipboard.writeText(content)
             .then(() => console.debug("写入剪切板"))
             .catch(e => {

@@ -1,6 +1,11 @@
 enum ImageStrategyEnum {
 
     /**
+     * 没
+     */
+    NONE = 0,
+
+    /**
      * 内置
      */
     INNER = 1,

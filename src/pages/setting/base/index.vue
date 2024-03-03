@@ -24,9 +24,8 @@
             </a-form-item>
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="isWeb">
-                        内部实现
-                    </a-radio>
+                    <a-radio :value="ImageStrategyEnum.NONE">未设置</a-radio>
+                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="isWeb">内部实现</a-radio>
                     <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="isWeb">插件【图床】</a-radio>
                     <a-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="!isAvailable">兰空图床(推荐)</a-radio>
                 </a-radio-group>

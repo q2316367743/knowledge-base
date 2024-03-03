@@ -39,12 +39,10 @@
         "pangu": "^4.0.7",
         "pinia": "^2.1.7",
         "relation-graph": "^2.1.31",
-        "tippy.js": "^6.3.7",
         "turndown": "^7.1.2",
         "vconsole": "^3.15.1",
         "vue": "^3.4.21",
         "vue-router": "^4.3.0",
-        "vue3-calendar-heatmap": "^2.0.5",
         "webdav": "^5.4.0",
         "xe-utils": "^3.5.20"
     },

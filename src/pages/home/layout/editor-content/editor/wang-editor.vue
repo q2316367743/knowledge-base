@@ -1,7 +1,7 @@
 <template>
     <main class="edit-wang-editor kb-wang-editor" ref="wangEditorEl">
-        <div id="editor-toolbar" v-show="!props.readOnly" ref="wangEditorToolbar"></div>
-        <div id="editor—wrapper" :style="editorWrapperStyle">
+        <div :id="toolbarId" v-show="!props.readOnly" ref="wangEditorToolbar"></div>
+        <div :id="editorId" :style="editorWrapperStyle">
         </div>
     </main>
 </template>
@@ -26,6 +26,10 @@ defineExpose({getToc})
 const content = ref(`${props.modelValue}` || '');
 const wangEditorEl = ref<HTMLElement | null>(null);
 const wangEditorToolbar = ref<HTMLElement | null>(null);
+
+const now = new Date().getTime();
+const editorId = ref('editor—wrapper-' + now);
+const toolbarId = ref('editor-toolbar-' + now);
 
 const size = useElementSize(wangEditorToolbar);
 
@@ -106,14 +110,14 @@ const toolbarConfig: Partial<IToolbarConfig> = {
 
 function create() {
     const instance = createEditor({
-        selector: '#editor—wrapper',
+        selector: '#' + editorId.value,
         html: content.value,
         config: editorConfig,
         mode: 'default', // or 'simple'
     });
     const toolbar = createToolbar({
         editor: instance,
-        selector: '#editor-toolbar',
+        selector: '#' + toolbarId.value,
         config: toolbarConfig,
         mode: 'simple', // 'default' or 'simple'
     });

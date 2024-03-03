@@ -7,7 +7,7 @@ import {
     getDefaultArticleIndex
 } from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {contains, group, map} from "@/utils/ArrayUtil";
+import {group, map} from "@/utils/ArrayUtil";
 import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
@@ -136,30 +136,6 @@ export const useArticleStore = defineStore('article', {
 
             await this._sync();
         },
-        async update(
-            id: number,
-            article: Partial<ArticleIndex>,
-            base: ArticleBase,
-            content: string
-        ) {
-            await this.updateIndex(id, article);
-            // 删除旧的基础信息
-            await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
-            // 新增基础信息
-            await saveOneByAsync(
-                LocalNameEnum.ARTICLE_BASE + id,
-                toRaw(base)
-            )
-            // 删除旧的内容
-            await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
-            // 新增内容
-            await saveOneByAsync(
-                LocalNameEnum.ARTICLE_CONTENT + id,
-                {
-                    content
-                } as ArticleSource
-            );
-        },
         async updateContent(
             id: number,
             content: string,
@@ -193,7 +169,6 @@ export const useArticleStore = defineStore('article', {
             await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
             // 删除评论
             await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
-            // TODO: 删除附件
             // 如果当前就是这个文章，则清除
             useHomeEditorStore().closeArticle(id);
         },

@@ -139,7 +139,7 @@
 <script lang="ts" setup>
 import {computed, h, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
-import {searchData, treeEach} from "@/entity/ListTree";
+import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useWindowSize} from "@vueuse/core";
@@ -196,7 +196,9 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                 },
             })).forEach(article => treeData.push(article));
         }
-    })
+    });
+    // 树排序
+    treeSort(treeData, useHomeEditorStore().articleSort);
     return treeData;
 });
 const virtualListProps = computed(() => ({

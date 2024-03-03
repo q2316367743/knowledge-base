@@ -18,6 +18,7 @@
                 <a-button @click="openUrl(Constant.homepage)">插件主页</a-button>
                 <a-button @click="openUrl(Constant.repo)">开源地址</a-button>
                 <a-button @click="openUrl(Constant.updateLog)">更新日志</a-button>
+                <a-button @click="openUrl(Constant.online)">在线地址</a-button>
                 <br />
                 <a-tooltip content="控制台">
                     <a-switch :default-checked="consoleShow" @change="changeConsole()" style="margin-top: 14px;">

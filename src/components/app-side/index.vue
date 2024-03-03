@@ -29,9 +29,6 @@
             <a-menu-item key="/graph/category">
                 分类图
             </a-menu-item>
-            <a-menu-item key="/graph/timeline">
-                时间线
-            </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="/setting">
             <template #icon>

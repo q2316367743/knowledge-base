@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="border: #efefef solid 1px; height: 100vh;width: 100%;">
+        <div style="height: 100vh;width: 100%;">
             <relation-graph ref="relationGraph$" :options="options" :on-node-click="onNodeClick"/>
         </div>
     </div>
@@ -14,6 +14,7 @@ import {useCategoryStore} from "@/store/db/CategoryStore";
 import {useRouter} from "vue-router";
 import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 const router = useRouter();
 
@@ -26,6 +27,7 @@ const options = {
     allowSwitchJunctionPoint: true,
     defaultJunctionPoint: 'border',
     showDebugPanel: false,
+    backgroundColor: useGlobalStore().isDark ? '#2E2E30' : '#ffffff',
 } as RGOptions;
 
 const TAG = '#ff7d00';
