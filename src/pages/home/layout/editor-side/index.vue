@@ -31,6 +31,7 @@
                                 </a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.EXCEL)">表格</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
                             </template>
                         </a-dsubmenu>
 
@@ -150,7 +151,7 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import {IconBook, IconCode, IconFile, IconNav} from "@arco-design/web-vue/es/icon";
+import {IconBook, IconCode, IconFile, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
 import {
     addArticle,
     addFolder,
@@ -190,6 +191,8 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                         return h(IconBook, {})
                     } else if (article.type === ArticleTypeEnum.EXCEL) {
                         return h(IconNav, {})
+                    } else if (article.type === ArticleTypeEnum.MIND_MAP) {
+                        return h(IconMindMapping, {})
                     } else {
                         return h(IconFile, {})
                     }

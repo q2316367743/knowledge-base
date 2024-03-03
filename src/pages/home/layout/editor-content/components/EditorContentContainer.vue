@@ -9,15 +9,19 @@
                        v-else-if="editorType === ArticleTypeEnum.CODE && load"/>
         <excel-editor v-model="content" :read-only="preview"
                       v-else-if="editorType === ArticleTypeEnum.EXCEL && load"/>
+        <mind-map-editor v-model="content" :read-only="preview"
+                         v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, onUnmounted, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+// 编辑器
 import WangEditor from "@/pages/home/layout/editor-content/editor/wang-editor.vue";
 import MonacoEditor from "@/pages/home/layout/editor-content/editor/monaco-editor/index.vue";
 import MarkdownEditor from "@/pages/home/layout/editor-content/editor/markdown-editor/index.vue";
 import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
+import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";

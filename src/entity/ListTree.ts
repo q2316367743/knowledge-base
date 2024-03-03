@@ -1,6 +1,6 @@
 import {TreeNodeData} from "@arco-design/web-vue";
 import {h} from "vue";
-import {IconBook, IconCode, IconFile, IconFolder, IconNav} from "@arco-design/web-vue/es/icon";
+import {IconBook, IconCode, IconFile, IconFolder, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
 import {pathJoin} from "@/utils/FileUtil";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
@@ -94,6 +94,8 @@ export function treeEach(
                         return h(IconBook, {})
                     } else if (article.type === ArticleTypeEnum.EXCEL) {
                         return h(IconNav, {})
+                    } else if (article.type === ArticleTypeEnum.MIND_MAP) {
+                        return h(IconMindMapping, {})
                     } else {
                         return h(IconFile, {})
                     }
@@ -186,7 +188,7 @@ export function treeSort(treeNodes: Array<TreeNodeData>, sortType: ArticleSortEn
             return (b.key as number) - (a.key as number);
         } else if (sortType === ArticleSortEnum.NAME_ASC) {
             return (a.title as string).localeCompare(b.title as string);
-        }else if (sortType === ArticleSortEnum.NAME_DESC) {
+        } else if (sortType === ArticleSortEnum.NAME_DESC) {
             return (b.title as string).localeCompare(a.title as string);
         } else {
             return (a.key as number) - (b.key as number);

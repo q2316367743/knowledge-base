@@ -21,7 +21,14 @@ enum ArticleTypeEnum {
     EXCEL = 5,
 
     /**
+     * 思维导图
+     */
+    MIND_MAP = 6,
+
+    /**
      * 旧的EditorJS编辑器
+     *
+     * @deprecated
      */
     EDITOR_JS = 2
 

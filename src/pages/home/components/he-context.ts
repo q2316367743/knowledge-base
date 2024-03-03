@@ -13,6 +13,47 @@ import {convert} from "@/global/BeanFactory";
 import {htmlToMarkdown} from "@/components/export-component/htmlToMarkdown";
 import {zipToArticle} from "@/components/export-component/zipToArticle";
 
+function buildDefaultContent(type: ArticleTypeEnum): any {
+    switch (type) {
+        case ArticleTypeEnum.MIND_MAP:
+            return {
+                "layout": "logicalStructure",
+                "root": {
+                    "data": {
+                        "text": "根节点",
+                        "expand": true,
+                        "isActive": false,
+                        "uid": "47fe79a5-2690-4343-8fbf-74c350d4b92f"
+                    }, "children": []
+                },
+                "theme": {"template": "dark", "config": {}},
+                "view": {
+                    "transform": {
+                        "scaleX": 1,
+                        "scaleY": 1,
+                        "shear": 0,
+                        "rotate": 0,
+                        "translateX": 0,
+                        "translateY": 0,
+                        "originX": 0,
+                        "originY": 0,
+                        "a": 1,
+                        "b": 0,
+                        "c": 0,
+                        "d": 1,
+                        "e": 0,
+                        "f": 0
+                    },
+                    "state": {"scale": 1, "x": 0, "y": 0, "sx": 0, "sy": 0}
+                }
+            }
+        case ArticleTypeEnum.EXCEL:
+            return {};
+        default:
+            return "";
+    }
+}
+
 /**
  * 新增一篇文章
  * @param pid 父ID
@@ -24,7 +65,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
         name: buildArticleName(type),
         folder: pid,
         type,
-    }), getDefaultArticleBase(), type === ArticleTypeEnum.EXCEL ? {} : "")
+    }), getDefaultArticleBase(), buildDefaultContent(type))
         .then(id => {
             MessageUtil.success("新增成功");
             useHomeEditorStore().openArticle(id);

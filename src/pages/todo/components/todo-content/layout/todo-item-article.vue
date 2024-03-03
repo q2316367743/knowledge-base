@@ -21,7 +21,7 @@ import {useFolderStore} from "@/store/db/FolderStore";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach} from "@/entity/ListTree";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import {IconBook, IconCode, IconFile, IconNav} from "@arco-design/web-vue/es/icon";
+import {IconBook, IconCode, IconFile, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
 
 const visible = ref(false);
 const keyword = ref('');
@@ -56,6 +56,8 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                         return h(IconBook, {})
                     } else if (article.type === ArticleTypeEnum.EXCEL) {
                         return h(IconNav, {})
+                    } else if (article.type === ArticleTypeEnum.MIND_MAP) {
+                        return h(IconMindMapping, {})
                     } else {
                         return h(IconFile, {})
                     }
