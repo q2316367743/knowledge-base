@@ -14,6 +14,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toDateString} from "xe-utils";
 import {turndownService} from "@/plugin/sdk/Turndown";
 
+// TODO: 此处需要导出
 export default class UtoolsConvertDriver implements ConvertDriver {
 
     async docxToMarkdown(folder: number, file: ArrayBuffer, title?: string): Promise<void> {
@@ -28,7 +29,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
             folder
         }), getDefaultArticleBase(), content);
         // 切换文章
-        useHomeEditorStore().setId(articleId);
+        useHomeEditorStore().openArticle(articleId);
         return Promise.resolve();
     }
 
@@ -41,7 +42,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
             folder
         }), getDefaultArticleBase(), resultObject.value);
         // 切换文章
-        useHomeEditorStore().setId(articleId);
+        useHomeEditorStore().openArticle(articleId);
         return Promise.resolve();
     }
 
@@ -54,7 +55,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
             folder
         }), getDefaultArticleBase(), content);
         // 切换文章
-        useHomeEditorStore().setId(articleId);
+        useHomeEditorStore().openArticle(articleId);
         return Promise.resolve();
     }
 
@@ -67,7 +68,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
             name, type, folder
         }), getDefaultArticleBase(), content);
         // 切换文章
-        useHomeEditorStore().setId(articleId);
+        useHomeEditorStore().openArticle(articleId);
         return Promise.resolve();
     }
 
@@ -91,7 +92,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
 
         }
         // 切换文章
-        useHomeEditorStore().setId(lastId);
+        useHomeEditorStore().openArticle(lastId);
         return Promise.resolve();
     }
 

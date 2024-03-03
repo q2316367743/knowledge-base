@@ -68,12 +68,8 @@ export function buildZTreeSetting(zTreeObj: Ref<ZTreeInstance | null>): ZTreeSet
                 const id = parseInt(treeNode.key);
                 if (clickFlag === 1) {
                     if (useArticleStore().articleMap.has(id)) {
-                        useHomeEditorStore().setId(id);
-                    } else {
-                        useHomeEditorStore().setId(0);
+                        useHomeEditorStore().openArticle(id);
                     }
-                }else if (clickFlag === 0) {
-                    useHomeEditorStore().setId(0);
                 }
             },
         }

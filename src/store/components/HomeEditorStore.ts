@@ -1,119 +1,60 @@
 import {defineStore} from "pinia";
-import {getFromOneByAsync, getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {computed, nextTick, ref, watch} from "vue";
+import {computed, nextTick, ref} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
-import {ArticleContent} from "@/entity/article/ArticleContent";
-import {parseFileExtra} from "@/utils/FileUtil";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
+import {map} from "@/utils/ArrayUtil";
+import {useEventBus} from "@vueuse/core";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
-// 文章索引
-export const articleIndex = ref<ArticleIndex | null>(null);
-// 文章是否可用
-export const articleAvailable = ref(false);
-// 文章标题
-export const title = ref('');
-// 文章内容，不一定是文本
-export const content = ref<any>('');
-let contentRev: string | undefined = undefined;
-// 计算属性
-export const preview = computed(() => articleIndex.value ? articleIndex.value.preview : false);
-export const language = computed(() => {
-    if (!articleIndex.value) {
-        return '';
+// 当前是否预览
+export const preview = computed(() => {
+    if (useHomeEditorStore().id) {
+        const articleIndex = useArticleStore().articleMap.get(useHomeEditorStore().id);
+        if (articleIndex) {
+            return articleIndex.preview;
+        }
     }
-    if (articleIndex.value.type !== ArticleTypeEnum.CODE) {
-        return '';
-    }
-    return parseFileExtra(title.value);
+    return false;
 });
+// 当前编辑器类型
 export const editorType = computed(() => {
-    if (!articleIndex.value) {
-        return null;
+    if (useHomeEditorStore().id) {
+        const articleIndex = useArticleStore().articleMap.get(useHomeEditorStore().id);
+        if (articleIndex) {
+            return articleIndex.type || ArticleTypeEnum.MARKDOWN;
+        }
     }
-    return articleIndex.value.type;
+    return null;
 });
-export const supportAutoSave = computed(() => articleIndex.value && articleIndex.value.type !== ArticleTypeEnum.EXCEL);
+
+// 一些事件
+export const useSaveContentEvent = useEventBus('save-content');
+export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
 
 
 // 一些特殊的方法
-export const getTextCount = ref<() => number>(() => content.value.length);
-export const getLineLength = ref<() => number>(() => content.value.split('\n').length);
+export const getTextCount = ref<() => number>(() => 0);
+export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
-export const getContent = ref<() => any>(() => content.value);
 
-export function saveTitle() {
-    useArticleStore().updateIndex(useHomeEditorStore().id, {name: title.value})
-        .then(() => console.debug("自动更新文章名称"))
-        .catch(e => MessageUtil.error("自动更新文章名称失败", e));
-}
 
 export function switchPreview() {
-    if (articleIndex.value) {
-        articleIndex.value.preview = !articleIndex.value.preview;
-    }
-    useArticleStore().updateIndex(useHomeEditorStore().id, {preview: preview.value})
+    useUpdatePreviewEvent.emit({id: useHomeEditorStore().id, preview: !preview.value});
+    useArticleStore().updateIndex(useHomeEditorStore().id, {preview: !preview.value})
         .then(() => console.debug("自动更新文章预览状态"))
         .catch(e => MessageUtil.error("自动更新文章预览状态失败", e));
 }
 
-export async function saveContent(value: any) {
-    try {
-        contentRev = await useArticleStore().updateContent(useHomeEditorStore().id, value, contentRev);
-    } catch (e) {
-        MessageUtil.error("自动保存文章失败", e);
-    }
-}
-
-watch(() => content.value, value => {
-    if (!articleAvailable.value) {
-        return;
-    }
-    if (!supportAutoSave.value) {
-        return;
-    }
-    saveContent(value).then(() => console.debug("自动保存文章成功"))
-        .catch(e => MessageUtil.error("自动保存文章失败", e));
-});
-
-
-async function initArticle(articleId: number) {
-
-    articleAvailable.value = false;
-    // 先清空内容
-    articleIndex.value = null;
-    title.value = '';
-    content.value = '';
-    getTextCount.value = () => content.value.length;
-    getLineLength.value = () => content.value.split('\n').length;
-    getContent.value = () => content.value;
-
-    if (articleId == 0) {
-        return;
-    }
-
-    await useArticleStore().init();
-
-    const articleIndexWrap = useArticleStore().articleMap.get(useHomeEditorStore().id);
-    if (!articleIndexWrap) {
-        MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
-        return;
-    }
-    articleIndex.value = articleIndexWrap;
-    title.value = articleIndexWrap.name;
-    // 内容
-    const contentWrap = await getFromOneByAsync<ArticleContent<any>>(LocalNameEnum.ARTICLE_CONTENT + useHomeEditorStore().id);
-    if (contentWrap.record) {
-        content.value = contentWrap.record.content;
-    }
-    contentRev = contentWrap.rev;
-    nextTick(() => articleAvailable.value = true).then(() => console.debug("文章加载完成"))
-}
 
 export const useHomeEditorStore = defineStore('home-editor', () => {
+
+    // 打开的文章
+    const indexes = ref(new Array<ArticleIndex>());
+
     const id = ref(0);
     const collapsed = ref(false);
     const widthWrap = ref('264px');
@@ -130,7 +71,12 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         id.value = getItemByDefault(LocalNameEnum.KEY_HOME_EDITOR_ID, 0);
         widthWrap.value = getItemByDefault(LocalNameEnum.KEY_HOME_WIDTH, '264px');
         collapsed.value = widthWrap.value === '0px';
-        initArticle(id.value).then(() => console.debug("初始化文章完成"));
+
+        useArticleStore().init().then(items => {
+            const tempMap = map(items.filter(e => !e.isDelete), 'id');
+            id.value > 0 && nextTick(() => openArticle(tempMap.get(id.value)))
+        });
+
     }
 
     function switchCollapsed(res?: boolean) {
@@ -140,7 +86,6 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
     function setId(res: number) {
         id.value = res;
         setItem<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, id.value);
-        initArticle(res).then(() => console.debug("设置文章完成"));
     }
 
     function setWidth(width: string) {
@@ -151,6 +96,63 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         setItem<string>(LocalNameEnum.KEY_HOME_WIDTH, widthWrap.value);
     }
 
+    function updateTitle(id: number, title: string) {
+        for (let valueElement of indexes.value) {
+            if (valueElement.id === id) {
+                valueElement.name = title;
+                return;
+            }
+        }
+    }
+
+    function openArticle(res: number | ArticleIndex | undefined) {
+        if (!res) {
+            return;
+        }
+        let index: ArticleIndex;
+        if (typeof res === 'number') {
+
+            const temp = useArticleStore().articleMap.get(res);
+            if (!temp) {
+                MessageUtil.error(`文章[${res}]不存在`);
+                return;
+            }
+            index = temp;
+        } else {
+            index = res;
+        }
+
+        if (indexes.value.findIndex(e => e.id === index.id) === -1) {
+            // 没有打开
+            indexes.value.push(index);
+        }
+
+        setId(index.id);
+
+    }
+
+    function closeArticle(...items: Array<number>) {
+        useSaveContentEvent.emit();
+        for (let res of items) {
+
+            const idx = indexes.value.findIndex(e => e.id === res);
+            if (idx === -1) {
+                console.debug(`文章【${res}】并没有打开，无需关闭`)
+                return;
+            }
+            const target = indexes.value[idx].id;
+            indexes.value.splice(idx, 1);
+            if (target === id.value) {
+                // 关闭自己
+                if (indexes.value.length > 0) {
+                    setId(indexes.value[indexes.value.length - 1].id);
+                } else {
+                    setId(0);
+                }
+            }
+        }
+    }
+
     return {
         id,
         collapsed,
@@ -159,7 +161,12 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         init,
         switchCollapsed,
         setId,
-        setWidth
+        setWidth,
+        updateTitle,
+
+        indexes,
+        openArticle,
+        closeArticle
 
     }
 

@@ -27,7 +27,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
     }), getDefaultArticleBase(), type === ArticleTypeEnum.EXCEL ? {} : "")
         .then(id => {
             MessageUtil.success("新增成功");
-            useHomeEditorStore().setId(id);
+            useHomeEditorStore().openArticle(id);
             // 树选择
         })
         .catch(e => MessageUtil.error("新增失败", e))
@@ -88,7 +88,10 @@ export function rename(id: number, name: string, article: boolean) {
         if (article) {
             // 重命名文件
             useArticleStore().updateIndex(id, {name: newName})
-                .then(() => MessageUtil.success("重命名成功"))
+                .then(() => {
+                    MessageUtil.success("重命名成功");
+                    useHomeEditorStore().updateTitle(id, newName);
+                })
                 .catch(e => MessageUtil.error("重命名失败", e));
         } else {
             useFolderStore().renameFolder(id, newName)

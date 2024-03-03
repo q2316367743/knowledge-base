@@ -56,7 +56,7 @@ function onSelect(
 
 function onNodeClick(nodeObject: TreeNodeData) {
     if (nodeObject.isLeaf) {
-        useHomeEditorStore().setId(nodeObject.key as number)
+        useHomeEditorStore().openArticle(nodeObject.key as number)
         router.push('/home');
     } else {
         if (nodeObject.title === '未分类文章') {

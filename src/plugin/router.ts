@@ -1,6 +1,4 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
-import Constant from "@/global/Constant";
-import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 // 引入路由
 
 const routers: Array<RouteRecordRaw> = [{
@@ -81,14 +79,6 @@ const routers: Array<RouteRecordRaw> = [{
     component: () => import("@/pages/more/about/index.vue")
 }];
 
-if (Constant.platform === PlatformTypeEnum.DOCKER ||
-    Constant.platform === PlatformTypeEnum.TAURI) {
-    routers.push({
-        name: "登录",
-        path: '/login',
-        component: () => import('@/pages/login/index.vue')
-    });
-}
 
 const router = createRouter({
     history: createWebHashHistory(),

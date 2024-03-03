@@ -100,7 +100,6 @@ import {clone} from "xe-utils";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Constant from "@/global/Constant";
-import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
 

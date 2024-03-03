@@ -6,8 +6,6 @@ import {RedirectPreload} from "@/plugin/utools";
 import {getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
-import Constant from "@/global/Constant";
-import PlatformTypeEnum from "@/enumeration/PlatformTypeEnum";
 import {isUtools} from "@/global/BeanFactory";
 
 /**
@@ -21,9 +19,6 @@ export async function useImageUpload(data: File | string): Promise<string> {
 
     try {
         let url = await selfImageUpload(data);
-        if (Constant.platform === PlatformTypeEnum.TAURI) {
-            url = getAttachmentBySync(url);
-        }
         return Promise.resolve(url);
     } catch (e) {
         return Promise.reject(e)
@@ -33,11 +28,11 @@ export async function useImageUpload(data: File | string): Promise<string> {
 
 }
 
-function selfImageUpload(data: File | Blob | string): Promise<string> {
+async function selfImageUpload(data: File | Blob | string): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
 
-        if (Constant.platform === PlatformTypeEnum.WEB) {
+        if (!isUtools) {
             return Promise.reject("web版不支持上传图片到内部");
         }
 
@@ -46,7 +41,8 @@ function selfImageUpload(data: File | Blob | string): Promise<string> {
         }
         return useUtoolsImageUpload(data);
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
-        return useImageUploadByPlugin(data).then(() => (""));
+        await useImageUploadByPlugin(data);
+        return ("");
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
@@ -63,7 +59,7 @@ function selfImageUpload(data: File | Blob | string): Promise<string> {
  */
 export async function useImageUploadByPlugin(data: File | Blob | string): Promise<void> {
 
-    if (Constant.platform === PlatformTypeEnum.WEB || !isUtools) {
+    if (!isUtools) {
         return Promise.reject("web版不支持调用图床");
     }
 

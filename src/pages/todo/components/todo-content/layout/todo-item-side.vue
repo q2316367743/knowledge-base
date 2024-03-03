@@ -282,7 +282,7 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
 }
 
 function toArticle(id: number) {
-    useHomeEditorStore().setId(id);
+    useHomeEditorStore().openArticle(id);
     router.push('/home')
 }
 

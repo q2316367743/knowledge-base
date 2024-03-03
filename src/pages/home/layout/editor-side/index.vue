@@ -209,12 +209,10 @@ watch(() => useHomeEditorStore().id, id => selectedKeys.value = [id]);
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
     if (useArticleStore().articleMap.has(id)) {
-        useHomeEditorStore().setId(id);
+        useHomeEditorStore().openArticle(id);
         if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
             useHomeEditorStore().switchCollapsed();
         }
-    } else {
-        useHomeEditorStore().setId(0);
     }
 }
 

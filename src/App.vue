@@ -105,7 +105,7 @@ function toArticle(id?: string) {
     if (!id) {
         return;
     }
-    useHomeEditorStore().setId(parseInt(id || '0'));
+    useHomeEditorStore().openArticle(parseInt(id || '0'));
     router.push('/home');
 }
 
@@ -142,7 +142,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         } else if (preload === 'add') {
             statistics.access("进入", "新增文章");
             useArticleStore().addSimple(extra)
-                .then(id => useHomeEditorStore().setId(id));
+                .then(id => useHomeEditorStore().openArticle(id));
         }
     }
 }

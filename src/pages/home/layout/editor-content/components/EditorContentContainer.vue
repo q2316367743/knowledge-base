@@ -1,30 +1,145 @@
 <template>
     <!-- 编辑区 -->
-    <div class="ec-container">
+    <div class="ec-container-item">
         <markdown-editor v-model="content" :preview="preview" ref="mdEditor"
-                         v-if="editorType === ArticleTypeEnum.MARKDOWN && articleAvailable"/>
+                         v-if="editorType === ArticleTypeEnum.MARKDOWN && load"/>
         <wang-editor v-model="content" :read-only="preview" ref="weEditor"
-                     v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && articleAvailable"/>
+                     v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
         <monaco-editor v-model="content" :language="language" :read-only="preview"
-                       v-else-if="editorType === ArticleTypeEnum.CODE && articleAvailable"/>
+                       v-else-if="editorType === ArticleTypeEnum.CODE && load"/>
         <excel-editor v-model="content" :read-only="preview"
-                      v-else-if="editorType === ArticleTypeEnum.EXCEL && articleAvailable"/>
+                      v-else-if="editorType === ArticleTypeEnum.EXCEL && load"/>
     </div>
 </template>
 <script lang="ts" setup>
+import {computed, onMounted, onUnmounted, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import WangEditor from "@/pages/home/layout/editor-content/editor/wang-editor.vue";
 import MonacoEditor from "@/pages/home/layout/editor-content/editor/monaco-editor/index.vue";
 import MarkdownEditor from "@/pages/home/layout/editor-content/editor/markdown-editor/index.vue";
-import {
-    articleAvailable,
-    articleIndex,
-    content,
-    editorType,
-    language,
-    preview
-} from "@/store/components/HomeEditorStore";
-import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor.vue";
+import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
+
+import {ArticleIndex} from "@/entity/article";
+import {ArticleContent} from "@/entity/article/ArticleContent";
+import {parseFileExtra} from "@/utils/FileUtil";
+import MessageUtil from "@/utils/MessageUtil";
+import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useHomeEditorStore, useSaveContentEvent, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
+
+const props = defineProps({
+    articleIndex: Object as PropType<ArticleIndex>
+});
+
+const load = ref(false);
+// 文章内容，不一定是文本
+const content = ref<any>('');
+let contentRev: string | undefined = undefined;
+// 计算属性
+const preview = computed(() => props.articleIndex ? props.articleIndex.preview : false);
+const language = computed(() => {
+    if (!props.articleIndex) {
+        return '';
+    }
+    if (props.articleIndex.type !== ArticleTypeEnum.CODE) {
+        return '';
+    }
+    return parseFileExtra(props.articleIndex.name);
+});
+const editorType = computed(() => {
+    if (!props.articleIndex) {
+        return null;
+    }
+    return props.articleIndex.type || ArticleTypeEnum.MARKDOWN;
+});
+
+
+async function saveContent(value: any) {
+    if (!props.articleIndex) {
+        return;
+    }
+    try {
+        contentRev = await useArticleStore().updateContent(props.articleIndex.id, value, contentRev);
+    } catch (e) {
+        MessageUtil.error("自动保存文章失败", e);
+    }
+}
+
+watch(() => content.value, value => {
+    if (!props.articleIndex) {
+        return;
+    }
+    if (!load.value) {
+        console.debug("自动保存文章，但未加载完成")
+        return;
+    }
+    saveContent(value).then(() => console.debug("自动保存文章成功"))
+        .catch(e => MessageUtil.error("自动保存文章失败", e));
+}, {deep: true});
+
+
+async function initArticle(articleId: number) {
+
+    if (articleId == 0) {
+        return;
+    }
+
+    await useArticleStore().init();
+
+    const articleIndexWrap = useArticleStore().articleMap.get(articleId);
+    if (!articleIndexWrap) {
+        MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
+        return;
+    }
+    // 内容
+    const contentWrap = await getFromOneByAsync<ArticleContent<any>>(LocalNameEnum.ARTICLE_CONTENT + articleId);
+    if (contentWrap.record) {
+        content.value = contentWrap.record.content;
+
+
+        load.value = true;
+    }
+    contentRev = contentWrap.rev;
+
+}
+
+onMounted(() => {
+    if (!props.articleIndex) {
+        return;
+    }
+    initArticle(props.articleIndex.id);
+
+    useSaveContentEvent.off(onSave);
+    useUpdatePreviewEvent.off(onPreview);
+    useSaveContentEvent.on(onSave);
+    useUpdatePreviewEvent.on(onPreview);
+});
+
+onUnmounted(() => {
+    useSaveContentEvent.off(onSave);
+    useUpdatePreviewEvent.off(onPreview);
+});
+
+function onSave() {
+    if (props.articleIndex) {
+        if (props.articleIndex.type !== ArticleTypeEnum.EXCEL) {
+            if (useHomeEditorStore().id === props.articleIndex.id) {
+                saveContent(content.value);
+            }
+        }
+    }
+}
+
+function onPreview(data: { id: number, preview: boolean }) {
+    if (props.articleIndex) {
+        if (props.articleIndex.id === data.id) {
+            props.articleIndex.preview = data.preview;
+        }
+    }
+}
+
+
 </script>
 <style scoped>
 
