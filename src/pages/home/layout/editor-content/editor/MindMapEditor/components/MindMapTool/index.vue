@@ -44,19 +44,19 @@
             </div>
             <div class="tool-btn-text">图标</div>
         </div>
-        <div class="tool-btn" :class="available ? 'active' : ''">
+        <div class="tool-btn" :class="available ? 'active' : ''" @click="setHyperlink()">
             <div class="tool-btn-icon">
                 <icon-link :size="18"/>
             </div>
             <div class="tool-btn-text">超链接</div>
         </div>
-        <div class="tool-btn" :class="available ? 'active' : ''">
+        <div class="tool-btn" :class="available ? 'active' : ''" @click="setNote()">
             <div class="tool-btn-icon">
                 <icon-notification :size="18"/>
             </div>
             <div class="tool-btn-text">备注</div>
         </div>
-        <div class="tool-btn" :class="available ? 'active' : ''">
+        <div class="tool-btn" :class="available ? 'active' : ''" @click="setTag()">
             <div class="tool-btn-icon">
                 <icon-tags :size="18"/>
             </div>
@@ -83,6 +83,15 @@ import {
     openInsertImage
 } from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertImage";
 import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+import {
+    openInsertHyperlink
+} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertHyperlink";
+import {
+    openInsertRemark
+} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertRemark";
+import {
+    openInsertTag
+} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertTag";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>,
@@ -122,38 +131,56 @@ onUnmounted(() => {
 
 // 回退
 const back = () => {
-    if (available && !isStart)
+    if (available.value && !isStart)
         props.mindMap && props.mindMap.execCommand('BACK');
 }
 
 // 前进
 const forward = () => {
-    if (available && !isEnd)
+    if (available.value && !isEnd)
         props.mindMap && props.mindMap.execCommand('FORWARD')
 }
 
 // 插入兄弟节点
 const insertNode = () => {
-    if (available && !isRoot && !isGeneralization)
+    if (available.value && !isRoot && !isGeneralization)
         props.mindMap && props.mindMap.execCommand('INSERT_NODE')
 }
 
 // 插入子节点
 const insertChildNode = () => {
-    if (available && !isGeneralization)
+    if (available.value && !isGeneralization)
         props.mindMap && props.mindMap.execCommand('INSERT_CHILD_NODE')
 }
 
 // 删除节点
 const deleteNode = () => {
-    if (available)
+    if (available.value)
         props.mindMap && props.mindMap.execCommand('REMOVE_NODE')
 }
 
 // 设置图片
 const setImage = () => {
-    if (available)
+    if (available.value)
         openInsertImage(activeNodes.value);
+}
+
+const setHyperlink = () => {
+    if (available.value) {
+        openInsertHyperlink(activeNodes.value);
+    }
+}
+
+const setNote = () => {
+    if (available.value) {
+        openInsertRemark(activeNodes.value);
+    }
+}
+
+const setTag = () => {
+    if (available.value) {
+        openInsertTag(activeNodes.value);
+    }
 }
 
 </script>

@@ -11,4 +11,7 @@ export interface MindMapNode {
         height: number;
     }): void;
     getData(type: string): any;
+    setHyperlink(url: string, title: string): void;
+    setNote(note: string): void;
+    setTag(tags: Array<string>): void;
 }
