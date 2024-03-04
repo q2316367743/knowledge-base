@@ -30,7 +30,8 @@ const props = defineProps({
         default: {},
         required: false
     },
-    readOnly: Boolean
+    readOnly: Boolean,
+    articleId: Number
 });
 const emits = defineEmits(['update:modelValue']);
 
@@ -80,8 +81,8 @@ onUnmounted(() => {
 
 useSaveContentEvent.on(onSave);
 
-function onSave() {
-    if (workbook) {
+function onSave(id: number) {
+    if (workbook && props.articleId === id) {
         emits("update:modelValue", workbook.save());
     }
 }

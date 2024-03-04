@@ -33,8 +33,9 @@ export const editorType = computed(() => {
 });
 
 // 一些事件
-export const useSaveContentEvent = useEventBus('save-content');
+export const useSaveContentEvent = useEventBus<number>('save-content');
 export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
+export const useArticleExportEvent = useEventBus<number>('article-export');
 
 
 // 一些特殊的方法

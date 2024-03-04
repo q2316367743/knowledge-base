@@ -1,15 +1,15 @@
 <template>
     <!-- 编辑区 -->
-    <div class="ec-container-item">
-        <markdown-editor v-model="content" :preview="preview" ref="mdEditor"
+    <div class="ec-container-item" v-if="articleIndex">
+        <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
                          v-if="editorType === ArticleTypeEnum.MARKDOWN && load"/>
-        <wang-editor v-model="content" :read-only="preview" ref="weEditor"
+        <wang-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
                      v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
-        <monaco-editor v-model="content" :language="language" :read-only="preview"
+        <monaco-editor v-model="content" :language="language" :read-only="preview" :article-id="articleIndex.id"
                        v-else-if="editorType === ArticleTypeEnum.CODE && load"/>
-        <excel-editor v-model="content" :read-only="preview"
+        <excel-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                       v-else-if="editorType === ArticleTypeEnum.EXCEL && load"/>
-        <mind-map-editor v-model="content" :read-only="preview"
+        <mind-map-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                          v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
     </div>
 </template>
@@ -30,7 +30,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useHomeEditorStore, useSaveContentEvent, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
+import {useSaveContentEvent, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -125,10 +125,10 @@ onUnmounted(() => {
     useUpdatePreviewEvent.off(onPreview);
 });
 
-function onSave() {
+function onSave(id: number) {
     if (props.articleIndex) {
         if (props.articleIndex.type !== ArticleTypeEnum.EXCEL) {
-            if (useHomeEditorStore().id === props.articleIndex.id) {
+            if (id === props.articleIndex.id) {
                 saveContent(content.value);
             }
         }

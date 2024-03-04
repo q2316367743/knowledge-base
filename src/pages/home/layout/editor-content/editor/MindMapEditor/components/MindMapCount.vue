@@ -62,10 +62,10 @@ function walk(data: any) {
     font-size: 12px;
     display: flex;
     user-select: none;
+    opacity: .6;
 
 
     .item {
-        color: #555;
         margin-right: 15px;
 
         &:last-of-type {

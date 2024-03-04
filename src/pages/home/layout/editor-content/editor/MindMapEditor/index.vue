@@ -18,7 +18,10 @@ import MindMapSetting
     from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/index.vue";
 
 // 插件
-import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js'
+import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js';
+import Export from 'simple-mind-map/src/plugins/Export.js';
+import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {openMindMapExport} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapExport";
 
 const props = defineProps({
     modelValue: {
@@ -26,7 +29,8 @@ const props = defineProps({
         default: {},
         required: false
     },
-    readOnly: Boolean
+    readOnly: Boolean,
+    articleId: Number
 });
 const emits = defineEmits(['update:modelValue']);
 
@@ -57,6 +61,11 @@ onMounted(() => {
         }
     });
     mindMap.value.addPlugin(MiniMap, undefined);
+    mindMap.value.addPlugin(Export, undefined);
+
+    useArticleExportEvent.off(onExport);
+    useArticleExportEvent.on(onExport);
+
 });
 
 watch(() => size.width.value, () => mindMap.value && mindMap.value.resize());
@@ -64,10 +73,17 @@ watch(() => size.height.value, () => mindMap.value && mindMap.value.resize());
 watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(value ? 'readonly' : 'edit'))
 
 onUnmounted(() => {
+    useArticleExportEvent.off(onExport);
     if (mindMap.value) {
         mindMap.value.destroy();
     }
 });
+
+function onExport(id: number) {
+    if (props.articleId === id && mindMap.value) {
+        openMindMapExport(mindMap.value);
+    }
+}
 
 
 </script>

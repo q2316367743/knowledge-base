@@ -36,22 +36,12 @@
                                     </template>
                                     设置
                                 </a-doption>
-                                <a-dsubmenu disabled>
+                                <a-doption @click="onExport()">
                                     <template #icon>
                                         <icon-export/>
                                     </template>
                                     导出
-                                    <template #content>
-                                        <a-doption @click="exportFile('md')" v-if="isNote">
-                                            markdown文件
-                                        </a-doption>
-                                        <a-doption @click="exportFile('md')" v-if="isNote">
-                                            Word文件
-                                        </a-doption>
-                                        <a-doption @click="exportFile('pdf')">pdf文件</a-doption>
-                                        <a-doption @click="exportFile('img')">图片</a-doption>
-                                    </template>
-                                </a-dsubmenu>
+                                </a-doption>
                             </template>
                         </a-dropdown>
                     </a-button-group>
@@ -68,7 +58,7 @@ import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtr
 import {
     editorType,
     preview,
-    switchPreview,
+    switchPreview, useArticleExportEvent,
     useHomeEditorStore,
     useSaveContentEvent
 } from "@/store/components/HomeEditorStore";
@@ -95,8 +85,14 @@ function exportFile(type: string) {
 
 function onSave() {
     // 触发保存
-    useSaveContentEvent.emit();
+    useSaveContentEvent.emit(useHomeEditorStore().id);
 }
+
+function onExport() {
+    // 触发保存
+    useArticleExportEvent.emit(useHomeEditorStore().id);
+}
+
 
 </script>
 <style scoped>

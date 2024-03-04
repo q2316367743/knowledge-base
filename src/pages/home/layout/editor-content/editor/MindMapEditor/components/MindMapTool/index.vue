@@ -57,7 +57,7 @@
             <div class="tool-btn-text">标签</div>
         </div>
         <a-divider direction="vertical"/>
-        <div class="tool-btn" :class="available ? 'active' : ''" @click="insertGeneralization()">
+        <div class="tool-btn" :class="available && !isGeneralization ? 'active' : ''" @click="insertGeneralization()">
             <div class="tool-btn-icon">
                 <icon-apps :size="18"/>
             </div>
@@ -181,7 +181,7 @@ const setTag = () => {
 }
 
 const insertGeneralization = () => {
-    if (available.value && props.mindMap) {
+    if (available.value && props.mindMap && !isGeneralization.value) {
         props.mindMap.execCommand('ADD_GENERALIZATION');
     }
 }
