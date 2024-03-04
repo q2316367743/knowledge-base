@@ -1,8 +1,9 @@
 <template>
     <div class="mind-map-editor-wrap">
         <div class="mind-map-editor" ref="mindMapEditor"></div>
-        <mind-map-count :mind-map="mindMap" v-if="available"/>
-        <mind-map-tool :mind-map="mindMap" :width="size.width.value" v-if="available" />
+        <mind-map-count v-if="available" :mind-map="mindMap"/>
+        <mind-map-tool v-if="available" :mind-map="mindMap" :width="size.width.value"/>
+        <mind-map-setting v-if="available" :mind-map="mindMap"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -13,6 +14,11 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
 import MindMapCount from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapCount.vue";
 import MindMapTool from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/index.vue";
+import MindMapSetting
+    from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/index.vue";
+
+// 插件
+import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js'
 
 const props = defineProps({
     modelValue: {
@@ -49,7 +55,8 @@ onMounted(() => {
         if (mindMap.value) {
             emits("update:modelValue", mindMap.value.getData(true));
         }
-    })
+    });
+    mindMap.value.addPlugin(MiniMap, undefined);
 });
 
 watch(() => size.width.value, () => mindMap.value && mindMap.value.resize());
@@ -61,7 +68,6 @@ onUnmounted(() => {
         mindMap.value.destroy();
     }
 });
-
 
 
 </script>

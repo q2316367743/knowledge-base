@@ -57,7 +57,6 @@ function walk(data: any) {
     color: var(--color-text-1);
     background: var(--color-fill-3);
     border-radius: 2px;
-    opacity: 0.8;
     height: 22px;
     line-height: 22px;
     font-size: 12px;

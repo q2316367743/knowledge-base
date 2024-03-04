@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 
+declare module 'simple-mind-map/src/plugins/MiniMap.js';
+
 declare global {
     interface Window {
         onImagePreview: (src: string) => void;
