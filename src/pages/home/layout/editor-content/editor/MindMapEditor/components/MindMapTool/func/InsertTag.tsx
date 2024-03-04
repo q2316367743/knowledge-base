@@ -1,6 +1,6 @@
 import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
 import {ref} from "vue";
-import {Button, Input, InputGroup, Modal, Tag, Textarea} from "@arco-design/web-vue";
+import {Button, Input, InputGroup, Modal, Tag} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/MessageUtil";
 
 export function openInsertTag(activeNodes: MindMapNode[]) {

@@ -1,12 +1,12 @@
 <template>
     <div class="mind-map-tool" :style="{left: left}" :data-left="left">
-        <div class="tool-btn" @click="back()" :class="available && !isStart ? 'active' : ''">
+        <div class="tool-btn" @click="back()" :class="!isStart ? 'active' : ''">
             <div class="tool-btn-icon">
                 <icon-backward :size="18"/>
             </div>
             <div class="tool-btn-text">后退</div>
         </div>
-        <div class="tool-btn" @click="forward()" :class="available && !isEnd ? 'active' : ''">
+        <div class="tool-btn" @click="forward()" :class="!isEnd ? 'active' : ''">
             <div class="tool-btn-icon">
                 <icon-forward :size="18"/>
             </div>
@@ -38,12 +38,6 @@
             </div>
             <div class="tool-btn-text">图片</div>
         </div>
-        <div class="tool-btn" :class="available ? 'active' : ''">
-            <div class="tool-btn-icon">
-                <icon-face-smile-fill :size="18"/>
-            </div>
-            <div class="tool-btn-text">图标</div>
-        </div>
         <div class="tool-btn" :class="available ? 'active' : ''" @click="setHyperlink()">
             <div class="tool-btn-icon">
                 <icon-link :size="18"/>
@@ -62,13 +56,14 @@
             </div>
             <div class="tool-btn-text">标签</div>
         </div>
-        <div class="tool-btn" :class="available ? 'active' : ''">
+        <a-divider direction="vertical"/>
+        <div class="tool-btn" :class="available ? 'active' : ''" @click="insertGeneralization()">
             <div class="tool-btn-icon">
                 <icon-apps :size="18"/>
             </div>
             <div class="tool-btn-text">概要</div>
         </div>
-        <div class="tool-btn" :class="available && !isGeneralization ? 'active' : ''">
+        <div class="tool-btn">
             <div class="tool-btn-icon">
                 <icon-branch :size="18"/>
             </div>
@@ -131,25 +126,27 @@ onUnmounted(() => {
 
 // 回退
 const back = () => {
-    if (available.value && !isStart)
+    if (!isStart.value){
         props.mindMap && props.mindMap.execCommand('BACK');
+
+    }
 }
 
 // 前进
 const forward = () => {
-    if (available.value && !isEnd)
+    if (!isEnd.value)
         props.mindMap && props.mindMap.execCommand('FORWARD')
 }
 
 // 插入兄弟节点
 const insertNode = () => {
-    if (available.value && !isRoot && !isGeneralization)
+    if (available.value && !isRoot.value && !isGeneralization.value)
         props.mindMap && props.mindMap.execCommand('INSERT_NODE')
 }
 
 // 插入子节点
 const insertChildNode = () => {
-    if (available.value && !isGeneralization)
+    if (available.value && !isGeneralization.value)
         props.mindMap && props.mindMap.execCommand('INSERT_CHILD_NODE')
 }
 
@@ -180,6 +177,12 @@ const setNote = () => {
 const setTag = () => {
     if (available.value) {
         openInsertTag(activeNodes.value);
+    }
+}
+
+const insertGeneralization = () => {
+    if (available.value && props.mindMap) {
+        props.mindMap.execCommand('ADD_GENERALIZATION');
     }
 }
 

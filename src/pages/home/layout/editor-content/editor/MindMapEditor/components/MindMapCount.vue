@@ -32,7 +32,6 @@ onUnmounted(() => {
 })
 
 function onDataChange(data: any) {
-    console.log(data)
     num.value = 0;
     walk(data)
 }
@@ -54,15 +53,16 @@ function walk(data: any) {
     padding: 0 12px;
     position: absolute;
     left: 20px;
-    bottom: 20px;
+    bottom: 10px;
     color: var(--color-text-1);
-    background: var(--color-fill-2);
+    background: var(--color-fill-3);
     border-radius: 2px;
     opacity: 0.8;
     height: 22px;
     line-height: 22px;
     font-size: 12px;
     display: flex;
+    user-select: none;
 
 
     .item {
