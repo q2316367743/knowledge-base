@@ -1,13 +1,18 @@
 <template>
-    <div class="mind-map-editor" ref="mindMapEditor"></div>
+    <div class="mind-map-editor-wrap">
+        <div class="mind-map-editor" ref="mindMapEditor"></div>
+        <mind-map-count :mind-map="mindMap" v-if="available"/>
+        <mind-map-tool :mind-map="mindMap" :width="size.width.value" v-if="available" />
+    </div>
 </template>
 <script lang="ts" setup>
-import {onMounted, onUnmounted, PropType, ref, watch} from "vue";
+import {computed, onMounted, onUnmounted, PropType, ref, shallowRef, watch} from "vue";
 import MindMap from "simple-mind-map";
 import {IWorkbookData} from "@univerjs/core";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useSaveContentEvent} from "@/store/components/HomeEditorStore";
-import {useElementSize, useIntervalFn} from "@vueuse/core";
+import {useElementSize} from "@vueuse/core";
+import MindMapCount from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapCount.vue";
+import MindMapTool from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/index.vue";
 
 const props = defineProps({
     modelValue: {
@@ -22,50 +27,53 @@ const emits = defineEmits(['update:modelValue']);
 const mindMapEditor = ref<HTMLElement>();
 const size = useElementSize(mindMapEditor);
 
-let mindMap: MindMap;
+const mindMap = shallowRef<MindMap | null>(null);
+
+const available = computed(() => !!mindMap.value);
 
 onMounted(() => {
     if (!mindMapEditor.value) {
         return;
     }
-    mindMap = new MindMap({
+    console.log(useGlobalStore().isDark)
+    mindMap.value = new MindMap({
         // @ts-ignore
-        el: mindMapEditor.value,
-        theme: useGlobalStore().isDark ? 'dark' : 'default'
+        el: mindMapEditor.value
     });
-    mindMap.setFullData(props.modelValue);
-    mindMap.reRender(() => console.log("reRender"));
+    mindMap.value.setFullData(props.modelValue);
+    mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');
+    mindMap.value.reRender(() => console.log("reRender"));
+    mindMap.value.on('data_change', () => {
+        // data数据是不带节点对象的纯数据
+        // 如果你需要操作节点对象，可以使用mindMap.renderer.renderTree
+        if (mindMap.value) {
+            emits("update:modelValue", mindMap.value.getData(true));
+        }
+    })
 });
 
-watch(() => size.width.value, () => mindMap && mindMap.reRender(() => console.log("reRender")));
-watch(() => size.height.value, () => mindMap && mindMap.reRender(() => console.log("reRender")));
+watch(() => size.width.value, () => mindMap.value && mindMap.value.resize());
+watch(() => size.height.value, () => mindMap.value && mindMap.value.resize());
+watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(value ? 'readonly' : 'edit'))
 
 onUnmounted(() => {
-    useSaveContentEvent.off(onSave);
-    if (mindMap) {
-        mindMap.destroy();
+    if (mindMap.value) {
+        mindMap.value.destroy();
     }
 });
 
-useSaveContentEvent.on(onSave);
 
-function onSave() {
-    if (mindMap) {
-        emits("update:modelValue", mindMap.getData(true));
-    }
-}
-
-useIntervalFn(() => {
-    // 每秒保存一次
-    if (mindMap) {
-        emits("update:modelValue", mindMap.getData(true));
-    }
-}, 1000)
 
 </script>
-<style scoped>
-.mind-map-editor {
+<style lang="less">
+.mind-map-editor-wrap {
+    position: relative;
     width: 100%;
     height: 100%;
+
+    .mind-map-editor {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>

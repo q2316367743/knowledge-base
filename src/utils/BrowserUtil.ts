@@ -222,3 +222,22 @@ export function getRandomChar(len: number): string {
     }
     return timestamp + tmp;
 }
+
+export const getImageSize = (src: string): Promise<{width: number,height: number}> => {
+    return new Promise(resolve => {
+        let img = new Image()
+        img.src = src
+        img.onload = () => {
+            resolve({
+                width: img.width,
+                height: img.height
+            })
+        }
+        img.onerror = () => {
+            resolve({
+                width: 100,
+                height: 100
+            })
+        }
+    })
+}

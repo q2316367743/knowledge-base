@@ -6,7 +6,8 @@ export default {
         Notification.success({
             content,
             title,
-            closable: true
+            closable: true,
+            duration: 1000
         })
     },
     info(content: string, title?: string): void {

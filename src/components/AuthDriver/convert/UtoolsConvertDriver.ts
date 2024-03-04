@@ -114,6 +114,9 @@ export default class UtoolsConvertDriver implements ConvertDriver {
                             path = path + '.md'
                         } else if (articleIndex.type === ArticleTypeEnum.RICH_TEXT) {
                             path = path + '.html';
+                        }else {
+                            // 其他的不导出
+                            continue;
                         }
                         zip.file(path, content.record.content);
                     }
