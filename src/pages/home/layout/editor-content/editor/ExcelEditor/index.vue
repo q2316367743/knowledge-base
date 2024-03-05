@@ -16,12 +16,13 @@ import {UniverSheetsPlugin} from "@univerjs/sheets";
 import {UniverSheetsFormulaPlugin} from "@univerjs/sheets-formula";
 import {UniverSheetsUIPlugin} from "@univerjs/sheets-ui";
 import {UniverUIPlugin} from "@univerjs/ui";
-import {onMounted, onBeforeUnmount, PropType, ref} from "vue";
+import {onMounted, onBeforeUnmount, PropType, ref, toRaw} from "vue";
 import {useArticleExportEvent, useSaveContentEvent} from "@/store/components/HomeEditorStore";
 import type {Workbook} from "@univerjs/core/lib/types/sheets/workbook";
 
-import  './darkTheme.less';
+import './darkTheme.less';
 import MessageUtil from "@/utils/MessageUtil";
+import {useIntervalFn} from "@vueuse/core";
 
 const props = defineProps({
     modelValue: {
@@ -67,26 +68,30 @@ onMounted(() => {
     univer.registerPlugin(UniverSheetsUIPlugin);
     univer.registerPlugin(UniverSheetsFormulaPlugin);
 
-
-    workbook = univer.createUniverSheet(props.modelValue);
+    workbook = univer.createUniverSheet(toRaw(props.modelValue));
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
+    useSaveContentEvent.off(onSave);
+    useSaveContentEvent.on(onSave);
 
 });
 
 onBeforeUnmount(() => {
-    useSaveContentEvent.off(onSave);
     univer.dispose();
+    useSaveContentEvent.off(onSave);
     useArticleExportEvent.off(onExport);
 });
 
-useSaveContentEvent.on(onSave);
 
 function onSave(id: number) {
     if (workbook && props.articleId === id) {
         emits("update:modelValue", workbook.save());
     }
 }
+
+useIntervalFn(() => {
+    onSave(props.articleId || 0);
+}, 5000)
 
 function onExport(id: number) {
     if (props.articleId === id) {
