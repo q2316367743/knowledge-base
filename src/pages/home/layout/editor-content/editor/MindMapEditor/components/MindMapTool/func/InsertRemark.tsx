@@ -1,6 +1,6 @@
 import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
 import {ref} from "vue";
-import {Form, FormItem, Input, Modal, Textarea} from "@arco-design/web-vue";
+import {Modal, Textarea} from "@arco-design/web-vue";
 
 export function openInsertRemark(activeNodes: MindMapNode[]) {
 
@@ -14,14 +14,8 @@ export function openInsertRemark(activeNodes: MindMapNode[]) {
     Modal.open({
         title: "备注",
         draggable: true,
-        content: () => <Form model={data.value}>
-            <FormItem label={'备注'}>
-                {{
-                    default: () => <Textarea autoSize={{minRows: 2, maxRows: 8}} v-model={data.value.note} />,
-                    help: () => <span></span>
-                }}
-            </FormItem>
-        </Form>,
+        content: () => <Textarea autoSize={{minRows: 2, maxRows: 8}} v-model={data.value.note}
+                                 placeholder={"请输入备注内容"}/>,
         onOk() {
             activeNodes.forEach(activeNode => {
                 activeNode.setNote(data.value.note);

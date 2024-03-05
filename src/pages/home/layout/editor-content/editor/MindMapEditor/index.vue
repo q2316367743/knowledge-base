@@ -12,16 +12,20 @@ import MindMap from "simple-mind-map";
 import {IWorkbookData} from "@univerjs/core";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
+
+// 组件
 import MindMapCount from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapCount.vue";
 import MindMapTool from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
     from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/index.vue";
+import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {openMindMapExport} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapExport";
 
 // 插件
 import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js';
 import Export from 'simple-mind-map/src/plugins/Export.js';
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
-import {openMindMapExport} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapExport";
+import ExportPDF from 'simple-mind-map/src/plugins/ExportPDF.js'
+import ExportXMind from 'simple-mind-map/src/plugins/ExportXMind.js'
 
 const props = defineProps({
     modelValue: {
@@ -62,6 +66,8 @@ onMounted(() => {
     });
     mindMap.value.addPlugin(MiniMap, undefined);
     mindMap.value.addPlugin(Export, undefined);
+    mindMap.value.addPlugin(ExportPDF, undefined);
+    mindMap.value.addPlugin(ExportXMind, undefined);
 
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
@@ -81,7 +87,7 @@ onUnmounted(() => {
 
 function onExport(id: number) {
     if (props.articleId === id && mindMap.value) {
-        openMindMapExport(mindMap.value);
+        openMindMapExport(mindMap.value, id);
     }
 }
 
