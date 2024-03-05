@@ -1,7 +1,7 @@
 import {useFileSystemAccess} from "@vueuse/core";
 import JSZip from "jszip";
 import {sleep} from "@/utils/BrowserUtil";
-import {parseFileName} from "@/utils/FileUtil";
+import {parseFileName} from "@/utils/file/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";

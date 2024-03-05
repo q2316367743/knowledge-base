@@ -10,7 +10,6 @@ import "@univerjs/sheets-formula/lib/index.css";
 import {IWorkbookData, Univer} from "@univerjs/core";
 import {defaultTheme} from "@univerjs/design";
 import {UniverDocsPlugin} from "@univerjs/docs";
-import {UniverDocsUIPlugin} from "@univerjs/docs-ui";
 import {UniverFormulaEnginePlugin} from "@univerjs/engine-formula";
 import {UniverRenderEnginePlugin} from "@univerjs/engine-render";
 import {UniverSheetsPlugin} from "@univerjs/sheets";
@@ -18,10 +17,11 @@ import {UniverSheetsFormulaPlugin} from "@univerjs/sheets-formula";
 import {UniverSheetsUIPlugin} from "@univerjs/sheets-ui";
 import {UniverUIPlugin} from "@univerjs/ui";
 import {onMounted, onBeforeUnmount, PropType, ref} from "vue";
-import { useSaveContentEvent} from "@/store/components/HomeEditorStore";
+import {useArticleExportEvent, useSaveContentEvent} from "@/store/components/HomeEditorStore";
 import type {Workbook} from "@univerjs/core/lib/types/sheets/workbook";
 
 import  './darkTheme.less';
+import MessageUtil from "@/utils/MessageUtil";
 
 const props = defineProps({
     modelValue: {
@@ -61,7 +61,6 @@ onMounted(() => {
     univer.registerPlugin(UniverDocsPlugin, {
         hasScroll: false,
     });
-    univer.registerPlugin(UniverDocsUIPlugin);
 
     // sheet plugins
     univer.registerPlugin(UniverSheetsPlugin);
@@ -70,12 +69,15 @@ onMounted(() => {
 
 
     workbook = univer.createUniverSheet(props.modelValue);
+    useArticleExportEvent.off(onExport);
+    useArticleExportEvent.on(onExport);
 
 });
 
 onBeforeUnmount(() => {
     useSaveContentEvent.off(onSave);
     univer.dispose();
+    useArticleExportEvent.off(onExport);
 });
 
 useSaveContentEvent.on(onSave);
@@ -83,6 +85,12 @@ useSaveContentEvent.on(onSave);
 function onSave(id: number) {
     if (workbook && props.articleId === id) {
         emits("update:modelValue", workbook.save());
+    }
+}
+
+function onExport(id: number) {
+    if (props.articleId === id) {
+        MessageUtil.warning("导出功能正在开发中...")
     }
 }
 

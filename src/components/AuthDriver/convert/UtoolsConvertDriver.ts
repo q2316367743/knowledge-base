@@ -1,6 +1,6 @@
 import {ConvertDriver} from "@/components/AuthDriver/ConvertDriver";
 import Mammoth from "mammoth";
-import {parseFileName} from "@/utils/FileUtil";
+import {parseFileName} from "@/utils/file/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleSource, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";

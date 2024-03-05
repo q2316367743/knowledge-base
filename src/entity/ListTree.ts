@@ -2,7 +2,7 @@ import {TreeNodeData} from "@arco-design/web-vue";
 import {h} from "vue";
 import {IconBook, IconCode, IconFile, IconFolder, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
-import {pathJoin} from "@/utils/FileUtil";
+import {pathJoin} from "@/utils/file/FileUtil";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 

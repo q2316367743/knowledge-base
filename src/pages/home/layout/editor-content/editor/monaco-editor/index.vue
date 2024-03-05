@@ -20,7 +20,7 @@ import {useElementSize} from "@vueuse/core";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
 import {download} from "@/utils/BrowserUtil";
-import {renderFileExtraName} from "@/utils/FileUtil";
+import {renderFileExtraName} from "@/utils/file/FileUtil";
 
 export default defineComponent({
     name: 'monaco-editor',
@@ -120,7 +120,8 @@ export default defineComponent({
 
 
         onBeforeUnmount(() => {
-            editor.dispose()
+            editor.dispose();
+            useArticleExportEvent.off(onExport);
         })
 
         onMounted(() => {
@@ -139,7 +140,7 @@ export default defineComponent({
                         desc: '默认导出'
                     }]).then(res => {
                         download(model.getValue(), res.title, 'text');
-                    })
+                    });
                 }
             }
         }

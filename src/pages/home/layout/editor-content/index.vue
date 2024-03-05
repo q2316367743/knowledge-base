@@ -11,8 +11,8 @@
     </div>
 </template>
 <script lang="ts" setup>
-import EditorContentHeader from "@/pages/home/layout/editor-content/components/EditorContentHeader.vue";
-import EditorContentContainer from "@/pages/home/layout/editor-content/components/EditorContentContainer.vue";
+import EditorContentHeader from "@/pages/home/layout/editor-content/layout/EditorContentHeader.vue";
+import EditorContentContainer from "@/pages/home/layout/editor-content/layout/EditorContentContainer.vue";
 import {computed} from "vue";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 

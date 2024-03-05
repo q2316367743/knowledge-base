@@ -10,7 +10,7 @@ export const htmlToMarkdown = async (folder: number, type: ArticleTypeEnum): Pro
         types: [{
             description: 'docx文档',
             accept: {
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document    ': ['.docx']
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
             }
         }]
     });

@@ -6,19 +6,23 @@
     </main>
 </template>
 <script lang="ts" setup>
-import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, SlateNode} from "@wangeditor/editor";
-import {computed, onMounted, ref, watch} from "vue";
+import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, SlateNode, Toolbar} from "@wangeditor/editor";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageUtil from "@/utils/MessageUtil";
 import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
 import {useImageUpload} from "@/plugin/image";
 import {useElementSize} from "@vueuse/core";
-import {getLineLength, getTextCount} from "@/store/components/HomeEditorStore";
+import {getLineLength, getTextCount, useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {download} from "@/utils/BrowserUtil";
+import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 
 const props = defineProps({
     modelValue: String,
-    readOnly: Boolean
+    readOnly: Boolean,
+    articleId: Number
 });
 const emits = defineEmits(['update:modelValue']);
 defineExpose({getToc})
@@ -57,6 +61,7 @@ watch(() => props.readOnly, value => {
 })
 
 let editor: IDomEditor | null = null;
+let toolbar: Toolbar | null = null;
 type InsertFnType = (url: string, alt?: string, href?: string) => void
 const editorConfig: Partial<IEditorConfig> = {
     placeholder: '请输入笔记内容',
@@ -115,7 +120,7 @@ function create() {
         config: editorConfig,
         mode: 'default', // or 'simple'
     });
-    const toolbar = createToolbar({
+    toolbar = createToolbar({
         editor: instance,
         selector: '#' + toolbarId.value,
         config: toolbarConfig,
@@ -127,7 +132,46 @@ function create() {
     editor = instance;
 }
 
-onMounted(() => create());
+onMounted(() => {
+    create();
+    useArticleExportEvent.off(onExport);
+    useArticleExportEvent.on(onExport);
+});
+
+onBeforeUnmount(() => {
+    editor && editor.destroy();
+    toolbar && toolbar.destroy();
+    useArticleExportEvent.off(onExport);
+})
+
+
+function onExport(id: number) {
+    if (props.articleId === id) {
+        createArticleExport(id, [{
+            key: 1,
+            name: 'Markdown',
+            desc: '便于分享'
+        }, {
+            key: 2,
+            name: 'HTML',
+            desc: '便于发布'
+        }, {
+            key: 3,
+            name: '纯文本',
+            desc: '便于阅读'
+        }]).then(res => {
+            if (editor) {
+                if (res.type === 1) {
+                    download(htmlToMarkdown(editor.getHtml()), res.title, 'text/plain;charset=utf-8');
+                }else if (res.type === 2) {
+                    download(editor.getHtml(), res.title, 'text/html;charset=utf-8');
+                }else if (res.type === 3) {
+                    download(editor.getText(), res.title, 'text/html;charset=utf-8');
+                }
+            }
+        })
+    }
+}
 
 function getToc(): Array<TocItem> {
     if (editor) {

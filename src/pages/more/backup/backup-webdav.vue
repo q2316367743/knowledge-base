@@ -48,7 +48,7 @@ import {createClient, FileStat} from "webdav";
 import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import MessageUtil from "@/utils/MessageUtil";
 import JSZip from "jszip";
-import {pathJoin} from "@/utils/FileUtil";
+import {pathJoin} from "@/utils/file/FileUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateString} from "xe-utils";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
