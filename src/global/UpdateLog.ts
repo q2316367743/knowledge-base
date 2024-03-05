@@ -2,6 +2,24 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.7.0',
+        sign: 170,
+        time: '2024-03-05',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【笔记】新增思维导图'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【笔记】增加排序功能"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【笔记】修复导出无效问题"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【笔记】多个富文本编辑器无法使用问题"
+        }]
+    },
+    {
         version: '1.6.0',
         sign: 160,
         time: '2024-02-29',

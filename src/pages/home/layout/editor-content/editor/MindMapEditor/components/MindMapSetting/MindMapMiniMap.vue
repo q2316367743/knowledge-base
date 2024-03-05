@@ -57,17 +57,17 @@ const updateMiniMp = () => {
     miniMapBoxTop.value = data.miniMapBoxTop
 }
 
-const onMousedown = (e: PointerEvent) => {
+const onMousedown = (e: MouseEvent) => {
     // @ts-ignore
     props.mindMap && props.mindMap.miniMap.onMousedown(e)
 }
 
-const onMousemove = (e: PointerEvent) => {
+const onMousemove = (e: MouseEvent) => {
     // @ts-ignore
     props.mindMap && props.mindMap.miniMap.onMousemove(e)
 }
 
-const onMouseup = (e: PointerEvent) => {
+const onMouseup = (e: MouseEvent) => {
     // @ts-ignore
     props.mindMap && props.mindMap.miniMap.onMouseup(e)
 }

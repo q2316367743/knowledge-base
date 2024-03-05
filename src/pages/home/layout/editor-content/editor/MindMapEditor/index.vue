@@ -41,7 +41,7 @@ const emits = defineEmits(['update:modelValue']);
 const mindMapEditor = ref<HTMLElement>();
 const size = useElementSize(mindMapEditor);
 
-const mindMap = shallowRef<MindMap | null>(null);
+const mindMap = shallowRef<MindMap>();
 
 const available = computed(() => !!mindMap.value);
 
