@@ -3,8 +3,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue'
-import {editorProps} from './MonacoEditorType'
+import {defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch} from 'vue'
 // @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 // @ts-ignore
@@ -17,12 +16,28 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import * as monaco from 'monaco-editor'
 import {useGlobalStore} from "@/store/GlobalStore";
+import {useElementSize} from "@vueuse/core";
 
 export default defineComponent({
     name: 'monaco-editor',
-    props: editorProps,
+    props: {
+        modelValue: {
+            type: String as PropType<string>,
+            default: null,
+        },
+        language: {
+            type: String as PropType<string>,
+            default: 'javascript',
+        },
+        readOnly: {
+            type: Boolean,
+            default: false,
+        },
+        articleId: Number
+    },
     emits: ['update:modelValue', 'change', 'editor-mounted'],
     setup(props, {emit}) {
+
         self.MonacoEnvironment = {
             getWorker(_: string, label: string) {
                 if (label === 'json') {
@@ -41,7 +56,10 @@ export default defineComponent({
             },
         }
         let editor: monaco.editor.IStandaloneCodeEditor
-        const codeEditBox = ref()
+        const codeEditBox = ref();
+
+
+        const size = useElementSize(codeEditBox);
 
         const init = () => {
             monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
@@ -57,9 +75,8 @@ export default defineComponent({
                 value: props.modelValue,
                 language: props.language,
                 theme: useGlobalStore().isDark ? 'vs-dark' : 'vs',
-                ...props.options,
-                readOnly: props.readOnly
-            })
+                readOnly: props.readOnly,
+            });
 
             // 监听值的变化
             editor.onDidChangeModelContent(() => {
@@ -83,14 +100,6 @@ export default defineComponent({
         )
 
         watch(
-            () => props.options,
-            newValue => {
-                editor.updateOptions(newValue)
-            },
-            {deep: true}
-        )
-
-        watch(
             () => props.language,
             newValue => {
                 monaco.editor.setModelLanguage(editor.getModel()!, newValue)
@@ -103,7 +112,8 @@ export default defineComponent({
 
         watch(() => useGlobalStore().isDark, value => {
             editor.updateOptions({theme: value ? 'vs-dark' : 'vs'})
-        })
+        });
+
 
         onBeforeUnmount(() => {
             editor.dispose()
@@ -120,7 +130,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .codeEditBox {
     position: relative;
-    width: v-bind(width);
-    height: v-bind(height);
+    width: 100%;
+    height: 100%;
 }
 </style>

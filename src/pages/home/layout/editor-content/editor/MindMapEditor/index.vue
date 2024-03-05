@@ -7,7 +7,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, PropType, ref, shallowRef, watch} from "vue";
+import {computed, onMounted, onBeforeUnmount, PropType, ref, shallowRef, watch} from "vue";
 import MindMap from "simple-mind-map";
 import {IWorkbookData} from "@univerjs/core";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -78,7 +78,7 @@ watch(() => size.width.value, () => mindMap.value && mindMap.value.resize());
 watch(() => size.height.value, () => mindMap.value && mindMap.value.resize());
 watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(value ? 'readonly' : 'edit'))
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     useArticleExportEvent.off(onExport);
     if (mindMap.value) {
         mindMap.value.destroy();

@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import MindMap from 'simple-mind-map';
-import {onMounted, onUnmounted, PropType, ref} from "vue";
+import {onMounted, onBeforeUnmount, PropType, ref} from "vue";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>
@@ -25,7 +25,7 @@ onMounted(() => {
     }
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     if (props.mindMap) {
         props.mindMap.off('data_change', onDataChange);
     }

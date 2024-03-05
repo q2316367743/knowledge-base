@@ -4,7 +4,6 @@
 <script lang="ts" setup>
 import "@univerjs/design/lib/index.css";
 import "@univerjs/ui/lib/index.css";
-// import "@univerjs/docs-ui/lib/index.css";
 import "@univerjs/sheets-ui/lib/index.css";
 import "@univerjs/sheets-formula/lib/index.css";
 
@@ -18,7 +17,7 @@ import {UniverSheetsPlugin} from "@univerjs/sheets";
 import {UniverSheetsFormulaPlugin} from "@univerjs/sheets-formula";
 import {UniverSheetsUIPlugin} from "@univerjs/sheets-ui";
 import {UniverUIPlugin} from "@univerjs/ui";
-import {onMounted, onUnmounted, PropType, ref} from "vue";
+import {onMounted, onBeforeUnmount, PropType, ref} from "vue";
 import { useSaveContentEvent} from "@/store/components/HomeEditorStore";
 import type {Workbook} from "@univerjs/core/lib/types/sheets/workbook";
 
@@ -74,7 +73,7 @@ onMounted(() => {
 
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     useSaveContentEvent.off(onSave);
     univer.dispose();
 });

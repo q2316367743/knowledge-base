@@ -81,7 +81,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, onUnmounted, ref, toRaw, watch} from "vue";
+import {computed, nextTick, onMounted, onBeforeUnmount, ref, toRaw, watch} from "vue";
 import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, Toolbar} from '@wangeditor/editor';
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
@@ -242,7 +242,7 @@ function create() {
 onMounted(() => create());
 
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     if (editor) {
         editor.destroy();
     }

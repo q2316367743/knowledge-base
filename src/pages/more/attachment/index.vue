@@ -13,7 +13,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {onUnmounted, ref} from "vue";
+import {onBeforeUnmount, ref} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import MessageUtil from "@/utils/MessageUtil";
@@ -46,7 +46,7 @@ function revokeAll() {
     resources = [];
 }
 
-onUnmounted(() => revokeAll());
+onBeforeUnmount(() => revokeAll());
 
 // 动画处理
 const side = ref<HTMLDivElement | null>(null);

@@ -14,7 +14,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, PropType, ref, watch} from "vue";
+import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 // 编辑器
 import WangEditor from "@/pages/home/layout/editor-content/editor/wang-editor.vue";
@@ -120,7 +120,7 @@ onMounted(() => {
     useUpdatePreviewEvent.on(onPreview);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     useSaveContentEvent.off(onSave);
     useUpdatePreviewEvent.off(onPreview);
 });

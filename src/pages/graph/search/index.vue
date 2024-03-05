@@ -30,7 +30,7 @@
 </template>
 <script lang="ts" setup>
 import {useWindowSize} from "@vueuse/core";
-import {computed, onUnmounted, ref} from "vue";
+import {computed, onBeforeUnmount, ref} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/MessageUtil";
 import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
@@ -106,7 +106,7 @@ async function _searchContent() {
 
 }
 
-onUnmounted(() => close.value = true);
+onBeforeUnmount(() => close.value = true);
 
 function stop() {
     if (close.value) {

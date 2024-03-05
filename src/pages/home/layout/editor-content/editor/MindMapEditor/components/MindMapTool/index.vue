@@ -72,7 +72,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onUnmounted, PropType, ref, shallowRef} from "vue";
+import {computed, onBeforeUnmount, PropType, ref, shallowRef} from "vue";
 import MindMap from "simple-mind-map";
 import {
     openInsertImage
@@ -119,7 +119,7 @@ props.mindMap && props.mindMap.on('node_active', nodeActive);
 // 前进回退事件
 props.mindMap && props.mindMap.on('back_forward', backForward);
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     props.mindMap && props.mindMap.off('node_active', nodeActive);
     props.mindMap && props.mindMap.off('back_forward', backForward);
 })

@@ -3,7 +3,7 @@
 </template>
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
-import {onMounted, shallowRef, watch} from "vue";
+import {onMounted, onBeforeUnmount, shallowRef, watch} from "vue";
 import {CherryConfig, editorProps} from "@/pages/home/layout/editor-content/editor/markdown-editor/CherryMarkdownOption";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
@@ -23,6 +23,8 @@ import {
     useYiYanMenu
 } from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/XiaRouMenu";
 import Constant from "@/global/Constant";
+import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {openMarkdownExport} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/MarkdownExport";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -118,7 +120,11 @@ const config: CherryConfig = {
         ],
         toolbarRight: ['fullScreen', '|'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'], // array or false
-        sidebar: ['theme', 'settings',],
+        sidebar: ['theme', 'settings'],
+        toc: {
+            updateLocationHash: false, // 要不要更新URL的hash
+            defaultModel: 'pure', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
+        },
         customMenu: {
             ScreenShotMenu: useScreenShotMenu(instance),
             PanGu: usePanGu(),
@@ -204,8 +210,12 @@ if (isUtools) {
 
 onMounted(() => {
     instance.value = new Cherry(config as any);
-    handleTheme()
+    handleTheme();
+    useArticleExportEvent.off(onExport);
+    useArticleExportEvent.on(onExport);
 });
+
+onBeforeUnmount(() => useArticleExportEvent.off(onExport));
 
 watch(() => props.preview, handleToolbar);
 watch(() => size.width.value, value => {
@@ -258,6 +268,13 @@ function getToc(): Array<TocItem> {
         return [];
     }
 }
+
+function onExport(id: number) {
+    if (props.articleId === id && instance.value) {
+        openMarkdownExport(id, instance.value)
+    }
+}
+
 
 </script>
 <style lang="less">
