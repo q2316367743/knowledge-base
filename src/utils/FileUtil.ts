@@ -49,5 +49,18 @@ export function renderLanguage(ext: string): string {
         return 'python';
     }
     return ext;
+}
 
+export function renderFileExtraName(language: string) {
+    // 部分后缀名与语言不符
+    if (language === 'markdown') {
+        return 'md';
+    } else if (language === 'typescript') {
+        return 'ts';
+    } else if (language === 'javascript') {
+        return 'js';
+    } else if (language === 'python') {
+        return 'py';
+    }
+    return language;
 }

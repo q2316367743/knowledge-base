@@ -5,6 +5,7 @@
     width: 161px;
     box-sizing: border-box;
     margin-top: 7px;
+    user-select: none;
 }
 
 .custom-radio-card-top {

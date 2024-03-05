@@ -49,6 +49,7 @@ export function createArticleExport(id: number, exportItems: Array<ExportItem>):
                     <span style="width: 160px">导出文件名称：</span>
                     <Input v-model={titleWrap.value} allowClear/>
                 </InputGroup>
+                <br/>
                 <RadioGroup v-model={type.value}>
                     {exportItems.map(item => <Radio value={item.key}>
                         {{

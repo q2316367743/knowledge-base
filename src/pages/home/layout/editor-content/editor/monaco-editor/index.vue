@@ -17,6 +17,10 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import * as monaco from 'monaco-editor'
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
+import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {download} from "@/utils/BrowserUtil";
+import {renderFileExtraName} from "@/utils/FileUtil";
 
 export default defineComponent({
     name: 'monaco-editor',
@@ -120,8 +124,25 @@ export default defineComponent({
         })
 
         onMounted(() => {
-            init()
+            init();
+            useArticleExportEvent.off(onExport);
+            useArticleExportEvent.on(onExport);
         })
+
+        function onExport(id: number) {
+            if (props.articleId === id && editor) {
+                const model = editor.getModel();
+                if (model) {
+                    createArticleExport(id, [{
+                        key: 1,
+                        name: '代码文件',
+                        desc: '默认导出'
+                    }]).then(res => {
+                        download(model.getValue(), res.title, 'text');
+                    })
+                }
+            }
+        }
 
         return {codeEditBox}
     },
