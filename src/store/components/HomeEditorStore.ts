@@ -159,6 +159,11 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
                     setId(0);
                 }
             }
+            if (indexes.value.length === 0) {
+                if (collapsed.value) {
+                    collapsed.value = false;
+                }
+            }
         }
     }
 
