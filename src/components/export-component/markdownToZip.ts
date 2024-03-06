@@ -3,10 +3,10 @@ import {listToList} from "@/entity/ListTree";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {ArticleSource} from "@/entity/article";
 import JSZip from "jszip";
 import {download} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
+import {ArticleContent} from "@/entity/article/ArticleContent";
 
 
 export async function markdownToZip() {
@@ -17,7 +17,7 @@ export async function markdownToZip() {
     for (let path of map.keys()) {
         const articleId = map.get(path);
         if (articleId) {
-            const content = await getFromOneWithDefaultByAsync<ArticleSource>(
+            const content = await getFromOneWithDefaultByAsync<ArticleContent>(
                 LocalNameEnum.ARTICLE_CONTENT + articleId, {content: ''});
 
             zip.file(path, content.record.content);

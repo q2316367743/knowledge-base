@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import {
     ArticleBase,
     ArticleIndex,
-    ArticleSource,
     getDefaultArticleBase,
     getDefaultArticleIndex
 } from "@/entity/article";
@@ -12,6 +11,7 @@ import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {ArticleContent} from "@/entity/article/ArticleContent";
 
 let isInit = false;
 
@@ -92,7 +92,7 @@ export const useArticleStore = defineStore('article', {
                 LocalNameEnum.ARTICLE_CONTENT + id,
                 {
                     content
-                } as ArticleSource
+                } as ArticleContent
             );
             return Promise.resolve(id);
         },
@@ -144,7 +144,7 @@ export const useArticleStore = defineStore('article', {
         ): Promise<undefined | string> {
             await this.updateIndex(id, article || {});
             // 新增内容
-            return saveOneByAsync<ArticleSource>(LocalNameEnum.ARTICLE_CONTENT + id, {
+            return saveOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + id, {
                 content
             }, rev);
         },

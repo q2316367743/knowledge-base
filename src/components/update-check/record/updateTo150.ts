@@ -1,6 +1,5 @@
 import {
     getFromOneByAsync,
-    getFromOneWithDefaultByAsync,
     listByAsync,
     saveListByAsync,
     saveOneByAsync
@@ -8,12 +7,12 @@ import {
 import {
     ArticleBase,
     ArticleIndex,
-    ArticleSource,
     getDefaultArticleBase,
     getDefaultArticleIndex
 } from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toRaw} from "vue";
+import {ArticleContent} from "@/entity/article/ArticleContent";
 
 /**
  * 本次更新主要是将临时文章增加到一篇文章里
@@ -56,7 +55,7 @@ async function add(
         LocalNameEnum.ARTICLE_CONTENT + id,
         {
             content
-        } as ArticleSource
+        } as ArticleContent
     );
     return Promise.resolve(id);
 }

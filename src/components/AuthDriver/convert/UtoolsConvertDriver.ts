@@ -2,7 +2,7 @@ import {ConvertDriver} from "@/components/AuthDriver/ConvertDriver";
 import Mammoth from "mammoth";
 import {parseFileName} from "@/utils/file/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {ArticleSource, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
+import { getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import JSZip from "jszip";
@@ -13,6 +13,7 @@ import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toDateString} from "xe-utils";
 import {turndownService} from "@/plugin/sdk/Turndown";
+import {ArticleContent} from "@/entity/article/ArticleContent";
 
 // TODO: 此处需要导出
 export default class UtoolsConvertDriver implements ConvertDriver {
@@ -105,7 +106,7 @@ export default class UtoolsConvertDriver implements ConvertDriver {
         for (let path of map.keys()) {
             const articleId = map.get(path);
             if (articleId) {
-                const content = await getFromOneByAsync<ArticleSource>(
+                const content = await getFromOneByAsync<ArticleContent>(
                     LocalNameEnum.ARTICLE_CONTENT + articleId);
                 if (content.record) {
                     const articleIndex = articleMap.get(articleId);

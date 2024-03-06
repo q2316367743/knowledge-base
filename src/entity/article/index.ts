@@ -4,7 +4,6 @@ import {ArticleContent} from "@/entity/article/ArticleContent";
 
 export * from './ArticleIndex';
 export * from './ArticleBase';
-export * from './ArticleSource';
 
 /**
  * 文章
