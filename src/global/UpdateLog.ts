@@ -2,9 +2,9 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
-        version: '1.7.0',
-        sign: 170,
-        time: '2024-03-05',
+        version: '1.7.1',
+        sign: 171,
+        time: '2024-03-06',
         items: [{
             label: LogItemEnum.ADD,
             content: '【笔记】新增思维导图'
@@ -17,6 +17,15 @@ export default [
         }, {
             label: LogItemEnum.REPAIR,
             content: "【笔记】多个富文本编辑器无法使用问题"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【笔记】选中笔记时，自动展开文件夹"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【笔记】点击文件夹展开文件夹"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【笔记】思维导图增加快捷键"
         }]
     },
     {

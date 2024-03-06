@@ -286,6 +286,8 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
     }
 }
 
+expandTo(useHomeEditorStore().id);
+
 function expandTo(id: number) {
     const article = useArticleStore().articleMap.get(id);
     if (article && article.folder !== 0) {
@@ -299,7 +301,7 @@ function _expandTo(id: number) {
     }
     const parent = useFolderStore().folderMap.get(id);
     if (parent) {
-        expandTo(parent.pid);
+        _expandTo(parent.pid);
     }
     if (expandedKeys.value.indexOf(id) === -1) {
         expandedKeys.value.push(id);
