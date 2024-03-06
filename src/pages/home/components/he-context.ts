@@ -26,7 +26,7 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
                         "uid": "47fe79a5-2690-4343-8fbf-74c350d4b92f"
                     }, "children": []
                 },
-                "theme": {"template": useGlobalStore().isDark ? 'dark' : 'default', "config": {}},
+                "theme": {"template": 'default', "config": {}},
                 "view": {
                     "transform": {
                         "scaleX": 1,

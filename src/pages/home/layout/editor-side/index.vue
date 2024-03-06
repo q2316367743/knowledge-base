@@ -6,11 +6,11 @@
                 <he-more/>
             </a-input-group>
         </header>
-        <a-tree v-model:selected-keys="selectedKeys" :data="treeNodeData" :virtual-list-props="virtualListProps"
+        <a-tree :data="treeNodeData" :virtual-list-props="virtualListProps" :checkable="checkKeys.length > 0"
                 :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable
-                :checkable="checkKeys.length > 0"
                 @select="onSelect($event)" @drop="onDrop($event)" style="margin: 0 7px;"
-                v-model:checked-keys="checkKeys">
+                v-model:selected-keys="selectedKeys" v-model:checked-keys="checkKeys"
+                v-model:expanded-keys="expandedKeys">
             <template #extra="nodeData">
                 <a-dropdown>
                     <a-button type="text">
@@ -31,7 +31,8 @@
                                 </a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.EXCEL)">表格</a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MIND_MAP)">思维导图
+                                </a-doption>
                             </template>
                         </a-dsubmenu>
 
@@ -166,6 +167,7 @@ const size = useWindowSize();
 const keyword = ref('');
 const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [useHomeEditorStore().id]);
 const checkKeys = ref<Array<number>>([]);
+const expandedKeys = ref<Array<number>>([]);
 
 const folderTree = computed(() => useFolderStore().folderTree);
 const folderMap = computed(() => useArticleStore().folderMap);
@@ -209,7 +211,10 @@ const virtualListProps = computed(() => ({
 }));
 const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
 
-watch(() => useHomeEditorStore().id, id => selectedKeys.value = [id]);
+watch(() => useHomeEditorStore().id, id => {
+    selectedKeys.value = [id];
+    expandTo(id);
+});
 
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
@@ -241,11 +246,6 @@ function multiCheckDelete() {
         });
 }
 
-
-/**
- * 检测节点是否允许被释放
- * @param options 参数
- */
 function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 | 1; }): boolean {
     return !options.dropNode.isLeaf
 }
@@ -281,6 +281,26 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
                     .catch(e => MessageUtil.error("移动失败", e));
             }
         }
+    }
+}
+
+function expandTo(id: number) {
+    const article = useArticleStore().articleMap.get(id);
+    if (article && article.folder !== 0) {
+        _expandTo(article.folder);
+    }
+}
+
+function _expandTo(id: number) {
+    if (id === 0) {
+        return;
+    }
+    const parent = useFolderStore().folderMap.get(id);
+    if (parent) {
+        expandTo(parent.pid);
+    }
+    if (expandedKeys.value.indexOf(id) === -1) {
+        expandedKeys.value.push(id);
     }
 }
 
