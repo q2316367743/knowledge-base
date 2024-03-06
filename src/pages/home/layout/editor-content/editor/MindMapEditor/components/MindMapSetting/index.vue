@@ -5,14 +5,21 @@
                 <icon-computer/>
             </template>
         </a-button>
+        <a-tooltip content="快捷键">
+            <a-button type="text" size="mini" @click="openMindMapShortcut()">
+                <template #icon>
+                    <icon-question-circle/>
+                </template>
+            </a-button>
+        </a-tooltip>
     </div>
     <mind-map-mini-map :mind-map="mindMap" v-if="miniMap"/>
 </template>
 <script lang="ts" setup>
 import {PropType, ref} from "vue";
 import MindMap from "simple-mind-map";
-import MindMapMiniMap
-    from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/MindMapMiniMap.vue";
+import MindMapMiniMap from "./MindMapMiniMap.vue";
+import {openMindMapShortcut} from "./MindMapShortcut";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>
