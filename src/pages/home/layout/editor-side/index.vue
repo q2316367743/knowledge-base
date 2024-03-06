@@ -223,6 +223,8 @@ function onSelect(selectKeys: Array<number | string>) {
         if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
             useHomeEditorStore().switchCollapsed();
         }
+    }else {
+        _expandTo(id);
     }
 }
 
