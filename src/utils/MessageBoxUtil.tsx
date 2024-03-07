@@ -84,7 +84,7 @@ export default {
                         }
                     })
                 ]),
-                title: '提示',
+                title: title,
                 draggable: true,
                 okText: config.confirmButtonText,
                 cancelText: config.cancelButtonText,
@@ -143,7 +143,7 @@ export default {
                         style: 'margin-top: 8px;'
                     })
                 ]),
-                title: '提示',
+                title: title,
                 draggable: true,
                 okText: config.confirmButtonText,
                 cancelText: config.cancelButtonText,
