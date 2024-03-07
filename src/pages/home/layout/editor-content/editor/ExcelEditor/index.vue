@@ -86,6 +86,7 @@ onBeforeUnmount(() => {
 function onSave(id: number) {
     if (props.readOnly) {
         // 只读不保存
+        MessageUtil.warning("预览模式，无法保存")
         return;
     }
     if (workbook && props.articleId === id) {
@@ -94,6 +95,10 @@ function onSave(id: number) {
 }
 
 useIntervalFn(() => {
+    if (props.readOnly) {
+        // 只读不保存
+        return;
+    }
     onSave(props.articleId || 0);
 }, 5000)
 
