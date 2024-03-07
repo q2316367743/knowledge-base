@@ -86,9 +86,20 @@
                  :key="item.id" @click.stop>
                 <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.TODO)">
                 </a-checkbox>
-                <p class="title gray" @click="setItemId(item.id)" style="text-decoration: line-through;margin: 0">
-                    {{ item.title }}
-                </p>
+                <a-dropdown align-point trigger="contextMenu">
+                    <div class="title gray delete" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
+                        {{ item.title }}
+                    </div>
+                    <template #content>
+                        <a-doption style="color: rgb(var(--red-6));" @click="removeById(item.id)">
+                            <template #icon>
+                                <icon-delete/>
+                            </template>
+                            删除
+                        </a-doption>
+                    </template>
+                </a-dropdown>
+
             </div>
             <!-- 已放弃 -->
             <a-divider orientation="left" v-if="abandonList.length > 0">
@@ -341,6 +352,10 @@ function toArticle(id: number) {
 
             .gray {
                 color: var(--color-neutral-6);
+            }
+
+            .delete {
+                text-decoration: line-through
             }
 
             .title {
