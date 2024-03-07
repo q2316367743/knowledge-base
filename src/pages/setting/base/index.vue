@@ -73,11 +73,15 @@
                     <a-radio :value="MdEditorEditModeEnum.EDIT_ONLY">仅编辑</a-radio>
                     <a-radio :value="MdEditorEditModeEnum.EDIT_PREVIEW">编辑和预览</a-radio>
                     <a-radio :value="MdEditorEditModeEnum.AUTO">自动切换</a-radio>
+                    <a-radio :value="MdEditorEditModeEnum.PREVIEW">仅预览</a-radio>
                 </a-radio-group>
                 <template #help>
                     <span v-if="instance.mdEditorEditMode === MdEditorEditModeEnum.AUTO">
                         当插件宽度小于{{ Constant.autoCollapsedWidth }}px时切换为【仅编辑】，
                         大于{{ Constant.autoCollapsedWidth }}px时切换为【编辑和预览】
+                    </span>
+                    <span v-else-if="instance.mdEditorEditMode === MdEditorEditModeEnum.PREVIEW">
+                        开启后，md编辑器默认是预览模式，如果文章不是预览吗模式，则需要点击两边预览/编辑切换才可以切换到编辑模式，请谨慎开启
                     </span>
                 </template>
             </a-form-item>

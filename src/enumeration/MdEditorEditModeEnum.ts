@@ -13,7 +13,12 @@ enum MdEditorEditModeEnum {
     /**
      * 自动切换
      */
-    AUTO = 3
+    AUTO = 3,
+
+    /**
+     * 仅预览
+     */
+    PREVIEW = 5
 
 }
 

@@ -30,6 +30,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
         newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName,
         codeExtraName: state => state.baseSetting.codeExtraName,
+        mdEditorEditMode: state => state.baseSetting.mdEditorEditMode,
         mdEditorAutoMode: (state): boolean => state.baseSetting.mdEditorEditMode === MdEditorEditModeEnum.AUTO,
         defaultModel: (state): 'editOnly' | 'edit&preview' => {
             switch (state.baseSetting.mdEditorEditMode) {
