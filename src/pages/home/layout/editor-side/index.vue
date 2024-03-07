@@ -66,17 +66,12 @@
                             </template>
                             导入
                         </a-doption>
-                        <a-dsubmenu v-if="!nodeData.isLeaf">
+                        <a-doption v-if="!nodeData.isLeaf" @click="exportToMd(nodeData.key)">
                             <template #icon>
                                 <icon-export/>
                             </template>
-                            导出
-                            <template #content>
-                                <a-tooltip content="将全部笔记保存为ZIP，并保留目录结构">
-                                    <a-doption @click="exportToMd(nodeData.key)">导出为ZIP</a-doption>
-                                </a-tooltip>
-                            </template>
-                        </a-dsubmenu>
+                            导出为ZIP
+                        </a-doption>
                     </template>
                 </a-dropdown>
             </template>

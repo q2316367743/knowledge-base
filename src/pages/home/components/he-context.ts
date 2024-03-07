@@ -7,11 +7,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {docxToArticle} from "@/components/export-component/docxToArticle";
-import {textToArticle} from "@/components/export-component/textToArticle";
 import {convert} from "@/global/BeanFactory";
-import {htmlToMarkdown} from "@/components/export-component/htmlToMarkdown";
-import {zipToArticle} from "@/components/export-component/zipToArticle";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -145,45 +141,6 @@ export function rename(id: number, name: string, article: boolean) {
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 导入相关 -----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
-
-export function importHtmlToMarkdown(folder: number) {
-    useGlobalStore().startLoading("正在准备数据")
-    docxToArticle(folder)
-        .then(() => MessageUtil.success("导出成功"))
-        .catch(e => MessageUtil.error("导出失败", e))
-        .finally(() => useGlobalStore().closeLoading());
-}
-
-
-export function importArticleByDocx(folder: number, type: ArticleTypeEnum) {
-    htmlToMarkdown(folder, type)
-        .then(() => MessageUtil.success("导入成功"))
-        .catch(e => {
-            if (e.message !== 'The user aborted a request.') {
-                MessageUtil.error("导入失败", e)
-            }
-        })
-}
-
-export function importTextToArticle(folder: number, type: ArticleTypeEnum) {
-    textToArticle(folder, type)
-        .then(() => MessageUtil.success("导入成功"))
-        .catch(e => {
-            if (e.message !== 'The user aborted a request.') {
-                MessageUtil.error("导入失败", e)
-            }
-        })
-}
-
-export function importArticleByZip(folder: number) {
-    zipToArticle(folder)
-        .then(() => MessageUtil.success("导入成功"))
-        .catch(e => {
-            if (e.message !== 'The user aborted a request.') {
-                MessageUtil.error("导入失败", e)
-            }
-        })
-}
 
 
 export function exportToMd(pid: number) {

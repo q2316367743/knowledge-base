@@ -31,17 +31,12 @@
                 </template>
                 导入
             </a-doption>
-            <a-dsubmenu>
+            <a-doption @click="exportToMd(0)">
                 <template #icon>
                     <icon-export/>
                 </template>
-                导出
-                <template #content>
-                    <a-tooltip content="将全部笔记保存为ZIP，并保留目录结构">
-                        <a-doption @click="exportToMd(0)">导出为ZIP</a-doption>
-                    </a-tooltip>
-                </template>
-            </a-dsubmenu>
+                导出为ZIP
+            </a-doption>
             <a-dsubmenu>
                 <template #icon>
                     <icon-sort/>
