@@ -84,6 +84,10 @@ onBeforeUnmount(() => {
 
 
 function onSave(id: number) {
+    if (props.readOnly) {
+        // 只读不保存
+        return;
+    }
     if (workbook && props.articleId === id) {
         emits("update:modelValue", workbook.save());
     }
