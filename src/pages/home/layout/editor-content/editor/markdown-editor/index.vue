@@ -25,6 +25,7 @@ import {
 import Constant from "@/global/Constant";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {openMarkdownExport} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/MarkdownExport";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -35,6 +36,11 @@ defineExpose({exportFile, getToc})
 const instance = shallowRef<Cherry>();
 const id = 'markdown-editor-' + new Date().getTime();
 const size = useWindowSize();
+
+// 默认模式
+const defaultModel = props.preview || useBaseSettingStore().mdEditorEditMode === MdEditorEditModeEnum.PREVIEW ?
+    'previewOnly' : useBaseSettingStore().defaultModel;
+
 const config: CherryConfig = {
     id: id,
     value: props.modelValue || '',
@@ -79,7 +85,7 @@ const config: CherryConfig = {
         }
     },
     editor: {
-        defaultModel: props.preview ? 'previewOnly' : useBaseSettingStore().defaultModel,
+        defaultModel: defaultModel,
         codemirror: {
             theme: useGlobalStore().isDark ? 'material-ocean' : 'default',
         },
@@ -211,6 +217,7 @@ if (isUtools) {
 onMounted(() => {
     instance.value = new Cherry(config as any);
     handleTheme();
+    handleToolbar(defaultModel === 'previewOnly')
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
 });
@@ -234,6 +241,7 @@ watch(() => useGlobalStore().isDark, value => {
 function handleToolbar(value: boolean) {
     if (instance.value) {
         let toolbar = instance.value.status.toolbar;
+        console.log(value)
         instance.value.switchModel(value ? 'previewOnly' : 'editOnly');
         // 工具栏
         if ((toolbar === 'show') === value) {

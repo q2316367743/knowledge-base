@@ -1,5 +1,7 @@
 import {turndownService} from "@/plugin/sdk/Turndown";
 import Mammoth from "mammoth";
+import JSZip from "jszip";
+import {basename} from "@/utils/file/FileUtil";
 
 /**
  * html转为markdown
@@ -24,4 +26,19 @@ export async function docxToHtml(docx: ArrayBuffer): Promise<string> {
 export async function docxToMarkdown(docx: ArrayBuffer): Promise<string> {
     const html = await docxToHtml(docx);
     return htmlToMarkdown(html);
+}
+
+
+export async function zipToFiles(file: File): Promise<File[]> {
+    const files = new Array<File>()
+    const jsZip = await JSZip.loadAsync(file);
+    for (let path in jsZip.files) {
+        const item = jsZip.files[path];
+        if (item.dir) {
+            continue;
+        }
+        const text = await item.async('blob');
+        files.push(new File([text], basename(path)));
+    }
+    return files;
 }

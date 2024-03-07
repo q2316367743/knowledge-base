@@ -25,7 +25,7 @@
                     <a-doption @click="addArticle(0, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
                 </template>
             </a-dsubmenu>
-            <a-dsubmenu>
+            <a-dsubmenu @click="showArticleImportModal(0)">
                 <template #icon>
                     <icon-import/>
                 </template>
@@ -99,6 +99,7 @@ import {
 import {computed} from "vue";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
+import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
 
 const items = [{
     key: ArticleSortEnum.CREATE_TIME_ASC,
