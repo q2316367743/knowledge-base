@@ -60,51 +60,12 @@
                             </template>
                             多选
                         </a-doption>
-                        <a-dsubmenu v-if="!nodeData.isLeaf">
+                        <a-doption v-if="!nodeData.isLeaf" @click="showArticleImportModal(nodeData.key)">
                             <template #icon>
                                 <icon-import/>
                             </template>
                             导入
-                            <template #content>
-                                <a-dsubmenu>
-                                    富文本
-                                    <template #content>
-                                        <a-tooltip
-                                            content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                                            <a-doption
-                                                @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.RICH_TEXT)">
-                                                docx文件
-                                            </a-doption>
-                                        </a-tooltip>
-                                        <a-doption
-                                            @click="importTextToArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">
-                                            html文件
-                                        </a-doption>
-                                    </template>
-                                </a-dsubmenu>
-                                <a-dsubmenu>
-                                    Markdown
-                                    <template #content>
-                                        <a-tooltip
-                                            content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                                            <a-doption
-                                                @click="importArticleByDocx(nodeData.key, ArticleTypeEnum.MARKDOWN)">
-                                                docx文件
-                                            </a-doption>
-                                        </a-tooltip>
-                                        <a-doption @click="importHtmlToMarkdown(nodeData.key)">html文件</a-doption>
-                                        <a-doption @click="importTextToArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">
-                                            markdown文件
-                                        </a-doption>
-                                    </template>
-                                </a-dsubmenu>
-                                <a-doption @click="importTextToArticle(nodeData.key, ArticleTypeEnum.CODE)">代码文件
-                                </a-doption>
-                                <a-tooltip content="导入压缩包中全部markdown文件，文件路径为文件名">
-                                    <a-doption @click="importArticleByZip(nodeData.key)">zip文件</a-doption>
-                                </a-tooltip>
-                            </template>
-                        </a-dsubmenu>
+                        </a-doption>
                         <a-dsubmenu v-if="!nodeData.isLeaf">
                             <template #icon>
                                 <icon-export/>
@@ -157,10 +118,10 @@ import {
     addArticle,
     addFolder,
     exportToMd,
-    importArticleByDocx, importArticleByZip, importHtmlToMarkdown, importTextToArticle,
     remove,
     rename
 } from "@/pages/home/components/he-context";
+import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
 
 const size = useWindowSize();
 

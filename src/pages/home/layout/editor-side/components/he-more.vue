@@ -25,40 +25,12 @@
                     <a-doption @click="addArticle(0, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
                 </template>
             </a-dsubmenu>
-            <a-dsubmenu @click="showArticleImportModal(0)">
+            <a-doption @click="showArticleImportModal(0)">
                 <template #icon>
                     <icon-import/>
                 </template>
                 导入
-                <template #content>
-                    <a-dsubmenu>
-                        富文本
-                        <template #content>
-                            <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                                <a-doption @click="importArticleByDocx(0, ArticleTypeEnum.RICH_TEXT)">docx文件
-                                </a-doption>
-                            </a-tooltip>
-                            <a-doption @click="importTextToArticle(0, ArticleTypeEnum.RICH_TEXT)">html文件</a-doption>
-                        </template>
-                    </a-dsubmenu>
-                    <a-dsubmenu>
-                        Markdown
-                        <template #content>
-                            <a-tooltip content="仅能保留部分格式，图片资源将以base64方式存储，最大导入文件支持1M">
-                                <a-doption @click="importArticleByDocx(0, ArticleTypeEnum.MARKDOWN)">docx文件
-                                </a-doption>
-                            </a-tooltip>
-                            <a-doption @click="importHtmlToMarkdown(0)">html文件</a-doption>
-                            <a-doption @click="importTextToArticle(0, ArticleTypeEnum.MARKDOWN)">markdown文件
-                            </a-doption>
-                        </template>
-                    </a-dsubmenu>
-                    <a-doption @click="importTextToArticle(0, ArticleTypeEnum.CODE)">代码文件</a-doption>
-                    <a-tooltip content="导入压缩包中全部markdown文件，文件路径为文件名">
-                        <a-doption @click="importArticleByZip(0)">zip文件</a-doption>
-                    </a-tooltip>
-                </template>
-            </a-dsubmenu>
+            </a-doption>
             <a-dsubmenu>
                 <template #icon>
                     <icon-export/>
@@ -91,10 +63,6 @@ import {
     addArticle,
     addFolder,
     exportToMd,
-    importArticleByDocx,
-    importArticleByZip,
-    importHtmlToMarkdown,
-    importTextToArticle
 } from "@/pages/home/components/he-context";
 import {computed} from "vue";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
