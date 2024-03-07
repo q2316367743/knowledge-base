@@ -36,6 +36,7 @@ export const editorType = computed(() => {
 export const useSaveContentEvent = useEventBus<number>('save-content');
 export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
 export const useArticleExportEvent = useEventBus<number>('article-export');
+export const useArticleImportEvent = useEventBus<number>('article-import');
 
 
 // 一些特殊的方法

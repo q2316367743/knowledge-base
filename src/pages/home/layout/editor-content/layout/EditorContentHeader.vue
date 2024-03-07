@@ -3,7 +3,7 @@
         <div class="menu" :style="{padding: disabled ? '0px' : '4px'}">
             <a-button type="text" @click="switchCollapsed()">
                 <template #icon>
-                    <icon-menu />
+                    <icon-menu/>
                 </template>
             </a-button>
         </div>
@@ -36,6 +36,12 @@
                                     </template>
                                     设置
                                 </a-doption>
+                                <a-doption @click="onImport()">
+                                    <template #icon>
+                                        <icon-import/>
+                                    </template>
+                                    导入
+                                </a-doption>
                                 <a-doption @click="onExport()">
                                     <template #icon>
                                         <icon-export/>
@@ -46,7 +52,7 @@
                         </a-dropdown>
                     </a-button-group>
                 </template>
-                <a-tab-pane v-for="article in indexes" :key="article.id" :title="article.name" />
+                <a-tab-pane v-for="article in indexes" :key="article.id" :title="article.name"/>
             </a-tabs>
         </div>
 
@@ -58,7 +64,7 @@ import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtr
 import {
     editorType,
     preview,
-    switchPreview, useArticleExportEvent,
+    switchPreview, useArticleExportEvent, useArticleImportEvent,
     useHomeEditorStore,
     useSaveContentEvent
 } from "@/store/components/HomeEditorStore";
@@ -79,9 +85,6 @@ function close(e: any) {
     useHomeEditorStore().closeArticle(e);
 }
 
-function exportFile(type: string) {
-
-}
 
 function onSave() {
     // 触发保存
@@ -91,6 +94,10 @@ function onSave() {
 function onExport() {
     // 触发保存
     useArticleExportEvent.emit(useHomeEditorStore().id);
+}
+
+function onImport() {
+    useArticleImportEvent.emit(useHomeEditorStore().id);
 }
 
 

@@ -18,14 +18,17 @@ import MindMapCount from "@/pages/home/layout/editor-content/editor/MindMapEdito
 import MindMapTool from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
     from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/index.vue";
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {useArticleExportEvent, useArticleImportEvent} from "@/store/components/HomeEditorStore";
 import {openMindMapExport} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapExport";
+import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
 
 // 插件
 import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js';
 import Export from 'simple-mind-map/src/plugins/Export.js';
 import ExportPDF from 'simple-mind-map/src/plugins/ExportPDF.js'
 import ExportXMind from 'simple-mind-map/src/plugins/ExportXMind.js'
+import xmind from 'simple-mind-map/src/parse/xmind.js'
+import markdown from 'simple-mind-map/src/parse/markdown.js'
 
 const props = defineProps({
     modelValue: {
@@ -71,6 +74,8 @@ onMounted(() => {
 
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
+    useArticleImportEvent.off(onImport);
+    useArticleImportEvent.on(onImport);
 
 });
 
@@ -80,6 +85,7 @@ watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(valu
 
 onBeforeUnmount(() => {
     useArticleExportEvent.off(onExport);
+    useArticleImportEvent.off(onImport);
     if (mindMap.value) {
         mindMap.value.destroy();
     }
@@ -88,6 +94,31 @@ onBeforeUnmount(() => {
 function onExport(id: number) {
     if (props.articleId === id && mindMap.value) {
         openMindMapExport(mindMap.value, id);
+    }
+}
+
+function onImport(id: number) {
+    if (props.articleId === id && mindMap.value) {
+        openArticleImport(['.xmind', '.md', '.markdown']).then(file => {
+            if (file.name.endsWith('.xmind')) {
+                xmind.parseXmindFile(file).then((data: any) => {
+                    if (mindMap.value) {
+                        mindMap.value.setData(data);
+                    }
+                });
+            } else if (file.name.endsWith('.md') || file.name.endsWith('.markdown')) {
+                const fileReader = new FileReader()
+                fileReader.readAsText(file)
+                fileReader.onload = async evt => {
+                    if (evt.target) {
+                        const data = await markdown.transformMarkdownTo(evt.target.result);
+                        if (mindMap.value) {
+                            mindMap.value.setData(data);
+                        }
+                    }
+                }
+            }
+        })
     }
 }
 
