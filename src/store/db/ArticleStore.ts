@@ -173,8 +173,6 @@ export const useArticleStore = defineStore('article', {
             useHomeEditorStore().closeArticle(id);
         },
         async removeRealByIds(ids: Array<number>) {
-            console.log(this.value)
-            console.log(ids)
             this.value = this.value.filter(e => ids.indexOf(e.id) === -1);
             // 删除索引
             await this._sync();

@@ -2,6 +2,39 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.7.2',
+        sign: 172,
+        time: '2024-03-08',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: "【笔记】文章导入全新改版，导入方式更加直观，更加方便"
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【思维导图】新增导入功能'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【表格笔记】保存内容需要手动保存，预览模式无法保存内容"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【笔记】markdown编辑模式增加仅预览选项"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【笔记】新增批量删除的功能，支持删除文件夹下全部笔记"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【笔记】新增清空回收站的功能"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【设置】增加待办中点击关联文章跳转方式，可以设置直接侧边预览"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【待办】可以直接删除已完成的待办"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【待办】新增待办进度条，显示清单中待办完成进度"
+        }]
+    },
+    {
         version: '1.7.1',
         sign: 171,
         time: '2024-03-06',

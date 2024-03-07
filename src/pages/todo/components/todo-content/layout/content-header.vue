@@ -149,7 +149,8 @@ const percent = computed(() => {
     if (useTodoStore().todoItems.length === 0) {
         return 0;
     }
-    const value = useTodoStore().todoList.length / useTodoStore().todoItems.length
+    const all = useTodoStore().todoList.length + useTodoStore().completeList.length;
+    const value = useTodoStore().completeList.length / all;
     return parseFloat(value.toFixed(4))
 })
 

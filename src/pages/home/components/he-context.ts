@@ -7,7 +7,7 @@ import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {convert} from "@/global/BeanFactory";
+import {articleToZip} from "@/utils/file/ConvertUtil";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -161,7 +161,7 @@ export function rename(id: number, name: string, article: boolean) {
 
 export function exportToMd(pid: number) {
     useGlobalStore().startLoading("正在准备数据")
-    convert.articleToZip(pid)
+    articleToZip(pid)
         .then(() => MessageUtil.success("导出成功"))
         .catch(e => MessageUtil.error("导出失败", e))
         .finally(() => useGlobalStore().closeLoading());
