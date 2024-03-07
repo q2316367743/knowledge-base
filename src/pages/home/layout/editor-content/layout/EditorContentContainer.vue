@@ -1,6 +1,6 @@
 <template>
     <!-- 编辑区 -->
-    <div class="ec-container-item" v-if="articleIndex">
+    <div class="ec-container-item" v-if="articleIndex" style="height: 100%">
         <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
                          v-if="editorType === ArticleTypeEnum.MARKDOWN && load"/>
         <wang-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"

@@ -2,8 +2,8 @@
     <div class="mind-map-editor-wrap">
         <div class="mind-map-editor" ref="mindMapEditor"></div>
         <mind-map-count v-if="available" :mind-map="mindMap"/>
-        <mind-map-tool v-if="available" :mind-map="mindMap" :width="size.width.value"/>
-        <mind-map-setting v-if="available" :mind-map="mindMap"/>
+        <mind-map-tool v-if="available && !props.readOnly" :mind-map="mindMap" :width="size.width.value"/>
+        <mind-map-setting v-if="available && !props.readOnly" :mind-map="mindMap"/>
     </div>
 </template>
 <script lang="ts" setup>

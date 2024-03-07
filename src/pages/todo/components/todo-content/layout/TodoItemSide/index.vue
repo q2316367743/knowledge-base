@@ -140,6 +140,10 @@ import MessageUtil from "@/utils/MessageUtil";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import {openArticle} from "@/pages/todo/components/todo-content/layout/TodoItemSide/OpenArticle";
 
 
 const size = useWindowSize();
@@ -282,8 +286,17 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
 }
 
 function toArticle(id: number) {
-    useHomeEditorStore().openArticle(id);
-    router.push('/home')
+    if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.TO_ARTICLE) {
+        useHomeEditorStore().openArticle(id);
+        router.push('/home');
+    }else if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.DRAWER) {
+        const article = useArticleStore().articleMap.get(id);
+        if (!article) {
+            MessageUtil.error("文章不存在");
+            return;
+        }
+        openArticle(article);
+    }
 }
 
 </script>

@@ -2,7 +2,7 @@ import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
-export default interface BaseSetting {
+export interface BaseSetting {
 
     /**
      * 文章主题
@@ -39,4 +39,29 @@ export default interface BaseSetting {
      */
     mdEditorEditMode: MdEditorEditModeEnum;
 
+    /**
+     * 待办文章动作
+     */
+    todoArticleAction: TodoArticleActionEnum;
+
+}
+
+export enum TodoArticleActionEnum {
+    // 前往文章
+    TO_ARTICLE = 1,
+    // 侧边预览
+    DRAWER = 2
+}
+
+export function getDefaultBaseSetting(): BaseSetting {
+    return {
+        articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
+        imageStrategy: ImageStrategyEnum.INNER,
+        autoCollapsedByEditor: true,
+        autoCollapsedByTodo: true,
+        newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
+        codeExtraName: 'ts',
+        mdEditorEditMode: MdEditorEditModeEnum.AUTO,
+        todoArticleAction: TodoArticleActionEnum.TO_ARTICLE
+    }
 }

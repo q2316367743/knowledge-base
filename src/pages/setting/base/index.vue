@@ -81,6 +81,12 @@
                     </span>
                 </template>
             </a-form-item>
+            <a-form-item label="待办文章动作">
+                <a-radio-group v-model="instance.todoArticleAction">
+                    <a-radio :value="TodoArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
+                    <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
+                </a-radio-group>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>
@@ -92,7 +98,7 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
-import {getDefaultBaseSetting, renderHelp, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {renderHelp, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
@@ -101,6 +107,7 @@ import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import Constant from "@/global/Constant";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
+import {getDefaultBaseSetting, TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -112,6 +119,9 @@ export default defineComponent({
         instance: getDefaultBaseSetting()
     }),
     computed: {
+        TodoArticleActionEnum() {
+            return TodoArticleActionEnum
+        },
         MdEditorEditModeEnum() {
             return MdEditorEditModeEnum
         },

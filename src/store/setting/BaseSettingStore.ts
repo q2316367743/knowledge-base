@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import BaseSetting from "@/entity/setting/BaseSetting";
+import {BaseSetting, getDefaultBaseSetting} from "@/entity/setting/BaseSetting";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
@@ -10,17 +10,6 @@ import dayjs from "dayjs";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
 
-export function getDefaultBaseSetting(): BaseSetting {
-    return {
-        articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
-        imageStrategy: ImageStrategyEnum.INNER,
-        autoCollapsedByEditor: true,
-        autoCollapsedByTodo: true,
-        newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
-        codeExtraName: 'ts',
-        mdEditorEditMode: MdEditorEditModeEnum.AUTO
-    }
-}
 
 export function renderHelp(theme: ArticleThemeEnum): string {
     if (theme === ArticleThemeEnum.HE_TI) {
@@ -54,7 +43,8 @@ export const useBaseSettingStore = defineStore('base-setting', {
                     }
                     return 'editOnly';
             }
-        }
+        },
+        todoArticleAction: state => state.baseSetting.todoArticleAction,
     },
     actions: {
         async init() {
