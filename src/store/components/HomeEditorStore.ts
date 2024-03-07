@@ -147,7 +147,6 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
             const idx = indexes.value.findIndex(e => e.id === res);
             if (idx === -1) {
-                console.debug(`文章【${res}】并没有打开，无需关闭`)
                 return;
             }
             const target = indexes.value[idx].id;

@@ -6,6 +6,10 @@
                     <icon-search/>
                 </template>
             </a-input>
+            <a-popconfirm content="是否清空回收站，此操作不可逆" @ok="clearAll" ok-text="清空"
+                          :ok-button-props="{status:'danger'}">
+                <a-button type="primary" status="danger">清空</a-button>
+            </a-popconfirm>
         </header>
         <a-list :data="results" :virtual-list-props="virtualListProps" style="margin: 0 7px;">
             <template #item="{ item }">
@@ -76,7 +80,11 @@ function remove(id: number) {
         .catch(e => MessageUtil.error("彻底删除失败", e))
 }
 
-// TODO: 清空回收站
+function clearAll() {
+    useArticleStore().removeRealByIds(items.value.map(e => e.id))
+        .then(() => MessageUtil.success("彻底删除成功"))
+        .catch(e => MessageUtil.error("彻底删除失败", e))
+}
 
 </script>
 <style scoped lang="less">

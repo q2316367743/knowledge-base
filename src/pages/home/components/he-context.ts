@@ -93,13 +93,29 @@ export function addFolder(pid: number) {
  * @param article 是否是文章
  */
 export function remove(id: number, name: string, article: boolean) {
-    MessageBoxUtil.confirm(`确认删除${article ? '文章' : '文件夹'}【${name}】？`, "删除提示", {
-        confirmButtonText: "删除"
-    }).then(() => {
-        _remove(id, article)
+    if (article) {
+        MessageBoxUtil.confirm(`确认删除文章【${name}】？`, "删除提示", {
+            confirmButtonText: "删除",
+        }).then(() => _remove(id, article)
             .then(() => MessageUtil.success("删除成功"))
-            .catch(e => MessageUtil.error("删除失败", e));
-    })
+            .catch(e => MessageUtil.error("删除失败", e)))
+    }else {
+        MessageBoxUtil.confirm(`确认删除文件夹【${name}】？`, "删除提示", {
+            confirmButtonText: "删除文件夹及全部文件",
+            cancelButtonText: "只删除文件夹"
+        }).then(() => {
+            // 全部删除
+            Promise.all([useFolderStore().removeFolder(id), useArticleStore().removeFolder(id)])
+                .then(() => MessageUtil.success("删除成功"))
+                .catch(e => MessageUtil.error("删除失败", e))
+        }).catch(e => {
+            if (e === 'cancel') {
+                useFolderStore().removeFolder(id)
+                    .then(() => MessageUtil.success("删除成功"))
+                    .catch(e => MessageUtil.error("删除失败", e))
+            }
+        })
+    }
 }
 
 async function _remove(id: number, article: boolean) {

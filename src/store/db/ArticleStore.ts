@@ -172,6 +172,23 @@ export const useArticleStore = defineStore('article', {
             // 如果当前就是这个文章，则清除
             useHomeEditorStore().closeArticle(id);
         },
+        async removeRealByIds(ids: Array<number>) {
+            console.log(this.value)
+            console.log(ids)
+            this.value = this.value.filter(e => ids.indexOf(e.id) === -1);
+            // 删除索引
+            await this._sync();
+            for (let id of ids) {
+                // 删除基础信息
+                await removeOneByAsync(LocalNameEnum.ARTICLE_BASE + id, true);
+                // 删除内容
+                await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
+                // 删除评论
+                await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
+            }
+            // 如果当前就是这个文章，则清除
+            useHomeEditorStore().closeArticle(...ids);
+        },
         async drop(id: number, pid: number) {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
@@ -200,6 +217,18 @@ export const useArticleStore = defineStore('article', {
             // 如果当前就是这个文章，则清除
             useHomeEditorStore().closeArticle(...ids);
             return Promise.resolve();
-        }
+        },
+        async removeFolder(folderId: number) {
+            let articleIndices = this.folderMap.get(folderId);
+            if (!articleIndices) {
+                return ;
+            }
+            await this.updateMultiIndex(articleIndices.map(e => ({
+                id: e.id,
+                isDelete: true
+            })));
+            useHomeEditorStore().closeArticle(...articleIndices.map(e => e.id));
+            return Promise.resolve();
+        },
     }
 });

@@ -74,6 +74,8 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
                 return await saveListByAsync(key, clone(records, true), rev);
             } else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.") {
                 return await saveListByAsync(key, clone(records, true), rev);
+            }else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': #<Object> could not be cloned.") {
+                return await saveListByAsync(key, clone(records, true), rev);
             }
             console.error(res)
             return Promise.reject(res.message);

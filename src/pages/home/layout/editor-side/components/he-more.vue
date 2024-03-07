@@ -25,18 +25,6 @@
                     <a-doption @click="addArticle(0, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
                 </template>
             </a-dsubmenu>
-            <a-doption @click="showArticleImportModal(0)">
-                <template #icon>
-                    <icon-import/>
-                </template>
-                导入
-            </a-doption>
-            <a-doption @click="exportToMd(0)">
-                <template #icon>
-                    <icon-export/>
-                </template>
-                导出为ZIP
-            </a-doption>
             <a-dsubmenu>
                 <template #icon>
                     <icon-sort/>
@@ -49,6 +37,18 @@
                     </a-doption>
                 </template>
             </a-dsubmenu>
+            <a-doption @click="showArticleImportModal(0)">
+                <template #icon>
+                    <icon-import/>
+                </template>
+                导入
+            </a-doption>
+            <a-doption @click="exportToMd(0)">
+                <template #icon>
+                    <icon-export/>
+                </template>
+                导出为ZIP
+            </a-doption>
         </template>
     </a-dropdown>
 </template>
