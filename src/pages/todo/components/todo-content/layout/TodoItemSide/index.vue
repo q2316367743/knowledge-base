@@ -315,7 +315,7 @@ function toArticle(id: number) {
 .list {
     .list-container {
         position: absolute;
-        top: 85px;
+        top: 100px;
         left: 0;
         right: 0;
         bottom: 0;

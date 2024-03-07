@@ -77,6 +77,9 @@
                 </a-dropdown>
             </a-button-group>
         </header>
+        <div style="padding: 0 4px">
+            <a-progress :percent="percent"/>
+        </div>
         <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
                  :disabled="id === 0">
             <template #suffix>
@@ -142,6 +145,13 @@ const todoListSort = ref<TodoListSortEnum>(TodoListSortEnum.PRIORITY);
 const exportVisible = ref(false);
 
 const color = computed(() => handlePriorityColor(priority.value));
+const percent = computed(() => {
+    if (useTodoStore().todoItems.length === 0) {
+        return 0;
+    }
+    const value = useTodoStore().todoList.length / useTodoStore().todoItems.length
+    return parseFloat(value.toFixed(4))
+})
 
 watch(() => useTodoStore().id, value => getTodoListSort(value), {immediate: true});
 
@@ -174,11 +184,11 @@ const setTodoListSort = (value: any) => {
         return;
     }
     useTodoCategoryStore()
-            .update(useTodoStore().id, {todoListSort: value})
-            .then(() => {
-                todoListSort.value = value;
-            })
-            .catch(e => MessageUtil.error("更新待办列表排序异常", e));
+        .update(useTodoStore().id, {todoListSort: value})
+        .then(() => {
+            todoListSort.value = value;
+        })
+        .catch(e => MessageUtil.error("更新待办列表排序异常", e));
 }
 
 function association() {
