@@ -185,7 +185,7 @@ function importToCode(text: string, file: FileItem) {
 function readText(file: File): Promise<string> {
     const fileReader = new FileReader();
     return new Promise((resolve, reject) => {
-        fileReader.onload = function (e) {
+        fileReader.onload = function () {
             const text = fileReader.result as string;
             resolve(text);
         }
