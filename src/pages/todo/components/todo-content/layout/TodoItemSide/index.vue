@@ -3,7 +3,7 @@
         <content-header/>
         <div class="list-container" @click="setItemId(0)">
             <!-- 待办 -->
-            <a-divider orientation="left" v-if="todoList.length > 0">
+            <a-divider orientation="left" v-if="todoList.length > 0" :style="{marginBottom: hideOfTodo ? '33px':'13px'}">
                 <span style="cursor: pointer;color: var(--color-text-1);"
                       @click.stop="hideOfTodo = !hideOfTodo">
                     <icon-right v-if="hideOfTodo"/>
@@ -73,7 +73,7 @@
                 </a-tooltip>
             </div>
             <!-- 已完成 -->
-            <a-divider orientation="left" v-if="completeList.length > 0">
+            <a-divider orientation="left" v-if="completeList.length > 0" :style="{marginBottom: hideOfComplete ? '33px':'13px'}">
                 <span style="cursor: pointer;color: rgb(var(--green-6));"
                       @click.stop="hideOfComplete = !hideOfComplete">
                     <icon-right v-if="hideOfComplete"/>
@@ -102,7 +102,7 @@
 
             </div>
             <!-- 已放弃 -->
-            <a-divider orientation="left" v-if="abandonList.length > 0">
+            <a-divider orientation="left" v-if="abandonList.length > 0" :style="{marginBottom: hideOfAbandon ? '33px':'13px'}">
                 <span style="cursor: pointer;color: rgb(var(--orange-6));" @click.stop="hideOfAbandon = !hideOfAbandon">
                     <icon-right v-if="hideOfAbandon"/>
                     <icon-down v-else/>
@@ -335,11 +335,11 @@ function toArticle(id: number) {
             }
 
             &:hover {
-                background-color: var(--color-neutral-2);
+                background-color: var(--color-fill-3);
             }
 
             &.active {
-                background-color: var(--color-neutral-3);
+                background-color: var(--color-fill-3);
             }
 
             .extra {
