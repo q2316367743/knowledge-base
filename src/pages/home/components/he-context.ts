@@ -1,13 +1,16 @@
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
+// 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {buildArticleName} from "@/store/setting/BaseSettingStore";
-import MessageUtil from "@/utils/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
+// 工具类
+import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {articleToZip} from "@/utils/file/ConvertUtil";
+import NotificationUtil from "@/utils/NotificationUtil";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -56,6 +59,9 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
  * @param type 文章类型
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
+    if (type === ArticleTypeEnum.EXCEL) {
+        NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
+    }
     useGlobalStore().startLoading("正在新增文章")
     useArticleStore().add(getDefaultArticleIndex({
         name: buildArticleName(type),
