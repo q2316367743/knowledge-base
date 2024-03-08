@@ -23,7 +23,6 @@
                     <a-doption @click="addArticle(0, ArticleTypeEnum.CODE)">代码</a-doption>
                     <a-doption @click="addArticle(0, ArticleTypeEnum.EXCEL)">表格</a-doption>
                     <a-doption @click="addArticle(0, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
-                    <a-doption @click="addArticle(0, ArticleTypeEnum.WHITEBOARD)">白板</a-doption>
                 </template>
             </a-dsubmenu>
             <a-dsubmenu>

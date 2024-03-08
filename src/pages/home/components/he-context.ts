@@ -8,7 +8,6 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {articleToZip} from "@/utils/file/ConvertUtil";
-import NotificationUtil from "@/utils/NotificationUtil";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -46,8 +45,6 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
             }
         case ArticleTypeEnum.EXCEL:
             return {};
-        case ArticleTypeEnum.WHITEBOARD:
-            return {};
         default:
             return "";
     }
@@ -59,9 +56,6 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
  * @param type 文章类型
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
-    if (type === ArticleTypeEnum.EXCEL) {
-        NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
-    }
     useGlobalStore().startLoading("正在新增文章")
     useArticleStore().add(getDefaultArticleIndex({
         name: buildArticleName(type),

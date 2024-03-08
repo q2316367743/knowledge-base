@@ -6,21 +6,14 @@ enum ArticleTypeEnum {
     MARKDOWN = 1,
 
     /**
-     * 旧的EditorJS编辑器
-     *
-     * @deprecated
+     * 富文本
      */
-    EDITOR_JS = 2,
+    RICH_TEXT = 4,
 
     /**
      * 代码笔记
      */
     CODE= 3,
-
-    /**
-     * 富文本
-     */
-    RICH_TEXT = 4,
 
     /**
      * 表格
@@ -33,9 +26,11 @@ enum ArticleTypeEnum {
     MIND_MAP = 6,
 
     /**
-     * 白板
+     * 旧的EditorJS编辑器
+     *
+     * @deprecated
      */
-    WHITEBOARD = 7
+    EDITOR_JS = 2
 
 }
 
