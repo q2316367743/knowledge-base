@@ -1,5 +1,12 @@
 <template>
     <div class="mind-map-setting">
+        <a-tooltip content="主题">
+            <a-button type="text" size="mini" @click="_openMindMapTheme()">
+                <template #icon>
+                    <icon-bg-colors/>
+                </template>
+            </a-button>
+        </a-tooltip>
         <a-button type="text" size="mini" @click="miniMap = !miniMap">
             <template #icon>
                 <icon-computer/>
@@ -20,12 +27,21 @@ import {PropType, ref} from "vue";
 import MindMap from "simple-mind-map";
 import MindMapMiniMap from "./MindMapMiniMap.vue";
 import {openMindMapShortcut} from "./MindMapShortcut";
+import {
+    openMindMapTheme
+} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/MindMapTheme";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>
 });
 
 const miniMap = ref(false);
+
+function _openMindMapTheme() {
+    if (props.mindMap) {
+        openMindMapTheme(props.mindMap)
+    }
+}
 </script>
 <style scoped>
 .mind-map-setting {

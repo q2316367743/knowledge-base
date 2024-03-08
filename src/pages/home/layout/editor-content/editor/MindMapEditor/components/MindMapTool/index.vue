@@ -63,7 +63,7 @@
             </div>
             <div class="tool-btn-text">概要</div>
         </div>
-        <div class="tool-btn">
+        <div class="tool-btn" :class="available ? 'active' : ''" @click="insertAssociativeLine()">
             <div class="tool-btn-icon">
                 <icon-branch :size="18"/>
             </div>
@@ -87,6 +87,7 @@ import {
 import {
     openInsertTag
 } from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertTag";
+import AssociativeLine from "simple-mind-map/src/plugins/AssociativeLine.js";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>,
@@ -183,6 +184,13 @@ const setTag = () => {
 const insertGeneralization = () => {
     if (available.value && props.mindMap && !isGeneralization.value) {
         props.mindMap.execCommand('ADD_GENERALIZATION');
+    }
+}
+
+const insertAssociativeLine = () => {
+    if (available.value && props.mindMap && !isGeneralization.value) {
+        // @ts-ignore
+        props.mindMap.associativeLine.createLineFromActiveNode()
     }
 }
 

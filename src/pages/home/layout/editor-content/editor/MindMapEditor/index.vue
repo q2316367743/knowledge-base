@@ -29,6 +29,7 @@ import ExportPDF from 'simple-mind-map/src/plugins/ExportPDF.js'
 import ExportXMind from 'simple-mind-map/src/plugins/ExportXMind.js'
 import xmind from 'simple-mind-map/src/parse/xmind.js'
 import markdown from 'simple-mind-map/src/parse/markdown.js'
+import AssociativeLine from 'simple-mind-map/src/plugins/AssociativeLine.js'
 
 const props = defineProps({
     modelValue: {
@@ -71,6 +72,7 @@ onMounted(() => {
     mindMap.value.addPlugin(Export, undefined);
     mindMap.value.addPlugin(ExportPDF, undefined);
     mindMap.value.addPlugin(ExportXMind, undefined);
+    mindMap.value.addPlugin(AssociativeLine, undefined);
 
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
