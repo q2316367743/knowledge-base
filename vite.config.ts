@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import { defineConfig } from "vite";
 import path from "path";
+import { visualizer } from 'rollup-plugin-visualizer'
 
 function _resolve(dir: string) {
     return path.resolve(__dirname, dir);
@@ -15,7 +16,12 @@ export default defineConfig({
         },
     },
     plugins: [
-        vue(),vueJsx()
+        vue(),vueJsx(),
+        // 打包体积分析
+        visualizer({
+            open: true,
+            filename: 'visualizer.html' //分析图生成的文件名
+        }),
     ],
     base: "./",
     build: {
