@@ -65,6 +65,9 @@ export default defineComponent({
 
         const size = useElementSize(codeEditBox);
 
+        watch(() => size.width.value, () => editor && editor.layout());
+        watch(() => size.height.value, () => editor && editor.layout());
+
         const init = () => {
             monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
                 noSemanticValidation: true,
