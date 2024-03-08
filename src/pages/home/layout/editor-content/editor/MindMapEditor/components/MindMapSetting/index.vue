@@ -7,6 +7,13 @@
                 </template>
             </a-button>
         </a-tooltip>
+        <a-tooltip content="布局">
+            <a-button type="text" size="mini" @click="_openMindMapLayout()">
+                <template #icon>
+                    <icon-layout/>
+                </template>
+            </a-button>
+        </a-tooltip>
         <a-button type="text" size="mini" @click="miniMap = !miniMap">
             <template #icon>
                 <icon-computer/>
@@ -30,6 +37,9 @@ import {openMindMapShortcut} from "./MindMapShortcut";
 import {
     openMindMapTheme
 } from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/MindMapTheme";
+import {
+    openMindMapLayout
+} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/MindMapLayout";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>
@@ -40,6 +50,12 @@ const miniMap = ref(false);
 function _openMindMapTheme() {
     if (props.mindMap) {
         openMindMapTheme(props.mindMap)
+    }
+}
+
+function _openMindMapLayout() {
+    if (props.mindMap) {
+        openMindMapLayout(props.mindMap);
     }
 }
 </script>

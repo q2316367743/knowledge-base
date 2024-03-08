@@ -10,7 +10,7 @@ export function openMindMapTheme(mindMap: MindMap) {
 
     function setTheme(value: string) {
         mindMap.setTheme(value);
-        mindMap.emit('data_change')
+        mindMap.emit('data_change');
     }
 
     Drawer.open({
