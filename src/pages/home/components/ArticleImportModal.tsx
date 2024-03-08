@@ -177,7 +177,7 @@ async function onImport(files: Array<FileItem>, folderId: number) {
     }catch (e) {
         MessageUtil.error("导入失败", e);
     }finally {
-        loadingReturn.close();
+        setTimeout(() => loadingReturn.close(), 2000);
     }
 }
 

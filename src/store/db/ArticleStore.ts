@@ -74,6 +74,21 @@ export const useArticleStore = defineStore('article', {
             }
             const now = new Date();
             const id = now.getTime();
+
+            // 新增内容
+            await saveOneByAsync(
+                LocalNameEnum.ARTICLE_CONTENT + id,
+                {
+                    content
+                } as ArticleContent
+            );
+
+            // 新增基础信息
+            await saveOneByAsync(
+                LocalNameEnum.ARTICLE_BASE + id,
+                toRaw(base)
+            )
+
             // 新增索引
             this.value.push(getDefaultArticleIndex({
                 ...article,
@@ -82,18 +97,6 @@ export const useArticleStore = defineStore('article', {
                 id,
             }));
             await this._sync();
-            // 新增基础信息
-            await saveOneByAsync(
-                LocalNameEnum.ARTICLE_BASE + id,
-                toRaw(base)
-            )
-            // 新增内容
-            await saveOneByAsync(
-                LocalNameEnum.ARTICLE_CONTENT + id,
-                {
-                    content
-                } as ArticleContent
-            );
             return Promise.resolve(id);
         },
         async updateIndex(
