@@ -105,7 +105,7 @@ export function showArticleImportModal(id: number) {
         </div>,
         footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <InputGroup>
-                <span style={{width: '70px', marginRight: '7px', color: 'var(--color-text-1)'}}>导入至</span>
+                <span style={{width: '120px', marginRight: '7px', color: 'var(--color-text-1)'}}>导入至：</span>
                 <TreeSelect data={folderTree} v-model={folderId.value}/>
             </InputGroup>
             <Space>
@@ -165,18 +165,20 @@ function getOptions(name: string): OptionItem[] {
 
 async function onImport(files: Array<FileItem>, folderId: number) {
     const loadingReturn = MessageBoxUtil.loading("正在导入...");
+    const count = files.length + '';
     try {
-        for (let file of files) {
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
             try {
                 await importOne(file, folderId);
-                loadingReturn.append(`${file.name} - 导入完成`);
-            }catch (e) {
-                loadingReturn.append(`${file.name} - 导入失败: ${e}`, 'error')
+                loadingReturn.append(`${(i + 1 + '').padStart(count.length, '0')} / ${count}: ${file.name} - 导入完成`);
+            } catch (e) {
+                loadingReturn.append(`${(i + 1 + '').padStart(count.length, '0')} / ${count}: ${file.name} - 导入失败: ${e}`, 'error')
             }
         }
-    }catch (e) {
+    } catch (e) {
         MessageUtil.error("导入失败", e);
-    }finally {
+    } finally {
         setTimeout(() => loadingReturn.close(), 2000);
     }
 }
@@ -191,7 +193,7 @@ async function importOne(file: FileItem, folderId: number) {
         await importToHtml(file, folderId);
     } else if (file.type === 'markdown') {
         await importToMarkdown(file, folderId);
-    }else {
+    } else {
         return Promise.reject("文件类型未知")
     }
 }

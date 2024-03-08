@@ -2,15 +2,15 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
-        version: '1.7.2',
-        sign: 172,
+        version: '1.7.3',
+        sign: 173,
         time: '2024-03-08',
         items: [{
             label: LogItemEnum.UPDATE,
             content: "【笔记】文章导入全新改版，导入方式更加直观，更加方便"
         }, {
             label: LogItemEnum.ADD,
-            content: '【思维导图】新增导入功能'
+            content: '【思维导图】新增导入功能，新增关联线，新增布局和主题设置'
         }, {
             label: LogItemEnum.ADD,
             content: "【表格笔记】保存内容需要手动保存，预览模式无法保存内容"
@@ -23,6 +23,9 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: "【笔记】新增清空回收站的功能"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【笔记】支持全选功能，可以批量删除"
         }, {
             label: LogItemEnum.ADD,
             content: "【设置】增加待办中点击关联文章跳转方式，可以设置直接侧边预览"

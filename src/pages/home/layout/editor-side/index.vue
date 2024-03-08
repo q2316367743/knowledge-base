@@ -85,6 +85,13 @@
                         </template>
                     </a-button>
                 </a-popconfirm>
+                <a-tooltip content="全选">
+                    <a-button type="text" @click="selectAll()">
+                        <template #icon>
+                            <icon-select-all/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
                 <a-button type="text" @click="multiCheckStop()">
                     <template #icon>
                         <icon-close/>
@@ -262,6 +269,10 @@ function _expandTo(id: number) {
     if (expandedKeys.value.indexOf(id) === -1) {
         expandedKeys.value.push(id);
     }
+}
+
+function selectAll() {
+    checkKeys.value = useArticleStore().articles.map(e => e.id);
 }
 
 </script>

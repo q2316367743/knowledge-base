@@ -1,4 +1,14 @@
-import {Input, InputPassword, Modal, ModalReturn, Result, Typography, TypographyParagraph} from "@arco-design/web-vue";
+import {
+    Button, ButtonGroup,
+    Input,
+    InputPassword,
+    Modal,
+    ModalReturn,
+    Result,
+    Space,
+    Typography,
+    TypographyParagraph
+} from "@arco-design/web-vue";
 import {h, ref, VNode} from "vue";
 import Optional from "@/utils/Optional";
 import {IconSync} from "@arco-design/web-vue/es/icon";
@@ -26,6 +36,26 @@ export default {
                     reject('close');
                 }
             })
+        })
+    },
+
+    confirmMulti(content: string, title: string, buttons: Array<{ name: string, action: () => void }>): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const modalReturn = Modal.confirm({
+                content,
+                title,
+                draggable: true,
+                footer: () => <ButtonGroup type={'primary'}>
+                    <Space>
+                        <Button type={'secondary'} onClick={modalReturn.close}>取消</Button>
+                        {buttons.map(btn => <Button onClick={() => {
+                            btn.action();
+                            resolve();
+                            modalReturn.close();
+                        }}>{btn.name}</Button>)}
+                    </Space>
+                </ButtonGroup>
+            });
         })
     },
 
@@ -200,7 +230,8 @@ export default {
 }
 
 export interface MessageBoxLoadingReturn extends ModalReturn {
-    setContent(content: string):void;
+    setContent(content: string): void;
+
     append(line: string, status?: LineContentStatus): void;
 }
 

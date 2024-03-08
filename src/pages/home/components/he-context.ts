@@ -99,22 +99,23 @@ export function remove(id: number, name: string, article: boolean) {
         }).then(() => _remove(id, article)
             .then(() => MessageUtil.success("删除成功"))
             .catch(e => MessageUtil.error("删除失败", e)))
-    }else {
-        MessageBoxUtil.confirm(`确认删除文件夹【${name}】？`, "删除提示", {
-            confirmButtonText: "删除文件夹及全部文件",
-            cancelButtonText: "只删除文件夹"
-        }).then(() => {
-            // 全部删除
-            Promise.all([useFolderStore().removeFolder(id), useArticleStore().removeFolder(id)])
-                .then(() => MessageUtil.success("删除成功"))
-                .catch(e => MessageUtil.error("删除失败", e))
-        }).catch(e => {
-            if (e === 'cancel') {
-                useFolderStore().removeFolder(id)
-                    .then(() => MessageUtil.success("删除成功"))
-                    .catch(e => MessageUtil.error("删除失败", e))
+    } else {
+        MessageBoxUtil.confirmMulti(`确认删除文件夹【${name}】？`, "删除提示", [{
+            name: '删除文件夹及全部文件',
+            action: () => {
+                Promise.all([useFolderStore().removeFolder(id), useArticleStore().removeFolder(id)])
+                    .then(() => MessageUtil.success("删除文件夹及全部文件成功"))
+                    .catch(e => MessageUtil.error("删除文件夹及全部文件失败", e))
             }
-        })
+        }, {
+            name: '只删除文件夹',
+            action: () => {
+
+                useFolderStore().removeFolder(id)
+                    .then(() => MessageUtil.success("只删除文件夹成功"))
+                    .catch(e => MessageUtil.error("只删除文件夹失败", e))
+            }
+        }]).finally(() => console.debug("删除完成"))
     }
 }
 
