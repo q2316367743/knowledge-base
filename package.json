@@ -37,7 +37,6 @@
         "monaco-editor": "^0.44.0",
         "pangu": "^4.0.7",
         "pinia": "^2.1.7",
-        "relation-graph": "^2.1.31",
         "simple-mind-map": "^0.9.7",
         "turndown": "^7.1.2",
         "vconsole": "^3.15.1",

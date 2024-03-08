@@ -86,9 +86,6 @@ dependencies:
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@4.9.5)(vue@3.4.21)
-  relation-graph:
-    specifier: ^2.1.31
-    version: 2.1.31
   simple-mind-map:
     specifier: ^0.9.7
     version: 0.9.7
@@ -4331,13 +4328,6 @@ packages:
       set-function-name: 2.0.2
     dev: false
 
-  /relation-graph@2.1.31:
-    resolution: {integrity: sha512-g97xqmH1pGtjygqFYVrg+tCDpzovPtkW2/jZgyYNQODmXSPD4xIWXWh98BkydZPveM8rMIf0pYMlI+jI9ANPuA==}
-    dependencies:
-      html2canvas: 1.4.1
-      screenfull: 5.2.0
-    dev: false
-
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
     dev: false
@@ -4420,11 +4410,6 @@ packages:
       '@types/json-schema': 7.0.15
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
-    dev: false
-
-  /screenfull@5.2.0:
-    resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
-    engines: {node: '>=0.10.0'}
     dev: false
 
   /scroll-into-view-if-needed@2.2.31:

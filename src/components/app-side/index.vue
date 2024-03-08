@@ -23,9 +23,6 @@
             <a-menu-item key="/graph/recycle">
                 回收站
             </a-menu-item>
-            <a-menu-item key="/graph/relation">
-                关联图
-            </a-menu-item>
             <a-menu-item key="/graph/category">
                 分类图
             </a-menu-item>

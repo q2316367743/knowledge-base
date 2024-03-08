@@ -22,10 +22,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/graph/recycle",
     component: () => import("@/pages/graph/recycle/index.vue")
 }, {
-    name: "图-关联",
-    path: "/graph/relation",
-    component: () => import("@/pages/graph/relation/index.vue")
-}, {
     name: "图-分类",
     path: "/graph/category",
     component: () => import("@/pages/graph/category/index.vue")
