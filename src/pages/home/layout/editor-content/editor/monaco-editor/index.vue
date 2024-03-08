@@ -17,10 +17,12 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import * as monaco from 'monaco-editor'
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {useArticleExportEvent, useArticleImportEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
 import {download} from "@/utils/BrowserUtil";
-import {renderFileExtraName} from "@/utils/file/FileUtil";
+import {readAsText} from "@/utils/file/FileUtil";
+import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
+import {useArticleStore} from "@/store/db/ArticleStore";
 
 export default defineComponent({
     name: 'monaco-editor',
@@ -125,12 +127,15 @@ export default defineComponent({
         onBeforeUnmount(() => {
             editor.dispose();
             useArticleExportEvent.off(onExport);
+            useArticleImportEvent.off(onImport);
         })
 
         onMounted(() => {
             init();
             useArticleExportEvent.off(onExport);
             useArticleExportEvent.on(onExport);
+            useArticleImportEvent.off(onImport);
+            useArticleImportEvent.on(onImport);
         })
 
         function onExport(id: number) {
@@ -146,6 +151,18 @@ export default defineComponent({
                     });
                 }
             }
+        }
+
+        function onImport(id: number) {
+            if (props.articleId === id && editor) {
+                openArticleImport().then(file => readAsText(file).then(text => {
+                    editor && editor.setValue(text);
+                    useArticleStore().updateIndex(id, {
+                        name: file.name
+                    }).then(() => useHomeEditorStore().updateTitle(id, file.name));
+                }));
+            }
+
         }
 
         return {codeEditBox}

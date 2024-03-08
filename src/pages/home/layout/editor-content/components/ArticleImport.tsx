@@ -4,7 +4,7 @@ import MessageUtil from "@/utils/MessageUtil";
 /**
  * 打开文章导入
  */
-export function openArticleImport(types: Array<string>): Promise<File> {
+export function openArticleImport(types?: Array<string>): Promise<File> {
     return new Promise((resolve, reject) => {
 
         function customRequest(request: RequestOption): UploadRequest {
@@ -25,8 +25,8 @@ export function openArticleImport(types: Array<string>): Promise<File> {
         const modalReturn = Modal.open({
             title: '导入',
             content: () => <div>
-                <Upload accept={types.join(',')} showFileList={false} draggable customRequest={customRequest}/>
-                <div style={{color: 'var(--color-text-2)', marginTop: '7px'}}>支持{types.join("，")}文件</div>
+                <Upload accept={types ? types.join(',') : ''} showFileList={false} draggable customRequest={customRequest}/>
+                <div style={{color: 'var(--color-text-2)', marginTop: '7px'}}>支持{types ? types.join("，") : '任意类型'}文件</div>
             </div>,
             footer: false
         });

@@ -4,7 +4,10 @@
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
 import {onMounted, onBeforeUnmount, shallowRef, watch} from "vue";
-import {CherryConfig, editorProps} from "@/pages/home/layout/editor-content/editor/markdown-editor/CherryMarkdownOption";
+import {
+    CherryConfig,
+    editorProps
+} from "@/pages/home/layout/editor-content/editor/markdown-editor/CherryMarkdownOption";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
 import {useScreenShotMenu} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/ScreenShotMenu";
@@ -23,9 +26,15 @@ import {
     useYiYanMenu
 } from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/XiaRouMenu";
 import Constant from "@/global/Constant";
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {useArticleExportEvent, useArticleImportEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {openMarkdownExport} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/MarkdownExport";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {download} from "@/utils/BrowserUtil";
+import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
+import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import {docxToMarkdown, htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -220,9 +229,14 @@ onMounted(() => {
     handleToolbar(defaultModel === 'previewOnly')
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
+    useArticleImportEvent.off(onImport);
+    useArticleImportEvent.on(onImport);
 });
 
-onBeforeUnmount(() => useArticleExportEvent.off(onExport));
+onBeforeUnmount(() => {
+    useArticleExportEvent.off(onExport);
+    useArticleImportEvent.off(onImport);
+});
 
 watch(() => props.preview, handleToolbar);
 watch(() => size.width.value, value => {
@@ -281,6 +295,40 @@ function onExport(id: number) {
     if (props.articleId === id && instance.value) {
         openMarkdownExport(id, instance.value)
     }
+}
+
+function setValue(text: string, name: string, id: number) {
+    instance.value && instance.value.setValue(text);
+    const fileName = parseFileName(name);
+    useArticleStore().updateIndex(id, {
+        name: fileName
+    }).then(() => useHomeEditorStore().updateTitle(id, fileName));
+}
+
+function onImport(id: number) {
+
+    if (props.articleId === id && instance.value) {
+        openArticleImport(['.md', '.markdown', '.html', '.docx'])
+            .then(file => {
+                const ext = extname(file.name);
+                if (ext === 'md' || ext === 'markdown' || ext === 'html') {
+                    readAsText(file).then(text => {
+                        if (ext === 'html') {
+                            text = htmlToMarkdown(text);
+                        } else if (ext !== 'md' && ext !== 'markdown') {
+                            MessageUtil.warning("文件类型不支持");
+                            return;
+                        }
+                        setValue(text, file.name, id);
+                    })
+                } else if (ext === 'docx') {
+                    file.arrayBuffer().then(arrayBuffer =>
+                        docxToMarkdown(arrayBuffer).then(text =>
+                            setValue(text, file.name, id)))
+                }
+            });
+    }
+
 }
 
 

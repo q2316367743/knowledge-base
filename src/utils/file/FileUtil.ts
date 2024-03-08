@@ -64,3 +64,17 @@ export function renderFileExtraName(language: string) {
     }
     return language;
 }
+
+export function readAsText(file: File): Promise<string> {
+    const fileReader = new FileReader();
+    return new Promise((resolve, reject) => {
+        fileReader.onload = function () {
+            const text = fileReader.result as string;
+            resolve(text);
+        }
+        fileReader.onerror = function (e) {
+            reject(e);
+        }
+        fileReader.readAsText(file);
+    });
+}

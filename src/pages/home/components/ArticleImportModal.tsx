@@ -23,6 +23,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import {readAsText} from "@/utils/file/FileUtil";
 
 interface FileItem {
     file: File;
@@ -185,7 +186,7 @@ async function onImport(files: Array<FileItem>, folderId: number) {
 
 async function importOne(file: FileItem, folderId: number) {
     if (file.type === 'code') {
-        const text = await readText(file.file);
+        const text = await readAsText(file.file);
         // 直接解析文字
         await importToCode(text, file, folderId);
     } else if (file.type === 'html') {
@@ -209,7 +210,7 @@ function importToCode(text: string, file: FileItem, folderId: number) {
 async function importToHtml(file: FileItem, folderId: number) {
     let text: string;
     if (file.name.endsWith('html')) {
-        text = await readText(file.file);
+        text = await readAsText(file.file);
         // 直接导入
     } else if (file.name.endsWith('docx')) {
         text = await docxToHtml(await file.file.arrayBuffer());
@@ -226,14 +227,14 @@ async function importToHtml(file: FileItem, folderId: number) {
 async function importToMarkdown(file: FileItem, folderId: number) {
     let text: string;
     if (file.name.endsWith('html')) {
-        text = htmlToMarkdown(await readText(file.file));
+        text = htmlToMarkdown(await readAsText(file.file));
         // 直接导入
     } else if (file.name.endsWith('docx')) {
         text = await docxToMarkdown(await file.file.arrayBuffer());
     } else if (file.name.endsWith('md')) {
-        text = await readText(file.file);
+        text = await readAsText(file.file);
     } else if (file.name.endsWith('markdown')) {
-        text = await readText(file.file);
+        text = await readAsText(file.file);
     } else {
         return Promise.reject("系统异常，不支持的文件格式：" + file.name);
     }
@@ -244,16 +245,3 @@ async function importToMarkdown(file: FileItem, folderId: number) {
     }), getDefaultArticleBase(), text);
 }
 
-function readText(file: File): Promise<string> {
-    const fileReader = new FileReader();
-    return new Promise((resolve, reject) => {
-        fileReader.onload = function () {
-            const text = fileReader.result as string;
-            resolve(text);
-        }
-        fileReader.onerror = function (e) {
-            reject(e);
-        }
-        fileReader.readAsText(file);
-    });
-}
