@@ -85,15 +85,16 @@ export default {
         })
     },
 
-    prompt(content: string, title: string, config: {
+    prompt(content: string, title?: string, config?: {
         confirmButtonText?: string,
         cancelButtonText?: string,
         inputPattern?: RegExp,
         inputErrorMessage?: string,
         inputValue?: string
     }): Promise<string> {
+        let _config = Object.assign(config || {}, {});
         return new Promise<string>((resolve, reject) => {
-            let value = Optional.ofNullable(config.inputValue).orElse("") as string;
+            let value = Optional.ofNullable(_config.inputValue).orElse("") as string;
             const onInput = (e: string) => {
                 value = e;
             }
@@ -104,7 +105,7 @@ export default {
                     h(Input, {
                         type: 'text',
                         onInput,
-                        "default-value": config.inputValue,
+                        "default-value": _config.inputValue,
                         style: 'margin-top: 8px;',
                         onVnodeMounted: (e: VNode) => {
                             (e.el as HTMLInputElement)
@@ -114,10 +115,10 @@ export default {
                         }
                     })
                 ]),
-                title: title,
+                title: title || '提示',
                 draggable: true,
-                okText: config.confirmButtonText,
-                cancelText: config.cancelButtonText,
+                okText: _config.confirmButtonText,
+                cancelText: _config.cancelButtonText,
                 onOk: () => {
                     resolve(value);
                 },

@@ -33,6 +33,8 @@
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.EXCEL)">表格</a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MIND_MAP)">思维导图
                                 </a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.WHITEBOARD)">白板
+                                </a-doption>
                             </template>
                         </a-dsubmenu>
 

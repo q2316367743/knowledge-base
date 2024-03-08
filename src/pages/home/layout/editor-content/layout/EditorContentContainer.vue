@@ -11,6 +11,8 @@
                       v-else-if="editorType === ArticleTypeEnum.EXCEL && load"/>
         <mind-map-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                          v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
+        <whiteboard-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                            v-else-if="editorType === ArticleTypeEnum.WHITEBOARD && load"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -22,6 +24,7 @@ import MonacoEditor from "@/pages/home/layout/editor-content/editor/monaco-edito
 import MarkdownEditor from "@/pages/home/layout/editor-content/editor/markdown-editor/index.vue";
 import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
 import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
+import WhiteboardEditor from "@/pages/home/layout/editor-content/editor/WhiteboardEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";
