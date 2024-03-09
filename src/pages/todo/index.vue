@@ -4,17 +4,24 @@
             <todo-side v-show="!collapsed"/>
         </a-layout-sider>
         <a-layout-content>
-            <todo-content />
+            <a-result title="请在左侧选择清单" status="404" style="margin-top: 20vh" v-if="empty"/>
+            <todo-content v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
+            <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD" />
         </a-layout-content>
     </a-layout>
 </template>
 <script lang="ts" setup>
-import TodoSide from "@/pages/todo/components/todo-side.vue";
-import TodoContent from "@/pages/todo/components/todo-content/index.vue";
 import {computed} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
+import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 
-const collapsed = computed(() => useTodoStore().collapsed)
+import TodoSide from "@/pages/todo/components/TodoSide/index.vue";
+import TodoContent from "@/pages/todo/components/todo-content/index.vue";
+import ContentCard from "@/pages/todo/components/ContentCard/index.vue";
+
+const collapsed = computed(() => useTodoStore().collapsed);
+const layout = computed(() => useTodoStore().layout);
+const empty = computed(() => useTodoStore().id === 0);
 
 </script>
 <style scoped>

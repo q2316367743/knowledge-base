@@ -12,7 +12,7 @@
 import {ref} from "vue";
 import {getFeatureOne, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
 import Constant from "@/global/Constant";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 const enable = ref(false);
 

@@ -16,7 +16,7 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
 import {usePanGu} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/PanGuMenu";
 import {useFanYi} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/FanYiMenu";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {isUtools} from "@/global/BeanFactory";
 import {

@@ -2,7 +2,7 @@ import {Form, FormItem, Modal, Input} from "@arco-design/web-vue";
 import {ref} from "vue";
 import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
 import {getImageSize} from "@/utils/BrowserUtil";
-import NotificationUtil from "@/utils/NotificationUtil";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
 
 export function openInsertImage(activeNodes: MindMapNode[]) {
     if (activeNodes.length === 0) {

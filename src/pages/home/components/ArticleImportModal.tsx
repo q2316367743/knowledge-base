@@ -17,12 +17,12 @@ import {computed, ref} from "vue";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
 import {docxToHtml, docxToMarkdown, htmlToMarkdown, zipToFiles} from "@/utils/file/ConvertUtil";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {readAsText} from "@/utils/file/FileUtil";
 
 interface FileItem {

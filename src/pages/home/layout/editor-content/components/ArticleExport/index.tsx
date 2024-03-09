@@ -7,7 +7,7 @@ import {
 } from "@arco-design/web-vue";
 import {ref} from "vue";
 import './index.css';
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 
 export interface ExportItem {

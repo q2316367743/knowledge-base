@@ -2,7 +2,7 @@ import {TreeNode, ZTreeInstance, ZTreeSetting} from "@/plugin/sdk/ZTree";
 import {Ref} from "vue";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 export function getTreeNodes(parentId: number): Array<TreeNode> {

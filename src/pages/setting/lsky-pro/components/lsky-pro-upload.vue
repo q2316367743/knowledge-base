@@ -58,7 +58,7 @@ import {computed, ref, watch} from "vue";
 import {CommonResult, StrategyResult} from "@/plugin/sdk/LskyPro";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {RequestOption, UploadRequest} from "@arco-design/web-vue";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {copyMarkdown, copyUrl, openInfo} from "@/pages/setting/lsky-pro/domain/func";
 import {useWindowSize} from "@vueuse/core";
 

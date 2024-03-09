@@ -1,4 +1,4 @@
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";

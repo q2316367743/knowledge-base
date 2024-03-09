@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, SlateNode, Toolbar} from "@wangeditor/editor";
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
 import {useImageUpload} from "@/plugin/image";
 import {useElementSize} from "@vueuse/core";

@@ -1,5 +1,5 @@
 import {Modal, RequestOption, Upload, UploadRequest} from "@arco-design/web-vue";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 /**
  * 打开文章导入

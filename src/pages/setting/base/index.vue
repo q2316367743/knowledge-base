@@ -100,14 +100,14 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
 import {renderHelp, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import Constant from "@/global/Constant";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";

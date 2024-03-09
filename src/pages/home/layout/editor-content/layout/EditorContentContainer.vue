@@ -26,7 +26,7 @@ import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEdit
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import {parseFileExtra} from "@/utils/file/FileUtil";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";

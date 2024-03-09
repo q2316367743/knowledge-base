@@ -27,7 +27,7 @@
                             </template>
                             新增
                         </a-doption>
-                        <a-doption @click="rename(nodeData.key, nodeData.title)">
+                        <a-doption @click="update(nodeData.key)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
@@ -51,45 +51,24 @@
                 </a-dropdown>
             </template>
         </a-tree>
-        <a-modal v-model:visible="todoCategory.visible" title="新增待办分类" ok-text="新增" draggable
-                 @ok="submit()">
-            <a-form :model="todoCategory.record" layout="vertical">
-                <a-form-item label="名称">
-                    <a-input v-model="todoCategory.record.name" allow-clear/>
-                </a-form-item>
-                <a-form-item label="类型">
-                    <a-radio-group v-model="todoCategory.record.type">
-                        <a-radio :value="TodoCategoryTypeEnum.FOLDER">文件夹</a-radio>
-                        <a-radio :value="TodoCategoryTypeEnum.TODO">清单</a-radio>
-                    </a-radio-group>
-                </a-form-item>
-            </a-form>
-        </a-modal>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import MessageUtil from "@/utils/MessageUtil";
-import {getDefaultTodoCategory, TodoCategoryRecord, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {useWindowSize} from "@vueuse/core";
 import {TreeNodeData} from "@arco-design/web-vue";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {useTodoStore} from "@/store/components/TodoStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/components/TodoSide/AddTodoCategory";
 
 const size = useWindowSize();
 
-const todoCategory = ref({
-    visible: false,
-    record: {
-        name: '',
-        pid: 0,
-        type: TodoCategoryTypeEnum.FOLDER
-    } as TodoCategoryRecord
-});
 const selectKeys = ref([useTodoStore().categoryId]);
 const keyword = ref('')
 
@@ -126,27 +105,12 @@ function switchFeature(id: number) {
 }
 
 function add(pid: number) {
-    todoCategory.value = {
-        visible: true,
-        record: getDefaultTodoCategory({pid: pid})
-    }
+    openAddTodoCategory(pid);
 }
 
-function submit() {
-    // 新增
-    useTodoCategoryStore().add(todoCategory.value.record)
-            .then(() => MessageUtil.success("新增成功"))
-            .catch(e => MessageUtil.error("新增失败", e));
-}
 
-function rename(id: number, name: string) {
-    MessageBoxUtil.prompt("请输入新的名称", "重命名", {
-        confirmButtonText: "修改",
-        cancelButtonText: "取消",
-        inputValue: name
-    }).then(newName => useTodoCategoryStore().rename(id, newName)
-            .then(() => MessageUtil.success("重命名成功"))
-            .catch(e => MessageUtil.error("重命名失败", e)))
+function update(id: number) {
+    openUpdateTodoCategory(id);
 }
 
 function remove(id: number, title: string) {
@@ -154,8 +118,8 @@ function remove(id: number, title: string) {
         confirmButtonText: "删除",
         cancelButtonText: "取消"
     }).then(() => useTodoCategoryStore().remove(id)
-            .then(() => MessageUtil.success("删除成功"))
-            .catch(e => MessageUtil.error("删除失败", e)));
+        .then(() => MessageUtil.success("删除成功"))
+        .catch(e => MessageUtil.error("删除失败", e)));
 
 }
 
@@ -169,19 +133,19 @@ function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 
 
 function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
     if (typeof data.dragNode.key !== 'undefined' &&
-            typeof data.dropNode.key !== 'undefined') {
+        typeof data.dropNode.key !== 'undefined') {
         if (data.dropPosition === 0) {
             useTodoCategoryStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-                    .then(() => MessageUtil.success("移动成功"))
-                    .catch(e => MessageUtil.error("移动失败", e));
+                .then(() => MessageUtil.success("移动成功"))
+                .catch(e => MessageUtil.error("移动失败", e));
         } else {
             const target = useTodoCategoryStore().todoCategoryMap.get(data.dropNode.key as number);
             if (!target) {
                 return;
             }
             useTodoCategoryStore().drop(data.dragNode.key as number, target.pid)
-                    .then(() => MessageUtil.success("移动成功"))
-                    .catch(e => MessageUtil.error("移动失败", e));
+                .then(() => MessageUtil.success("移动成功"))
+                .catch(e => MessageUtil.error("移动失败", e));
         }
     }
 }

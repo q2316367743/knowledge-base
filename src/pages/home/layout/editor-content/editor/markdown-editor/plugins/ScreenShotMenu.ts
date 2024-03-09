@@ -1,6 +1,6 @@
 import Cherry from "cherry-markdown";
 import {useImageUpload} from "@/plugin/image";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {ShallowRef} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 

@@ -1,7 +1,7 @@
 import Category from "@/entity/Category";
 import {defineStore} from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {clone} from "xe-utils";
 import {listToTree} from "@/entity/ListTree";
 import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";

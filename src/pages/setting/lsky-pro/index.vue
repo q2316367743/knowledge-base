@@ -58,8 +58,8 @@
 <script lang="ts" setup>
 import {computed, h, ref} from "vue";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import MessageUtil from "@/utils/MessageUtil";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import LskyProImage from "@/pages/setting/lsky-pro/components/lsky-pro-image.vue";
 import {Descriptions, DescriptionsItem, Modal, Progress} from "@arco-design/web-vue";
 import LskyProUpload from "@/pages/setting/lsky-pro/components/lsky-pro-upload.vue";

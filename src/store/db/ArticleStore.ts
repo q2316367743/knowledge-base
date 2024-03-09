@@ -6,9 +6,9 @@ import {
     getDefaultArticleIndex
 } from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {group, map} from "@/utils/ArrayUtil";
+import {group, map} from "@/utils/lang/ArrayUtil";
 import {toRaw} from "vue";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {ArticleContent} from "@/entity/article/ArticleContent";

@@ -10,7 +10,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {useWindowSize} from "@vueuse/core";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
 import {treeEach} from "@/entity/ListTree";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";

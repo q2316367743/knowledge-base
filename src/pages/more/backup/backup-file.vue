@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
 import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import JSZip from "jszip";
 import {download} from "@/utils/BrowserUtil";
 import {useGlobalStore} from "@/store/GlobalStore";

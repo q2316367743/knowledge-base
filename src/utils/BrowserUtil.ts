@@ -1,4 +1,4 @@
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 /**
  * 下载

@@ -18,12 +18,14 @@ import {
     saveOneByAsync
 } from "@/utils/utools/DbStorageUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {clone} from "xe-utils";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {toRaw} from "vue";
 
 export function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
     if (a.top) {
@@ -58,6 +60,8 @@ export const useTodoStore = defineStore('todo', {
         todoArticles: new Array<number>(),
         todoArticlesRev: undefined as string | undefined,
         rev: undefined as string | undefined,
+        sort: TodoListSortEnum.PRIORITY as TodoListSortEnum,
+        layout: TodoListLayoutEnum.DEFAULT as TodoListLayoutEnum,
         // 收起状态
         collapsed: false,
         // 当前选择的待办项
@@ -107,14 +111,26 @@ export const useTodoStore = defineStore('todo', {
             this.itemId = 0;
         },
         setId(id: number) {
-            this.id = id;
-            if (id === 0) {
+            if (this.id !== id || id === 0) {
+                // 只要切换ID或者id为0
+                this.id = id;
                 this.todoItems = new Array<TodoItemIndex>();
                 this.todoArticles = new Array<number>();
                 this.todoArticlesRev = undefined;
-                this.itemId = 0
-            } else {
+                this.itemId = 0;
+                this.sort = TodoListSortEnum.PRIORITY;
+                this.layout = TodoListLayoutEnum.DEFAULT;
+            }
+            if (id > 0) {
+                const todoCategory = useTodoCategoryStore().todoCategoryMap.get(id);
+                if (!todoCategory) {
+                    MessageUtil.error("待办分类不存在，请刷新页面重试");
+                    this.id = 0;
+                    return;
+                }
                 useGlobalStore().startLoading("正在获取待办项");
+                this.layout = todoCategory.todoListLayout;
+                this.sort = todoCategory.todoListSort;
                 listByAsync<TodoItemIndex>(LocalNameEnum.TODO_CATEGORY + id)
                     .then(items => {
                         this.todoItems = items.list;
@@ -218,6 +234,9 @@ export const useTodoStore = defineStore('todo', {
                 }, old.rev);
             }
             return Promise.resolve(this.todoItems[index]);
+        },
+        async saveContent(id: number, content: TodoItemContent, rev?: string): Promise<string | undefined> {
+            return saveOneByAsync(LocalNameEnum.TODO_ITEM + id, content, rev)
         },
         async removeById(id: number) {
             const index = this.todoItems.findIndex(e => e.id === id);

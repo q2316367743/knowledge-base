@@ -109,7 +109,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";

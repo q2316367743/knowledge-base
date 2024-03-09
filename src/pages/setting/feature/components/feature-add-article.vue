@@ -19,7 +19,7 @@
 import {ref} from "vue";
 import Constant from "@/global/Constant";
 import {getFeatureOne, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 
 const instance = ref({

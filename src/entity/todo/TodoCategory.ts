@@ -49,6 +49,11 @@ export interface TodoCategory extends ListTree {
      */
     todoListSort: TodoListSortEnum;
 
+    /**
+     * 布局类型
+     */
+    todoListLayout: TodoListLayoutEnum;
+
 }
 
 export enum TodoCategoryTypeEnum {
@@ -57,6 +62,13 @@ export enum TodoCategoryTypeEnum {
 
     TODO = 2
 
+}
+
+export enum TodoListLayoutEnum {
+    // 默认布局
+    DEFAULT = 1,
+    // 卡片布局
+    CARD = 2
 }
 
 export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCategory {
@@ -72,7 +84,8 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
         hideOfAbandon: false,
         hideOfComplete: false,
         hideOfArticle: false,
-        todoListSort: TodoListSortEnum.PRIORITY
+        todoListSort: TodoListSortEnum.PRIORITY,
+        todoListLayout: TodoListLayoutEnum.DEFAULT
     }, source);
 }
 

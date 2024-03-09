@@ -3,7 +3,7 @@ import {Folder} from "@/entity/folder";
 import {listToTree} from "@/entity/ListTree";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
-import {group, map} from "@/utils/ArrayUtil";
+import {group, map} from "@/utils/lang/ArrayUtil";
 
 export const useFolderStore = defineStore('folder', {
     state: () => ({

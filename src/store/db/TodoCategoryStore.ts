@@ -2,12 +2,12 @@ import {listToTree, TodoCategory, TodoCategoryRecord, TodoCategoryTypeEnum} from
 import {defineStore} from "pinia";
 import {listByAsync, removeOneByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {map} from "@/utils/ArrayUtil";
+import {map} from "@/utils/lang/ArrayUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {listFeature, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
 import Constant from "@/global/Constant";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 export const useTodoCategoryStore = defineStore('todo-category', {
     state: () => ({

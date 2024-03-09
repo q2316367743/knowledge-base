@@ -40,7 +40,7 @@ dependencies:
     version: 9.13.0(vue@3.4.21)
   '@vueuse/integrations':
     specifier: ^10.9.0
-    version: 10.9.0(axios@1.6.7)(fuse.js@7.0.0)(idb-keyval@6.2.1)(vue@3.4.21)
+    version: 10.9.0(axios@1.6.7)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.21)
   '@wangeditor/editor':
     specifier: ^5.1.23
     version: 5.1.23
@@ -89,6 +89,9 @@ dependencies:
   simple-mind-map:
     specifier: ^0.9.7
     version: 0.9.7
+  sortablejs:
+    specifier: ^1.15.2
+    version: 1.15.2
   turndown:
     specifier: ^7.1.2
     version: 7.1.2
@@ -112,6 +115,9 @@ devDependencies:
   '@types/pangu':
     specifier: ^4.0.2
     version: 4.0.2
+  '@types/sortablejs':
+    specifier: ^1.15.8
+    version: 1.15.8
   '@types/turndown':
     specifier: ^5.0.4
     version: 5.0.4
@@ -847,6 +853,10 @@ packages:
     resolution: {integrity: sha512-rVwVCkOFTWpmBjZuxTiVhLE8cwIKff3jWEKjs+DDg6bMkQwjp9Bp03pNanHQTtTzP53SDHJutb/kfGFHNhOJaQ==}
     dev: true
 
+  /@types/sortablejs@1.15.8:
+    resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==}
+    dev: true
+
   /@types/tern@0.23.9:
     resolution: {integrity: sha512-ypzHFE/wBzh+BlH6rrBgS5I/Z7RD21pGhZ2rltb/+ZrVM1awdZwjx7hE5XfuYgHWk9uvV5HLZN3SloevCAp3Bw==}
     dependencies:
@@ -1358,7 +1368,7 @@ packages:
       - vue
     dev: false
 
-  /@vueuse/integrations@10.9.0(axios@1.6.7)(fuse.js@7.0.0)(idb-keyval@6.2.1)(vue@3.4.21):
+  /@vueuse/integrations@10.9.0(axios@1.6.7)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.21):
     resolution: {integrity: sha512-acK+A01AYdWSvL4BZmCoJAcyHJ6EqhmkQEXbQLwev1MY7NBnS+hcEMx/BzVoR9zKI+UqEPMD9u6PsyAuiTRT4Q==}
     peerDependencies:
       async-validator: '*'
@@ -1404,6 +1414,7 @@ packages:
       axios: 1.6.7
       fuse.js: 7.0.0
       idb-keyval: 6.2.1
+      sortablejs: 1.15.2
       vue-demi: 0.14.7(vue@3.4.21)
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -4628,6 +4639,10 @@ packages:
   /snabbdom@3.6.2:
     resolution: {integrity: sha512-ig5qOnCDbugFntKi6c7Xlib8bA6xiJVk8O+WdFrV3wxbMqeHO0hXFQC4nAhPVWfZfi8255lcZkNhtIBINCc4+Q==}
     engines: {node: '>=12.17.0'}
+    dev: false
+
+  /sortablejs@1.15.2:
+    resolution: {integrity: sha512-FJF5jgdfvoKn1MAKSdGs33bIqLi3LmsgVTliuX6iITj834F+JRQZN90Z93yql8h0K2t0RwDPBmxwlbZfDcxNZA==}
     dev: false
 
   /source-map-js@1.0.2:

@@ -3,7 +3,8 @@
         <content-header/>
         <div class="list-container" @click="setItemId(0)">
             <!-- 待办 -->
-            <a-divider orientation="left" v-if="todoList.length > 0" :style="{marginBottom: hideOfTodo ? '33px':'13px'}">
+            <a-divider orientation="left" v-if="todoList.length > 0"
+                       :style="{marginBottom: hideOfTodo ? '33px':'13px'}">
                 <span style="cursor: pointer;color: var(--color-text-1);"
                       @click.stop="hideOfTodo = !hideOfTodo">
                     <icon-right v-if="hideOfTodo"/>
@@ -73,7 +74,8 @@
                 </a-tooltip>
             </div>
             <!-- 已完成 -->
-            <a-divider orientation="left" v-if="completeList.length > 0" :style="{marginBottom: hideOfComplete ? '33px':'13px'}">
+            <a-divider orientation="left" v-if="completeList.length > 0"
+                       :style="{marginBottom: hideOfComplete ? '33px':'13px'}">
                 <span style="cursor: pointer;color: rgb(var(--green-6));"
                       @click.stop="hideOfComplete = !hideOfComplete">
                     <icon-right v-if="hideOfComplete"/>
@@ -102,7 +104,8 @@
 
             </div>
             <!-- 已放弃 -->
-            <a-divider orientation="left" v-if="abandonList.length > 0" :style="{marginBottom: hideOfAbandon ? '33px':'13px'}">
+            <a-divider orientation="left" v-if="abandonList.length > 0"
+                       :style="{marginBottom: hideOfAbandon ? '33px':'13px'}">
                 <span style="cursor: pointer;color: rgb(var(--orange-6));" @click.stop="hideOfAbandon = !hideOfAbandon">
                     <icon-right v-if="hideOfAbandon"/>
                     <icon-down v-else/>
@@ -147,14 +150,15 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 // 工具类
-import MessageUtil from "@/utils/MessageUtil";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {openArticle} from "@/pages/todo/components/todo-content/layout/TodoItemSide/OpenArticle";
+import {openArticle} from "@/pages/todo/components/OpenArticle";
+import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
 
 
 const size = useWindowSize();
@@ -169,8 +173,7 @@ const itemId = computed(() => useTodoStore().itemId);
 const todoList = computed(() => {
     const category = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().id);
     return useTodoStore().todoList
-        .sort((a, b) => sortTodoIndex(a, b,
-            category ? getDefaultTodoCategory(category).todoListSort : TodoListSortEnum.PRIORITY))
+        .sort((a, b) => sortTodoIndex(a, b, ifObjectIsNull(category, 'todoListSort', TodoListSortEnum.PRIORITY)));
 });
 const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
@@ -300,7 +303,7 @@ function toArticle(id: number) {
     if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.TO_ARTICLE) {
         useHomeEditorStore().openArticle(id);
         router.push('/home');
-    }else if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.DRAWER) {
+    } else if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.DRAWER) {
         const article = useArticleStore().articleMap.get(id);
         if (!article) {
             MessageUtil.error("文章不存在");

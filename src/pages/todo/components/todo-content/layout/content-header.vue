@@ -9,7 +9,7 @@
             <div class="title">{{ title }}</div>
             <a-button-group type="text">
                 <!-- 排序 -->
-                <a-dropdown position="br" @select="setTodoListSort($event)">
+                <a-dropdown position="br" @select="setTodoListSort($event)"  :disabled="disabled">
                     <a-button>
                         <template #icon>
                             <icon-sort/>
@@ -81,10 +81,10 @@
             <a-progress :percent="percent"/>
         </div>
         <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
-                 :disabled="id === 0">
+                 :disabled="id === 0" >
             <template #suffix>
                 <!-- 优先级 -->
-                <a-dropdown position="br" @select="updatePriority($event)">
+                <a-dropdown position="br" @select="updatePriority($event)"  :disabled="disabled">
                     <a-button type="text" :style="{color: color}" class="priority">
                         <template #icon>
                             <icon-thunderbolt/>
@@ -117,7 +117,7 @@
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
@@ -152,7 +152,7 @@ const percent = computed(() => {
     const all = useTodoStore().todoList.length + useTodoStore().completeList.length;
     const value = useTodoStore().completeList.length / all;
     return parseFloat(value.toFixed(4))
-})
+});
 
 watch(() => useTodoStore().id, value => getTodoListSort(value), {immediate: true});
 

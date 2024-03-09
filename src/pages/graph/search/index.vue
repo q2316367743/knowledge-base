@@ -32,7 +32,7 @@
 import {useWindowSize} from "@vueuse/core";
 import {computed, onBeforeUnmount, ref} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleContent} from "@/entity/article/ArticleContent";

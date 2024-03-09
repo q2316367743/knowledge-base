@@ -45,17 +45,17 @@
                            @close="tagRemove(tag)">{{ tag }}
                     </a-tag>
                     <a-input
-                            v-if="tag.input"
-                            ref="tagInputRef"
-                            :style="{ width: '90px'}"
-                            size="mini"
-                            v-model.trim="tag.value"
-                            @keyup.enter="tagAdd()"
-                            @blur="tagAdd()"
+                        v-if="tag.input"
+                        ref="tagInputRef"
+                        :style="{ width: '90px'}"
+                        size="mini"
+                        v-model.trim="tag.value"
+                        @keyup.enter="tagAdd()"
+                        @blur="tagAdd()"
                     />
                     <a-tag
-                            v-else
-                            @click="tagEdit()"
+                        v-else
+                        @click="tagEdit()"
                     >
                         <template #icon>
                             <icon-plus/>
@@ -86,7 +86,7 @@ import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, 
 import {useTodoStore} from "@/store/components/TodoStore";
 import {getDefaultTodoItem, handlePriorityColor, TodoItem, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useMagicKeys} from "@vueuse/core";
@@ -139,12 +139,12 @@ const editorConfig: IEditorConfig = {
                 // file 即选中的文件
                 // 自己实现上传，并得到图片 url alt href
                 useImageUpload(file)
-                        .then(url => {
-                            if (url) {
-                                // 最后插入图片
-                                insertFn(url, file.name || "默认图片");
-                            }
-                        })
+                    .then(url => {
+                        if (url) {
+                            // 最后插入图片
+                            insertFn(url, file.name || "默认图片");
+                        }
+                    })
             }
         }
     }
@@ -158,21 +158,21 @@ function init(id: number) {
     }
     // 获取内容
     useTodoStore().getTodoItem(id)
-            .then(value => {
-                item.value = value;
-                // 重新设置编辑器的值
-                if (editor) {
-                    try {
-                        editor.setHtml(item.value.content.record.content);
-                    } catch (e) {
-                        console.error("编辑器赋值错误，重新创建");
-                        editor.destroy();
-                        create();
-                    }
+        .then(value => {
+            item.value = value;
+            // 重新设置编辑器的值
+            if (editor) {
+                try {
+                    editor.setHtml(item.value.content.record.content);
+                } catch (e) {
+                    console.error("编辑器赋值错误，重新创建");
+                    editor.destroy();
+                    create();
                 }
-                isInit = true;
-            })
-            .catch(e => MessageUtil.error("获取待办内容失败", e))
+            }
+            isInit = true;
+        })
+        .catch(e => MessageUtil.error("获取待办内容失败", e))
 }
 
 // 内容的自动保存
@@ -187,20 +187,20 @@ const autoSave = () => {
     }
     autoSaveLoading.value = true;
     lock = true;
-    saveOneByAsync(LocalNameEnum.TODO_ITEM + itemId.value, {
+    useTodoStore().saveContent(itemId.value, {
         ...item.value.content.record,
         tags: toRaw(item.value.content.record.tags)
     }, item.value.content.rev)
-            .then(rev => {
-                item.value.content.rev = rev;
-                lock = false;
-                if (todo) {
-                    todo = false;
-                    autoSave()
-                }
-            })
-            .catch(e => MessageUtil.error("自动保存内容失败", e))
-            .finally(() => autoSaveLoading.value = false);
+        .then(rev => {
+            item.value.content.rev = rev;
+            lock = false;
+            if (todo) {
+                todo = false;
+                autoSave()
+            }
+        })
+        .catch(e => MessageUtil.error("自动保存内容失败", e))
+        .finally(() => autoSaveLoading.value = false);
 };
 
 function create() {
@@ -254,14 +254,14 @@ onBeforeUnmount(() => {
 function updatePriority(priority: any) {
     useGlobalStore().startLoading("开始更新待办项");
     useTodoStore().updateById(itemId.value, {priority})
-            .then(() => MessageUtil.success("更新成功"))
-            .catch(e => MessageUtil.error("更新失败", e))
-            .finally(() => useGlobalStore().closeLoading());
+        .then(() => MessageUtil.success("更新成功"))
+        .catch(e => MessageUtil.error("更新失败", e))
+        .finally(() => useGlobalStore().closeLoading());
 }
 
 function updateTitle() {
     useTodoStore().updateById(item.value.index.id, {title: item.value.index.title})
-            .catch(e => MessageUtil.error("更新标题失败", e));
+        .catch(e => MessageUtil.error("更新标题失败", e));
 }
 
 watch(() => s.value, value => {
@@ -372,6 +372,7 @@ function tagRemove(tag: string) {
     }
 
 }
+
 #todo-editor—wrapper {
     p:last-child {
         padding-bottom: 15px;

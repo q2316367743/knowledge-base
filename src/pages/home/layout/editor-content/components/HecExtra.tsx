@@ -6,7 +6,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {computed, ref} from "vue";
 import {Drawer, Form, FormItem, Input, Select, Textarea, TreeSelect} from "@arco-design/web-vue";
 import {useCategoryStore} from "@/store/db/CategoryStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 export async function openHeExtra(id: number) {
     const categoryTree = computed(() => useCategoryStore().categoryTree);

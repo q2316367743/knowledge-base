@@ -1,7 +1,7 @@
 import Cherry from "cherry-markdown";
 import {ShallowRef} from "vue";
 import axios from "axios";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 const YI_YAN: string = "https://v.api.aa1.cn/api/yiyan/index.php";
 const AN_WEI: string = "https://v.api.aa1.cn/api/api-wenan-anwei/index.php?type=json";

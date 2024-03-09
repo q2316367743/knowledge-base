@@ -15,8 +15,8 @@
 <script lang="ts" setup>
 import {onBeforeUnmount, ref} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {listRecordByAsync, removeOneByAsync} from "@/utils/utools/DbStorageUtil";
 
 const attachments = ref(new Array<string>());

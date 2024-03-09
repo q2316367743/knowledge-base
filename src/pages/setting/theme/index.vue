@@ -18,7 +18,7 @@
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {clone} from "xe-utils";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import ColorPicker from "@/components/color-picker/index.vue";

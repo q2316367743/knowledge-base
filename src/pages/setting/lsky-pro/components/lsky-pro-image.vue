@@ -100,7 +100,7 @@
 import {ref, watch} from "vue";
 import {AlbumResult, AlbumType, ImageOrder, ImagePermission, ImageResult} from "@/plugin/sdk/LskyPro";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {copyMarkdown, copyUrl, openInfo} from "@/pages/setting/lsky-pro/domain/func";
 
 const page = ref(1);

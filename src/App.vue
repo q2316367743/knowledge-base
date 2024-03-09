@@ -22,7 +22,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 // 组件
 import {ArticleIndex} from "@/entity/article";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";

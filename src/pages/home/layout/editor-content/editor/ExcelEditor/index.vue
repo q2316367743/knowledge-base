@@ -21,7 +21,7 @@ import {useArticleExportEvent, useSaveContentEvent} from "@/store/components/Hom
 import type {Workbook} from "@univerjs/core/lib/types/sheets/workbook";
 
 import './darkTheme.less';
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {useIntervalFn} from "@vueuse/core";
 
 const props = defineProps({

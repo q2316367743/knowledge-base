@@ -31,7 +31,7 @@ import {ref, watch} from "vue";
 import dayjs from "dayjs";
 import {ShortcutType} from "@arco-design/web-vue";
 import {useTodoStore} from "@/store/components/TodoStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";

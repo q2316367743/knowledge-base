@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
 import { useCategoryStore} from "@/store/db/CategoryStore";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {statistics} from "@/global/BeanFactory";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {useWindowSize} from "@vueuse/core";

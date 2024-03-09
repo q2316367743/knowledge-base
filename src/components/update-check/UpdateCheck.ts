@@ -1,13 +1,13 @@
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
-import NotificationUtil from "@/utils/NotificationUtil";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {init} from "@/components/update-check/record/init";
 import {parseVersion} from "@/components/update-check/domain";
 import {updateTo130FromUnder} from "@/components/update-check/record/updateTo130";
 import {updateTo140FromUnder} from "@/components/update-check/record/updateTo140";
 import {updateTo150FromUnder} from "@/components/update-check/record/updateTo150";
-import MessageUtil from "@/utils/MessageUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 export default async function updateCheck(toUpdate?: () => void) {
     const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)

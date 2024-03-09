@@ -7,10 +7,10 @@ import {buildArticleName} from "@/store/setting/BaseSettingStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 // 工具类
-import MessageUtil from "@/utils/MessageUtil";
-import MessageBoxUtil from "@/utils/MessageBoxUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {articleToZip} from "@/utils/file/ConvertUtil";
-import NotificationUtil from "@/utils/NotificationUtil";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
