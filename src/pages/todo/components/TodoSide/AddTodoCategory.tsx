@@ -1,10 +1,16 @@
 import {Ref, ref} from "vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {Form, FormItem, Input, Modal, Radio, RadioGroup} from "@arco-design/web-vue";
-import {TodoCategoryRecord, TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {
+    getDefaultTodoCategory,
+    TodoCategoryRecord,
+    TodoCategoryTypeEnum,
+    TodoListLayoutEnum
+} from "@/entity/todo/TodoCategory";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {clone} from "xe-utils";
+import {useTodoStore} from "@/store/components/TodoStore";
 
 
 function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
@@ -66,7 +72,7 @@ export function openUpdateTodoCategory(id: number) {
         MessageUtil.error("系统异常，待办分类不存在，请刷新后重试");
         return;
     }
-    const record = ref<TodoCategoryRecord>(clone(temp, true));
+    const record = ref<TodoCategoryRecord>(clone(getDefaultTodoCategory(temp), true));
 
     Modal.open({
         title: "修改待办分类",
@@ -76,6 +82,9 @@ export function openUpdateTodoCategory(id: number) {
         async onBeforeOk() {
             try {
                 await useTodoCategoryStore().update(id, record.value);
+                if (id === useTodoStore().id) {
+                    useTodoStore().setId(id);
+                }
                 MessageUtil.success("修改成功");
                 return true;
             } catch (e) {

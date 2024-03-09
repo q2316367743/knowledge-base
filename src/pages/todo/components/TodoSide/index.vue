@@ -83,7 +83,9 @@ watch(() => selectKeys.value, value => {
     useTodoStore().setCategoryId(categoryId);
     let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
     if (category && category.type === TodoCategoryTypeEnum.TODO) {
-        useTodoStore().setId(categoryId);
+        if (categoryId !== useTodoStore().id) {
+            useTodoStore().setId(categoryId);
+        }
         if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
             useTodoStore().switchCollapsed();
         }
