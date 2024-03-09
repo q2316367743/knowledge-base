@@ -62,6 +62,6 @@ export function getDefaultBaseSetting(): BaseSetting {
         newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
         codeExtraName: 'ts',
         mdEditorEditMode: MdEditorEditModeEnum.AUTO,
-        todoArticleAction: TodoArticleActionEnum.TO_ARTICLE
+        todoArticleAction: TodoArticleActionEnum.DRAWER
     }
 }
