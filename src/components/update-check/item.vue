@@ -71,6 +71,11 @@ export default defineComponent({
                         name: '优化',
                         color: 'orange'
                     };
+                case LogItemEnum.MAJOR:
+                    return {
+                        name: '重要更新',
+                        color: '#f53f3f'
+                    }
                 default:
                     return {
                         name: '',

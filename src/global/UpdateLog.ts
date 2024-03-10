@@ -2,11 +2,14 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
-        version: '1.7.3',
-        sign: 173,
-        time: '2024-03-08',
+        version: '1.8.0',
+        sign: 180,
+        time: '2024-03-10',
         items: [{
-            label: LogItemEnum.UPDATE,
+            label: LogItemEnum.MAJOR,
+            content: "【待办】新增卡片布局，卡片布局更加直观，操作更加方便"
+        }, {
+            label: LogItemEnum.MAJOR,
             content: "【笔记】文章导入全新改版，导入方式更加直观，更加方便"
         }, {
             label: LogItemEnum.ADD,
@@ -35,7 +38,10 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: "【待办】新增待办进度条，显示清单中待办完成进度"
-        }]
+        }],
+        remark: "此次重点更新待办的卡片视图，显示更加直观。" +
+            "新增待办进度条，显示清单中待办完成进度。" +
+            "之后的版本中会删除掉表格笔记，请大家不要使用。"
     },
     {
         version: '1.7.1',

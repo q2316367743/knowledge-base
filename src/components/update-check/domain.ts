@@ -63,7 +63,12 @@ export enum LogItemEnum {
     /**
      * 更新/改版
      */
-    UPDATE = 4
+    UPDATE = 4,
+
+    /**
+     * 重大更新
+     */
+    MAJOR = 5
 
 }
 

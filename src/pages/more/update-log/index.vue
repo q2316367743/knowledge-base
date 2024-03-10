@@ -1,5 +1,10 @@
 <template>
     <div class="more-update-log">
+        <a-alert>
+            <span>反馈建议前往</span>
+            <a-link @click="toTxc()">兔小巢</a-link>
+            <span>，支持图片反馈。</span>
+        </a-alert>
         <a-timeline style="margin-top: 10px;" label-position="relative">
             <a-timeline-item :label="log.time" placement="top" v-for="log in UpdateLog">
                 <a-card shadow="hover" :title="log.version">
@@ -8,11 +13,13 @@
             </a-timeline-item>
         </a-timeline>
     </div>
-    <a-back-top target-container=".more-update-log" />
+    <a-back-top target-container=".more-update-log"/>
 </template>
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";
 import UpdateLog from "@/global/UpdateLog";
+
+const toTxc = () => utools.shellOpenExternal("https://txc.qq.com/products/612648");
 </script>
 <style scoped>
 .more-update-log {
