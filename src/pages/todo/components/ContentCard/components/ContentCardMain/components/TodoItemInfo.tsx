@@ -1,5 +1,5 @@
 import {handlePriorityColor, TodoItemIndex, TodoItemPriority} from "@/entity/todo/TodoItem";
-import {Button, Drawer, Form, FormItem, Input, Radio, RadioGroup, Tag} from "@arco-design/web-vue";
+import {Button, Drawer, Form, FormItem, Radio, RadioGroup, Tag, Textarea} from "@arco-design/web-vue";
 import {ref, shallowRef, watch} from "vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
@@ -25,7 +25,8 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
         width: 400,
         content: () => <Form model={base.value} layout={'vertical'}>
             <FormItem>
-                <Input v-model={base.value.title} allowClear class="input" placeholder="请输入待办"/>
+                <Textarea v-model={base.value.title} allowClear placeholder="请输入待办"
+                          autoSize={{minRows: 2, maxRows: 8}}/>
             </FormItem>
             <FormItem label={'优先级'}>
                 <RadioGroup v-model={base.value.priority} type={'button'}>
@@ -53,7 +54,8 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
                             }}
                         </Button></div>,
                     default: () => content.value.record.content ?
-                        <div innerHTML={content.value.record.content}></div> : '请输入备注'
+                        <div innerHTML={content.value.record.content}></div> :
+                        <div style={{color: 'var(--color-text-3)'}}>请输入备注</div>
                 }}
             </FormItem>
         </Form>,

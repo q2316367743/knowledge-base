@@ -22,7 +22,6 @@
             <a-button @click="visible = false">取消</a-button>
             <a-button type="primary" @click="copyToClipboard()">复制到剪切板</a-button>
             <a-button type="primary" @click="exportTodo()">导出</a-button>
-            "
         </template>
     </a-modal>
 </template>
@@ -33,7 +32,6 @@ import {ShortcutType} from "@arco-design/web-vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
-import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {turndownService} from "@/plugin/sdk/Turndown";
 

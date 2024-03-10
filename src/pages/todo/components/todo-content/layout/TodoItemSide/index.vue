@@ -157,7 +157,7 @@ import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {openArticle} from "@/pages/todo/components/OpenArticle";
+import {openArticle} from "@/pages/todo/components/common/OpenArticle";
 import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
 
 

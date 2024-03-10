@@ -40,7 +40,7 @@
                 <a-tag class="length" color="arcoblue">{{ articleList.length }}</a-tag>
             </div>
             <div class="extra">
-                <a-button type="text" @click="openAddRelationArticle(articleList.map(e => e.id))">
+                <a-button type="text" @click="openAddRelationArticle()">
                     <template #icon>
                         <icon-plus/>
                     </template>
@@ -69,12 +69,12 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoItemStatus} from "@/entity/todo/TodoItem";
 import {
     openAddRelationArticle
-} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/AddRelationArticle";
+} from "@/pages/todo/components/common/AddRelationArticle";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {openArticle} from "@/pages/todo/components/OpenArticle";
+import {openArticle} from "@/pages/todo/components/common/OpenArticle";
 import {useRouter} from "vue-router";
 
 const router = useRouter();

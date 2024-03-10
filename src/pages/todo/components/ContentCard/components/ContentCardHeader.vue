@@ -63,7 +63,7 @@
                     </template>
                 </a-button>
                 <template #content>
-                    <a-doption :disabled="disabled" @click="open()">
+                    <a-doption :disabled="disabled" @click="openTodoExport()">
                         <template #icon>
                             <icon-export/>
                         </template>
@@ -77,9 +77,10 @@
 <script lang="ts" setup>
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useTodoStore} from "@/store/components/TodoStore";
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
 
 const disabled = computed(() => useTodoStore().id === 0);
 const title = computed(() => useTodoStore().title);

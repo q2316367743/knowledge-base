@@ -1,5 +1,4 @@
 import Statistics from '@/plugin/Statistics';
-import {useEventBus} from "@vueuse/core";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
@@ -17,7 +16,6 @@ window.utools = window.utools || utools;
 
 
 export const statistics = new Statistics()
-export const useTodoAddArticleEvent = useEventBus<void>('todo-add-article');
 
 
 

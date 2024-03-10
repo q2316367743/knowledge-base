@@ -15,14 +15,12 @@
             </div>
         </template>
     </a-split>
-    <todo-item-article/>
 </template>
 <script lang="ts" setup>
 import {computed, nextTick, ref, watch} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import TodoItemContent from "@/pages/todo/components/todo-content/layout/todo-item-content.vue";
 import TodoItemSide from "@/pages/todo/components/todo-content/layout/TodoItemSide/index.vue";
-import TodoItemArticle from "@/pages/todo/components/todo-content/layout/todo-item-article.vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 
 const size = useWindowSize();

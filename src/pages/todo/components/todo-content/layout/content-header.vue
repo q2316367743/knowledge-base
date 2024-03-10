@@ -61,13 +61,13 @@
                         </template>
                     </a-button>
                     <template #content>
-                        <a-doption @click="association()" :disabled="disabled">
+                        <a-doption @click="openAddRelationArticle()" :disabled="disabled">
                             <template #icon>
                                 <icon-file/>
                             </template>
                             关联文章
                         </a-doption>
-                        <a-doption :disabled="disabled" @click="open()">
+                        <a-doption :disabled="disabled" @click="openTodoExport()">
                             <template #icon>
                                 <icon-export/>
                             </template>
@@ -111,7 +111,6 @@
                 </a-dropdown>
             </template>
         </a-input>
-        <todo-export v-model:visible="exportVisible"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -121,9 +120,9 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
-import {useTodoAddArticleEvent} from "@/global/BeanFactory";
-import TodoExport from "@/pages/todo/components/todo-content/components/todo-export.vue";
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
+import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
+import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
@@ -142,7 +141,6 @@ const disabled = computed(() => useTodoStore().id === 0);
 const titleWrap = ref("");
 const priority = ref<TodoItemPriority>(TodoItemPriority.NONE);
 const todoListSort = ref<TodoListSortEnum>(TodoListSortEnum.PRIORITY);
-const exportVisible = ref(false);
 
 const color = computed(() => handlePriorityColor(priority.value));
 const percent = computed(() => {
@@ -192,13 +190,7 @@ const setTodoListSort = (value: any) => {
         .catch(e => MessageUtil.error("更新待办列表排序异常", e));
 }
 
-function association() {
-    useTodoAddArticleEvent.emit();
-}
 
-function open() {
-    exportVisible.value = true;
-}
 
 function updatePriority(value: any) {
     priority.value = value;

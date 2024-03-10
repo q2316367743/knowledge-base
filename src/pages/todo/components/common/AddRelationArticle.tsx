@@ -9,9 +9,9 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
 
-export function openAddRelationArticle(ids: Array<number>) {
+export function openAddRelationArticle() {
     const keyword = ref('');
-    const checkedKeys = ref<Array<number>>(ids);
+    const checkedKeys = ref<Array<number>>(useTodoStore().todoArticles);
 
     const folderTree = computed(() => useFolderStore().folderTree);
     const folderMap = computed(() => useArticleStore().folderMap);
