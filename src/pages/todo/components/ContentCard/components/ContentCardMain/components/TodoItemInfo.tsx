@@ -1,5 +1,15 @@
 import {handlePriorityColor, TodoItemIndex, TodoItemPriority} from "@/entity/todo/TodoItem";
-import {Button, Drawer, Form, FormItem, Radio, RadioGroup, Tag, Textarea} from "@arco-design/web-vue";
+import {
+    Button,
+    Drawer,
+    Form,
+    FormItem, Popconfirm,
+    Radio,
+    RadioGroup,
+    Space,
+    Tag,
+    Textarea
+} from "@arco-design/web-vue";
 import {ref, shallowRef, watch} from "vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
@@ -24,7 +34,29 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
         content.value.record.tags = content.value.record.tags.filter((tag) => tag !== e);
     }
 
-    Drawer.open({
+    function onClose() {
+        open.close();
+    }
+
+    async function onBeforeOk() {
+        // 先更新索引
+        await useTodoStore().updateById(index.id, base.value);
+        // 再更新内容
+        await useTodoStore().saveContent(index.id, content.value.record, content.value.rev);
+        MessageUtil.success("保存成功");
+        onClose();
+    }
+
+    function onRemove() {
+        useTodoStore().removeById(index.id)
+            .then(() => {
+                MessageUtil.success("删除成功");
+                onClose();
+            })
+            .catch(e => MessageUtil.error("删除失败", e));
+    }
+
+    const open = Drawer.open({
         title: '待办详情',
         width: 400,
         content: () => <Form model={base.value} layout={'vertical'}>
@@ -46,7 +78,8 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
             </FormItem>
             <FormItem label={'标签'}>
                 {content.value.record.tags.map(tag =>
-                    <Tag color={'arcoblue'} style={{marginRight: '4px'}} closable onClose={() => closeTag(tag)}>{tag}</Tag>)}
+                    <Tag color={'arcoblue'} style={{marginRight: '4px'}} closable
+                         onClose={() => closeTag(tag)}>{tag}</Tag>)}
                 <Button size={'mini'} type={'primary'} onClick={startAddTag}>新增</Button>
             </FormItem>
             <FormItem>
@@ -64,16 +97,17 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
                 }}
             </FormItem>
         </Form>,
-        okText: '保存',
-        async onBeforeOk() {
-            // 先更新索引
-            await useTodoStore().updateById(index.id, base.value);
-            // 再更新内容
-            await useTodoStore().saveContent(index.id, content.value.record, content.value.rev);
-            MessageUtil.success("保存成功");
-            return true;
-        }
-    })
+        footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Popconfirm content={'是否删除此待办，删除后不可恢复'} onOk={onRemove} okText={'删除'}
+                        okButtonProps={{status: 'danger'}}>
+                <Button type={'primary'} status={'danger'}>删除</Button>
+            </Popconfirm>
+            <Space>
+                <Button onClick={onClose}>取消</Button>
+                <Button type={'primary'} onClick={onBeforeOk}>保存</Button>
+            </Space>
+        </div>
+    });
 }
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
