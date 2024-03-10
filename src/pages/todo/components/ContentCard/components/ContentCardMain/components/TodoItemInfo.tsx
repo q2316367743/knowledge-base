@@ -20,6 +20,10 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
         openInfo(content.value.record.content).then(res => content.value.record.content = res);
     }
 
+    function closeTag(e: string) {
+        content.value.record.tags = content.value.record.tags.filter((tag) => tag !== e);
+    }
+
     Drawer.open({
         title: '待办详情',
         width: 400,
@@ -41,7 +45,8 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
                 </RadioGroup>
             </FormItem>
             <FormItem label={'标签'}>
-                {content.value.record.tags.map(tag => <Tag color={'arcoblue'} style={{marginRight: '4px'}}>{tag}</Tag>)}
+                {content.value.record.tags.map(tag =>
+                    <Tag color={'arcoblue'} style={{marginRight: '4px'}} closable onClose={() => closeTag(tag)}>{tag}</Tag>)}
                 <Button size={'mini'} type={'primary'} onClick={startAddTag}>新增</Button>
             </FormItem>
             <FormItem>
