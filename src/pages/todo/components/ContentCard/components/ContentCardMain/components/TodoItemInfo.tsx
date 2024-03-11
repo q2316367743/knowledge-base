@@ -1,11 +1,11 @@
-import {handlePriorityColor, TodoItemIndex, TodoItemPriority} from "@/entity/todo/TodoItem";
+import {handlePriorityColor, TodoItemAttr, TodoItemIndex, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {
-    Button,
+    Button, DatePicker,
     Drawer,
     Form,
     FormItem, Popconfirm,
     Radio,
-    RadioGroup,
+    RadioGroup, RangePicker,
     Space,
     Tag,
     Textarea
@@ -19,10 +19,27 @@ import {createEditor, createToolbar, IDomEditor, IToolbarConfig} from "@wangedit
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useImageUpload} from "@/plugin/image";
 
-export async function openTodoItemInfo(index: TodoItemIndex) {
+function renderIsRange(attr: TodoItemAttr): boolean {
+    if (attr.start === '' && attr.end === '') {
+        return false;
+    }
+    return attr.start !== attr.end;
+
+}
+
+export async function openTodoItemInfo(index: TodoItemIndex, toUpdate?: () => void) {
     const base = ref(clone(index, true));
     const todoItem = await useTodoStore().getTodoItem(index.id);
     const content = ref(todoItem.content);
+    const attr = ref<TodoItemAttr>(await useTodoStore().getTodoItemAttr(index.id));
+    const isRange = ref(renderIsRange(attr.value));
+    const range = ref([attr.value.start, attr.value.end]);
+
+    watch(() => range.value[0], (newValue) => {
+        if (!isRange.value) {
+            range.value[1] = newValue;
+        }
+    })
 
     const startAddTag = () => MessageBoxUtil.prompt("请输入标签名字").then(tag => content.value.record.tags.push(tag));
 
@@ -40,11 +57,17 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
 
     async function onBeforeOk() {
         // 先更新索引
-        await useTodoStore().updateById(index.id, base.value);
+        await useTodoStore().updateById(index.id, base.value, {
+            ...attr.value,
+            start: range.value[0],
+            end: range.value[1]
+        });
+        // 再更新属性
         // 再更新内容
         await useTodoStore().saveContent(index.id, content.value.record, content.value.rev);
         MessageUtil.success("保存成功");
         onClose();
+        toUpdate && toUpdate();
     }
 
     function onRemove() {
@@ -75,6 +98,21 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
                     <Radio value={TodoItemPriority.NONE}
                            style={{color: handlePriorityColor(TodoItemPriority.NONE)}}>无优先级</Radio>
                 </RadioGroup>
+            </FormItem>
+            <FormItem>
+                {{
+                    label: () => <RadioGroup v-model={isRange.value} type={'button'}>
+                        <Radio value={false}>时间</Radio>
+                        <Radio value={true}>时间段</Radio>
+                    </RadioGroup>,
+                    default: () => {
+                        if (isRange.value) {
+                            return <RangePicker v-model={range.value}></RangePicker>
+                        } else {
+                            return <DatePicker v-model={range.value[0]}></DatePicker>
+                        }
+                    }
+                }}
             </FormItem>
             <FormItem label={'标签'}>
                 {content.value.record.tags.map(tag =>

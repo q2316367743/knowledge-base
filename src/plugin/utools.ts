@@ -1,6 +1,6 @@
 import MessageUtil from '@/utils/modal/MessageUtil';
 import {generateUUID} from "@/utils/BrowserUtil";
-import {createStore, del, get, getMany, keys, set} from 'idb-keyval';
+import {createStore, del, get, getMany, keys, set, values} from 'idb-keyval';
 import Constant from "@/global/Constant";
 
 const store = createStore(Constant.id, "store");
@@ -115,17 +115,20 @@ export const utools = {
             /**
              * 获取所有文档 可根据文档id前缀查找
              */
-            async allDocs(key?: string): Promise<DbDoc[]> {
-                let itemKeys = await keys(store);
-                if (key) {
+            async allDocs(key?: string | string[]): Promise<DbDoc[]> {
+                if (key && key instanceof Array) {
+                    return getMany(key, store);
+                } else if (key && typeof key === 'string') {
+                    let itemKeys = await keys(store);
                     itemKeys = itemKeys.filter(itemKey => {
                         if (typeof itemKey === 'string') {
                             return itemKey.startsWith(key)
                         }
                         return false;
                     })
+                    return getMany(itemKeys, store);
                 }
-                return getMany(itemKeys);
+                return values(store);
             },
 
             /**

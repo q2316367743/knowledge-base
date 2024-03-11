@@ -52,14 +52,14 @@ export interface TodoItemAttr {
     reason: string;
 
     /**
-     * 截止至，仅用于展示
+     * 开始时间
      */
-    end: string;
+    start: string;
 
     /**
-     * 进度
+     * 截止至，默认等于开始时间
      */
-    progress: number;
+    end: string;
 
 }
 
@@ -161,8 +161,8 @@ export function getDefaultTodoItemAttr(id?: number): TodoItemAttr {
     return {
         id: id || 0,
         reason: '',
-        end: '',
-        progress: 0
+        start: '',
+        end: ''
     }
 }
 

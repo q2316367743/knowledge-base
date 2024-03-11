@@ -13,7 +13,7 @@
                 </a-button>
             </div>
             <div class="content" ref="todoRef">
-                <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id"/>
+                <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" :attr="true"/>
             </div>
         </div>
         <div class="card-item">
