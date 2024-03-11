@@ -1,6 +1,6 @@
 <template>
     <main class="main">
-        <div class="card-item">
+        <div class="card-item" v-if="showTodo" :style="style">
             <div class="title">
                 待办
                 <a-tag class="length">{{ todoList.length }}</a-tag>
@@ -16,7 +16,7 @@
                 <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" :attr="true"/>
             </div>
         </div>
-        <div class="card-item">
+        <div class="card-item" v-if="showComplete" :style="style">
             <div class="title">
                 已完成
                 <a-tag class="length" color="green">{{ completeList.length }}</a-tag>
@@ -25,7 +25,7 @@
                 <card-todo-item v-for="item in completeList" :key="item.id" :item="item" :data-id="item.id"/>
             </div>
         </div>
-        <div class="card-item">
+        <div class="card-item" v-if="showAbandon" :style="style">
             <div class="title">
                 已取消
                 <a-tag class="length" color="orange">{{ abandonList.length }}</a-tag>
@@ -34,7 +34,7 @@
                 <card-todo-item v-for="item in abandonList" :key="item.id" :item="item" :data-id="item.id"/>
             </div>
         </div>
-        <div class="card-item">
+        <div class="card-item" v-if="showArticle" :style="style">
             <div class="title">
                 关联的文章
                 <a-tag class="length" color="arcoblue">{{ articleList.length }}</a-tag>
@@ -76,6 +76,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openArticle} from "@/pages/todo/components/common/OpenArticle";
 import {useRouter} from "vue-router";
+import {contains} from "@/utils/lang/ArrayUtil";
 
 const router = useRouter();
 
@@ -92,12 +93,23 @@ const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
 const articleList = computed(() => useTodoStore().articleList);
 
-onMounted(() => {
-    if (!todoRef.value || !completeRef.value || !abandonRef.value) {
-        MessageUtil.warning("系统异常，拖拽组件加载失败");
-        return;
+const hides = computed(() => useTodoStore().hides);
+
+
+const showTodo = computed(() => !contains(hides.value, '1'));
+const showComplete = computed(() => !contains(hides.value, '2'));
+const showAbandon = computed(() => !contains(hides.value, '3'));
+const showArticle = computed(() => !contains(hides.value, '4'));
+
+const style = computed(() => {
+    return {
+        maxWidth: '400px',
+        minWidth: '233px'
     }
-    new Sortable(todoRef.value, {
+})
+
+onMounted(() => {
+    todoRef.value && new Sortable(todoRef.value, {
         group: 'shared', // set both lists to same group
         animation: 150,
         onAdd(e: SortableEvent) {
@@ -105,7 +117,7 @@ onMounted(() => {
         }
     });
 
-    new Sortable(completeRef.value, {
+    completeRef.value && new Sortable(completeRef.value, {
         group: 'shared',
         animation: 150,
         onAdd(e: SortableEvent) {
@@ -113,7 +125,7 @@ onMounted(() => {
         }
     });
 
-    new Sortable(abandonRef.value, {
+    abandonRef.value && new Sortable(abandonRef.value, {
         group: 'shared',
         animation: 150,
         onAdd(e: SortableEvent) {

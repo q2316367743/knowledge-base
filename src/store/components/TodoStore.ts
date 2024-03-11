@@ -25,6 +25,7 @@ import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {map} from "@/utils/lang/ArrayUtil";
 
 export function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
     if (a.top) {
@@ -61,6 +62,7 @@ export const useTodoStore = defineStore('todo', {
         rev: undefined as string | undefined,
         sort: TodoListSortEnum.PRIORITY as TodoListSortEnum,
         layout: TodoListLayoutEnum.DEFAULT as TodoListLayoutEnum,
+        hides: new Array<string>(),
         // 收起状态
         collapsed: false,
         // 当前选择的待办项
@@ -117,19 +119,25 @@ export const useTodoStore = defineStore('todo', {
                 this.todoArticles = new Array<number>();
                 this.todoArticlesRev = undefined;
                 this.itemId = 0;
-                this.sort = TodoListSortEnum.PRIORITY;
-                this.layout = TodoListLayoutEnum.DEFAULT;
             }
             if (id > 0) {
-                const todoCategory = useTodoCategoryStore().todoCategoryMap.get(id);
+                const todoCategory = map(useTodoCategoryStore().value, 'id').get(id);
                 if (!todoCategory) {
                     MessageUtil.error("待办分类不存在，请刷新页面重试");
                     this.id = 0;
                     return;
                 }
+                // 只要ID大于0，这几项就要刷新
+                this.sort = TodoListSortEnum.PRIORITY;
+                this.layout = TodoListLayoutEnum.DEFAULT;
+                this.hides = new Array<string>();
                 useGlobalStore().startLoading("正在获取待办项");
                 this.layout = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;
                 this.sort = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
+                todoCategory.hideOfTodo && this.hides.push('1');
+                todoCategory.hideOfComplete && this.hides.push('2');
+                todoCategory.hideOfAbandon && this.hides.push('3');
+                todoCategory.hideOfArticle && this.hides.push('4');
                 listByAsync<TodoItemIndex>(LocalNameEnum.TODO_CATEGORY + id)
                     .then(items => {
                         this.todoItems = items.list;

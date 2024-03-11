@@ -1,12 +1,12 @@
 <template>
     <div class="card-todo-item" v-if="item" :style="style" @click="_openTodoItemInfo()">
-        <p>{{ item.title }}</p>
+        <a-typography-paragraph :ellipsis="ellipsis">{{ item.title }}</a-typography-paragraph>
         <div v-if="hasAttr" style="text-align: right;font-size: 0.8rem">
             <a-tag color="orange">
                 <template #icon>
                     <icon-clock-circle/>
                 </template>
-                {{start}}{{ end ? ' - ' + end : ''}}
+                {{ start }}{{ end ? ' · ' + end : '' }}
             </a-tag>
         </div>
     </div>
@@ -26,6 +26,11 @@ const props = defineProps({
         default: false
     }
 });
+
+const ellipsis = {
+    rows: 3,
+    expandable: true,
+};
 
 const attr = ref(getDefaultTodoItemAttr());
 const hasAttr = ref(false);

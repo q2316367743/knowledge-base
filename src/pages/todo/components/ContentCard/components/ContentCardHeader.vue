@@ -69,6 +69,12 @@
                         </template>
                         导出
                     </a-doption>
+                    <a-doption :disabled="disabled" @click="openTodoSetting()">
+                        <template #icon>
+                            <icon-settings/>
+                        </template>
+                        设置
+                    </a-doption>
                 </template>
             </a-dropdown>
         </a-button-group>
@@ -81,6 +87,7 @@ import {computed} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
+import {openTodoSetting} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoSetting";
 
 const disabled = computed(() => useTodoStore().id === 0);
 const title = computed(() => useTodoStore().title);
