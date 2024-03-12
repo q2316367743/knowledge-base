@@ -38,6 +38,38 @@
         .calendar {
             margin: 0 7px;
             width: 33%;
+            height: 100%;
+            position: relative;
+
+            .article {
+                position: absolute;
+                top: 280px;
+                left: 0;
+                right: 0;
+                bottom: 7px;
+                border: 1px solid var(--color-neutral-3);
+                border-radius: 2px;
+
+
+                .title {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    font-size: 1.3rem;
+                    line-height: 46px;
+                    padding-left: 14px;
+                }
+                .list {
+                    position: absolute;
+                    top: 46px;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    overflow: auto;
+                    border-radius: 2px;
+                }
+            }
         }
 
         .right {
@@ -46,14 +78,16 @@
             right: 7px;
             width: calc(66% - 17px);
             height: calc(100% - 7px);
+            border: 1px solid var(--color-neutral-3);
 
             .title {
                 position: absolute;
                 top: 0;
                 left: 0;
                 right: 0;
-                font-size: 1.2rem;
-                line-height: 32px;
+                font-size: 1.3rem;
+                line-height: 46px;
+                padding-left: 14px;
             }
 
             .list {
@@ -63,7 +97,6 @@
                 right: 0;
                 bottom: 0;
                 overflow: auto;
-                border: 1px solid var(--color-neutral-3);
                 border-radius: 2px;
 
                 .card-todo-item {

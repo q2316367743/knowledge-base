@@ -69,6 +69,12 @@
                         </template>
                         导出
                     </a-doption>
+                    <a-doption :disabled="disabled" @click="openAddRelationArticle()">
+                        <template #icon>
+                            <icon-relation/>
+                        </template>
+                        关联文章
+                    </a-doption>
                     <a-doption :disabled="disabled" @click="openTodoSetting()">
                         <template #icon>
                             <icon-settings/>
@@ -88,6 +94,7 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
 import {openTodoSetting} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoSetting";
+import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 
 const disabled = computed(() => useTodoStore().id === 0);
 const title = computed(() => useTodoStore().title);

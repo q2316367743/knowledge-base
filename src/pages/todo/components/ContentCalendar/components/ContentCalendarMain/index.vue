@@ -3,6 +3,16 @@
         <div class="calendar">
             <calendar expanded :is-dark="isDark" :attributes="attributes" title-position="left" @dayclick="onDayClick"
                       transparent/>
+            <div class="article" v-if="todoCategory && !todoCategory.hideOfArticle">
+                <div class="title">关联文章</div>
+                <div class="list">
+                    <a-list :bordered="false">
+                        <a-list-item v-for="article in articleList">
+                            <a-link @click="toArticle(article.id)">{{article.name}}</a-link>
+                        </a-list-item>
+                    </a-list>
+                </div>
+            </div>
         </div>
         <div class="right">
             <div class="title">
@@ -32,6 +42,15 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {openArticle} from "@/pages/todo/components/common/OpenArticle";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 interface Attribute {
     key: string | number;
@@ -49,18 +68,19 @@ const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
 const articleList = computed(() => useTodoStore().articleList);
 
-const items = computed<Array<TodoItemIndex>>(() => {
-    const todoCategory = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().categoryId);
+const todoCategory = computed(() => useTodoCategoryStore().todoCategoryMap.get(useTodoStore().categoryId));
 
-    if (!todoCategory) {
+const items = computed<Array<TodoItemIndex>>(() => {
+
+    if (!todoCategory.value) {
         return [];
     }
 
     const temp = new Array<TodoItemIndex>();
 
-    !todoCategory.hideOfTodo && temp.push(...todoList.value);
-    !todoCategory.hideOfComplete && temp.push(...completeList.value);
-    !todoCategory.hideOfAbandon && temp.push(...abandonList.value);
+    !todoCategory.value.hideOfTodo && temp.push(...todoList.value);
+    !todoCategory.value.hideOfComplete && temp.push(...completeList.value);
+    !todoCategory.value.hideOfAbandon && temp.push(...abandonList.value);
 
     return temp;
 })
@@ -128,6 +148,20 @@ function onUpdate() {
         }
     }
     indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoStore().sort));
+}
+
+function toArticle(id: number) {
+    if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.TO_ARTICLE) {
+        useHomeEditorStore().openArticle(id);
+        router.push('/home');
+    } else if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.DRAWER) {
+        const article = useArticleStore().articleMap.get(id);
+        if (!article) {
+            MessageUtil.error("文章不存在");
+            return;
+        }
+        openArticle(article);
+    }
 }
 
 </script>
