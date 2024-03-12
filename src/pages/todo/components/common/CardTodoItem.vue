@@ -2,9 +2,8 @@
     <div class="card-todo-item" :class="{deleted: index.status !== TodoItemStatus.TODO, top: index.top}"
          :style="style"
          @click="_openTodoItemInfo()">
-        <a-typography-paragraph :ellipsis="ellipsis">{{
-                index.title
-            }}
+        <a-typography-paragraph style="margin-top: 9px" :ellipsis="ellipsis">
+            {{ index.title }}
         </a-typography-paragraph>
         <div v-if="hasAttr" style="text-align: right;font-size: 0.8rem">
             <a-tag color="orange">

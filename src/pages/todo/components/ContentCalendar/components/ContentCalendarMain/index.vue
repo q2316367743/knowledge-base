@@ -9,7 +9,7 @@
                 {{ title }}
             </div>
             <div class="list">
-                <card-todo-item v-for="index in indexes" :item="index" @update="onUpdate" :key="index.id"/>
+                <card-todo-item v-for="index in indexes" :item="index" @update="onUpdate" :key="index.id" attr/>
             </div>
         </div>
         <div class="add">
