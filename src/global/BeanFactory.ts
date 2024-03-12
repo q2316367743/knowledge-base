@@ -9,14 +9,17 @@ import {utools} from "@/plugin/utools";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
+import {ref} from "vue";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
 window.utools = window.utools || utools;
 
 
-export const statistics = new Statistics()
+export const statistics = new Statistics();
 
+// 首页的关键字
+export const keyword = ref('');
 
 
 export async function initData(): Promise<void> {

@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref,} from "vue";
-import {statistics} from "@/global/BeanFactory";
+import {keyword, statistics} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -98,7 +98,12 @@ utools.onMainPush(action => {
         })
     }
     return items;
-}, action => toArticle(action.option.title));
+}, action => {
+    keyword.value = `${action.payload}`;
+    if (action.option.title) {
+        toArticle(action.option.title);
+    }
+});
 
 //前往文章
 function toArticle(id?: string) {

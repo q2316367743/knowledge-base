@@ -124,10 +124,10 @@ import {
     rename
 } from "@/pages/home/components/he-context";
 import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
+import {keyword} from "@/global/BeanFactory";
 
 const size = useWindowSize();
 
-const keyword = ref('');
 const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [useHomeEditorStore().id]);
 const checkKeys = ref<Array<number>>([]);
 const expandedKeys = ref<Array<number>>([]);
