@@ -1,5 +1,4 @@
 import {DbRecord} from "@/utils/utools/DbStorageUtil";
-import {useGlobalStore} from "@/store/GlobalStore";
 
 /**
  * 待办项
@@ -179,7 +178,6 @@ export function getDefaultTodoItem(): TodoItem {
 }
 
 export function handleSimplePriorityColor(priority: TodoItemPriority): string {
-    const isDark = useGlobalStore().isDark;
     switch (priority){
         case TodoItemPriority.HIGH:
             return 'red';
@@ -188,7 +186,7 @@ export function handleSimplePriorityColor(priority: TodoItemPriority): string {
         case TodoItemPriority.FLOOR:
             return 'blue';
         default:
-            return isDark ? '#fff' : '#000';
+            return 'purple';
     }
 }
 

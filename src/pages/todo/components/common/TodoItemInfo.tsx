@@ -6,7 +6,7 @@ import {
     FormItem, Popconfirm,
     Radio,
     RadioGroup, RangePicker,
-    Space,
+    Space, Switch,
     Tag,
     Textarea
 } from "@arco-design/web-vue";
@@ -27,7 +27,7 @@ function renderIsRange(attr: TodoItemAttr): boolean {
 
 }
 
-export async function openTodoItemInfo(index: TodoItemIndex, toUpdate?: () => void) {
+export async function openTodoItemInfo(index: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
     const base = ref(clone(index, true));
     const todoItem = await useTodoStore().getTodoItem(index.id);
     const content = ref(todoItem.content);
@@ -67,7 +67,7 @@ export async function openTodoItemInfo(index: TodoItemIndex, toUpdate?: () => vo
         await useTodoStore().saveContent(index.id, content.value.record, content.value.rev);
         MessageUtil.success("保存成功");
         onClose();
-        toUpdate && toUpdate();
+        toUpdate && toUpdate(base.value);
     }
 
     function onRemove() {
@@ -98,6 +98,9 @@ export async function openTodoItemInfo(index: TodoItemIndex, toUpdate?: () => vo
                     <Radio value={TodoItemPriority.NONE}
                            style={{color: handlePriorityColor(TodoItemPriority.NONE)}}>无优先级</Radio>
                 </RadioGroup>
+            </FormItem>
+            <FormItem label={'置顶'}>
+                <Switch v-model={base.value.top} />
             </FormItem>
             <FormItem>
                 {{

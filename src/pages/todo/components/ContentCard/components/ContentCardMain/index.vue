@@ -21,7 +21,7 @@
                 已完成
                 <a-tag class="length" color="green">{{ completeList.length }}</a-tag>
             </div>
-            <div class="content delete" ref="completeRef">
+            <div class="content" ref="completeRef">
                 <card-todo-item v-for="item in completeList" :key="item.id" :item="item" :data-id="item.id"/>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 已取消
                 <a-tag class="length" color="orange">{{ abandonList.length }}</a-tag>
             </div>
-            <div class="content delete" ref="abandonRef">
+            <div class="content" ref="abandonRef">
                 <card-todo-item v-for="item in abandonList" :key="item.id" :item="item" :data-id="item.id"/>
             </div>
         </div>
@@ -63,8 +63,8 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
 import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
-import {openAddTodoItem} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/AddTodoItem";
-import CardTodoItem from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/CardTodoItem.vue";
+import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
+import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoItemStatus} from "@/entity/todo/TodoItem";
 import {

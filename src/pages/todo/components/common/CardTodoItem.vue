@@ -1,6 +1,11 @@
 <template>
-    <div class="card-todo-item" v-if="item" :style="style" @click="_openTodoItemInfo()">
-        <a-typography-paragraph :ellipsis="ellipsis">{{ item.title }}</a-typography-paragraph>
+    <div class="card-todo-item" :class="{deleted: index.status !== TodoItemStatus.TODO, top: index.top}"
+         :style="style"
+         @click="_openTodoItemInfo()">
+        <a-typography-paragraph :ellipsis="ellipsis">{{
+                index.title
+            }}
+        </a-typography-paragraph>
         <div v-if="hasAttr" style="text-align: right;font-size: 0.8rem">
             <a-tag color="orange">
                 <template #icon>
@@ -13,8 +18,14 @@
 </template>
 <script lang="ts" setup>
 import {computed, PropType, ref} from "vue";
-import {getDefaultTodoItemAttr, handlePriorityColor, TodoItemIndex} from "@/entity/todo/TodoItem";
-import {openTodoItemInfo} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoItemInfo";
+import {
+    getDefaultTodoItemAttr,
+    getDefaultTodoItemIndex,
+    handlePriorityColor,
+    TodoItemIndex,
+    TodoItemStatus
+} from "@/entity/todo/TodoItem";
+import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {toDateString} from "xe-utils";
 import {handleDate} from "@/utils/lang/ObjUtil";
@@ -27,6 +38,8 @@ const props = defineProps({
     }
 });
 
+const emits = defineEmits(['update']);
+
 const ellipsis = {
     rows: 3,
     expandable: true,
@@ -36,27 +49,35 @@ const attr = ref(getDefaultTodoItemAttr());
 const hasAttr = ref(false);
 const start = ref('');
 const end = ref('');
+const index = ref(props.item || getDefaultTodoItemIndex())
 
 const style = computed(() => {
-    if (!props.item) {
+    if (!index.value) {
         return {};
     }
     return {
-        borderLeft: '4px solid ' + handlePriorityColor(props.item.priority)
+        borderLeft: '4px solid ' + handlePriorityColor(index.value.priority)
     }
 });
 
-const createTime = computed(() => props.item ? toDateString(props.item.createTime, "yyyy-MM-dd HH:mm") : '')
+const createTime = computed(() => index.value ? toDateString(index.value.createTime, "yyyy-MM-dd HH:mm") : '')
 
 function _openTodoItemInfo() {
-    if (!props.item) {
+    if (!index.value) {
         return;
     }
-    openTodoItemInfo(props.item, () => props.item && initAttr(props.item.id))
+    openTodoItemInfo(index.value, res => {
+        index.value = res
+        if (index.value) {
+            initAttr(index.value.id);
+            emits('update', index.value.id);
+        }
+    })
 }
 
 function initAttr(id: number) {
     hasAttr.value = false;
+
     useTodoStore().getTodoItemAttr(id)
         .then(res => {
             attr.value = res;
@@ -74,11 +95,27 @@ function initAttr(id: number) {
 
 }
 
-if (props.attr && props.item) {
-    initAttr(props.item.id);
+if (props.attr && index.value) {
+    initAttr(index.value.id);
 }
 
 </script>
-<style scoped>
+<style scoped lang="less">
+.card-todo-item {
+    padding: 8px 12px;
+    margin: 14px 4px;
+    border-radius: 2px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    background-color: var(--color-fill-2);
 
+    &.deleted {
+        color: var(--color-text-4);
+        background-color: var(--color-fill-1);
+
+        .arco-typography {
+            color: var(--color-text-4);
+        }
+    }
+}
 </style>

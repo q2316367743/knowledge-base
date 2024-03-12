@@ -1,13 +1,23 @@
 <template>
     <div class="content-calendar-main">
-        <div class="header">
-            <a-button type="primary">新建</a-button>
-        </div>
         <div class="calendar">
-            <calendar expanded :is-dark="isDark" :attributes="attributes" title-position="left" @dayclick="onDayClick" transparent/>
+            <calendar expanded :is-dark="isDark" :attributes="attributes" title-position="left" @dayclick="onDayClick"
+                      transparent/>
         </div>
-        <div class="list">
-
+        <div class="right">
+            <div class="title">
+                {{ title }}
+            </div>
+            <div class="list">
+                <card-todo-item v-for="index in indexes" :item="index" @update="onUpdate" :key="index.id"/>
+            </div>
+        </div>
+        <div class="add">
+            <a-button type="primary" @click="openAddTodoItem()" shape="circle" size="large">
+                <template #icon>
+                    <icon-plus/>
+                </template>
+            </a-button>
         </div>
     </div>
 </template>
@@ -15,15 +25,13 @@
 import {computed, ref, watch} from "vue";
 import {Calendar} from 'v-calendar';
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
-import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
-import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {handleSimplePriorityColor, TodoItemIndex} from "@/entity/todo/TodoItem";
 import {map} from "@/utils/lang/ArrayUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {CalendarDay} from "v-calendar/dist/types/src/utils/page";
-
+import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 
 interface Attribute {
     key: string | number;
@@ -33,20 +41,36 @@ interface Attribute {
 }
 
 const attributes = ref<Array<Attribute>>([]);
+const indexes = ref<Array<TodoItemIndex>>([]);
+const title = ref("请选择日期");
 
-const todoList = computed(() => {
-    const category = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().id);
-    return useTodoStore().todoList
-        .sort((a, b) => sortTodoIndex(a, b, ifObjectIsNull(category, 'todoListSort', TodoListSortEnum.PRIORITY)));
-});
-// const completeList = computed(() => useTodoStore().completeList);
-// const abandonList = computed(() => useTodoStore().abandonList);
-// const articleList = computed(() => useTodoStore().articleList);
+const todoList = computed(() => useTodoStore().todoList);
+const completeList = computed(() => useTodoStore().completeList);
+const abandonList = computed(() => useTodoStore().abandonList);
+const articleList = computed(() => useTodoStore().articleList);
+
+const items = computed<Array<TodoItemIndex>>(() => {
+    const todoCategory = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().categoryId);
+
+    if (!todoCategory) {
+        return [];
+    }
+
+    const temp = new Array<TodoItemIndex>();
+
+    !todoCategory.hideOfTodo && temp.push(...todoList.value);
+    !todoCategory.hideOfComplete && temp.push(...completeList.value);
+    !todoCategory.hideOfAbandon && temp.push(...abandonList.value);
+
+    return temp;
+})
 
 const isDark = computed(() => useGlobalStore().isDark);
 const itemId = computed(() => useTodoStore().itemId);
 
-watch(() => todoList.value, value => buildAttributes(value).then(res => attributes.value = res), {
+const todoMap = computed(() => map(items.value, 'id'));
+
+watch(() => items.value, value => buildAttributes(value).then(res => attributes.value = res), {
     deep: true,
     immediate: true
 })
@@ -81,9 +105,29 @@ async function buildAttributes(indexes: Array<TodoItemIndex>): Promise<Array<Att
     }));
 }
 
-function onDayClick(a: CalendarDay, b: PointerEvent) {
-    // TODO: 可以拿到attributes，就可以渲染右侧列表
-    console.log(a, b)
+function onDayClick(a: any) {
+    indexes.value = [];
+    const attributes = a.attributes as Array<Attribute>;
+    const temp = new Array<TodoItemIndex>();
+    for (let attribute of attributes) {
+        const todoItemIndex = todoMap.value.get(attribute.key as number);
+        if (todoItemIndex) {
+            temp.push(todoItemIndex);
+        }
+    }
+    indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoStore().sort));
+    title.value = a.id;
+}
+
+function onUpdate() {
+    const temp = new Array<TodoItemIndex>();
+    for (let valueElement of indexes.value) {
+        const todoItemIndex = todoMap.value.get(valueElement.id);
+        if (todoItemIndex) {
+            temp.push(todoItemIndex);
+        }
+    }
+    indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoStore().sort));
 }
 
 </script>
