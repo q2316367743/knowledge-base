@@ -55,7 +55,10 @@ export function openAddTodoItem() {
         okText: '新增',
         async onBeforeOk() {
             try {
-                await useTodoStore().addSimple(record.value)
+                await useTodoStore().addSimple(record.value, {
+                    start: range.value[0],
+                    end: range.value[1]
+                })
                 MessageUtil.success("新增成功");
                 return true;
             } catch (e) {

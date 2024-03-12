@@ -160,7 +160,7 @@ export const useTodoStore = defineStore('todo', {
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.TODO_CATEGORY + this.id, this.todoItems, this.rev);
         },
-        async addSimple(record: Partial<TodoItemIndex>) {
+        async addSimple(record: Partial<TodoItemIndex>, attr?: Partial<TodoItemAttr>) {
             if (!record.title) {
                 return Promise.reject("请输入内容");
             }
@@ -175,12 +175,21 @@ export const useTodoStore = defineStore('todo', {
                 ...getDefaultTodoItemIndex(id),
                 ...record
             };
+            if (attr) {
+                // 由于数据量不大，就直接查询
+                let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+                // 如果存在内容，则一并更新
+                await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ATTR + id, {
+                    ...old.record,
+                    ...attr
+                }, old.rev);
+            }
+            // 新增内容
+            await saveOneByAsync<TodoItemContent>(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
             // 新增到当前列表
             this.todoItems.push(item);
             // 同步
             await this._sync();
-            // 新增内容
-            await saveOneByAsync<TodoItemContent>(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
         },
         async getTodoItem(id: number): Promise<TodoItem> {
             if (id === 0) {

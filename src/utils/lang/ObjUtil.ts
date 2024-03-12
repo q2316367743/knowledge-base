@@ -29,7 +29,14 @@ export function handleDate(date: Date | string | number) {
 
     if (diffDays < 0) {
         return `过期了${Math.abs(diffDays)}天`;
-    } else if (diffDays <= 7) {
+    }else if (diffDays <= 7) {
+
+        if (today.getDate() === old.getDate()) {
+            return "今天"
+        }else if (old.getDate() - today.getDate() === 1) {
+            return "明天"
+        }
+
         const daysOfWeek = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         const dayOfWeek = daysOfWeek[old.getDay()];
 
