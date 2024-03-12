@@ -36,6 +36,7 @@ export function openTodoSetting() {
                 <RadioGroup v-model={config.value.todoListLayout}>
                     <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
                     <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
+                    <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>
                 </RadioGroup>
             </FormItem>
         </Form>,

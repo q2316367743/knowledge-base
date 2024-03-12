@@ -11,8 +11,9 @@ import {
 } from "@/entity/todo/TodoItem";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {
+    DbRecord,
     getFromOneWithDefaultByAsync,
-    listByAsync,
+    listByAsync, listRecordByAsync,
     removeOneByAsync,
     saveListByAsync,
     saveOneByAsync
@@ -220,6 +221,9 @@ export const useTodoStore = defineStore('todo', {
             }
             let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
             return Promise.resolve(attrDbRecord.record);
+        },
+        async getMultiTodoItemAttr(ids: Array<number>): Promise<Array<DbRecord<TodoItemAttr>>> {
+            return listRecordByAsync(ids.map(id => LocalNameEnum.TODO_ATTR + id))
         },
         /**
          * 根据ID更新待办项

@@ -65,10 +65,20 @@ export enum TodoCategoryTypeEnum {
 }
 
 export enum TodoListLayoutEnum {
-    // 默认布局
+
+    /**
+     * 默认布局
+     */
     DEFAULT = 1,
-    // 卡片布局
-    CARD = 2
+    /**
+     * 卡片布局
+     */
+    CARD = 2,
+    /**
+     * 日历布局
+     */
+    CALENDAR = 3
+
 }
 
 export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCategory {

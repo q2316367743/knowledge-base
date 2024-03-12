@@ -100,8 +100,8 @@
     overflow: auto;
 }
 .juejin thead {
-    background: #f6f6f6;
-    color: #000;
+    background: var(--color-fill-2);
+    color: var(--color-text-1);
     text-align: left;
 }
 .juejin tr:nth-child(2n) {
