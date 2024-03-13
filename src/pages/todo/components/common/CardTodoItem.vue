@@ -13,9 +13,9 @@
                 {{ start }}{{ end ? ' · ' + end : '' }}
             </a-tag>
         </div>
-        <a-tooltip content="置顶" v-if="index.top">
+        <a-tooltip content="置顶" v-if="(index.top && index.status === TodoItemStatus.TODO) || props.showTop">
             <div class="top">
-                <icon-arrow-up />
+                <icon-arrow-up/>
             </div>
         </a-tooltip>
     </div>
@@ -37,6 +37,10 @@ import {handleDate} from "@/utils/lang/ObjUtil";
 const props = defineProps({
     item: Object as PropType<TodoItemIndex>,
     attr: {
+        type: Boolean,
+        default: false
+    },
+    showTop: {
         type: Boolean,
         default: false
     }
@@ -122,13 +126,14 @@ if (props.attr && index.value) {
             color: var(--color-text-4);
         }
     }
+
     .top {
         position: absolute;
         top: 0;
         right: 0;
         background-color: rgb(var(--orange-6));
         color: var(--color-fill-2);
-        clip-path: polygon(0 0, 100% 100%,100% 0);
+        clip-path: polygon(0 0, 100% 100%, 100% 0);
         width: 25px;
         height: 25px;
         text-align: right;
