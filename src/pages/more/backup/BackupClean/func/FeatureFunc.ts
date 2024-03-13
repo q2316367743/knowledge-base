@@ -2,6 +2,7 @@ import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {removeFeatureOne} from "@/utils/utools/FeatureUtil";
+import Constant from "@/global/Constant";
 
 export async function removeTodoCode() {
     const keyword = await MessageBoxUtil.prompt("请输入要删除的待办名称")
@@ -11,6 +12,6 @@ export async function removeTodoCode() {
         return;
     }
     const category = useTodoCategoryStore().value[index];
-    removeFeatureOne("todo:" + category.id);
+    removeFeatureOne(Constant.feature.TODO_CATEGORY + category.id);
     MessageUtil.success("删除成功")
 }
