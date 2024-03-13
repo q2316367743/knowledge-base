@@ -5,10 +5,14 @@
                  :style="{backgroundImage: `url('${render(attachment)}')`}" :data-id="attachment"/>
         </div>
         <div class="buttons">
-            <a-button type="primary" @click="pre()">上一张</a-button>
-            <a-button type="primary" @click="copy()" style="margin: 0 7px ;">复制链接</a-button>
-            <a-button type="primary" @click="remove()" status="danger" style="margin: 0 7px 0 0;">删除图片</a-button>
-            <a-button type="primary" @click="next()">下一张</a-button>
+            <a-button :disabled="attachments.length === 0" type="primary" @click="pre()">上一张</a-button>
+            <a-button :disabled="attachments.length === 0" type="primary" @click="copy()" style="margin: 0 7px ;">
+                复制链接
+            </a-button>
+            <a-button :disabled="attachments.length === 0" type="primary" @click="remove()" status="danger"
+                      style="margin: 0 7px 0 0;">删除图片
+            </a-button>
+            <a-button :disabled="attachments.length === 0" type="primary" @click="next()">下一张</a-button>
         </div>
     </div>
 </template>
@@ -25,9 +29,9 @@ let resources = new Array<string>();
 function fetchAttachment() {
     attachments.value = [];
     listRecordByAsync<any>(LocalNameEnum.ARTICLE_ATTACHMENT)
-            .then(items => {
-                items.forEach(item => attachments.value.push(item.id))
-            })
+        .then(items => {
+            items.forEach(item => attachments.value.push(item.id))
+        })
 }
 
 fetchAttachment();
@@ -94,12 +98,12 @@ function remove() {
     }).then(() => {
         const item = document.querySelector(".more-attachment .item:nth-child(1)")!;
         removeOneByAsync(item?.attributes.getNamedItem('data-id')?.value!)
-                .then(() => {
-                    if (side.value) {
-                        side.value.removeChild(item);
-                        MessageUtil.success("删除成功");
-                    }
-                }).catch(e => MessageUtil.error("删除失败", e));
+            .then(() => {
+                if (side.value) {
+                    side.value.removeChild(item);
+                    MessageUtil.success("删除成功");
+                }
+            }).catch(e => MessageUtil.error("删除失败", e));
     })
 }
 

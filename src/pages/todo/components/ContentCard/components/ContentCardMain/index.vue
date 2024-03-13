@@ -22,7 +22,8 @@
                 <a-tag class="length" color="green">{{ completeList.length }}</a-tag>
             </div>
             <div class="content" ref="completeRef">
-                <card-todo-item v-for="item in completeList" :key="item.id" :item="item" :data-id="item.id"/>
+                <card-todo-item v-for="item in completeList" :key="item.id" :item="item" :data-id="item.id"
+                                :show-top="false"/>
             </div>
         </div>
         <div class="card-item" v-if="showAbandon" :style="style">
@@ -31,7 +32,8 @@
                 <a-tag class="length" color="orange">{{ abandonList.length }}</a-tag>
             </div>
             <div class="content" ref="abandonRef">
-                <card-todo-item v-for="item in abandonList" :key="item.id" :item="item" :data-id="item.id"/>
+                <card-todo-item v-for="item in abandonList" :key="item.id" :item="item" :data-id="item.id"
+                                :show-top="false"/>
             </div>
         </div>
         <div class="card-item" v-if="showArticle" :style="style">
