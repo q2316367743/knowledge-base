@@ -9,7 +9,7 @@
         <footer class="footer">
             <div>
                 <a-tag v-for="tag in item.tags" :key="tag" :color="randomColor(tag)" closable
-                       @close="tagRemove(tag)">{{ tag }}
+                       @close="tagRemove(tag)" class="tag">{{ tag }}
                 </a-tag>
                 <a-input
                     v-if="tag.input"
