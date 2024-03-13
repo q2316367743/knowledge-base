@@ -1,13 +1,7 @@
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
 export interface BaseSetting {
-
-    /**
-     * 文章主题
-     */
-    articleTheme: ArticleThemeEnum;
 
     /**
      * 图片策略
@@ -55,7 +49,6 @@ export enum TodoArticleActionEnum {
 
 export function getDefaultBaseSetting(): BaseSetting {
     return {
-        articleTheme: ArticleThemeEnum.TAILWIND_BLUE,
         imageStrategy: ImageStrategyEnum.INNER,
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,

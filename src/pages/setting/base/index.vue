@@ -1,27 +1,6 @@
 <template>
     <div class="more-setting-base">
         <a-form :model="instance" layout="vertical">
-            <a-form-item label="文章主题">
-                <a-select v-model="instance.articleTheme" style="width: 200px">
-                    <a-option :value="ArticleThemeEnum.TAILWIND_BLUE">天空蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.JUE_JIN">掘金</a-option>
-                    <a-option :value="ArticleThemeEnum.CHANNING_CYAN">柠青</a-option>
-                    <a-option :value="ArticleThemeEnum.CHINESE_RED">中国红</a-option>
-                    <a-option :value="ArticleThemeEnum.CONDENSED_NIGHT_PURPLE">凝夜紫</a-option>
-                    <a-option :value="ArticleThemeEnum.DEVUI_BLUE">科技蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.GEEK_BLACK">极客黑</a-option>
-                    <a-option :value="ArticleThemeEnum.JZMAN">jzman</a-option>
-                    <a-option :value="ArticleThemeEnum.SMART_BLUE">灵动蓝</a-option>
-                    <a-option :value="ArticleThemeEnum.V_GREEN">微绿</a-option>
-                    <a-option :value="ArticleThemeEnum.VUEPRESS">vuepress</a-option>
-                    <a-option :value="ArticleThemeEnum.HE_TI">赫蹏</a-option>
-                    <a-option :value="ArticleThemeEnum.GITHUB">Github</a-option>
-                    <a-option :value="ArticleThemeEnum.ZUI">Zui</a-option>
-                </a-select>
-                <template #help>
-                    <span v-html="renderHelp(instance.articleTheme)"></span>
-                </template>
-            </a-form-item>
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
                     <a-radio :value="ImageStrategyEnum.NONE">未设置</a-radio>
@@ -102,8 +81,7 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
-import {renderHelp, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
+import { useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
@@ -118,7 +96,6 @@ export default defineComponent({
     emits: ['save'],
     data: () => ({
         JsonTheme, Constant,
-        ArticleThemeEnum,
         ImageStrategyEnum,
         instance: getDefaultBaseSetting()
     }),
@@ -144,7 +121,6 @@ export default defineComponent({
         this.instance = clone(this.baseSetting, true);
     },
     methods: {
-        renderHelp,
         save() {
             // 校验图床
             if (this.instance.imageStrategy === ImageStrategyEnum.LSKY_PRO) {

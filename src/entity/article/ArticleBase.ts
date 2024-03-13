@@ -1,7 +1,3 @@
-import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-
-
 /**
  * 文章基础信息
  */

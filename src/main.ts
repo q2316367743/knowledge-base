@@ -11,8 +11,6 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@/less/customer.less';
 import '@/less/index.less';
-import "@/less/post.css"
-import "@/less/typo.less"
 import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';

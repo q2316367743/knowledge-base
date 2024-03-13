@@ -56,7 +56,6 @@ const config: CherryConfig = {
     previewer: {
         dom: false,
         enablePreviewerBubble: true,
-        className: useBaseSettingStore().articleTheme
     },
     isPreviewOnly: false,
     autoScrollByCursor: true,

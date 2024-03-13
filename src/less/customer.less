@@ -120,6 +120,10 @@ body[arco-theme=dark] {
 
             .cherry-previewer {
                 background-color: rgba(200, 200, 200, 0.1);
+
+                pre {
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
             }
         }
     }
@@ -185,19 +189,35 @@ body[arco-theme=dark] {
 
         .cherry-previewer {
             background-color: rgba(100, 100, 100, 0.1);
+
+            pre {
+                background-color: rgba(45, 45, 45, 0.8);
+            }
+
+            blockquote {
+                background-color: rgba(35, 35, 35, 0.4) !important;
+                backdrop-filter: blur(8px);
+            }
+            .one-footnote {
+                color: var(--color-text-1);
+            }
         }
     }
 
 }
 
-.cherry-markdown {
 
-    pre {
-        background-color: var(--color-fill-2) !important;
+.cherry {
+
+    .cherry-markdown :not(pre)>code {
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        color: rgb(var(--red-6)) !important;
+        font-family: "JetBrainsMono", "楷体", "宋体", serif;
     }
-
-    div[data-type=codeBlock] code[class*=language-], div[data-type=codeBlock] pre[class*=language-] {
-        color: var(--color-text-1);
+    blockquote {
+        color: var(--color-text-2) !important;
     }
-
+}
+.cherry-markdown.theme__dark table th, .cherry-markdown.theme__dark .cherry-table th {
+    background-color: var(--color-fill-2) !important;
 }

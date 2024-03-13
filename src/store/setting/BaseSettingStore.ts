@@ -1,22 +1,11 @@
 import {defineStore} from "pinia";
 import {BaseSetting, getDefaultBaseSetting} from "@/entity/setting/BaseSetting";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import ArticleThemeEnum from "@/enumeration/ArticleThemeEnum";
-import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import Constant from "@/global/Constant";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import dayjs from "dayjs";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
-import {isUtools} from "@/global/BeanFactory";
-
-
-export function renderHelp(theme: ArticleThemeEnum): string {
-    if (theme === ArticleThemeEnum.HE_TI) {
-        return `样式来源于<a class="arco-link" href="https://gitee.com/malinonce/heti" onclick="utools.shellOpenExternal('https://gitee.com/malinonce/heti')">赫蹏</a>`
-    }
-    return "";
-}
 
 export const useBaseSettingStore = defineStore('base-setting', {
     state: () => ({
@@ -24,7 +13,6 @@ export const useBaseSettingStore = defineStore('base-setting', {
         rev: undefined as string | undefined
     }),
     getters: {
-        articleTheme: state => state.baseSetting.articleTheme,
         imageStrategy: state => state.baseSetting.imageStrategy,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
