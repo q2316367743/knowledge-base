@@ -186,8 +186,15 @@ function onSelect(selectKeys: Array<number | string>) {
         if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
             useHomeEditorStore().switchCollapsed();
         }
-    }else {
-        _expandTo(id);
+    } else {
+        const index = expandedKeys.value.indexOf(id);
+        if (index === -1) {
+            // 不存在，展开
+            _expandTo(id);
+        } else {
+            // 存在，收起
+            expandedKeys.value.splice(index, 1);
+        }
     }
 }
 
