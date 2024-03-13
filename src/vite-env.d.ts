@@ -11,6 +11,5 @@ declare module 'simple-mind-map/src/plugins/AssociativeLine.js';
 declare global {
     interface Window {
         onImagePreview: (src: string) => void;
-        $: any
     }
 }

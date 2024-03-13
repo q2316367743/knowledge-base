@@ -18,8 +18,9 @@
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";
 import UpdateLog from "@/global/UpdateLog";
+import Constant from "@/global/Constant";
 
-const toTxc = () => utools.shellOpenExternal("https://txc.qq.com/products/612648");
+const toTxc = () => utools.shellOpenExternal(Constant.feedback);
 </script>
 <style scoped>
 .more-update-log {
