@@ -59,7 +59,7 @@ interface Attribute {
     dot?: boolean | string;
 }
 
-const attributes = ref<Array<Attribute>>([]);
+const attributes = ref<Array<any>>([]);
 const indexes = ref<Array<TodoItemIndex>>([]);
 const title = ref("请选择日期");
 
@@ -86,7 +86,6 @@ const items = computed<Array<TodoItemIndex>>(() => {
 })
 
 const isDark = computed(() => useGlobalStore().isDark);
-const itemId = computed(() => useTodoStore().itemId);
 
 const todoMap = computed(() => map(items.value, 'id'));
 

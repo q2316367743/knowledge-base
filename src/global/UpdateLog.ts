@@ -2,6 +2,21 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.0',
+        sign: 190,
+        time: '2024-02-29',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: '【待办】新增日历布局'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【笔记】修复了笔记样式错误问题"
+        }],
+        remark: "此次版本新增了日历布局，但是自我感觉操作不是很流畅。" +
+            "我是一般只使用卡片布局，很少使用日历布局的。" +
+            "如果有更多的想法或更好的建议，可以去兔小巢，如果可能的话，有图片标注一下就更好了。"
+    },
+    {
         version: '1.8.0',
         sign: 180,
         time: '2024-03-10',

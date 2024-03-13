@@ -15,7 +15,7 @@
                 <p>开通utools会员，数据可同步。</p>
             </div>
             <div class="action">
-                <a-button @click="openUrl(Constant.homepage)">插件主页</a-button>
+                <a-button @click="openUrl(Constant.feedback)">反馈中心</a-button>
                 <a-button @click="openUrl(Constant.repo)">开源地址</a-button>
                 <a-button @click="openUrl(Constant.updateLog)">更新日志</a-button>
                 <a-button @click="openUrl(Constant.online)">在线地址</a-button>

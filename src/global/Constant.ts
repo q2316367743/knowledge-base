@@ -7,7 +7,7 @@ export default {
     version: UpdateLog[0].version,
     author: '落雨不悔',
     website: 'https://blog.esion.xyz',
-    homepage: 'https://txc.qq.com/products/612648',
+    feedback: 'https://txc.qq.com/products/612648',
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',
     online: 'https://blog.esion.xyz/apps/knowledge-base',
     updateLog: UpdateLog[0].url || '',
