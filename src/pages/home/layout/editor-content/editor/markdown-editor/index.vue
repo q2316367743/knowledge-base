@@ -29,8 +29,6 @@ import Constant from "@/global/Constant";
 import {useArticleExportEvent, useArticleImportEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {openMarkdownExport} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/MarkdownExport";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
-import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
-import {download} from "@/utils/BrowserUtil";
 import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
 import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -254,7 +252,6 @@ watch(() => useGlobalStore().isDark, value => {
 function handleToolbar(value: boolean) {
     if (instance.value) {
         let toolbar = instance.value.status.toolbar;
-        console.log(value)
         instance.value.switchModel(value ? 'previewOnly' : 'editOnly');
         // 工具栏
         if ((toolbar === 'show') === value) {
