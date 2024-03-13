@@ -222,6 +222,17 @@ export const useTodoStore = defineStore('todo', {
             let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
             return Promise.resolve(attrDbRecord.record);
         },
+        async getTodoItemContent(id: number): Promise<DbRecord<TodoItemContent>> {
+            if (id === 0) {
+                return Promise.reject("待办项不存在");
+            }
+            const index = this.todoItems.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("待办项不存在");
+            }
+            let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
+            return Promise.resolve(attrDbRecord);
+        },
         async getMultiTodoItemAttr(ids: Array<number>): Promise<Array<DbRecord<TodoItemAttr>>> {
             return listRecordByAsync(ids.map(id => LocalNameEnum.TODO_ATTR + id))
         },

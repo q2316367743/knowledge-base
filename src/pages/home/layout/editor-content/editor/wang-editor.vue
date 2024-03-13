@@ -46,7 +46,7 @@ const editorWrapperStyle = computed(() => {
     return {
         height: height
     }
-})
+});
 
 watch(() => content.value, value => emits('update:modelValue', value));
 watch(() => props.modelValue, value => content.value = value || '');

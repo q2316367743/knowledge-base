@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <content-header/>
+        <side-header/>
         <div class="list-container" @click="setItemId(0)">
             <!-- 待办 -->
             <a-divider orientation="left" v-if="todoList.length > 0"
@@ -152,7 +152,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 // 工具类
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import ContentHeader from "@/pages/todo/components/todo-content/layout/content-header.vue";
+import SideHeader from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/SideHeader.vue"
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
@@ -315,58 +315,5 @@ function toArticle(id: number) {
 
 </script>
 <style scoped lang="less">
-.list {
-    .list-container {
-        position: absolute;
-        top: 100px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: auto;
 
-        .todo-layout-list-item {
-            padding: 4px 7px;
-            border-bottom: 1px solid var(--color-neutral-3);
-            display: grid;
-            grid-template-columns: 30px 1fr 32px;
-            height: 32px;
-            line-height: 32px;
-            cursor: pointer;
-
-            &:last-child {
-                border-bottom: 1px solid transparent;
-            }
-
-            &:hover {
-                background-color: var(--color-fill-3);
-            }
-
-            &.active {
-                background-color: var(--color-fill-3);
-            }
-
-            .extra {
-                color: rgb(var(--orange-6));
-
-                &.disabled {
-                    color: var(--color-neutral-4);
-                }
-            }
-
-            .gray {
-                color: var(--color-neutral-6);
-            }
-
-            .delete {
-                text-decoration: line-through
-            }
-
-            .title {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-        }
-    }
-}
 </style>

@@ -1,0 +1,138 @@
+.todo-content-default {
+    width: 100%;
+    height: 100%;
+
+    .list {
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+
+
+    .info {
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+
+    .list {
+        .list-container {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: auto;
+
+            .todo-layout-list-item {
+                padding: 4px 7px;
+                border-bottom: 1px solid var(--color-neutral-3);
+                display: grid;
+                grid-template-columns: 30px 1fr 32px;
+                height: 32px;
+                line-height: 32px;
+                cursor: pointer;
+
+                &:last-child {
+                    border-bottom: 1px solid transparent;
+                }
+
+                &:hover {
+                    background-color: var(--color-fill-3);
+                }
+
+                &.active {
+                    background-color: var(--color-fill-3);
+                }
+
+                .extra {
+                    color: rgb(var(--orange-6));
+
+                    &.disabled {
+                        color: var(--color-neutral-4);
+                    }
+                }
+
+                .gray {
+                    color: var(--color-neutral-6);
+                }
+
+                .delete {
+                    text-decoration: line-through
+                }
+
+                .title {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+
+    .main {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        .header {
+            position: absolute;
+            top: 7px;
+            left: 7px;
+            right: 7px;
+
+            .title {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 39px;
+            }
+
+            .priority {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+        }
+
+        .content {
+            position: absolute;
+            top: 46px;
+            left: 7px;
+            right: 7px;
+            bottom: 7px;
+            overflow: auto;
+            overflow-x: hidden;
+
+            .container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 39px;
+
+            }
+
+
+            .todo-item-tags {
+                width: 100%;
+                flex-wrap: wrap;
+
+                .arco-tag {
+                    margin: 4px 7px;
+                }
+            }
+
+            .footer {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+    }
+}
