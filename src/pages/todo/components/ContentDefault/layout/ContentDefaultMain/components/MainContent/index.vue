@@ -7,7 +7,7 @@
             <!-- 标签 -->
         </main>
         <footer class="footer">
-            <div>
+            <div class="tags">
                 <a-tag v-for="tag in item.tags" :key="tag" :color="randomColor(tag)" closable
                        @close="tagRemove(tag)" class="tag">{{ tag }}
                 </a-tag>

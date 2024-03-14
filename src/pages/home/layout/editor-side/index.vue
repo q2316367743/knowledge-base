@@ -35,7 +35,6 @@
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.DRAUU)">画板</a-doption>
                             </template>
                         </a-dsubmenu>
-
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
                             <template #icon>
                                 <icon-folder-add/>
@@ -102,7 +101,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, h, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";

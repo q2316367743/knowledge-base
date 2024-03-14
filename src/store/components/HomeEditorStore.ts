@@ -33,7 +33,6 @@ export const editorType = computed(() => {
 });
 
 // 一些事件
-export const useSaveContentEvent = useEventBus<number>('save-content');
 export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
 export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
@@ -142,7 +141,6 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
     }
 
     function closeArticle(...items: Array<number>) {
-        useSaveContentEvent.emit();
         for (let res of items) {
 
             const idx = indexes.value.findIndex(e => e.id === res);

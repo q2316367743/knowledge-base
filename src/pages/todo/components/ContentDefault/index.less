@@ -110,19 +110,10 @@
                 top: 0;
                 left: 0;
                 right: 0;
-                bottom: 39px;
+                bottom: 32px;
 
             }
 
-
-            .todo-item-tags {
-                width: 100%;
-                flex-wrap: wrap;
-
-                .arco-tag {
-                    margin: 4px 7px;
-                }
-            }
 
             .footer {
                 position: absolute;
@@ -132,8 +123,16 @@
                 display: flex;
                 justify-content: space-between;
 
-                .tag {
-                    margin-right: 7px;
+                .tags {
+                    padding-top: 8px;
+                    overflow-x: auto;
+                    display: flex;
+                    flex-wrap: nowrap;
+                    word-wrap: normal;
+
+                    .tag {
+                        margin-right: 7px;
+                    }
                 }
             }
         }

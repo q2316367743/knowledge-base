@@ -11,11 +11,6 @@
             <a-tabs v-model:active-key="activeKey" hide-content editable @delete="close">
                 <template #extra>
                     <a-button-group type="text" :disabled="disabled">
-                        <a-button type="text" @click="onSave()" status="success" style="border: none;">
-                            <template #icon>
-                                <icon-save/>
-                            </template>
-                        </a-button>
                         <a-dropdown position="br">
                             <a-button>
                                 <template #icon>
@@ -66,7 +61,6 @@ import {
     preview,
     switchPreview, useArticleExportEvent, useArticleImportEvent,
     useHomeEditorStore,
-    useSaveContentEvent
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
@@ -86,10 +80,6 @@ function close(e: any) {
 }
 
 
-function onSave() {
-    // 触发保存
-    useSaveContentEvent.emit(useHomeEditorStore().id);
-}
 
 function onExport() {
     // 触发保存

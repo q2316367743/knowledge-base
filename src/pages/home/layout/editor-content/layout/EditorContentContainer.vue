@@ -33,7 +33,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useSaveContentEvent, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
+import {useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -117,26 +117,13 @@ onMounted(() => {
     }
     initArticle(props.articleIndex.id);
 
-    useSaveContentEvent.off(onSave);
     useUpdatePreviewEvent.off(onPreview);
-    useSaveContentEvent.on(onSave);
     useUpdatePreviewEvent.on(onPreview);
 });
 
 onBeforeUnmount(() => {
-    useSaveContentEvent.off(onSave);
     useUpdatePreviewEvent.off(onPreview);
 });
-
-function onSave(id: number) {
-    if (props.articleIndex) {
-        if (props.articleIndex.type !== ArticleTypeEnum.EXCEL) {
-            if (id === props.articleIndex.id) {
-                saveContent(content.value);
-            }
-        }
-    }
-}
 
 function onPreview(data: { id: number, preview: boolean }) {
     if (props.articleIndex) {

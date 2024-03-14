@@ -40,7 +40,7 @@ export default {
     },
 
     confirmMulti(content: string, title: string, buttons: Array<{ name: string, action: () => void }>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>(resolve => {
             const modalReturn = Modal.confirm({
                 content,
                 title,
@@ -98,7 +98,7 @@ export default {
             const onInput = (e: string) => {
                 value = e;
             }
-            Modal.confirm({
+            const res = Modal.confirm({
                 content: () => h('div', {class: 'es-prompt'}, [
                     h('div', {}, content),
                     // @ts-ignore
@@ -112,6 +112,10 @@ export default {
                                 .getElementsByTagName("input")
                                 .item(0)!
                                 .focus();
+                        },
+                        onPressEnter: () => {
+                            resolve(value);
+                            res.close();
                         }
                     })
                 ]),
