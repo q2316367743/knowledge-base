@@ -2,9 +2,25 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.1',
+        sign: 191,
+        time: '2024-03-14',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '【待办】只有待办状态才显示置顶'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【待办】默认视图优化，不会因为滚动导致工具栏丢失"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【编辑器】点击文件夹，如果已展开则关闭"
+        }],
+        remark: "下个版本将会彻底删除表格笔记，大家注意数据迁移！！！"
+    },
+    {
         version: '1.9.0',
         sign: 190,
-        time: '2024-02-29',
+        time: '2024-03-13',
         items: [{
             label: LogItemEnum.MAJOR,
             content: '【待办】新增日历布局'

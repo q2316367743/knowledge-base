@@ -10,6 +10,7 @@ export default {
     feedback: 'https://txc.qq.com/products/612648',
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',
     online: 'https://blog.esion.xyz/apps/knowledge-base',
+    doc: "https://blog.esion.xyz/docs/knowledge-base/知识库.html",
     updateLog: UpdateLog[0].url || '',
     statistics: "http://project-esion.nat300.top/webhook/5e512530-23e3-4bf4-8fa7-1720da99a6b6",
     feature: {
