@@ -7,9 +7,8 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onBeforeUnmount, PropType, ref, shallowRef, watch} from "vue";
+import {computed, onMounted, onBeforeUnmount, ref, shallowRef, watch} from "vue";
 import MindMap from "simple-mind-map";
-import {IWorkbookData} from "@univerjs/core";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
 
@@ -33,7 +32,7 @@ import AssociativeLine from 'simple-mind-map/src/plugins/AssociativeLine.js'
 
 const props = defineProps({
     modelValue: {
-        type: Object as PropType<IWorkbookData>,
+        type: Object,
         default: {},
         required: false
     },

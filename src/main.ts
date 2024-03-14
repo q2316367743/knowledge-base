@@ -15,8 +15,6 @@ import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';
 
-// Use calendar defaults (optional)
-
 
 createApp(App)
     .use(ArcoVue)

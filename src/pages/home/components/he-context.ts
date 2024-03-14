@@ -11,6 +11,8 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {articleToZip} from "@/utils/file/ConvertUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
+import {h} from "vue";
+import {IconBgColors, IconBook, IconCode, IconFile, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -172,4 +174,21 @@ export function exportToMd(pid: number) {
         .then(() => MessageUtil.success("导出成功"))
         .catch(e => MessageUtil.error("导出失败", e))
         .finally(() => useGlobalStore().closeLoading());
+}
+
+
+export function buildArticleIcon(type: ArticleTypeEnum) {
+    if (type === ArticleTypeEnum.CODE) {
+        return h(IconCode, {})
+    } else if (type === ArticleTypeEnum.RICH_TEXT) {
+        return h(IconBook, {})
+    } else if (type === ArticleTypeEnum.EXCEL) {
+        return h(IconNav, {})
+    } else if (type === ArticleTypeEnum.MIND_MAP) {
+        return h(IconMindMapping, {})
+    }  else if (type === ArticleTypeEnum.DRAUU) {
+        return h(IconBgColors, {})
+    } else {
+        return h(IconFile, {})
+    }
 }

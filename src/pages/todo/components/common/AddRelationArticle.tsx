@@ -3,11 +3,10 @@ import {computed, h, ref} from "vue";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {searchData, treeEach} from "@/entity/ListTree";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import {IconBook, IconCode, IconFile, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
+import {buildArticleIcon} from "@/pages/home/components/he-context";
 
 export function openAddRelationArticle() {
     const keyword = ref('');
@@ -35,19 +34,7 @@ export function openAddRelationArticle() {
                     key: article.id,
                     title: article.name,
                     isLeaf: true,
-                    icon: () => {
-                        if (article.type === ArticleTypeEnum.CODE) {
-                            return h(IconCode, {})
-                        } else if (article.type === ArticleTypeEnum.RICH_TEXT) {
-                            return h(IconBook, {})
-                        } else if (article.type === ArticleTypeEnum.EXCEL) {
-                            return h(IconNav, {})
-                        } else if (article.type === ArticleTypeEnum.MIND_MAP) {
-                            return h(IconMindMapping, {})
-                        } else {
-                            return h(IconFile, {})
-                        }
-                    },
+                    icon: () => buildArticleIcon(article.type),
                     checkable: true
                 })).forEach(article => treeData.push(article));
             }
