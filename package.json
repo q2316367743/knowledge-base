@@ -11,6 +11,8 @@
     },
     "dependencies": {
         "@arco-design/web-vue": "^2.54.5",
+        "@logicflow/core": "^1.2.22",
+        "@logicflow/extension": "^1.2.22",
         "@popperjs/core": "^2.11.8",
         "@vueuse/core": "^9.13.0",
         "@vueuse/integrations": "^10.9.0",

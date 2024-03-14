@@ -50,6 +50,13 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
             }
         case ArticleTypeEnum.EXCEL:
             return {};
+        case ArticleTypeEnum.LOGIC_FLOW:
+            return {
+                config: {},
+                record: {},
+                editorConfig: {},
+                option: {}
+            };
         default:
             return "";
     }
@@ -186,7 +193,7 @@ export function buildArticleIcon(type: ArticleTypeEnum) {
         return h(IconNav, {})
     } else if (type === ArticleTypeEnum.MIND_MAP) {
         return h(IconMindMapping, {})
-    }  else if (type === ArticleTypeEnum.DRAUU) {
+    } else if (type === ArticleTypeEnum.DRAUU) {
         return h(IconBgColors, {})
     } else {
         return h(IconFile, {})

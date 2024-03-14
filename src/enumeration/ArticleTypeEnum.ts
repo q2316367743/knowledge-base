@@ -35,7 +35,12 @@ enum ArticleTypeEnum {
     /**
      * drauu实现的画板
      */
-    DRAUU = 7
+    DRAUU = 7,
+
+    /**
+     * 流程图
+     */
+    LOGIC_FLOW = 8
 
 }
 

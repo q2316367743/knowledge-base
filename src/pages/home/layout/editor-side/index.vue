@@ -33,6 +33,7 @@
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MIND_MAP)">思维导图
                                 </a-doption>
                                 <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.DRAUU)">画板</a-doption>
+                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.LOGIC_FLOW)">流程图</a-doption>
                             </template>
                         </a-dsubmenu>
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
