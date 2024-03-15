@@ -82,7 +82,6 @@ function buildArrayFunc(editor: ShallowRef<Cherry | undefined>, title: string, u
  * @param editor 编辑器
  * @param title 标题
  * @param url 链接
- * @param key 使用的key
  */
 function buildTextFunc(editor: ShallowRef<Cherry | undefined>, title: string, url: string) {
     return Cherry.createMenuHook(title, {
