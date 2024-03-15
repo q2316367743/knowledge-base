@@ -36,11 +36,16 @@ export interface BaseSetting {
     /**
      * 待办文章动作
      */
-    todoArticleAction: TodoArticleActionEnum;
+    todoArticleAction: ArticleActionEnum;
+
+    /**
+     * 关联文章动作
+     */
+    relationArticleAction: ArticleActionEnum;
 
 }
 
-export enum TodoArticleActionEnum {
+export enum ArticleActionEnum {
     // 前往文章
     TO_ARTICLE = 1,
     // 侧边预览
@@ -55,6 +60,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
         codeExtraName: 'ts',
         mdEditorEditMode: MdEditorEditModeEnum.AUTO,
-        todoArticleAction: TodoArticleActionEnum.DRAWER
+        todoArticleAction: ArticleActionEnum.DRAWER,
+        relationArticleAction: ArticleActionEnum.TO_ARTICLE
     }
 }

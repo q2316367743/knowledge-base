@@ -132,7 +132,7 @@
             </a-divider>
             <a-typography v-if="!hideOfArticle" style="padding: 0 7px;">
                 <a-typography-paragraph v-for="item in articleList" :key="item.id" @click.stop>
-                    <a-link @click="toArticle(item.id)">{{ item.name }}</a-link>
+                    <a-link @click="toArticleByTodo(item.id)">{{ item.name }}</a-link>
                 </a-typography-paragraph>
             </a-typography>
         </div>
@@ -148,16 +148,12 @@ import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 // 工具类
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import SideHeader from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/SideHeader.vue"
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {openArticle} from "@/pages/todo/components/common/OpenArticle";
+import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
 
 
@@ -179,7 +175,6 @@ const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
 const articleList = computed(() => useTodoStore().articleList);
 
-const max = computed(() => (size.width.value - 200) + 'px');
 
 function getHide(id: number) {
     if (id === 0) {
@@ -299,19 +294,6 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
     return Promise.resolve(record);
 }
 
-function toArticle(id: number) {
-    if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.TO_ARTICLE) {
-        useHomeEditorStore().openArticle(id);
-        router.push('/home');
-    } else if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.DRAWER) {
-        const article = useArticleStore().articleMap.get(id);
-        if (!article) {
-            MessageUtil.error("文章不存在");
-            return;
-        }
-        openArticle(article);
-    }
-}
 
 </script>
 <style scoped lang="less">

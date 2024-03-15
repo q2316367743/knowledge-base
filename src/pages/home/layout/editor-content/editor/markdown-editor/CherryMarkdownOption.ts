@@ -1,4 +1,5 @@
 import {PropType} from "vue";
+import {CustomSyntaxRegConfig} from "cherry-markdown/types/cherry";
 
 export interface CherryConfig{
     // 选择器
@@ -91,6 +92,8 @@ interface Engine {
     global?: Global;
     // Built in syntax configuration
     syntax?: Syntax;
+    /** 自定义语法 */
+    customSyntax?: Record<string, CustomSyntaxRegConfig['syntaxClass'] | CustomSyntaxRegConfig>;
 }
 
 interface Syntax {

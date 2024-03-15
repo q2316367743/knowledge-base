@@ -34,6 +34,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
             }
         },
         todoArticleAction: state => state.baseSetting.todoArticleAction,
+        relationArticleAction: state => state.baseSetting.relationArticleAction,
     },
     actions: {
         async init() {

@@ -33,6 +33,10 @@ import {openArticleImport} from "@/pages/home/layout/editor-content/components/A
 import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {docxToMarkdown, htmlToMarkdown} from "@/utils/file/ConvertUtil";
+import {
+    RelationArticleSyntaxHook
+} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/RelationArticle";
+import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -88,7 +92,14 @@ const config: CherryConfig = {
                 }
                 return url;
             }
-        }
+        },
+        customSyntax: {
+            RelationArticle: {
+                syntaxClass: RelationArticleSyntaxHook, // 将自定义语法对象挂载到 importHook.syntaxClass上
+                force: false, // true： 当cherry自带的语法中也有一个“importHook”时，用自定义的语法覆盖默认语法； false：不覆盖
+                before: 'fontEmphasis', // 定义该自定义语法的执行顺序，当前例子表明在加粗/斜体语法前执行该自定义语法
+            },
+        },
     },
     editor: {
         defaultModel: defaultModel,
@@ -199,20 +210,22 @@ const config: CherryConfig = {
                     const src = (aEle as HTMLImageElement).src;
                     // @ts-ignore
                     window.onImagePreview(src);
+                } else if (aEle.classList.contains('relation-article')) {
+                    const title = aEle.getAttribute('data-title');
+                    if (title) {
+                        const real = decodeURIComponent(title);
+                        toArticleByRelation(real);
+                    }
                 }
             }
-        },
-        onCopyCode(event: Event, src: string) {
-            console.log(event, src);
-            return src;
-        },
+        }
     },
     fileUpload(file, callback) {
         useImageUpload(file)
             .then(url => callback(url))
             .catch(e => MessageUtil.error("图片上传失败", e))
 
-    }
+    },
 };
 if (isUtools) {
     // 只有是utools才需要截图
@@ -223,7 +236,6 @@ if (isUtools) {
 onMounted(() => {
     instance.value = new Cherry(config as any);
     handleTheme();
-    handleToolbar(defaultModel === 'previewOnly')
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
     useArticleImportEvent.off(onImport);
@@ -250,18 +262,7 @@ watch(() => useGlobalStore().isDark, value => {
 })
 
 function handleToolbar(value: boolean) {
-    if (instance.value) {
-        let toolbar = instance.value.status.toolbar;
-        instance.value.switchModel(value ? 'previewOnly' : 'editOnly');
-        // 工具栏
-        if ((toolbar === 'show') === value) {
-            try {
-                instance.value.toolbar.menus.hooks.settings.toggleToolbar()
-            } catch (e) {
-                console.error(e)
-            }
-        }
-    }
+    instance.value && instance.value.switchModel(value ? 'previewOnly' : useBaseSettingStore().defaultModel);
 }
 
 function handleTheme() {
@@ -273,7 +274,6 @@ function handleTheme() {
 
 function exportFile(type: any, fileName: string) {
     if (instance.value) {
-        console.log(type, fileName)
         instance.value.export(type, fileName);
     }
 }

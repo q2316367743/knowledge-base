@@ -66,6 +66,13 @@ window.onImagePreview = (src: string) => {
         src
     }
 }
+// @ts-ignore 全局事件
+window.jumpToArticle = (title: string) => {
+    console.log(title);
+    title = decodeURIComponent(title);
+    console.log(title);
+}
+
 // 适配新版，快速启动，推送数据到主程序
 utools.onMainPush(action => {
     useGlobalStore().initDarkColors();

@@ -51,7 +51,7 @@
             <div class="content">
                 <a-list :bordered="false">
                     <a-list-item v-for="item in articleList" :key="item.id">
-                        <a-link :item="item" @click="toArticle(item.id)">{{ item.name }}</a-link>
+                        <a-link :item="item" @click="toArticleByTodo(item.id)">{{ item.name }}</a-link>
                     </a-list-item>
                 </a-list>
             </div>
@@ -72,13 +72,9 @@ import {TodoItemStatus} from "@/entity/todo/TodoItem";
 import {
     openAddRelationArticle
 } from "@/pages/todo/components/common/AddRelationArticle";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {openArticle} from "@/pages/todo/components/common/OpenArticle";
 import {useRouter} from "vue-router";
 import {contains} from "@/utils/lang/ArrayUtil";
+import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 
 const router = useRouter();
 
@@ -151,20 +147,6 @@ function updateItem(e: SortableEvent, status: TodoItemStatus) {
     useTodoStore().updateById(_id, {status: status})
         .then(() => MessageUtil.success("操作成功！"));
 
-}
-
-function toArticle(id: number) {
-    if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.TO_ARTICLE) {
-        useHomeEditorStore().openArticle(id);
-        router.push('/home');
-    } else if (useBaseSettingStore().todoArticleAction === TodoArticleActionEnum.DRAWER) {
-        const article = useArticleStore().articleMap.get(id);
-        if (!article) {
-            MessageUtil.error("文章不存在");
-            return;
-        }
-        openArticle(article);
-    }
 }
 
 </script>

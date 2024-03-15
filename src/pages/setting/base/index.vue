@@ -70,6 +70,12 @@
                     <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
                 </a-radio-group>
             </a-form-item>
+            <a-form-item label="关联文章动作">
+                <a-radio-group v-model="instance.relationArticleAction">
+                    <a-radio :value="TodoArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
+                    <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
+                </a-radio-group>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
             </a-form-item>
@@ -89,7 +95,7 @@ import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import Constant from "@/global/Constant";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
-import {getDefaultBaseSetting, TodoArticleActionEnum} from "@/entity/setting/BaseSetting";
+import {getDefaultBaseSetting, ArticleActionEnum} from "@/entity/setting/BaseSetting";
 
 export default defineComponent({
     name: 'more-setting-base',
@@ -101,7 +107,7 @@ export default defineComponent({
     }),
     computed: {
         TodoArticleActionEnum() {
-            return TodoArticleActionEnum
+            return ArticleActionEnum
         },
         MdEditorEditModeEnum() {
             return MdEditorEditModeEnum
