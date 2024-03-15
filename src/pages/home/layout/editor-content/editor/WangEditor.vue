@@ -1,12 +1,20 @@
 <template>
-    <main class="edit-wang-editor kb-wang-editor" ref="wangEditorEl">
-        <div :id="toolbarId" v-show="!props.readOnly" ref="wangEditorToolbar"></div>
-        <div :id="editorId" :style="editorWrapperStyle">
+    <main class="edit-wang-editor kb-wang-editor">
+        <div ref="toolbarDom" v-show="!props.readOnly" ></div>
+        <div ref="editorDom" :style="editorWrapperStyle">
         </div>
     </main>
 </template>
 <script lang="ts" setup>
-import {createEditor, createToolbar, IDomEditor, IEditorConfig, IToolbarConfig, SlateNode, Toolbar} from "@wangeditor/editor";
+import {
+    createEditor,
+    createToolbar,
+    IDomEditor,
+    IEditorConfig,
+    IToolbarConfig,
+    SlateNode,
+    Toolbar
+} from "@wangeditor/editor";
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
@@ -28,14 +36,11 @@ const emits = defineEmits(['update:modelValue']);
 defineExpose({getToc})
 
 const content = ref(`${props.modelValue}` || '');
-const wangEditorEl = ref<HTMLElement | null>(null);
-const wangEditorToolbar = ref<HTMLElement | null>(null);
 
-const now = new Date().getTime();
-const editorId = ref('editor—wrapper-' + now);
-const toolbarId = ref('editor-toolbar-' + now);
+const editorDom = ref<HTMLDivElement>();
+const toolbarDom = ref<HTMLDivElement>();
 
-const size = useElementSize(wangEditorToolbar);
+const size = useElementSize(toolbarDom);
 
 const editorWrapperStyle = computed(() => {
     let height = '100%';
@@ -114,15 +119,18 @@ const toolbarConfig: Partial<IToolbarConfig> = {
 
 
 function create() {
+    if (!editorDom.value || !toolbarDom.value) {
+        return;
+    }
     const instance = createEditor({
-        selector: '#' + editorId.value,
+        selector: editorDom.value,
         html: content.value,
         config: editorConfig,
         mode: 'default', // or 'simple'
     });
     toolbar = createToolbar({
         editor: instance,
-        selector: '#' + toolbarId.value,
+        selector: toolbarDom.value,
         config: toolbarConfig,
         mode: 'simple', // 'default' or 'simple'
     });
@@ -163,9 +171,9 @@ function onExport(id: number) {
             if (editor) {
                 if (res.type === 1) {
                     download(htmlToMarkdown(editor.getHtml()), res.title, 'text/plain;charset=utf-8');
-                }else if (res.type === 2) {
+                } else if (res.type === 2) {
                     download(editor.getHtml(), res.title, 'text/html;charset=utf-8');
-                }else if (res.type === 3) {
+                } else if (res.type === 3) {
                     download(editor.getText(), res.title, 'text/html;charset=utf-8');
                 }
             }
