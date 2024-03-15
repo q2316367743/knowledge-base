@@ -47,6 +47,7 @@ import {
 } from "./syntax/RelationArticle";
 
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
+import {useRelationMenu} from "@/pages/home/layout/editor-content/editor/markdown-editor/menu/RelationMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -149,7 +150,7 @@ const config: CherryConfig = {
                 WenAn: ['YiYan', 'AnWei', 'Pyq', 'TianGouRiJi', 'QingGan', 'MingRenMingYan']
             },
             'graph',
-            'export'
+            'Relation',
         ],
         toolbarRight: ['fullScreen', '|'],
         bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'], // array or false
@@ -162,6 +163,7 @@ const config: CherryConfig = {
             ScreenShotMenu: useScreenShotMenu(instance),
             PanGu: usePanGu(),
             FanYi: useFanYi(),
+            Relation: useRelationMenu(instance),
             // 夏柔API
             YiYan: useYiYanMenu(instance),
             AnWei: useAnWeiMenu(instance),
