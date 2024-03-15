@@ -7,7 +7,6 @@ import router from './plugin/router';
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';
-import {LogicFlowIcon} from "@/pages/home/layout/editor-content/editor/LogicFlow/icon";
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@/less/customer.less';
@@ -23,7 +22,6 @@ createApp(App)
     .use(createPinia())
     .use(router)
     .use(setupCalendar, {})
-    .use(LogicFlowIcon)
     .mount('#app');
 
 import { statistics } from './global/BeanFactory';

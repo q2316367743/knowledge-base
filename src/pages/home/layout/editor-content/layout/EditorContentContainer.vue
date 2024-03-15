@@ -13,8 +13,6 @@
                          v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
         <drauu-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                       v-else-if="editorType === ArticleTypeEnum.DRAUU && load"/>
-        <logic-flow v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                    v-else-if="editorType === ArticleTypeEnum.LOGIC_FLOW && load"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -27,7 +25,6 @@ import MarkdownEditor from "@/pages/home/layout/editor-content/editor/markdown-e
 import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
 import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
 import DrauuEditor from "@/pages/home/layout/editor-content/editor/DrauuEditor/index.vue";
-import LogicFlow from "@/pages/home/layout/editor-content/editor/LogicFlow/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";
