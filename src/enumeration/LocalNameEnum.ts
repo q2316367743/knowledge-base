@@ -82,6 +82,11 @@ enum LocalNameEnum {
      */
     KEY_APP_THEME = '/key/app/theme',
 
+    /**
+     * 待办导出脚本
+     */
+    KEY_TODO_SCRIPT = '/key/todo/script'
+
 }
 
 export default LocalNameEnum;
