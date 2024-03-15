@@ -2,6 +2,22 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.2',
+        sign: 192,
+        time: '2024-03-15',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【笔记】新增画板'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【待办】新增模板导出，可以自定义导出格式"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【编辑器】已删除表格笔记"
+        }],
+        remark: "已删除表格笔记，如果还没有迁移的，可以下载1.9.2之前的版本，将数据保存"
+    },
+    {
         version: '1.9.1',
         sign: 191,
         time: '2024-03-14',
