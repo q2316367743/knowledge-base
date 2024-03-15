@@ -8,34 +8,44 @@ import {
     CherryConfig,
     editorProps
 } from "@/pages/home/layout/editor-content/editor/markdown-editor/CherryMarkdownOption";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {useWindowSize} from "@vueuse/core";
-import {useScreenShotMenu} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/ScreenShotMenu";
-import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
-import {usePanGu} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/PanGuMenu";
-import {useFanYi} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/FanYiMenu";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {isUtools} from "@/global/BeanFactory";
+
+import {useScreenShotMenu} from "./menu/ScreenShotMenu";
+import {usePanGu} from "./menu/PanGuMenu";
+import {useFanYi} from "./menu/FanYiMenu";
 import {
     useAnWeiMenu, useMingRenMingYanMenu,
     usePyqMenu, useQingGanMenu,
     useTianGouRiJiMenu,
     useYiYanMenu
-} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/XiaRouMenu";
-import Constant from "@/global/Constant";
-import {useArticleExportEvent, useArticleImportEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {openMarkdownExport} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/MarkdownExport";
-import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
-import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
-import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
+} from "./menu/XiaRouMenu";
+
+import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
+
+import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {useArticleExportEvent, useArticleImportEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
+
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
 import {docxToMarkdown, htmlToMarkdown} from "@/utils/file/ConvertUtil";
+
+import {isUtools} from "@/global/BeanFactory";
+import Constant from "@/global/Constant";
+
+import {TocItem} from "./common/TocItem";
+import {openMarkdownExport} from "./common/MarkdownExport";
+
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+
+import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
+
 import {
     RelationArticleSyntaxHook
-} from "@/pages/home/layout/editor-content/editor/markdown-editor/plugins/RelationArticle";
+} from "./syntax/RelationArticle";
+
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 
 const DEV_URL = "http://localhost:5173/#";
