@@ -20,8 +20,8 @@ import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 // 编辑器
 import WangEditor from "@/pages/home/layout/editor-content/editor/WangEditor.vue";
-import MonacoEditor from "@/pages/home/layout/editor-content/editor/monaco-editor/index.vue";
-import MarkdownEditor from "@/pages/home/layout/editor-content/editor/markdown-editor/index.vue";
+import MonacoEditor from "@/pages/home/layout/editor-content/editor/MonacoEditor/index.vue";
+import MarkdownEditor from "@/pages/home/layout/editor-content/editor/MarkdownEditor/index.vue";
 import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
 import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
 import DrauuEditor from "@/pages/home/layout/editor-content/editor/DrauuEditor/index.vue";

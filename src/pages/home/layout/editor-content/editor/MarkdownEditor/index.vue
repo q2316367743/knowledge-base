@@ -7,7 +7,7 @@ import {onMounted, onBeforeUnmount, shallowRef, watch} from "vue";
 import {
     CherryConfig,
     editorProps
-} from "@/pages/home/layout/editor-content/editor/markdown-editor/CherryMarkdownOption";
+} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/CherryMarkdownOption";
 import {useWindowSize} from "@vueuse/core";
 
 import {useScreenShotMenu} from "./menu/ScreenShotMenu";
@@ -47,7 +47,7 @@ import {
 } from "./syntax/RelationArticle";
 
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
-import {useRelationMenu} from "@/pages/home/layout/editor-content/editor/markdown-editor/menu/RelationMenu";
+import {useRelationMenu} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/RelationMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 

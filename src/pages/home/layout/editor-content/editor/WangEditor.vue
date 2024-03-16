@@ -17,7 +17,7 @@ import {
 } from "@wangeditor/editor";
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {TocItem} from "@/pages/home/layout/editor-content/editor/markdown-editor/common/TocItem";
+import {TocItem} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/common/TocItem";
 import {useImageUpload} from "@/plugin/image";
 import {useElementSize} from "@vueuse/core";
 import {getLineLength, getTextCount, useArticleExportEvent} from "@/store/components/HomeEditorStore";
