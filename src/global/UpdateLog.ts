@@ -12,6 +12,18 @@ export default [
             label: LogItemEnum.ADD,
             content: "【待办】新增模板导出，可以自定义导出格式"
         }, {
+            label: LogItemEnum.ADD,
+            content: "【markdown笔记】支持关联文章"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【思维导图】支持插入图标"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【思维导图】标签共享，可以相互引用"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【编辑器】支持文章移动和文章批量移动"
+        }, {
             label: LogItemEnum.UPDATE,
             content: "【编辑器】已删除表格笔记"
         }],
