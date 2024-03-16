@@ -36,7 +36,7 @@ export function toArticleByRelation(title: string) {
  * @param id
  * @param articleAction
  */
-export function toArticle(id: number, articleAction: ArticleActionEnum) {
+function toArticle(id: number, articleAction: ArticleActionEnum) {
     if (articleAction === ArticleActionEnum.TO_ARTICLE) {
         useHomeEditorStore().openArticle(id);
         router.push('/home');
@@ -50,7 +50,7 @@ export function toArticle(id: number, articleAction: ArticleActionEnum) {
     }
 }
 
-export function openArticle(articleIndex: ArticleIndex) {
+function openArticle(articleIndex: ArticleIndex) {
     const size = useWindowSize();
     Drawer.open({
         title: articleIndex.name,

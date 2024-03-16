@@ -21,7 +21,7 @@ export const useArticleStore = defineStore('article', {
         rev: undefined as string | undefined
     }),
     getters: {
-        articles: state => state.value.filter(e => !e.isDelete).sort((a, b) => b.id - a.id),
+        articles: (state): Array<ArticleIndex> => state.value.filter(e => !e.isDelete).sort((a, b) => b.id - a.id),
         articleDeletes: state => state.value.filter(e => e.isDelete),
         articleMap: (state): Map<number, ArticleIndex> =>
             map(state.value.filter(e => !e.isDelete), 'id'),
