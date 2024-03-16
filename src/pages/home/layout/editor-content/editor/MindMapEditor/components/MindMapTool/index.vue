@@ -56,6 +56,12 @@
             </div>
             <div class="tool-btn-text">标签</div>
         </div>
+        <div class="tool-btn" :class="available ? 'active' : ''" @click="setIcon()">
+            <div class="tool-btn-icon">
+                <icon-face-smile-fill :size="18"/>
+            </div>
+            <div class="tool-btn-text">图标</div>
+        </div>
         <a-divider direction="vertical"/>
         <div class="tool-btn" :class="available && !isGeneralization ? 'active' : ''" @click="insertGeneralization()">
             <div class="tool-btn-icon">
@@ -88,6 +94,9 @@ import {
     openInsertTag
 } from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertTag";
 import AssociativeLine from "simple-mind-map/src/plugins/AssociativeLine.js";
+import {
+    openInsertIcon
+} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertIcon";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>,
@@ -178,6 +187,12 @@ const setNote = () => {
 const setTag = () => {
     if (available.value) {
         openInsertTag(activeNodes.value);
+    }
+}
+
+const setIcon = () => {
+    if (available.value) {
+        openInsertIcon(activeNodes.value);
     }
 }
 

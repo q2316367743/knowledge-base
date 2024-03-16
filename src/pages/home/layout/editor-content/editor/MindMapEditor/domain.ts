@@ -14,4 +14,5 @@ export interface MindMapNode {
     setHyperlink(url: string, title: string): void;
     setNote(note: string): void;
     setTag(tags: Array<string>): void;
+    setIcon(icons: Array<string>): void;
 }

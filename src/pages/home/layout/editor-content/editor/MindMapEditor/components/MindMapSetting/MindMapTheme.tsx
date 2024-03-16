@@ -1,6 +1,6 @@
 import MindMap from "simple-mind-map";
 import {themeList} from '../../constant'
-import {Drawer, Link, List, ListItem, Radio, RadioGroup} from "@arco-design/web-vue";
+import {Drawer, Image, Link, List, ListItem, Radio, RadioGroup} from "@arco-design/web-vue";
 import {computed, ref} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 
@@ -22,7 +22,12 @@ export function openMindMapTheme(mindMap: MindMap) {
         footer: false,
         content: () => <List bordered={false}>
             {themes.value.map(theme =>
-                <ListItem><Link onClick={() => setTheme(theme.value)}>{theme.name}</Link></ListItem>)}
+                <ListItem>
+                    <div style={{cursor: "pointer"}} onClick={() => setTheme(theme.value)}>
+                        <img style={{width: '323px'}} src={`./mind-map/img/themes/${theme.value}.jpg`} alt={theme.name}/>
+                    </div>
+                    {theme.name}
+                </ListItem>)}
         </List>,
     });
 }
