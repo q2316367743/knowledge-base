@@ -16,3 +16,17 @@ export interface MindMapNode {
     setTag(tags: Array<string>): void;
     setIcon(icons: Array<string>): void;
 }
+
+export interface MindMapNodeData {
+    uid: string;
+    text: string;
+    tag: Array<string>;
+    richText: boolean;
+    icon: Array<string>;
+    expand: boolean;
+}
+
+export interface MindMapTreeNode {
+    data: MindMapNodeData;
+    children: Array<MindMapTreeNode>
+}

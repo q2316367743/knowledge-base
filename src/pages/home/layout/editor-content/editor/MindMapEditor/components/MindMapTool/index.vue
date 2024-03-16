@@ -93,7 +93,6 @@ import {
 import {
     openInsertTag
 } from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertTag";
-import AssociativeLine from "simple-mind-map/src/plugins/AssociativeLine.js";
 import {
     openInsertIcon
 } from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertIcon";
@@ -185,8 +184,8 @@ const setNote = () => {
 }
 
 const setTag = () => {
-    if (available.value) {
-        openInsertTag(activeNodes.value);
+    if (available.value &&props.mindMap ) {
+        openInsertTag(activeNodes.value, props.mindMap);
     }
 }
 

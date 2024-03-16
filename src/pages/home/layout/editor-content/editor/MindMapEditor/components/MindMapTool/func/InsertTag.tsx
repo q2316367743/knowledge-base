@@ -1,39 +1,38 @@
-import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+import {MindMapNode, MindMapTreeNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
 import {ref} from "vue";
-import {Button, Input, InputGroup, Modal, Tag} from "@arco-design/web-vue";
-import MessageUtil from "@/utils/modal/MessageUtil";
+import {Modal, Option, Select} from "@arco-design/web-vue";
+import MindMap from "simple-mind-map";
 
-export function openInsertTag(activeNodes: MindMapNode[]) {
+function renderTree(tags: Array<string>, treeNode: MindMapTreeNode) {
+    const tag = treeNode.data.tag;
+    if (tag) {
+        tags.push(...tag);
+    }
+    if (treeNode.children) {
+        treeNode.children.forEach(child => renderTree(tags, child));
+    }
+}
+
+export function openInsertTag(activeNodes: MindMapNode[], mindMap: MindMap) {
     if (activeNodes.length === 0) {
         return;
     }
-    const first = activeNodes[0];
-    const text = ref("");
-    const tags = ref<Array<string>>(first.getData('tag') || []);
+    const tags = ref<Array<string>>(activeNodes.flatMap(e => e.getData('tag') || []));
 
-    function add() {
-        if (tags.value.some(tag => tag === text.value)) {
-            MessageUtil.warning("标签已存在");
-            return;
-        }
-        tags.value.push(text.value);
-        text.value = '';
-    }
+    const treeNode = mindMap.getData(false) as MindMapTreeNode;
 
-    function close(tag: string) {
-        tags.value = tags.value.filter(t => t !== tag);
-    }
+    const options = ref<Array<string>>([]);
+
+    renderTree(options.value, treeNode);
 
     Modal.open({
         title: "标签",
         draggable: true,
         content: () => <div>
-            <InputGroup style="width: 100%">
-                <Input v-model={text.value}></Input>
-                <Button type={'primary'} onClick={add}>新增</Button>
-            </InputGroup>
-            {tags.value.map(tag => <Tag key={tag} color={'arcoblue'} style={{marginRight: '7px', marginTop: '4px'}}
-                                        closable onClose={() => close(tag)}>{tag}</Tag>)}
+            <Select v-model={tags.value} placeholder={'回车创建标签'} allowClear allowCreate allowSearch multiple>
+                {options.value.map(option => <Option value={option}>{option}</Option>)}
+            </Select>
+            <div>回车新增标签，退格删除标签</div>
         </div>,
         onOk() {
             activeNodes.forEach(activeNode => {
