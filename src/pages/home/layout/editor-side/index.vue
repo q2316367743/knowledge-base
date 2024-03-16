@@ -47,18 +47,33 @@
                             </template>
                             重命名
                         </a-doption>
-                        <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)" style="color: red;">
-                            <template #icon>
-                                <icon-delete/>
-                            </template>
-                            删除
-                        </a-doption>
                         <a-doption @click="multiCheckStart(nodeData.key)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
                             多选
                         </a-doption>
+                        <a-dsubmenu>
+                            <template #icon>
+                                <icon-apps/>
+                            </template>
+                            操作
+                            <template #content>
+                                <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)"
+                                           style="color: red;">
+                                    <template #icon>
+                                        <icon-delete/>
+                                    </template>
+                                    删除
+                                </a-doption>
+                                <a-doption @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                                    <template #icon>
+                                        <icon-to-right/>
+                                    </template>
+                                    移动到
+                                </a-doption>
+                            </template>
+                        </a-dsubmenu>
                         <a-doption v-if="!nodeData.isLeaf" @click="showArticleImportModal(nodeData.key)">
                             <template #icon>
                                 <icon-import/>
@@ -84,6 +99,13 @@
                         </template>
                     </a-button>
                 </a-popconfirm>
+                <a-tooltip content="移动到">
+                    <a-button type="text" @click="moveMultiTo()">
+                        <template #icon>
+                            <icon-to-right/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
                 <a-tooltip content="全选">
                     <a-button type="text" @click="selectAll()">
                         <template #icon>
@@ -123,6 +145,7 @@ import {
 } from "@/pages/home/components/he-context";
 import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
 import {keyword} from "@/global/BeanFactory";
+import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 
 const size = useWindowSize();
 
@@ -266,6 +289,59 @@ function _expandTo(id: number) {
 
 function selectAll() {
     checkKeys.value = useArticleStore().articles.map(e => e.id);
+}
+
+function moveTo(id: number, name: string, article: boolean) {
+    let folderId: number | undefined = undefined;
+    if (article) {
+        // 文章，则需要找父文件夹
+        const articleIndex = useArticleStore().articleMap.get(id);
+        if (articleIndex) {
+            folderId = articleIndex.folder;
+        }
+    } else {
+        folderId = id;
+    }
+    openFolderChoose(folderId).then(folder => {
+        if (article) {
+            // 更新文章文件夹
+            useArticleStore().updateIndex(id, {folder: folder.id})
+                .then(() => MessageUtil.success("移动成功"))
+        } else {
+            useFolderStore().drop(id, folder.id);
+        }
+    })
+}
+
+function moveMultiTo() {
+    openFolderChoose().then(folder => {
+        useGlobalStore().startLoading("开始移动");
+        try {
+            const articleMap = useArticleStore().articleMap;
+            // 文章
+            const articleIds = checkKeys.value.filter(id => articleMap.has(id));
+            if (articleIds.length > 0) {
+                useArticleStore().updateMultiIndex(articleIds.map(id => ({
+                    id,
+                    folder: folder.id
+                })))
+            }
+            // 文件夹
+            const folderIds = checkKeys.value.filter(id => folderMap.value.has(id));
+            if (folderIds.length > 0) {
+                useFolderStore().updateMulti(folderIds.map(id => ({
+                    id,
+                    pid: folder.id
+                })))
+            }
+            checkKeys.value = [];
+            MessageUtil.success("移动成功");
+        } catch (e) {
+            MessageUtil.error("移动失败");
+        } finally {
+            useGlobalStore().closeLoading();
+        }
+    })
 }
 
 </script>

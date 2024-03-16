@@ -69,5 +69,21 @@ export const useFolderStore = defineStore('folder', {
             // 同步
             await this._sync();
         },
+        async updateMulti(folders: Array<Partial<Folder> & {id: number}>) {
+            for (let folder of folders) {
+                const index = this.folders.findIndex(e => e.id === folder.id);
+                if (index === -1) {
+                    continue;
+                }
+                // 新增索引
+                this.folders[index] = {
+                    ...this.folders[index],
+                    ...folder,
+                    updateTime: new Date(),
+                };
+            }
+            // 同步
+            await this._sync();
+        }
     }
 })
