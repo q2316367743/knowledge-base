@@ -1,157 +1,41 @@
 <template>
-    <div class="more-setting-base">
-        <a-form :model="instance" layout="vertical">
-            <a-form-item label="图片上传策略">
-                <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.NONE">未设置</a-radio>
-                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="isWeb">内部实现</a-radio>
-                    <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="isWeb">插件【图床】</a-radio>
-                    <a-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="!isAvailable">兰空图床(推荐)</a-radio>
-                </a-radio-group>
-                <template #help>
-                    <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
-                        上传到插件内部，占用个人存储空间，最大图片仅支持10m
-                    </span>
-                    <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
-                        需要安装插件【图床】
-                    </span>
-                    <span v-else-if="instance.imageStrategy === ImageStrategyEnum.LSKY_PRO">
-                        推荐使用，需要自己部署图床服务器
-                    </span>
-                </template>
-            </a-form-item>
-            <a-form-item label="编辑文章是否自动收起菜单">
-                <a-switch v-model="instance.autoCollapsedByEditor">
-                    <template #checked>是</template>
-                    <template #unchecked>否</template>
-                </a-switch>
-                <template #help>
-                    当插件宽度小于1080px时生效
-                </template>
-            </a-form-item>
-            <a-form-item label="点击待办是否自动收起菜单">
-                <a-switch v-model="instance.autoCollapsedByTodo">
-                    <template #checked>是</template>
-                    <template #unchecked>否</template>
-                </a-switch>
-                <template #help>
-                    当插件宽度小于1080px时生效
-                </template>
-            </a-form-item>
-            <a-form-item label="新建文章名模板">
-                <a-input v-model="instance.newArticleTemplateByName"/>
-                <template #help>
-                    [YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z] => YYYYescape 2019-01-25T00:00:00-02:00Z
-                </template>
-            </a-form-item>
-            <a-form-item label="默认代码拓展名">
-                <a-input v-model="instance.codeExtraName"/>
-            </a-form-item>
-            <a-form-item label="md编辑器默认编辑模式">
-                <a-radio-group v-model="instance.mdEditorEditMode">
-                    <a-radio :value="MdEditorEditModeEnum.EDIT_ONLY">仅编辑</a-radio>
-                    <a-radio :value="MdEditorEditModeEnum.EDIT_PREVIEW">编辑和预览</a-radio>
-                    <a-radio :value="MdEditorEditModeEnum.AUTO">自动切换</a-radio>
-                    <a-radio :value="MdEditorEditModeEnum.PREVIEW">仅预览</a-radio>
-                </a-radio-group>
-                <template #help>
-                    <span v-if="instance.mdEditorEditMode === MdEditorEditModeEnum.AUTO">
-                        当插件宽度小于{{ Constant.autoCollapsedWidth }}px时切换为【仅编辑】，
-                        大于{{ Constant.autoCollapsedWidth }}px时切换为【编辑和预览】
-                    </span>
-                    <span v-else-if="instance.mdEditorEditMode === MdEditorEditModeEnum.PREVIEW">
-                        开启后，md编辑器默认是预览模式，如果文章不是预览吗模式，则需要点击两边预览/编辑切换才可以切换到编辑模式，请谨慎开启
-                    </span>
-                </template>
-            </a-form-item>
-            <a-form-item label="待办文章动作">
-                <a-radio-group v-model="instance.todoArticleAction">
-                    <a-radio :value="TodoArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
-                    <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
-                </a-radio-group>
-            </a-form-item>
-            <a-form-item label="关联文章动作">
-                <a-radio-group v-model="instance.relationArticleAction">
-                    <a-radio :value="TodoArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
-                    <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
-                </a-radio-group>
-            </a-form-item>
-            <a-form-item>
-                <a-button type="primary" @click="save()">保存</a-button>
-            </a-form-item>
-        </a-form>
+    <div class="setting">
+        <a-tabs v-model:active-key="activeKey" hide-content>
+            <a-tab-pane key="base" title="基础设置"/>
+            <a-tab-pane key="theme" title="主题设置"/>
+            <a-tab-pane key="chat" title="聊天设置"/>
+        </a-tabs>
+        <main class="main">
+            <base-setting v-if="activeKey === 'base'"/>
+            <theme-setting v-else-if="activeKey === 'theme'"/>
+            <chat-setting v-else-if="activeKey === 'chat'"/>
+        </main>
     </div>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
-import {mapState} from "pinia";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import JsonTheme from "@/global/CodeTheme";
-import { useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import {clone} from "xe-utils";
-import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import Constant from "@/global/Constant";
-import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
-import {isUtools} from "@/global/BeanFactory";
-import {getDefaultBaseSetting, ArticleActionEnum} from "@/entity/setting/BaseSetting";
+<script lang="ts" setup>
+import {ref} from "vue";
 
-export default defineComponent({
-    name: 'more-setting-base',
-    emits: ['save'],
-    data: () => ({
-        JsonTheme, Constant,
-        ImageStrategyEnum,
-        instance: getDefaultBaseSetting()
-    }),
-    computed: {
-        TodoArticleActionEnum() {
-            return ArticleActionEnum
-        },
-        MdEditorEditModeEnum() {
-            return MdEditorEditModeEnum
-        },
-        ...mapState(useBaseSettingStore, ['baseSetting']),
-        ...mapState(useLskyProSettingStore, ['isAvailable']),
-        isWeb() {
-            return !isUtools
-        }
-    },
-    watch: {
-        baseSetting() {
-            this.instance = clone(this.baseSetting, true);
-        }
-    },
-    created() {
-        this.instance = clone(this.baseSetting, true);
-    },
-    methods: {
-        save() {
-            // 校验图床
-            if (this.instance.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
-                if (!useLskyProSettingStore().isAvailable) {
-                    MessageBoxUtil.confirm("检测到您未配置兰空图床，是否立即前往配置?", "错误")
-                        .then(() => this.$router.push("/setting/lsky-pro"))
-                    return;
-                }
-            }
-            useBaseSettingStore().save(this.instance)
-                .then(() => MessageUtil.success("保存成功"))
-                .catch(e => MessageUtil.error("保存失败", e))
-                .finally(() => this.$emit('save'));
-        }
-    }
-});
+import BaseSetting from "@/pages/setting/base/components/BaseSetting.vue";
+import ThemeSetting from "@/pages/setting/base/components/ThemeSetting.vue";
+import ChatSetting from "@/pages/setting/base/components/ChatSetting.vue";
+
+const activeKey = ref<string>('base');
 </script>
-<style scoped>
-.more-setting-base {
+<style scoped lang="less">
+.setting {
     position: absolute;
-    top: 7px;
-    left: 7px;
-    right: 7px;
-    bottom: 7px;
-    overflow: auto;
-}
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
+    .main {
+        position: absolute;
+        top: 46px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+    }
+}
 </style>

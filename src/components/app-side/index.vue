@@ -35,16 +35,13 @@
             <a-menu-item key="/setting/base">
                 基础设置
             </a-menu-item>
-            <a-menu-item key="/setting/theme">
-                主题设置
-            </a-menu-item>
             <a-menu-item key="/setting/lsky-pro">
                 兰空图床
             </a-menu-item>
             <a-menu-item key="/setting/category">
                 分类设置
             </a-menu-item>
-            <a-menu-item key="/setting/feature">
+            <a-menu-item key="/setting/feature" v-if="isUtools">
                 关键字设置
             </a-menu-item>
         </a-sub-menu>

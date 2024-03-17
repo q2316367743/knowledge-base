@@ -22,6 +22,8 @@ enum LocalNameEnum {
      */
     ARTICLE_ATTACHMENT = '/article/attachment/',
 
+    // ========================== 设置 ==========================
+
     SETTING_BASE = '/local/setting/base',
 
     SETTING_BACKUP = '/local/setting/backup',
@@ -31,6 +33,8 @@ enum LocalNameEnum {
     SETTING_LSKY_PRO = '/local/setting/lsky-pro',
 
     SETTING_WORKSPACE = '/local/setting/workspace',
+
+    SETTING_CHAT = '/local/setting/chat',
 
     /**
      * 待办清单中待办项索引，内部保存了全部的待办项
@@ -85,7 +89,12 @@ enum LocalNameEnum {
     /**
      * 待办导出脚本
      */
-    KEY_TODO_SCRIPT = '/key/todo/script'
+    KEY_TODO_SCRIPT = '/key/todo/script',
+
+    /**
+     * 聊天模型
+     */
+    KEY_CHAT_MODELS = '/key/chat/models'
 
 }
 

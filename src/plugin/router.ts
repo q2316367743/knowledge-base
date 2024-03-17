@@ -30,10 +30,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/setting/base",
     component: () => import("@/pages/setting/base/index.vue")
 }, {
-    name: "设置-主题",
-    path: "/setting/theme",
-    component: () => import("@/pages/setting/theme/index.vue")
-}, {
     name: "设置-分类",
     path: "/setting/category",
     component: () => import("@/pages/setting/category/index.vue")

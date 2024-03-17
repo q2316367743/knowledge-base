@@ -28,6 +28,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
+import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -58,6 +59,7 @@ utools.onPluginEnter(action => {
 useGlobalStore().initDarkColors();
 
 useHomeEditorStore().init();
+useChatSettingStore().init();
 
 // @ts-ignore 全局事件
 window.onImagePreview = (src: string) => {
