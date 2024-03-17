@@ -24,6 +24,9 @@ export default [
             label: LogItemEnum.ADD,
             content: "【编辑器】支持文章移动和文章批量移动"
         }, {
+            label: LogItemEnum.REPAIR,
+            content: "【编辑器】修复从预览模式切换为编辑模式，工具栏重置问题"
+        }, {
             label: LogItemEnum.UPDATE,
             content: "【编辑器】已删除表格笔记"
         }],
