@@ -63,13 +63,14 @@
             <div class="tool-btn-text">图标</div>
         </div>
         <a-divider direction="vertical"/>
-        <div class="tool-btn" :class="available && !isGeneralization ? 'active' : ''" @click="insertGeneralization()">
+        <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''" @click="insertGeneralization()">
             <div class="tool-btn-icon">
                 <icon-apps :size="18"/>
             </div>
             <div class="tool-btn-text">概要</div>
         </div>
-        <div class="tool-btn" :class="available ? 'active' : ''" @click="insertAssociativeLine()">
+        <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
+             @click="insertAssociativeLine()">
             <div class="tool-btn-icon">
                 <icon-branch :size="18"/>
             </div>
@@ -135,7 +136,7 @@ onBeforeUnmount(() => {
 
 // 回退
 const back = () => {
-    if (!isStart.value){
+    if (!isStart.value) {
         props.mindMap && props.mindMap.execCommand('BACK');
 
     }
@@ -184,7 +185,7 @@ const setNote = () => {
 }
 
 const setTag = () => {
-    if (available.value &&props.mindMap ) {
+    if (available.value && props.mindMap) {
         openInsertTag(activeNodes.value, props.mindMap);
     }
 }
@@ -196,13 +197,13 @@ const setIcon = () => {
 }
 
 const insertGeneralization = () => {
-    if (available.value && props.mindMap && !isGeneralization.value) {
+    if (available.value && !isRoot.value && props.mindMap && !isGeneralization.value) {
         props.mindMap.execCommand('ADD_GENERALIZATION');
     }
 }
 
 const insertAssociativeLine = () => {
-    if (available.value && props.mindMap && !isGeneralization.value) {
+    if (available.value && !isRoot.value && props.mindMap && !isGeneralization.value) {
         // @ts-ignore
         props.mindMap.associativeLine.createLineFromActiveNode()
     }

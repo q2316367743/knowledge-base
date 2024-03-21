@@ -4,12 +4,12 @@
         <mind-map-count v-if="available" :mind-map="mindMap"/>
         <mind-map-tool v-if="available && !props.readOnly" :mind-map="mindMap" :width="size.width.value"/>
         <mind-map-setting v-if="available && !props.readOnly" :mind-map="mindMap"/>
+        <mind-map-context v-if="available && !props.readOnly" :mind-map="mindMap"/>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, onBeforeUnmount, ref, shallowRef, watch} from "vue";
 import MindMap from "simple-mind-map";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
 
 // 组件
@@ -29,6 +29,7 @@ import ExportXMind from 'simple-mind-map/src/plugins/ExportXMind.js'
 import xmind from 'simple-mind-map/src/parse/xmind.js'
 import markdown from 'simple-mind-map/src/parse/markdown.js'
 import AssociativeLine from 'simple-mind-map/src/plugins/AssociativeLine.js'
+import MindMapContext from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapContext.vue";
 
 const props = defineProps({
     modelValue: {
@@ -52,7 +53,6 @@ onMounted(() => {
     if (!mindMapEditor.value) {
         return;
     }
-    console.log(useGlobalStore().isDark)
     mindMap.value = new MindMap({
         // @ts-ignore
         el: mindMapEditor.value
@@ -60,6 +60,7 @@ onMounted(() => {
     mindMap.value.setFullData(props.modelValue);
     mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');
     mindMap.value.reRender(() => console.log("reRender"));
+
     mindMap.value.on('data_change', () => {
         // data数据是不带节点对象的纯数据
         // 如果你需要操作节点对象，可以使用mindMap.renderer.renderTree
@@ -67,6 +68,7 @@ onMounted(() => {
             emits("update:modelValue", mindMap.value.getData(true));
         }
     });
+
     mindMap.value.addPlugin(MiniMap, undefined);
     mindMap.value.addPlugin(Export, undefined);
     mindMap.value.addPlugin(ExportPDF, undefined);

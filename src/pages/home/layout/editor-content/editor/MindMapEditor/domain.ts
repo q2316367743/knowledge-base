@@ -15,15 +15,19 @@ export interface MindMapNode {
     setNote(note: string): void;
     setTag(tags: Array<string>): void;
     setIcon(icons: Array<string>): void;
+    nodeData: MindMapTreeNode
 }
 
 export interface MindMapNodeData {
     uid: string;
     text: string;
-    tag: Array<string>;
     richText: boolean;
-    icon: Array<string>;
     expand: boolean;
+    isActive: boolean;
+    icon?: Array<string>;
+    tag?: Array<string>;
+    hyperlink?: string;
+    hyperlinkTitle?: string;
 }
 
 export interface MindMapTreeNode {
