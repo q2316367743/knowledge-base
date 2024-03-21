@@ -2,6 +2,21 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.3',
+        sign: 193,
+        time: '2024-03-21',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【思维导图】新增右键菜单，如果存在链接，可以在菜单中打开链接'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【思维导图】节点可拖拽"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【待办】待办中预览关联的文章，可以直接点击编辑接口进行跳转标记"
+        }],
+    },
+    {
         version: '1.9.2',
         sign: 192,
         time: '2024-03-15',
