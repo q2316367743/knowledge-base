@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref,} from "vue";
-import {keyword, statistics} from "@/global/BeanFactory";
+import {keyword, statistics, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -60,6 +60,9 @@ useGlobalStore().initDarkColors();
 
 useHomeEditorStore().init();
 useChatSettingStore().init();
+
+usePageJumpEvent.reset();
+usePageJumpEvent.on(path => router.push(path));
 
 // @ts-ignore 全局事件
 window.onImagePreview = (src: string) => {

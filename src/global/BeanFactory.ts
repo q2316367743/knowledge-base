@@ -10,11 +10,13 @@ import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
 import {ref} from "vue";
+import {useEventBus} from "@vueuse/core";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
 window.utools = window.utools || utools;
 
+export const usePageJumpEvent = useEventBus<string>('page-jump');
 
 export const statistics = new Statistics();
 

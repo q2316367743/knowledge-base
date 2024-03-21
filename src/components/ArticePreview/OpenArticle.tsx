@@ -7,8 +7,8 @@ import {ArticleActionEnum} from "@/entity/setting/BaseSetting";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import router from '@/plugin/router';
 import {IconEdit} from "@arco-design/web-vue/es/icon";
+import {usePageJumpEvent} from "@/global/BeanFactory";
 
 
 export function toArticleByTodo(id: number) {
@@ -40,7 +40,7 @@ export function toArticleByRelation(title: string) {
 function toArticle(id: number, articleAction: ArticleActionEnum) {
     if (articleAction === ArticleActionEnum.TO_ARTICLE) {
         useHomeEditorStore().openArticle(id);
-        router.push('/home');
+        usePageJumpEvent.emit('/home');
     } else if (articleAction === ArticleActionEnum.DRAWER) {
         const article = useArticleStore().articleMap.get(id);
         if (!article) {
@@ -56,7 +56,7 @@ function openArticle(articleIndex: ArticleIndex) {
 
     function openToArticle() {
         useHomeEditorStore().openArticle(articleIndex.id);
-        router.push('/home').then(() => console.log("跳转到首页"));
+        usePageJumpEvent.emit('/home');
         open.close();
     }
 
