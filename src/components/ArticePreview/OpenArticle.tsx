@@ -1,5 +1,5 @@
 import {ArticleIndex} from "@/entity/article";
-import {Drawer} from "@arco-design/web-vue";
+import {Button, Drawer} from "@arco-design/web-vue";
 import EditorContentContainer from "@/pages/home/layout/editor-content/layout/EditorContentContainer.vue";
 import {useWindowSize} from "@vueuse/core";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
@@ -8,6 +8,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import router from '@/plugin/router';
+import {IconEdit} from "@arco-design/web-vue/es/icon";
 
 
 export function toArticleByTodo(id: number) {
@@ -52,15 +53,30 @@ function toArticle(id: number, articleAction: ArticleActionEnum) {
 
 function openArticle(articleIndex: ArticleIndex) {
     const size = useWindowSize();
-    Drawer.open({
-        title: articleIndex.name,
+
+    function openToArticle() {
+        useHomeEditorStore().openArticle(articleIndex.id);
+        router.push('/home').then(() => console.log("跳转到首页"));
+        open.close();
+    }
+
+    const open = Drawer.open({
+        title: () => <div>
+            <Button type={'text'} onClick={openToArticle}>
+                {{
+                    icon: () => <IconEdit />
+                }}
+            </Button>
+            <span style={{marginLeft: '7px'}}>articleIndex.name</span>
+        </div>,
         width: '80vw',
         footer: false,
+        closable:false,
         content: () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
             <EditorContentContainer articleIndex={{
                 ...articleIndex,
                 preview: true
             }}/>
         </div>
-    })
+    });
 }
