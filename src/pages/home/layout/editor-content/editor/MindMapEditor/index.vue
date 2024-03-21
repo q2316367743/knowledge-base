@@ -17,9 +17,10 @@ import MindMapCount from "@/pages/home/layout/editor-content/editor/MindMapEdito
 import MindMapTool from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
     from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapSetting/index.vue";
+import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
 import {useArticleExportEvent, useArticleImportEvent} from "@/store/components/HomeEditorStore";
 import {openMindMapExport} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapExport";
-import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
+import MindMapContext from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapContext.vue";
 
 // 插件
 import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js';
@@ -29,7 +30,8 @@ import ExportXMind from 'simple-mind-map/src/plugins/ExportXMind.js'
 import xmind from 'simple-mind-map/src/parse/xmind.js'
 import markdown from 'simple-mind-map/src/parse/markdown.js'
 import AssociativeLine from 'simple-mind-map/src/plugins/AssociativeLine.js'
-import MindMapContext from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapContext.vue";
+import Select from 'simple-mind-map/src/plugins/Select.js'
+import Drag from 'simple-mind-map/src/plugins/Drag.js'
 
 const props = defineProps({
     modelValue: {
@@ -74,6 +76,8 @@ onMounted(() => {
     mindMap.value.addPlugin(ExportPDF, undefined);
     mindMap.value.addPlugin(ExportXMind, undefined);
     mindMap.value.addPlugin(AssociativeLine, undefined);
+    mindMap.value.addPlugin(Select, undefined);
+    mindMap.value.addPlugin(Drag, undefined);
 
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
