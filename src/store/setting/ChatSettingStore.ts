@@ -21,6 +21,7 @@ export interface MessageUser {
 
 export const messages = ref(new Array<MessageItem>());
 export const loading = ref(false);
+export const activeKey = ref('1');
 
 
 export function sendMessage(content: string, resolve?: () => void) {

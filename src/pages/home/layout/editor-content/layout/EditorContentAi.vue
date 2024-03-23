@@ -1,85 +1,109 @@
 <template>
     <div class="editor-content-ai">
-        <div class="container" ref="containerRef">
-            <a-row>
-                <a-col :span="20">
-                    <div class="message">
-                        <div class="message-user">
-                            AI小助手
+        <header class="header">
+            <a-tabs hide-content v-model:active-key="activeKey" type="capsule">
+                <a-tab-pane title="聊天" key="1"/>
+                <a-tab-pane title="你问我答" key="2"/>
+            </a-tabs>
+        </header>
+        <main class="main" v-show="activeKey === '1'">
+            <div class="container" ref="containerRef">
+                <a-row>
+                    <a-col :span="20">
+                        <div class="message">
+                            <div class="message-user">
+                                AI小助手
+                            </div>
+                            <div class="message-content">
+                                你好，我是Ai小助手，需要帮助吗？
+                            </div>
+                            <div class="message-tool"></div>
                         </div>
-                        <div class="message-content">
-                            你好，我是Ai小助手，需要帮助吗？
-                        </div>
-                        <div class="message-tool"></div>
-                    </div>
-                </a-col>
-            </a-row>
-            <a-row v-for="message in messages">
-                <a-col :span="20">
-                    <div class="message">
-                        <div class="message-user">
-                            {{ renderRole(message.role) }}
-                        </div>
-                        <div class="message-content">
-                            {{ message.content }}
-                        </div>
-                        <div class="message-tool">
-                            <a-button-group type="text">
-                                <a-button @click="execCopy(message.content)">
-                                    <template #icon>
-                                        <icon-copy/>
-                                    </template>
-                                </a-button>
-                                <a-tooltip content="插入到文章中" :disabled="!allowInsert">
-                                    <a-button :disabled="!allowInsert" @click="insertToArticle(message.content)">
+                    </a-col>
+                </a-row>
+                <a-row v-for="message in messages">
+                    <a-col :span="20">
+                        <div class="message">
+                            <div class="message-user">
+                                {{ renderRole(message.role) }}
+                            </div>
+                            <div class="message-content">
+                                {{ message.content }}
+                            </div>
+                            <div class="message-tool">
+                                <a-button-group type="text">
+                                    <a-button @click="execCopy(message.content)">
                                         <template #icon>
-                                            <icon-left/>
+                                            <icon-copy/>
                                         </template>
                                     </a-button>
-                                </a-tooltip>
-                            </a-button-group>
+                                    <a-tooltip content="插入到文章中" :disabled="!allowInsert">
+                                        <a-button :disabled="!allowInsert" @click="insertToArticle(message.content)">
+                                            <template #icon>
+                                                <icon-left/>
+                                            </template>
+                                        </a-button>
+                                    </a-tooltip>
+                                </a-button-group>
+                            </div>
                         </div>
-                    </div>
-                </a-col>
-            </a-row>
-            <a-row v-if="loading">
-                <a-col :span="20">
-                    <div class="message">
-                        <div class="message-user">
-                            AI小助手
+                    </a-col>
+                </a-row>
+                <a-row v-if="loading">
+                    <a-col :span="20">
+                        <div class="message">
+                            <div class="message-user">
+                                AI小助手
+                            </div>
+                            <div class="message-content">
+                                正在思考中
+                                <icon-refresh spin/>
+                            </div>
+                            <div class="message-tool"></div>
                         </div>
-                        <div class="message-content">
-                            正在思考中
-                            <icon-refresh spin/>
-                        </div>
-                        <div class="message-tool"></div>
-                    </div>
-                </a-col>
-            </a-row>
-        </div>
-        <div class="input">
-            <a-input-group>
-                <a-tooltip content="清空聊天记录">
-                    <a-button type="text" status="danger" :loading="loading" @click="clearMsg()">
+                    </a-col>
+                </a-row>
+            </div>
+            <div class="input">
+                <a-input-group>
+                    <a-tooltip content="清空聊天记录">
+                        <a-button type="text" status="danger" :loading="loading" @click="clearMsg()">
+                            <template #icon>
+                                <icon-delete/>
+                            </template>
+                        </a-button>
+                    </a-tooltip>
+                    <a-input placeholder="聊点什么吧..." allow-clear v-model="content" :disabled="loading"
+                             @keydown.enter="sendMsg()"/>
+                    <a-button type="text" @click="sendMsg()" :loading="loading">
                         <template #icon>
-                            <icon-delete/>
+                            <icon-send/>
                         </template>
                     </a-button>
-                </a-tooltip>
-                <a-input placeholder="请输入您的问题" allow-clear v-model="content" :disabled="loading"
-                         @keydown.enter="sendMsg()"/>
-                <a-button type="text" @click="sendMsg()" :loading="loading">
-                    <template #icon>
-                        <icon-send/>
-                    </template>
-                </a-button>
-            </a-input-group>
-        </div>
+                </a-input-group>
+            </div>
+        </main>
+        <main class="main" v-show="activeKey === '2'">
+            <div class="container">
+                <a-alert type="warning" closable>此操作会将文章内容附带提交</a-alert>
+            </div>
+            <div class="input">
+                <a-input-group>
+                    <a-input placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="content" :disabled="!allowInsert"
+                             @keydown.enter="sendMsg()"/>
+                    <a-button type="text" @click="sendMsg()" :loading="loading" :disabled="!allowInsert">
+                        <template #icon>
+                            <icon-send/>
+                        </template>
+                    </a-button>
+                </a-input-group>
+            </div>
+        </main>
     </div>
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
-import {loading, messages, sendMessage} from "@/store/setting/ChatSettingStore";
+import {activeKey, loading, messages, sendMessage} from "@/store/setting/ChatSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {editorType, useArticleInsertEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
@@ -162,6 +186,15 @@ function insertToArticle(content: string) {
     height: 100%;
     width: 100%;
 
+    .main {
+        position: absolute;
+        top: 39px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+    }
+
+
     .container {
         position: absolute;
         top: 7px;
@@ -208,7 +241,6 @@ function insertToArticle(content: string) {
         left: 7px;
         right: 7px;
         bottom: 7px;
-        padding: 7px;
 
         .arco-input-group {
             width: 100%;
