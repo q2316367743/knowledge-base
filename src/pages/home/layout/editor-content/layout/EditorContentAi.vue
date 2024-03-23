@@ -59,6 +59,13 @@
         </div>
         <div class="input">
             <a-input-group>
+                <a-tooltip content="清空聊天记录">
+                    <a-button type="text" status="danger" :loading="loading" @click="clearMsg()">
+                        <template #icon>
+                            <icon-delete/>
+                        </template>
+                    </a-button>
+                </a-tooltip>
                 <a-input placeholder="请输入您的问题" allow-clear v-model="content" :disabled="loading"
                          @keydown.enter="sendMsg()"/>
                 <a-button type="text" @click="sendMsg()" :loading="loading">
@@ -110,23 +117,35 @@ const execCopy = (content: string) => {
     MessageUtil.success("已复制到剪切板")
 }
 
-function scrollToBottom() {
-    if (containerRef.value) {
-        containerRef.value.scrollTo(0, containerRef.value.scrollHeight);
-    }
-}
 
-onMounted(scrollToBottom);
+onMounted(() => {
+    // 创建一个新的MutationObserver实例
+    const observer = new MutationObserver(() => {
+        if (!containerRef.value) {
+            return;
+        }
+        // 当内容发生变化时，滚动到底部
+        containerRef.value.scrollTop = containerRef.value.scrollHeight;
+    });
+
+    // 配置并开始观察目标节点
+    const config = {childList: true, subtree: true};
+    if (containerRef.value) {
+        observer.observe(containerRef.value, config);
+    }
+});
 
 function sendMsg() {
     if (content.value.trim() === '') {
         return;
     }
     sendMessage(content.value, () => {
-        scrollToBottom();
         content.value = '';
     });
-    scrollToBottom();
+}
+
+function clearMsg() {
+    messages.value = [];
 }
 
 function insertToArticle(content: string) {

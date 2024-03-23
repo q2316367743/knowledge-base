@@ -140,7 +140,7 @@ function onImport(id: number) {
 
 function onInsert(data: { id: number, content: string }) {
     if (props.articleId === data.id && instance.value) {
-        instance.value.insertValue(data.content);
+        instance.value.setValue(instance.value.getValue() + data.content);
     }
 
 }
