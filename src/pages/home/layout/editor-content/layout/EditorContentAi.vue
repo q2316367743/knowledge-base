@@ -31,7 +31,7 @@
                                     </template>
                                 </a-button>
                                 <a-tooltip content="插入到文章中" :disabled="!allowInsert">
-                                    <a-button :disabled="!allowInsert">
+                                    <a-button :disabled="!allowInsert" @click="insertToArticle(message.content)">
                                         <template #icon>
                                             <icon-left/>
                                         </template>
@@ -72,9 +72,9 @@
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
+import {loading, messages, sendMessage} from "@/store/setting/ChatSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {editorType, messages} from "@/store/components/HomeEditorStore";
+import {editorType, useArticleInsertEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
 
@@ -82,13 +82,11 @@ let user = utools.getUser();
 const nickname = user ? user.nickname : '游客';
 
 const content = ref('');
-const loading = ref(false);
 const containerRef = ref<HTMLDivElement>();
 
 const allowInsert = computed(() =>
     editorType.value === ArticleTypeEnum.MARKDOWN || editorType.value === ArticleTypeEnum.RICH_TEXT);
 
-const {openAi, model} = useChatSettingStore();
 
 function renderRole(role: string) {
     switch (role) {
@@ -124,30 +122,18 @@ function sendMsg() {
     if (content.value.trim() === '') {
         return;
     }
-    if (!openAi) {
-        return;
-    }
-    messages.value.push({
-        role: 'user',
-        content: content.value.trim()
-    });
-    content.value = '';
-    loading.value = true;
-
-    scrollToBottom();
-    openAi.chat.completions.create({
-        model: model,
-        messages: messages.value
-    }).then(res => {
-        const content = res.choices.sort((a, b) => a.index - b.index).map(e => e.message.content).join("/n");
-        messages.value.push({
-            role: 'assistant',
-            content
-        });
+    sendMessage(content.value, () => {
         scrollToBottom();
-    }).catch(e => MessageUtil.error("聊天发生错误", e)).finally(() => loading.value = false);
+        content.value = '';
+    });
+    scrollToBottom();
+}
 
-
+function insertToArticle(content: string) {
+    useArticleInsertEvent.emit({
+        id: useHomeEditorStore().id,
+        content: '\n\n' + content
+    })
 }
 
 </script>
@@ -202,7 +188,7 @@ function sendMsg() {
         position: absolute;
         left: 7px;
         right: 7px;
-        bottom: 46px;
+        bottom: 7px;
         padding: 7px;
 
         .arco-input-group {

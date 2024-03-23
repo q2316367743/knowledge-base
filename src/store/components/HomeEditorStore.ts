@@ -10,7 +10,6 @@ import {map} from "@/utils/lang/ArrayUtil";
 import {useEventBus} from "@vueuse/core";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
-import {MessageItem} from "@/store/setting/ChatSettingStore";
 
 // 当前是否预览
 export const preview = computed(() => {
@@ -37,6 +36,7 @@ export const editorType = computed(() => {
 export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
 export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
+export const useArticleInsertEvent = useEventBus<{ id: number, content: string }>('article-insert');
 
 
 // 一些特殊的方法
@@ -45,7 +45,6 @@ export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
 
 export const robot = ref(true);
-export const messages = ref(new Array<MessageItem>());
 
 export const switchRobot = () => robot.value = !robot.value;
 
