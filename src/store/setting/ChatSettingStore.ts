@@ -63,8 +63,9 @@ export const useChatSettingStore = defineStore(LocalNameEnum.SETTING_CHAT, () =>
     function buildOpenAi() {
         openAi.value = null;
         if (chatSetting.value.enable) {
+            const api = chatSetting.value.api;
             openAi.value = new OpenAI({
-                baseURL: chatSetting.value.api,
+                baseURL: api + (api.endsWith('/') ? '' : '/') + 'v1',
                 apiKey: chatSetting.value.token,
                 dangerouslyAllowBrowser: true
             })

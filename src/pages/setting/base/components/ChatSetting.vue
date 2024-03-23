@@ -1,8 +1,7 @@
 <template>
     <div class="more-setting-chat">
         <a-alert>推荐使用<a-link @click="toApi()">V3 API</a-link>，无需科学上网，即可使用。</a-alert>
-        <a-alert type="warning" style="margin: 7px 0;">注意，V3 API的api链接地址需要后面拼接v1，例如：https://api.gpt.ge/v1</a-alert>
-        <a-form :model="instance" layout="vertical">
+        <a-form :model="instance" layout="vertical" style="margin-top: 7px;">
             <a-form-item label="是否启用">
                 <a-switch v-model="instance.enable" type="round"/>
             </a-form-item>
