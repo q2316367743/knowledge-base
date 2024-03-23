@@ -10,6 +10,7 @@ import {map} from "@/utils/lang/ArrayUtil";
 import {useEventBus} from "@vueuse/core";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
+import {MessageItem} from "@/store/setting/ChatSettingStore";
 
 // 当前是否预览
 export const preview = computed(() => {
@@ -43,6 +44,10 @@ export const getTextCount = ref<() => number>(() => 0);
 export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
 
+export const robot = ref(true);
+export const messages = ref(new Array<MessageItem>());
+
+export const switchRobot = () => robot.value = !robot.value;
 
 export function switchPreview() {
     useUpdatePreviewEvent.emit({id: useHomeEditorStore().id, preview: !preview.value});

@@ -8,7 +8,7 @@ export interface ChatSetting {
 export function getDefaultChatSetting(): ChatSetting {
     return {
         enable: false,
-        api: 'https://api.tutujin.com/v1',
+        api: 'https://api.openai.com',
         token: '',
         model: 'gpt-3.5-turbo'
     }

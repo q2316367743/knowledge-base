@@ -28,6 +28,7 @@
         "less-loader": "^11.1.4",
         "mammoth": "^1.7.0",
         "monaco-editor": "^0.44.0",
+        "openai": "^4.29.2",
         "pangu": "^4.0.7",
         "pinia": "^2.1.7",
         "simple-mind-map": "^0.9.7",

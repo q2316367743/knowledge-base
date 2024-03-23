@@ -11,6 +11,13 @@
             <a-tabs v-model:active-key="activeKey" hide-content editable @delete="close">
                 <template #extra>
                     <a-button-group type="text" :disabled="disabled">
+                        <a-tooltip content="AI助理" position="bottom" v-if="useChatSettingStore().enable">
+                            <a-button @click="switchRobot()">
+                                <template #icon>
+                                    <icon-robot />
+                                </template>
+                            </a-button>
+                        </a-tooltip>
                         <a-dropdown position="br">
                             <a-button>
                                 <template #icon>
@@ -59,10 +66,11 @@ import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtr
 import {
     editorType,
     preview,
-    switchPreview, useArticleExportEvent, useArticleImportEvent,
+    switchPreview, switchRobot, useArticleExportEvent, useArticleImportEvent,
     useHomeEditorStore,
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 
 const activeKey = ref(useHomeEditorStore().id);
 
