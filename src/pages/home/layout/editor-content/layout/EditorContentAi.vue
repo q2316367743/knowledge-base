@@ -3,7 +3,7 @@
         <header class="header">
             <a-tabs hide-content v-model:active-key="activeKey" type="capsule">
                 <a-tab-pane title="聊天" key="1"/>
-                <a-tab-pane title="你问我答" key="2"/>
+                <a-tab-pane title="你问我答" key="2" disabled/>
                 <template #extra>
                     <a-button type="text" @click="toggle()">
                         <icon-fullscreen-exit v-if="fullscreen" />

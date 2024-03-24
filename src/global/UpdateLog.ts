@@ -2,6 +2,18 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.4',
+        sign: 194,
+        time: '2024-03-24',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【编辑器】加了个AI问答的功能，但需要自己配置api和token'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【编辑器】插入图片时，自动拼接#100%"
+        }],
+    },
+    {
         version: '1.9.3',
         sign: 193,
         time: '2024-03-21',
