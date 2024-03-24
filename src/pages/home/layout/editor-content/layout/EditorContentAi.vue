@@ -1,9 +1,15 @@
 <template>
-    <div class="editor-content-ai">
+    <div class="editor-content-ai" :style="{position: fullscreen ? 'fixed' : 'absolute', backgroundColor: fullscreen ? 'var(--color-bg-1)' : ''}">
         <header class="header">
             <a-tabs hide-content v-model:active-key="activeKey" type="capsule">
                 <a-tab-pane title="聊天" key="1"/>
                 <a-tab-pane title="你问我答" key="2"/>
+                <template #extra>
+                    <a-button type="text" @click="toggle()">
+                        <icon-fullscreen-exit v-if="fullscreen" />
+                        <icon-fullscreen v-else/>
+                    </a-button>
+                </template>
             </a-tabs>
         </header>
         <main class="main" v-show="activeKey === '1'">
@@ -27,8 +33,7 @@
                             <div class="message-user">
                                 {{ renderRole(message.role) }}
                             </div>
-                            <div class="message-content">
-                                {{ message.content }}
+                            <div class="message-content" v-html="renderContent(message.content)">
                             </div>
                             <div class="message-tool">
                                 <a-button-group type="text">
@@ -107,6 +112,7 @@ import {activeKey, loading, messages, sendMessage} from "@/store/setting/ChatSet
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {editorType, useArticleInsertEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import CherryEngine from "cherry-markdown/dist/cherry-markdown.engine.core"
 
 
 let user = utools.getUser();
@@ -114,10 +120,14 @@ const nickname = user ? user.nickname : '游客';
 
 const content = ref('');
 const containerRef = ref<HTMLDivElement>();
+const fullscreen = ref(false);
 
 const allowInsert = computed(() =>
     editorType.value === ArticleTypeEnum.MARKDOWN || editorType.value === ArticleTypeEnum.RICH_TEXT);
 
+function toggle() {
+    fullscreen.value = !fullscreen.value;
+}
 
 function renderRole(role: string) {
     switch (role) {
@@ -134,6 +144,12 @@ function renderRole(role: string) {
         default:
             return role;
     }
+}
+
+function renderContent(content: string) {
+    const engine = new CherryEngine({});
+    // @ts-ignore
+    return engine.makeHtml(content);
 }
 
 const execCopy = (content: string) => {
@@ -182,9 +198,11 @@ function insertToArticle(content: string) {
 </script>
 <style lang="less">
 .editor-content-ai {
-    position: relative;
-    height: 100%;
-    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 51;
 
     .main {
         position: absolute;
@@ -200,7 +218,7 @@ function insertToArticle(content: string) {
         top: 7px;
         left: 7px;
         right: 7px;
-        bottom: 94px;
+        bottom: 46px;
         overflow: auto;
 
         .message {
@@ -224,8 +242,10 @@ function insertToArticle(content: string) {
                 border-radius: 2px;
                 margin-right: auto;
                 padding: 10px 16px;
-                width: fit-content;
                 margin-top: 4px;
+                p {
+                    line-height: 1.5;
+                }
             }
 
             .message-tool {

@@ -1,7 +1,7 @@
 <template>
     <div class="app" :class="enableBackgroundImage ? 'customer-image' : 'default-color'" :style="customerImage">
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
-            <a-layout>
+            <a-layout class="app-layout">
                 <a-layout-sider collapsed style="z-index: 50">
                     <app-side/>
                 </a-layout-sider>
