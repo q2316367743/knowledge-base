@@ -27,5 +27,5 @@ src-utools/dist
 src-utools/node_modules
 /visualizer.html
 
-src-server/src/data/db/knowledge-base.db
+src-server/src/data
 src-server/out
