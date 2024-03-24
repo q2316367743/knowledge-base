@@ -1,0 +1,22 @@
+{
+    "name": "knowledge-base",
+    "version": "1.9.4",
+    "description": "知识库",
+    "main": "index.js",
+    "scripts": {
+        "dev": "ts-node src/main.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.11.30",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.3"
+    },
+    "dependencies": {
+        "express": "^4.19.1",
+        "sqlite3": "^5.1.7"
+    }
+}

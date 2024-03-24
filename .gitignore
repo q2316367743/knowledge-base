@@ -26,3 +26,5 @@ dist-ssr
 src-utools/dist
 src-utools/node_modules
 /visualizer.html
+
+src-server/knowledge-base.db
