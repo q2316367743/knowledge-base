@@ -34,8 +34,10 @@ export const editorType = computed(() => {
 
 // 一些事件
 export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
+export const useUpdateRobotEvent = useEventBus<number>('update-robot');
 export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
+export const useArticleAiEvent = useEventBus<{ id: number, content: string }>('article-ai');
 export const useArticleInsertEvent = useEventBus<{ id: number, content: string }>('article-insert');
 
 
@@ -46,7 +48,6 @@ export const getToc = ref<() => TocItem[]>(() => []);
 
 export const robot = ref(true);
 
-export const switchRobot = () => robot.value = !robot.value;
 
 export function switchPreview() {
     useUpdatePreviewEvent.emit({id: useHomeEditorStore().id, preview: !preview.value});

@@ -1,6 +1,6 @@
 import {ArticleIndex} from "@/entity/article";
 import {Button, Drawer} from "@arco-design/web-vue";
-import EditorContentContainer from "@/pages/home/layout/editor-content/layout/EditorContentContainer.vue";
+import EditorContentContainer from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
 import {useWindowSize} from "@vueuse/core";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {ArticleActionEnum} from "@/entity/setting/BaseSetting";

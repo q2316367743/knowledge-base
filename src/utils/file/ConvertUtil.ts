@@ -11,6 +11,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
+import {MindMapTreeNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
 
 /**
  * html转为markdown
@@ -83,4 +84,14 @@ export async function articleToZip(folder: number): Promise<void> {
     download(zipContent,
         "知识库|" + toDateString(new Date(), "yyyy-MM-dd_HH_mm_ss") + ".zip",
         "application/zip");
+}
+
+export function stringToBlob(str: string) {
+    return new Blob([str], { type: 'text/plain' });
+}
+
+export function mindMapToMarkdown(data: any): string {
+    const root = data.root as MindMapTreeNode;
+    // TODO：使用广度遍历
+    return '';
 }

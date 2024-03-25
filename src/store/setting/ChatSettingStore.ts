@@ -4,53 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {computed, ref, shallowRef} from "vue";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import OpenAI from "openai";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {robot} from "@/store/components/HomeEditorStore";
 
-export type MessageItem = MessageAssistant | MessageUser;
-export interface MessageAssistant {
-    role: 'assistant';
-    content: string;
-}
-
-export interface MessageUser {
-    role: 'user';
-    content: string;
-}
-
-
-export const messages = ref(new Array<MessageItem>());
-export const loading = ref(false);
-export const activeKey = ref('1');
-
-
-export function sendMessage(content: string, resolve?: () => void) {
-    robot.value = false;
-    if (content.trim() === '') {
-        return;
-    }
-    const {openAi, model} = useChatSettingStore();
-    if (!openAi) {
-        return;
-    }
-    messages.value.push({
-        role: 'user',
-        content: content.trim()
-    });
-    loading.value = true;
-
-    openAi.chat.completions.create({
-        model: model,
-        messages: messages.value
-    }).then(res => {
-        const content = res.choices.sort((a, b) => a.index - b.index).map(e => e.message.content).join("/n");
-        messages.value.push({
-            role: 'assistant',
-            content
-        });
-        resolve && resolve();
-    }).catch(e => MessageUtil.error("聊天发生错误", e)).finally(() => loading.value = false);
-}
 
 export const useChatSettingStore = defineStore(LocalNameEnum.SETTING_CHAT, () => {
     const chatSetting = ref(getDefaultChatSetting());

@@ -42,7 +42,7 @@ const size = useWindowSize();
 
 
 onMounted(() => {
-    instance.value = new Cherry(buildConfig(id, props.modelValue || '', props.preview, instance, e => emits('update:modelValue', e)));
+    instance.value = new Cherry(buildConfig(props.articleId || 0, id, props.modelValue || '', props.preview, instance, e => emits('update:modelValue', e)));
     handleTheme();
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);

@@ -17,6 +17,8 @@ enum LocalNameEnum {
 
     ARTICLE_COMMENT = '/article/comment/',
 
+    ARTICLE_AI = '/article/ai/',
+
     /**
      * 附件
      */
@@ -94,7 +96,12 @@ enum LocalNameEnum {
     /**
      * 聊天模型
      */
-    KEY_CHAT_MODELS = '/key/chat/models'
+    KEY_CHAT_MODELS = '/key/chat/models',
+
+    /**
+     * 文章——AI警告
+     */
+    KEY_ARTICLE_AI_FILE_WARN = '/key/article/ai/warning'
 
 }
 

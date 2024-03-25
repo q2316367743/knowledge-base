@@ -33,7 +33,11 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
+import {robot, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
+import EditorContentAi
+    from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentAi/index.vue";
+import {useWindowSize} from "@vueuse/core";
+import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -43,6 +47,19 @@ const load = ref(false);
 // 文章内容，不一定是文本
 const content = ref<any>('');
 let contentRev: string | undefined = undefined;
+
+
+const size = useWindowSize();
+
+const collapsed = computed(() => {
+    if (!useChatSettingStore().enable) {
+        return true;
+    }
+    return robot.value;
+})
+
+const width = computed(() => Math.max(Math.min(Math.floor(size.width.value / 8 * 3), 400), 200));
+
 // 计算属性
 const preview = computed(() => props.articleIndex ? props.articleIndex.preview : false);
 const language = computed(() => {

@@ -14,7 +14,7 @@
                         <a-tooltip content="AI助理" position="bottom" v-if="useChatSettingStore().enable">
                             <a-button @click="switchRobot()">
                                 <template #icon>
-                                    <icon-robot />
+                                    <icon-robot/>
                                 </template>
                             </a-button>
                         </a-tooltip>
@@ -57,17 +57,14 @@
                 <a-tab-pane v-for="article in indexes" :key="article.id" :title="article.name"/>
             </a-tabs>
         </div>
-
     </header>
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
 import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
 import {
-    editorType,
-    preview,
-    switchPreview, switchRobot, useArticleExportEvent, useArticleImportEvent,
-    useHomeEditorStore,
+    editorType, useUpdateRobotEvent, preview, useArticleExportEvent, useArticleImportEvent,
+    switchPreview, useHomeEditorStore,
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
@@ -78,7 +75,6 @@ const switchCollapsed = useHomeEditorStore().switchCollapsed;
 
 const indexes = computed(() => useHomeEditorStore().indexes);
 const disabled = computed(() => useHomeEditorStore().indexes.length === 0);
-const isNote = computed(() => editorType.value === ArticleTypeEnum.RICH_TEXT || editorType.value === ArticleTypeEnum.MARKDOWN);
 
 watch(() => activeKey.value, value => useHomeEditorStore().setId(value));
 watch(() => useHomeEditorStore().id, value => activeKey.value = value);
@@ -86,7 +82,6 @@ watch(() => useHomeEditorStore().id, value => activeKey.value = value);
 function close(e: any) {
     useHomeEditorStore().closeArticle(e);
 }
-
 
 
 function onExport() {
@@ -98,6 +93,9 @@ function onImport() {
     useArticleImportEvent.emit(useHomeEditorStore().id);
 }
 
+function switchRobot() {
+    useUpdateRobotEvent.emit(useHomeEditorStore().id);
+}
 
 </script>
 <style scoped>

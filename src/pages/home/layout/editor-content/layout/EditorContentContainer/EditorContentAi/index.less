@@ -1,0 +1,71 @@
+.editor-content-ai {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 51;
+
+    .main {
+        position: absolute;
+        top: 39px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+    }
+
+
+    .container {
+        position: absolute;
+        top: 7px;
+        left: 7px;
+        right: 7px;
+        bottom: 46px;
+        overflow: auto;
+
+        .message {
+            margin-top: 14px;
+
+            &:hover {
+                .message-tool {
+                    visibility: visible;
+                }
+            }
+
+            .message-user {
+                display: block;
+                font-size: 12px;
+                margin-bottom: 5px;
+                color: var(--color-text-2);
+            }
+
+            .message-content {
+                background-color: var(--color-fill-1);
+                border-radius: 2px;
+                margin-right: auto;
+                padding: 5px 8px;
+                margin-top: 4px;
+
+                p {
+                    line-height: 1.5;
+                }
+            }
+
+            .message-tool {
+                visibility: hidden;
+                height: 32px;
+            }
+        }
+
+    }
+
+    .input {
+        position: absolute;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+
+        .arco-input-group {
+            width: 100%;
+        }
+    }
+}
