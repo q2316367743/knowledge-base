@@ -188,7 +188,7 @@ export function openInfo(_content: string) {
                                 // async customUpload(file, insertFn) {                   // JS 语法
                                 // file 即选中的文件
                                 // 自己实现上传，并得到图片 url alt href
-                                useImageUpload(file)
+                                useImageUpload(file, true)
                                     .then(url => {
                                         if (url) {
                                             // 最后插入图片

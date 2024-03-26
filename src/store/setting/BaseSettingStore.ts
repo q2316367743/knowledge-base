@@ -14,6 +14,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
     }),
     getters: {
         imageStrategy: state => state.baseSetting.imageStrategy,
+        localImagePath: state => state.baseSetting.localImagePath,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
         newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName,

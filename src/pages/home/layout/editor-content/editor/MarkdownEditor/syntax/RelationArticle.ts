@@ -18,5 +18,3 @@ export const RelationArticleSyntaxHook = Cherry.createSyntaxHook(
             return {reg: /\[\[(.*)]]/g};
         },
     });
-
-console.log(Cherry.constants.HOOKS_TYPE_LIST)

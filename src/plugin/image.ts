@@ -80,7 +80,16 @@ function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<stri
     const id = new Date().getTime() + '';
     if (isLocal) {
         // TODO: 本地图片上传
-        return Promise.resolve('');
+        const {localImagePath} = useBaseSettingStore();
+        // @ts-ignore
+        return window.preload.writeToFile(localImagePath, id + '.png', data).then(path => {
+            const prefix = 'file://';
+            if (utools.isWindows()) {
+                return `${prefix}/${path}`;
+            }else {
+                return `${prefix}${path}`;
+            }
+        });
     }else {
         return postAttachment(
             LocalNameEnum.ARTICLE_ATTACHMENT + id,

@@ -22,5 +22,12 @@ declare global {
          * @param title 文章标题
          */
         jumpToArticle: (title: string) => void;
+
+        preload: {
+
+            // 写入文件
+            writeToFile: (dir: string, name: string, content: Blob) => Promise<string>;
+        }
+
     }
 }
