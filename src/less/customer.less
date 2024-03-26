@@ -198,6 +198,7 @@ body[arco-theme=dark] {
                 background-color: rgba(35, 35, 35, 0.4) !important;
                 backdrop-filter: blur(8px);
             }
+
             .one-footnote {
                 color: var(--color-text-1);
             }
@@ -209,15 +210,33 @@ body[arco-theme=dark] {
 
 .cherry {
 
-    .cherry-markdown :not(pre)>code {
+    .cherry-markdown :not(pre) > code {
         background-color: rgba(0, 0, 0, 0.2) !important;
         color: rgb(var(--red-6)) !important;
         font-family: "JetBrainsMono", "楷体", "宋体", serif;
     }
+
     blockquote {
         color: var(--color-text-2) !important;
     }
+
+    .cherry-flex-toc {
+        background-color: var(--color-fill-2) !important;
+        color: var(--color-text-1) !important;
+
+        .cherry-toc-one-a {
+            color: var(--color-text-1) !important;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            &:hover {
+                color: rgb(var(--arcoblue-5)) !important;
+            }
+            &.current {
+                color: rgb(var(--arcoblue-6)) !important;
+            }
+        }
+    }
 }
+
 .cherry-markdown.theme__dark table th, .cherry-markdown.theme__dark .cherry-table th {
     background-color: var(--color-fill-2) !important;
 }
