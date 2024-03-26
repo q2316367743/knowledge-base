@@ -123,7 +123,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -146,12 +146,14 @@ import {
 import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
 import {keyword} from "@/global/BeanFactory";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const size = useWindowSize();
 
 const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [useHomeEditorStore().id]);
 const checkKeys = ref<Array<number>>([]);
-const expandedKeys = ref<Array<number>>([]);
+const expandedKeys = ref<Array<number>>(getItemByDefault<Array<number>>(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, []));
 
 const folderTree = computed(() => useFolderStore().folderTree);
 const folderMap = computed(() => useArticleStore().folderMap);
@@ -187,6 +189,9 @@ watch(() => useHomeEditorStore().id, id => {
     selectedKeys.value = [id];
     expandTo(id);
 });
+
+
+watch(() => expandedKeys.value, value => setItem(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, value), {deep: true});
 
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;

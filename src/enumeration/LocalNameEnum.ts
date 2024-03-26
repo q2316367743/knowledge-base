@@ -84,6 +84,11 @@ enum LocalNameEnum {
     KEY_HOME_EDITOR_ID = '/key/home/editor/id',
 
     /**
+     * 展开的目录
+     */
+    KEY_HOME_EXPANDED_KEYS = '/key/home/expanded/keys',
+
+    /**
      * 应用主题
      */
     KEY_APP_THEME = '/key/app/theme',
