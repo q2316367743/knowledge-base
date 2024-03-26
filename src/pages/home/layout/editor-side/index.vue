@@ -123,7 +123,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";
