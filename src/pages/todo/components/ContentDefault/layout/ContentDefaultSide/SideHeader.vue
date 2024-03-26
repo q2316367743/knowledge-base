@@ -73,6 +73,12 @@
                             </template>
                             导出
                         </a-doption>
+                        <a-doption :disabled="disabled" @click="openTodoSetting()">
+                            <template #icon>
+                                <icon-settings/>
+                            </template>
+                            设置
+                        </a-doption>
                     </template>
                 </a-dropdown>
             </a-button-group>
@@ -123,6 +129,7 @@ import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
+import {openTodoSetting} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoSetting";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);

@@ -2,6 +2,21 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.5',
+        sign: 195,
+        time: '2024-03-26',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: '【AI】增加你问我答，可以根据文章进行提问'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【待办】修复卡片布局和日历布局中，布局错位问题"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【待办】默认布局增加设置"
+        }],
+    },
+    {
         version: '1.9.4',
         sign: 194,
         time: '2024-03-24',
