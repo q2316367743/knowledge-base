@@ -1,19 +1,16 @@
 import {isUtools} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
-import {
-    RelationArticleSyntaxHook
-} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/syntax/RelationArticle";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useScreenShotMenu} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/ScreenShotMenu";
-import {usePanGu} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/PanGuMenu";
-import {useFanYi} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/FanYiMenu";
-import {useRelationMenu} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/RelationMenu";
+import {useScreenShotMenu} from "@/components/CherryMarkdown/menu/ScreenShotMenu";
+import {usePanGu} from "@/components/CherryMarkdown/menu/PanGuMenu";
+import {useFanYi} from "@/components/CherryMarkdown/menu/FanYiMenu";
+import {useRelationMenu} from "@/components/CherryMarkdown/menu/RelationMenu";
 import {
     useAnWeiMenu, useMingRenMingYanMenu,
     usePyqMenu, useQingGanMenu, useTianGouRiJiMenu,
     useYiYanMenu
-} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/XiaRouMenu";
+} from "@/components/CherryMarkdown/menu/XiaRouMenu";
 import Cherry from "cherry-markdown";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -22,7 +19,8 @@ import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {Ref} from "vue";
 import {CherryOptions} from "cherry-markdown/dist/types/Cherry";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {useAskAi} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/menu/AskAi";
+import {useAskAi} from "@/components/CherryMarkdown/menu/AskAi";
+import {RelationArticleSyntaxHook} from "@/components/CherryMarkdown/syntax/RelationArticle";
 
 const DEV_URL = "http://localhost:5173/#";
 

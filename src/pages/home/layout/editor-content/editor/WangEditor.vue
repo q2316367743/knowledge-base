@@ -94,7 +94,15 @@ const editorConfig: Partial<IEditorConfig> = {
                     })
             }
         }
-    }
+    },
+    hoverbarKeys: {
+        // 在编辑器中，选中链接文本时，要弹出的菜单
+        link: {
+            menuKeys: [
+                'editLink', 'unLink', 'open-by-utools',
+            ],
+        },
+    },
 }
 
 const toolbarConfig: Partial<IToolbarConfig> = {

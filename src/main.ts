@@ -31,6 +31,8 @@ statistics.open();
 // 安装wangEditor插件
 import { Boot } from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
+import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
 
 Boot.registerModule(markdownModule);
+Boot.registerMenu(OpenByUtoolsMenu)
 
