@@ -47,7 +47,6 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
                 jsZip.file('index.md', replacedStr);
                 // 附件导出
                 for (let image of images) {
-                    console.log(image)
                     const data = utools.db.getAttachment(image.path);
                     if (data) {
                         const blob = new Blob([data]);
