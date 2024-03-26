@@ -3,7 +3,7 @@
         <a-form :model="instance" layout="vertical">
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.NONE">未设置</a-radio>
+                    <a-radio :value="ImageStrategyEnum.NONE" :disabled="isUtools">未设置</a-radio>
                     <a-radio :value="ImageStrategyEnum.INNER" :disabled="isWeb">内部实现</a-radio>
                     <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="isWeb">插件【图床】</a-radio>
                     <a-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="!isAvailable">兰空图床(推荐)</a-radio>
@@ -18,6 +18,26 @@
                     <span v-else-if="instance.imageStrategy === ImageStrategyEnum.LSKY_PRO">
                         推荐使用，需要自己部署图床服务器
                     </span>
+                </template>
+            </a-form-item>
+            <a-form-item v-if="isUtools">
+                <a-input-group style="width: 80%">
+                    <a-input v-model="instance.localImagePath" allow-clear
+                             :disabled="instance.imageStrategy !== ImageStrategyEnum.INNER"/>
+                    <a-button>
+                        <template #icon>
+                            <icon-file />
+                        </template>
+                    </a-button>
+                </a-input-group>
+                <template #label>
+                    本地图片目录
+                    <a-link @click="openLocalImagePath()">
+                        <icon-question-circle/>
+                    </a-link>
+                </template>
+                <template #help>
+                    本设置只对富文本编辑器时，图片上传策略为【内部实现】有效，设置后，插件会将图片保存到该目录下
                 </template>
             </a-form-item>
             <a-form-item label="编辑文章是否自动收起菜单">
@@ -87,7 +107,7 @@ import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import JsonTheme from "@/global/CodeTheme";
-import { useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
@@ -103,7 +123,8 @@ export default defineComponent({
     data: () => ({
         JsonTheme, Constant,
         ImageStrategyEnum,
-        instance: getDefaultBaseSetting()
+        instance: getDefaultBaseSetting(),
+        isUtools
     }),
     computed: {
         TodoArticleActionEnum() {
@@ -140,6 +161,9 @@ export default defineComponent({
                 .then(() => MessageUtil.success("保存成功"))
                 .catch(e => MessageUtil.error("保存失败", e))
                 .finally(() => this.$emit('save'));
+        },
+        openLocalImagePath() {
+            MessageBoxUtil.alert("由于富文本编辑器的限制，导致无法将图片上传到utools内部，所以只能存放到本地中，因此，富文本编辑器的图片目前无法实现同步功能", "本地图片须知")
         }
     }
 });

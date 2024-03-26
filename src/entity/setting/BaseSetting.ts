@@ -1,5 +1,7 @@
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import {pathJoin} from "@/utils/file/FileUtil";
+import Constant from "@/global/Constant";
 
 export interface BaseSetting {
 
@@ -7,6 +9,11 @@ export interface BaseSetting {
      * 图片策略
      */
     imageStrategy: ImageStrategyEnum;
+
+    /**
+     * 本地图片目录
+     */
+    localImagePath: string;
 
     /**
      * 当屏幕太小时，是否自动收起
@@ -55,6 +62,7 @@ export enum ArticleActionEnum {
 export function getDefaultBaseSetting(): BaseSetting {
     return {
         imageStrategy: ImageStrategyEnum.INNER,
+        localImagePath: pathJoin(utools.getPath('cache'), Constant.id, 'image'),
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
         newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",

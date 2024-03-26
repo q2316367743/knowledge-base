@@ -11,14 +11,15 @@ import {isUtools} from "@/global/BeanFactory";
 /**
  * 文件上传组件
  * @param data 图片数据
+ * @param isLocal 是否是本地，默认不是
  * @return 链接
  */
-export async function useImageUpload(data: File | string): Promise<string> {
+export async function useImageUpload(data: File | string, isLocal: boolean = false): Promise<string> {
 
     useGlobalStore().startLoading("开始上传图片");
 
     try {
-        let url = await selfImageUpload(data);
+        let url = await selfImageUpload(data, isLocal);
         return Promise.resolve(url);
     } catch (e) {
         return Promise.reject(e)
@@ -28,7 +29,7 @@ export async function useImageUpload(data: File | string): Promise<string> {
 
 }
 
-async function selfImageUpload(data: File | Blob | string): Promise<string> {
+async function selfImageUpload(data: File | Blob | string, isLocal: boolean): Promise<string> {
 
     if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
 
@@ -39,7 +40,7 @@ async function selfImageUpload(data: File | Blob | string): Promise<string> {
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
-        return useUtoolsImageUpload(data);
+        return useUtoolsImageUpload(data, isLocal);
     } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
         await useImageUploadByPlugin(data);
         return ("");
@@ -75,14 +76,21 @@ export async function useImageUploadByPlugin(data: File | Blob | string): Promis
 }
 
 
-async function useUtoolsImageUpload(data: Blob | File): Promise<string> {
+function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<string> {
     const id = new Date().getTime() + '';
+    if (isLocal) {
+        // TODO: 本地图片上传
+        return Promise.resolve('');
+    }else {
+        return postAttachment(
+            LocalNameEnum.ARTICLE_ATTACHMENT + id,
+            data
+        );
+    }
 
-    const url = await postAttachment(
-        LocalNameEnum.ARTICLE_ATTACHMENT + id,
-        data
-    );
-    return Promise.resolve(url);
+
+
+
 }
 
 /**

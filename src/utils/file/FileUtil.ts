@@ -13,7 +13,7 @@ export function parseFileName(fileName: string): string {
 
 
 export function pathJoin(...paths: string[]): string {
-    return paths.join("/")
+    return paths.join(utools.isWindows() ? '\\' : '/');
 }
 
 export function parseFileExtra(fileName: string): string {
