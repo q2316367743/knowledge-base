@@ -1,10 +1,9 @@
 import Cherry from "cherry-markdown";
-import {useArticleAiEvent} from "@/store/components/HomeEditorStore";
 
-export const useAskAi = (id: number) => {
+export const useAskAi = (id: number, callback: (content: string) => void) => {
     return Cherry.createMenuHook('问问AI', {
         onClick: function (selection: string) {
-            useArticleAiEvent.emit({id, content: selection})
+            callback(selection)
             return ""
         }
     });

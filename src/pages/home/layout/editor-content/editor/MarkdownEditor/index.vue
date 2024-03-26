@@ -15,7 +15,6 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {
     useArticleExportEvent,
     useArticleImportEvent,
-    useArticleInsertEvent,
     useHomeEditorStore
 } from "@/store/components/HomeEditorStore";
 
@@ -25,7 +24,6 @@ import {docxToMarkdown, htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 import Constant from "@/global/Constant";
 
-import {TocItem} from "./common/TocItem";
 import {openMarkdownExport} from "./common/MarkdownExport";
 
 import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
@@ -33,8 +31,8 @@ import {openArticleImport} from "@/pages/home/layout/editor-content/components/A
 import {buildConfig} from "@/pages/home/layout/editor-content/editor/MarkdownEditor/common/build-config";
 
 const props = defineProps(editorProps);
-const emits = defineEmits(['update:modelValue']);
-defineExpose({exportFile, getToc})
+const emits = defineEmits(['update:modelValue', 'sendToChat']);
+defineExpose({onInsert})
 
 const instance = shallowRef<Cherry>();
 const id = 'markdown-editor-' + new Date().getTime();
@@ -42,20 +40,24 @@ const size = useWindowSize();
 
 
 onMounted(() => {
-    instance.value = new Cherry(buildConfig(props.articleId || 0, id, props.modelValue || '', props.preview, instance, e => emits('update:modelValue', e)));
+    instance.value = new Cherry(buildConfig(
+        props.articleId || 0, id,
+        props.modelValue || '',
+        props.preview,
+        instance,
+        e => emits('update:modelValue', e),
+        e => emits('sendToChat', e)
+    ));
     handleTheme();
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
     useArticleImportEvent.off(onImport);
     useArticleImportEvent.on(onImport);
-    useArticleInsertEvent.off(onInsert);
-    useArticleInsertEvent.on(onInsert);
 });
 
 onBeforeUnmount(() => {
     useArticleExportEvent.off(onExport);
     useArticleImportEvent.off(onImport);
-    useArticleInsertEvent.off(onInsert);
 });
 
 watch(() => props.preview, handleToolbar);
@@ -83,20 +85,6 @@ function handleTheme() {
     instance.value.setTheme(useGlobalStore().isDark ? 'dark' : 'default')
 }
 
-function exportFile(type: any, fileName: string) {
-    if (instance.value) {
-        instance.value.export(type, fileName);
-    }
-}
-
-
-function getToc(): Array<TocItem> {
-    if (instance.value) {
-        return instance.value.getToc();
-    } else {
-        return [];
-    }
-}
 
 function onExport(id: number) {
     if (props.articleId === id && instance.value) {
@@ -138,9 +126,9 @@ function onImport(id: number) {
 
 }
 
-function onInsert(data: { id: number, content: string }) {
-    if (props.articleId === data.id && instance.value) {
-        instance.value.setValue(instance.value.getValue() + data.content);
+function onInsert(str: string) {
+    if (instance.value) {
+        instance.value.setValue(instance.value.getValue() + str);
     }
 
 }

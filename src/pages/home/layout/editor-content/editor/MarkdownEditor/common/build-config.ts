@@ -26,7 +26,14 @@ import {useAskAi} from "@/pages/home/layout/editor-content/editor/MarkdownEditor
 
 const DEV_URL = "http://localhost:5173/#";
 
-export function buildConfig(articleId: number, id: string, value: string, preview: boolean, instance: Ref<Cherry | undefined>, update: (content: string) => void): CherryOptions {
+export function buildConfig(
+    articleId: number,
+    id: string,
+    value: string,
+    preview: boolean,
+    instance: Ref<Cherry | undefined>,
+    update: (content: string) => void,
+    sendToChat: (content: string) => void): CherryOptions {
 
     // 默认模式
     const defaultModel = preview || useBaseSettingStore().mdEditorEditMode === MdEditorEditModeEnum.PREVIEW ?
@@ -145,7 +152,7 @@ export function buildConfig(articleId: number, id: string, value: string, previe
             },
             customMenu: {
                 // 菜单
-                AI: useAskAi(articleId),
+                AI: useAskAi(articleId, sendToChat),
                 ScreenShotMenu: useScreenShotMenu(instance),
                 PanGu: usePanGu(),
                 FanYi: useFanYi(),

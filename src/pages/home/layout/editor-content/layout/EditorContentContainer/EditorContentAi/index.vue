@@ -2,9 +2,9 @@
     <div class="editor-content-ai"
          :style="{position: fullscreen ? 'fixed' : 'absolute', backgroundColor: fullscreen ? 'var(--color-bg-1)' : ''}">
         <header class="header">
-            <a-tabs hide-content v-model:active-key="activeKey" type="capsule">
+            <a-tabs hide-content v-model:active-key="activeKey" type="text">
                 <a-tab-pane title="聊天" key="1" :disabled="loading"/>
-                <a-tab-pane title="你问我答" key="2" :disabled="loading"/>
+                <a-tab-pane title="你问我答" key="2" :disabled="loading || !allowAsk"/>
                 <template #extra>
                     <a-button type="text" @click="toggle()">
                         <icon-fullscreen-exit v-if="fullscreen"/>
@@ -60,15 +60,15 @@
             <div class="input">
                 <a-input-group>
                     <a-tooltip content="清空聊天记录">
-                        <a-button type="text" status="danger" :loading="loading" @click="clearMsg()">
+                        <a-button type="text" status="danger" :loading="loading" @click="clearChat()">
                             <template #icon>
                                 <icon-delete/>
                             </template>
                         </a-button>
                     </a-tooltip>
                     <a-input placeholder="聊点什么吧..." allow-clear v-model="content" :disabled="loading"
-                             @keydown.enter="sendMsg()"/>
-                    <a-button type="text" @click="sendMsg()" :loading="loading">
+                             @keydown.enter="sendChat()"/>
+                    <a-button type="text" @click="sendChat()" :loading="loading">
                         <template #icon>
                             <icon-send/>
                         </template>
@@ -83,26 +83,16 @@
                         <a-button size="small" type="text" @click="closeWarn()">不再提示</a-button>
                     </template>
                 </a-alert>
-                <a-alert type="warning" v-if="ai.ask.fileId === ''" style="margin-top: 7px;">
-                    暂未上传文件
-                    <template #action>
-                        <a-button size="small" type="text" @click="uploadFile()" :loading="loading">上传</a-button>
-                    </template>
-                </a-alert>
-                <a-alert v-else>
-                    已上传文件，文件版本：{{ ai.ask.version }}
-                    <template #action>
-                        <a-button size="small" type="text" :loading="loading">重新上传</a-button>
-                    </template>
-
-                </a-alert>
+                <div class="question" v-if="ai.ask.question">{{ ai.ask.question }}</div>
+                <div class="answer" v-if="loading">正在回答中 <icon-refresh spin /></div>
+                <div class="answer" v-else v-html="renderContent(ai.ask.answer)"></div>
             </div>
             <div class="input">
                 <a-input-group>
                     <a-input placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="question"
                              :disabled="loading"
-                             @keydown.enter="sendMsg()"/>
-                    <a-button type="text" @click="sendMsg()" :loading="loading" :disabled="!allowInsert">
+                             @keydown.enter="sendToAsk()"/>
+                    <a-button type="text" @click="sendToAsk()" :loading="loading" :disabled="!allowInsert">
                         <template #icon>
                             <icon-send/>
                         </template>
@@ -116,7 +106,7 @@
 import {computed, onMounted, PropType, ref, watch} from "vue";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {editorType, robot, useArticleInsertEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {editorType} from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {ArticleIndex} from "@/entity/article";
 import {execCopy, renderContent, renderRole} from "./func";
@@ -129,7 +119,9 @@ import {htmlToMarkdown, mindMapToMarkdown, stringToBlob} from "@/utils/file/Conv
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
 });
-defineExpose({sendToMessage});
+const emits = defineEmits(['insertToArticle']);
+defineExpose({sendToChat});
+
 
 const showWarn = ref(getItemByDefault(LocalNameEnum.KEY_ARTICLE_AI_FILE_WARN, true));
 
@@ -144,16 +136,13 @@ const activeKey = ref('1');
 const ai = ref<ArticleAi>(getDefaultArticleAi());
 let rev: string | undefined = undefined;
 
-watch(() => ai.value, value => {
-    // 自动保存
-    saveOneByAsync(LocalNameEnum.ARTICLE_AI, value, rev)
-        .then(res => {
-            rev = res;
-        })
-}, {deep: true});
 
-const allowInsert = computed(() =>
-    editorType.value === ArticleTypeEnum.MARKDOWN || editorType.value === ArticleTypeEnum.RICH_TEXT);
+const allowInsert = computed(() => editorType.value === ArticleTypeEnum.MARKDOWN);
+const allowAsk = computed(() => editorType.value === ArticleTypeEnum.MARKDOWN ||
+    editorType.value === ArticleTypeEnum.RICH_TEXT ||
+    editorType.value === ArticleTypeEnum.CODE);
+
+// ------------------------------------------ 简单事件 ------------------------------------------
 
 function toggle() {
     fullscreen.value = !fullscreen.value;
@@ -165,15 +154,22 @@ function scrollBottom() {
     }
 }
 
+function closeWarn() {
+    showWarn.value = false;
+    setItem(LocalNameEnum.KEY_ARTICLE_AI_FILE_WARN, false);
+}
 
-function sendMsg() {
+
+// ------------------------------------------ 聊天相关 ------------------------------------------
+
+function sendChat() {
     const str = content.value.trim();
-    robot.value = false;
     if (str === '') {
         return;
     }
     const {openAi, model} = useChatSettingStore();
     if (!openAi) {
+        MessageUtil.warning("系统异常，openai客户端未找到！");
         return;
     }
     ai.value.chat.messages.push({
@@ -197,38 +193,83 @@ function sendMsg() {
     }).catch(e => MessageUtil.error("聊天发生错误", e)).finally(() => loading.value = false);
 }
 
-function sendToMessage(str: string) {
-    content.value = str;
-    sendMsg();
-
+function clearChat() {
+    ai.value.chat.messages = [{
+        role: 'system',
+        content: '你好，我是Ai小助手，需要帮助吗？'
+    }];
 }
 
-function clearMsg() {
-    ai.value.chat.messages = [];
-}
-
-onMounted(() => {
+onMounted(async () => {
     // 初始化
-    if (!props.articleIndex) {
-        getFromOneByAsync(LocalNameEnum.ARTICLE_AI).then(res => {
-            if (res.record) {
-                ai.value = res.record
-            }
-            rev = res.rev;
-        })
+    if (props.articleIndex) {
+        const res = await getFromOneByAsync(LocalNameEnum.ARTICLE_AI + props.articleIndex.id)
+        if (res.record) {
+            ai.value = res.record
+        }
+        rev = res.rev;
     }
+    watch(() => ai.value, value => {
+        // 自动保存
+        if (props.articleIndex) {
+            saveOneByAsync(LocalNameEnum.ARTICLE_AI + props.articleIndex.id, value, rev)
+                .then(res => {
+                    rev = res;
+                });
+        }
+    }, {deep: true});
 });
 
-function insertToArticle(content: string) {
-    useArticleInsertEvent.emit({
-        id: useHomeEditorStore().id,
-        content: '\n\n' + content
-    })
+// ------------------------------------------ 问答相关 ------------------------------------------
+
+function sendToAsk() {
+    loading.value = true;
+    _sendToAsk()
+        .then(() => MessageUtil.success("问题提交成功"))
+        .catch(e => MessageUtil.error("问题提交失败", e))
+        .finally(() => loading.value = false);
 }
 
-function closeWarn() {
-    showWarn.value = false;
-    setItem(LocalNameEnum.KEY_ARTICLE_AI_FILE_WARN, false);
+async function _sendToAsk() {
+    const str = question.value.trim();
+    if (str === '') {
+        return;
+    }
+    const {openAi, model} = useChatSettingStore();
+    if (!openAi) {
+        MessageUtil.warning("系统异常，openai客户端未找到！");
+        return;
+    }
+
+    ai.value.ask.question = str;
+    ai.value.ask.answer = '';
+    question.value = '';
+
+    const content: string = await getFileContent();
+
+    const res = await openAi.chat.completions.create({
+        model: model,
+        messages: [{
+            role: 'user',
+            content: content
+        }, {
+            role: 'user',
+            content: str
+        }]
+    })
+    ai.value.ask.answer = res.choices.sort((a, b) => a.index - b.index).map(e => e.message.content).join("/n");
+}
+
+// ------------------------------------------ 相关事件 ------------------------------------------
+
+function sendToChat(str: string) {
+    content.value = str;
+    sendChat();
+
+}
+
+function insertToArticle(content: string) {
+    emits('insertToArticle', '\n\n' + content);
 }
 
 // ------------------------------------------ 你问我答 ------------------------------------------
@@ -243,7 +284,6 @@ async function uploadFile() {
             if (props.articleIndex) {
                 const res = await getFromOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + props.articleIndex.id);
                 const record = res.record;
-                console.log(record)
                 if (record) {
                     // 获取文件
                     let file: Blob;
@@ -285,6 +325,34 @@ async function uploadFile() {
         loading.value = false;
     }
 
+}
+
+async function getFileContent(): Promise<string> {
+    if (props.articleIndex) {
+        const res = await getFromOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + props.articleIndex.id);
+        const record = res.record;
+        if (record) {
+            // 获取文件
+            if (props.articleIndex.type === ArticleTypeEnum.MARKDOWN) {
+                return record.content
+            } else if (props.articleIndex.type === ArticleTypeEnum.CODE) {
+                return record.content
+            } else if (props.articleIndex.type === ArticleTypeEnum.RICH_TEXT) {
+                return htmlToMarkdown(record.content)
+            } else if (props.articleIndex.type === ArticleTypeEnum.MIND_MAP) {
+                // mind-map转md
+                return mindMapToMarkdown(record.content)
+            } else if (props.articleIndex.type === ArticleTypeEnum.DRAUU) {
+                throw new Error("画板不支持一问一答")
+            } else {
+                throw new Error("文章类型不支持");
+            }
+        } else {
+            throw new Error("文章内容不存在");
+        }
+    } else {
+        throw new Error("系统异常，文章信息不存在");
+    }
 }
 
 

@@ -13,25 +13,13 @@
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
-import {useWindowSize} from "@vueuse/core";
+import { useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import EditorContentHeader from "@/pages/home/layout/editor-content/layout/EditorContentHeader.vue";
 import EditorContentContainer from "@/pages/home/layout/editor-content/layout/EditorContentContainer/index.vue";
-import {robot, useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 
 const indexes = computed(() => useHomeEditorStore().indexes);
 const id = computed(() => useHomeEditorStore().id);
 
-const size = useWindowSize();
-
-const collapsed = computed(() => {
-    if (!useChatSettingStore().enable) {
-        return true;
-    }
-    return robot.value;
-})
-
-const width = computed(() => Math.max(Math.min(Math.floor(size.width.value / 8 * 3), 400), 200));
 
 </script>
 <style lang="less">

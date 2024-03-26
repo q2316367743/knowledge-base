@@ -65,10 +65,12 @@ export interface ArticleAi {
 export function getDefaultArticleAi(): ArticleAi {
     return {
         ask: {
+            // 暂时不用
             version: '',
-            answer: '',
             fileId: '',
-            question: ''
+
+            question: '',
+            answer: '',
         },
         chat: {
             messages: [{

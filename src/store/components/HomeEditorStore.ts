@@ -37,8 +37,6 @@ export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean 
 export const useUpdateRobotEvent = useEventBus<number>('update-robot');
 export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
-export const useArticleAiEvent = useEventBus<{ id: number, content: string }>('article-ai');
-export const useArticleInsertEvent = useEventBus<{ id: number, content: string }>('article-insert');
 
 
 // 一些特殊的方法

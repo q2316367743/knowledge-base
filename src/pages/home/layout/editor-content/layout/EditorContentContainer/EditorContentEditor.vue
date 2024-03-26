@@ -2,7 +2,7 @@
     <!-- 编辑区 -->
     <div class="ec-container-item" v-if="articleIndex">
         <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
-                         v-if="editorType === ArticleTypeEnum.MARKDOWN && load"/>
+                         v-if="editorType === ArticleTypeEnum.MARKDOWN && load" @send-to-chat="sendToChat"/>
         <wang-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
                      v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
         <monaco-editor v-model="content" :language="language" :read-only="preview" :article-id="articleIndex.id"
@@ -33,32 +33,20 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {robot, useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
-import EditorContentAi
-    from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentAi/index.vue";
-import {useWindowSize} from "@vueuse/core";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
+import { useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
 });
+const emits = defineEmits(['sendToChat']);
+defineExpose({insertToArticle});
 
 const load = ref(false);
 // 文章内容，不一定是文本
 const content = ref<any>('');
 let contentRev: string | undefined = undefined;
 
-
-const size = useWindowSize();
-
-const collapsed = computed(() => {
-    if (!useChatSettingStore().enable) {
-        return true;
-    }
-    return robot.value;
-})
-
-const width = computed(() => Math.max(Math.min(Math.floor(size.width.value / 8 * 3), 400), 200));
+const mdEditor = ref();
 
 // 计算属性
 const preview = computed(() => props.articleIndex ? props.articleIndex.preview : false);
@@ -148,6 +136,17 @@ function onPreview(data: { id: number, preview: boolean }) {
             props.articleIndex.preview = data.preview;
         }
     }
+}
+
+function insertToArticle(str: string) {
+    console.log(editorType.value, mdEditor.value, str)
+    if (editorType.value === ArticleTypeEnum.MARKDOWN) {
+        mdEditor.value.onInsert(str);
+    }
+}
+
+function sendToChat(str: string){
+    emits('sendToChat', str);
 }
 
 
