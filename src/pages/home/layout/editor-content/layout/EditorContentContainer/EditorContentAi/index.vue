@@ -17,12 +17,12 @@
             <div class="container" ref="containerRef">
                 <a-row v-for="message in ai.chat.messages">
                     <a-col :span="20">
-                        <div class="message">
+                        <a-typography class="message">
                             <div class="message-user">
                                 {{ renderRole(message.role) }}
                             </div>
-                            <div class="message-content" v-html="renderContent(message.content)">
-                            </div>
+                            <a-typography-paragraph class="message-content preview" v-html="renderContent(message.content)">
+                            </a-typography-paragraph>
                             <div class="message-tool">
                                 <a-button-group type="text" v-if="message.role !== 'system'">
                                     <a-button @click="execCopy(message.content)">
@@ -39,7 +39,7 @@
                                     </a-tooltip>
                                 </a-button-group>
                             </div>
-                        </div>
+                        </a-typography>
                     </a-col>
                 </a-row>
                 <a-row v-if="loading">
@@ -77,16 +77,16 @@
             </div>
         </main>
         <main class="main" v-show="activeKey === '2'">
-            <div class="container">
+            <a-typography class="container">
                 <a-alert type="warning" closable v-if="showWarn">此操作会将文章内容附带提交
                     <template #action>
                         <a-button size="small" type="text" @click="closeWarn()">不再提示</a-button>
                     </template>
                 </a-alert>
-                <div class="question" v-if="ai.ask.question">{{ ai.ask.question }}</div>
+                <a-typography-paragraph class="question" v-if="ai.ask.question">{{ ai.ask.question }}</a-typography-paragraph>
                 <div class="answer" v-if="loading">正在回答中 <icon-refresh spin /></div>
-                <div class="answer" v-else v-html="renderContent(ai.ask.answer)"></div>
-            </div>
+                <a-typography-paragraph class="answer preview" v-else v-html="renderContent(ai.ask.answer)"></a-typography-paragraph>
+            </a-typography>
             <div class="input">
                 <a-input-group>
                     <a-input placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="question"
