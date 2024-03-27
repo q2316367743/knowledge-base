@@ -1,7 +1,7 @@
 <template>
     <div class="card-todo-item" :class="{deleted: index.status !== TodoItemStatus.TODO}"
-         :style="style"
-         @click="_openTodoItemInfo()">
+         :style="style" @click="_openTodoItemInfo()"
+         @contextmenu="_openTodoItemSetting()">
         <a-typography-paragraph style="margin-top: 9px" :ellipsis="ellipsis">
             {{ index.title }}
         </a-typography-paragraph>
@@ -29,10 +29,11 @@ import {
     TodoItemIndex,
     TodoItemStatus
 } from "@/entity/todo/TodoItem";
-import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
+import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {toDateString} from "xe-utils";
 import {handleDate} from "@/utils/lang/ObjUtil";
+import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
 
 const props = defineProps({
     item: Object as PropType<TodoItemIndex>,
@@ -70,11 +71,11 @@ const style = computed(() => {
 
 const createTime = computed(() => index.value ? toDateString(index.value.createTime, "yyyy-MM-dd HH:mm") : '')
 
-function _openTodoItemInfo() {
+function _openTodoItemSetting() {
     if (!index.value) {
         return;
     }
-    openTodoItemInfo(index.value, res => {
+    openTodoItemSetting(index.value, res => {
         index.value = res
         if (index.value) {
             initAttr(index.value.id);
@@ -82,6 +83,14 @@ function _openTodoItemInfo() {
         }
     })
 }
+
+function _openTodoItemInfo() {
+    if (!index.value) {
+        return;
+    }
+    openTodoItemInfo(index.value)
+}
+
 
 function initAttr(id: number) {
     hasAttr.value = false;

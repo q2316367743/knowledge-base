@@ -204,3 +204,20 @@ export function handlePriorityColor(priority: TodoItemPriority): string {
             return 'var(--color-text-1)';
     }
 }
+
+
+export function handlePriorityText(priority: TodoItemPriority): string {
+    switch (priority){
+        case TodoItemPriority.HIGH:
+            return '高优先级';
+        case TodoItemPriority.MIDDLE:
+            return '中优先级';
+        case TodoItemPriority.FLOOR:
+            return '低优先级';
+        case TodoItemPriority.NONE:
+            return '无优先级';
+        default:
+            return '无优先级';
+    }
+
+}
