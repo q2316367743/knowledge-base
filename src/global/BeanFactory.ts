@@ -1,22 +1,25 @@
+import {ref} from "vue";
+import {useEventBus} from "@vueuse/core";
+import {utools} from "@/plugin/utools";
 import Statistics from '@/plugin/Statistics';
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+// 状态管理
+import {useFolderStore} from "@/store/db/FolderStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
-import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
-import {useFolderStore} from "@/store/db/FolderStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {utools} from "@/plugin/utools";
+import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
-import {ref} from "vue";
-import {useEventBus} from "@vueuse/core";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
 window.utools = window.utools || utools;
 
 export const usePageJumpEvent = useEventBus<string>('page-jump');
+export const useNewEvent = useEventBus('new');
+export const useDeleteEvent = useEventBus('delete');
 
 export const statistics = new Statistics();
 

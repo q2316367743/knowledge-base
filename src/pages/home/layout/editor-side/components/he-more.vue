@@ -18,11 +18,9 @@
                 </template>
                 新增笔记
                 <template #content>
-                    <a-doption @click="addArticle(0, ArticleTypeEnum.RICH_TEXT)">富文本</a-doption>
-                    <a-doption @click="addArticle(0, ArticleTypeEnum.MARKDOWN)">markdown</a-doption>
-                    <a-doption @click="addArticle(0, ArticleTypeEnum.CODE)">代码</a-doption>
-                    <a-doption @click="addArticle(0, ArticleTypeEnum.MIND_MAP)">思维导图</a-doption>
-                    <a-doption @click="addArticle(0, ArticleTypeEnum.DRAUU)">画板</a-doption>
+                    <a-doption v-for="articleType in articleTypes" :key="articleType.key"
+                               @click="addArticle(0, articleType.key)">{{ articleType.name }}
+                    </a-doption>
                 </template>
             </a-dsubmenu>
             <a-dsubmenu>
@@ -53,16 +51,18 @@
     </a-dropdown>
 </template>
 <script lang="ts" setup>
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {
-    addArticle,
-    addFolder,
-    exportToMd,
+    addArticle, addArticleModal,
+    addFolder, articleTypes,
+    exportToMd, remove,
 } from "@/pages/home/components/he-context";
-import {computed} from "vue";
+import {computed, onBeforeUnmount, onMounted} from "vue";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
+import {useDeleteEvent, useNewEvent} from "@/global/BeanFactory";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 const items = [{
     key: ArticleSortEnum.CREATE_TIME_ASC,
@@ -92,6 +92,35 @@ function renderSort(sort: ArticleSortEnum) {
         }
     }
 }
+
+function onNewArticle() {
+    addArticleModal();
+}
+
+function onDeleteArticle() {
+    const {id} = useHomeEditorStore();
+    const {articleMap} = useArticleStore();
+    const articleIndex = articleMap.get(id);
+    if (articleIndex) {
+        remove(articleIndex.id, articleIndex.name, true)
+    } else {
+        MessageUtil.warning("仅支持删除文章");
+    }
+}
+
+
+onMounted(() => {
+    useNewEvent.off(onNewArticle);
+    useNewEvent.on(onNewArticle);
+    useDeleteEvent.off(onDeleteArticle);
+    useDeleteEvent.on(onDeleteArticle);
+});
+
+onBeforeUnmount(() => {
+    useNewEvent.off(onNewArticle);
+    useDeleteEvent.off(onDeleteArticle);
+});
+
 </script>
 <style scoped>
 

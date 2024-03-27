@@ -1,7 +1,7 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia';
+import {createApp} from 'vue'
+import {createPinia} from 'pinia';
 import App from './App.vue'
-import { setupCalendar } from 'v-calendar';
+import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
 
 // 额外引入图标库
@@ -24,15 +24,28 @@ createApp(App)
     .use(setupCalendar, {})
     .mount('#app');
 
-import { statistics } from './global/BeanFactory';
+import {statistics, useDeleteEvent, useNewEvent} from './global/BeanFactory';
+
 statistics.init();
 statistics.open();
 
 // 安装wangEditor插件
-import { Boot } from '@wangeditor/editor'
+import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
 
 Boot.registerModule(markdownModule);
-Boot.registerMenu(OpenByUtoolsMenu)
+Boot.registerMenu(OpenByUtoolsMenu);
+
+window.onload = () => {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.ctrlKey && e.code === 'KeyN') {
+            e.preventDefault();
+            useNewEvent.emit();
+        } else if (e.code === 'Delete') {
+            e.preventDefault();
+            useDeleteEvent.emit();
+        }
+    });
+}
 

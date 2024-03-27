@@ -25,14 +25,9 @@
                             </template>
                             新增笔记
                             <template #content>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.RICH_TEXT)">富文本
+                                <a-doption v-for="articleType in articleTypes" :key="articleType.key"
+                                           @click="addArticle(nodeData.key, articleType.key)">{{ articleType.name }}
                                 </a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MARKDOWN)">markdown
-                                </a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.CODE)">代码</a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.MIND_MAP)">思维导图
-                                </a-doption>
-                                <a-doption @click="addArticle(nodeData.key, ArticleTypeEnum.DRAUU)">画板</a-doption>
                             </template>
                         </a-dsubmenu>
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
@@ -162,10 +157,9 @@ import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {
     addArticle,
-    addFolder, buildArticleIcon,
+    addFolder, articleTypes, buildArticleIcon,
     exportToMd,
     remove,
     rename

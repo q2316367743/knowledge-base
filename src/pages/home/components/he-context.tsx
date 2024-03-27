@@ -11,8 +11,9 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {articleToZip} from "@/utils/file/ConvertUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
-import {h} from "vue";
+import {h, ref} from "vue";
 import {IconBgColors, IconBook, IconCode, IconFile, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
+import {Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -55,6 +56,23 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
     }
 }
 
+export const articleTypes = [{
+    key: ArticleTypeEnum.RICH_TEXT,
+    name: '富文本'
+}, {
+    key: ArticleTypeEnum.MARKDOWN,
+    name: 'markdown'
+}, {
+    key: ArticleTypeEnum.CODE,
+    name: '代码'
+}, {
+    key: ArticleTypeEnum.MIND_MAP,
+    name: '思维导图'
+}, {
+    key: ArticleTypeEnum.DRAUU,
+    name: '画板'
+}]
+
 /**
  * 新增一篇文章
  * @param pid 父ID
@@ -62,9 +80,9 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
     _addArticle(pid, type).then(id => {
-            MessageUtil.success("新增成功");
-            useHomeEditorStore().openArticle(id);
-        })
+        MessageUtil.success("新增成功");
+        useHomeEditorStore().openArticle(id);
+    })
         .catch(e => MessageUtil.error("新增失败", e));
 }
 
@@ -84,6 +102,46 @@ async function _addArticle(pid: number, type: ArticleTypeEnum) {
         folder: pid,
         type,
     }), getDefaultArticleBase(), buildDefaultContent(type));
+}
+
+export function addArticleModal() {
+    const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
+    const name = ref(newArticleAutoName ? buildArticleName(ArticleTypeEnum.MARKDOWN, newArticleTemplateByName, codeExtraName) : '');
+    const type = ref(ArticleTypeEnum.MARKDOWN);
+    const folder = ref(0);
+    const {folderTree} = useFolderStore();
+    Modal.open({
+        title: '新增文章',
+        titleAlign: 'start',
+        draggable: true,
+        okText: '新增',
+        content: () => <Form model={{}} layout={'vertical'}>
+            <FormItem label={'文章类型'} required>
+                <RadioGroup v-model={type.value}>
+                    {articleTypes.map(item => <Radio key={item.key} value={item.key}>{item.name}</Radio>)}
+                </RadioGroup>
+            </FormItem>
+            <FormItem label={'所在文件夹'} required>
+                <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
+            </FormItem>
+            <FormItem label={'文章名称'} required>
+                <Input v-model={name.value} class={'arco-input'} placeholder={'请输入文章名称'}/>
+            </FormItem>
+        </Form>,
+        async onBeforeOk() {
+            if (name.value.trim() === '') {
+                MessageUtil.warning("请输入文章名称")
+                return Promise.resolve(false);
+            }
+            const id = await useArticleStore().add(getDefaultArticleIndex({
+                name: name.value,
+                folder: folder.value,
+                type: type.value,
+            }), getDefaultArticleBase(), buildDefaultContent(type.value));
+            useHomeEditorStore().openArticle(id);
+            return Promise.resolve(true);
+        }
+    })
 }
 
 /**
