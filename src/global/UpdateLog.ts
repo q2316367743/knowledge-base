@@ -2,6 +2,30 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.6',
+        sign: 196,
+        time: '2024-03-27',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: "【markdown】现在markdown笔记的右上角单独markdown文件导出，如果笔记中含有存放在utools中的图片，导出的时候会自动将图片进行解析，之后会下载一个包含图片的压缩包。"
+        }, {
+            label: LogItemEnum.ADD,
+            content: '【编辑器】现在可以记住侧边栏展开的目录了'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【富文本】由于富文本本身的问题，导致图片无法进行渲染，目前采取折中方案，会将图片保存到本地磁盘，以本地文件形式加载，但是这样图片就没办法进行utools同步了。"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【富文本】修复了富文本中链接无法打开的问题。"
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: "【markdown】修复了暗黑模式下，目录颜色问题。"
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: "【插件】一些细节样式优化"
+        }],
+    },
+    {
         version: '1.9.5',
         sign: 195,
         time: '2024-03-26',
