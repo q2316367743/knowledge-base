@@ -41,24 +41,24 @@
                             </template>
                             新建文件夹
                         </a-doption>
-                        <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
-                            <template #icon>
-                                <icon-edit/>
-                            </template>
-                            重命名
-                        </a-doption>
-                        <a-doption @click="multiCheckStart(nodeData.key)">
-                            <template #icon>
-                                <icon-edit/>
-                            </template>
-                            多选
-                        </a-doption>
-                        <a-dsubmenu>
+                        <a-dsubmenu v-if="!nodeData.isLeaf">
                             <template #icon>
                                 <icon-apps/>
                             </template>
-                            操作
+                            更多操作
                             <template #content>
+                                <a-doption @click="multiCheckStart(nodeData.key)">
+                                    <template #icon>
+                                        <icon-check-square />
+                                    </template>
+                                    多选
+                                </a-doption>
+                                <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                                    <template #icon>
+                                        <icon-edit/>
+                                    </template>
+                                    重命名
+                                </a-doption>
                                 <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)"
                                            style="color: red;">
                                     <template #icon>
@@ -74,6 +74,33 @@
                                 </a-doption>
                             </template>
                         </a-dsubmenu>
+
+                        <a-doption v-if="nodeData.isLeaf" @click="multiCheckStart(nodeData.key)">
+                            <template #icon>
+                                <icon-check-square />
+                            </template>
+                            多选
+                        </a-doption>
+                        <a-doption v-if="nodeData.isLeaf" @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                            <template #icon>
+                                <icon-edit/>
+                            </template>
+                            重命名
+                        </a-doption>
+                        <a-doption v-if="nodeData.isLeaf" @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)"
+                                   style="color: red;">
+                            <template #icon>
+                                <icon-delete/>
+                            </template>
+                            删除
+                        </a-doption>
+                        <a-doption v-if="nodeData.isLeaf" @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                            <template #icon>
+                                <icon-to-right/>
+                            </template>
+                            移动到
+                        </a-doption>
+
                         <a-doption v-if="!nodeData.isLeaf" @click="showArticleImportModal(nodeData.key)">
                             <template #icon>
                                 <icon-import/>
