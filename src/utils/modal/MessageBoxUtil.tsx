@@ -93,7 +93,7 @@ export default {
         inputValue?: string
     }): Promise<string> {
         const _config = config || {};
-        return new Promise<string>((resolve, reject) => {
+        return new Promise<string>(resolve => {
             let value = Optional.ofNullable(_config.inputValue).orElse("") as string;
             const onInput = (e: string) => {
                 value = e;
@@ -125,12 +125,6 @@ export default {
                 cancelText: _config.cancelButtonText,
                 onOk: () => {
                     resolve(value);
-                },
-                onCancel: () => {
-                    reject('cancel');
-                },
-                onClose: () => {
-                    reject('close');
                 }
             })
         })

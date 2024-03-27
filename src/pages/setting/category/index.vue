@@ -33,7 +33,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref} from "vue";
-import { useCategoryStore} from "@/store/db/CategoryStore";
+import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {statistics} from "@/global/BeanFactory";
 import {TreeNodeData} from "@arco-design/web-vue";
@@ -51,9 +51,7 @@ function add(pid: number) {
     useCategoryStore().add(pid)
         .then(() => MessageUtil.success("新增成功"))
         .catch(e => {
-            if (e !== 'cancel') {
-                MessageUtil.error("新增失败", e)
-            }
+            MessageUtil.error("新增失败", e)
         });
 }
 
@@ -61,9 +59,7 @@ function update(id: number) {
     useCategoryStore().update(id)
         .then(() => MessageUtil.success("更新成功"))
         .catch(e => {
-            if (e !== 'cancel') {
-                MessageUtil.error("更新失败", e)
-            }
+            MessageUtil.error("更新失败", e)
         });
 }
 

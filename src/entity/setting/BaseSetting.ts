@@ -26,6 +26,11 @@ export interface BaseSetting {
     autoCollapsedByTodo: boolean;
 
     /**
+     * 新建文章时是否自动命名
+     */
+    newArticleAutoName: boolean;
+
+    /**
      * 新建文章的文件名模板
      */
     newArticleTemplateByName: string;
@@ -65,6 +70,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         localImagePath: pathJoin(utools.getPath('cache'), Constant.id, 'image'),
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
+        newArticleAutoName: true,
         newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
         codeExtraName: 'ts',
         mdEditorEditMode: MdEditorEditModeEnum.AUTO,

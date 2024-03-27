@@ -17,6 +17,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
         localImagePath: state => state.baseSetting.localImagePath,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
+        newArticleAutoName: state => state.baseSetting.newArticleAutoName,
         newArticleTemplateByName: state => state.baseSetting.newArticleTemplateByName,
         codeExtraName: state => state.baseSetting.codeExtraName,
         mdEditorEditMode: state => state.baseSetting.mdEditorEditMode,
@@ -50,10 +51,10 @@ export const useBaseSettingStore = defineStore('base-setting', {
     }
 });
 
-export function buildArticleName(type: ArticleTypeEnum): string {
-    const name = dayjs().format(useBaseSettingStore().newArticleTemplateByName);
+export function buildArticleName(type: ArticleTypeEnum, newArticleTemplateByName: string, codeExtraName: string): string {
+    const name = dayjs().format(newArticleTemplateByName);
     if (type === ArticleTypeEnum.CODE) {
-        return `${name}.${useBaseSettingStore().codeExtraName}`;
+        return `${name}.${codeExtraName}`;
     }
     return name;
 }

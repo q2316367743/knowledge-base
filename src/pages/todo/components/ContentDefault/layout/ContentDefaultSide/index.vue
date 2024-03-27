@@ -275,9 +275,7 @@ function updateStatusToAbandon(itemId: number) {
             }
         })
         .catch(e => {
-            if (e !== 'cancel') {
-                MessageUtil.error("更新失败", e)
-            }
+            MessageUtil.error("更新失败", e)
         })
         .finally(() => useGlobalStore().closeLoading());
 }

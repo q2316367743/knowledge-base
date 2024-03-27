@@ -3,7 +3,7 @@ import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {buildArticleName} from "@/store/setting/BaseSettingStore";
+import {buildArticleName, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 // 工具类
@@ -61,22 +61,29 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
  * @param type 文章类型
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
+    _addArticle(pid, type).then(id => {
+            MessageUtil.success("新增成功");
+            useHomeEditorStore().openArticle(id);
+        })
+        .catch(e => MessageUtil.error("新增失败", e));
+}
+
+async function _addArticle(pid: number, type: ArticleTypeEnum) {
     if (type === ArticleTypeEnum.EXCEL) {
         NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
     }
-    useGlobalStore().startLoading("正在新增文章")
-    useArticleStore().add(getDefaultArticleIndex({
-        name: buildArticleName(type),
+    const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
+    let name: string;
+    if (newArticleAutoName) {
+        name = buildArticleName(type, newArticleTemplateByName, codeExtraName);
+    } else {
+        name = await MessageBoxUtil.prompt("请输入文章名称", "新建文章");
+    }
+    return useArticleStore().add(getDefaultArticleIndex({
+        name,
         folder: pid,
         type,
-    }), getDefaultArticleBase(), buildDefaultContent(type))
-        .then(id => {
-            MessageUtil.success("新增成功");
-            useHomeEditorStore().openArticle(id);
-            // 树选择
-        })
-        .catch(e => MessageUtil.error("新增失败", e))
-        .finally(() => useGlobalStore().closeLoading());
+    }), getDefaultArticleBase(), buildDefaultContent(type));
 }
 
 /**
@@ -186,7 +193,7 @@ export function buildArticleIcon(type: ArticleTypeEnum) {
         return h(IconNav, {})
     } else if (type === ArticleTypeEnum.MIND_MAP) {
         return h(IconMindMapping, {})
-    }  else if (type === ArticleTypeEnum.DRAUU) {
+    } else if (type === ArticleTypeEnum.DRAUU) {
         return h(IconBgColors, {})
     } else {
         return h(IconFile, {})

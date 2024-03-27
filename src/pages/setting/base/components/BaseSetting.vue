@@ -24,24 +24,26 @@
                 <a-input-group style="width: 80%">
                     <a-input v-model="instance.localImagePath" allow-clear
                              :disabled="instance.imageStrategy !== ImageStrategyEnum.INNER"/>
-                    <a-button>
+                    <a-button @click="chooseLocalImagePath()" type="primary">
                         <template #icon>
-                            <icon-file />
+                            <icon-file/>
                         </template>
                     </a-button>
                 </a-input-group>
                 <template #label>
-                    本地图片目录
-                    <a-link @click="openLocalImagePath()">
-                        <icon-question-circle/>
-                    </a-link>
+                    本地图片目录（富文本）
+                    <a-button type="text" @click="openLocalImagePath()" size="mini">
+                        <template #icon>
+                            <icon-question-circle/>
+                        </template>
+                    </a-button>
                 </template>
                 <template #help>
                     本设置只对富文本编辑器时，图片上传策略为【内部实现】有效，设置后，插件会将图片保存到该目录下
                 </template>
             </a-form-item>
             <a-form-item label="编辑文章是否自动收起菜单">
-                <a-switch v-model="instance.autoCollapsedByEditor">
+                <a-switch v-model="instance.autoCollapsedByEditor" type="round">
                     <template #checked>是</template>
                     <template #unchecked>否</template>
                 </a-switch>
@@ -50,7 +52,7 @@
                 </template>
             </a-form-item>
             <a-form-item label="点击待办是否自动收起菜单">
-                <a-switch v-model="instance.autoCollapsedByTodo">
+                <a-switch v-model="instance.autoCollapsedByTodo" type="round">
                     <template #checked>是</template>
                     <template #unchecked>否</template>
                 </a-switch>
@@ -58,14 +60,20 @@
                     当插件宽度小于1080px时生效
                 </template>
             </a-form-item>
-            <a-form-item label="新建文章名模板">
-                <a-input v-model="instance.newArticleTemplateByName"/>
+            <a-form-item label="新建文章是否自动命名">
+                <a-switch v-model="instance.newArticleAutoName" type="round">
+                    <template #checked>是</template>
+                    <template #unchecked>否</template>
+                </a-switch>
+            </a-form-item>
+            <a-form-item label="新建文章名模板" v-if="instance.newArticleAutoName">
+                <a-input v-model="instance.newArticleTemplateByName" allow-clear style="width: 400px;"/>
                 <template #help>
                     [YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z] => YYYYescape 2019-01-25T00:00:00-02:00Z
                 </template>
             </a-form-item>
-            <a-form-item label="默认代码拓展名">
-                <a-input v-model="instance.codeExtraName"/>
+            <a-form-item label="默认代码拓展名" v-if="instance.newArticleAutoName">
+                <a-input v-model="instance.codeExtraName" allow-clear style="width: 200px;"/>
             </a-form-item>
             <a-form-item label="md编辑器默认编辑模式">
                 <a-radio-group v-model="instance.mdEditorEditMode">
@@ -164,6 +172,18 @@ export default defineComponent({
         },
         openLocalImagePath() {
             MessageBoxUtil.alert("由于富文本编辑器的限制，导致无法将图片上传到utools内部，所以只能存放到本地中，因此，富文本编辑器的图片目前无法实现同步功能", "本地图片须知")
+        },
+        chooseLocalImagePath() {
+            // 选择本地图片目录
+            const paths = utools.showOpenDialog({
+                title: '请选择图片缓存目录',
+                defaultPath: this.instance.localImagePath,
+                buttonLabel: '选择',
+                properties: ['openDirectory']
+            });
+            if (paths && paths.length > 0) {
+                this.instance.localImagePath = paths[0];
+            }
         }
     }
 });
