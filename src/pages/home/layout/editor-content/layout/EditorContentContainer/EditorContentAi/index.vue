@@ -278,9 +278,7 @@ async function uploadFile() {
     const {openAi} = useChatSettingStore();
     try {
         loading.value = true;
-        console.log(openAi)
         if (openAi) {
-            console.log(props.articleIndex)
             if (props.articleIndex) {
                 const res = await getFromOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + props.articleIndex.id);
                 const record = res.record;

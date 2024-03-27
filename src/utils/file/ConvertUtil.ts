@@ -93,5 +93,5 @@ export function stringToBlob(str: string) {
 export function mindMapToMarkdown(data: any): string {
     const root = data.root as MindMapTreeNode;
     // TODO：使用广度遍历
-    return '';
+    throw new Error("暂不支持思维导图问答");
 }
