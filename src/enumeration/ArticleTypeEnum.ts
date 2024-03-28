@@ -35,7 +35,12 @@ enum ArticleTypeEnum {
     /**
      * drauu实现的画板
      */
-    DRAUU = 7
+    DRAUU = 7,
+
+    /**
+     * 白板
+     */
+    WHITE_BOARD = 8
 
 }
 

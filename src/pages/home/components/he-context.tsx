@@ -11,9 +11,66 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {articleToZip} from "@/utils/file/ConvertUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
+// 组件
 import {h, ref} from "vue";
-import {IconBgColors, IconBook, IconCode, IconFile, IconMindMapping, IconNav} from "@arco-design/web-vue/es/icon";
+import {
+    IconBook,
+    IconCode, IconComputer,
+    IconFile,
+    IconMindMapping,
+    IconNav,
+    IconPalette
+} from "@arco-design/web-vue/es/icon";
 import {Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
+
+// ------------------------------------------------------------------------------------------------------
+// ----------------------------------------------- 全局配置 -----------------------------------------------
+// ------------------------------------------------------------------------------------------------------
+
+
+export function buildArticleIcon(type: ArticleTypeEnum) {
+    if (type === ArticleTypeEnum.CODE) {
+        return h(IconCode, {})
+    } else if (type === ArticleTypeEnum.RICH_TEXT) {
+        return h(IconBook, {})
+    } else if (type === ArticleTypeEnum.EXCEL) {
+        return h(IconNav, {})
+    } else if (type === ArticleTypeEnum.MIND_MAP) {
+        return h(IconMindMapping, {})
+    } else if (type === ArticleTypeEnum.DRAUU) {
+        return h(IconPalette, {})
+    } else if (type === ArticleTypeEnum.WHITE_BOARD) {
+        return h(IconComputer, {})
+    } else {
+        return h(IconFile, {})
+    }
+}
+
+export const articleTypes = [{
+    key: ArticleTypeEnum.RICH_TEXT,
+    name: '富文本',
+    icon: IconBook,
+}, {
+    key: ArticleTypeEnum.MARKDOWN,
+    name: 'markdown',
+    icon: IconFile
+}, {
+    key: ArticleTypeEnum.CODE,
+    name: '代码',
+    icon: IconCode
+}, {
+    key: ArticleTypeEnum.MIND_MAP,
+    name: '思维导图',
+    icon: IconMindMapping
+}, {
+    key: ArticleTypeEnum.WHITE_BOARD,
+    name: '白板',
+    icon: IconComputer
+}, {
+    key: ArticleTypeEnum.DRAUU,
+    name: '画板',
+    icon: IconPalette
+}]
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {
@@ -51,27 +108,12 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
             }
         case ArticleTypeEnum.EXCEL:
             return {};
+        case ArticleTypeEnum.WHITE_BOARD:
+            return {};
         default:
             return "";
     }
 }
-
-export const articleTypes = [{
-    key: ArticleTypeEnum.RICH_TEXT,
-    name: '富文本'
-}, {
-    key: ArticleTypeEnum.MARKDOWN,
-    name: 'markdown'
-}, {
-    key: ArticleTypeEnum.CODE,
-    name: '代码'
-}, {
-    key: ArticleTypeEnum.MIND_MAP,
-    name: '思维导图'
-}, {
-    key: ArticleTypeEnum.DRAUU,
-    name: '画板'
-}]
 
 /**
  * 新增一篇文章
@@ -239,21 +281,4 @@ export function exportToMd(pid: number) {
         .then(() => MessageUtil.success("导出成功"))
         .catch(e => MessageUtil.error("导出失败", e))
         .finally(() => useGlobalStore().closeLoading());
-}
-
-
-export function buildArticleIcon(type: ArticleTypeEnum) {
-    if (type === ArticleTypeEnum.CODE) {
-        return h(IconCode, {})
-    } else if (type === ArticleTypeEnum.RICH_TEXT) {
-        return h(IconBook, {})
-    } else if (type === ArticleTypeEnum.EXCEL) {
-        return h(IconNav, {})
-    } else if (type === ArticleTypeEnum.MIND_MAP) {
-        return h(IconMindMapping, {})
-    } else if (type === ArticleTypeEnum.DRAUU) {
-        return h(IconBgColors, {})
-    } else {
-        return h(IconFile, {})
-    }
 }

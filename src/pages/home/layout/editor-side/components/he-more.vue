@@ -19,7 +19,11 @@
                 新增笔记
                 <template #content>
                     <a-doption v-for="articleType in articleTypes" :key="articleType.key"
-                               @click="addArticle(0, articleType.key)">{{ articleType.name }}
+                               @click="addArticle(0, articleType.key)">
+                        <template #icon>
+                            <component :is="articleType.icon"/>
+                        </template>
+                        {{ articleType.name }}
                     </a-doption>
                 </template>
             </a-dsubmenu>

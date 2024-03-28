@@ -13,6 +13,8 @@
                          v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
         <drauu-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                       v-else-if="editorType === ArticleTypeEnum.DRAUU && load"/>
+        <leafer-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                      v-else-if="editorType === ArticleTypeEnum.WHITE_BOARD && load"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -25,6 +27,7 @@ import MarkdownEditor from "@/pages/home/layout/editor-content/editor/MarkdownEd
 import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
 import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
 import DrauuEditor from "@/pages/home/layout/editor-content/editor/DrauuEditor/index.vue";
+import LeaferEditor from "@/pages/home/layout/editor-content/editor/LeaferEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";
