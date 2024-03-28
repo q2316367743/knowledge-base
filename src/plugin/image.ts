@@ -76,28 +76,24 @@ export async function useImageUploadByPlugin(data: File | Blob | string): Promis
 }
 
 
-function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<string> {
+async function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<string> {
     const id = new Date().getTime() + '';
     if (isLocal) {
-        // TODO: 本地图片上传
         const {localImagePath} = useBaseSettingStore();
         // @ts-ignore
-        return window.preload.writeToFile(localImagePath, id + '.png', data).then(path => {
-            const prefix = 'file://';
-            if (utools.isWindows()) {
-                return `${prefix}/${path}`;
-            }else {
-                return `${prefix}${path}`;
-            }
-        });
-    }else {
+        let path = await window.preload.writeToFile(localImagePath, id + '.png', data);
+        const prefix = 'file://';
+        if (utools.isWindows()) {
+            return `${prefix}/${path}`;
+        } else {
+            return `${prefix}${path}`;
+        }
+    } else {
         return postAttachment(
             LocalNameEnum.ARTICLE_ATTACHMENT + id,
             data
         );
     }
-
-
 
 
 }
