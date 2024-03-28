@@ -6,6 +6,25 @@
                     <template #header>
                         推荐
                     </template>
+                    <!-- 听雨HTML转Markdown -->
+                    <a-list-item action-layout="vertical">
+                        <template #actions>
+                            <a-link target="_blank"
+                                    @click="openLink('https://gitee.com/qiaoshengda/rain-html-to-markdown')">Gitee仓库
+                            </a-link>
+                        </template>
+                        <template #extra>
+                            <a-link @click="toApp('网页剪报')" style="margin-top: 40px;">立即使用</a-link>
+                        </template>
+                        <a-list-item-meta title="网页剪报"
+                                          description="快速将Html转Markdown，可以实现网页文章转存知识库">
+                            <template #avatar>
+                                <a-avatar shape="square">
+                                    <img alt="es-client" src="@/assets/logo/rain-html-to-markdown.png"/>
+                                </a-avatar>
+                            </template>
+                        </a-list-item-meta>
+                    </a-list-item>
                     <!-- 卡片笔记 -->
                     <a-list-item action-layout="vertical">
                         <template #actions>
@@ -90,25 +109,6 @@
                             <template #avatar>
                                 <a-avatar shape="square">
                                     <img alt="es-client" src="@/assets/logo/es-client.png"/>
-                                </a-avatar>
-                            </template>
-                        </a-list-item-meta>
-                    </a-list-item>
-                    <!-- 听雨HTML转Markdown -->
-                    <a-list-item action-layout="vertical">
-                        <template #actions>
-                            <a-link target="_blank"
-                                    @click="openLink('https://gitee.com/qiaoshengda/rain-html-to-markdown')">Gitee仓库
-                            </a-link>
-                        </template>
-                        <template #extra>
-                            <a-link @click="toApp('听雨html转markdown')" style="margin-top: 40px;">立即使用</a-link>
-                        </template>
-                        <a-list-item-meta title="听雨HTML转Markdown"
-                                          description="快速将Html转Markdown，可以实现网页文章转存知识库">
-                            <template #avatar>
-                                <a-avatar shape="square">
-                                    <img alt="es-client" src="@/assets/logo/rain-html-to-markdown.png"/>
                                 </a-avatar>
                             </template>
                         </a-list-item-meta>

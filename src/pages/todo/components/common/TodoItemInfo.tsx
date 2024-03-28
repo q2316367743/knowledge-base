@@ -44,18 +44,16 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
                     }}
                 </Tag>
             </DescriptionsItem>}
-            <DescriptionsItem label={'标签'}>
+            {content.record.tags.length > 0 && <DescriptionsItem label={'标签'}>
                 <div style={{display: 'flex', flexWrap: 'wrap'}}>
                     {content.record.tags.length > 0 ? content.record.tags.map(tag =>
-                        <Tag color={'arcoblue'} style={{marginRight: '4px', marginBottom: '4px'}}>{tag}</Tag>) :
-                    <div>暂无标签</div>}
+                            <Tag color={'arcoblue'} style={{marginRight: '4px', marginBottom: '4px'}}>{tag}</Tag>) :
+                        <div>暂无标签</div>}
                 </div>
-            </DescriptionsItem>
+            </DescriptionsItem>}
             <DescriptionsItem label={'备注'}>
                 {{
-                    default: () => content.record.content ?
-                        <div innerHTML={content.record.content} ></div> :
-                        <div style={{color: 'var(--color-text-3)'}}>请输入备注</div>
+                    default: () => <div innerHTML={content.record.content} ></div>
                 }}
             </DescriptionsItem>
         </Descriptions>,

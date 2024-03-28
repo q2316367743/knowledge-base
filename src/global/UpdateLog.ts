@@ -1,6 +1,21 @@
 import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
+    // {
+    //     version: '1.9.7',
+    //     sign: 197,
+    //     time: '2024-03-28',
+    //     items: [{
+    //         label: LogItemEnum.UPDATE,
+    //         content: "【编辑器】现在可以在设置中设置，新建笔记时是否自动根据规则命名，如果选择否，则在创建笔记时需要手动命名。"
+    //     }, {
+    //         label: LogItemEnum.UPDATE,
+    //         content: '【待办】在卡片布局和日历布局中，左键点击待办是查看详情，右键点击待办才是编辑'
+    //     }, {
+    //         label: LogItemEnum.ADD,
+    //         content: "【插件】新增两个快捷键：（ctrl/alt + n）=> 新建笔记，Delete => 删除当前笔记"
+    //     }]
+    // },
     {
         version: '1.9.6',
         sign: 196,
