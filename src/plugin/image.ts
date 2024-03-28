@@ -1,4 +1,3 @@
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
@@ -7,6 +6,7 @@ import {getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil"
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
+import {useImageSettingStore} from "@/store/setting/ImageSettingStore";
 
 /**
  * 文件上传组件
@@ -31,7 +31,9 @@ export async function useImageUpload(data: File | string, isLocal: boolean = fal
 
 async function selfImageUpload(data: File | Blob | string, isLocal: boolean): Promise<string> {
 
-    if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.INNER) {
+    const {imageStrategy} = useImageSettingStore().imageSetting;
+
+    if (imageStrategy === ImageStrategyEnum.INNER) {
 
         if (!isUtools) {
             return Promise.reject("web版不支持上传图片到内部");
@@ -41,10 +43,10 @@ async function selfImageUpload(data: File | Blob | string, isLocal: boolean): Pr
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
         return useUtoolsImageUpload(data, isLocal);
-    } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.IMAGE) {
+    } else if (imageStrategy === ImageStrategyEnum.IMAGE) {
         await useImageUploadByPlugin(data);
         return ("");
-    } else if (useBaseSettingStore().baseSetting.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
+    } else if (imageStrategy === ImageStrategyEnum.LSKY_PRO) {
         if (typeof data === 'string') {
             data = base64toBlob(data.replace("data:image/png;base64,", ""));
         }
@@ -79,7 +81,7 @@ export async function useImageUploadByPlugin(data: File | Blob | string): Promis
 async function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<string> {
     const id = new Date().getTime() + '';
     if (isLocal) {
-        const {localImagePath} = useBaseSettingStore();
+        const {localImagePath} = useImageSettingStore().imageSetting;
         // @ts-ignore
         let path = await window.preload.writeToFile(localImagePath, id + '.png', data);
         const prefix = 'file://';

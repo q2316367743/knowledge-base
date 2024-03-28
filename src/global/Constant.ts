@@ -5,6 +5,7 @@ export default {
     id: 'knowledge-base',
     name: '知识库',
     version: UpdateLog[0].version,
+    sign: UpdateLog[0].sign,
     author: '落雨不悔',
     website: 'https://blog.esion.xyz',
     feedback: 'https://txc.qq.com/products/612648',

@@ -38,6 +38,8 @@ enum LocalNameEnum {
 
     SETTING_CHAT = '/local/setting/chat',
 
+    SETTING_IMAGE = '/local/setting/image',
+
     /**
      * 待办清单中待办项索引，内部保存了全部的待办项
      */

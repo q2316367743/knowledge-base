@@ -12,6 +12,7 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
+import {useImageSettingStore} from "@/store/setting/ImageSettingStore";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
@@ -34,6 +35,7 @@ export async function initData(): Promise<void> {
         useBaseSettingStore().init(),
         useLskyProSettingStore().init(),
         useWorkspaceSettingStore().init(),
+        useImageSettingStore().init(),
 
         useArticleStore().init(),
         useCategoryStore().init(),

@@ -39,7 +39,7 @@ Boot.registerMenu(OpenByUtoolsMenu);
 
 window.onload = () => {
     document.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.ctrlKey && e.code === 'KeyN') {
+        if ((e.ctrlKey || e.altKey) && e.code === 'KeyN') {
             e.preventDefault();
             useNewEvent.emit();
         } else if (e.code === 'Delete') {
