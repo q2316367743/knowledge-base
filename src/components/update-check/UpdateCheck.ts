@@ -8,7 +8,6 @@ import {updateTo130FromUnder} from "@/components/update-check/record/updateTo130
 import {updateTo140FromUnder} from "@/components/update-check/record/updateTo140";
 import {updateTo150FromUnder} from "@/components/update-check/record/updateTo150";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {updateTo197FromUnder} from "@/components/update-check/record/UpdateTo197";
 
 export default async function updateCheck(toUpdate?: () => void) {
     const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)
@@ -41,9 +40,6 @@ export default async function updateCheck(toUpdate?: () => void) {
                     await updateTo150FromUnder();
                     MessageUtil.success("数据迁移成功");
                 }
-            }
-            if (Constant.sign >= 197) {
-                await updateTo197FromUnder();
             }
 
         }

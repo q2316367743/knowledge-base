@@ -1,3 +1,4 @@
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
@@ -6,7 +7,6 @@ import {getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil"
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
-import {useImageSettingStore} from "@/store/setting/ImageSettingStore";
 
 /**
  * 文件上传组件
@@ -31,7 +31,7 @@ export async function useImageUpload(data: File | string, isLocal: boolean = fal
 
 async function selfImageUpload(data: File | Blob | string, isLocal: boolean): Promise<string> {
 
-    const {imageStrategy} = useImageSettingStore().imageSetting;
+    const {imageStrategy} = useBaseSettingStore();
 
     if (imageStrategy === ImageStrategyEnum.INNER) {
 
@@ -81,7 +81,7 @@ export async function useImageUploadByPlugin(data: File | Blob | string): Promis
 async function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<string> {
     const id = new Date().getTime() + '';
     if (isLocal) {
-        const {localImagePath} = useImageSettingStore().imageSetting;
+        const {localImagePath} = useBaseSettingStore();
         // @ts-ignore
         let path = await window.preload.writeToFile(localImagePath, id + '.png', data);
         const prefix = 'file://';

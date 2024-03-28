@@ -1,56 +1,53 @@
 <template>
     <div class="more-setting-image">
-        <a-form :model="instance" layout="vertical">
-            <a-form-item label="图片上传策略">
-                <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.NONE" :disabled="isUtools">未设置</a-radio>
-                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="!isUtools">内部实现</a-radio>
-                    <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="!isUtools">插件【图床】</a-radio>
-                    <a-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="!isAvailable">兰空图床(推荐)</a-radio>
-                </a-radio-group>
-                <template #help>
-                    <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
-                        上传到插件内部，占用个人存储空间，最大图片仅支持10m
-                    </span>
-                    <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
-                        需要安装插件【图床】
-                    </span>
-                    <span v-else-if="instance.imageStrategy === ImageStrategyEnum.LSKY_PRO">
-                        推荐使用，需要自己部署图床服务器
-                    </span>
-                </template>
-            </a-form-item>
-            <a-form-item>
-                <a-button type="primary" @click="save()">保存</a-button>
-            </a-form-item>
-        </a-form>
+        <a-tabs v-model:active-key="activeKey" lazy-load animation type="text">
+            <template #extra>
+                <a-button type="outline" @click="save()">保存</a-button>
+            </template>
+            <a-tab-pane key="qi-niu" title="七牛云">
+                <a-form :model="instance.qiNui" layout="vertical">
+                    <a-form-item label="AccessKey">
+                        <a-input v-model:value="instance.qiNui.accessKey" allow-clear style="width: 400px"/>
+                    </a-form-item>
+                    <a-form-item label="SecretKey">
+                        <a-input-password v-model:value="instance.qiNui.secretKey" allow-clear style="width: 400px"/>
+                    </a-form-item>
+                    <a-form-item label="bucket">
+                        <a-input v-model:value="instance.qiNui.bucket" allow-clear style="width: 400px"/>
+                    </a-form-item>
+                    <a-form-item label="区域">
+                        <a-input v-model:value="instance.qiNui.region" allow-clear style="width: 400px"/>
+                    </a-form-item>
+                    <a-form-item label="使用cdn加速">
+                        <a-switch v-model:value="instance.qiNui.useCdn"/>
+                    </a-form-item>
+                    <a-form-item label="path">
+                        <a-input v-model:value="instance.qiNui.path" allow-clear style="width: 400px"/>
+                    </a-form-item>
+                    <a-form-item label="域名">
+                        <a-input v-model:value="instance.qiNui.domain" allow-clear style="width: 400px"/>
+                    </a-form-item>
+                </a-form>
+            </a-tab-pane>
+            <a-tab-pane key="ali-oss" title="阿里云OSS">
+            </a-tab-pane>
+        </a-tabs>
+
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {ref} from "vue";
 import {clone} from "xe-utils";
 import {useImageSettingStore} from "@/store/setting/ImageSettingStore";
-import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import {isUtools} from "@/global/BeanFactory";
-import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
 
 const router = useRouter();
 
 const instance = ref(clone(useImageSettingStore().imageSetting, true));
-const isAvailable = computed(() => useLskyProSettingStore().isAvailable);
+const activeKey = ref('qi-niu');
 
 function save() {
-    // 校验图床
-    if (instance.value.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
-        if (!useLskyProSettingStore().isAvailable) {
-            MessageBoxUtil.confirm("检测到您未配置兰空图床，是否立即前往配置?", "错误")
-                .then(() => router.push("/setting/lsky-pro"))
-            return;
-        }
-    }
     useImageSettingStore().save(instance.value)
         .then(() => MessageUtil.success("保存成功"))
         .catch(e => MessageUtil.error("保存失败", e));

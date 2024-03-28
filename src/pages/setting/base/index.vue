@@ -2,7 +2,7 @@
     <div class="setting">
         <a-tabs v-model:active-key="activeKey" hide-content>
             <a-tab-pane key="base" title="基础设置"/>
-            <a-tab-pane key="image" title="图片设置"/>
+            <a-tab-pane key="image" title="图床设置"/>
             <a-tab-pane key="theme" title="主题设置"/>
             <a-tab-pane key="chat" title="聊天设置"/>
         </a-tabs>
