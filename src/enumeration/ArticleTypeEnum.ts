@@ -37,11 +37,6 @@ enum ArticleTypeEnum {
      */
     DRAUU = 7,
 
-    /**
-     * 白板
-     */
-    WHITE_BOARD = 8
-
 }
 
 export default ArticleTypeEnum;

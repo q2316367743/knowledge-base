@@ -39,15 +39,16 @@
             <div class="side-btn" :class="brush === 'stylus' ? 'active' : ''" @click="brush = 'stylus'">✍️</div>
             <div class="side-btn" :class="brush === 'draw' ? 'active' : ''" @click="brush = 'draw'">✏️</div>
             <div class="side-btn" :class="brush === 'line' ? 'active' : ''" @click="brush = 'line'">⁄</div>
+            <div class="side-btn" :class="brush === 'arrow' ? 'active' : ''" @click="brush = 'arrow'">↘️</div>
             <div class="side-btn" :class="brush === 'rectangle' ? 'active' : ''" @click="brush = 'rectangle'">⃞</div>
             <div class="side-btn" :class="brush === 'ellipse' ? 'active' : ''" style="font-size: 26px;"
                  @click="brush = 'ellipse'">○
             </div>
             <div class="side-btn" :class="brush === 'eraseLine' ? 'active' : ''" @click="brush = 'eraseLine'">🧹</div>
             <a-divider/>
-            <div class="side-btn" :class="dasharray === 'solid' ? 'active' : ''" @click="dasharray = 'solid'">—</div>
-            <div class="side-btn" :class="dasharray === 'dashed' ? 'active' : ''" @click="dasharray = 'dashed'">┅</div>
-            <div class="side-btn" :class="dasharray === 'dotted' ? 'active' : ''" @click="dasharray = 'dotted'">⋯</div>
+            <div class="side-btn" :class="{active: !dasharray}" @click="dasharray = undefined">—</div>
+            <div class="side-btn" :class="{active: dasharray === '4'}" @click="dasharray = '4'">┅</div>
+            <div class="side-btn" :class="{active: dasharray === '1 7'}" @click="dasharray = '1 7'">⋯</div>
         </div>
         <!-- 内容 -->
         <div class="drauu-view-wrap">
@@ -63,11 +64,11 @@ https://github.com/antfu/drauu
 </template>
 <script lang="ts" setup>
 import {onMounted, ref, watch} from "vue";
-import { DrawingMode} from 'drauu';
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useDrauu} from "@vueuse/integrations/useDrauu";
 import {downloadByBase64, svg2png} from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {DrawingMode} from "@/components/drauu";
+import {useDrauu} from "@/components/drauu/hooks";
 
 
 const props = defineProps({
@@ -81,12 +82,12 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue']);
 
-const target = ref<SVGElement>();
+const target = ref<SVGSVGElement>();
 
 const color = ref('#000000');
 const size = ref(3);
-const brush = ref<DrawingMode>("stylus");
-const dasharray = ref("solid");
+const brush = ref<DrawingMode | 'arrow'>("stylus");
+const dasharray = ref<string>();
 const drauu = useDrauu(target, {
     brush: {
         color: useGlobalStore().isDark ? '#f2f2f2' : '#000000',
@@ -114,7 +115,15 @@ onMounted(() => {
 
 watch(() => color.value, value => drauu.brush.value.color = value);
 watch(() => size.value, value => drauu.brush.value.size = value);
-watch(() => brush.value, value => drauu.brush.value.mode = value);
+watch(() => brush.value, value => {
+    if (value === 'arrow') {
+        drauu.brush.value.mode = 'line';
+        drauu.brush.value.arrowEnd = true;
+    }else {
+        drauu.brush.value.mode = value;
+        drauu.brush.value.arrowEnd = false;
+    }
+});
 watch(() => dasharray.value, value => drauu.brush.value.dasharray = value);
 
 const undo = drauu.undo;

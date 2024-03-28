@@ -39,8 +39,6 @@ export function buildArticleIcon(type: ArticleTypeEnum) {
         return h(IconMindMapping, {})
     } else if (type === ArticleTypeEnum.DRAUU) {
         return h(IconPalette, {})
-    } else if (type === ArticleTypeEnum.WHITE_BOARD) {
-        return h(IconComputer, {})
     } else {
         return h(IconFile, {})
     }
@@ -62,10 +60,6 @@ export const articleTypes = [{
     key: ArticleTypeEnum.MIND_MAP,
     name: '思维导图',
     icon: IconMindMapping
-}, {
-    key: ArticleTypeEnum.WHITE_BOARD,
-    name: '白板',
-    icon: IconComputer
 }, {
     key: ArticleTypeEnum.DRAUU,
     name: '画板',
@@ -107,8 +101,6 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
                 }
             }
         case ArticleTypeEnum.EXCEL:
-            return {};
-        case ArticleTypeEnum.WHITE_BOARD:
             return {};
         default:
             return "";

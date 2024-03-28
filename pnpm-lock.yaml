@@ -16,7 +16,7 @@ dependencies:
     version: 9.13.0(vue@3.4.21)
   '@vueuse/integrations':
     specifier: ^10.9.0
-    version: 10.9.0(axios@1.6.7)(drauu@0.4.0)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.21)
+    version: 10.9.0(axios@1.6.7)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.21)
   '@wangeditor/editor':
     specifier: ^5.1.23
     version: 5.1.23
@@ -32,9 +32,6 @@ dependencies:
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
-  drauu:
-    specifier: ^0.4.0
-    version: 0.4.0
   fuse.js:
     specifier: ^7.0.0
     version: 7.0.0
@@ -59,12 +56,18 @@ dependencies:
   monaco-editor:
     specifier: ^0.44.0
     version: 0.44.0
+  nanoevents:
+    specifier: ^9.0.0
+    version: 9.0.0
   openai:
     specifier: ^4.29.2
     version: 4.29.2
   pangu:
     specifier: ^4.0.7
     version: 4.0.7
+  perfect-freehand:
+    specifier: ^1.2.2
+    version: 1.2.2
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@4.9.5)(vue@3.4.21)
@@ -466,10 +469,6 @@ packages:
     resolution: {integrity: sha512-sCgECOx8wiqY8NN1xN22BqqKzXYIG2AicNLlakOAI4f0WgyLVUbAigMf8CZhBtJxdudTcB1gD5lciqi44jwJvg==}
     optionalDependencies:
       node-fetch: 3.3.2
-    dev: false
-
-  /@drauu/core@0.4.0:
-    resolution: {integrity: sha512-NaypCz/tA0XBAAZrie536FqOXpIuPg2lANB15wsUmrX+Hdw3DZWGz0Ez+wS9WKQsr4+qKcPL61o5eE7CoCYNCg==}
     dev: false
 
   /@esbuild/android-arm64@0.18.20:
@@ -1104,7 +1103,7 @@ packages:
       - vue
     dev: false
 
-  /@vueuse/integrations@10.9.0(axios@1.6.7)(drauu@0.4.0)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.21):
+  /@vueuse/integrations@10.9.0(axios@1.6.7)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.21):
     resolution: {integrity: sha512-acK+A01AYdWSvL4BZmCoJAcyHJ6EqhmkQEXbQLwev1MY7NBnS+hcEMx/BzVoR9zKI+UqEPMD9u6PsyAuiTRT4Q==}
     peerDependencies:
       async-validator: '*'
@@ -1148,7 +1147,6 @@ packages:
       '@vueuse/core': 10.9.0(vue@3.4.21)
       '@vueuse/shared': 10.9.0(vue@3.4.21)
       axios: 1.6.7
-      drauu: 0.4.0
       fuse.js: 7.0.0
       idb-keyval: 6.2.1
       sortablejs: 1.15.2
@@ -2441,12 +2439,6 @@ packages:
     dev: false
     optional: true
 
-  /drauu@0.4.0:
-    resolution: {integrity: sha512-G+JU7UN5WGmx/yBk+iTAlkKwHDeHc02K0oEYms7b9OrsVU0UqXlpRKg/sNXKNDHbIlS3lGzUx7o4J200E5lAOQ==}
-    dependencies:
-      '@drauu/core': 0.4.0
-    dev: false
-
   /duck@0.1.12:
     resolution: {integrity: sha512-wkctla1O6VfP89gQ+J/yDesM0S7B7XLXjKGzXxMDVFg7uEn706niAtyYovKbyq1oT9YwDcly721/iUWoc8MVRg==}
     dependencies:
@@ -3708,6 +3700,11 @@ packages:
     resolution: {integrity: sha512-N/sMKHniSDJBjfrkbS/tpkPj4RAbvW3mr8UAzvlMHyun93XEm83IAvhWtJVHo+RHn/oO8Job5YN4b+wRjSVp5g==}
     dev: false
 
+  /nanoevents@9.0.0:
+    resolution: {integrity: sha512-X8pU7IOpgKXVLPxYUI55ymXc8XuBE+uypfEyEFBtHkD1EX9KavYTVc+vXZHFyHKzA1TaZoVDqklLdQBBrxIuAw==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    dev: false
+
   /nanoid@3.3.7:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -3883,6 +3880,10 @@ packages:
       '@pdf-lib/upng': 1.0.1
       pako: 1.0.11
       tslib: 1.14.1
+    dev: false
+
+  /perfect-freehand@1.2.2:
+    resolution: {integrity: sha512-eh31l019WICQ03pkF3FSzHxB8n07ItqIQ++G5UV8JX0zVOXzgTGCqnRR0jJ2h9U8/2uW4W4mtGJELt9kEV0CFQ==}
     dev: false
 
   /picocolors@1.0.0:
