@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "知识库",
+    "version": "1.9.7",
+    "description": "构造自己的知识库",
+    "content_security_policy": {
+        "script-src": "self",
+        "object-src": "self"
+    },
+    "icons": {
+        "256": "icons/logo.png"
+    },
+    "action": {
+        "default_title": "知识库",
+        "default_icon": "icons/logo.png"
+    },
+    "background": {
+        "service_worker": "src/background.js",
+        "type": "module"
+    },
+    "permissions": [
+    ],
+    "host_permissions": [
+    ]
+}

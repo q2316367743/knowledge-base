@@ -6,7 +6,8 @@
     "description": "知识库",
     "scripts": {
         "dev": "vite",
-        "build": "vue-tsc && vite build",
+        "build": "vue-tsc && vite build -c config/vite.config.ts",
+        "build:chrome": "vue-tsc && vite build -c config/vite.chrome.ts",
         "preview": "vite preview"
     },
     "dependencies": {
