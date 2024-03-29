@@ -1,7 +1,5 @@
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
-import {pathJoin} from "@/utils/file/FileUtil";
-import Constant from "@/global/Constant";
 
 export interface BaseSetting {
 
