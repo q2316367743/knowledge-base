@@ -25,6 +25,7 @@ export class EraserModel extends BaseModel<SVGRectElement> {
         for (let i = 0; i < children.length; i++) {
           const ele = children[i] as any
           if (ele.getTotalLength) {
+
             const pathLength = ele.getTotalLength()
 
             for (let j = 0; j < this.pathSubFactor; j++) {
@@ -37,19 +38,39 @@ export class EraserModel extends BaseModel<SVGRectElement> {
                 y2: pos2.y,
                 segment: j,
                 element: element || ele,
-              })
+              });
             }
-          }
-          else {
-            if (ele.children)
+          } else {
+            if (ele.children) {
               calculatePathFragments(ele.children, ele)
+            }
+            if (ele instanceof SVGTextElement) {
+
+              console.log(element, ele);
+              console.log( ele.getAttribute('x'), ele.getAttribute('y'), ele.clientWidth, ele.clientHeight)
+
+              const x = parseInt(ele.getAttribute('x') || '0');
+              const y = parseInt(ele.getAttribute('y') || '0');
+              const width = ele.clientWidth;
+              const height = ele.clientHeight;
+
+              this.pathFragments.push({
+                x1: x,
+                x2: x+width,
+                y1: y,
+                y2: y + height,
+                segment: 1,
+                element: element || ele,
+              });
+            }
           }
         }
       }
     }
 
-    if (el)
-      calculatePathFragments(el.children)
+    if (el) {
+      calculatePathFragments(el.children);
+    }
   }
 
   onUnselected(): void {
@@ -106,6 +127,7 @@ export class EraserModel extends BaseModel<SVGRectElement> {
   }
 
   private lineLineIntersect(line1: any, line2: any): boolean {
+    console.log(line1, line2)
     const x1 = line1.x1
     const x2 = line1.x2
     const x3 = line2.x1

@@ -7,9 +7,10 @@ import {LineModel} from './line'
 import {RectModel} from './rect'
 import {DrawModel} from './draw'
 import {EraserModel} from './eraser'
+import {TextModel} from './text';
 
 export function createModels(drauu: Drauu):
-    Record<DrawingMode, DrawModel | StylusModel | LineModel | RectModel | EllipseModel | EraserModel> {
+    Record<DrawingMode, DrawModel | StylusModel | LineModel | RectModel | EllipseModel | EraserModel | TextModel> {
     return {
         draw: new DrawModel(drauu),
         stylus: new StylusModel(drauu),
@@ -17,6 +18,7 @@ export function createModels(drauu: Drauu):
         rectangle: new RectModel(drauu),
         ellipse: new EllipseModel(drauu),
         eraseLine: new EraserModel(drauu),
+        text: new TextModel(drauu)
     }
 }
 

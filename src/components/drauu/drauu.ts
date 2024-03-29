@@ -115,6 +115,10 @@ export class Drauu {
     return this._emitter.on(type, fn)
   }
 
+  emitChanged() {
+    this._emitter.emit('changed')
+  }
+
   undo() {
     if (!this.canUndo() || this.drawing)
       return false
