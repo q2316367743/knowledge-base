@@ -6,6 +6,8 @@ import Constant from "@/global/Constant";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import dayjs from "dayjs";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import {isUtools} from "@/global/BeanFactory";
+import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 
 export const useBaseSettingStore = defineStore('base-setting', {
     state: () => ({
@@ -14,7 +16,6 @@ export const useBaseSettingStore = defineStore('base-setting', {
     }),
     getters: {
         imageStrategy: state => state.baseSetting.imageStrategy,
-        localImagePath: state => state.baseSetting.localImagePath,
         autoCollapsedByEditor: state => state.baseSetting.autoCollapsedByEditor,
         autoCollapsedByTodo: state => state.baseSetting.autoCollapsedByTodo,
         newArticleAutoName: state => state.baseSetting.newArticleAutoName,
@@ -41,8 +42,15 @@ export const useBaseSettingStore = defineStore('base-setting', {
     actions: {
         async init() {
             const res = await getFromOneWithDefaultByAsync(LocalNameEnum.SETTING_BASE, getDefaultBaseSetting());
-            this.baseSetting = res.record;
+            this.baseSetting = Object.assign(this.baseSetting, res.record);
             this.rev = res.rev;
+            if (!isUtools) {
+                if (this.baseSetting.imageStrategy !== ImageStrategyEnum.LSKY_PRO &&
+                    this.baseSetting.imageStrategy !== ImageStrategyEnum.INNER) {
+                    this.baseSetting.imageStrategy = ImageStrategyEnum.INNER;
+                    this.save(this.baseSetting).then(() => console.debug("重置图片策略为内部"));
+                }
+            }
         },
         async save(baseSetting: BaseSetting) {
             this.baseSetting = baseSetting;

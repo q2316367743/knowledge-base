@@ -3,14 +3,14 @@
         <a-form :model="instance" layout="vertical">
             <a-form-item label="图片上传策略">
                 <a-radio-group v-model="instance.imageStrategy">
-                    <a-radio :value="ImageStrategyEnum.NONE" :disabled="isUtools">未设置</a-radio>
-                    <a-radio :value="ImageStrategyEnum.INNER" :disabled="isWeb">内部实现</a-radio>
+                    <a-radio :value="ImageStrategyEnum.INNER">内部实现</a-radio>
                     <a-radio :value="ImageStrategyEnum.IMAGE" :disabled="isWeb">插件【图床】</a-radio>
                     <a-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="!isAvailable">兰空图床(推荐)</a-radio>
                 </a-radio-group>
                 <template #help>
                     <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
-                        上传到插件内部，占用个人存储空间，最大图片仅支持10m
+                        <span v-if="isUtools">markdown图片上传到插件内部，占用个人存储空间，最大图片仅支持10m，富文本将转为base64存储在文章中，文章最大1m，请谨慎上传</span>
+                        <span v-else>转为base64存储到文章中</span>
                     </span>
                     <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
                         需要安装插件【图床】
@@ -18,28 +18,6 @@
                     <span v-else-if="instance.imageStrategy === ImageStrategyEnum.LSKY_PRO">
                         推荐使用，需要自己部署图床服务器
                     </span>
-                </template>
-            </a-form-item>
-            <a-form-item v-if="isUtools">
-                <a-input-group style="width: 80%">
-                    <a-input v-model="instance.localImagePath" allow-clear
-                             :disabled="instance.imageStrategy !== ImageStrategyEnum.INNER"/>
-                    <a-button @click="chooseLocalImagePath()" type="primary">
-                        <template #icon>
-                            <icon-file/>
-                        </template>
-                    </a-button>
-                </a-input-group>
-                <template #label>
-                    本地图片目录（富文本）
-                    <a-button type="text" @click="openLocalImagePath()" size="mini">
-                        <template #icon>
-                            <icon-question-circle/>
-                        </template>
-                    </a-button>
-                </template>
-                <template #help>
-                    本设置只对富文本编辑器时，图片上传策略为【内部实现】有效，设置后，插件会将图片保存到该目录下
                 </template>
             </a-form-item>
             <a-form-item label="编辑文章是否自动收起菜单">
@@ -173,18 +151,6 @@ export default defineComponent({
         openLocalImagePath() {
             MessageBoxUtil.alert("由于富文本编辑器的限制，导致无法将图片上传到utools内部，所以只能存放到本地中，因此，富文本编辑器的图片目前无法实现同步功能", "本地图片须知")
         },
-        chooseLocalImagePath() {
-            // 选择本地图片目录
-            const paths = utools.showOpenDialog({
-                title: '请选择图片缓存目录',
-                defaultPath: this.instance.localImagePath,
-                buttonLabel: '选择',
-                properties: ['openDirectory']
-            });
-            if (paths && paths.length > 0) {
-                this.instance.localImagePath = paths[0];
-            }
-        }
     }
 });
 </script>

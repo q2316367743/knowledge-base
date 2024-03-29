@@ -1,9 +1,5 @@
 enum ImageStrategyEnum {
 
-    /**
-     * 没
-     */
-    NONE = 0,
 
     /**
      * 内置
@@ -11,7 +7,7 @@ enum ImageStrategyEnum {
     INNER = 1,
 
     /**
-     * 图床
+     * 【图床】插件
      */
     IMAGE = 2,
 
@@ -19,11 +15,6 @@ enum ImageStrategyEnum {
      * 兰空图床
      */
     LSKY_PRO = 3,
-
-    /**
-     * 七牛云
-     */
-    QI_NIU = 4
 
 }
 

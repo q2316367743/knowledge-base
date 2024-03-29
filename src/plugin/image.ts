@@ -8,6 +8,8 @@ import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
 
+const BASE64_PREFIX: string = 'data:image/png;base64,';
+
 /**
  * 文件上传组件
  * @param data 图片数据
@@ -35,32 +37,44 @@ async function selfImageUpload(data: File | Blob | string, isLocal: boolean): Pr
 
     if (imageStrategy === ImageStrategyEnum.INNER) {
 
-        if (!isUtools) {
-            return Promise.reject("web版不支持上传图片到内部");
+        if (isUtools) {
+            if (isLocal) {
+                // utools的富文本转为base64
+                return useImageUploadByBase64(data);
+            }else {
+                return useImageUploadByUtools(data);
+            }
+        } else {
+            // web版直接使用base64
+            return useImageUploadByBase64(data);
         }
 
-        if (typeof data === 'string') {
-            data = base64toBlob(data.replace("data:image/png;base64,", ""));
-        }
-        return useUtoolsImageUpload(data, isLocal);
     } else if (imageStrategy === ImageStrategyEnum.IMAGE) {
         await useImageUploadByPlugin(data);
         return ("");
     } else if (imageStrategy === ImageStrategyEnum.LSKY_PRO) {
-        if (typeof data === 'string') {
-            data = base64toBlob(data.replace("data:image/png;base64,", ""));
-        }
-        return useLskyProSettingStore().upload(data)
+        return useImageUploadByLskyPro(data)
     }
     return Promise.reject("请在基础设置中选择图片上传策略")
 
+}
+
+// --------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------- 上传图片 ---------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------
+
+async function useImageUploadByBase64(data: File | Blob | string): Promise<string> {
+    if (data instanceof Blob) {
+        data = await blobToBase64(data);
+    }
+    return data;
 }
 
 /**
  * 图片上传使用插件
  * @param data 图片数据
  */
-export async function useImageUploadByPlugin(data: File | Blob | string): Promise<void> {
+async function useImageUploadByPlugin(data: File | Blob | string): Promise<void> {
 
     if (!isUtools) {
         return Promise.reject("web版不支持调用图床");
@@ -78,27 +92,28 @@ export async function useImageUploadByPlugin(data: File | Blob | string): Promis
 }
 
 
-async function useUtoolsImageUpload(data: Blob | File, isLocal: boolean): Promise<string> {
-    const id = new Date().getTime() + '';
-    if (isLocal) {
-        const {localImagePath} = useBaseSettingStore();
-        // @ts-ignore
-        let path = await window.preload.writeToFile(localImagePath, id + '.png', data);
-        const prefix = 'file://';
-        if (utools.isWindows()) {
-            return `${prefix}/${path}`;
-        } else {
-            return `${prefix}${path}`;
-        }
-    } else {
-        return postAttachment(
-            LocalNameEnum.ARTICLE_ATTACHMENT + id,
-            data
-        );
+async function useImageUploadByUtools(data: Blob | File | string): Promise<string> {
+    if (typeof data === 'string') {
+        data = base64toBlob(data.replace(BASE64_PREFIX, ""));
     }
-
+    const id = new Date().getTime() + '';
+    return postAttachment(
+        LocalNameEnum.ARTICLE_ATTACHMENT + id,
+        data
+    );
 
 }
+
+async function useImageUploadByLskyPro(data: Blob | File | string): Promise<string> {
+    if (typeof data === 'string') {
+        data = base64toBlob(data.replace(BASE64_PREFIX, ""));
+    }
+    return useLskyProSettingStore().upload(data)
+}
+
+// --------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------- 加载图片 ---------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------
 
 /**
  * 根据图片ID，获取图片连接（同步）

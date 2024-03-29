@@ -11,11 +11,6 @@ export interface BaseSetting {
     imageStrategy: ImageStrategyEnum;
 
     /**
-     * 本地图片目录
-     */
-    localImagePath: string;
-
-    /**
      * 当屏幕太小时，是否自动收起
      */
     autoCollapsedByEditor: boolean;
@@ -67,7 +62,6 @@ export enum ArticleActionEnum {
 export function getDefaultBaseSetting(): BaseSetting {
     return {
         imageStrategy: ImageStrategyEnum.INNER,
-        localImagePath: pathJoin(utools.getPath('cache'), Constant.id, 'image'),
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
         newArticleAutoName: true,
