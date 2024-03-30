@@ -95,3 +95,14 @@ export function mindMapToMarkdown(data: any): string {
     // TODO：使用广度遍历
     throw new Error("暂不支持思维导图问答");
 }
+
+export function htmlToDocByDownload(htmlContent: string, fileName: string) {
+    const blob = new Blob([htmlContent], {type: 'application/msword'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName + '.doc';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+

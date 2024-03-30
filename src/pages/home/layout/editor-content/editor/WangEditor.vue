@@ -23,7 +23,7 @@ import {useElementSize} from "@vueuse/core";
 import {getLineLength, getTextCount, useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
 import {download} from "@/utils/BrowserUtil";
-import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
+import {htmlToDocByDownload, htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 
@@ -175,6 +175,10 @@ function onExport(id: number) {
             key: 3,
             name: '纯文本',
             desc: '便于阅读'
+        }, {
+            key: 4,
+            name: 'Word文档',
+            desc: '便于阅读'
         }]).then(res => {
             if (editor) {
                 if (res.type === 1) {
@@ -183,6 +187,8 @@ function onExport(id: number) {
                     download(editor.getHtml(), res.title, 'text/html;charset=utf-8');
                 } else if (res.type === 3) {
                     download(editor.getText(), res.title, 'text/html;charset=utf-8');
+                }else if (res.type === 4) {
+                    htmlToDocByDownload(`<html lang="zh"><body>${editor.getHtml()}</body></html>`, res.title);
                 }
             }
         })
