@@ -24,7 +24,7 @@ createApp(App)
     .use(setupCalendar, {})
     .mount('#app');
 
-import {statistics, useDeleteEvent, useNewEvent} from './global/BeanFactory';
+import {statistics, useNewEvent} from './global/BeanFactory';
 
 statistics.init();
 statistics.open();
@@ -42,9 +42,6 @@ window.onload = () => {
         if ((e.ctrlKey || e.altKey) && e.code === 'KeyN') {
             e.preventDefault();
             useNewEvent.emit();
-        } else if (e.code === 'Delete') {
-            e.preventDefault();
-            useDeleteEvent.emit();
         }
     });
 }
