@@ -24,7 +24,7 @@ createApp(App)
     .use(setupCalendar, {})
     .mount('#app');
 
-import {statistics, useNewEvent} from './global/BeanFactory';
+import {statistics, useDeleteEvent, useNewEvent} from './global/BeanFactory';
 
 statistics.init();
 statistics.open();
@@ -39,9 +39,15 @@ Boot.registerMenu(OpenByUtoolsMenu);
 
 window.onload = () => {
     document.addEventListener('keydown', (e: KeyboardEvent) => {
-        if ((e.ctrlKey || e.altKey) && e.code === 'KeyN') {
-            e.preventDefault();
-            useNewEvent.emit();
+        if (e.ctrlKey || e.altKey) {
+            if (e.code === 'KeyN') {
+                e.preventDefault();
+                useNewEvent.emit();
+            }else if (e.code === 'Delete') {
+                e.preventDefault();
+                useDeleteEvent.emit();
+            }
+
         }
     });
 }

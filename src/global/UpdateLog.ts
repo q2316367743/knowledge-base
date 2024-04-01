@@ -2,6 +2,21 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '1.9.8',
+        sign: 198,
+        time: '2024-04-01',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: "【编辑器】delete删除快捷键改为：（ctrl/alt + Delete）"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '【富文本】富文本现在上传图片会将图片转为base64存在文章中，但由于文章最大1m，请谨慎使用'
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【富文本】富文本导出新增Word格式"
+        }]
+    },
+    {
         version: '1.9.7',
         sign: 197,
         time: '2024-03-29',
