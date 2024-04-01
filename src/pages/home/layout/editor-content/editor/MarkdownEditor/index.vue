@@ -35,7 +35,7 @@ const emits = defineEmits(['update:modelValue', 'sendToChat']);
 defineExpose({onInsert})
 
 const instance = shallowRef<Cherry>();
-const id = 'markdown-editor-' + new Date().getTime();
+const id = 'markdown-editor-' + props.articleId;
 const size = useWindowSize();
 
 

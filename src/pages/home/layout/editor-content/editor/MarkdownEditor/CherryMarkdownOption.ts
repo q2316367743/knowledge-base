@@ -240,5 +240,8 @@ export const editorProps = {
         required: false,
         default: false
     },
-    articleId: Number
+    articleId: {
+        type: Number,
+        default: () => new Date().getTime()
+    }
 }
