@@ -9,7 +9,6 @@
             </a-button>
         </a-layout-header>
         <a-layout-content>
-
             <a-tree block-node animation :data="pluginTree" :virtual-list-props="virtualListProps"
                     @select="onSelect">
                 <template #extra="nodeData">
