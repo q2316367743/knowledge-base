@@ -1,36 +1,54 @@
 <template>
     <a-layout class="setting-plugin-side">
-        <a-tree block-node animation :data="pluginTree" :virtual-list-props="virtualListProps"
-                @select="onSelect">
-            <template #extra="nodeData">
-                <a-dropdown v-if="nodeData.isLeaf">
-                    <a-button type="text">
+        <a-layout-header>
+            <a-dropdown>
+                <a-button type="text">
+                    <template #icon>
+                        <icon-question/>
+                    </template>
+                    使用帮助
+                </a-button>
+                <template #content>
+                    <a-doption>主题帮助</a-doption>
+                    <a-doption>markdown菜单</a-doption>
+                    <a-doption>markdown语法</a-doption>
+                </template>
+            </a-dropdown>
+        </a-layout-header>
+        <a-layout-content>
+
+            <a-tree block-node animation :data="pluginTree" :virtual-list-props="virtualListProps"
+                    @select="onSelect">
+                <template #extra="nodeData">
+                    <a-dropdown v-if="nodeData.isLeaf">
+                        <a-button type="text">
+                            <template #icon>
+                                <icon-more/>
+                            </template>
+                        </a-button>
+                        <template #content>
+                            <a-doption @click="editPlugin(nodeData)">
+                                <template #icon>
+                                    <icon-edit/>
+                                </template>
+                                重命名
+                            </a-doption>
+                            <a-doption @click="removePlugin(nodeData.key)">
+                                <template #icon>
+                                    <icon-delete/>
+                                </template>
+                                删除
+                            </a-doption>
+                        </template>
+                    </a-dropdown>
+                    <a-button type="text" v-else @click="createPlugin(nodeData.key)">
                         <template #icon>
-                            <icon-more/>
+                            <icon-plus/>
                         </template>
                     </a-button>
-                    <template #content>
-                        <a-doption @click="editPlugin(nodeData)">
-                            <template #icon>
-                                <icon-edit/>
-                            </template>
-                            重命名
-                        </a-doption>
-                        <a-doption @click="removePlugin(nodeData.key)">
-                            <template #icon>
-                                <icon-delete/>
-                            </template>
-                            删除
-                        </a-doption>
-                    </template>
-                </a-dropdown>
-                <a-button type="text" v-else @click="createPlugin(nodeData.key)">
-                    <template #icon>
-                        <icon-plus/>
-                    </template>
-                </a-button>
-            </template>
-        </a-tree>
+                </template>
+            </a-tree>
+        </a-layout-content>
     </a-layout>
 </template>
 <script lang="ts" setup>
@@ -47,7 +65,7 @@ const size = useWindowSize();
 
 const pluginTree = computed(() => usePluginSettingStore().pluginTree);
 const virtualListProps = computed(() => ({
-    height: size.height.value - 14
+    height: size.height.value - 21 - 32
 }))
 
 function onSelect(selectedKeys: Array<string | number>) {

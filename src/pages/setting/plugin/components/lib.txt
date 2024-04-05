@@ -1,0 +1,57 @@
+declare class Cherry {
+    /**
+     * 获取编辑区内的markdown源码内容
+     * @returns markdown源码内容
+     */
+    getValue(): string;
+
+    /**
+     * 获取编辑区内的markdown源码内容
+     * @returns {string} markdown源码内容
+     */
+    getMarkdown(): string;
+
+    /**
+     * 获取预览区内的html内容
+     * @param {boolean} [wrapTheme=true] 是否在外层包裹主题class
+     * @returns {string} html内容
+     */
+    getHtml(wrapTheme?: boolean): string;
+
+    /**
+     * 覆盖编辑区的内容
+     * @param {string} content markdown内容
+     * @param {boolean} keepCursor 是否保持光标位置
+     */
+    setValue(content: string, keepCursor?: boolean): void;
+
+    /**
+     * 在光标处或者指定行+偏移量插入内容
+     * @param {string} content 被插入的文本
+     * @param {boolean} [isSelect=false] 是否选中刚插入的内容
+     * @param {[number, number]|false} [anchor=false] [x,y] 代表x+1行，y+1字符偏移量，默认false 会从光标处插入
+     * @param {boolean} [focus=true] 保持编辑器处于focus状态
+     */
+    insert(content: string, isSelect?: boolean, anchor?: [number, number] | false, focus?: boolean): void;
+
+    /**
+     * 在光标处或者指定行+偏移量插入内容
+     * @param {string} content 被插入的文本
+     * @param {boolean} [isSelect=false] 是否选中刚插入的内容
+     * @param {[number, number]|false} [anchor=false] [x,y] 代表x+1行，y+1字符偏移量，默认false 会从光标处插入
+     * @param {boolean} [focus=true] 保持编辑器处于focus状态
+     * @returns
+     */
+    insertValue(content: string, isSelect?: boolean, anchor?: [number, number] | false, focus?: boolean): void;
+
+    /**
+     * 覆盖编辑区的内容
+     * @param {string} content markdown内容
+     * @param {boolean} [keepCursor=false] 是否保持光标位置
+     */
+    setMarkdown(content: string, keepCursor?: boolean): void;
+
+}
+
+declare const selection: string;
+declare const instance: Cherry;

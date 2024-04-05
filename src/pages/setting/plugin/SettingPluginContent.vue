@@ -3,12 +3,13 @@
 </template>
 <script lang="ts" setup>
 import {PluginSettingIndex, PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
-import { onMounted, PropType, ref, watch} from "vue";
+import {onMounted, onUnmounted, PropType, ref, watch} from "vue";
 import * as monaco from "monaco-editor";
 import {useElementSize} from "@vueuse/core";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import lib from './components/lib.txt?raw'
 
 const props = defineProps({
     plugin: Object as PropType<PluginSettingIndex>
@@ -17,9 +18,7 @@ const props = defineProps({
 const pluginRef = ref();
 
 const size = useElementSize(pluginRef);
-
-
-
+const iDisposable = monaco.languages.typescript.javascriptDefaults.addExtraLib(lib, 'markdown-menu.d.ts');
 
 onMounted(() => {
 
@@ -71,7 +70,11 @@ onMounted(() => {
     watch(() => size.width.value, () => editor && editor.layout());
     watch(() => size.height.value, () => editor && editor.layout());
 
-})
+});
+
+onUnmounted(() => {
+    iDisposable && iDisposable.dispose();
+});
 
 
 </script>
