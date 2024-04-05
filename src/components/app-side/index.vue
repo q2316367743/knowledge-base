@@ -35,6 +35,9 @@
             <a-menu-item key="/setting/base">
                 基础设置
             </a-menu-item>
+            <a-menu-item key="/setting/plugin">
+                主题与插件
+            </a-menu-item>
             <a-menu-item key="/setting/lsky-pro">
                 兰空图床
             </a-menu-item>

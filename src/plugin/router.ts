@@ -42,6 +42,10 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/setting/feature",
     component: () => import("@/pages/setting/feature/index.vue")
 }, {
+    name: "设置-插件",
+    path: "/setting/plugin",
+    component: () => import("@/pages/setting/plugin/index.vue")
+}, {
     name: "更多-备份",
     path: "/more/backup",
     component: () => import("@/pages/more/backup/index.vue")

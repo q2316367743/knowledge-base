@@ -3,7 +3,6 @@ import {createPinia} from 'pinia';
 import App from './App.vue'
 import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
-
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';
@@ -14,7 +13,39 @@ import '@/less/index.less';
 import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';
+// 编辑器
+// @ts-ignore
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+// @ts-ignore
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+// @ts-ignore
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+// @ts-ignore
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+// @ts-ignore
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+// 安装wangEditor插件
+import {Boot} from '@wangeditor/editor'
+import markdownModule from '@wangeditor/plugin-md'
+import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
 
+self.MonacoEnvironment = {
+    getWorker(_: string, label: string) {
+        if (label === 'json') {
+            return new jsonWorker()
+        }
+        if (['css', 'scss', 'less'].includes(label)) {
+            return new cssWorker()
+        }
+        if (['html', 'handlebars', 'razor'].includes(label)) {
+            return new htmlWorker()
+        }
+        if (['typescript', 'javascript'].includes(label)) {
+            return new tsWorker()
+        }
+        return new EditorWorker()
+    },
+}
 
 createApp(App)
     .use(ArcoVue)
@@ -29,10 +60,6 @@ import {statistics, useDeleteEvent, useNewEvent} from './global/BeanFactory';
 statistics.init();
 statistics.open();
 
-// 安装wangEditor插件
-import {Boot} from '@wangeditor/editor'
-import markdownModule from '@wangeditor/plugin-md'
-import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
 
 Boot.registerModule(markdownModule);
 Boot.registerMenu(OpenByUtoolsMenu);

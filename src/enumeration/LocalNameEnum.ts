@@ -40,6 +40,10 @@ enum LocalNameEnum {
 
     SETTING_IMAGE = '/local/setting/image',
 
+    SETTING_PLUGIN = '/local/setting/plugin',
+
+    LIST_PLUGIN_CONTENT = '/list/plugin/content',
+
     /**
      * 待办清单中待办项索引，内部保存了全部的待办项
      */
