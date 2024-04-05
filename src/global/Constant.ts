@@ -20,5 +20,8 @@ export default {
         TODO_CATEGORY: 'todo:'
     },
     autoCollapsedWidth: 1080,
-    goodsId: 'nrniJTkDF7bjDosiki1vjXxAxGNbUsG6'
+    goodsId: 'nrniJTkDF7bjDosiki1vjXxAxGNbUsG6',
+    help: {
+        plugin: 'https://blog.esion.xyz/index.php/2024/04/06/知识库-主题与插件/'
+    }
 }

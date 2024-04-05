@@ -1,19 +1,12 @@
 <template>
     <a-layout class="setting-plugin-side">
         <a-layout-header>
-            <a-dropdown>
-                <a-button type="text">
-                    <template #icon>
-                        <icon-question/>
-                    </template>
-                    使用帮助
-                </a-button>
-                <template #content>
-                    <a-doption>主题帮助</a-doption>
-                    <a-doption>markdown菜单</a-doption>
-                    <a-doption>markdown语法</a-doption>
+            <a-button type="text" @click="toHelp()">
+                <template #icon>
+                    <icon-question/>
                 </template>
-            </a-dropdown>
+                使用帮助
+            </a-button>
         </a-layout-header>
         <a-layout-content>
 
@@ -57,6 +50,7 @@ import {useWindowSize} from "@vueuse/core";
 import {contains} from "@/utils/lang/ArrayUtil";
 import {PLUGIN_FOLDER_KEYS, usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {createPlugin, editPlugin, removePlugin} from "@/pages/setting/plugin/components/operation";
+import Constant from "@/global/Constant";
 
 const emits = defineEmits(['select']);
 
@@ -66,7 +60,8 @@ const size = useWindowSize();
 const pluginTree = computed(() => usePluginSettingStore().pluginTree);
 const virtualListProps = computed(() => ({
     height: size.height.value - 21 - 32
-}))
+}));
+const toHelp = () => utools.shellOpenExternal(Constant.help.plugin);
 
 function onSelect(selectedKeys: Array<string | number>) {
     const selectKey = selectedKeys[0];
@@ -76,9 +71,7 @@ function onSelect(selectedKeys: Array<string | number>) {
         // 文件
         emits('select', selectedKeys[0]);
     }
-
-};
-
+}
 
 </script>
 <style scoped>
