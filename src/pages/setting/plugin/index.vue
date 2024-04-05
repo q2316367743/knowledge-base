@@ -10,7 +10,7 @@
     </a-layout>
 </template>
 <script lang="ts" setup>
-import { ref} from "vue";
+import {nextTick, ref} from "vue";
 import { usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
 import SettingPluginSide from "@/pages/setting/plugin/SettingPluginSide.vue";
@@ -23,8 +23,10 @@ const load = ref(false);
 function onSelect(selectKey: string | number) {
     // 文件
     load.value = false;
-    plugin.value = usePluginSettingStore().pluginMap.get(selectKey as number);
-    load.value = !!plugin.value;
+    nextTick(() => {
+        plugin.value = usePluginSettingStore().pluginMap.get(selectKey as number);
+        load.value = !!plugin.value;
+    })
 }
 
 

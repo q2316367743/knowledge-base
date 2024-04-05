@@ -4,10 +4,16 @@ import {TreeNodeData} from "@arco-design/web-vue";
 import {group, map, MapWrap} from "@/utils/lang/ArrayUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
-import {getFromOneByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getFromOneByAsync, listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {PluginSettingContent, PluginSettingIndex, PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 
 export const PLUGIN_FOLDER_KEYS = ['theme', 'markdown-menu', 'markdown-syntax'];
+
+export interface PluginItem {
+    id: number;
+    name: string;
+    content: string;
+}
 
 export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, () => {
     const items = ref(new Array<PluginSettingIndex>())
@@ -114,16 +120,32 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         return getFromOneByAsync<PluginSettingContent>(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`);
     }
 
+    async function getPlugins(type: PluginSettingTypeEnum): Promise<Array<PluginItem>> {
+        const indexes = items.value.filter(item => item.type === type);
+
+        if (indexes.length === 0) {
+            return Promise.resolve([])
+        }
+
+        const records = await listRecordByAsync<PluginSettingContent>(indexes.map(item => `${LocalNameEnum.LIST_PLUGIN_CONTENT}/${item.id}`));
+
+        const recordMap = map(records.map(record => record.record), 'id');
+
+        return indexes.map(item => {
+            const record = recordMap.getOrDefault(item.id, {id: item.id, content: ''});
+            return {
+                id: item.id,
+                name: item.name,
+                content: record.content
+            }
+        }).filter(item => item.content !== '');
+
+    }
+
     return {
-        pluginTree,
-        pluginMap,
-        init,
-        save,
-        add,
-        rename,
-        saveContent,
-        remove,
-        getContent
+        pluginTree, pluginMap,
+        init, save, add, rename, saveContent, remove, getContent,
+        getPlugins
     }
 
 })

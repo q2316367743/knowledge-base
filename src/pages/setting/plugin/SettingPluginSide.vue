@@ -1,7 +1,6 @@
 <template>
     <a-layout class="setting-plugin-side">
         <a-tree block-node animation :data="pluginTree" :virtual-list-props="virtualListProps"
-                v-model:expanded-keys="expandedKeys"
                 @select="onSelect">
             <template #extra="nodeData">
                 <a-dropdown v-if="nodeData.isLeaf">
@@ -35,17 +34,16 @@
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {useWindowSize} from "@vueuse/core";
+import {contains} from "@/utils/lang/ArrayUtil";
 import {PLUGIN_FOLDER_KEYS, usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {createPlugin, editPlugin, removePlugin} from "@/pages/setting/plugin/components/operation";
-import {contains} from "@/utils/lang/ArrayUtil";
 
 const emits = defineEmits(['select']);
 
 const size = useWindowSize();
 
-const expandedKeys = ref<string[]>([]);
 
 const pluginTree = computed(() => usePluginSettingStore().pluginTree);
 const virtualListProps = computed(() => ({
@@ -55,12 +53,6 @@ const virtualListProps = computed(() => ({
 function onSelect(selectedKeys: Array<string | number>) {
     const selectKey = selectedKeys[0];
     if (contains(PLUGIN_FOLDER_KEYS, selectKey)) {
-        // 文件夹
-        if (!expandedKeys.value.includes(selectKey as string)) {
-            expandedKeys.value.push(selectKey as string);
-        } else {
-            expandedKeys.value = expandedKeys.value.filter(key => key !== selectKey);
-        }
         emits('select');
     } else {
         // 文件

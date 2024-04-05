@@ -40,19 +40,21 @@ const size = useWindowSize();
 
 
 onMounted(() => {
-    instance.value = new Cherry(buildConfig(
+    buildConfig(
         props.articleId || 0, id,
         props.modelValue || '',
         props.preview,
         instance,
         e => emits('update:modelValue', e),
         e => emits('sendToChat', e)
-    ));
-    handleTheme();
-    useArticleExportEvent.off(onExport);
-    useArticleExportEvent.on(onExport);
-    useArticleImportEvent.off(onImport);
-    useArticleImportEvent.on(onImport);
+    ).then(config => {
+        instance.value = new Cherry(config);
+        handleTheme();
+        useArticleExportEvent.off(onExport);
+        useArticleExportEvent.on(onExport);
+        useArticleImportEvent.off(onImport);
+        useArticleImportEvent.on(onImport);
+    }).catch(e => MessageUtil.error("编辑器初始化失败", e))
 });
 
 onBeforeUnmount(() => {

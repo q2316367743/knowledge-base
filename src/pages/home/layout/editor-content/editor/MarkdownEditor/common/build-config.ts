@@ -21,17 +21,18 @@ import {CherryOptions} from "cherry-markdown/dist/types/Cherry";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {useAskAi} from "@/components/CherryMarkdown/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/components/CherryMarkdown/syntax/RelationArticle";
+import {useMoreItemMenu, useMoreMenu} from "@/components/CherryMarkdown/menu/MoreMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
-export function buildConfig(
+export async function buildConfig(
     articleId: number,
     id: string,
     value: string,
     preview: boolean,
     instance: Ref<Cherry | undefined>,
     update: (content: string) => void,
-    sendToChat: (content: string) => void): CherryOptions {
+    sendToChat: (content: string) => void): Promise<CherryOptions> {
 
     // 默认模式
     const defaultModel = preview || useBaseSettingStore().mdEditorEditMode === MdEditorEditModeEnum.PREVIEW ?
@@ -80,6 +81,37 @@ export function buildConfig(
     if (isUtools) {
         // 只有是utools才需要截图
         toolbar.push('ScreenShotMenu')
+    }
+
+
+    const customMenu: Record<string, any> = {
+        // 菜单
+        AI: useAskAi(articleId, sendToChat),
+        ScreenShotMenu: useScreenShotMenu(instance),
+        PanGu: usePanGu(),
+        FanYi: useFanYi(),
+        Relation: useRelationMenu(instance),
+        // 夏柔API
+        YiYan: useYiYanMenu(instance),
+        AnWei: useAnWeiMenu(instance),
+        Pyq: usePyqMenu(instance),
+        TianGouRiJi: useTianGouRiJiMenu(instance),
+        QingGan: useQingGanMenu(instance),
+        MingRenMingYan: useMingRenMingYanMenu(instance),
+        // 分组
+        YangShi: Cherry.createMenuHook("样式", {}),
+        ZiTi: Cherry.createMenuHook("字体", {}),
+        WenAn: Cherry.createMenuHook("文案", {}),
+        // 更多
+        More: useMoreMenu
+    }
+    const plugins = await useMoreItemMenu(instance);
+
+    if (plugins.length > 0) {
+        plugins.forEach(plugin => customMenu[plugin.name] = plugin.hook);
+        toolbar.push({
+            More: [...plugins.map(plugin => plugin.name)],
+        });
     }
 
     const config = {
@@ -148,25 +180,7 @@ export function buildConfig(
                 updateLocationHash: false, // 要不要更新URL的hash
                 defaultModel: 'pure', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
             },
-            customMenu: {
-                // 菜单
-                AI: useAskAi(articleId, sendToChat),
-                ScreenShotMenu: useScreenShotMenu(instance),
-                PanGu: usePanGu(),
-                FanYi: useFanYi(),
-                Relation: useRelationMenu(instance),
-                // 夏柔API
-                YiYan: useYiYanMenu(instance),
-                AnWei: useAnWeiMenu(instance),
-                Pyq: usePyqMenu(instance),
-                TianGouRiJi: useTianGouRiJiMenu(instance),
-                QingGan: useQingGanMenu(instance),
-                MingRenMingYan: useMingRenMingYanMenu(instance),
-                // 分组
-                YangShi: Cherry.createMenuHook("样式", {}),
-                ZiTi: Cherry.createMenuHook("字体", {}),
-                WenAn: Cherry.createMenuHook("文案", {})
-            }
+            customMenu
         },
         callback: {
             afterChange(value: string) {
