@@ -32,12 +32,16 @@ export const keyword = ref('');
 export async function initData(): Promise<void> {
     // 在进行数据初始化
     await Promise.all([
-        useThemeSettingStore().init(),
         useBaseSettingStore().init(),
         useLskyProSettingStore().init(),
         useWorkspaceSettingStore().init(),
         useImageSettingStore().init(),
-        usePluginSettingStore().init(),
+        Promise.all([
+            useThemeSettingStore().init(),
+            usePluginSettingStore().init()])
+            .then(() => {
+                // TODO: 处理主题
+            }),
 
         useArticleStore().init(),
         useCategoryStore().init(),

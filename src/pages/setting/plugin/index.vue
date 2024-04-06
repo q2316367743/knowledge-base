@@ -5,20 +5,30 @@
         </a-layout-sider>
         <a-layout-content>
             <setting-plugin-content :plugin="plugin" v-if="load"/>
-            <a-result v-else title="请前往主题设置中设置" style="margin-top: 15vh;"/>
+            <a-result v-else title="主题与插件" style="margin-top: 15vh;">
+                <template #subtitle>
+                    <p>选择左侧的插件进行编辑</p>
+                    <p>通过主题与插件，可以自定义您的知识库插件</p>
+                </template>
+                <template #extra>
+                    <a-button type="primary" @click="toHelp">查看帮助</a-button>
+                </template>
+            </a-result>
         </a-layout-content>
     </a-layout>
 </template>
 <script lang="ts" setup>
 import {nextTick, ref} from "vue";
-import { usePluginSettingStore} from "@/store/db/PluginSettingStore";
+import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
 import SettingPluginSide from "@/pages/setting/plugin/SettingPluginSide.vue";
 import SettingPluginContent from "@/pages/setting/plugin/SettingPluginContent.vue";
+import Constant from "@/global/Constant";
 
 const plugin = ref<PluginSettingIndex>();
 const load = ref(false);
 
+const toHelp = () => utools.shellOpenExternal(Constant.help.plugin);
 
 function onSelect(selectKey: string | number) {
     // 文件
