@@ -39,9 +39,7 @@ export async function initData(): Promise<void> {
         Promise.all([
             useThemeSettingStore().init(),
             usePluginSettingStore().init()])
-            .then(() => {
-                // TODO: 处理主题
-            }),
+            .then(useThemeSettingStore().buildThemeStyle),
 
         useArticleStore().init(),
         useCategoryStore().init(),

@@ -1,5 +1,5 @@
 <template>
-    <div class="app" :class="enableBackgroundImage ? 'customer-image' : 'default-color'" :style="customerImage">
+    <div class="app">
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout class="app-layout">
                 <a-layout-sider collapsed style="z-index: 50">
@@ -27,7 +27,6 @@ import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
-import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 
 
@@ -43,8 +42,6 @@ const preview = ref({
 
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
-const enableBackgroundImage = computed(() => useThemeSettingStore().enableBackgroundImage);
-const customerImage = computed(() => useThemeSettingStore().customerImage);
 
 
 // 插件进入

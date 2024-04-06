@@ -1,30 +1,15 @@
 export interface ThemeSetting {
 
-    /**
-     * 背景图片
-     */
-    backgroundImage: string;
+    theme: number;
 
-    /**
-     * 文字颜色
-     */
-    textColor: string;
+    markdownMenus: Array<number>;
 
-    /**
-     * 背景颜色
-     */
-    bgColor: string;
-
-    /**
-     * 主要颜色
-     */
-    primaryColor: string;
+    markdownSyntaxes: Array<number>;
 
 }
 
 export const getDefaultThemeSetting = (): ThemeSetting => ({
-    backgroundImage: "",
-    bgColor: "var(--color-bg-1)",
-    primaryColor: "rgb(var(--arcoblue-6))",
-    textColor: "var(--color-text-1)"
+    theme: 0,
+    markdownMenus: [],
+    markdownSyntaxes: []
 })

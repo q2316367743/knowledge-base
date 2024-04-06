@@ -1,11 +1,12 @@
 import {defineStore} from "pinia";
 import {computed, h, ref} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
-import {group, map, MapWrap} from "@/utils/lang/ArrayUtil";
+import {contains, group, map, MapWrap} from "@/utils/lang/ArrayUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {getFromOneByAsync, listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {PluginSettingContent, PluginSettingIndex, PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
+import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 
 export const PLUGIN_FOLDER_KEYS = ['theme', 'markdown-menu', 'markdown-syntax'];
 
@@ -121,11 +122,25 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
     }
 
     async function getPlugins(type: PluginSettingTypeEnum): Promise<Array<PluginItem>> {
-        const indexes = items.value.filter(item => item.type === type);
+        let indexes = items.value.filter(item => item.type === type);
 
         if (indexes.length === 0) {
             return Promise.resolve([])
         }
+
+        // 过滤掉没启用的
+
+        switch (type) {
+            case PluginSettingTypeEnum.MARKDOWN_MENU:
+                const {markdownMenus} = useThemeSettingStore();
+                indexes = indexes.filter(item => contains(markdownMenus, item.id));
+                break;
+            case PluginSettingTypeEnum.MARKDOWN_SYNTAX:
+                const {markdownSyntaxes} = useThemeSettingStore();
+                indexes = indexes.filter(item => contains(markdownSyntaxes, item.id));
+                break;
+        }
+
 
         const records = await listRecordByAsync<PluginSettingContent>(indexes.map(item => `${LocalNameEnum.LIST_PLUGIN_CONTENT}/${item.id}`));
 
@@ -142,10 +157,27 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
 
     }
 
+    async function getThemeContent(id: number): Promise<string> {
+        const index = items.value.findIndex(item => item.id === id);
+
+        if (index === -1) {
+            return Promise.resolve('')
+        }
+
+        if (items.value[index].type !== PluginSettingTypeEnum.THEME) {
+            return Promise.resolve('')
+        }
+
+        const record = await getFromOneByAsync<PluginSettingContent>(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`);
+
+        return record.record ? record.record.content : '';
+
+    }
+
     return {
-        pluginTree, pluginMap,
+        plugins: items,pluginTree, pluginMap,
         init, save, add, rename, saveContent, remove, getContent,
-        getPlugins
+        getPlugins, getThemeContent
     }
 
 })

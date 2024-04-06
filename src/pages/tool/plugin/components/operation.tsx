@@ -3,12 +3,16 @@ import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {parseType, renderType} from "@/pages/tool/plugin/components/func";
 import {TreeNodeData} from "@arco-design/web-vue";
+import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 
 
 export function createPlugin(key: string | number) {
     const type = parseType(key.toString());
     if (!type) {
         return MessageUtil.error("未知类型");
+    }
+    if (type === PluginSettingTypeEnum.MARKDOWN_SYNTAX) {
+        return MessageUtil.warning("不支持新建Markdown语法");
     }
     const content = renderType(type);
     MessageBoxUtil.prompt(`请输入${content}名称`, '新建' + content, {
