@@ -14,16 +14,19 @@
         </a-menu-item>
         <a-sub-menu key="/graph">
             <template #icon>
-                <icon-mind-mapping/>
+                <icon-tool/>
             </template>
-            <template #title>图</template>
-            <a-menu-item key="/graph/search">
+            <template #title>工具</template>
+            <a-menu-item key="/tool/search">
                 搜索内容
             </a-menu-item>
-            <a-menu-item key="/graph/recycle">
+            <a-menu-item key="/tool/recycle">
                 回收站
             </a-menu-item>
-            <a-menu-item key="/graph/category">
+            <a-menu-item key="/tool/plugin">
+                主题与插件
+            </a-menu-item>
+            <a-menu-item key="/tool/category">
                 分类图
             </a-menu-item>
         </a-sub-menu>
@@ -34,9 +37,6 @@
             <template #title>设置</template>
             <a-menu-item key="/setting/base">
                 基础设置
-            </a-menu-item>
-            <a-menu-item key="/setting/plugin">
-                主题与插件
             </a-menu-item>
             <a-menu-item key="/setting/lsky-pro">
                 兰空图床

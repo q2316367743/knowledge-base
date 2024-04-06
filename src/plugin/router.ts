@@ -14,17 +14,21 @@ const routers: Array<RouteRecordRaw> = [{
     path: '/todo',
     component: () => import("@/pages/todo/index.vue")
 }, {
-    name: "图-搜索",
-    path: "/graph/search",
-    component: () => import("@/pages/graph/search/index.vue")
+    name: "工具-搜索内容",
+    path: "/tool/search",
+    component: () => import("@/pages/tool/search/index.vue")
 }, {
-    name: "图-回收站",
-    path: "/graph/recycle",
-    component: () => import("@/pages/graph/recycle/index.vue")
+    name: "工具-回收站",
+    path: "/tool/recycle",
+    component: () => import("@/pages/tool/recycle/index.vue")
 }, {
-    name: "图-分类",
-    path: "/graph/category",
-    component: () => import("@/pages/graph/category/index.vue")
+    name: "工具-插件",
+    path: "/tool/plugin",
+    component: () => import("@/pages/tool/plugin/index.vue")
+}, {
+    name: "工具-分类",
+    path: "/tool/category",
+    component: () => import("@/pages/tool/category/index.vue")
 }, {
     name: "设置-基础",
     path: "/setting/base",
@@ -41,10 +45,6 @@ const routers: Array<RouteRecordRaw> = [{
     name: "设置-关键字",
     path: "/setting/feature",
     component: () => import("@/pages/setting/feature/index.vue")
-}, {
-    name: "设置-插件",
-    path: "/setting/plugin",
-    component: () => import("@/pages/setting/plugin/index.vue")
 }, {
     name: "更多-备份",
     path: "/more/backup",

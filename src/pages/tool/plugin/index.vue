@@ -11,7 +11,10 @@
                     <p>通过主题与插件，可以自定义您的知识库插件</p>
                 </template>
                 <template #extra>
-                    <a-button type="primary" @click="toHelp">查看帮助</a-button>
+                    <a-space>
+                        <a-button type="primary" @click="toHelp">查看帮助</a-button>
+                        <a-button type="primary" @click="toSetting">前往设置</a-button>
+                    </a-space>
                 </template>
             </a-result>
         </a-layout-content>
@@ -21,14 +24,23 @@
 import {nextTick, ref} from "vue";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
-import SettingPluginSide from "@/pages/setting/plugin/SettingPluginSide.vue";
-import SettingPluginContent from "@/pages/setting/plugin/SettingPluginContent.vue";
+import SettingPluginSide from "@/pages/tool/plugin/SettingPluginSide.vue";
+import SettingPluginContent from "@/pages/tool/plugin/SettingPluginContent.vue";
 import Constant from "@/global/Constant";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const plugin = ref<PluginSettingIndex>();
 const load = ref(false);
 
 const toHelp = () => utools.shellOpenExternal(Constant.help.plugin);
+const toSetting = () => router.push({
+    path: '/setting/base',
+    query: {
+        tab: 'theme'
+    }
+});
 
 function onSelect(selectKey: string | number) {
     // 文件

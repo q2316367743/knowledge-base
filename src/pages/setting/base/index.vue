@@ -21,8 +21,11 @@ import BaseSetting from "@/pages/setting/base/components/BaseSetting.vue";
 import ThemeSetting from "@/pages/setting/base/components/ThemeSetting.vue";
 import ChatSetting from "@/pages/setting/base/components/ChatSetting.vue";
 import ImageSetting from "@/pages/setting/base/components/ImageSetting.vue";
+import {useRoute} from "vue-router";
 
-const activeKey = ref<string>('base');
+const route = useRoute();
+
+const activeKey = ref<string>((route.query.tab as string) || 'base');
 </script>
 <style scoped lang="less">
 .setting {
