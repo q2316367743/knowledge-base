@@ -9,6 +9,7 @@
                 <template #subtitle>
                     <p>选择左侧的插件进行编辑</p>
                     <p>通过主题与插件，可以自定义您的知识库插件</p>
+                    <p>主题需要设置才可以启用，菜单和语法则是立即启用</p>
                 </template>
                 <template #extra>
                     <a-space>
@@ -22,12 +23,12 @@
 </template>
 <script lang="ts" setup>
 import {nextTick, ref} from "vue";
+import {useRouter} from "vue-router";
+import Constant from "@/global/Constant";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
 import SettingPluginSide from "@/pages/tool/plugin/SettingPluginSide.vue";
 import SettingPluginContent from "@/pages/tool/plugin/SettingPluginContent.vue";
-import Constant from "@/global/Constant";
-import {useRouter} from "vue-router";
 
 const router = useRouter();
 
