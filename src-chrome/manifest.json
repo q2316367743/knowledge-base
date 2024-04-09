@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "知识库",
-    "version": "1.9.7",
+    "version": "2.0.0",
     "description": "构造自己的知识库",
     "content_security_policy": {
         "script-src": "self",

@@ -2,6 +2,16 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.0.0',
+        sign: 200,
+        time: '2024-04-06',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【编辑器】新增主体与插件"
+        }],
+        remark: '此处新增了主题与插件，可以自定义主题，自己修改markdown预览样式。也可以自己新增markdown菜单，实现自定义功能，比如文字替换、插入自定义内容等等。主题与插件的使用方法请查看文档'
+    },
+    {
         version: '1.9.8',
         sign: 198,
         time: '2024-04-01',
