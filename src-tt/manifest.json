@@ -65,6 +65,11 @@
 			"entry": "/dist/index.html",
 			"width": "1280px",
 			"height": "800px"
+		},
+		"card": {
+			"entry": "/dist/card.html",
+			"size": "8x8",
+			"preview": "tcs.gif"
 		}
 	}
 }

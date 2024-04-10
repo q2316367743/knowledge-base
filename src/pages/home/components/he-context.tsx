@@ -113,14 +113,14 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
  * @param type 文章类型
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
-    _addArticle(pid, type).then(id => {
+    _addArticle(pid, type, buildDefaultContent(type)).then(id => {
         MessageUtil.success("新增成功");
         useHomeEditorStore().openArticle(id);
     })
         .catch(e => MessageUtil.error("新增失败", e));
 }
 
-async function _addArticle(pid: number, type: ArticleTypeEnum) {
+export async function _addArticle(pid: number, type: ArticleTypeEnum, content: any) {
     if (type === ArticleTypeEnum.EXCEL) {
         NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
     }
@@ -135,7 +135,7 @@ async function _addArticle(pid: number, type: ArticleTypeEnum) {
         name,
         folder: pid,
         type,
-    }), getDefaultArticleBase(), buildDefaultContent(type));
+    }), getDefaultArticleBase(), content);
 }
 
 export function addArticleModal() {

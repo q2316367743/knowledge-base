@@ -1,0 +1,47 @@
+
+
+html,
+body {
+    height: 100%;
+}
+
+
+.app {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-bg-1);
+    color: var(--color-text-1);
+
+    .app-layout {
+        height: 100%;
+        width: 100%;
+
+        &>.arco-layout-content {
+            position: relative;
+            overflow: hidden;
+            color: var(--color-text-1);
+        }
+    }
+
+    .rain-loading {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    &.customer-image {
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .arco-layout-content {
+        position: relative;
+    }
+
+}

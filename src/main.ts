@@ -8,8 +8,7 @@ import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
-import '@/less/customer.less';
-import '@/less/index.less';
+import '@/assets/style/global.less';
 import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';

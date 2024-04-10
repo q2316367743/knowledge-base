@@ -6,6 +6,7 @@
     "description": "知识库",
     "scripts": {
         "dev": "vite -c config/vite.config.ts",
+        "dev:tt": "vite -c config/vite.tt.ts",
         "build": "vue-tsc && vite build -c config/vite.config.ts",
         "build:chrome": "vue-tsc && vite build -c config/vite.chrome.ts",
         "build:tt": "vue-tsc && vite build -c config/vite.tt.ts",
