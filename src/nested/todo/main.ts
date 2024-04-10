@@ -8,6 +8,11 @@ import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
+import './less/setting.less';
+import './less/info.less';
+import '@wangeditor/editor/dist/css/style.css';
+import {Boot} from "@wangeditor/editor";
+import markdownModule from "@wangeditor/plugin-md";
 
 window.utools = window.utools || utools;
 
@@ -18,4 +23,4 @@ createApp(App)
     .mount('#app');
 
 
-
+Boot.registerModule(markdownModule);

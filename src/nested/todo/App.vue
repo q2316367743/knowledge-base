@@ -1,7 +1,8 @@
 <template>
     <div class="app kb-todo">
         <card-todo-input/>
-        <card-todo-container/>
+        <card-todo-container v-if="categoryId"/>
+        <a-result v-else title="请先前往设置中选择代办清单" />
         <div class="setting">
             <a-button type="text" @click="openSettingModal()" size="mini">
                 <template #icon>
@@ -14,7 +15,7 @@
 <script lang="ts" setup>
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {openSettingModal} from "@/nested/todo/setting";
+import {openSettingModal} from "@/nested/todo/components/CardTodoSetting";
 import {useSettingStore} from "@/nested/todo/store";
 import {computed, watch} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
@@ -30,7 +31,8 @@ useSettingStore().init();
 const categoryId = computed(() => useSettingStore().categoryId);
 
 watch(categoryId, value => {
-    value && useTodoStore().setId(value);
+    useTodoStore().setId(value || 0);
+    useTodoStore().setCategoryId(value || 0);
 }, {immediate: true})
 
 

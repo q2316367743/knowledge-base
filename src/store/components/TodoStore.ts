@@ -25,7 +25,7 @@ import {clone} from "xe-utils";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {map} from "@/utils/lang/ArrayUtil";
 
 export function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
@@ -125,6 +125,10 @@ export const useTodoStore = defineStore('todo', {
                 const todoCategory = map(useTodoCategoryStore().value, 'id').get(id);
                 if (!todoCategory) {
                     MessageUtil.error("待办分类不存在，请刷新页面重试");
+                    this.id = 0;
+                    return;
+                }
+                if (todoCategory.type !== TodoCategoryTypeEnum.TODO) {
                     this.id = 0;
                     return;
                 }

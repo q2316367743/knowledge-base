@@ -1,10 +1,10 @@
-import {computed, createApp, ref} from "vue";
+import {createApp, ref} from "vue";
 import {Button, Form, FormItem, TreeSelect} from "@arco-design/web-vue";
 import {IconLeft, IconSave} from "@arco-design/web-vue/es/icon";
-import './setting.less';
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {useSettingStore} from "@/nested/todo/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 
 export function openSettingModal() {
     const settingDiv = document.createElement('div');
@@ -21,6 +21,11 @@ export function openSettingModal() {
     }
 
     function onSave() {
+        const todoCategory = todoCategoryMap.get(setting.value.categoryId || 0);
+        if (todoCategory && todoCategory.type !== TodoCategoryTypeEnum.TODO) {
+            MessageUtil.success("请选择待办清单，不能选择待办文件夹");
+            return;
+        }
         loading.value = true;
         useSettingStore().save(setting.value)
             .then(() => {
@@ -51,8 +56,11 @@ export function openSettingModal() {
                 <div class={'container'}>
                     <Form model={{}} layout={'vertical'}>
                         <FormItem label={'当前清单'}>
-                            <TreeSelect data={todoCategoryTree} allowClear allowSearch
-                                        v-model={setting.value.categoryId}/>
+                            {{
+                                default: () => <TreeSelect data={todoCategoryTree} allowClear allowSearch
+                                                           v-model={setting.value.categoryId}/>,
+                                help: () => <span>请选择待办清单，请勿选择待办文件夹</span>
+                            }}
                         </FormItem>
                     </Form>
                 </div>

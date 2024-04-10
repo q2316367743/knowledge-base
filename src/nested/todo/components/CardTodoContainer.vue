@@ -72,6 +72,7 @@ import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} fr
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {openCardTodoInfo} from "@/nested/todo/components/CardTodoInfo";
 
 const todoList = computed(() => {
     const category = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().id);
@@ -144,7 +145,7 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
     return Promise.resolve(record);
 }
 
-const setItemId = (itemId: number) => useTodoStore().setItemId(itemId);
+const setItemId = (itemId: number) => openCardTodoInfo(itemId);
 const handleColor = (item: TodoItemIndex): string => handlePriorityColor(item.priority);
 
 </script>

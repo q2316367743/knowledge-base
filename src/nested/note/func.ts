@@ -8,7 +8,7 @@ type InsertFnType = (url: string, alt?: string, href?: string) => void
 
 export function buildEditorConfig(): Partial<IEditorConfig> {
     return {
-        placeholder: '请输入笔记内容',
+        placeholder: '请输入笔记内容，支持markdown语法',
         customAlert: (info: string, type: AlertType) => {
             MessageUtil[type](info);
         },

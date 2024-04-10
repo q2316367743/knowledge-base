@@ -44,14 +44,6 @@ const priority = ref<TodoItemPriority>(TodoItemPriority.NONE);
 const id = computed(() => useTodoStore().id);
 const disabled = computed(() => useTodoStore().id === 0);
 const color = computed(() => handlePriorityColor(priority.value));
-const percent = computed(() => {
-    if (useTodoStore().todoItems.length === 0) {
-        return 0;
-    }
-    const all = useTodoStore().todoList.length + useTodoStore().completeList.length;
-    const value = useTodoStore().completeList.length / all;
-    return parseFloat(value.toFixed(4))
-});
 const placeholder = computed(() => {
     if (id.value === 0) {
         return '';
