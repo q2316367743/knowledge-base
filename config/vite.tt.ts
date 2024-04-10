@@ -1,7 +1,7 @@
 // vite.config.js
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import {resolve} from "path";
 
 function _resolve(dir: string) {
@@ -15,16 +15,16 @@ export default defineConfig({
         },
     },
     plugins: [
-        vue(),vueJsx(),
+        vue(), vueJsx(),
     ],
     base: "./",
     build: {
         outDir: "src-tt/dist",
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'index.html'),
-                note: resolve(__dirname, 'note.html'),
-                todo: resolve(__dirname, 'todo.html'),
+                main: _resolve('index.html'),
+                note: _resolve('note.html'),
+                todo: _resolve('todo.html'),
             },
         },
     },
