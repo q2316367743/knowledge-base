@@ -6,11 +6,14 @@ import {Ref} from "vue";
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 type InsertFnType = (url: string, alt?: string, href?: string) => void
 
-export function buildEditorConfig(): Partial<IEditorConfig> {
+export function buildEditorConfig(update?: (value: string) => void): Partial<IEditorConfig> {
     return {
         placeholder: '请输入笔记内容，支持markdown语法',
         customAlert: (info: string, type: AlertType) => {
             MessageUtil[type](info);
+        },
+        onChange(editor) {
+            update && update(editor.getHtml());
         },
         scroll: true,
         autoFocus: false,
@@ -41,10 +44,10 @@ export function buildEditorConfig(): Partial<IEditorConfig> {
     }
 }
 
-export function buildRickText(dom: Ref<HTMLDivElement | undefined>): IDomEditor {
+export function buildRickText(dom: Ref<HTMLDivElement | undefined>, update?: (value: string) => void): IDomEditor {
     return createEditor({
         selector: dom.value,
-        config: buildEditorConfig(),
+        config: buildEditorConfig(update),
         mode: 'default', // or 'simple'
     });
 }

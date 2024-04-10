@@ -270,6 +270,36 @@ export const useTodoStore = defineStore('todo', {
             }
             return Promise.resolve(this.todoItems[index]);
         },
+        /**
+         * 根据ID更新待办项
+         * @param id 待办项ID
+         * @param record 更新内容
+         * @param content 待办内容
+         * @return 更新后的数据
+         */
+        async updateContent(id: number, record: Partial<TodoItemIndex>, content?: Partial<TodoItemContent>): Promise<TodoItemIndex> {
+            const index = this.todoItems.findIndex(e => e.id === id);
+            if (index === -1) {
+                return Promise.reject("待办项不存在");
+            }
+            this.todoItems[index] = {
+                ...this.todoItems[index],
+                ...record,
+                updateTime: new Date(),
+            };
+            // 同步
+            await this._sync();
+            if (content) {
+                // 由于数据量不大，就直接查询
+                let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemAttr(id));
+                // 如果存在内容，则一并更新
+                await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ITEM + id, {
+                    ...old.record,
+                    ...content
+                }, old.rev);
+            }
+            return Promise.resolve(this.todoItems[index]);
+        },
         async saveContent(id: number, content: TodoItemContent, rev?: string): Promise<string | undefined> {
             return saveOneByAsync(LocalNameEnum.TODO_ITEM + id, content, rev)
         },
