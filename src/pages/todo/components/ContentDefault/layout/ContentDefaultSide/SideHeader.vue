@@ -121,12 +121,15 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+// 存储
+import {useTodoStore} from "@/store/components/TodoStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+// 实体类
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
+// 组件
 import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 import {openTodoSetting} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoSetting";

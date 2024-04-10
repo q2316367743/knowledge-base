@@ -23,8 +23,8 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, 'index.html'),
-                card: resolve(__dirname, 'card.html'),
                 note: resolve(__dirname, 'note.html'),
+                todo: resolve(__dirname, 'todo.html'),
             },
         },
     },

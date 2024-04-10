@@ -9,7 +9,6 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
 
-export const isUtools: boolean = typeof window.utools !== 'undefined'
 window.utools = window.utools || utools;
 
 createApp(App)

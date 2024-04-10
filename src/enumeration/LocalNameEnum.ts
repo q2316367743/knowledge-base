@@ -112,7 +112,12 @@ enum LocalNameEnum {
     /**
      * 文章——AI警告
      */
-    KEY_ARTICLE_AI_FILE_WARN = '/key/article/ai/warning'
+    KEY_ARTICLE_AI_FILE_WARN = '/key/article/ai/warning',
+
+    /**
+     * 卡片 - 待办 - 设置
+     */
+    CARD_TODO_SETTING = '/card/todo/setting'
 
 }
 
