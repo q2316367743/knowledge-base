@@ -66,10 +66,15 @@
 			"width": "1280px",
 			"height": "800px"
 		},
-		"card": {
-			"entry": "/dist/card.html",
-			"size": "8x8",
-			"preview": "tcs.gif"
+		"note": {
+			"entry": "/dist/note.html",
+			"size": "4x4",
+			"preview": "./dist/logo.png"
+		},
+		"todo": {
+			"entry": "/dist/todo.html",
+			"size": "4x4",
+			"preview": "./dist/logo.png"
 		}
 	}
 }
