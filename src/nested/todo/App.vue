@@ -40,6 +40,7 @@ watch(categoryId, value => {
 <style scoped lang="less">
 .kb-todo {
     padding: 7px;
+    background-color: transparent;
 
     .setting {
         position: absolute;
