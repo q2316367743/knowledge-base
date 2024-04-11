@@ -66,12 +66,7 @@
 			"width": "1280px",
 			"height": "800px"
 		},
-		"note": {
-			"entry": "/dist/note.html",
-			"size": "4x4",
-			"preview": "./dist/logo.png"
-		},
-		"todo": {
+		"card": {
 			"entry": "/dist/todo.html",
 			"size": "4x4",
 			"preview": "./dist/logo.png"
