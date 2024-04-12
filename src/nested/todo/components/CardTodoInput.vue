@@ -1,10 +1,10 @@
 <template>
     <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
-             :disabled="id === 0" size="mini">
+             :disabled="id === 0">
         <template #suffix>
             <!-- 优先级 -->
             <a-dropdown position="br" @select="updatePriority($event)"  :disabled="disabled">
-                <a-button type="text" :style="{color: color}" class="priority" size="mini">
+                <a-button type="text" :style="{color: color}" class="priority">
                     <template #icon>
                         <icon-thunderbolt/>
                     </template>

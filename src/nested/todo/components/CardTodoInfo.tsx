@@ -56,13 +56,13 @@ export function openCardTodoInfo(id: number) {
 
             return () => <div class={'card-todo-info'}>
                 <div class={'header'}>
-                    <Button size={'mini'} type={'text'} onClick={onClose} loading={loading.value}>
+                    <Button type={'text'} onClick={onClose} loading={loading.value}>
                         {{
                             icon: () => <IconLeft/>
                         }}
                     </Button>
-                    <Input allowClear size={'mini'} v-model={todoItem.value.index.title} disabled={loading.value}/>
-                    <Button size={'mini'} type={'text'} style={{marginLeft: '7px'}} onClick={onSave}
+                    <Input allowClear v-model={todoItem.value.index.title} disabled={loading.value}/>
+                    <Button type={'text'} style={{marginLeft: '7px'}} onClick={onSave}
                             loading={loading.value}>
                         {{
                             icon: () => <IconSave/>
