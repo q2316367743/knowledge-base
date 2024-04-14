@@ -1,5 +1,5 @@
 <template>
-    <div class="home-editor-side">
+    <div class="home-editor-side" ref="homeEditorSideRef">
         <header style="margin: 7px;">
             <a-input-group style="width: 100%">
                 <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
@@ -154,7 +154,7 @@ import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {useWindowSize} from "@vueuse/core";
+import {useElementSize, useWindowSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";
@@ -174,7 +174,8 @@ import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
-const size = useWindowSize();
+const homeEditorSideRef = ref();
+const size = useElementSize(homeEditorSideRef);
 
 const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [useHomeEditorStore().id]);
 const checkKeys = ref<Array<number>>([]);
@@ -206,7 +207,7 @@ const treeData = computed<Array<TreeNodeData>>(() => {
     return treeData;
 });
 const virtualListProps = computed(() => ({
-    height: size.height.value - 46
+    height: size.height.value - 53
 }));
 const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
 
