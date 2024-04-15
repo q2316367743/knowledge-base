@@ -71,12 +71,6 @@
                 </template>
                 推荐
             </a-menu-item>
-            <!--            <a-menu-item key="/more/vip">-->
-            <!--                <template #icon>-->
-            <!--                    <icon-fire />-->
-            <!--                </template>-->
-            <!--                高级版-->
-            <!--            </a-menu-item>-->
             <a-menu-item key="/more/update">
                 <template #icon>
                     <icon-time-line/>
@@ -93,7 +87,7 @@
     </a-menu>
     <div class="app-exit">
         <a-dropdown position="tl">
-            <a-button type="text">
+            <a-button type="text" style="margin-bottom: 7px;">
                 <template #icon>
                     <icon-palette/>
                 </template>
@@ -116,6 +110,39 @@
                 </a-doption>
             </template>
         </a-dropdown>
+        <a-dropdown position="tl">
+            <a-button type="text">
+                <template #icon>
+                    <icon-question-circle-fill/>
+                </template>
+            </a-button>
+            <template #content>
+                <a-doption @click="openKeyDrawer()">
+                    <template #icon>
+                        <icon-to-bottom />
+                    </template>
+                    快捷键
+                </a-doption>
+                <a-doption @click="toDoc()">
+                    <template #icon>
+                        <icon-question-circle/>
+                    </template>
+                    帮助中心
+                </a-doption>
+                <a-doption @click="toTxc()">
+                    <template #icon>
+                        <icon-message />
+                    </template>
+                    反馈与建议
+                </a-doption>
+                <a-doption @click="toUpdateLog()">
+                    <template #icon>
+                        <icon-message-banned />
+                    </template>
+                    查看更新日志
+                </a-doption>
+            </template>
+        </a-dropdown>
     </div>
 </template>
 <script lang="ts" setup>
@@ -124,6 +151,8 @@ import {ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
+import {openKeyDrawer} from "@/components/app-side/func";
+import {toDoc, toTxc} from "@/global/Constant";
 
 const route = useRoute();
 const router = useRouter();
@@ -137,6 +166,7 @@ watch(() => route.path, path => {
     }
 });
 
+const toUpdateLog = () => router.push('/more/update')
 
 </script>
 <style scoped>

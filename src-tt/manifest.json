@@ -62,18 +62,18 @@
 	"file_assign": "",
 	"modules": {
 		"main": {
-			"entry": "http://localhost:5173/index.html",
+			"entry": "./dist/index.html",
 			"width": "1280px",
 			"height": "800px"
 		},
 		"card": [{
 			"name": "待办",
-			"entry": "http://localhost:5173/todo.html",
+			"entry": "./dist/todo.html",
 			"size": "4x4",
 			"preview": "./dist/logo.png"
 		}, {
 			"name": "富文本笔记",
-			"entry": "http://localhost:5173/note.html",
+			"entry": "./dist/note.html",
 			"size": "4x4",
 			"preview": "./dist/logo.png"
 		}]

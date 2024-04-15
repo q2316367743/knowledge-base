@@ -1,12 +1,13 @@
 import UpdateLog from "@/global/UpdateLog";
 
-export default {
+const Constant=  {
     uid: 'zdllh16g',
     id: 'knowledge-base',
     name: '知识库',
     version: UpdateLog[0].version,
     sign: UpdateLog[0].sign,
     author: '落雨不悔',
+    txcId: '612648',
     website: 'https://blog.esion.xyz',
     feedback: 'https://txc.qq.com/products/612648',
     repo: 'https://gitee.com/qiaoshengda/knowledge-base',
@@ -25,3 +26,8 @@ export default {
         plugin: 'https://blog.esion.xyz/index.php/2024/04/06/知识库-主题与插件/'
     }
 }
+
+export default Constant;
+
+export const toTxc = () => utools.shellOpenExternal(Constant.feedback);
+export const toDoc = () => utools.shellOpenExternal(Constant.doc);
