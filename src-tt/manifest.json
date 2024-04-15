@@ -67,12 +67,12 @@
 			"height": "800px"
 		},
 		"card": [{
-			"name": "待办组件",
+			"name": "待办",
 			"entry": "http://localhost:5173/todo.html",
 			"size": "4x4",
 			"preview": "./dist/logo.png"
 		}, {
-			"name": "笔记组件",
+			"name": "富文本笔记",
 			"entry": "http://localhost:5173/note.html",
 			"size": "4x4",
 			"preview": "./dist/logo.png"

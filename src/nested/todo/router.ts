@@ -10,6 +10,10 @@ const routers: Array<RouteRecordRaw> = [{
     path: '/home',
     component: () => import('@/nested/todo/pages/home/index.vue')
 }, {
+    name: "待办",
+    path: '/info/:id',
+    component: () => import('@/nested/todo/pages/info/index.vue')
+}, {
     name: "设置",
     path: '/setting',
     component: () => import('@/nested/todo/pages/setting/index.vue')

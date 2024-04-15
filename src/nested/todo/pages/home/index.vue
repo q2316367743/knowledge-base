@@ -47,7 +47,7 @@ function openSettingModal() {
 
     .container {
         position: absolute;
-        top: 40px;
+        top: 47px;
         left: 0;
         right: 0;
         bottom: 0;

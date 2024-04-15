@@ -9,7 +9,6 @@ import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
-import './less/info.less';
 import '@wangeditor/editor/dist/css/style.css';
 // 富文本
 import {Boot} from "@wangeditor/editor";

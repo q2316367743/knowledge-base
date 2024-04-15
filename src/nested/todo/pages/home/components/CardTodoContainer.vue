@@ -4,12 +4,25 @@
              :key="item.id" @click.stop>
             <a-checkbox :default-checked="false" @change="updateStatus(item.id, TodoItemStatus.COMPLETE)">
             </a-checkbox>
-            <a-dropdown align-point trigger="contextMenu">
-                <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
-                    {{ item.title }}
-                </div>
+            <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
+                {{ item.title }}
+            </div>
+            <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="left">
+                <a-button type="text" :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
+                          @click="updateTop(item.id, !item.top)">
+                    <template #icon>
+                        <icon-arrow-rise/>
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-dropdown trigger="click" position="br">
+                <a-button type="text">
+                    <template #icon>
+                        <icon-more/>
+                    </template>
+                </a-button>
                 <template #content>
-                    <a-dsubmenu>
+                    <a-dsubmenu position="lt">
                         <template #icon>
                             <icon-thunderbolt :style="{color:handlePriorityColor(item.priority)}"/>
                         </template>
@@ -51,14 +64,6 @@
                     </a-doption>
                 </template>
             </a-dropdown>
-            <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="right">
-                <a-button type="text" :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
-                          @click="updateTop(item.id, !item.top)">
-                    <template #icon>
-                        <icon-arrow-rise/>
-                    </template>
-                </a-button>
-            </a-tooltip>
         </div>
     </div>
 </template>
@@ -72,7 +77,9 @@ import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} fr
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {openCardTodoInfo} from "@/nested/todo/components/CardTodoInfo";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const todoList = computed(() => {
     const category = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().id);
@@ -145,7 +152,7 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
     return Promise.resolve(record);
 }
 
-const setItemId = (itemId: number) => openCardTodoInfo(itemId);
+const setItemId = (itemId: number) => router.push('/info/' + itemId);
 const handleColor = (item: TodoItemIndex): string => handlePriorityColor(item.priority);
 
 </script>
@@ -156,7 +163,7 @@ const handleColor = (item: TodoItemIndex): string => handlePriorityColor(item.pr
         padding: 4px 7px;
         border-bottom: 1px solid var(--color-neutral-3);
         display: grid;
-        grid-template-columns: 30px 1fr 32px;
+        grid-template-columns: 30px 1fr 32px 32px;
         height: 32px;
         line-height: 32px;
         cursor: pointer;
