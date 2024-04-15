@@ -62,20 +62,20 @@
 	"file_assign": "",
 	"modules": {
 		"main": {
-			"entry": "./dist/index.html",
+			"entry": "/dist/index.html",
 			"width": "1280px",
 			"height": "800px"
 		},
 		"card": [{
 			"name": "待办",
-			"entry": "./dist/todo.html",
+			"entry": "/dist/todo.html",
 			"size": "4x4",
-			"preview": "./dist/logo.png"
+			"preview": "/dist/logo.png"
 		}, {
 			"name": "富文本笔记",
 			"entry": "./dist/note.html",
 			"size": "4x4",
-			"preview": "./dist/logo.png"
+			"preview": "/dist/logo.png"
 		}]
 	}
 }
