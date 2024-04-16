@@ -5,12 +5,12 @@
         </div>
         <div class="option">
             <div style="width: 50%;max-width: 230px">
-                <a-tree-select :data="folderTree" size="mini" v-model="folder" :loading="loading"/>
+                <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
             </div>
             <a-space>
-                <a-button size="mini" @click="onReset()" :loading="loading">重置</a-button>
+                <a-button @click="onReset()" :loading="loading">重置</a-button>
                 <a-popconfirm content="二次确认" @ok="onSubmit()" ok-text="新建">
-                    <a-button size="mini" type="primary" :loading="loading">新建</a-button>
+                    <a-button type="primary" :loading="loading">新建</a-button>
                 </a-popconfirm>
             </a-space>
         </div>
@@ -80,12 +80,14 @@ function onAdd(html: string) {
 </script>
 <style scoped lang="less">
 .kb-note {
+    background-color: transparent;
+
     .container {
         position: absolute;
         top: 7px;
         left: 7px;
         right: 7px;
-        bottom: 38px;
+        bottom: 46px;
 
         .note {
             position: relative;
