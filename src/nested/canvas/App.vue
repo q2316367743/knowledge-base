@@ -5,7 +5,7 @@
                 <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
             </div>
             <a-space>
-                <a-button :loading="loading" status="danger">重置</a-button>
+                <a-button :loading="loading" status="danger" @click="onReset">重置</a-button>
                 <a-popconfirm content="二次确认" ok-text="新建" position="br" @ok="onAdd">
                     <a-button type="primary" :loading="loading" style="margin-right: 17px">新建</a-button>
                 </a-popconfirm>
