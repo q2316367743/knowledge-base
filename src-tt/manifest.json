@@ -1,65 +1,11 @@
 {
 	"name": "知识库",
-	"options": null,
-	"author": "落雨不悔",
-	"open_source": 1,
-	"csv_url": "https://gitee.com/qiaoshengda/knowledge-base",
-	"os_summary": "Apache-2.0",
-	"site": "https://blog.esion.xyz",
-	"package": "xyz.esion.knowledge-base",
-	"preload": "",
-	"debug_url": null,
-	"url": "https://blog.esion.xyz/apps/knowledge-base",
-	"logo": "./dist/logo.png",
 	"description": "构建自己的知识库，高效便捷的知识管理工具",
-	"type": "web",
-	"auth": {
-		"base": {
-			"webSecure": true
-		},
-		"api": {
-			"enable": false
-		},
-		"ability": {}
-	},
-	"window": {
-		"defaultType": "frameWindow",
-		"frameWindow": {
-			"enable": true,
-			"width": 1000,
-			"height": 800,
-			"controllers": {
-				"goBack": true,
-				"goForward": true,
-				"refresh": true,
-				"home": true
-			},
-			"canResize": true,
-			"minWidth": "",
-			"minHeight": ""
-		},
-		"window": {
-			"enable": false,
-			"width": 400,
-			"minWidth": 300,
-			"maxWidth": 600,
-			"canResize": true,
-			"height": 400,
-			"minHeight": 300,
-			"maxHeight": 600,
-			"top": false,
-			"blurAction": "none"
-		},
-		"attach": {
-			"enable": false,
-			"width": 320,
-			"minWidth": 320,
-			"maxWidth": 320,
-			"canResize": true
-		}
-	},
+	"author": "落雨不悔",
+	"version": "2.0.0",
+	"logo": "./dist/logo.png",
+	"community": 460433,
 	"theme_color": "#FFBA40",
-	"file_assign": "",
 	"modules": {
 		"main": {
 			"entry": "/dist/index.html",
@@ -70,12 +16,20 @@
 			"name": "待办",
 			"entry": "/dist/todo.html",
 			"size": "4x4",
-			"preview": "/dist/logo.png"
+			"preview": "/dist/logo.png",
+			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}, {
 			"name": "富文本笔记",
-			"entry": "./dist/note.html",
+			"entry": "/dist/note.html",
 			"size": "4x4",
-			"preview": "/dist/logo.png"
+			"preview": "/dist/logo.png",
+			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
+		}, {
+			"name": "画布",
+			"entry": "/dist/canvas.html",
+			"size": "8x8",
+			"preview": "/dist/logo.png",
+			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}]
 	}
 }

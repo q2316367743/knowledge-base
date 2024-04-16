@@ -25,6 +25,7 @@ export default defineConfig({
                 main: _resolve('index.html'),
                 note: _resolve('note.html'),
                 todo: _resolve('todo.html'),
+                canvas: _resolve('canvas.html'),
             },
         },
     },

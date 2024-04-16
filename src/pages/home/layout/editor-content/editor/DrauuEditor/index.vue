@@ -36,81 +36,25 @@
         </div>
         <!-- 左侧边栏 -->
         <div class="side">
-            <a-radio-group v-model="brush">
-                <div class="brush">
-                    <a-radio value="stylus">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">✍️</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="draw">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">✏️</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="line">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">⁄</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="arrow">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">↘️</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="rectangle">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">⃞</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="ellipse">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">○</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="text">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">文</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="eraseLine">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">🧹</div>
-                        </template>
-                    </a-radio>
-                </div>
-            </a-radio-group>
+            <div class="side-btn" :class="brush === 'stylus' ? 'active' : ''" @click="brush = 'stylus'">✍️</div>
+            <div class="side-btn" :class="brush === 'draw' ? 'active' : ''" @click="brush = 'draw'">✏️</div>
+            <div class="side-btn" :class="brush === 'line' ? 'active' : ''" @click="brush = 'line'">⁄</div>
+            <div class="side-btn" :class="brush === 'arrow' ? 'active' : ''" @click="brush = 'arrow'">↘️</div>
+            <div class="side-btn" :class="brush === 'rectangle' ? 'active' : ''" @click="brush = 'rectangle'">⃞</div>
+            <div class="side-btn" :class="brush === 'ellipse' ? 'active' : ''" style="font-size: 26px;"
+                 @click="brush = 'ellipse'">○
+            </div>
+            <div class="side-btn" :class="brush === 'text' ? 'active' : ''" @click="brush = 'text'">文</div>
+            <div class="side-btn" :class="brush === 'eraseLine' ? 'active' : ''" @click="brush = 'eraseLine'">🧹</div>
             <a-divider/>
-            <a-radio-group v-model="dasharray">
-                <div class="brush">
-                    <a-radio value="">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">—</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="4">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">┅</div>
-                        </template>
-                    </a-radio>
-                    <a-radio value="1 7">
-                        <template #radio="{checked }">
-                            <div class="side-btn" :class="{active: checked}">⋯</div>
-                        </template>
-                    </a-radio>
-                </div>
-            </a-radio-group>
+            <div class="side-btn" :class="{active: !dasharray}" @click="dasharray = undefined">—</div>
+            <div class="side-btn" :class="{active: dasharray === '4'}" @click="dasharray = '4'">┅</div>
+            <div class="side-btn" :class="{active: dasharray === '1 7'}" @click="dasharray = '1 7'">⋯</div>
         </div>
         <!-- 内容 -->
         <div class="drauu-view-wrap">
             <svg class="drauu-view" ref="target" style="touch-action: none"></svg>
         </div>
-        <!-- 帮助信息 -->
-        <pre class="about">
-<b>Drauu</b>
-Headless SVG-based drawboard in browser
-https://github.com/antfu/drauu
-</pre>
     </div>
 </template>
 <script lang="ts" setup>
@@ -167,6 +111,7 @@ onMounted(() => {
 watch(() => color.value, value => drauu.brush.value.color = value);
 watch(() => size.value, value => drauu.brush.value.size = value);
 watch(() => brush.value, value => {
+    console.log(value)
     if (value === 'arrow') {
         drauu.brush.value.mode = 'line';
         drauu.brush.value.arrowEnd = true;
