@@ -2,49 +2,21 @@ import {createEditor, IDomEditor} from "@wangeditor/editor";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useImageUpload} from "@/plugin/image";
 import {Ref} from "vue";
-import {copy} from "@/utils/BrowserUtil";
 
 type AlertType = 'success' | 'info' | 'warning' | 'error';
 type InsertFnType = (url: string, alt?: string, href?: string) => void
 
 
-export function buildRickText(dom: Ref<HTMLDivElement | undefined>, isFocus: Ref<boolean>): IDomEditor {
-    let editor:IDomEditor | null = null;
-    document.addEventListener('keydown', e => {
-        if (!isFocus.value) {
-            return;
-        }
-        if (!editor) {
-            return;
-        }
-        if (e.ctrlKey) {
-            if (e.code === 'KeyA') {
-                e.preventDefault();
-                e.stopPropagation();
-            }else if (e.code === 'KeyC') {
-                e.preventDefault();
-                e.stopPropagation();
-                copy(editor.getSelectionText());
-            }else if (e.code === 'KeyV') {
-                e.preventDefault();
-                e.stopPropagation();
-                navigator.clipboard.readText().then(text => {
-                    editor && editor.insertText(text);
-                })
-            }
-        }
-        if (e.code === 'Space') {
-            e.preventDefault();
-            e.stopPropagation();
-            editor.insertText(' ');
-        }
-    })
-    editor =  createEditor({
+export function buildRickText(dom: Ref<HTMLDivElement | undefined>, update?: (value: string) => void): IDomEditor {
+    return createEditor({
         selector: dom.value,
         config: {
             placeholder: '请输入笔记内容，支持markdown语法',
             customAlert: (info: string, type: AlertType) => {
                 MessageUtil[type](info);
+            },
+            onChange(editor) {
+                update && update(editor.getHtml());
             },
             scroll: true,
             autoFocus: false,
@@ -75,5 +47,4 @@ export function buildRickText(dom: Ref<HTMLDivElement | undefined>, isFocus: Ref
         },
         mode: 'default', // or 'simple'
     });
-    return editor;
 }

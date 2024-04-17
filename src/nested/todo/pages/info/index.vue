@@ -25,9 +25,9 @@ import {onMounted, onUnmounted, ref, shallowRef} from "vue";
 import {getDefaultTodoItem} from "@/entity/todo/TodoItem";
 import {IDomEditor} from "@wangeditor/editor";
 import {useTodoStore} from "@/store/components/TodoStore";
-import {buildRickText} from "@/nested/note/func";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRoute, useRouter} from "vue-router";
+import {buildRickText} from "@/nested/todo/pages/info/func";
 
 const route = useRoute();
 const router = useRouter();

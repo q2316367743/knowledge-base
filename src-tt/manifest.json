@@ -16,19 +16,19 @@
 			"name": "待办",
 			"entry": "/dist/todo.html",
 			"size": "4x4",
-			"preview": "/dist/logo.png",
+			"preview": "/preview/todo.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}, {
 			"name": "富文本笔记",
 			"entry": "/dist/note.html",
 			"size": "4x4",
-			"preview": "/dist/logo.png",
+			"preview": "/preview/note.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}, {
 			"name": "画布",
 			"entry": "/dist/canvas.html",
 			"size": "8x8",
-			"preview": "/dist/logo.png",
+			"preview": "/preview/canvas.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}]
 	}

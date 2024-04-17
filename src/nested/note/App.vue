@@ -1,18 +1,24 @@
 <template>
     <div class="app kb-note">
-        <div class="container kb-wang-editor">
-            <div ref="noteRef" class="note"/>
-        </div>
         <div class="option">
             <div style="width: 50%;max-width: 230px">
                 <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
             </div>
             <a-space>
+                <a-tooltip content="编辑时开启，以优化编辑体验" position="br">
+                    <a-switch v-model="isFocus" type="round">
+                        <template #checked>聚焦</template>
+                        <template #unchecked>失焦</template>
+                    </a-switch>
+                </a-tooltip>
                 <a-button @click="onReset()" :loading="loading">重置</a-button>
-                <a-popconfirm content="二次确认" @ok="onSubmit()" ok-text="新建">
+                <a-popconfirm content="二次确认" @ok="onSubmit()" ok-text="新建" position="br">
                     <a-button type="primary" :loading="loading">新建</a-button>
                 </a-popconfirm>
             </a-space>
+        </div>
+        <div class="container kb-wang-editor">
+            <div ref="noteRef" class="note"/>
         </div>
     </div>
 </template>
@@ -35,12 +41,12 @@ const folder = ref(0);
 const noteRef = ref<HTMLDivElement>();
 const instance = shallowRef<IDomEditor>();
 const loading = ref(false);
-
+const isFocus = ref(false);
 
 const folderTree = computed(() => useFolderStore().folderTree);
 
 onMounted(() => {
-    instance.value = buildRickText(noteRef);
+    instance.value = buildRickText(noteRef, isFocus);
 });
 
 function onReset() {
@@ -77,32 +83,30 @@ function onAdd(html: string) {
         .finally(() => loading.value = false);
 }
 
+
 </script>
 <style scoped lang="less">
 .kb-note {
     background-color: transparent;
 
+    .option {
+        display: flex;
+        justify-content: space-between;
+        padding: 7px;
+    }
+
     .container {
         position: absolute;
-        top: 7px;
+        top: 46px;
         left: 7px;
         right: 7px;
-        bottom: 46px;
+        bottom: 7px;
 
         .note {
             position: relative;
             height: 100%;
             width: 100%;
         }
-    }
-
-    .option {
-        position: absolute;
-        left: 7px;
-        right: 7px;
-        bottom: 7px;
-        display: flex;
-        justify-content: space-between;
     }
 }
 </style>
