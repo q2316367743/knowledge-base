@@ -41,9 +41,6 @@
             <a-menu-item key="/setting/lsky-pro">
                 兰空图床
             </a-menu-item>
-            <a-menu-item key="/setting/category">
-                分类设置
-            </a-menu-item>
             <a-menu-item key="/setting/feature" v-if="isUtools">
                 关键字设置
             </a-menu-item>

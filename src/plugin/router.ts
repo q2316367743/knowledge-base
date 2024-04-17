@@ -34,10 +34,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/setting/base",
     component: () => import("@/pages/setting/base/index.vue")
 }, {
-    name: "设置-分类",
-    path: "/setting/category",
-    component: () => import("@/pages/setting/category/index.vue")
-}, {
     name: "设置-兰空图床",
     path: "/setting/lsky-pro",
     component: () => import("@/pages/setting/lsky-pro/index.vue")

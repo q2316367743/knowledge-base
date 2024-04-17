@@ -4,9 +4,10 @@ import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {computed, ref} from "vue";
-import {Drawer, Form, FormItem, Input, Select, Textarea, TreeSelect} from "@arco-design/web-vue";
+import {Button, Drawer, Form, FormItem, Input, Select, Textarea, TreeSelect} from "@arco-design/web-vue";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {openCategoryManageDrawer} from "@/pages/home/components/CategoryManageDrawer";
 
 export async function openHeExtra(id: number) {
     const categoryTree = computed(() => useCategoryStore().categoryTree);
@@ -28,7 +29,7 @@ export async function openHeExtra(id: number) {
     }
     Drawer.open({
         title: '信息',
-        width: 300,
+        width: 400,
         okText: '保存',
         content: () => <Form model={base.value} layout="vertical">
             <FormItem label="来源">
@@ -40,9 +41,15 @@ export async function openHeExtra(id: number) {
             <FormItem label="来源链接">
                 <Input v-model={base.value.sourceUrl} maxLength={255}/>
             </FormItem>
-            <FormItem label="分类">
-                <TreeSelect v-model={categoryId.value} placeholder="请选择分类" scrollbar allowClear
-                            data={categoryTree.value} allowSearch/>
+            <FormItem>
+                {{
+                    label: () => <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                        <div>分类</div>
+                        <Button type={'text'} size={'mini'} onClick={openCategoryManageDrawer}>管理</Button>
+                    </div>,
+                    default: () => <TreeSelect v-model={categoryId.value} placeholder="请选择分类" scrollbar allowClear
+                                               data={categoryTree.value} allowSearch/>
+                }}
             </FormItem>
             <FormItem label="标签">
                 {{

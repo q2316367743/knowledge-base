@@ -1,8 +1,7 @@
 <template>
     <div class="setting-dict">
         <div class="header">
-            <a-input allow-clear v-model="keyword" placeholder="请输入分类名称" style="width: 320px"/>
-            <a-button type="primary" @click="add(0)">新增</a-button>
+            <a-input allow-clear v-model="keyword" placeholder="请输入分类名称" />
         </div>
         <div class="container">
             <a-tree :data="treeData" block-node :virtual-list-props="{height: height}" draggable @drop="onDrop($event)">
@@ -43,7 +42,7 @@ const size = useWindowSize();
 
 const keyword = ref('');
 const categoryTree = computed<Array<TreeNodeData>>(() => useCategoryStore().categoryTree);
-const height = computed(() => size.height.value - 40 - 7);
+const height = computed(() => size.height.value - 40 - 7 - 48- 6);
 
 
 function add(pid: number) {
