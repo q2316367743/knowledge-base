@@ -89,9 +89,14 @@
             </a-typography>
             <div class="input">
                 <a-input-group>
-                    <a-input placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="question"
-                             :disabled="loading"
-                             @keydown.enter="sendToAsk()"/>
+                    <a-button type="text" :loading="loading" :disabled="!allowInsert" @click="openAiAskPromptDrawer()">
+                        <template #icon>
+                            <icon-settings/>
+                        </template>
+                    </a-button>
+                    <a-auto-complete placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="question" :data="prompts"
+                             :disabled="loading" @keydown.enter="sendToAsk()">
+                    </a-auto-complete>
                     <a-button type="text" @click="sendToAsk()" :loading="loading" :disabled="!allowInsert">
                         <template #icon>
                             <icon-send/>
@@ -115,6 +120,7 @@ import {getFromOneByAsync, getItemByDefault, saveOneByAsync, setItem} from "@/ut
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import {htmlToMarkdown, mindMapToMarkdown, stringToBlob} from "@/utils/file/ConvertUtil";
+import {openAiAskPromptDrawer, useAiAskPromptStore} from "@/store/components/AiAskPromptStore";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -136,11 +142,11 @@ const activeKey = ref('1');
 const ai = ref<ArticleAi>(getDefaultArticleAi());
 let rev: string | undefined = undefined;
 
-
 const allowInsert = computed(() => editorType.value === ArticleTypeEnum.MARKDOWN);
 const allowAsk = computed(() => editorType.value === ArticleTypeEnum.MARKDOWN ||
     editorType.value === ArticleTypeEnum.RICH_TEXT ||
     editorType.value === ArticleTypeEnum.CODE);
+const prompts = computed(() => useAiAskPromptStore().prompts);
 
 // ------------------------------------------ 简单事件 ------------------------------------------
 
@@ -223,6 +229,11 @@ onMounted(async () => {
 // ------------------------------------------ 问答相关 ------------------------------------------
 
 function sendToAsk() {
+    const str = question.value.trim();
+    if (str === '') {
+        MessageUtil.warning("请输入问题内容")
+        return;
+    }
     loading.value = true;
     _sendToAsk()
         .then(() => MessageUtil.success("问题提交成功"))
