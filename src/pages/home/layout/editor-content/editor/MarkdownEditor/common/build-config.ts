@@ -15,7 +15,6 @@ import Cherry from "cherry-markdown";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {Ref} from "vue";
 import {CherryOptions} from "cherry-markdown/dist/types/Cherry";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
@@ -35,7 +34,7 @@ export async function buildConfig(
     sendToChat: (content: string) => void): Promise<CherryOptions> {
 
     // 默认模式
-    const defaultModel = preview || useBaseSettingStore().mdEditorEditMode === MdEditorEditModeEnum.PREVIEW ?
+    const defaultModel = preview ?
         'previewOnly' : useBaseSettingStore().defaultModel;
 
     const toolbar = [];

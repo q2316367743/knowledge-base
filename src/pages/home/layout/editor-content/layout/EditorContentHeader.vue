@@ -27,10 +27,9 @@
                             <template #content>
                                 <a-doption @click="switchPreview()" :disabled="editorType === ArticleTypeEnum.EXCEL">
                                     <template #icon>
-                                        <icon-edit v-if="preview"/>
-                                        <icon-lock v-else/>
+                                        <icon-lock />
                                     </template>
-                                    {{ preview ? '编辑' : '预览' }}
+                                    编辑/预览
                                 </a-doption>
                                 <a-doption @click="openHeExtra(useHomeEditorStore().id)" :disabled="preview">
                                     <template #icon>
@@ -64,7 +63,7 @@ import {computed, ref, watch} from "vue";
 import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
 import {
     editorType, useUpdateRobotEvent, preview, useArticleExportEvent, useArticleImportEvent,
-    switchPreview, useHomeEditorStore,
+    useArticlePreviewEvent,useHomeEditorStore
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
@@ -95,6 +94,10 @@ function onImport() {
 
 function switchRobot() {
     useUpdateRobotEvent.emit(useHomeEditorStore().id);
+}
+
+function switchPreview() {
+    useArticlePreviewEvent.emit(useHomeEditorStore().id);
 }
 
 </script>

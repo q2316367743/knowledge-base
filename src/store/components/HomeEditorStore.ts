@@ -33,10 +33,11 @@ export const editorType = computed(() => {
 });
 
 // 一些事件
-export const useUpdatePreviewEvent = useEventBus<{ id: number, preview: boolean }>('update-preview');
 export const useUpdateRobotEvent = useEventBus<number>('update-robot');
 export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
+// 切换预览
+export const useArticlePreviewEvent = useEventBus<number>('article-preview');
 
 
 // 一些特殊的方法
@@ -44,15 +45,6 @@ export const getTextCount = ref<() => number>(() => 0);
 export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
 
-export const robot = ref(true);
-
-
-export function switchPreview() {
-    useUpdatePreviewEvent.emit({id: useHomeEditorStore().id, preview: !preview.value});
-    useArticleStore().updateIndex(useHomeEditorStore().id, {preview: !preview.value})
-        .then(() => console.debug("自动更新文章预览状态"))
-        .catch(e => MessageUtil.error("自动更新文章预览状态失败", e));
-}
 
 
 export const useHomeEditorStore = defineStore('home-editor', () => {

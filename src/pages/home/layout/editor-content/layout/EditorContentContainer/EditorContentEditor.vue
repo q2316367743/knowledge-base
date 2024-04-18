@@ -33,7 +33,9 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import { useUpdatePreviewEvent} from "@/store/components/HomeEditorStore";
+import {useArticlePreviewEvent} from "@/store/components/HomeEditorStore";
+import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -48,8 +50,20 @@ let contentRev: string | undefined = undefined;
 
 const mdEditor = ref();
 
+function buildPreview(): boolean {
+    // 判断是否设置了仅预览
+    const {mdEditorEditMode} = useBaseSettingStore()
+    if (mdEditorEditMode === MdEditorEditModeEnum.PREVIEW) {
+        return true;
+    }
+    if (props.articleIndex) {
+        return props.articleIndex.preview;
+    }
+    return false;
+}
+
 // 计算属性
-const preview = computed(() => props.articleIndex ? props.articleIndex.preview : false);
+const preview = ref<boolean>(buildPreview());
 const language = computed(() => {
     if (!props.articleIndex) {
         return '';
@@ -122,18 +136,21 @@ onMounted(() => {
     }
     initArticle(props.articleIndex.id);
 
-    useUpdatePreviewEvent.off(onPreview);
-    useUpdatePreviewEvent.on(onPreview);
+    useArticlePreviewEvent.off(onPreview);
+    useArticlePreviewEvent.on(onPreview);
 });
 
 onBeforeUnmount(() => {
-    useUpdatePreviewEvent.off(onPreview);
+    useArticlePreviewEvent.off(onPreview);
 });
-
-function onPreview(data: { id: number, preview: boolean }) {
+function onPreview(id: number) {
     if (props.articleIndex) {
-        if (props.articleIndex.id === data.id) {
-            props.articleIndex.preview = data.preview;
+        if (props.articleIndex.id === id) {
+            preview.value = !preview.value;
+            // 此处处理
+            useArticleStore().updateIndex(id, {preview: preview.value})
+                .then(() => console.debug("自动更新文章预览状态"))
+                .catch(e => MessageUtil.error("自动更新文章预览状态失败", e));
         }
     }
 }

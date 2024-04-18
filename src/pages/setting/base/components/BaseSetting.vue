@@ -66,7 +66,7 @@
                         大于{{ Constant.autoCollapsedWidth }}px时切换为【编辑和预览】
                     </span>
                     <span v-else-if="instance.mdEditorEditMode === MdEditorEditModeEnum.PREVIEW">
-                        开启后，md编辑器默认是预览模式，如果文章不是预览吗模式，则需要点击两边预览/编辑切换才可以切换到编辑模式，请谨慎开启
+                        开启后，md编辑器默认是预览模式，想要编辑需要在右上角切换模式
                     </span>
                 </template>
             </a-form-item>
@@ -147,9 +147,6 @@ export default defineComponent({
                 .then(() => MessageUtil.success("保存成功"))
                 .catch(e => MessageUtil.error("保存失败", e))
                 .finally(() => this.$emit('save'));
-        },
-        openLocalImagePath() {
-            MessageBoxUtil.alert("由于富文本编辑器的限制，导致无法将图片上传到utools内部，所以只能存放到本地中，因此，富文本编辑器的图片目前无法实现同步功能", "本地图片须知")
         },
     }
 });
