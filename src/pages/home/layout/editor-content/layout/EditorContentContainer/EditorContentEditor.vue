@@ -52,11 +52,11 @@ const mdEditor = ref();
 
 function buildPreview(): boolean {
     // 判断是否设置了仅预览
-    const {mdEditorEditMode} = useBaseSettingStore()
-    if (mdEditorEditMode === MdEditorEditModeEnum.PREVIEW) {
-        return true;
-    }
     if (props.articleIndex) {
+        const {mdEditorEditMode} = useBaseSettingStore()
+        if (props.articleIndex.type === ArticleTypeEnum.MARKDOWN && mdEditorEditMode === MdEditorEditModeEnum.PREVIEW) {
+            return true;
+        }
         return props.articleIndex.preview;
     }
     return false;
@@ -143,6 +143,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
     useArticlePreviewEvent.off(onPreview);
 });
+
 function onPreview(id: number) {
     if (props.articleIndex) {
         if (props.articleIndex.id === id) {
@@ -162,7 +163,7 @@ function insertToArticle(str: string) {
     }
 }
 
-function sendToChat(str: string){
+function sendToChat(str: string) {
     emits('sendToChat', str);
 }
 

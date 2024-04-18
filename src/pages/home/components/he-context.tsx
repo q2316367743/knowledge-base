@@ -22,6 +22,7 @@ import {
     IconPalette
 } from "@arco-design/web-vue/es/icon";
 import {Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
+import {MindMapTreeNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -76,9 +77,10 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
                         "text": "根节点",
                         "expand": true,
                         "isActive": false,
-                        "uid": "47fe79a5-2690-4343-8fbf-74c350d4b92f"
+                        "uid": "47fe79a5-2690-4343-8fbf-74c350d4b92f",
+                        richText: false,
                     }, "children": []
-                },
+                } as MindMapTreeNode,
                 "theme": {"template": 'default', "config": {}},
                 "view": {
                     "transform": {

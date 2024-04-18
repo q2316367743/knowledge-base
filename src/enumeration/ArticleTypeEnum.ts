@@ -24,6 +24,7 @@ enum ArticleTypeEnum {
 
     /**
      * 表格
+     * @deprecated
      */
     EXCEL = 5,
 
