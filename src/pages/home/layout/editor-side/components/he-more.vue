@@ -2,7 +2,7 @@
     <a-dropdown>
         <a-button type="primary">
             <template #icon>
-                <icon-plus/>
+                <icon-more-vertical/>
             </template>
         </a-button>
         <template #content>

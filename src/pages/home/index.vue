@@ -9,11 +9,13 @@
     </a-split>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import EditorSide from '@/pages/home/layout/editor-side/index.vue';
 import EditorContent from "@/pages/home/layout/editor-content/index.vue";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useWindowSize} from "@vueuse/core";
+import {useSearchContentEvent} from "@/global/BeanFactory";
+import {openSearchContent} from "@/pages/home/components/SearchContent";
 
 const windowSize = useWindowSize();
 
@@ -28,6 +30,15 @@ watch(() => useHomeEditorStore().width, value => {
         size.value = value;
     }
 });
+
+onMounted(() => {
+    useSearchContentEvent.off(openSearchContent);
+    useSearchContentEvent.on(openSearchContent);
+});
+
+onUnmounted(() => {
+    useSearchContentEvent.off(openSearchContent);
+})
 
 </script>
 <style lang="less">

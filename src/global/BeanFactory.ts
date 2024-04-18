@@ -22,6 +22,7 @@ window.utools = window.utools || utools;
 export const usePageJumpEvent = useEventBus<string>('page-jump');
 export const useNewEvent = useEventBus('new');
 export const useDeleteEvent = useEventBus('delete');
+export const useSearchContentEvent = useEventBus('search-content');
 
 export const statistics = new Statistics();
 

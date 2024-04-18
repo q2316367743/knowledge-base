@@ -54,7 +54,7 @@ createApp(App)
     .use(setupCalendar, {})
     .mount('#app');
 
-import {statistics, useDeleteEvent, useNewEvent} from './global/BeanFactory';
+import {statistics, useDeleteEvent, useNewEvent, useSearchContentEvent} from './global/BeanFactory';
 
 statistics.init();
 statistics.open();
@@ -73,7 +73,13 @@ window.onload = () => {
                 e.preventDefault();
                 useDeleteEvent.emit();
             }
-
+            if (e.shiftKey) {
+                if (e.code === 'KeyF') {
+                    // 全局搜索
+                    e.preventDefault();
+                    useSearchContentEvent.emit();
+                }
+            }
         }
     });
 }
