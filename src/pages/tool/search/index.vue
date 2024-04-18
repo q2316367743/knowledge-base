@@ -2,8 +2,15 @@
     <div class="graph-search">
         <header class="header">
             <a-input-group class="search" :style="{width: searchWidth + 'px'}">
+                <a-select v-model="type" style="width: 120px">
+                    <a-option :value="0">全部</a-option>
+                    <a-option v-for="articleType in articleTextTypes" :key="articleType.key" :value="articleType.key">
+                        {{ articleType.name }}
+                    </a-option>
+                </a-select>
                 <a-input-search v-model="keyword" :placeholder="SearchContentPlaceholder" allow-clear :loading="loading"
-                                search-button @search="searchContent()" @clear="searchContent()"/>
+                                search-button @search="searchContent()" @clear="searchContent()"
+                                @keydown.enter="searchContent"/>
                 <a-button type="primary" status="danger" :disabled="!loading" @click="stop()">
                     <template #icon>
                         <icon-close/>
@@ -17,7 +24,8 @@
                 <a-list-item v-for="item in items">
                     <a-list-item-meta>
                         <template #title>
-                            <a-link @click="toArticle(item.value)">{{item.title}}</a-link>
+                            <a-tag color="blue">{{ renderArticleType(item.type) }}</a-tag>
+                            <a-link @click="toArticle(item.value)">{{ item.title }}</a-link>
                         </template>
                         <template #description>
                             <span v-html="item.html"></span>
@@ -35,6 +43,8 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useRouter} from "vue-router";
 import {_searchContent, SearchContentItem, SearchContentPlaceholder} from "@/pages/home/components/SearchContent";
+import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
+import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 
 
 const size = useWindowSize();
@@ -45,6 +55,7 @@ const loading = ref(false);
 const close = ref(false);
 const text = ref('');
 const items = ref(new Array<SearchContentItem>())
+const type = ref<ArticleTypeEnum | 0>(0)
 
 const searchWidth = computed(() => size.width.value / 2);
 
@@ -58,7 +69,7 @@ function searchContent() {
         close.value = true;
         return;
     }
-    _searchContent(keyword.value, close, items, text)
+    _searchContent(keyword.value, close, items, text, type.value)
         .then(() => MessageUtil.success("搜索完成"))
         .catch(e => MessageUtil.error("搜索失败", e))
         .finally(() => loading.value = false);

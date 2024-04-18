@@ -45,7 +45,7 @@ export function buildArticleIcon(type: ArticleTypeEnum) {
     }
 }
 
-export const articleTypes = [{
+export const articleTextTypes =  [{
     key: ArticleTypeEnum.RICH_TEXT,
     name: '富文本',
     icon: IconBook,
@@ -61,11 +61,35 @@ export const articleTypes = [{
     key: ArticleTypeEnum.MIND_MAP,
     name: '思维导图',
     icon: IconMindMapping
-}, {
+}]
+
+export const articleTypes = [
+    ...articleTextTypes, {
     key: ArticleTypeEnum.DRAUU,
     name: '画板',
     icon: IconPalette
 }]
+
+export function renderArticleType(type: ArticleTypeEnum): string {
+    switch (type) {
+        case ArticleTypeEnum.CODE:
+            return "代码笔记";
+        case ArticleTypeEnum.DRAUU:
+            return "画板";
+        case ArticleTypeEnum.EDITOR_JS:
+            return "富文本（已弃用）";
+        case ArticleTypeEnum.EXCEL:
+            return "表格（已弃用）";
+        case ArticleTypeEnum.MARKDOWN:
+            return "markdown笔记";
+        case ArticleTypeEnum.MIND_MAP:
+            return "思维导图";
+        case ArticleTypeEnum.RICH_TEXT:
+            return "富文本笔记";
+        default:
+            return "未知笔记类型";
+    }
+}
 
 function buildDefaultContent(type: ArticleTypeEnum): any {
     switch (type) {

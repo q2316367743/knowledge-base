@@ -2,6 +2,19 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.0.1',
+        sign: 201,
+        time: '2024-04-18',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【编辑器】AI问答新增问答提示词，可以快速输入相同的问题"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【工具】搜索内容升级，现在可以在markdown、富文本、代码笔记和思维导图中搜索内容了"
+        }],
+        remark: "首页新增快捷键Ctrl/Alt+Shift+F进行快速内容搜索，可以以弹窗的形式进行搜索"
+    },
+    {
         version: '2.0.0',
         sign: 200,
         time: '2024-04-06',

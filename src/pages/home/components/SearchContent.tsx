@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
     ListItemMeta,
-    Modal
+    Modal, Option, Select, Tag
 } from "@arco-design/web-vue";
 import {Ref, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
@@ -20,6 +20,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {IconClose, IconSearch} from "@arco-design/web-vue/es/icon";
 import {findKeyword, MindMapTreeNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
 
 
 export interface SearchContentItem {
@@ -29,18 +30,22 @@ export interface SearchContentItem {
     type: ArticleTypeEnum
 }
 
-export async function _searchContent(keyword: string, close: Ref<boolean>, items: Ref<Array<SearchContentItem>>, text: Ref<string>): Promise<void> {
+export async function _searchContent(
+    keyword: string, close: Ref<boolean>, items: Ref<Array<SearchContentItem>>, text: Ref<string>,
+    type: ArticleTypeEnum | 0
+): Promise<void> {
     const articles = useArticleStore().articles.filter(a =>
-        (a.type === ArticleTypeEnum.RICH_TEXT
+        type === 0 ? (a.type === ArticleTypeEnum.RICH_TEXT
             || a.type === ArticleTypeEnum.MARKDOWN
             || a.type === ArticleTypeEnum.CODE
-            || a.type === ArticleTypeEnum.MIND_MAP));
+            || a.type === ArticleTypeEnum.MIND_MAP) : (a.type === type));
     for (let i = 0; i < articles.length; i++) {
         if (close.value) {
             return Promise.resolve();
         }
-        text.value = `正在搜索 ${i + 1} / ${articles.length}`
         const article = articles[i];
+        console.log(JSON.stringify(article))
+        text.value = `正在搜索 ${i + 1} / ${articles.length}：${article.name}`;
         const contentWrap = await getFromOneWithDefaultByAsync<ArticleContent<any>>(
             LocalNameEnum.ARTICLE_CONTENT + article.id, {content: ''});
         // 搜索
@@ -67,6 +72,7 @@ export async function _searchContent(keyword: string, close: Ref<boolean>, items
             if (typeof content !== 'string') {
                 continue;
             }
+            console.log('文章字数：', content.length)
             if (article.type === ArticleTypeEnum.RICH_TEXT) {
                 const parser = new DOMParser();
                 const document = parser.parseFromString(content, 'text/html');
@@ -75,6 +81,7 @@ export async function _searchContent(keyword: string, close: Ref<boolean>, items
             const length = content.length;
             let position = 0;
             while (position < length) {
+                console.log('开始字符：', position)
                 const index = content.indexOf(keyword, position);
                 if (index > -1) {
                     const prefix = content.substring(Math.max(0, index - 30), index);
@@ -87,7 +94,7 @@ export async function _searchContent(keyword: string, close: Ref<boolean>, items
                         value: article.id,
                         type: article.type
                     });
-                    position = index;
+                    position = index + keyword.length;
                     continue;
                 }
                 break;
@@ -108,6 +115,7 @@ export function openSearchContent() {
     const close = ref(false);
     const text = ref('');
     const items = ref(new Array<SearchContentItem>());
+    const type = ref<ArticleTypeEnum | 0>(0)
 
 
     function searchContent() {
@@ -120,7 +128,7 @@ export function openSearchContent() {
             close.value = true;
             return;
         }
-        _searchContent(keyword.value, close, items, text)
+        _searchContent(keyword.value, close, items, text, type.value)
             .then(() => MessageUtil.success("搜索完成"))
             .catch(e => MessageUtil.error("搜索失败", e))
             .finally(() => loading.value = false);
@@ -144,6 +152,10 @@ export function openSearchContent() {
 
     const modalReturn = Modal.open({
         title: () => <InputGroup style={{width: '80%'}}>
+            <Select v-model={type.value} style="width: 120px">
+                <Option value={0}>全部</Option>
+                {articleTextTypes.map(articleType => <Option value={articleType.key}>{articleType.name}</Option>)}
+            </Select>
             <Input v-model={keyword.value} placeholder={SearchContentPlaceholder}
                    onPressEnter={searchContent} allowClear={true} onVnodeMounted={e => {
                 const htmlInputElement = (e.el as HTMLSpanElement).querySelector('input');
@@ -169,7 +181,10 @@ export function openSearchContent() {
                 {items.value.map(item => <ListItem>
                     <ListItemMeta>
                         {{
-                            title: () => <Link onClick={() => toArticle(item.value)}>{item.title}</Link>,
+                            title: () => <>
+                                <Tag color={'blue'}>{renderArticleType(item.type)}</Tag>
+                                <Link onClick={() => toArticle(item.value)}>{item.title}</Link>
+                            </>,
                             description: () => <div innerHTML={item.html}></div>
                         }}
                     </ListItemMeta>
