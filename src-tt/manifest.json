@@ -30,6 +30,12 @@
 			"size": "8x8",
 			"preview": "/preview/canvas.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
+		}, {
+			"name": "笔记预览",
+			"entry": "/dist/preview.html",
+			"size": "8x8",
+			"preview": "/preview/preview.png",
+			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}]
 	}
 }

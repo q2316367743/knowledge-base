@@ -170,5 +170,10 @@ function sendToChat(str: string) {
 
 </script>
 <style scoped>
+.ec-container-item {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 3px);
+}
 
 </style>
