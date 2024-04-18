@@ -75,7 +75,8 @@ function searchContent() {
 }
 
 async function _searchContent() {
-    const articles = useArticleStore().articles.filter(a => a.type !== ArticleTypeEnum.RICH_TEXT);
+    const articles = useArticleStore().articles.filter(a =>
+        (a.type === ArticleTypeEnum.RICH_TEXT || a.type === ArticleTypeEnum.MARKDOWN || a.type === ArticleTypeEnum.CODE));
     for (let i = 0; i < articles.length; i++) {
         if (close.value) {
             return Promise.resolve();
@@ -85,9 +86,14 @@ async function _searchContent() {
         const contentWrap = await getFromOneWithDefaultByAsync<ArticleContent<any>>(
             LocalNameEnum.ARTICLE_CONTENT + article.id, {content: ''});
         // 搜索
-        const content = contentWrap.record.content;
+        let content = contentWrap.record.content;
         if (typeof content !== 'string') {
             continue;
+        }
+        if (article.type === ArticleTypeEnum.RICH_TEXT) {
+            const parser = new DOMParser();
+            const document = parser.parseFromString(content, 'text/html');
+            content = document.body.innerText;
         }
         const length = content.length;
         const index = content.indexOf(keyword.value);
