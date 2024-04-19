@@ -4,9 +4,10 @@ import vue from "@vitejs/plugin-vue";
 // @ts-ignore
 import vueJsx from "@vitejs/plugin-vue-jsx";
 // @ts-ignore
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 // @ts-ignore
 import path from "path";
+import UnoCSS from 'unocss/vite';
 
 function _resolve(dir: string) {
 // @ts-ignore
@@ -20,7 +21,7 @@ export default defineConfig({
         },
     },
     plugins: [
-        vue(),vueJsx(),
+        vue(), vueJsx(), UnoCSS()
     ],
     base: "./",
     build: {

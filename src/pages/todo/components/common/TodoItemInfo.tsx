@@ -1,7 +1,7 @@
 import {handlePriorityColor, handlePriorityText, TodoItemIndex} from "@/entity/todo/TodoItem";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {
-    Descriptions, DescriptionsItem, Drawer, Tag
+    Descriptions, DescriptionsItem, Drawer, PageHeader, Tag, TypographyTitle
 } from "@arco-design/web-vue";
 import {ref} from "vue";
 import {handleDate} from "@/utils/lang/ObjUtil";
@@ -29,34 +29,36 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
     Drawer.open({
         header: false,
         width: 400,
-        content: () => <Descriptions column={1} layout={'vertical'}>
-            <DescriptionsItem label={'待办详情'}>
+        content: () => <>
+            <TypographyTitle heading={3}>
                 {index.title}
-            </DescriptionsItem>
-            <DescriptionsItem label={'优先级'}>
-                <div style={{color: handlePriorityColor(index.priority)}}>{handlePriorityText(index.priority)}</div>
-            </DescriptionsItem>
-            {hasAttr.value && <DescriptionsItem label={'时间'}>
-                <Tag color="orange">
+            </TypographyTitle>
+            <Descriptions column={1} layout={'vertical'}>
+                <DescriptionsItem label={'优先级'}>
+                    <div style={{color: handlePriorityColor(index.priority)}}>{handlePriorityText(index.priority)}</div>
+                </DescriptionsItem>
+                {hasAttr.value && <DescriptionsItem label={'时间'}>
+                    <Tag color="orange">
+                        {{
+                            icon: () => <IconClockCircle/>,
+                            default: () => <span>{start.value}{end.value ? ' · ' + end.value : ''}</span>
+                        }}
+                    </Tag>
+                </DescriptionsItem>}
+                {content.record.tags.length > 0 && <DescriptionsItem label={'标签'}>
+                    <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                        {content.record.tags.length > 0 ? content.record.tags.map(tag =>
+                                <Tag color={'arcoblue'} style={{marginRight: '4px', marginBottom: '4px'}}>{tag}</Tag>) :
+                            <div>暂无标签</div>}
+                    </div>
+                </DescriptionsItem>}
+                <DescriptionsItem label={'备注'}>
                     {{
-                        icon: () => <IconClockCircle/>,
-                        default: () => <span>{start.value}{end.value ? ' · ' + end.value : ''}</span>
+                        default: () => <div innerHTML={content.record.content} ></div>
                     }}
-                </Tag>
-            </DescriptionsItem>}
-            {content.record.tags.length > 0 && <DescriptionsItem label={'标签'}>
-                <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                    {content.record.tags.length > 0 ? content.record.tags.map(tag =>
-                            <Tag color={'arcoblue'} style={{marginRight: '4px', marginBottom: '4px'}}>{tag}</Tag>) :
-                        <div>暂无标签</div>}
-                </div>
-            </DescriptionsItem>}
-            <DescriptionsItem label={'备注'}>
-                {{
-                    default: () => <div innerHTML={content.record.content} ></div>
-                }}
-            </DescriptionsItem>
-        </Descriptions>,
+                </DescriptionsItem>
+            </Descriptions>
+        </>,
         footer: false
     });
 }

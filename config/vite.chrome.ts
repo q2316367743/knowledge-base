@@ -1,8 +1,9 @@
 // vite.config.js
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import path from "path";
+import UnoCSS from 'unocss/vite';
 
 function _resolve(dir: string) {
     return path.resolve(__dirname, '../', dir);
@@ -15,7 +16,7 @@ export default defineConfig({
         },
     },
     plugins: [
-        vue(),vueJsx(),
+        vue(), vueJsx(), UnoCSS()
     ],
     base: "./",
     build: {

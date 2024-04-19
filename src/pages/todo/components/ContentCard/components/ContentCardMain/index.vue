@@ -13,7 +13,8 @@
                 </a-button>
             </div>
             <div class="content" ref="todoRef">
-                <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" :attr="true"/>
+                <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" :attr="true"
+                                :only="hides.length == 3"/>
             </div>
         </div>
         <div class="card-item" v-if="showComplete" :style="style">
@@ -100,9 +101,15 @@ const showAbandon = computed(() => !contains(hides.value, '3'));
 const showArticle = computed(() => !contains(hides.value, '4'));
 
 const style = computed(() => {
+    let length = [showTodo.value, showComplete.value, showAbandon.value, showArticle.value]
+        .filter(e => e)
+        .length;
+    if (length === 0) {
+        length = 1;
+    }
     return {
-        maxWidth: '400px',
-        minWidth: '233px'
+        minWidth: '233px',
+        width: Math.floor(100 / length) + '%',
     }
 })
 

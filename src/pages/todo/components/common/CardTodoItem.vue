@@ -1,8 +1,8 @@
 <template>
     <div class="card-todo-item" :class="{deleted: index.status !== TodoItemStatus.TODO}"
          :style="style" @click="_openTodoItemInfo()"
-         @contextmenu="_openTodoItemSetting()">
-        <a-typography-paragraph style="margin-top: 9px" :ellipsis="ellipsis">
+         @contextmenu="_openTodoItemSetting($event)">
+        <a-typography-paragraph style="margin-top: 1rem" :ellipsis="ellipsis">
             {{ index.title }}
         </a-typography-paragraph>
         <div v-if="hasAttr" style="text-align: right;font-size: 0.8rem">
@@ -15,9 +15,23 @@
         </div>
         <a-tooltip content="置顶" v-if="(index.top && index.status === TodoItemStatus.TODO) || props.showTop">
             <div class="top">
-                <icon-arrow-up/>
+                <icon-arrow-up class="color-#fff"/>
             </div>
         </a-tooltip>
+        <div class="more">
+            <a-tooltip content="完成" v-if="only">
+                <a-button type="text" status="success" @click.stop="onCheck()">
+                    <template #icon>
+                        <icon-check />
+                    </template>
+                </a-button>
+            </a-tooltip>
+            <a-button type="text" @click="_openTodoItemSetting($event)">
+                <template #icon>
+                    <icon-more />
+                </template>
+            </a-button>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -34,6 +48,7 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import {toDateString} from "xe-utils";
 import {handleDate} from "@/utils/lang/ObjUtil";
 import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 const props = defineProps({
     item: Object as PropType<TodoItemIndex>,
@@ -42,6 +57,10 @@ const props = defineProps({
         default: false
     },
     showTop: {
+        type: Boolean,
+        default: false
+    },
+    only: {
         type: Boolean,
         default: false
     }
@@ -69,9 +88,10 @@ const style = computed(() => {
     }
 });
 
-const createTime = computed(() => index.value ? toDateString(index.value.createTime, "yyyy-MM-dd HH:mm") : '')
 
-function _openTodoItemSetting() {
+function _openTodoItemSetting(e: Event) {
+    e.preventDefault();
+    e.stopPropagation()
     if (!index.value) {
         return;
     }
@@ -116,6 +136,11 @@ if (props.attr && index.value) {
     initAttr(index.value.id);
 }
 
+function onCheck() {
+    useTodoStore().updateById(index.value.id, {status: TodoItemStatus.COMPLETE})
+        .then(() => MessageUtil.success("操作成功！"));
+}
+
 </script>
 <style scoped lang="less">
 .card-todo-item {
@@ -138,14 +163,24 @@ if (props.attr && index.value) {
 
     .top {
         position: absolute;
-        top: 0;
         right: 0;
+        bottom: 0;
         background-color: rgb(var(--orange-6));
         color: var(--color-fill-2);
-        clip-path: polygon(0 0, 100% 100%, 100% 0);
+        clip-path: polygon(100% 0, 0 100% ,100% 100%);
         width: 25px;
         height: 25px;
         text-align: right;
+        .arco-icon {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    }
+    .more {
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 }
 </style>

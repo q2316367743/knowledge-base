@@ -1,6 +1,6 @@
 <template>
     <div class="todo-side">
-        <header style="margin: 7px;">
+        <header class="m-2">
             <a-input-group>
                 <a-input style="width: 218px;" v-model="keyword" allow-clear/>
                 <a-button type="primary" @click="add(0)">
@@ -74,7 +74,7 @@ const keyword = ref('')
 
 const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree);
 const virtualListProps = computed(() => ({
-    height: size.height.value - 53
+    height: size.height.value - 56
 }));
 const treeNodeData = computed(() => searchData(keyword.value, todoCategoryTree.value));
 

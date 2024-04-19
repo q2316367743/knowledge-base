@@ -1,6 +1,6 @@
 <template>
     <div class="home-editor-side" ref="homeEditorSideRef">
-        <header style="margin: 7px;">
+        <header class="m-2">
             <a-input-group style="width: 100%">
                 <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
                 <he-more/>
@@ -207,7 +207,7 @@ const treeData = computed<Array<TreeNodeData>>(() => {
     return treeData;
 });
 const virtualListProps = computed(() => ({
-    height: size.height.value - 53
+    height: size.height.value - 56
 }));
 const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
 

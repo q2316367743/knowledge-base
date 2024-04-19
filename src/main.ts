@@ -12,6 +12,7 @@ import '@/assets/style/global.less';
 import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';
+import 'virtual:uno.css'
 // 编辑器
 // @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
