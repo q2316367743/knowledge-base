@@ -64,24 +64,35 @@ statistics.open();
 Boot.registerModule(markdownModule);
 Boot.registerMenu(OpenByUtoolsMenu);
 
-window.onload = () => {
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.ctrlKey || e.altKey) {
-            if (e.code === 'KeyN') {
+window.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.ctrlKey || e.altKey) {
+        if (e.code === 'KeyN') {
+            e.preventDefault();
+            useNewEvent.emit();
+        } else if (e.code === 'Delete') {
+            e.preventDefault();
+            useDeleteEvent.emit();
+        }
+        if (e.shiftKey) {
+            if (e.code === 'KeyF') {
+                // 全局搜索
                 e.preventDefault();
-                useNewEvent.emit();
-            }else if (e.code === 'Delete') {
-                e.preventDefault();
-                useDeleteEvent.emit();
-            }
-            if (e.shiftKey) {
-                if (e.code === 'KeyF') {
-                    // 全局搜索
-                    e.preventDefault();
-                    useSearchContentEvent.emit();
-                }
+                useSearchContentEvent.emit();
             }
         }
-    });
-}
+    }
+});
+
+window.addEventListener('click', (e: MouseEvent) => {
+    console.log(e)
+    let target = e.target;
+    if (target) {
+        let tagName = (target as HTMLElement).tagName;
+        console.log(tagName);
+        if (tagName && tagName.toLowerCase() === 'a') {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+})
 
