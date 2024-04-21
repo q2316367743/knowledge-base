@@ -16,6 +16,10 @@ export function pathJoin(...paths: string[]): string {
     return paths.join(utools.isWindows() ? '\\' : '/');
 }
 
+export function urlJoin(...paths: string[]): string {
+    return paths.join('/');
+}
+
 export function parseFileExtra(fileName: string): string {
     // 部分后缀名与语言不符
     return renderLanguage(extname(fileName));

@@ -47,14 +47,12 @@ import {computed, ref} from "vue";
 import {createClient, FileStat} from "webdav";
 import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import JSZip from "jszip";
-import {pathJoin} from "@/utils/file/FileUtil";
+import { urlJoin} from "@/utils/file/FileUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateString} from "xe-utils";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
-import {listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import updateCheck from "@/components/update-check/UpdateCheck";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
 
@@ -154,7 +152,7 @@ async function _execBackup() {
     });
 
     await client.putFileContents(
-        pathJoin(FOLDER_PATH, toDateString(new Date(), "yyyy-MM-dd_HH_mm_ss") + ".zip"),
+        urlJoin(FOLDER_PATH, toDateString(new Date(), "yyyy-MM-dd_HH_mm_ss") + ".zip"),
         content)
 
 }
@@ -176,7 +174,7 @@ async function _deleteFile(name: string) {
         username: instance.value.record.username,
         password: instance.value.record.password,
     });
-    await client.deleteFile(pathJoin(FOLDER_PATH, name));
+    await client.deleteFile(urlJoin(FOLDER_PATH, name));
 }
 
 function restore() {
@@ -202,7 +200,7 @@ async function _restore(): Promise<void> {
         password: instance.value.record.password,
     });
     // 获取文件
-    const res = await client.getFileContents(pathJoin(FOLDER_PATH, backup.value.file), {
+    const res = await client.getFileContents(urlJoin(FOLDER_PATH, backup.value.file), {
         format: 'binary'
     }) as ArrayBuffer;
     await restoreBackup(res);
