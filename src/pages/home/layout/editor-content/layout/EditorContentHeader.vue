@@ -55,7 +55,7 @@
                 </template>
                 <a-tab-pane v-for="article in indexes" :key="article.id">
                     <template #title>
-                        <a-dropdown position="bottom" trigger="contextMenu">
+                        <a-dropdown position="bottom" trigger="contextMenu" :popup-max-height="false">
                             <div>{{article.name}}</div>
                             <template #content>
                                 <a-doption @click="close(article.id)">
@@ -70,6 +70,9 @@
                                 <a-dgroup title="更多">
                                     <a-doption @click="rename(article.id, article.name, true)">
                                         重命名
+                                    </a-doption>
+                                    <a-doption @click="remove(article.id, article.name, true)">
+                                        删除
                                     </a-doption>
                                 </a-dgroup>
                             </template>
@@ -89,7 +92,7 @@ import {
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {rename} from "@/pages/home/components/he-context";
+import {remove, rename} from "@/pages/home/components/he-context";
 
 const activeKey = ref(useHomeEditorStore().id);
 
