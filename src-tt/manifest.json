@@ -2,7 +2,7 @@
 	"name": "知识库",
 	"description": "构建自己的知识库，高效便捷的知识管理工具",
 	"author": "落雨不悔",
-	"version": "2.0.0",
+	"version": "2.0.2",
 	"logo": "./dist/logo.png",
 	"community": 460433,
 	"theme_color": "#FFBA40",

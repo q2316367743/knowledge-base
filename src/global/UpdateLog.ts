@@ -2,6 +2,20 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.0.2',
+        sign: 202,
+        time: '2024-04-24',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【编辑器】标签页新增右键菜单，可以关闭当前标签页、关闭其他标签页、关闭全部标签页，还可以修改、删除当前标签页的文章"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【备份】修复备份路径错误的问题"
+        }],
+        remark: "新增的标签页右键菜单，不仅可以快速对标签页进行操作，还可以对当前标签页的文章进行操作",
+        url: 'https://txc.qq.com/products/612648/post/171395053315590872'
+    },
+    {
         version: '2.0.1',
         sign: 201,
         time: '2024-04-18',
@@ -12,7 +26,8 @@ export default [
             label: LogItemEnum.UPDATE,
             content: "【工具】搜索内容升级，现在可以在markdown、富文本、代码笔记和思维导图中搜索内容了"
         }],
-        remark: "首页新增快捷键Ctrl/Alt+Shift+F进行快速内容搜索，可以以弹窗的形式进行搜索"
+        remark: "首页新增快捷键Ctrl/Alt+Shift+F进行快速内容搜索，可以以弹窗的形式进行搜索",
+        url: 'https://txc.qq.com/products/612648/post/171343242781378813'
     },
     {
         version: '2.0.0',
