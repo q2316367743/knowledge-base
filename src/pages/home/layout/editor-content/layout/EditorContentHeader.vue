@@ -53,7 +53,29 @@
                         </a-dropdown>
                     </a-button-group>
                 </template>
-                <a-tab-pane v-for="article in indexes" :key="article.id" :title="article.name"/>
+                <a-tab-pane v-for="article in indexes" :key="article.id">
+                    <template #title>
+                        <a-dropdown position="bottom" trigger="contextMenu">
+                            <div>{{article.name}}</div>
+                            <template #content>
+                                <a-doption @click="close(article.id)">
+                                    关闭
+                                </a-doption>
+                                <a-doption @click="useHomeEditorStore().closeOther(article.id)">
+                                    关闭其他标签
+                                </a-doption>
+                                <a-doption @click="useHomeEditorStore().closeAll()">
+                                    关闭全部标签
+                                </a-doption>
+                                <a-dgroup title="更多">
+                                    <a-doption @click="rename(article.id, article.name, true)">
+                                        重命名
+                                    </a-doption>
+                                </a-dgroup>
+                            </template>
+                        </a-dropdown>
+                    </template>
+                </a-tab-pane>
             </a-tabs>
         </div>
     </header>
@@ -67,6 +89,7 @@ import {
 } from "@/store/components/HomeEditorStore";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
+import {rename} from "@/pages/home/components/he-context";
 
 const activeKey = ref(useHomeEditorStore().id);
 

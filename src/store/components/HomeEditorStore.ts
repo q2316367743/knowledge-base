@@ -160,6 +160,19 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         }
     }
 
+    function closeAll() {
+        indexes.value = [];
+        setId(0);
+        if (collapsed.value) {
+            collapsed.value = false;
+        }
+    }
+
+    function closeOther(id: number) {
+        indexes.value = indexes.value.filter(e => e.id === id);
+        setId(id);
+    }
+
     return {
         id,
         collapsed,
@@ -176,7 +189,9 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
         indexes,
         openArticle,
-        closeArticle
+        closeArticle,
+        closeAll,
+        closeOther
 
     }
 

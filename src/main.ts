@@ -82,17 +82,3 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
         }
     }
 });
-
-window.addEventListener('click', (e: MouseEvent) => {
-    console.log(e)
-    let target = e.target;
-    if (target) {
-        let tagName = (target as HTMLElement).tagName;
-        console.log(tagName);
-        if (tagName && tagName.toLowerCase() === 'a') {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    }
-})
-

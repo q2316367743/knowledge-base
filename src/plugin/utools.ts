@@ -1,5 +1,5 @@
 import MessageUtil from '@/utils/modal/MessageUtil';
-import {generateUUID} from "@/utils/BrowserUtil";
+import {copy, generateUUID} from "@/utils/BrowserUtil";
 import {createStore, del, get, getMany, keys, set, values} from 'idb-keyval';
 import Constant from "@/global/Constant";
 
@@ -57,141 +57,144 @@ function isWindows(): boolean {
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
 
-export const utools = {
-    db: {
+const db = {
+    /**
+     * 获取附件
+     * @param docId 文档ID
+     */
+    getAttachment(docId: string): Uint8Array | null {
+        return null;
+    },
+    promises: {
         /**
-         * 获取附件
-         * @param docId 文档ID
+         * 创建/更新文档
          */
-        getAttachment(docId: string): Uint8Array | null {
-            return null;
+        async put(doc: DbDoc): Promise<DbReturn> {
+            try {
+                await set(doc._id, doc, store)
+                return Promise.resolve({
+                    id: doc._id,
+                    rev: ''
+                });
+            } catch (e) {
+                return Promise.resolve({
+                    id: doc._id,
+                    error: true,
+                    message: `${e}`,
+                    ok: false
+                });
+            }
         },
-        promises: {
-            /**
-             * 创建/更新文档
-             */
-            async put(doc: DbDoc): Promise<DbReturn> {
-                try {
-                    await set(doc._id, doc, store)
-                    return Promise.resolve({
-                        id: doc._id,
-                        rev: ''
-                    });
-                } catch (e) {
-                    return Promise.resolve({
-                        id: doc._id,
-                        error: true,
-                        message: `${e}`,
-                        ok: false
-                    });
-                }
-            },
             /**
              * 获取文档
              */
             get(id: string): Promise<DbDoc | undefined> {
-                return get(id, store)
-            },
+            return get(id, store)
+        },
             /**
              * 删除文档
              */
             async remove(id: string): Promise<DbReturn> {
-                try {
-                    await del(id, store);
-                    return Promise.resolve({
-                        id,
-                        rev: ''
-                    });
-                } catch (e) {
-                    return Promise.resolve({
-                        id,
-                        error: true,
-                        message: `${e}`,
-                        ok: false
-                    });
-                }
+            try {
+                await del(id, store);
+                return Promise.resolve({
+                    id,
+                    rev: ''
+                });
+            } catch (e) {
+                return Promise.resolve({
+                    id,
+                    error: true,
+                    message: `${e}`,
+                    ok: false
+                });
+            }
 
-            },
+        },
             /**
              * 获取所有文档 可根据文档id前缀查找
              */
             async allDocs(key?: string | string[]): Promise<DbDoc[]> {
-                if (key && key instanceof Array) {
-                    return getMany(key, store);
-                } else if (key && typeof key === 'string') {
-                    let itemKeys = await keys(store);
-                    itemKeys = itemKeys.filter(itemKey => {
-                        if (typeof itemKey === 'string') {
-                            return itemKey.startsWith(key)
-                        }
-                        return false;
-                    })
-                    return getMany(itemKeys, store);
+            if (key && key instanceof Array) {
+            return getMany(key, store);
+        } else if (key && typeof key === 'string') {
+            let itemKeys = await keys(store);
+            itemKeys = itemKeys.filter(itemKey => {
+                if (typeof itemKey === 'string') {
+                    return itemKey.startsWith(key)
                 }
-                return values(store);
-            },
+                return false;
+            })
+            return getMany(itemKeys, store);
+        }
+        return values(store);
+    },
 
-            /**
-             * 存储附件到新文档
-             * @param docId 文档ID
-             * @param attachment 附件 buffer
-             * @param type 附件类型，示例：image/png, text/plain
-             */
-            async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
-                return Promise.reject("web不支持上传附件")
-            },
+        /**
+         * 存储附件到新文档
+         * @param docId 文档ID
+         * @param attachment 附件 buffer
+         * @param type 附件类型，示例：image/png, text/plain
+         */
+        async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
+            return Promise.reject("web不支持上传附件")
+        },
 
             /**
              * 获取附件
              * @param docId 文档ID
              */
             async getAttachment(docId: string): Promise<Uint8Array | null> {
-                return Promise.reject("web不支持上传附件")
-            },
+            return Promise.reject("web不支持上传附件")
+        },
 
             /**
              * 获取附件类型
              * @param docId 文档ID
              */
             getAttachmentType(docId: string): Promise<string | null> {
-                return Promise.reject("Web不支持保存附件")
-            },
+            return Promise.reject("Web不支持保存附件")
         },
     },
-    dbStorage: {
-        /**
-         * 键值对存储，如果键名存在，则更新其对应的值
-         * @param key 键名(同时为文档ID)
-         * @param value 键值
-         */
-        setItem(key: string, value: any): void {
-            localStorage.setItem(key, JSON.stringify({
-                value: value
-            }))
-        },
+}
+const dbStorage= {
+    /**
+     * 键值对存储，如果键名存在，则更新其对应的值
+     * @param key 键名(同时为文档ID)
+     * @param value 键值
+     */
+    setItem(key: string, value: any): void {
+        localStorage.setItem(key, JSON.stringify({
+            value: value
+        }))
+    },
         /**
          * 获取键名对应的值
          */
         getItem(key: string): any {
-            const value = localStorage.getItem(key);
-            if (!value) {
-                return null;
-            }
-            try {
-                const valueWrap = JSON.parse(value);
-                return valueWrap['value'];
-            } catch (e) {
-                console.error(e);
-                return null;
-            }
-        },
-        /**
-         * 删除键值对(删除文档)
-         */
-        removeItem(key: string): void {
-            localStorage.removeItem(key)
+        const value = localStorage.getItem(key);
+        if (!value) {
+            return null;
+        }
+        try {
+            const valueWrap = JSON.parse(value);
+            return valueWrap['value'];
+        } catch (e) {
+            console.error(e);
+            return null;
         }
     },
+    /**
+     * 删除键值对(删除文档)
+     */
+    removeItem(key: string): void {
+        localStorage.removeItem(key)
+    }
+}
+
+export const utools = {
+    db,
+    dbStorage,
     getPath(): string {
         return '';
     },
@@ -279,10 +282,14 @@ export const utools = {
         return [];
     },
     copyText(content: string) {
-        navigator.clipboard.writeText(content)
-            .then(() => console.debug("写入剪切板"))
-            .catch(e => {
-                throw e;
-            })
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(content)
+                .then(() => console.debug("写入剪切板"))
+                .catch(e => {
+                    throw e;
+                })
+        }else {
+            copy(content, false);
+        }
     }
 }
