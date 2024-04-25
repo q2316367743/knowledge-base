@@ -1,6 +1,6 @@
 import {DbPromiseInstance} from "@/plugin/utools/types";
 import {createStore, del, get, getMany, keys, set, values} from "idb-keyval";
-import {DbDoc, DbReturn} from "@/plugin/utools/index";
+import {DbDoc, DbReturn} from "@/plugin/utools";
 import Constant from "@/global/Constant";
 
 
