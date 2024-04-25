@@ -1,7 +1,7 @@
 import {createApp} from 'vue'
 import {createPinia} from 'pinia';
 import App from './App.vue'
-import {utools} from "@/plugin/utools";
+import {utools} from "@/plugin/utools/utools";
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';

@@ -2,7 +2,7 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {base64toBlob, blobToBase64} from "@/utils/BrowserUtil";
-import {RedirectPreload} from "@/plugin/utools";
+import {RedirectPreload} from "@/plugin/utools/utools";
 import {getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";

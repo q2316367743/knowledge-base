@@ -10,24 +10,22 @@ declare module 'simple-mind-map/src/plugins/AssociativeLine.js';
 declare module 'simple-mind-map/src/plugins/Select.js';
 declare module 'simple-mind-map/src/plugins/Drag.js';
 
-declare global {
-    interface Window {
-        /**
-         * 打开图片预览
-         * @param src 图片链接
-         */
-        onImagePreview: (src: string) => void;
-        /**
-         * 跳转到文章
-         * @param title 文章标题
-         */
-        jumpToArticle: (title: string) => void;
+declare interface Window {
+    /**
+     * 打开图片预览
+     * @param src 图片链接
+     */
+    onImagePreview: (src: string) => void;
+    /**
+     * 跳转到文章
+     * @param title 文章标题
+     */
+    jumpToArticle: (title: string) => void;
 
-        preload: {
+    preload: {
 
-            // 写入文件
-            writeToFile: (dir: string, name: string, content: Blob) => Promise<string>;
-        }
-
+        // 写入文件
+        writeToFile: (dir: string, name: string, content: Blob) => Promise<string>;
     }
+    bs: any
 }
