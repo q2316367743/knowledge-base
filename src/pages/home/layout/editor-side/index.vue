@@ -12,7 +12,7 @@
                 v-model:selected-keys="selectedKeys" v-model:checked-keys="checkKeys"
                 v-model:expanded-keys="expandedKeys">
             <template #extra="nodeData">
-                <a-dropdown>
+                <a-dropdown trigger="click" :popup-max-height="false">
                     <a-button type="text">
                         <template #icon>
                             <icon-more/>

@@ -1,5 +1,5 @@
 <template>
-    <a-dropdown>
+    <a-dropdown trigger="click" :popup-max-height="false">
         <a-button type="primary">
             <template #icon>
                 <icon-more-vertical/>

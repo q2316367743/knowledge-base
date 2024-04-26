@@ -9,5 +9,6 @@ export default defineConfig({
         [/^mt-([.\d]+)$/, ([_, num]) => ({marginTop: `${num}px`})],
         [/^mb-([.\d]+)$/, ([_, num]) => ({marginBottom: `${num}px`})],
         [/^color-(.*$)/, ([_, rgb]) => ({ color: `${rgb}` })],
+        [/^abs-([.\d]+)$/, ([_, num]) => ({ position: 'absolute', top: `${num}px`, left: `${num}px`, right: `${num}px`, bottom: `${num}px` })],
     ],
 })

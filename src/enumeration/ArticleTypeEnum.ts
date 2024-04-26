@@ -38,6 +38,11 @@ enum ArticleTypeEnum {
      */
     DRAUU = 7,
 
+    /**
+     * 表格
+     */
+    HANDSONTABLE = 8
+
 }
 
 export default ArticleTypeEnum;

@@ -13,6 +13,8 @@
                          v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
         <drauu-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                       v-else-if="editorType === ArticleTypeEnum.DRAUU && load"/>
+        <handsontable-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                             v-else-if="editorType === ArticleTypeEnum.HANDSONTABLE && load"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -36,6 +38,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useArticlePreviewEvent} from "@/store/components/HomeEditorStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import HandsontableEditor from "@/pages/home/layout/editor-content/editor/HandsontableEditor.vue";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>

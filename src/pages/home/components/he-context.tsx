@@ -34,7 +34,7 @@ export function buildArticleIcon(type: ArticleTypeEnum) {
         return h(IconCode, {})
     } else if (type === ArticleTypeEnum.RICH_TEXT) {
         return h(IconBook, {})
-    } else if (type === ArticleTypeEnum.EXCEL) {
+    } else if (type === ArticleTypeEnum.EXCEL || type === ArticleTypeEnum.HANDSONTABLE) {
         return h(IconNav, {})
     } else if (type === ArticleTypeEnum.MIND_MAP) {
         return h(IconMindMapping, {})
@@ -45,7 +45,7 @@ export function buildArticleIcon(type: ArticleTypeEnum) {
     }
 }
 
-export const articleTextTypes =  [{
+export const articleTextTypes = [{
     key: ArticleTypeEnum.RICH_TEXT,
     name: '富文本',
     icon: IconBook,
@@ -65,10 +65,14 @@ export const articleTextTypes =  [{
 
 export const articleTypes = [
     ...articleTextTypes, {
-    key: ArticleTypeEnum.DRAUU,
-    name: '画板',
-    icon: IconPalette
-}]
+        key: ArticleTypeEnum.DRAUU,
+        name: '画板',
+        icon: IconPalette
+    }, {
+        key: ArticleTypeEnum.HANDSONTABLE,
+        name: '表格',
+        icon: IconNav
+    }]
 
 export function renderArticleType(type: ArticleTypeEnum): string {
     switch (type) {
@@ -86,6 +90,8 @@ export function renderArticleType(type: ArticleTypeEnum): string {
             return "思维导图";
         case ArticleTypeEnum.RICH_TEXT:
             return "富文本笔记";
+        case ArticleTypeEnum.HANDSONTABLE:
+            return "表格";
         default:
             return "未知笔记类型";
     }
@@ -128,6 +134,14 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
             }
         case ArticleTypeEnum.EXCEL:
             return {};
+        case ArticleTypeEnum.HANDSONTABLE:
+            return {
+                data: [
+                    ["", "", "", "", "", ""],["", "", "", "", "", ""],
+                    ["", "", "", "", "", ""],["", "", "", "", "", ""],
+                    ["", "", "", "", "", ""],["", "", "", "", "", ""]
+                ],
+            };
         default:
             return "";
     }

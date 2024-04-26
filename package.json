@@ -23,6 +23,7 @@
         "cherry-markdown": "^0.8.40",
         "dayjs": "^1.11.10",
         "fuse.js": "^7.0.0",
+        "handsontable": "^14.3.0",
         "html2canvas": "^1.4.1",
         "idb-keyval": "^6.2.1",
         "jszip": "^3.10.1",
