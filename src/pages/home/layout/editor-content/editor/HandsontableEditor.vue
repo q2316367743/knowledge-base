@@ -1,10 +1,10 @@
 <template>
-    <a-layout class="handsontable-editor-wrap abs-0">
+    <a-layout class="handsontable-editor-wrap abs-7">
         <div ref="containerRef"></div>
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref, shallowRef} from "vue";
+import {onMounted, ref, shallowRef, watch} from "vue";
 import Handsontable from 'handsontable';
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
 import {CellChange, ChangeSource} from "handsontable/common";
@@ -36,9 +36,18 @@ onMounted(() => {
         autoWrapCol: true,
         contextMenu: true,
         allowInsertColumn: true,
+        allowInsertRow: true,
+        allowRemoveRow: true,
+        allowRemoveColumn: true,
+        manualRowMove: false,
         manualRowResize: true,
-        licenseKey: 'non-commercial-and-evaluation', // for non-commercial use only
+        manualColumnMove: false,
+        manualColumnResize: true,
+        licenseKey: 'non-commercial-and-evaluation',
+        readOnly: props.readOnly,
+        language: zhCN.languageCode,
         afterChange(changes: Array<CellChange> | null, source: ChangeSource) {
+            console.log(changes, source)
             if (source === 'loadData') {
                 return; // don't save this change
             }
@@ -62,10 +71,41 @@ onMounted(() => {
                 data: data.value
             });
         },
-        readOnly: props.readOnly,
-        language: zhCN.languageCode,
+        afterColumnMove(movedColumns: number[], finalIndex: number, dropIndex: number | undefined, movePossible: boolean, orderChanged: boolean) {
+            console.log(movedColumns, finalIndex, dropIndex, movePossible);
+            const minColumn = Math.min(...movedColumns);
+            const maxColumn = Math.max(...movedColumns);
+            const startIndex = Math.min(minColumn, finalIndex, dropIndex || 0);
+            const endIndex = Math.max(maxColumn, finalIndex, dropIndex || 0);
+            // true: 从前往后
+            const direct = Math.max(...movedColumns) <= finalIndex;
+            console.log(minColumn, maxColumn, startIndex, endIndex, direct);
+            for (let row of data.value) {
+                const notMoveColumn = row.slice(maxColumn + 1, direct ? endIndex : minColumn);
+                const moveColumn = row.slice(minColumn, maxColumn + 1);
+                let move: Array<string>;
+                if (direct) {
+                    move = [...notMoveColumn, ...moveColumn];
+                }else {
+                    move = [...moveColumn, ...notMoveColumn];
+                }
+                const currentRow = [...row.slice(0, startIndex), ...move, ...row.slice(endIndex, row.length)];
+                console.log('方向：', direct, `不移动，进改变位置：（${maxColumn + 1}，${direct ? endIndex : minColumn}）`, notMoveColumn, "，移动中：", moveColumn)
+                console.log('开始：', row.slice(0, startIndex), '，移动：', move, '，结尾', row.slice(endIndex, row.length), '，最终：', currentRow)
+            }
+        },
+        afterRowMove(movedRows, finalIndex, dropIndex, movePossible, orderChanged) {
+            console.log(movedRows, finalIndex, dropIndex, movePossible, orderChanged);
+        },
     });
+    hot.value.updateSettings({
+
+    })
 });
+
+watch(() => props.readOnly, value => hot.value && hot.value.updateSettings({
+    readOnly: value
+}))
 
 
 </script>

@@ -89,7 +89,7 @@ const drauu = useDrauu(target, {
         mode: 'stylus',
         size: 3,
         dasharray: 'solid'
-    }
+    },
 });
 
 onMounted(() => {
