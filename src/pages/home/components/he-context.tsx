@@ -141,6 +141,7 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
                     ["", "", "", "", "", ""],["", "", "", "", "", ""],
                     ["", "", "", "", "", ""],["", "", "", "", "", ""]
                 ],
+                columns: []
             };
         default:
             return "";

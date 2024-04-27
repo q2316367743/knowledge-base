@@ -1,13 +1,34 @@
 <template>
-    <a-layout class="handsontable-editor-wrap abs-7">
-        <div ref="containerRef"></div>
+    <a-layout class="handsontable-editor-wrap abs-0">
+        <a-layout-header class="header">
+            <a-button-group type="text" class="w-full">
+                <div class="flex justify-between w-full">
+                    <a-space>
+                        <a-button @click="updateColumnsWrap()">修改列</a-button>
+                    </a-space>
+                    <a-space>
+                        <a-button>
+                            <template #icon>
+                                <icon-settings />
+                            </template>
+                        </a-button>
+                    </a-space>
+                </div>
+            </a-button-group>
+        </a-layout-header>
+        <a-layout-content class="content">
+            <div ref="containerRef"></div>
+        </a-layout-content>
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref, shallowRef, watch} from "vue";
+import {onMounted, ref, shallowRef, toRaw, watch} from "vue";
 import Handsontable from 'handsontable';
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
 import {CellChange, ChangeSource} from "handsontable/common";
+import {ColumnSettings} from "handsontable/settings";
+import {updateColumns} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/columns";
+import {clone} from "xe-utils";
 
 registerLanguageDictionary(zhCN)
 
@@ -20,7 +41,8 @@ const emits = defineEmits(['update:modelValue']);
 
 const containerRef = ref<HTMLElement>();
 const hot = shallowRef<Handsontable | null>(null);
-const data = ref<Array<Array<string>>>(props.modelValue ? props.modelValue.data : [["", "", "", "", "", ""]]);
+const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data || [["", "", "", "", "", ""]]) : [["", "", "", "", "", ""]]);
+const columns = ref<Array<ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns || null) : null);
 
 onMounted(() => {
     if (!containerRef.value) {
@@ -46,6 +68,7 @@ onMounted(() => {
         licenseKey: 'non-commercial-and-evaluation',
         readOnly: props.readOnly,
         language: zhCN.languageCode,
+        columns: columns.value as any,
         afterChange(changes: Array<CellChange> | null, source: ChangeSource) {
             console.log(changes, source)
             if (source === 'loadData') {
@@ -67,9 +90,7 @@ onMounted(() => {
                 row[change[1] as number] = change[3];
                 data.value[change[0]] = row;
             }
-            emits('update:modelValue', {
-                data: data.value
-            });
+            updateModelValue();
         },
         afterColumnMove(movedColumns: number[], finalIndex: number, dropIndex: number | undefined, movePossible: boolean, orderChanged: boolean) {
             console.log(movedColumns, finalIndex, dropIndex, movePossible);
@@ -98,15 +119,30 @@ onMounted(() => {
             console.log(movedRows, finalIndex, dropIndex, movePossible, orderChanged);
         },
     });
-    hot.value.updateSettings({
-
-    })
 });
 
 watch(() => props.readOnly, value => hot.value && hot.value.updateSettings({
     readOnly: value
-}))
+}));
 
+function updateModelValue() {
+    emits('update:modelValue', {
+        data: data.value,
+        columns: columns.value
+    });
+}
+
+function updateColumnsWrap() {
+    updateColumns(clone(columns.value, true) as Array<ColumnSettings> || [])
+        .then(res => {
+            // 更新
+            columns.value = res;
+            hot.value && hot.value.updateSettings({
+                columns: columns.value as any
+            });
+            updateModelValue();
+        })
+}
 
 </script>
 <style scoped lang="less">
@@ -121,6 +157,7 @@ watch(() => props.readOnly, value => hot.value && hot.value.updateSettings({
         left: 7px;
         right: 7px;
         bottom: 7px;
+        overflow: auto;
     }
 }
 </style>

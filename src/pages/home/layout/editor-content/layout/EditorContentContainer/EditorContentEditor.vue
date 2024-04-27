@@ -27,6 +27,7 @@ import MarkdownEditor from "@/pages/home/layout/editor-content/editor/MarkdownEd
 import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
 import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
 import DrauuEditor from "@/pages/home/layout/editor-content/editor/DrauuEditor/index.vue";
+import HandsontableEditor from "@/pages/home/layout/editor-content/editor/HandsontableEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";
@@ -38,7 +39,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useArticlePreviewEvent} from "@/store/components/HomeEditorStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
-import HandsontableEditor from "@/pages/home/layout/editor-content/editor/HandsontableEditor.vue";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
