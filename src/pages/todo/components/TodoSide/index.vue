@@ -2,7 +2,7 @@
     <div class="todo-side">
         <header class="m-2">
             <a-input-group>
-                <a-input style="width: 218px;" v-model="keyword" allow-clear/>
+                <a-input style="width: 233px;" v-model="keyword" allow-clear/>
                 <a-button type="primary" @click="add(0)">
                     <template #icon>
                         <icon-plus/>

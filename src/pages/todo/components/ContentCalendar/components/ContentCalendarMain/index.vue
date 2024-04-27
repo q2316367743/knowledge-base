@@ -19,7 +19,7 @@
                 {{ title }}
             </div>
             <div class="list">
-                <card-todo-item v-for="index in indexes" :item="index" @update="onUpdate" :key="index.id" attr/>
+                <card-todo-item v-for="index in indexes" :item="index" @update="onUpdate" :key="index.id" attr only/>
             </div>
         </div>
         <div class="add">
