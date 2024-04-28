@@ -48,6 +48,16 @@ export interface BaseSetting {
      */
     relationArticleAction: ArticleActionEnum;
 
+    /**
+     * 表格列数
+     */
+    tableColumnCount: number;
+
+    /**
+     * 表格行数
+     */
+    tableColCount: number;
+
 }
 
 export enum ArticleActionEnum {
@@ -67,6 +77,8 @@ export function getDefaultBaseSetting(): BaseSetting {
         codeExtraName: 'ts',
         mdEditorEditMode: MdEditorEditModeEnum.AUTO,
         todoArticleAction: ArticleActionEnum.DRAWER,
-        relationArticleAction: ArticleActionEnum.TO_ARTICLE
+        relationArticleAction: ArticleActionEnum.TO_ARTICLE,
+        tableColumnCount: 26,
+        tableColCount: 26
     }
 }

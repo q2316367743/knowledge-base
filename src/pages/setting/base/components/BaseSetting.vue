@@ -72,15 +72,28 @@
             </a-form-item>
             <a-form-item label="待办文章动作">
                 <a-radio-group v-model="instance.todoArticleAction">
-                    <a-radio :value="TodoArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
-                    <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
+                    <a-radio :value="ArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
+                    <a-radio :value="ArticleActionEnum.DRAWER">侧边预览</a-radio>
                 </a-radio-group>
             </a-form-item>
             <a-form-item label="关联文章动作">
                 <a-radio-group v-model="instance.relationArticleAction">
-                    <a-radio :value="TodoArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
-                    <a-radio :value="TodoArticleActionEnum.DRAWER">侧边预览</a-radio>
+                    <a-radio :value="ArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
+                    <a-radio :value="ArticleActionEnum.DRAWER">侧边预览</a-radio>
                 </a-radio-group>
+            </a-form-item>
+            <a-form-item label="表格组件初始化表格大小">
+                <a-input-number v-model="instance.tableColumnCount" placeholder="请输入列数" style="width: 120px" :min="1">
+                    <template #suffix>
+                        列
+                    </template>
+                </a-input-number>
+                <span style="margin: 0 14px"> X </span>
+                <a-input-number v-model="instance.tableColCount" placeholder="请输入行数" style="width: 120px" :min="1">
+                    <template #suffix>
+                        行
+                    </template>
+                </a-input-number>
             </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="save()">保存</a-button>
@@ -88,11 +101,9 @@
         </a-form>
     </div>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
-import {mapState} from "pinia";
+<script lang="ts" setup>
+import {computed, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import JsonTheme from "@/global/CodeTheme";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import {clone} from "xe-utils";
@@ -101,55 +112,29 @@ import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import Constant from "@/global/Constant";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
-import {getDefaultBaseSetting, ArticleActionEnum} from "@/entity/setting/BaseSetting";
+import {useRouter} from "vue-router";
+import {ArticleActionEnum} from "@/entity/setting/BaseSetting";
 
-export default defineComponent({
-    name: 'more-setting-base',
-    emits: ['save'],
-    data: () => ({
-        JsonTheme, Constant,
-        ImageStrategyEnum,
-        instance: getDefaultBaseSetting(),
-        isUtools
-    }),
-    computed: {
-        TodoArticleActionEnum() {
-            return ArticleActionEnum
-        },
-        MdEditorEditModeEnum() {
-            return MdEditorEditModeEnum
-        },
-        ...mapState(useBaseSettingStore, ['baseSetting']),
-        ...mapState(useLskyProSettingStore, ['isAvailable']),
-        isWeb() {
-            return !isUtools
+const router = useRouter();
+
+const instance = ref(clone(useBaseSettingStore().baseSetting, true));
+const isWeb = !isUtools;
+const isAvailable = computed(() => useLskyProSettingStore().isAvailable);
+
+function save() {
+    // 校验图床
+    if (instance.value.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
+        if (!useLskyProSettingStore().isAvailable) {
+            MessageBoxUtil.confirm("检测到您未配置兰空图床，是否立即前往配置?", "错误")
+                .then(() => router.push("/setting/lsky-pro"))
+            return;
         }
-    },
-    watch: {
-        baseSetting() {
-            this.instance = clone(this.baseSetting, true);
-        }
-    },
-    created() {
-        this.instance = clone(this.baseSetting, true);
-    },
-    methods: {
-        save() {
-            // 校验图床
-            if (this.instance.imageStrategy === ImageStrategyEnum.LSKY_PRO) {
-                if (!useLskyProSettingStore().isAvailable) {
-                    MessageBoxUtil.confirm("检测到您未配置兰空图床，是否立即前往配置?", "错误")
-                        .then(() => this.$router.push("/setting/lsky-pro"))
-                    return;
-                }
-            }
-            useBaseSettingStore().save(this.instance)
-                .then(() => MessageUtil.success("保存成功"))
-                .catch(e => MessageUtil.error("保存失败", e))
-                .finally(() => this.$emit('save'));
-        },
     }
-});
+    useBaseSettingStore().save(instance.value)
+        .then(() => MessageUtil.success("保存成功"))
+        .catch(e => MessageUtil.error("保存失败", e));
+}
+
 </script>
 <style scoped>
 .more-setting-base {

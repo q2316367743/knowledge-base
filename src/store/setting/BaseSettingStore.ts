@@ -38,6 +38,8 @@ export const useBaseSettingStore = defineStore('base-setting', {
         },
         todoArticleAction: state => state.baseSetting.todoArticleAction,
         relationArticleAction: state => state.baseSetting.relationArticleAction,
+        tableColumnCount: state => state.baseSetting.tableColumnCount,
+        tableColCount: state => state.baseSetting.tableColCount,
     },
     actions: {
         async init() {

@@ -126,3 +126,11 @@ export class MapWrap<K, V> extends Map<K, V> {
     }
 
 }
+
+export function traverseNumber(num: number) {
+    const arr = new Array<number>()
+    for (let i = 0; i < num; i++) {
+        arr.push(i);
+    }
+    return arr
+}
