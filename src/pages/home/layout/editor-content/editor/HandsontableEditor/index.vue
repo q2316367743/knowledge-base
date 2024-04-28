@@ -17,12 +17,12 @@
             </a-button-group>
         </a-layout-header>
         <a-layout-content class="content">
-            <div ref="containerRef"></div>
+            <div ref="containerRef" class="handsontable-editor"></div>
         </a-layout-content>
     </a-layout>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref, shallowRef, toRaw, watch} from "vue";
+import {onMounted, ref, shallowRef, watch} from "vue";
 import Handsontable from 'handsontable';
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
 import {CellChange, ChangeSource} from "handsontable/common";
@@ -145,7 +145,7 @@ function updateColumnsWrap() {
 }
 
 </script>
-<style scoped lang="less">
+<style lang="less">
 .handsontable-editor-wrap {
     .header {
         padding: 7px;
@@ -159,5 +159,55 @@ function updateColumnsWrap() {
         bottom: 7px;
         overflow: auto;
     }
+}
+
+.handsontable-editor {
+    color: var(--color-text-1);
+
+    thead {
+        th {
+            color: var(--color-text-1);
+            background-color: var(--color-neutral-2);
+        }
+    }
+
+    tbody {
+        th {
+            color: var(--color-text-1);
+            background-color: var(--color-neutral-2);
+        }
+
+        td, tr {
+            color: var(--color-text-1);
+            background-color: var(--color-bg-2);
+        }
+    }
+
+    tbody th.ht__highlight, thead th.ht__highlight {
+        color: var(--color-text-1);
+        background-color: var(--color-neutral-3);
+    }
+}
+.htMenu {
+    .htCore {
+        color: var(--color-text-1);
+        background-color: var(--color-neutral-2);
+    }
+     table tbody tr td {
+         background-color: var(--color-neutral-2);
+         &.htDisabled {
+             color: var(--color-text-4);
+             &:hover {
+                 background-color: var(--color-neutral-4);
+             }
+         }
+         &.current {
+             background-color: var(--color-neutral-3);
+         }
+     }
+}
+.handsontableInput {
+    color: var(--color-text-1);
+    background-color: var(--color-fill-2);
 }
 </style>
