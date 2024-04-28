@@ -1,24 +1,28 @@
 <template>
     <a-layout class="handsontable-editor-wrap abs-0">
-        <a-layout-header class="header">
+        <div class="content">
+            <div ref="containerRef" class="handsontable-editor"></div>
+        </div>
+        <div class="side">
             <a-button-group type="text" class="w-full">
                 <div class="flex justify-between w-full">
                     <a-space>
-                        <a-button @click="updateColumnsWrap()">修改列</a-button>
                     </a-space>
-                    <a-space>
-                        <a-button>
-                            <template #icon>
-                                <icon-settings/>
+                    <div>
+                        <a-dropdown position="br">
+                            <a-button>
+                                <template #icon>
+                                    <icon-settings/>
+                                </template>
+                            </a-button>
+                            <template #content>
+                                <a-doption @click="updateColumnsWrap()">修改列</a-doption>
                             </template>
-                        </a-button>
-                    </a-space>
+                        </a-dropdown>
+                    </div>
                 </div>
             </a-button-group>
-        </a-layout-header>
-        <a-layout-content class="content">
-            <div ref="containerRef" class="handsontable-editor"></div>
-        </a-layout-content>
+        </div>
     </a-layout>
 </template>
 <script lang="ts" setup>
@@ -147,17 +151,21 @@ function updateColumnsWrap() {
 </script>
 <style lang="less">
 .handsontable-editor-wrap {
-    .header {
-        padding: 7px;
-    }
 
     .content {
         position: absolute;
-        top: 47px;
+        top: 7px;
         left: 7px;
-        right: 7px;
+        right: 47px;
         bottom: 7px;
         overflow: auto;
+    }
+    .side {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        padding: 7px;
     }
 }
 
