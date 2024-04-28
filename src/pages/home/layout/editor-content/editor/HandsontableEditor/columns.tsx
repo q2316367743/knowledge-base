@@ -9,7 +9,7 @@ import {
     Option, Radio, RadioGroup,
     Select,
     Space,
-    Table
+    Table, TypographyParagraph
 } from "@arco-design/web-vue";
 import {Ref, ref} from "vue";
 import {clone} from "xe-utils";
@@ -91,7 +91,12 @@ export function updateColumns(columns: Array<ColumnSettings>): Promise<Array<Col
         Drawer.open({
             title: '修改列设置',
             width: '50%',
+            okText: '保存',
             content: () => <div>
+                <TypographyParagraph>
+                    <blockquote>请注意，新增、删除列，并不会影响数据变化，只会影响表头</blockquote>
+                    <blockquote style={{color: 'rgb(var(--warning-6))'}}>未自定义列，将自动生成列名，并可无线生成列。如果自定义了列，列数将只与此设置有关，无法在右键菜单中新增一列。</blockquote>
+                </TypographyParagraph>
                 <div class={'mb-8'}>
                     <Space>
                         <Button type="primary" onClick={add}>

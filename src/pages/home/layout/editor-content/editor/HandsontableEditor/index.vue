@@ -9,7 +9,7 @@
                     <a-space>
                         <a-button>
                             <template #icon>
-                                <icon-settings />
+                                <icon-settings/>
                             </template>
                         </a-button>
                     </a-space>
@@ -42,7 +42,7 @@ const emits = defineEmits(['update:modelValue']);
 const containerRef = ref<HTMLElement>();
 const hot = shallowRef<Handsontable | null>(null);
 const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data || [["", "", "", "", "", ""]]) : [["", "", "", "", "", ""]]);
-const columns = ref<Array<ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns || null) : null);
+const columns = ref<Array<ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
 
 onMounted(() => {
     if (!containerRef.value) {
@@ -107,7 +107,7 @@ onMounted(() => {
                 let move: Array<string>;
                 if (direct) {
                     move = [...notMoveColumn, ...moveColumn];
-                }else {
+                } else {
                     move = [...moveColumn, ...notMoveColumn];
                 }
                 const currentRow = [...row.slice(0, startIndex), ...move, ...row.slice(endIndex, row.length)];
