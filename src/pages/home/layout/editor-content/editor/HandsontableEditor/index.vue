@@ -48,17 +48,17 @@
 </template>
 <script lang="ts" setup>
 import {onMounted, ref, shallowRef, watch} from "vue";
-import Handsontable from 'handsontable';
-import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
-import {updateColumns} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/columns";
 import {clone} from "xe-utils";
+import Handsontable from 'handsontable';
+import {HyperFormula} from "hyperformula";
+import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
+import {updateColumns} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/drawer/columns";
 import {useHandsontableImport} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ImportHook";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {
     handsontableExport,
     useHandsontableExport
 } from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ExportHook";
-import {HyperFormula} from "hyperformula";
 import {openFormulaDrawer} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/drawer/FormulaDrawer";
 
 registerLanguageDictionary(zhCN)
@@ -74,6 +74,7 @@ const containerRef = ref<HTMLElement>();
 const hot = shallowRef<Handsontable | null>(null);
 const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data || [["", "", "", "", "", ""]]) : [["", "", "", "", "", ""]]);
 const columns = ref<Array<Handsontable.ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
+const columnSorting = ref<boolean | Handsontable.plugins.ColumnSorting.Config[]>(props.modelValue ? (props.modelValue.columnSorting || true) : true);
 
 let onImport = () => {
     MessageUtil.warning("系统初始化中")
@@ -95,6 +96,7 @@ onMounted(() => {
     if (!containerRef.value) {
         return;
     }
+    console.log(columnSorting.value)
     hot.value = new Handsontable(containerRef.value, {
         data: data.value,
         rowHeaders: true,
@@ -119,6 +121,16 @@ onMounted(() => {
         formulas: {
             engine: hyperformulaInstance,
         },
+
+        // // enable filtering
+        // filters: true,
+        // // enable the column menu
+        // dropdownMenu: true,
+
+        columnSorting: typeof columnSorting.value === 'boolean' ? columnSorting.value : {
+            initialConfig: columnSorting.value
+        },
+
         afterChange(changes: Array<Handsontable.CellChange> | null, source: Handsontable.ChangeSource) {
             console.log(changes, source)
             if (source === 'loadData') {
@@ -168,6 +180,14 @@ onMounted(() => {
         afterRowMove(movedRows, finalIndex, dropIndex, movePossible, orderChanged) {
             console.log(movedRows, finalIndex, dropIndex, movePossible, orderChanged);
         },
+        afterFilter(conditionsStack) {
+            console.log(conditionsStack)
+        },
+        afterColumnSort(currentSortConfig, destinationSortConfigs) {
+            columnSorting.value = destinationSortConfigs;
+            // 保存
+            updateModelValue();
+        },
     });
     const useHandsontableImportResult = useHandsontableImport(props.articleId || 0, (records, columnsWrap) => {
         if (hot.value) {
@@ -196,7 +216,8 @@ watch(() => props.readOnly, value => hot.value && hot.value.updateSettings({
 function updateModelValue() {
     emits('update:modelValue', {
         data: data.value,
-        columns: columns.value
+        columns: columns.value,
+        columnSorting: columnSorting.value
     });
 }
 
