@@ -1,4 +1,3 @@
-import {ColumnSettings} from "handsontable/settings";
 import {
     Button, ButtonGroup,
     Drawer,
@@ -15,6 +14,7 @@ import {Ref, ref} from "vue";
 import {clone} from "xe-utils";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TableColumnData} from "@arco-design/web-vue/es/table/interface";
+import Handsontable from "handsontable";
 
 const types: Array<string> = ['autocomplete', 'checkbox', 'date', 'dropdown',
     'numeric', 'password', 'select', 'time', 'text',]
@@ -35,8 +35,8 @@ const translation: Record<string, string> = {
  * @param columns 列设置
  * @see https://handsontable.com/docs/javascript-data-grid/cell-type/
  */
-export function updateColumns(columns: Array<ColumnSettings>): Promise<Array<ColumnSettings>> {
-    const columnsWrap = ref<Array<ColumnSettings>>(columns);
+export function updateColumns(columns: Array<Handsontable.ColumnSettings>): Promise<Array<Handsontable.ColumnSettings>> {
+    const columnsWrap = ref<Array<Handsontable.ColumnSettings>>(columns);
     const columnHeads: Array<TableColumnData> = [{
         dataIndex: 'title',
         title: '列名',
@@ -87,7 +87,7 @@ export function updateColumns(columns: Array<ColumnSettings>): Promise<Array<Col
         columnsWrap.value.splice(index, 1);
     }
 
-    return new Promise<Array<ColumnSettings>>(resolve => {
+    return new Promise<Array<Handsontable.ColumnSettings>>(resolve => {
         Drawer.open({
             title: '修改列设置',
             width: '50%',
@@ -95,7 +95,9 @@ export function updateColumns(columns: Array<ColumnSettings>): Promise<Array<Col
             content: () => <div>
                 <TypographyParagraph>
                     <blockquote>请注意，新增、删除列，并不会影响数据变化，只会影响表头</blockquote>
-                    <blockquote style={{color: 'rgb(var(--warning-6))'}}>未自定义列，将自动生成列名，并可无线生成列。如果自定义了列，列数将只与此设置有关，无法在右键菜单中新增一列。</blockquote>
+                    {columnsWrap.value.length === 0 && <blockquote
+                        style={{color: 'rgb(var(--warning-6))'}}>未自定义列，将自动生成列名，并可通过右键无线生成列。
+                        如果自定义了列，列数将只与此设置有关，无法在右键菜单中新增一列。</blockquote>}
                 </TypographyParagraph>
                 <div class={'mb-8'}>
                     <Space>
@@ -107,14 +109,14 @@ export function updateColumns(columns: Array<ColumnSettings>): Promise<Array<Col
                 <Table data={columnsWrap.value} columns={columnHeads} rowKey={'title'} pagination={false}/>
             </div>,
             onOk() {
-                resolve(columnsWrap.value as Array<ColumnSettings>);
+                resolve(columnsWrap.value as Array<Handsontable.ColumnSettings>);
             },
         });
     })
 }
 
-function updateColumnCell(columns: Ref<Array<ColumnSettings>>, index: number) {
-    const column = ref<ColumnSettings>(clone(columns.value[index], true));
+function updateColumnCell(columns: Ref<Array<Handsontable.ColumnSettings>>, index: number) {
+    const column = ref<Handsontable.ColumnSettings>(clone(columns.value[index], true));
     Modal.open({
         title: '新增列',
         content: () => <Form model={{}} layout={'vertical'}>

@@ -8,7 +8,7 @@
                 <div class="flex justify-between w-full">
                     <a-space>
                     </a-space>
-                    <div>
+                    <a-space direction="vertical">
                         <a-dropdown position="br">
                             <a-button>
                                 <template #icon>
@@ -19,7 +19,21 @@
                                 <a-doption @click="updateColumnsWrap()">修改列</a-doption>
                             </template>
                         </a-dropdown>
-                    </div>
+                        <a-tooltip content="导入" position="left">
+                            <a-button @click="onImport()">
+                                <template #icon>
+                                    <icon-import/>
+                                </template>
+                            </a-button>
+                        </a-tooltip>
+                        <a-tooltip content="导出" position="left">
+                            <a-button @click="onExport()">
+                                <template #icon>
+                                    <icon-export/>
+                                </template>
+                            </a-button>
+                        </a-tooltip>
+                    </a-space>
                 </div>
             </a-button-group>
         </div>
@@ -29,10 +43,14 @@
 import {onMounted, ref, shallowRef, watch} from "vue";
 import Handsontable from 'handsontable';
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
-import {CellChange, ChangeSource} from "handsontable/common";
-import {ColumnSettings} from "handsontable/settings";
 import {updateColumns} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/columns";
 import {clone} from "xe-utils";
+import {useHandsontableImport} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ImportHook";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {
+    handsontableExport,
+    useHandsontableExport
+} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ExportHook";
 
 registerLanguageDictionary(zhCN)
 
@@ -46,7 +64,15 @@ const emits = defineEmits(['update:modelValue']);
 const containerRef = ref<HTMLElement>();
 const hot = shallowRef<Handsontable | null>(null);
 const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data || [["", "", "", "", "", ""]]) : [["", "", "", "", "", ""]]);
-const columns = ref<Array<ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
+const columns = ref<Array<Handsontable.ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
+
+let onImport = () => {
+    MessageUtil.warning("系统初始化中")
+}
+
+function onExport() {
+    handsontableExport(data, columns as any);
+}
 
 onMounted(() => {
     if (!containerRef.value) {
@@ -73,7 +99,7 @@ onMounted(() => {
         readOnly: props.readOnly,
         language: zhCN.languageCode,
         columns: columns.value as any,
-        afterChange(changes: Array<CellChange> | null, source: ChangeSource) {
+        afterChange(changes: Array<Handsontable.CellChange> | null, source: Handsontable.ChangeSource) {
             console.log(changes, source)
             if (source === 'loadData') {
                 return; // don't save this change
@@ -123,6 +149,24 @@ onMounted(() => {
             console.log(movedRows, finalIndex, dropIndex, movePossible, orderChanged);
         },
     });
+    const useHandsontableImportResult = useHandsontableImport(props.articleId || 0, (records, columnsWrap) => {
+        if (hot.value) {
+            // 表格赋值
+            hot.value.updateData(records);
+            hot.value.updateSettings({columns: columnsWrap});
+            // 数据赋值
+            data.value = records;
+            columns.value = columnsWrap;
+            // 更新
+            updateModelValue();
+            MessageUtil.success("导入成功")
+        }
+    });
+    useHandsontableExport(data, columns as any, props.articleId);
+    onImport = () => {
+        useHandsontableImportResult.onImport(props.articleId || 0);
+    }
+
 });
 
 watch(() => props.readOnly, value => hot.value && hot.value.updateSettings({
@@ -137,7 +181,7 @@ function updateModelValue() {
 }
 
 function updateColumnsWrap() {
-    updateColumns(clone(columns.value, true) as Array<ColumnSettings> || [])
+    updateColumns(clone(columns.value, true) as Array<Handsontable.ColumnSettings> || [])
         .then(res => {
             // 更新
             columns.value = res;
@@ -148,6 +192,8 @@ function updateColumnsWrap() {
         })
 }
 
+
+
 </script>
 <style lang="less">
 .handsontable-editor-wrap {
@@ -156,7 +202,7 @@ function updateColumnsWrap() {
         position: absolute;
         top: 7px;
         left: 7px;
-        right: 47px;
+        right: 46px;
         bottom: 7px;
         overflow: auto;
     }

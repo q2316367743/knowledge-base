@@ -57,8 +57,6 @@ function isWindows(): boolean {
 }
 
 
-
-
 export const utools = {
     db: {
         promises: createDbPromiseInstance(),
@@ -71,12 +69,7 @@ export const utools = {
         window.open(url);
     },
     redirect(label: string | string[], payload: string | RedirectPreload) {
-        if (typeof label === 'string' || typeof payload !== 'string') {
-            MessageUtil.warning("web环境不支持utools");
-            window.open("https://u.tools");
-        } else {
-            window.open(`utools://${label[0]}/${label[1]}?${payload}`)
-        }
+        window.open(`utools://${label}/${label}?${typeof payload === 'string' ? payload : JSON.stringify(payload)}`)
     },
     setFeature() {
         MessageUtil.warning("web环境不支持设置feature，请使用utools版本");

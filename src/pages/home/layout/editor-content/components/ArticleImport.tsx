@@ -1,10 +1,11 @@
 import {Modal, RequestOption, Upload, UploadRequest} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {JSX} from "vue/jsx-runtime";
 
 /**
  * 打开文章导入
  */
-export function openArticleImport(types?: Array<string>): Promise<File> {
+export function openArticleImport(types: Array<string>, extra?: () => JSX.Element): Promise<File> {
     return new Promise((resolve, reject) => {
 
         function customRequest(request: RequestOption): UploadRequest {
@@ -25,6 +26,7 @@ export function openArticleImport(types?: Array<string>): Promise<File> {
         const modalReturn = Modal.open({
             title: '导入',
             content: () => <div>
+                {extra ? extra() : ''}
                 <Upload accept={types ? types.join(',') : ''} showFileList={false} draggable customRequest={customRequest}/>
                 <div style={{color: 'var(--color-text-2)', marginTop: '7px'}}>支持{types ? types.join("，") : '任意类型'}文件</div>
             </div>,

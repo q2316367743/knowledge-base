@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {ref} from "vue";
 
 export enum GlobalType {
     DARK = 1,
@@ -8,58 +9,51 @@ export enum GlobalType {
     AUTO = 3
 }
 
-function renderTheme(): boolean {
-    const globalType = getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO);
-    if (globalType === GlobalType.AUTO) {
-        return utools.isDarkColors();
-    } else if (globalType === GlobalType.DARK) {
-        return true;
-    } else if (globalType === GlobalType.LIGHT) {
+export const useGlobalStore = defineStore('global', () => {
+    const isDark = ref(utools.isDarkColors());
+    const loading = ref(false);
+    const loadingText = ref('');
+    const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
+
+    function renderTheme(): boolean {
+        if (globalType.value === GlobalType.AUTO) {
+            return utools.isDarkColors();
+        } else if (globalType.value === GlobalType.DARK) {
+            return true;
+        } else if (globalType.value === GlobalType.LIGHT) {
+            return false;
+        }
         return false;
     }
-    return false;
-}
 
-export const useGlobalStore = defineStore('global', {
-    state: () => ({
-        isDark: utools.isDarkColors(),
-        loading: false,
-        loadingText: '',
-    }),
-    actions: {
-        /**
-         * 初始化主题、重置主题
-         */
-        initDarkColors() {
-            this.isDark = renderTheme()
-            if (this.isDark) {
-                // 设置为暗黑主题
-                document.body.setAttribute('arco-theme', 'dark');
-            } else {
-                // 恢复亮色主题
-                document.body.removeAttribute('arco-theme');
-            }
-        },
-        /**
-         * 切换主题
-         */
-        switchDarkColors(type: GlobalType) {
-            setItem(LocalNameEnum.KEY_APP_THEME, type);
-            this.isDark = renderTheme()
-            if (this.isDark) {
-                // 设置为暗黑主题
-                document.body.setAttribute('arco-theme', 'dark');
-            } else {
-                // 恢复亮色主题
-                document.body.removeAttribute('arco-theme');
-            }
-        },
-        startLoading(text?: string) { // 加载中.. 可以加载完成后自动关闭页面.. 不要忘
-            this.loading = true;
-            this.loadingText = text || '加载中...';
-        },
-        closeLoading() {
-            this.loading = false;
+    function initDarkColors() {
+        isDark.value = renderTheme()
+        if (isDark.value) {
+            // 设置为暗黑主题
+            document.body.setAttribute('arco-theme', 'dark');
+        } else {
+            // 恢复亮色主题
+            document.body.removeAttribute('arco-theme');
         }
     }
-})
+
+    function switchDarkColors(type: GlobalType) {
+        globalType.value = type;
+        setItem(LocalNameEnum.KEY_APP_THEME, globalType.value);
+        initDarkColors()
+    }
+
+    function startLoading(text?: string) { // 加载中.. 可以加载完成后自动关闭页面.. 不要忘
+        loading.value = true;
+        loadingText.value = text || '加载中...';
+    }
+    function closeLoading() {
+        loading.value = false;
+    }
+
+    return {
+        isDark, globalType,
+        initDarkColors, switchDarkColors, startLoading, closeLoading
+    }
+
+});

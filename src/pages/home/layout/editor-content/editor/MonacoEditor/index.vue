@@ -128,7 +128,7 @@ export default defineComponent({
 
         function onImport(id: number) {
             if (props.articleId === id && editor) {
-                openArticleImport().then(file => readAsText(file).then(text => {
+                openArticleImport([]).then(file => readAsText(file).then(text => {
                     editor && editor.setValue(text);
                     useArticleStore().updateIndex(id, {
                         name: file.name

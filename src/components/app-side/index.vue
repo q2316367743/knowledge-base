@@ -86,7 +86,9 @@
         <a-dropdown position="tl">
             <a-button type="text" style="margin-bottom: 7px;">
                 <template #icon>
-                    <icon-palette/>
+                    <icon-moon v-if="themeType === GlobalType.DARK"/>
+                    <icon-sun v-else-if="themeType === GlobalType.LIGHT"/>
+                    <icon-palette v-else/>
                 </template>
             </a-button>
             <template #content>
@@ -144,7 +146,7 @@
 </template>
 <script lang="ts" setup>
 import IconTimeLine from "@/icon/IconTimeLine.vue";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
@@ -155,6 +157,8 @@ const route = useRoute();
 const router = useRouter();
 
 const selectedKeys = ref(['/dashboard']);
+
+const themeType = computed(() => useGlobalStore().globalType)
 
 watch(() => selectedKeys.value, value => router.push(value[0]));
 watch(() => route.path, path => {
