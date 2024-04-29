@@ -85,7 +85,7 @@ function onExport() {
 }
 
 // create an external HyperFormula instance
-const hyperformulaInstance = HyperFormula.buildEmpty({
+const hyperFormulaInstance = HyperFormula.buildEmpty({
     // to use an external HyperFormula instance,
     // initialize it with the `'internal-use-in-handsontable'` license key
     licenseKey: 'internal-use-in-handsontable',
@@ -118,7 +118,7 @@ onMounted(() => {
         language: zhCN.languageCode,
         columns: columns.value as any,
         formulas: {
-            engine: hyperformulaInstance,
+            engine: hyperFormulaInstance,
         },
 
         // // enable filtering
