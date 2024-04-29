@@ -2,8 +2,8 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
-        version: '2.1.0-alpha-1',
-        sign: 21001,
+        version: '2.1.0',
+        sign: 210,
         time: '2024-04-29',
         items: [{
             label: LogItemEnum.MAJOR,
