@@ -96,7 +96,6 @@ onMounted(() => {
     if (!containerRef.value) {
         return;
     }
-    console.log(columnSorting.value)
     hot.value = new Handsontable(containerRef.value, {
         data: data.value,
         rowHeaders: true,
