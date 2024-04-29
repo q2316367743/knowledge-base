@@ -21,13 +21,13 @@
 import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 // 编辑器
-import WangEditor from "@/pages/home/layout/editor-content/editor/WangEditor.vue";
-import MonacoEditor from "@/pages/home/layout/editor-content/editor/MonacoEditor/index.vue";
-import MarkdownEditor from "@/pages/home/layout/editor-content/editor/MarkdownEditor/index.vue";
-import ExcelEditor from "@/pages/home/layout/editor-content/editor/ExcelEditor/index.vue";
-import MindMapEditor from "@/pages/home/layout/editor-content/editor/MindMapEditor/index.vue";
-import DrauuEditor from "@/pages/home/layout/editor-content/editor/DrauuEditor/index.vue";
-import HandsontableEditor from "@/pages/home/layout/editor-content/editor/HandsontableEditor/index.vue";
+import WangEditor from "@/pages/home/editor/WangEditor.vue";
+import MonacoEditor from "@/pages/home/editor/MonacoEditor/index.vue";
+import MarkdownEditor from "@/pages/home/editor/MarkdownEditor/index.vue";
+import ExcelEditor from "@/pages/home/editor/ExcelEditor/index.vue";
+import MindMapEditor from "@/pages/home/editor/MindMapEditor/index.vue";
+import DrauuEditor from "@/pages/home/editor/DrauuEditor/index.vue";
+import HandsontableEditor from "@/pages/home/editor/HandsontableEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";

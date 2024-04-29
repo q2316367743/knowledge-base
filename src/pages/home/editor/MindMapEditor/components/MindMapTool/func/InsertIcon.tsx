@@ -1,8 +1,8 @@
-import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+import {MindMapNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {Checkbox, CheckboxGroup, Divider, Drawer} from "@arco-design/web-vue";
 import {ref, watch} from "vue";
 import styled from "vue3-styled-components";
-import {nodeIconList} from "@/pages/home/layout/editor-content/editor/MindMapEditor/config/icons";
+import {nodeIconList} from "@/pages/home/editor/MindMapEditor/config/icons";
 
 const IconDiv = styled.div`
     width: 24px;

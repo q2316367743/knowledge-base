@@ -83,20 +83,20 @@ import {computed, onBeforeUnmount, PropType, ref, shallowRef} from "vue";
 import MindMap from "simple-mind-map";
 import {
     openInsertImage
-} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertImage";
-import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+} from "@/pages/home/editor/MindMapEditor/components/MindMapTool/func/InsertImage";
+import {MindMapNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {
     openInsertHyperlink
-} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertHyperlink";
+} from "@/pages/home/editor/MindMapEditor/components/MindMapTool/func/InsertHyperlink";
 import {
     openInsertRemark
-} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertRemark";
+} from "@/pages/home/editor/MindMapEditor/components/MindMapTool/func/InsertRemark";
 import {
     openInsertTag
-} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertTag";
+} from "@/pages/home/editor/MindMapEditor/components/MindMapTool/func/InsertTag";
 import {
     openInsertIcon
-} from "@/pages/home/layout/editor-content/editor/MindMapEditor/components/MindMapTool/func/InsertIcon";
+} from "@/pages/home/editor/MindMapEditor/components/MindMapTool/func/InsertIcon";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>,

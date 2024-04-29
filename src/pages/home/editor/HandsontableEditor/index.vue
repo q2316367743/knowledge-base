@@ -36,7 +36,7 @@
                         <a-tooltip content="支持的数学公式" position="left">
                             <a-button @click="openFormulaDrawer()">
                                 <template #icon>
-                                    <icon-formula />
+                                    <icon-formula/>
                                 </template>
                             </a-button>
                         </a-tooltip>
@@ -52,14 +52,14 @@ import {clone} from "xe-utils";
 import Handsontable from 'handsontable';
 import {HyperFormula} from "hyperformula";
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
-import {updateColumns} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/drawer/columns";
-import {useHandsontableImport} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ImportHook";
+import {updateColumns} from "@/pages/home/editor/HandsontableEditor/drawer/ColumnDrawer";
+import {useHandsontableImport} from "@/pages/home/editor/HandsontableEditor/hooks/ImportHook";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {
     handsontableExport,
     useHandsontableExport
-} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ExportHook";
-import {openFormulaDrawer} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/drawer/FormulaDrawer";
+} from "@/pages/home/editor/HandsontableEditor/hooks/ExportHook";
+import {openFormulaDrawer} from "@/pages/home/editor/HandsontableEditor/drawer/FormulaDrawer";
 
 registerLanguageDictionary(zhCN)
 
@@ -75,6 +75,7 @@ const hot = shallowRef<Handsontable | null>(null);
 const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data || [["", "", "", "", "", ""]]) : [["", "", "", "", "", ""]]);
 const columns = ref<Array<Handsontable.ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
 const columnSorting = ref<boolean | Handsontable.plugins.ColumnSorting.Config[]>(props.modelValue ? (props.modelValue.columnSorting || true) : true);
+const filters = ref<Array<ColumnConditions>>(props.modelValue ? (props.modelValue.filters || []) : [])
 
 let onImport = () => {
     MessageUtil.warning("系统初始化中")
@@ -91,6 +92,11 @@ const hyperFormulaInstance = HyperFormula.buildEmpty({
     licenseKey: 'internal-use-in-handsontable',
 });
 
+interface ColumnConditions {
+    column: number;
+    conditions: Handsontable.plugins.Filters.ConditionId[];
+    operation: Handsontable.plugins.Filters.OperationType;
+}
 
 onMounted(() => {
     if (!containerRef.value) {
@@ -121,13 +127,36 @@ onMounted(() => {
             engine: hyperFormulaInstance,
         },
 
-        // // enable filtering
-        // filters: true,
-        // // enable the column menu
-        // dropdownMenu: true,
+        // enable filtering
+        filters: true,
+        // enable the column menu
+        dropdownMenu: true,
 
         columnSorting: typeof columnSorting.value === 'boolean' ? columnSorting.value : {
             initialConfig: columnSorting.value
+        },
+
+        // `afterInit()` is a Handsontable hook: it's fired after the Handsontable instance is initiated
+        afterInit() {
+            // @ts-ignore
+            const instance = this as Handsontable;
+
+            // get the `Filters` plugin, so you can use its API
+            const filter = instance.getPlugin('filters');
+
+            if (filter && filters.value.length > 0) {
+                // filter data by the 'Price' column (column at index 2)
+                // to display only items that are less than ('lt') $200
+                for (let item of filters.value) {
+                    for (let condition of item.conditions) {
+                        if (condition.name) {
+                            filter.addCondition(item.column, condition.name, condition.args);
+                        }
+                    }
+                }
+                filter.filter();
+            }
+
         },
 
         afterChange(changes: Array<Handsontable.CellChange> | null, source: Handsontable.ChangeSource) {
@@ -179,8 +208,9 @@ onMounted(() => {
         afterRowMove(movedRows, finalIndex, dropIndex, movePossible, orderChanged) {
             console.log(movedRows, finalIndex, dropIndex, movePossible, orderChanged);
         },
-        afterFilter(conditionsStack) {
-            console.log(conditionsStack)
+        afterFilter(conditionsStack: Array<ColumnConditions>) {
+            filters.value = conditionsStack;
+            updateModelValue();
         },
         afterColumnSort(currentSortConfig, destinationSortConfigs) {
             columnSorting.value = destinationSortConfigs;
@@ -216,7 +246,8 @@ function updateModelValue() {
     emits('update:modelValue', {
         data: data.value,
         columns: columns.value,
-        columnSorting: columnSorting.value
+        columnSorting: columnSorting.value,
+        filters: filters.value
     });
 }
 
@@ -233,75 +264,7 @@ function updateColumnsWrap() {
 }
 
 
-
 </script>
 <style lang="less">
-.handsontable-editor-wrap {
-
-    .content {
-        position: absolute;
-        top: 7px;
-        left: 7px;
-        right: 46px;
-        bottom: 7px;
-        overflow: auto;
-    }
-    .side {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        padding: 7px;
-    }
-}
-
-.handsontable-editor {
-    color: var(--color-text-1);
-
-    thead {
-        th {
-            color: var(--color-text-1);
-            background-color: var(--color-neutral-2);
-        }
-    }
-
-    tbody {
-        th {
-            color: var(--color-text-1);
-            background-color: var(--color-neutral-2);
-        }
-
-        td, tr {
-            color: var(--color-text-1);
-            background-color: var(--color-bg-2);
-        }
-    }
-
-    tbody th.ht__highlight, thead th.ht__highlight {
-        color: var(--color-text-1);
-        background-color: var(--color-neutral-3);
-    }
-}
-.htMenu {
-    .htCore {
-        color: var(--color-text-1);
-        background-color: var(--color-neutral-2);
-    }
-     table tbody tr td {
-         background-color: var(--color-neutral-2);
-         &.htDisabled {
-             color: var(--color-text-4);
-             &:hover {
-                 background-color: var(--color-neutral-4);
-             }
-         }
-         &.current {
-             background-color: var(--color-neutral-3);
-         }
-     }
-}
-.handsontableInput {
-    color: var(--color-text-1);
-    background-color: var(--color-fill-2);
-}
+@import url('./index.less');
 </style>

@@ -1,6 +1,6 @@
 import {Form, FormItem, Modal, Input} from "@arco-design/web-vue";
 import {ref} from "vue";
-import {MindMapNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+import {MindMapNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {getImageSize} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 

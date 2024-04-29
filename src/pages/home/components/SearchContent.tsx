@@ -19,7 +19,7 @@ import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {IconClose, IconSearch} from "@arco-design/web-vue/es/icon";
-import {findKeyword, MindMapTreeNode} from "@/pages/home/layout/editor-content/editor/MindMapEditor/domain";
+import {findKeyword, MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
 
 

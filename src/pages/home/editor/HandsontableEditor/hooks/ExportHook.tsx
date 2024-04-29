@@ -71,10 +71,8 @@ export function useHandsontableExport(
 
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
-    console.log("注册")
 
     onUnmounted(() => {
-        console.log("取消注册")
         useArticleExportEvent.off(onExport);
     })
 }

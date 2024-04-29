@@ -1,0 +1,98 @@
+.handsontable-editor-wrap {
+
+    .content {
+        position: absolute;
+        top: 7px;
+        left: 7px;
+        right: 46px;
+        bottom: 7px;
+        overflow: auto;
+    }
+
+    .side {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        padding: 7px;
+    }
+}
+
+.handsontable-editor {
+    color: var(--color-text-1);
+
+    thead {
+        th {
+            color: var(--color-text-1);
+            background-color: var(--color-neutral-2);
+        }
+    }
+
+    tbody {
+        th {
+            color: var(--color-text-1);
+            background-color: var(--color-neutral-2);
+        }
+
+        td, tr {
+            color: var(--color-text-1);
+            background-color: var(--color-bg-2);
+        }
+    }
+
+    tbody th.ht__highlight, thead th.ht__highlight {
+        color: var(--color-text-1);
+        background-color: var(--color-neutral-3);
+    }
+}
+
+.htMenu {
+    .htCore {
+        color: var(--color-text-1);
+        background-color: var(--color-neutral-2);
+    }
+
+    table tbody tr td {
+        background-color: var(--color-neutral-2);
+
+        &.htDisabled {
+            color: var(--color-text-4);
+
+            &:hover {
+                background-color: var(--color-neutral-4);
+            }
+        }
+
+        &.current {
+            background-color: var(--color-neutral-3);
+        }
+    }
+
+    .handsontable {
+        tr {
+            background-color: var(--color-fill-2);
+        }
+
+        .htUISelectCaption {
+            background-color: var(--color-fill-2);
+        }
+
+        .htFiltersMenuValue .htUIMultipleSelectSearch input {
+            background-color: var(--color-fill-2);
+            color: var(--color-text-1);
+        }
+        .htUIMultipleSelect .handsontable .htCore td:hover {
+            background-color: var(--color-fill-3);
+
+        }
+    }
+
+    .ht_master table td.htCustomMenuRenderer {
+        background-color: var(--color-neutral-2);
+    }
+}
+
+.handsontableInput {
+    color: var(--color-text-1);
+    background-color: var(--color-fill-2);
+}
