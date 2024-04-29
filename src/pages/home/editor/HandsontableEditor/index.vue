@@ -76,6 +76,7 @@ const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data
 const columns = ref<Array<Handsontable.ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
 const columnSorting = ref<boolean | Handsontable.plugins.ColumnSorting.Config[]>(props.modelValue ? (props.modelValue.columnSorting || true) : true);
 const filters = ref<Array<ColumnConditions>>(props.modelValue ? (props.modelValue.filters || []) : [])
+const mergeCells = ref<boolean | Handsontable.plugins.MergeCells.Settings>(props.modelValue ? (props.modelValue.mergeCells || true) : true);
 
 let onImport = () => {
     MessageUtil.warning("系统初始化中")
@@ -136,6 +137,8 @@ onMounted(() => {
             initialConfig: columnSorting.value
         },
 
+        mergeCells: mergeCells.value,
+
         // `afterInit()` is a Handsontable hook: it's fired after the Handsontable instance is initiated
         afterInit() {
             // @ts-ignore
@@ -160,7 +163,7 @@ onMounted(() => {
         },
 
         afterChange(changes: Array<Handsontable.CellChange> | null, source: Handsontable.ChangeSource) {
-            console.log(changes, source)
+            console.debug(changes, source)
             if (source === 'loadData') {
                 return; // don't save this change
             }
@@ -214,9 +217,33 @@ onMounted(() => {
         },
         afterColumnSort(currentSortConfig, destinationSortConfigs) {
             columnSorting.value = destinationSortConfigs;
-            // 保存
             updateModelValue();
         },
+        afterMergeCells(_cellRange, mergeParent) {
+            if (typeof mergeCells.value === 'boolean') {
+                // @ts-ignore
+                mergeCells.value = [mergeParent];
+            } else {
+                // @ts-ignore
+                mergeCells.value.push(mergeParent);
+            }
+            updateModelValue();
+        },
+        afterUnmergeCells(cellRange: Handsontable.CellRange) {
+            const row = cellRange.from.row;
+            const col = cellRange.from.col;
+            const rowspan = cellRange.to.row - row + 1;
+            const colspan = cellRange.to.col - col + 1;
+            if (typeof mergeCells.value !== 'boolean') {
+                mergeCells.value = mergeCells.value.filter(e => {
+                    return e.row !== row ||
+                        e.col !== col ||
+                        e.rowspan !== rowspan ||
+                        e.colspan !== colspan
+                });
+                updateModelValue();
+            }
+        }
     });
     const useHandsontableImportResult = useHandsontableImport(props.articleId || 0, (records, columnsWrap) => {
         if (hot.value) {
@@ -247,7 +274,8 @@ function updateModelValue() {
         data: data.value,
         columns: columns.value,
         columnSorting: columnSorting.value,
-        filters: filters.value
+        filters: filters.value,
+        mergeCells: mergeCells.value
     });
 }
 
