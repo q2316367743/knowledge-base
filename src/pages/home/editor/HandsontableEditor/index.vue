@@ -60,6 +60,7 @@ import {
     useHandsontableExport
 } from "@/pages/home/editor/HandsontableEditor/hooks/ExportHook";
 import {openFormulaDrawer} from "@/pages/home/editor/HandsontableEditor/drawer/FormulaDrawer";
+import {ColumnConditions} from "@/pages/home/editor/HandsontableEditor/types";
 
 registerLanguageDictionary(zhCN)
 
@@ -72,11 +73,12 @@ const emits = defineEmits(['update:modelValue']);
 
 const containerRef = ref<HTMLElement>();
 const hot = shallowRef<Handsontable | null>(null);
+
 const data = ref<Array<Array<string>>>(props.modelValue ? (props.modelValue.data || [["", "", "", "", "", ""]]) : [["", "", "", "", "", ""]]);
 const columns = ref<Array<Handsontable.ColumnSettings> | null>(props.modelValue ? (props.modelValue.columns ? (props.modelValue.columns.length === 0 ? null : props.modelValue.columns) : null) : null);
 const columnSorting = ref<boolean | Handsontable.plugins.ColumnSorting.Config[]>(props.modelValue ? (props.modelValue.columnSorting || true) : true);
 const filters = ref<Array<ColumnConditions>>(props.modelValue ? (props.modelValue.filters || []) : [])
-const mergeCells = ref<boolean | Handsontable.plugins.MergeCells.Settings>(props.modelValue ? (props.modelValue.mergeCells || true) : true);
+const mergeCells = ref<Handsontable.plugins.MergeCells.Settings>(props.modelValue ? (props.modelValue.mergeCells || true) : true);
 
 let onImport = () => {
     MessageUtil.warning("系统初始化中")
@@ -93,11 +95,6 @@ const hyperFormulaInstance = HyperFormula.buildEmpty({
     licenseKey: 'internal-use-in-handsontable',
 });
 
-interface ColumnConditions {
-    column: number;
-    conditions: Handsontable.plugins.Filters.ConditionId[];
-    operation: Handsontable.plugins.Filters.OperationType;
-}
 
 onMounted(() => {
     if (!containerRef.value) {
@@ -219,15 +216,24 @@ onMounted(() => {
             columnSorting.value = destinationSortConfigs;
             updateModelValue();
         },
-        afterMergeCells(_cellRange, mergeParent) {
-            if (typeof mergeCells.value === 'boolean') {
-                // @ts-ignore
-                mergeCells.value = [mergeParent];
-            } else {
-                // @ts-ignore
-                mergeCells.value.push(mergeParent);
+        afterMergeCells(_cellRange, mergeParent, auto) {
+            if (auto) {
+                return;
             }
-            updateModelValue();
+            let records: Array<any> = [];
+            if (typeof mergeCells.value !== 'boolean') {
+                records = mergeCells.value;
+            }
+            const idx = records.findIndex(e => {
+                // @ts-ignore
+                return e.row !== mergeParent.row && e.col !== mergeParent.col && e.rowspan !== mergeParent.rowspan && e.colspan !== mergeParent.colspan
+            });
+            if (idx === -1) {
+                records.push(mergeParent);
+                mergeCells.value = records;
+                updateModelValue();
+            }
+
         },
         afterUnmergeCells(cellRange: Handsontable.CellRange) {
             const row = cellRange.from.row;
@@ -243,7 +249,7 @@ onMounted(() => {
                 });
                 updateModelValue();
             }
-        }
+        },
     });
     const useHandsontableImportResult = useHandsontableImport(props.articleId || 0, (records, columnsWrap) => {
         if (hot.value) {
