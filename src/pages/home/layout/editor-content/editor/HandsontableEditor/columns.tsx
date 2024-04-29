@@ -87,6 +87,10 @@ export function updateColumns(columns: Array<Handsontable.ColumnSettings>): Prom
         columnsWrap.value.splice(index, 1);
     }
 
+    function clear() {
+        columnsWrap.value = [];
+    }
+
     return new Promise<Array<Handsontable.ColumnSettings>>(resolve => {
         Drawer.open({
             title: '修改列设置',
@@ -104,6 +108,9 @@ export function updateColumns(columns: Array<Handsontable.ColumnSettings>): Prom
                         <Button type="primary" onClick={add}>
                             新增
                         </Button>
+                        {columnsWrap.value.length > 0 && <Button type="primary" status="danger" onClick={clear}>
+                            清空
+                        </Button>}
                     </Space>
                 </div>
                 <Table data={columnsWrap.value} columns={columnHeads} rowKey={'title'} pagination={false}/>

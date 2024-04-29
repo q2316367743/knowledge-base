@@ -33,6 +33,13 @@
                                 </template>
                             </a-button>
                         </a-tooltip>
+                        <a-tooltip content="支持的数学公式" position="left">
+                            <a-button @click="openFormulaDrawer()">
+                                <template #icon>
+                                    <icon-formula />
+                                </template>
+                            </a-button>
+                        </a-tooltip>
                     </a-space>
                 </div>
             </a-button-group>
@@ -51,6 +58,8 @@ import {
     handsontableExport,
     useHandsontableExport
 } from "@/pages/home/layout/editor-content/editor/HandsontableEditor/hooks/ExportHook";
+import {HyperFormula} from "hyperformula";
+import {openFormulaDrawer} from "@/pages/home/layout/editor-content/editor/HandsontableEditor/drawer/FormulaDrawer";
 
 registerLanguageDictionary(zhCN)
 
@@ -73,6 +82,14 @@ let onImport = () => {
 function onExport() {
     handsontableExport(data, columns as any);
 }
+
+// create an external HyperFormula instance
+const hyperformulaInstance = HyperFormula.buildEmpty({
+    // to use an external HyperFormula instance,
+    // initialize it with the `'internal-use-in-handsontable'` license key
+    licenseKey: 'internal-use-in-handsontable',
+});
+
 
 onMounted(() => {
     if (!containerRef.value) {
@@ -99,6 +116,9 @@ onMounted(() => {
         readOnly: props.readOnly,
         language: zhCN.languageCode,
         columns: columns.value as any,
+        formulas: {
+            engine: hyperformulaInstance,
+        },
         afterChange(changes: Array<Handsontable.CellChange> | null, source: Handsontable.ChangeSource) {
             console.log(changes, source)
             if (source === 'loadData') {
@@ -186,7 +206,7 @@ function updateColumnsWrap() {
             // 更新
             columns.value = res;
             hot.value && hot.value.updateSettings({
-                columns: columns.value as any
+                columns: columns.value.length === 0 ? null : (columns.value as any)
             });
             updateModelValue();
         })

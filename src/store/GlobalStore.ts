@@ -52,7 +52,7 @@ export const useGlobalStore = defineStore('global', () => {
     }
 
     return {
-        isDark, globalType,
+        isDark, globalType,loading, loadingText,
         initDarkColors, switchDarkColors, startLoading, closeLoading
     }
 

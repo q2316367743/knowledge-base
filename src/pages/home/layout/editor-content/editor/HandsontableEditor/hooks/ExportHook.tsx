@@ -61,7 +61,7 @@ export function handsontableExport(data: Ref<Array<Array<string>>>, columns: Ref
 export function useHandsontableExport(
     data: Ref<Array<Array<string>>>,
     columns: Ref<Array<Handsontable.ColumnSettings> | null>,
-    articleId: number) {
+    articleId?: number) {
 
     function onExport(id: number) {
         if (id === articleId) {

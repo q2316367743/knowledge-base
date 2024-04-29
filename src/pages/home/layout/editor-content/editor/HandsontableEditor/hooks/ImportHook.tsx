@@ -80,18 +80,19 @@ export function useHandsontableImport(articleId: number, success: (records: Arra
             try {
                 const records = new Array<Array<string>>()
                 let items = JSON.parse(data) as Array<Record<string, any>>;
-                if (isObject(items)) {
-                    let keys = Object.keys(items);
-                    if (keys.length === 0) {
-                        MessageUtil.error("JSON对象是个空对象");
+                if (!Array.isArray(items)) {
+                    if (isObject(items)) {
+                        let keys = Object.keys(items);
+                        if (keys.length === 0) {
+                            MessageUtil.error("JSON对象是个空对象");
+                            return;
+                        }
+                        items = (items as Record<string, any>)[keys[0]];
+                        MessageUtil.warning("检测到传入了多个sheet，只会导入sheet：" + keys[0]);
+                    }else {
+                        MessageUtil.error("JSON字符串不是一个数组，请勿上传多个sheet。");
                         return;
                     }
-                    items = (items as Record<string, any>)[keys[0]];
-                    MessageUtil.warning("检测到传入了多个sheet，只会导入sheet：" + keys[0]);
-                }
-                if (!Array.isArray(items)) {
-                    MessageUtil.error("JSON字符串不是一个数组，请勿上传多个sheet。");
-                    return;
                 }
                 const first = items[0];
                 if (!first) {

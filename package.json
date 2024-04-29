@@ -25,6 +25,7 @@
         "fuse.js": "^7.0.0",
         "handsontable": "^14.3.0",
         "html2canvas": "^1.4.1",
+        "hyperformula": "^2.7.0",
         "idb-keyval": "^6.2.1",
         "jszip": "^3.10.1",
         "less": "^4.2.0",
