@@ -34,7 +34,6 @@
 import {computed, ref} from "vue";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {statistics} from "@/global/BeanFactory";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {useWindowSize} from "@vueuse/core";
 
@@ -46,7 +45,6 @@ const height = computed(() => size.height.value - 40 - 7 - 48- 6);
 
 
 function add(pid: number) {
-    statistics.access("新增分类");
     useCategoryStore().add(pid)
         .then(() => MessageUtil.success("新增成功"))
         .catch(e => {

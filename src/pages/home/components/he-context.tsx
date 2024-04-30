@@ -24,6 +24,7 @@ import {
 import {Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 import {MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
+import {track} from "@/plugin/Statistics";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -159,6 +160,10 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
     _addArticle(pid, type, buildDefaultContent(type)).then(id => {
         MessageUtil.success("新增成功");
         useHomeEditorStore().openArticle(id);
+        // 新建文章
+        track('new_article', {
+            type: renderArticleType(type)
+        })
     })
         .catch(e => MessageUtil.error("新增失败", e));
 }

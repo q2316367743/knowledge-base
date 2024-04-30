@@ -29,6 +29,8 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
+import {useDeleteEvent, useNewEvent, useSearchContentEvent} from './global/BeanFactory';
+import {track} from "@/plugin/Statistics";
 
 self.MonacoEnvironment = {
     getWorker(_: string, label: string) {
@@ -56,10 +58,6 @@ createApp(App)
     .use(setupCalendar, {})
     .mount('#app');
 
-import {statistics, useDeleteEvent, useNewEvent, useSearchContentEvent} from './global/BeanFactory';
-
-statistics.init();
-statistics.open();
 
 
 Boot.registerModule(markdownModule);
@@ -70,15 +68,30 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.code === 'KeyN') {
             e.preventDefault();
             useNewEvent.emit();
+            track('keymap', {
+                ctrl: e.ctrlKey ? 'true' : 'false',
+                alt: e.altKey ? 'true' : 'false',
+                code: e.code,
+            });
         } else if (e.code === 'Delete') {
             e.preventDefault();
             useDeleteEvent.emit();
+            track('keymap', {
+                ctrl: e.ctrlKey ? 'true' : 'false',
+                alt: e.altKey ? 'true' : 'false',
+                code: e.code,
+            });
         }
         if (e.shiftKey) {
             if (e.code === 'KeyF') {
                 // 全局搜索
                 e.preventDefault();
                 useSearchContentEvent.emit();
+                track('keymap', {
+                    ctrl: e.ctrlKey ? 'true' : 'false',
+                    alt: e.altKey ? 'true' : 'false',
+                    code: e.code,
+                });
             }
         }
     }

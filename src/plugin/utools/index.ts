@@ -58,8 +58,12 @@ function isWindows(): boolean {
 
 
 export const utools = {
+    ...window.utools,
     db: {
         promises: createDbPromiseInstance(),
+        getAttachment(docId: string) {
+            return ''
+        }
     },
     dbStorage: createDbStorage(),
     getPath(): string {

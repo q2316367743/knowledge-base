@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref,} from "vue";
-import {keyword, statistics, usePageJumpEvent} from "@/global/BeanFactory";
+import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -28,6 +28,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
+import {access} from "@/plugin/Statistics";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -134,27 +135,27 @@ function toTodo(id?: string) {
 // 插件进入
 function onPluginEnter(operate: string, preload: string, extra: string) {
     if (operate === 'article') {
-        statistics.access("进入", "查看文章");
+        access("feature", "查看文章");
         toArticle(preload);
     } else if (operate === 'todo') {
-        statistics.access("进入", "查看待办");
+        access("feature", "查看待办");
         toTodo(preload);
     } else if (operate === 'function') {
         if (preload === 'import') {
-            statistics.access("进入", "导入文章");
+            access("feature", "导入文章");
             useGlobalStore().startLoading("开始导入")
             htmlToArticle(extra)
                 .then(() => MessageUtil.success("导入成功"))
                 .catch(e => MessageUtil.error("导入失败", e))
                 .finally(() => useGlobalStore().closeLoading());
         } else if (preload === 'editor') {
-            statistics.access("进入", "前往编辑器");
+            access("feature", "前往编辑器");
             router.push('/home');
         } else if (preload === 'todo') {
-            statistics.access("进入", "前往待办");
+            access("feature", "前往待办");
             router.push('/todo');
         } else if (preload === 'add') {
-            statistics.access("进入", "新增文章");
+            access("feature", "新增文章");
             useArticleStore().addSimple(extra)
                 .then(id => useHomeEditorStore().openArticle(id));
         }

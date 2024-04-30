@@ -121,6 +121,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import {htmlToMarkdown, mindMapToMarkdown, stringToBlob} from "@/utils/file/ConvertUtil";
 import {openAiAskPromptDrawer, useAiAskPromptStore} from "@/store/components/AiAskPromptStore";
+import {track} from "@/plugin/Statistics";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -173,7 +174,7 @@ function sendChat() {
     if (str === '') {
         return;
     }
-    const {openAi, model} = useChatSettingStore();
+    const {openAi, model, api} = useChatSettingStore();
     if (!openAi) {
         MessageUtil.warning("系统异常，openai客户端未找到！");
         return;
@@ -196,6 +197,12 @@ function sendChat() {
         });
         content.value = '';
         scrollBottom();
+
+        track('ai', {
+            api,
+            model,
+            func: 'chat'
+        });
     }).catch(e => MessageUtil.error("聊天发生错误", e)).finally(() => loading.value = false);
 }
 
@@ -246,7 +253,7 @@ async function _sendToAsk() {
     if (str === '') {
         return;
     }
-    const {openAi, model} = useChatSettingStore();
+    const {openAi, model, api} = useChatSettingStore();
     if (!openAi) {
         MessageUtil.warning("系统异常，openai客户端未找到！");
         return;
@@ -269,6 +276,11 @@ async function _sendToAsk() {
         }]
     })
     ai.value.ask.answer = res.choices.sort((a, b) => a.index - b.index).map(e => e.message.content).join("/n");
+    track('ai', {
+        api,
+        model,
+        func: 'ask'
+    });
 }
 
 // ------------------------------------------ 相关事件 ------------------------------------------

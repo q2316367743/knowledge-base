@@ -122,7 +122,9 @@ enum LocalNameEnum {
     /**
      * 卡片 - 待办 - 设置
      */
-    CARD_TODO_SETTING = '/card/todo/setting'
+    CARD_TODO_SETTING = '/card/todo/setting',
+
+    KEY_TOKEN = '/key/version'
 
 }
 

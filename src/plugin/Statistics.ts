@@ -1,82 +1,143 @@
-import Constant from '@/global/Constant';
-import axios from 'axios';
+import Constant from "@/global/Constant";
+import {generateUUID} from "@/utils/BrowserUtil";
+import {getItem, setItem} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import axios from "axios";
+import {utools} from '@/plugin/utools';
 
-export default class Statistics {
+export type EventIdentificationEnum = 'update' | 'page_jump' |
+    'feature' | 'recommend' | 'new_article' | 'keymap' | 'ai';
 
-    private token: string = '';
-    private nickname: string = '未知用户';
-    private expired: number = 0;
+let user = utools.getUser();
+let nickname = '';
+if (user) {
+    nickname = user.nickname;
+}
 
-    constructor() {
+let token = getItem<string>(LocalNameEnum.KEY_TOKEN);
+if (!token) {
+    token = generateUUID();
+    setItem(LocalNameEnum.KEY_TOKEN, token);
+}
+const profileId = token;
+let expired = 0;
+
+
+export function login() {
+    window.TDAPP.login({
+        profileId: profileId,
+        profileType: 1,
+        name: nickname
+    })
+}
+
+export function register() {
+    window.TDAPP.register({
+        profileId: profileId,
+        profileType: 1,
+        name: nickname
+    })
+}
+
+/**
+ * 访问某个标签
+ * @param event 操作
+ * @param additional 附加
+ */
+export function access(event: EventIdentificationEnum, additional?: string) {
+    track(event, additional ? {
+        additional: additional
+    } : undefined);
+}
+
+/**
+ * 时间埋点
+ * @param event 操作
+ * @param params 附加参数
+ */
+export function track(event: EventIdentificationEnum, params?: Record<string, string>) {
+    // if (utools.isDev()) {
+    //     return;
+    // }
+    let system;
+    if (utools.isWindows()) {
+        system = "Windows";
+    } else if (utools.isMacOS()) {
+        system = "MacOS"
+    } else if (utools.isLinux()) {
+        system = "Linux"
+    } else {
+        system = navigator.userAgent;
     }
-
-    init() {
-        let user = utools.getUser();
-        if (user) {
-            this.nickname = user.nickname;
-        }
+    try {
+        window.TDAPP.onEvent(event, "", {
+            ...(params || {}),
+            // 操作系统
+            system,
+            // 当前用户
+            nickname: nickname,
+            // 使用的版本
+            version: Constant.version
+        });
+    } catch (e) {
+        console.error("埋点统计失败", e);
     }
-
-    /**
-     * 插件打开
-     */
-    open() {
-        this.access("/");
+    try {
+        const additional = params ? (params['additional'] ? params['additional'] : JSON.stringify(params)) : '';
+        _access(event, additional)
+            .then(() => console.log('自定义统计成功'))
+            .catch(e => console.error("自定义统计失败", e));
+    } catch (e) {
+        console.error("自定义埋点统计失败", e);
     }
+}
 
-    /**
-     * 访问某个标签
-     * @param operate 操作
-     * @param additional 附加
-     */
-    access(operate: string, additional?: string) {
-        this._access(operate, additional).then(() => console.debug("调用成功"))
-    }
 
-    /**
-     * 访问某个标签
-     * @param operate 操作
-     * @param additional 附加
-     */
-    private async _access(operate: string, additional?: string) {
-        if (utools.isDev()) {
-            return;
-        }
-        let now = new Date();
-        if (this.token === '') {
+/**
+ * 自己的统计事件
+ *
+ * @param operate 操作
+ * @param additional 附加
+ */
+async function _access(operate: string, additional?: string) {
+    let now = new Date();
+    if (token === '' || now.getTime() > expired) {
+        try {
             const res = await utools.fetchUserServerTemporaryToken();
-            this.token = res.token;
-            this.expired = res.expiredAt + now.getTime();
+            token = res.token;
+            expired = res.expiredAt + now.getTime();
+        } catch (e) {
+            console.log(e);
+            token = generateUUID();
+            expired = 7200 + now.getTime();
         }
-        if (now.getTime() > this.expired) {
-            // token过期，重新获取token
-            const res = await utools.fetchUserServerTemporaryToken();
-            this.token = res.token;
-            this.expired = res.expiredAt + now.getTime();
-        }
-        let system: string;
-        if (utools.isWindows()) {
-            system = "Windows";
-        } else if (utools.isMacOS()) {
-            system = "MacOS"
-        } else if (utools.isLinux()) {
-            system = "Linux"
-        } else {
-            system = navigator.userAgent;
-        }
-        await axios.post(`${Constant.statistics}`, {
-            token: this.token,
-            nickname: this.nickname,
+    }
+    let system: string;
+    if (utools.isWindows()) {
+        system = "Windows";
+    } else if (utools.isMacOS()) {
+        system = "MacOS"
+    } else if (utools.isLinux()) {
+        system = "Linux"
+    } else {
+        system = navigator.userAgent;
+    }
+    await axios({
+        url: Constant.statistics,
+        method: "POST",
+        params: {
+            id: Constant.uid
+        },
+        data: {
+            token: token,
+            nickname: nickname,
             operate,
             additional,
-            platform: "utools",
             system,
             version: Constant.version
-        }, {
-            params: {
-                id: Constant.uid
-            }
-        });
-    }
+        },
+    });
 
 }
+
+

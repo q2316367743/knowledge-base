@@ -14,6 +14,7 @@ export const useChatSettingStore = defineStore(LocalNameEnum.SETTING_CHAT, () =>
 
     const enable = computed(() => chatSetting.value.enable);
     const model = computed(() => chatSetting.value.model);
+    const api = computed(() => chatSetting.value.api);
 
     function buildOpenAi() {
         openAi.value = null;
@@ -44,7 +45,7 @@ export const useChatSettingStore = defineStore(LocalNameEnum.SETTING_CHAT, () =>
 
     return {
         chatSetting, openAi,
-        enable, model,
+        enable, model, api,
         init, save
     }
 
