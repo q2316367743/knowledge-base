@@ -74,6 +74,9 @@
                                     <a-doption @click="remove(article.id, article.name, true)">
                                         删除
                                     </a-doption>
+                                    <a-doption @click="switchPreview(article.id)" :disabled="editorType === ArticleTypeEnum.EXCEL">
+                                        编辑/预览
+                                    </a-doption>
                                 </a-dgroup>
                             </template>
                         </a-dropdown>
@@ -122,8 +125,8 @@ function switchRobot() {
     useUpdateRobotEvent.emit(useHomeEditorStore().id);
 }
 
-function switchPreview() {
-    useArticlePreviewEvent.emit(useHomeEditorStore().id);
+function switchPreview(id?: number) {
+    useArticlePreviewEvent.emit(id || useHomeEditorStore().id);
 }
 
 </script>
