@@ -81,6 +81,30 @@ declare interface TDAPP {
     login(opt: TdAppUserOpt): void;
 }
 
+
+declare interface TtDbResultRow {
+    key: string;
+    error?: string;
+    id?: string;
+    value?: {rev: string}
+
+}
+
+declare interface TtAllDocResult {
+    offset: number;
+    rows: Array<TtDbResultRow>;
+}
+
+
+
+declare interface TtDb {
+    allDocs(keys?: string | string[]): Promise<TtAllDocResult>;
+    put(doc: DbDoc): Promise<DbReturn>;
+    get(key: string): Promise<DbDoc>;
+    remove(key: string): Promise<DbReturn>;
+}
+
+
 declare interface Window {
     /**
      * 打开图片预览
@@ -98,6 +122,9 @@ declare interface Window {
         // 写入文件
         writeToFile: (dir: string, name: string, content: Blob) => Promise<string>;
     }
-    bs: any,
+    bs: {
+        db: TtDb
+    },
     TDAPP: TDAPP
 }
+

@@ -1,6 +1,6 @@
 import {DbStorage} from "@/plugin/utools/types";
 
-const dbStorageByWeb: DbStorage = {
+export const dbStorageByWeb: DbStorage = {
     /**
      * 键值对存储，如果键名存在，则更新其对应的值
      * @param key 键名(同时为文档ID)
@@ -41,7 +41,6 @@ const dbStorageByBs: DbStorage = {
      * @param value 键值
      */
     setItem(key: string, value: any): void {
-        console.log(key, value)
         window.bs.db.put({
             _id: key,
             value: value
@@ -51,9 +50,6 @@ const dbStorageByBs: DbStorage = {
      * 获取键名对应的值
      */
     getItem(key: string): any {
-        const items = window.bs.db.allDocs([key]);
-        const item = items[0];
-        return Promise.resolve(item ? item.value : null);
     },
     /**
      * 删除键值对(删除文档)
@@ -64,8 +60,8 @@ const dbStorageByBs: DbStorage = {
 }
 
 export function createDbStorage(): DbStorage {
-    if (window.bs) {
-        return dbStorageByBs;
-    }
+    // if (window.bs) {
+    //     return dbStorageByBs;
+    // }
     return dbStorageByWeb;
 }

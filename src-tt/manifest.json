@@ -2,37 +2,37 @@
 	"name": "知识库",
 	"description": "构建自己的知识库，高效便捷的知识管理工具",
 	"author": "落雨不悔",
-	"version": "2.0.2",
+	"version": "2.1.1",
 	"logo": "/dist/logo.png",
 	"community": 460433,
 	"theme_color": "#FFBA40",
 	"modules": {
 		"main": {
-			"entry": "/dist/index.html",
+			"entry": "http://localhost:5173/index.html",
 			"width": "1280px",
 			"height": "800px"
 		},
 		"card": [{
 			"name": "待办",
-			"entry": "/dist/todo.html",
+			"entry": "http://localhost:5173/todo.html",
 			"size": "4x4",
 			"preview": "/preview/todo.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}, {
 			"name": "富文本笔记",
-			"entry": "/dist/note.html",
+			"entry": "http://localhost:5173/note.html",
 			"size": "4x4",
 			"preview": "/preview/note.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}, {
 			"name": "画布",
-			"entry": "/dist/canvas.html",
+			"entry": "http://localhost:5173/canvas.html",
 			"size": "8x8",
 			"preview": "/preview/canvas.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]
 		}, {
 			"name": "笔记预览",
-			"entry": "/dist/preview.html",
+			"entry": "http://localhost:5173/preview.html",
 			"size": "8x8",
 			"preview": "/preview/preview.png",
 			"sizeList": ["8x8", "8x6", "6x6", "4x4"]

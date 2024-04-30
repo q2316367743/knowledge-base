@@ -72,7 +72,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         imageStrategy: ImageStrategyEnum.INNER,
         autoCollapsedByEditor: true,
         autoCollapsedByTodo: true,
-        newArticleAutoName: true,
+        newArticleAutoName: false,
         newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
         codeExtraName: 'ts',
         mdEditorEditMode: MdEditorEditModeEnum.AUTO,

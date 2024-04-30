@@ -99,27 +99,50 @@ const dbByWeb: DbPromiseInstance = {
 }
 
 const dbByTs: DbPromiseInstance = {
-    allDocs(key?: string | string[]): Promise<DbDoc[]> {
-        return Promise.resolve(window.bs.db.allDocs(key));
-    }, get(id: string): Promise<DbDoc | undefined> {
-        const items = window.bs.db.allDocs([id]);
-        return Promise.resolve(items[0]);
-    }, getAttachment(docId: string): Promise<Uint8Array | null> {
+    async allDocs(key?: string | string[]): Promise<DbDoc[]> {
+        const res = await window.bs.db.allDocs(key);
+        const docs = new Array<DbDoc>();
+        for (let row of res.rows) {
+            if (!row.error) {
+                const doc = await this.get(row.key);
+                if (doc) {
+                    docs.push(doc);
+                }
+            }
+        }
+        return docs;
+    },
+    async get(id: string): Promise<DbDoc | undefined> {
+        try {
+            return await window.bs.db.get(id);
+        }catch (e) {
+            console.debug(`id: ${id} not found`);
+            return undefined;
+        }
+    },
+    getAttachment(docId: string): Promise<Uint8Array | null> {
         return Promise.reject("天天工作台不支持附件");
-    }, getAttachmentType(docId: string): Promise<string | null> {
+    },
+    getAttachmentType(docId: string): Promise<string | null> {
         return Promise.reject("天天工作台不支持附件");
-    }, postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
+    },
+    postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<DbReturn> {
         return Promise.reject("天天工作台不支持附件");
-    }, put(doc: DbDoc): Promise<DbReturn> {
-        window.bs.db.put(doc)
-        return Promise.resolve({
-            id: doc._id,
-        });
-    }, remove(id: string): Promise<DbReturn> {
-        window.bs.db.remove(id);
-        return Promise.resolve({
-            id
-        });
+    },
+    async put(doc: DbDoc): Promise<DbReturn> {
+        return window.bs.db.put(doc).catch(e => {
+            console.log(e)
+            return {
+                id: e.docId,
+                ok: false,
+                error: e.error,
+                name: e.name,
+                message: e.message,
+            };
+        })
+    },
+    remove(id: string): Promise<DbReturn> {
+        return window.bs.db.remove(id);
     }
 
 }

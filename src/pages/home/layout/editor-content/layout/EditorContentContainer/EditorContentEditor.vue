@@ -88,11 +88,7 @@ async function saveContent(value: any) {
     if (!props.articleIndex) {
         return;
     }
-    try {
-        contentRev = await useArticleStore().updateContent(props.articleIndex.id, value, contentRev);
-    } catch (e) {
-        MessageUtil.error("自动保存文章失败", e);
-    }
+    contentRev = await useArticleStore().updateContent(props.articleIndex.id, value, contentRev);
 }
 
 watch(() => content.value, value => {

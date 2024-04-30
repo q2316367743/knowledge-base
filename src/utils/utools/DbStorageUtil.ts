@@ -81,6 +81,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
             console.error(res)
             return Promise.reject(res.message);
         }
+        return res.rev;
     } catch (e: any) {
         if (e.message === "An object could not be cloned.") {
             // 查询后更新
