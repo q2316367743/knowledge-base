@@ -56,9 +56,7 @@ function isWindows(): boolean {
     return agent.indexOf("win") >= 0 || agent.indexOf("wow") >= 0;
 }
 
-
-export const utools = {
-    ...window.utools,
+let web = {
     db: {
         promises: createDbPromiseInstance(),
         getAttachment(docId: string) {
@@ -159,3 +157,5 @@ export const utools = {
         }
     }
 }
+
+export const utools = window.utools || web;

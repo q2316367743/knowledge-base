@@ -2,6 +2,16 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.1.1',
+        sign: 211,
+        time: '2024-04-30',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: "【编辑器】表格笔记新增排序和过滤"
+        }],
+        url: 'https://txc.qq.com/products/612648/post/171446212110000020'
+    },
+    {
         version: '2.1.0',
         sign: 210,
         time: '2024-04-29',
@@ -13,6 +23,7 @@ export default [
             content: "【待办】日历布局新增已完成"
         }],
         remark: "此次主要新增了一个表格笔记，可以记录一些二维数据，并且配合自定义列，还可以设置列属性。表格笔记还属于预览",
+        url: 'https://txc.qq.com/products/612648/post/171438499593252185'
     },
     {
         version: '2.0.2',

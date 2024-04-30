@@ -24,6 +24,9 @@ let expired = 0;
 
 
 export function login() {
+    if (utools.isDev()) {
+        return;
+    }
     window.TDAPP.login({
         profileId: profileId,
         profileType: 1,
@@ -32,6 +35,9 @@ export function login() {
 }
 
 export function register() {
+    if (utools.isDev()) {
+        return;
+    }
     window.TDAPP.register({
         profileId: profileId,
         profileType: 1,
