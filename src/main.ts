@@ -31,6 +31,7 @@ import markdownModule from '@wangeditor/plugin-md'
 import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
 import {useDeleteEvent, useNewEvent, useSearchContentEvent} from './global/BeanFactory';
 import {track} from "@/plugin/Statistics";
+import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 self.MonacoEnvironment = {
     getWorker(_: string, label: string) {
@@ -75,12 +76,21 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
             });
         } else if (e.code === 'Delete') {
             e.preventDefault();
+            e.stopPropagation();
             useDeleteEvent.emit();
             track('keymap', {
                 ctrl: e.ctrlKey ? 'true' : 'false',
                 alt: e.altKey ? 'true' : 'false',
                 code: e.code,
             });
+        }else if(e.code == 'KeyQ') {
+            e.preventDefault();
+            e.stopPropagation();
+            useArticlePreviewEvent.emit(useHomeEditorStore().id);
+        }else if (e.code === 'KeyP') {
+            e.preventDefault();
+            e.stopPropagation();
+            useArticleExportEvent.emit(useHomeEditorStore().id);
         }
         if (e.shiftKey) {
             if (e.code === 'KeyF') {

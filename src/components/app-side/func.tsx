@@ -15,6 +15,12 @@ export function openKeyDrawer() {
             <DescriptionsItem label={'搜索文章内容'}>
                 Ctrl / Alt + Shift + F
             </DescriptionsItem>
+            <DescriptionsItem label={'切换编辑/预览'}>
+                Ctrl / Alt + Q
+            </DescriptionsItem>
+            <DescriptionsItem label={'打印'}>
+                Ctrl / Alt + P
+            </DescriptionsItem>
         </Descriptions>
     })
 }
