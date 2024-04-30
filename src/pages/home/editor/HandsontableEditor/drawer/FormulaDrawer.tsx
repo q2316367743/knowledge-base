@@ -25,10 +25,22 @@ export function openFormulaDrawer() {
                                 default: () => <span>目录</span>
                             }}
                         </Button>,
-                        content: () => <Anchor style={{backgroundColor: 'var(--color-bg-1)'}}>
-                            <AnchorLink>链接</AnchorLink>
-                            <AnchorLink>数学</AnchorLink>
-                        </Anchor>
+                        content: () => <div class={'handsontable-formula-toc'}>
+                            <Anchor line-less change-hash={false}>
+                                <AnchorLink href={'#array'}>数组操作</AnchorLink>
+                                <AnchorLink href={'#date'}>日期和时间</AnchorLink>
+                                <AnchorLink href={'#engineering'}>工程</AnchorLink>
+                                <AnchorLink href={'#info'}>信息</AnchorLink>
+                                <AnchorLink href={'#finance'}>金融</AnchorLink>
+                                <AnchorLink href={'#logical'}>逻辑</AnchorLink>
+                                <AnchorLink href={'#lookup-and-reference'}>参考文献</AnchorLink>
+                                <AnchorLink href={'#math-and-trigonometry'}>数学和三角学</AnchorLink>
+                                <AnchorLink href={'#matrix-functions'}>矩阵函数</AnchorLink>
+                                <AnchorLink href={'#operator'}>操作者</AnchorLink>
+                                <AnchorLink href={'#statistical'}>统计</AnchorLink>
+                                <AnchorLink href={'#text'}>文本</AnchorLink>
+                            </Anchor>
+                        </div>
                     }}
                 </Trigger>
             </Space>
@@ -47,58 +59,18 @@ export function openFormulaDrawer() {
             <TypographyParagraph>HyperFormula附带了一个广泛的预构建函数库。您可以使用它们为任何业务应用程序创建复杂的公式。公式语法和函数逻辑类似于现代电子表格软件中的标准。这是因为电子表格可能是有史以来最通用的软件。我们希望HyperFormula具有相同的灵活性，但没有电子表格UI的限制。</TypographyParagraph>
             <TypographyParagraph>HyperFormula的每个内置函数名称都有17种语言版本，并且可以添加自定义语言包。</TypographyParagraph>
             <TypographyParagraph>最新版本的HyperFormula包含394个函数的广泛集合，这些函数分为以下几类：</TypographyParagraph>
-            <ul>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#array-manipulation"
-                    target=""> 数组操作</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#date-and-time"
-                    target=""> 日期和时间</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#engineering"
-                    target=""> 工程</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#information"
-                    target=""> 信息</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#financial"
-                    target=""> 金融</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#logical"
-                    target=""> 逻辑</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#lookup-and-reference"
-                    target=""> 参考文献</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#math-and-trigonometry"
-                    target=""> 数学和三角学</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#matrix-functions"
-                    target=""> 矩阵函数</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#operator"
-                    target=""> 操作者</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#statistical"
-                    target=""> 统计</a></li>
-                <li style="text-align: start;"><a
-                    href="https://hyperformula.handsontable.com/guide/built-in-functions.html#text"
-                    target=""> 文本</a></li>
-            </ul>
             <TypographyParagraph
                 style="text-align: start;"><em>一些类别，如兼容性，多维数据集和数据库尚未得到支持。</em></TypographyParagraph><TypographyParagraph
             style="text-align: start;"><br/></TypographyParagraph><TypographyParagraph>您可以修改内置函数或通过添加自定义函数创建自己的函数。</TypographyParagraph>
-            <TypographyTitle heading={2}
-                             style="text-align: start;">可用功能列表</TypographyTitle>
+            <TypographyTitle heading={2}>可用功能列表</TypographyTitle>
             <TypographyParagraph style="text-align: start;">功能总数：394</TypographyParagraph>
-            <TypographyTitle heading={3}
-                             style="text-align: start;"> 数组操作</TypographyTitle>
+            <h3 class={'arco-typography'} id="array"> 数组操作</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">ARRAYFORMULA</td>
@@ -122,13 +94,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 日期和时间</TypographyTitle>
+            <h3 class={'arco-typography'} id={'date'}> 日期和时间</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">DATE</td>
@@ -296,13 +268,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 工程</TypographyTitle>
+            <h3 class={'arco-typography'} id={'engineering'}> 工程</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">BIN2DEC</td>
@@ -560,13 +532,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 信息</TypographyTitle>
+            <h3 class={'arco-typography'} id={'info'}> 信息</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">ISBINARY</td>
@@ -673,13 +645,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 金融</TypographyTitle>
+            <h3 class={'arco-typography'} id={'finance'}> 金融</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">CUMIPMT</td>
@@ -861,13 +833,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 逻辑</TypographyTitle>
+            <h3 class={'arco-typography'} id={'logical'}> 逻辑</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">AND</td>
@@ -952,13 +924,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 参考文献</TypographyTitle>
+            <h3 class={'arco-typography'} id={'lookup-and-reference'}> 参考文献</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">ADDRESS</td>
@@ -1053,13 +1025,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 数学和三角学</TypographyTitle>
+            <h3 class={'arco-typography'} id={'math-and-trigonometry'}> 数学和三角学</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">ABS</td>
@@ -1511,13 +1483,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 矩阵函数</TypographyTitle>
+            <h3 class={'arco-typography'} id={'matrix-functions'}> 矩阵函数</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">MMULT</td>
@@ -1549,13 +1521,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 操作者</TypographyTitle>
+            <h3 class={'arco-typography'} id={'operator'}> 操作者</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">HF.ADD</td>
@@ -1636,13 +1608,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;"> 统计</TypographyTitle>
+            <h3 class={'arco-typography'} id={'statistical'}>统计</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">AVEDEV</td>
@@ -2409,14 +2381,13 @@ export function openFormulaDrawer() {
                 </tr>
                 </tbody>
             </table>
-            <TypographyTitle heading={3} style="text-align: start;">文本
-            </TypographyTitle>
+            <h3 class={'arco-typography'} id={'text'}>文本</h3>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Function ID</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Description</th>
-                    <th colspan="1" rowspan="1" style="text-align: left;">Syntax</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">方法</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">描述</th>
+                    <th colspan="1" rowspan="1" style="text-align: left;">语法</th>
                 </tr>
                 <tr>
                     <td colspan="1" rowspan="1" style="text-align: left;">CHAR</td>
