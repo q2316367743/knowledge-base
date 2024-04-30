@@ -145,7 +145,9 @@ export const useArticleStore = defineStore('article', {
             rev?: undefined | string,
             article?: Partial<ArticleIndex>,
         ): Promise<undefined | string> {
-            await this.updateIndex(id, article || {});
+            if (article) {
+                await this.updateIndex(id, article);
+            }
             // 新增内容
             return saveOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + id, {
                 content
