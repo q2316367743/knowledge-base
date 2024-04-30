@@ -56,9 +56,9 @@ export function access(event: EventIdentificationEnum, additional?: string) {
  * @param params 附加参数
  */
 export function track(event: EventIdentificationEnum, params?: Record<string, string>) {
-    // if (utools.isDev()) {
-    //     return;
-    // }
+    if (utools.isDev()) {
+        return;
+    }
     let system;
     if (utools.isWindows()) {
         system = "Windows";
