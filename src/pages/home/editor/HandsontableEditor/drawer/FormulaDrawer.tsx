@@ -1,7 +1,7 @@
 import {
-    Alert, Button,
+    Alert, Anchor, AnchorLink, Button,
     Drawer,
-    Link, Space,
+    Link, Space, Trigger,
     Typography,
     TypographyParagraph,
     TypographyTitle
@@ -17,11 +17,20 @@ export function openFormulaDrawer() {
         title: () => <div>
             <Space>
                 <div>支持的数学公式</div>
-                <Button type={'text'}>
+                <Trigger trigger={'click'}>
                     {{
-                        icon: () => <IconCaretDown/>
+                        default: () => <Button type={'text'}>
+                            {{
+                                icon: () => <IconCaretDown/>,
+                                default: () => <span>目录</span>
+                            }}
+                        </Button>,
+                        content: () => <Anchor style={{backgroundColor: 'var(--color-bg-1)'}}>
+                            <AnchorLink>链接</AnchorLink>
+                            <AnchorLink>数学</AnchorLink>
+                        </Anchor>
                     }}
-                </Button>
+                </Trigger>
             </Space>
         </div>,
         width: 800,
