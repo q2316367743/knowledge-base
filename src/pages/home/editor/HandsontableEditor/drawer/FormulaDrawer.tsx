@@ -1,4 +1,12 @@
-import {Alert, Drawer, Link, Typography, TypographyParagraph, TypographyTitle} from "@arco-design/web-vue";
+import {
+    Alert, Button,
+    Drawer,
+    Link, Space,
+    Typography,
+    TypographyParagraph,
+    TypographyTitle
+} from "@arco-design/web-vue";
+import {IconCaretDown} from "@arco-design/web-vue/es/icon";
 
 function openUrl() {
     utools.shellOpenExternal("https://hyperformula.handsontable.com/guide/built-in-functions.html#list-of-available-functions")
@@ -6,7 +14,16 @@ function openUrl() {
 
 export function openFormulaDrawer() {
     Drawer.open({
-        title: '支持的数学公式',
+        title: () => <div>
+            <Space>
+                <div>支持的数学公式</div>
+                <Button type={'text'}>
+                    {{
+                        icon: () => <IconCaretDown/>
+                    }}
+                </Button>
+            </Space>
+        </div>,
         width: 800,
         footer: false,
         content: () => <Typography>
@@ -63,10 +80,10 @@ export function openFormulaDrawer() {
                 style="text-align: start;"><em>一些类别，如兼容性，多维数据集和数据库尚未得到支持。</em></TypographyParagraph><TypographyParagraph
             style="text-align: start;"><br/></TypographyParagraph><TypographyParagraph>您可以修改内置函数或通过添加自定义函数创建自己的函数。</TypographyParagraph>
             <TypographyTitle heading={2}
-                style="text-align: start;">可用功能列表</TypographyTitle>
+                             style="text-align: start;">可用功能列表</TypographyTitle>
             <TypographyParagraph style="text-align: start;">功能总数：394</TypographyParagraph>
             <TypographyTitle heading={3}
-                style="text-align: start;"> 数组操作</TypographyTitle>
+                             style="text-align: start;"> 数组操作</TypographyTitle>
             <table style="width: auto; text-align: start;">
                 <tbody>
                 <tr>
