@@ -17,7 +17,6 @@ export const useThemeSettingStore = defineStore(LocalNameEnum.SETTING_THEME, () 
     style.setAttribute("type", "text/css");
     style.setAttribute('id', 'custom-theme');
 
-    console.log('load theme style')
     document.head.appendChild(style);
 
     async function init(): Promise<void> {

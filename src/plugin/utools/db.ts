@@ -131,7 +131,6 @@ const dbByTs: DbPromiseInstance = {
     },
     async put(doc: DbDoc): Promise<DbReturn> {
         return window.bs.db.put(doc).catch(e => {
-            console.log(e)
             return {
                 id: e.docId,
                 ok: false,

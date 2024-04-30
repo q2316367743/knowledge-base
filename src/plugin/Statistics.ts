@@ -113,7 +113,7 @@ async function _access(operate: string, additional?: string) {
             token = res.token;
             expired = res.expiredAt + now.getTime();
         } catch (e) {
-            console.log(e);
+            console.error(e);
             token = generateUUID();
             expired = 7200 + now.getTime();
         }

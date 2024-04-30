@@ -156,7 +156,6 @@ function onPreview(id: number) {
 }
 
 function insertToArticle(str: string) {
-    console.log(editorType.value, mdEditor.value, str)
     if (editorType.value === ArticleTypeEnum.MARKDOWN) {
         mdEditor.value.onInsert(str);
     }
