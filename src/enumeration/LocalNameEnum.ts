@@ -42,6 +42,8 @@ enum LocalNameEnum {
 
     SETTING_PLUGIN = '/local/setting/plugin',
 
+    SETTING_CUSTOMER_FILE_NAME = '/local/setting/customer-file-name',
+
     LIST_PLUGIN_CONTENT = '/list/plugin/content',
 
     /**

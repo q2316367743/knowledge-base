@@ -45,7 +45,12 @@
                 </a-switch>
             </a-form-item>
             <a-form-item label="新建文章名模板" v-if="instance.newArticleAutoName">
-                <a-input v-model="instance.newArticleTemplateByName" allow-clear style="width: 400px;"/>
+                <a-space>
+                    <a-input v-model="instance.newArticleTemplateByName" allow-clear style="width: 400px;"/>
+                    <a-button type="primary" @click="openCustomerFileNameDrawer()">
+                        个性化
+                    </a-button>
+                </a-space>
                 <template #help>
                     [YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z] => YYYYescape 2019-01-25T00:00:00-02:00Z
                 </template>
@@ -114,6 +119,7 @@ import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
 import {useRouter} from "vue-router";
 import {ArticleActionEnum} from "@/entity/setting/BaseSetting";
+import {openCustomerFileNameDrawer} from "@/pages/setting/base/drawer/CustomerFileNameDrawer";
 
 const router = useRouter();
 

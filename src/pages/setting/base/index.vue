@@ -4,7 +4,7 @@
             <a-tab-pane key="base" title="基础设置"/>
             <a-tab-pane key="image" title="图床设置" disabled/>
             <a-tab-pane key="theme" title="主题设置"/>
-            <a-tab-pane key="chat" title="聊天设置"/>
+            <a-tab-pane key="chat" title="AI设置"/>
         </a-tabs>
         <main class="main">
             <base-setting v-if="activeKey === 'base'"/>

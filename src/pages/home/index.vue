@@ -16,6 +16,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useWindowSize} from "@vueuse/core";
 import {useSearchContentEvent} from "@/global/BeanFactory";
 import {openSearchContent} from "@/pages/home/components/SearchContent";
+import {useCustomerFileNameStore} from "@/store/setting/CustomerFileNameStore";
 
 const windowSize = useWindowSize();
 
@@ -38,7 +39,9 @@ onMounted(() => {
 
 onUnmounted(() => {
     useSearchContentEvent.off(openSearchContent);
-})
+});
+
+useCustomerFileNameStore().init();
 
 </script>
 <style lang="less">

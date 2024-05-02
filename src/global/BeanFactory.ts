@@ -10,7 +10,6 @@ import {useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
-import {useWorkspaceSettingStore} from "@/store/setting/WorkspaceSettingStore";
 import {useImageSettingStore} from "@/store/setting/ImageSettingStore";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 
@@ -32,7 +31,6 @@ export async function initData(): Promise<void> {
     await Promise.all([
         useBaseSettingStore().init(),
         useLskyProSettingStore().init(),
-        useWorkspaceSettingStore().init(),
         useImageSettingStore().init(),
         Promise.all([
             useThemeSettingStore().init(),

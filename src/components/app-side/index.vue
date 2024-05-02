@@ -140,6 +140,12 @@
                     </template>
                     查看更新日志
                 </a-doption>
+                <a-doption @click="openShangZan()">
+                    <template #icon>
+                        <icon-heart-fill />
+                    </template>
+                    赏赞
+                </a-doption>
             </template>
         </a-dropdown>
     </div>
@@ -150,7 +156,7 @@ import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
-import {openKeyDrawer} from "@/components/app-side/func";
+import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {toDoc, toTxc} from "@/global/Constant";
 
 const route = useRoute();

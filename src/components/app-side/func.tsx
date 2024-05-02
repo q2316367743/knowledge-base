@@ -1,4 +1,5 @@
-import {Descriptions, DescriptionsItem, Drawer} from "@arco-design/web-vue";
+import {Descriptions, DescriptionsItem, Drawer, Image, Modal} from "@arco-design/web-vue";
+import reward from '@/assets/image/reward.png';
 
 export function openKeyDrawer() {
     Drawer.open({
@@ -22,5 +23,14 @@ export function openKeyDrawer() {
                 Ctrl / Alt + P
             </DescriptionsItem>
         </Descriptions>
+    })
+}
+
+export function openShangZan() {
+    Modal.open({
+        title:'赏赞',
+        footer: false,
+        width: 440,
+        content: () => <Image src={reward} width={400} height={400}></Image>
     })
 }
