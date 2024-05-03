@@ -9,7 +9,7 @@ import {useElementSize} from "@vueuse/core";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import lib from './components/lib.txt?raw'
+import lib from '../components/lib.txt?raw'
 
 const props = defineProps({
     plugin: Object as PropType<PluginSettingIndex>

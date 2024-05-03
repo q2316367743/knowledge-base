@@ -6,7 +6,9 @@ export enum PluginSettingTypeEnum {
      * 富文本插件
      * 展示不启用
      */
-    RICH_TEXT_PLUGIN = 4
+    RICH_TEXT_PLUGIN = 4,
+
+    MARKDOWN_TEMPLATE = 5,
 }
 
 export interface PluginSettingIndex {

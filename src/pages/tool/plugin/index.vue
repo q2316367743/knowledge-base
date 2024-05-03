@@ -5,11 +5,12 @@
         </a-layout-sider>
         <a-layout-content>
             <setting-plugin-content :plugin="plugin" v-if="load"/>
-            <a-result v-else title="主题与插件" status="warning" style="margin-top: 15vh;">
+            <a-result v-else title="主题、插件和模板" status="warning" style="margin-top: 15vh;">
                 <template #subtitle>
                     <p>选择左侧的插件进行编辑</p>
                     <p>通过主题与插件，可以自定义您的知识库插件</p>
                     <p>主题、markdown菜单、markdown语法需要设置才可以启用。</p>
+                    <p>markdown模板命名请以<b style="color: rgb(var(--danger-6))">正则表达式</b>的方式进行命名，创建markdown时回去匹配第一个匹配到的。</p>
                     <p style="color: rgb(var(--warning-6))">请注意，如果修改的主题是正在使用的，修改后需要前往主题设置中刷新主题</p>
                 </template>
                 <template #extra>
@@ -38,8 +39,8 @@ import {useRouter} from "vue-router";
 import Constant from "@/global/Constant";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
-import SettingPluginSide from "@/pages/tool/plugin/SettingPluginSide.vue";
-import SettingPluginContent from "@/pages/tool/plugin/SettingPluginContent.vue";
+import SettingPluginSide from "@/pages/tool/plugin/layout/SettingPluginSide.vue";
+import SettingPluginContent from "@/pages/tool/plugin/layout/SettingPluginContent.vue";
 
 const router = useRouter();
 

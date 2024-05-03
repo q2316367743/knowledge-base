@@ -25,6 +25,7 @@ import {Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco
 import {MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
 import {track} from "@/plugin/Statistics";
+import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -99,7 +100,7 @@ export function renderArticleType(type: ArticleTypeEnum): string {
     }
 }
 
-function buildDefaultContent(type: ArticleTypeEnum): any {
+async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<any> {
     switch (type) {
         case ArticleTypeEnum.MIND_MAP:
             return {
@@ -140,12 +141,25 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
             const {tableColumnCount, tableColCount} = useBaseSettingStore();
             return {
                 data: [
-                ...traverseNumber(tableColCount).map(() => {
+                    ...traverseNumber(tableColCount).map(() => {
                         return [...traverseNumber(tableColumnCount).map(() => "")]
                     })
                 ],
                 columns: []
             };
+        case ArticleTypeEnum.MARKDOWN:
+            // 查看是否有模板
+            const {markdownTemplates} = usePluginSettingStore();
+            for (let markdownTemplate of markdownTemplates) {
+                // 名字匹配
+                if (name.match(markdownTemplate.name)) {
+                    // 获取内容
+                    const {getContent} = usePluginSettingStore();
+                    const res = await getContent(markdownTemplate.id);
+                    return res.record ? res.record?.content : '';
+                }
+            }
+            return '';
         default:
             return "";
     }
@@ -157,7 +171,7 @@ function buildDefaultContent(type: ArticleTypeEnum): any {
  * @param type 文章类型
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
-    _addArticle(pid, type, buildDefaultContent(type)).then(id => {
+    _addArticle(pid, type).then(id => {
         MessageUtil.success("新增成功");
         useHomeEditorStore().openArticle(id);
         // 新建文章
@@ -168,7 +182,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
         .catch(e => MessageUtil.error("新增失败", e));
 }
 
-export async function _addArticle(pid: number, type: ArticleTypeEnum, content: any) {
+export async function _addArticle(pid: number, type: ArticleTypeEnum) {
     if (type === ArticleTypeEnum.EXCEL) {
         NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
     }
@@ -179,6 +193,8 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum, content: a
     } else {
         name = await MessageBoxUtil.prompt("请输入文章名称", "新建文章");
     }
+    const content = await buildDefaultContent(name, type)
+
     return useArticleStore().add(getDefaultArticleIndex({
         name,
         folder: pid,
@@ -215,11 +231,12 @@ export function addArticleModal() {
                 MessageUtil.warning("请输入文章名称")
                 return Promise.resolve(false);
             }
+            const content = buildDefaultContent(name.value, type.value);
             const id = await useArticleStore().add(getDefaultArticleIndex({
                 name: name.value,
                 folder: folder.value,
                 type: type.value,
-            }), getDefaultArticleBase(), buildDefaultContent(type.value));
+            }), getDefaultArticleBase(), content);
             useHomeEditorStore().openArticle(id);
             return Promise.resolve(true);
         }

@@ -110,9 +110,9 @@
             </template>
         </a-dropdown>
         <a-dropdown position="tl">
-            <a-button type="text">
+            <a-button type="text" style="margin-bottom: 7px;">
                 <template #icon>
-                    <icon-question-circle-fill/>
+                    <icon-question-circle/>
                 </template>
             </a-button>
             <template #content>
@@ -140,14 +140,13 @@
                     </template>
                     查看更新日志
                 </a-doption>
-                <a-doption @click="openShangZan()">
-                    <template #icon>
-                        <icon-heart-fill />
-                    </template>
-                    赏赞
-                </a-doption>
             </template>
         </a-dropdown>
+        <a-button type="text" @click="openShangZan()">
+            <template #icon>
+                <icon-heart />
+            </template>
+        </a-button>
     </div>
 </template>
 <script lang="ts" setup>

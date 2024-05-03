@@ -55,9 +55,23 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
                 isLeaf: true,
                 icon: () => h(IconFile)
             }))
+        }, {
+            key: 'markdown-template',
+            title: 'markdown模板',
+            isLeaf: false,
+            icon: () => h(IconFolder),
+            children: itemMap.getOrDefault(PluginSettingTypeEnum.MARKDOWN_TEMPLATE, []).map(item => ({
+                key: item.id,
+                title: item.name,
+                isLeaf: true,
+                icon: () => h(IconFile)
+            }))
         }];
     })
     const pluginMap = computed<MapWrap<number, PluginSettingIndex>>(() => map(items.value, 'id'))
+
+    const markdownTemplates = computed(() =>
+        items.value.filter(item => item.type === PluginSettingTypeEnum.MARKDOWN_TEMPLATE));
 
     async function init() {
         const res = await getFromOneByAsync<Array<PluginSettingIndex>>(LocalNameEnum.SETTING_PLUGIN);
@@ -175,7 +189,7 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
     }
 
     return {
-        plugins: items,pluginTree, pluginMap,
+        plugins: items,pluginTree, pluginMap,markdownTemplates,
         init, save, add, rename, saveContent, remove, getContent,
         getPlugins, getThemeContent
     }

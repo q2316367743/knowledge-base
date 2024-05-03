@@ -21,6 +21,8 @@ export function parseType(content: string): PluginSettingTypeEnum | null {
             return PluginSettingTypeEnum.MARKDOWN_MENU;
         case 'markdown-syntax':
             return PluginSettingTypeEnum.MARKDOWN_SYNTAX;
+        case 'markdown-template':
+            return PluginSettingTypeEnum.MARKDOWN_TEMPLATE;
         default:
             return null;
     }
