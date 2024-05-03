@@ -24,7 +24,7 @@
                 回收站
             </a-menu-item>
             <a-menu-item key="/tool/plugin">
-                主题与插件
+                主题|插件|模板
             </a-menu-item>
             <a-menu-item key="/tool/category">
                 分类图

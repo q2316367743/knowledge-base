@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
     ListItemMeta,
-    Modal, Option, Select, Tag
+    Modal, Option, Select, Space, Tag
 } from "@arco-design/web-vue";
 import {Ref, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
@@ -160,7 +160,7 @@ export function openSearchContent() {
                    onPressEnter={searchContent} allowClear={true} onVnodeMounted={e => {
                 const htmlInputElement = (e.el as HTMLSpanElement).querySelector('input');
                 htmlInputElement && htmlInputElement.focus();
-            }}/>
+            }} style={{width: 'calc(100% - 164px)'}}/>
             <Button type={'primary'} disabled={keyword.value.trim() === ''} onClick={searchContent}>
                 {{
                     icon: () => <IconSearch/>
