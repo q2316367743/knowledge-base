@@ -1,5 +1,11 @@
 import {Log, LogItemEnum} from "@/components/update-check/domain";
 
+// 数学笔记-公式对话框增加目录
+// 编辑器标签栏右键增加预览切换
+// 新增快捷键：Ctrl/Alt + Q（预览），Ctrl/Alt + P（打印）
+// TODO：支持更加细致的文件名自定义
+// 新增markdown模板，在创建markdown笔记的时候，根据名字正则匹配markdown模板（重要功能）
+
 export default [
     {
         version: '2.1.1',
