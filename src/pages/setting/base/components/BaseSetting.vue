@@ -48,7 +48,7 @@
                 <a-space>
                     <a-input v-model="instance.newArticleTemplateByName" allow-clear style="width: 400px;"/>
                     <a-button type="primary" @click="openCustomerFileNameDrawer()">
-                        个性化
+                        更多
                     </a-button>
                 </a-space>
                 <template #help>

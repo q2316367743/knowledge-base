@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
+import {useCustomerFileNameStore} from "@/store/setting/CustomerFileNameStore";
 
 export const useBaseSettingStore = defineStore('base-setting', {
     state: () => ({
@@ -61,7 +62,15 @@ export const useBaseSettingStore = defineStore('base-setting', {
     }
 });
 
-export function buildArticleName(type: ArticleTypeEnum, newArticleTemplateByName: string, codeExtraName: string): string {
+export function buildArticleName(type: ArticleTypeEnum, newArticleTemplateByName: string, codeExtraName: string, pid: number): string {
+
+    const {customerFileNameMap} = useCustomerFileNameStore();
+
+    let newVar = customerFileNameMap.get(pid);
+    if (newVar) {
+        newArticleTemplateByName = newVar.script;
+    }
+
     const name = dayjs().format(newArticleTemplateByName);
     if (type === ArticleTypeEnum.CODE) {
         return `${name}.${codeExtraName}`;

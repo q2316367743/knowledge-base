@@ -6,6 +6,9 @@
         <a-layout-content>
             <setting-plugin-content :plugin="plugin" v-if="load"/>
             <a-result v-else title="主题、插件和模板" status="warning" style="margin-top: 15vh;">
+                <template #icon>
+                    <icon-question />
+                </template>
                 <template #subtitle>
                     <p>选择左侧的插件进行编辑</p>
                     <p>通过主题与插件，可以自定义您的知识库插件</p>

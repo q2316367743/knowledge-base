@@ -19,9 +19,9 @@ import {
     IconFile,
     IconMindMapping,
     IconNav,
-    IconPalette
+    IconPalette, IconRefresh
 } from "@arco-design/web-vue/es/icon";
-import {Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
+import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 import {MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
 import {track} from "@/plugin/Statistics";
@@ -189,7 +189,7 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum) {
     const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
     let name: string;
     if (newArticleAutoName) {
-        name = buildArticleName(type, newArticleTemplateByName, codeExtraName);
+        name = buildArticleName(type, newArticleTemplateByName, codeExtraName, pid);
     } else {
         name = await MessageBoxUtil.prompt("请输入文章名称", "新建文章");
     }
@@ -204,10 +204,20 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum) {
 
 export function addArticleModal() {
     const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
-    const name = ref(newArticleAutoName ? buildArticleName(ArticleTypeEnum.MARKDOWN, newArticleTemplateByName, codeExtraName) : '');
     const type = ref(ArticleTypeEnum.MARKDOWN);
     const folder = ref(0);
+    const name = ref('');
     const {folderTree} = useFolderStore();
+
+    function refreshFileName() {
+        name.value = buildArticleName(ArticleTypeEnum.MARKDOWN, newArticleTemplateByName, codeExtraName, folder.value);
+    }
+
+    // 如果自动命名，则刷新
+    if (newArticleAutoName) {
+        refreshFileName();
+    }
+
     Modal.open({
         title: '新增文章',
         titleAlign: 'start',
@@ -223,7 +233,15 @@ export function addArticleModal() {
                 <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
             </FormItem>
             <FormItem label={'文章名称'} required>
-                <Input v-model={name.value} class={'arco-input'} placeholder={'请输入文章名称'}/>
+                <Input v-model={name.value} class={'arco-input'} placeholder={'请输入文章名称'} allowClear>
+                    {{
+                        suffix: () => newArticleAutoName && <Button type={'text'} onClick={refreshFileName}>
+                            {{
+                                icon: () => <IconRefresh />
+                            }}
+                        </Button>
+                    }}
+                </Input>
             </FormItem>
         </Form>,
         async onBeforeOk() {

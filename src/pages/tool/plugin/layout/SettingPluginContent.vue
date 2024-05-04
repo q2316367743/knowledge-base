@@ -37,8 +37,17 @@ onMounted(() => {
         allowNonTsExtensions: true,
     })
 
+    let language = 'plaintext';
+    if (props.plugin.type === PluginSettingTypeEnum.THEME) {
+        language = 'css';
+    }else if (props.plugin.type === PluginSettingTypeEnum.MARKDOWN_MENU) {
+        language = 'javascript';
+    }else if (props.plugin.type === PluginSettingTypeEnum.MARKDOWN_TEMPLATE) {
+        language = 'markdown';
+    }
+
     const editor = monaco.editor.create(pluginRef.value, {
-        language: props.plugin.type === PluginSettingTypeEnum.THEME ? 'css' : 'javascript',
+        language: language,
         theme: useGlobalStore().isDark ? 'vs-dark' : 'vs',
     });
 

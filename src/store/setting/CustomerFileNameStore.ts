@@ -24,6 +24,7 @@ export const useCustomerFileNameStore = defineStore(LocalNameEnum.SETTING_CUSTOM
             customerFileNames.value = res.record;
         }
         rev = res.rev;
+        return customerFileNames.value
     }
 
     async function save(res: Array<CustomerFileNameSetting>) {
@@ -35,9 +36,9 @@ export const useCustomerFileNameStore = defineStore(LocalNameEnum.SETTING_CUSTOM
             if (!folderMap.has(e.folderId)) {
                 return Promise.reject(new Error(`第${i + 1}个规则未配置文件夹`))
             }
-            for (let j = i; i < res.length; j++) {
+            for (let j = i + 1; j < res.length; j++) {
                 // 判断是否有重复的
-                if (res[i].folderId === res[j].folderId) {
+                if (res[j] && res[i].folderId === res[j].folderId) {
                     return Promise.reject(new Error(`第${i + 1}个规则和第${j + 1}配置的文件夹重复`))
                 }
 
