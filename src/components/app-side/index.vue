@@ -23,11 +23,11 @@
             <a-menu-item key="/tool/recycle">
                 回收站
             </a-menu-item>
-            <a-menu-item key="/tool/plugin">
-                主题|插件|模板
-            </a-menu-item>
             <a-menu-item key="/tool/category">
                 分类图
+            </a-menu-item>
+            <a-menu-item key="/tool/share" disabled>
+                分享中心
             </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="/setting">
@@ -43,6 +43,9 @@
             </a-menu-item>
             <a-menu-item key="/setting/feature" v-if="isUtools">
                 关键字设置
+            </a-menu-item>
+            <a-menu-item key="/setting/plugin">
+                主题|插件|模板
             </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="/more">

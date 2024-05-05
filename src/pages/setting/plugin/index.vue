@@ -30,6 +30,12 @@
                             </template>
                             前往设置
                         </a-button>
+                        <a-button type="primary" @click="toShare" disabled>
+                            <template #icon>
+                                <icon-share-alt />
+                            </template>
+                            前往分享中心
+                        </a-button>
                     </a-space>
                 </template>
             </a-result>
@@ -42,8 +48,8 @@ import {useRouter} from "vue-router";
 import Constant from "@/global/Constant";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
-import SettingPluginSide from "@/pages/tool/plugin/layout/SettingPluginSide.vue";
-import SettingPluginContent from "@/pages/tool/plugin/layout/SettingPluginContent.vue";
+import SettingPluginSide from "@/pages/setting/plugin/layout/SettingPluginSide.vue";
+import SettingPluginContent from "@/pages/setting/plugin/layout/SettingPluginContent.vue";
 
 const router = useRouter();
 
@@ -57,6 +63,7 @@ const toSetting = () => router.push({
         tab: 'theme'
     }
 });
+const toShare = () => router.push('/tool/share');
 
 function onSelect(selectKey: string | number) {
     // 文件

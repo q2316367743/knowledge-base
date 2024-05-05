@@ -38,7 +38,7 @@ import {computed} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import {contains} from "@/utils/lang/ArrayUtil";
 import {PLUGIN_FOLDER_KEYS, usePluginSettingStore} from "@/store/db/PluginSettingStore";
-import {createPlugin, editPlugin, removePlugin} from "@/pages/tool/plugin/components/operation";
+import {createPlugin, editPlugin, removePlugin} from "@/pages/setting/plugin/components/operation";
 
 const emits = defineEmits(['select']);
 

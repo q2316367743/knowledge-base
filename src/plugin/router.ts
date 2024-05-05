@@ -23,13 +23,13 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/tool/recycle",
     component: () => import("@/pages/tool/recycle/index.vue")
 }, {
-    name: "工具-插件",
-    path: "/tool/plugin",
-    component: () => import("@/pages/tool/plugin/index.vue")
-}, {
     name: "工具-分类",
     path: "/tool/category",
     component: () => import("@/pages/tool/category/index.vue")
+}, {
+    name: "工具-分享中心",
+    path: "/tool/share",
+    component: () => import("@/pages/tool/share/index.vue")
 }, {
     name: "设置-基础",
     path: "/setting/base",
@@ -42,6 +42,10 @@ const routers: Array<RouteRecordRaw> = [{
     name: "设置-关键字",
     path: "/setting/feature",
     component: () => import("@/pages/setting/feature/index.vue")
+}, {
+    name: "设置-插件",
+    path: "/setting/plugin",
+    component: () => import("@/pages/setting/plugin/index.vue")
 }, {
     name: "更多-备份",
     path: "/more/backup",
