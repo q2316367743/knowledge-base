@@ -21,6 +21,10 @@ export function openCustomerFileNameDrawer() {
         items.value.push(createCustomerFileNameSetting());
     }
 
+    function remove(index: number) {
+        items.value.splice(index, 1);
+    }
+
     Drawer.open({
         title: '更多自定义文件名规则',
         width: 600,
@@ -29,7 +33,7 @@ export function openCustomerFileNameDrawer() {
             <Space direction={'vertical'} class={'w-full'}>
                 <div><Button type={'primary'} onClick={add}>新增</Button></div>
                 <Alert type={'warning'}>每一个规则都需要配置文件夹，不要重复配置文件夹，请勿配置为全部文件夹</Alert>
-                {items.value.map(item => <Row gutter={16}>
+                {items.value.map((item, index) => <Row gutter={16}>
                     <Col span={10}>
                         <TreeSelect data={folderTree} v-model={item.folderId}></TreeSelect>
                     </Col>
@@ -37,7 +41,7 @@ export function openCustomerFileNameDrawer() {
                         <Input allowClear v-model={item.script}/>
                     </Col>
                     <Col span={3} class={'align-right'}>
-                        <Button type={'primary'} status={'danger'}>删除</Button>
+                        <Button type={'primary'} status={'danger'} onClick={() => remove(index)}>删除</Button>
                     </Col>
                 </Row>)}
             </Space>

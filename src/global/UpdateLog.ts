@@ -3,16 +3,38 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 // 数学笔记-公式对话框增加目录
 // 编辑器标签栏右键增加预览切换
 // 新增快捷键：Ctrl/Alt + Q（预览），Ctrl/Alt + P（打印）
-// TODO：支持更加细致的文件名自定义
+// 支持更加细致的文件名自定义
 // 新增markdown模板，在创建markdown笔记的时候，根据名字正则匹配markdown模板（重要功能）
 
 export default [
+    {
+        version: '2.2.0',
+        sign: 212,
+        time: '2024-05-06',
+        items: [{
+            label: LogItemEnum.ADD,
+            content: "【编辑器】数学笔记-公式对话框增加目录"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【编辑器】编辑器标签栏右键增加预览切换"
+        },{
+            label: LogItemEnum.ADD,
+            content: "【插件】新增快捷键：Ctrl/Alt + Q（预览），Ctrl/Alt + P（打印）"
+        },{
+            label: LogItemEnum.ADD,
+            content: "【设置】支持更加细致的文件名自定义"
+        },{
+            label: LogItemEnum.MAJOR,
+            content: "【编辑器】新增markdown模板，在创建markdown笔记的时候，根据名字正则匹配markdown模板"
+        }],
+        url: 'https://txc.qq.com/products/612648/post/171492015824131371'
+    },
     {
         version: '2.1.1',
         sign: 211,
         time: '2024-04-30',
         items: [{
-            label: LogItemEnum.MAJOR,
+            label: LogItemEnum.ADD,
             content: "【编辑器】表格笔记新增排序和过滤"
         }],
         url: 'https://txc.qq.com/products/612648/post/171446212110000020'

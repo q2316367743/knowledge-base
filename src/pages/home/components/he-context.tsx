@@ -182,7 +182,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
         .catch(e => MessageUtil.error("新增失败", e));
 }
 
-export async function _addArticle(pid: number, type: ArticleTypeEnum) {
+export async function _addArticle(pid: number, type: ArticleTypeEnum, content?: string) {
     if (type === ArticleTypeEnum.EXCEL) {
         NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
     }
@@ -193,7 +193,9 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum) {
     } else {
         name = await MessageBoxUtil.prompt("请输入文章名称", "新建文章");
     }
-    const content = await buildDefaultContent(name, type)
+    if (!content) {
+        content = await buildDefaultContent(name, type);
+    }
 
     return useArticleStore().add(getDefaultArticleIndex({
         name,

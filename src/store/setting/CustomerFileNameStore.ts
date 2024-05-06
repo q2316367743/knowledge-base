@@ -16,7 +16,7 @@ export const useCustomerFileNameStore = defineStore(LocalNameEnum.SETTING_CUSTOM
 
     async function init() {
         if (isInit) {
-            return;
+            return customerFileNames.value;
         }
         isInit = true;
         const res = await getFromOneByAsync(LocalNameEnum.SETTING_CUSTOMER_FILE_NAME);

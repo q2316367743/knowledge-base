@@ -1,6 +1,6 @@
 {
   "name": "knowledge-base",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "知识库",
   "main": "preload.js",
   "author": "落雨不悔",
