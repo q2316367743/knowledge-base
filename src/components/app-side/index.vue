@@ -26,7 +26,7 @@
             <a-menu-item key="/tool/category">
                 分类图
             </a-menu-item>
-            <a-menu-item key="/tool/share" disabled>
+            <a-menu-item key="/tool/share">
                 分享中心
             </a-menu-item>
         </a-sub-menu>
