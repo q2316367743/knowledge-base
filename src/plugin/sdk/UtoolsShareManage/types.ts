@@ -21,11 +21,11 @@ export interface PluginCategory {
  * Pagination«PluginCategoryScriptList»
  */
 export interface Pagination<T> {
-    count?: number | null;
-    page?: number | null;
-    records?: T[] | null;
-    size?: number | null;
-    total?: number | null;
+    count?: number;
+    page?: number;
+    records?: T[];
+    size?: number;
+    total?: number;
 }
 
 
@@ -36,15 +36,15 @@ export interface PluginCategoryScriptList {
     /**
      * 分类ID
      */
-    categoryId?: number | null;
+    categoryId?: number;
     /**
      * 分类名字
      */
-    categoryName?: null | string;
+    categoryName?: string;
     /**
      * 创建人
      */
-    createName?: null | string;
+    createName?: string;
     /**
      * 脚本描述
      */
@@ -52,12 +52,12 @@ export interface PluginCategoryScriptList {
     /**
      * 下载数量
      */
-    downloadCount?: number | null;
+    downloadCount?: number;
     id?: number;
     /**
      * 喜欢数量
      */
-    likeCount?: number | null;
+    likeCount?: number;
     /**
      * 脚本名字
      */
@@ -69,7 +69,12 @@ export interface PluginCategoryScriptList {
     /**
      * 审核时间
      */
-    verityTime?: null | string;
+    verityTime?: string;
+
+    /**
+     * 最后申请ID
+     */
+    lastApplicationId?: number;
 }
 
 /**
@@ -81,23 +86,23 @@ export interface PluginScriptInstance {
     /**
      * 访问token
      */
-    accessToken?: null | string;
+    accessToken?: string;
     /**
      * 脚本内容
      */
-    content?: null | string;
+    content?: string;
     /**
      * 脚本描述
      */
-    description?: null | string;
+    description?: string;
     /**
      * 如果没有则为第一次
      */
-    id?: number | null;
+    id?: number;
     /**
      * 脚本名字
      */
-    name?: null | string;
+    name?: string;
 }
 
 /**
@@ -112,6 +117,34 @@ export interface PluginScriptApplicationView {
      * 脚本ID
      */
     id?: number;
+}
+
+/**
+ * PluginScriptContentView
+ */
+export interface PluginScriptContentView {
+    /**
+     * 申请ID，起到了一个版本的作用
+     */
+    applicationId?: number;
+
+    /**
+     * 脚本名称
+     */
+    name?: string;
+    /**
+     * 内容
+     */
+    content?: string;
+    /**
+     * 脚本ID
+     */
+    id?: number;
+
+    /**
+     * 分类ID
+     */
+    categoryId?: number;
 }
 
 export const verityStatusEnum: Record<number, string> = {

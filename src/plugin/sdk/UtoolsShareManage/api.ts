@@ -1,7 +1,7 @@
 import {
     Pagination,
     PluginCategory,
-    PluginCategoryScriptList, PluginScriptApplicationView,
+    PluginCategoryScriptList, PluginScriptApplicationView, PluginScriptContentView,
     PluginScriptInstance,
     Result
 } from "@/plugin/sdk/UtoolsShareManage/types";
@@ -56,4 +56,15 @@ export async function myself(categoryId: number, current: number, size: number):
         return Promise.reject(new Event(data.msg));
     }
     return data.data;
+}
+
+
+export async function download(id: number): Promise<PluginScriptContentView> {
+    const rsp = await instance.get<Result<PluginScriptContentView>>(
+        `/public/plugin/download/${id}/v1`)
+    const data = rsp.data;
+    if (data.code !== 200) {
+        return Promise.reject(new Event(data.msg));
+    }
+    return rsp.data.data;
 }

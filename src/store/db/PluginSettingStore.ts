@@ -92,6 +92,12 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
     })
     const pluginMap = computed<MapWrap<number, PluginSettingIndex>>(() => map(items.value, 'id'))
 
+    const installIds = computed(() => items.value.filter(e => e.originId)
+        .map(e => e.originId || 0));
+    const installApplicationIds = computed(() => items.value
+        .filter(e => e.originApplicationId)
+        .map(e => e.originApplicationId || 0));
+
     const markdownTemplates = computed(() =>
         items.value.filter(item => item.type === PluginSettingTypeEnum.MARKDOWN_TEMPLATE));
 
@@ -107,7 +113,7 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         rev = await saveOneByAsync(LocalNameEnum.SETTING_PLUGIN, items.value, rev);
     }
 
-    async function add(item: Omit<PluginSettingIndex, 'id'>) {
+    async function add(item: Omit<PluginSettingIndex, 'id'>, content = '') {
         const id = new Date().getTime();
         items.value.push({
             id,
@@ -117,7 +123,7 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         await save();
         await saveOneByAsync<PluginSettingContent>(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`, {
             id,
-            content: ''
+            content
         });
     }
 
@@ -225,6 +231,7 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
 
     return {
         plugins: items,pluginTree, pluginMap,markdownTemplates,
+        installIds,installApplicationIds,
         init, save, add, update, rename, saveContent, remove, getContent,
         getPlugins, getThemeContent
     }
