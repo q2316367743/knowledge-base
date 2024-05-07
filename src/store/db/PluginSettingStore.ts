@@ -116,9 +116,8 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
     async function add(item: Omit<PluginSettingIndex, 'id'>, content = '') {
         const id = new Date().getTime();
         items.value.push({
+            ...item,
             id,
-            type: item.type,
-            name: item.name
         });
         await save();
         await saveOneByAsync<PluginSettingContent>(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`, {
@@ -170,6 +169,18 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         await save();
         // 删除内容
         await removeOneByAsync(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`, true)
+    }
+
+    async function removeApplicationId(applicationId: number) {
+        const index = items.value.findIndex(item => item.originApplicationId === applicationId);
+        if (index === -1) {
+            return Promise.reject(new Error("插件不存在"));
+        }
+        let source = items.value[index];
+        items.value.splice(index, 1);
+        await save();
+        // 删除内容
+        await removeOneByAsync(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${source.id}`, true)
     }
 
     function getContent(id: number) {
@@ -233,7 +244,7 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         plugins: items,pluginTree, pluginMap,markdownTemplates,
         installIds,installApplicationIds,
         init, save, add, update, rename, saveContent, remove, getContent,
-        getPlugins, getThemeContent
+        getPlugins, getThemeContent, removeApplicationId
     }
 
 })

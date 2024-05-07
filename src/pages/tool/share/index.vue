@@ -16,11 +16,15 @@
                 <a-list-item v-for="script in scripts" :key="script.id">
                     <a-list-item-meta :title="script.name" :description="script.description"/>
                     <template #actions>
-                        <a-button type="text" @click="uninstall(script.id)"
-                                  v-if="installIds.indexOf(script.id || 0) > -1 &&
-                                  installApplicationIds.indexOf(script.lastApplicationId || 0) > -1">卸载
-                        </a-button>
-                        <a-button type="text" @click="update(script.id)" v-if="installIds.indexOf(script.id || 0) > -1 &&
+                        <a-popconfirm content="是否卸载插件" v-if="installIds.indexOf(script.id || 0) > -1 &&
+                                  installApplicationIds.indexOf(script.lastApplicationId || 0) > -1"
+                        @ok="uninstall(script.id)">
+                            <a-button type="text" status="danger"
+                            >卸载
+                            </a-button>
+                        </a-popconfirm>
+                        <a-button type="text" status="success" @click="update(script.id)"
+                                  v-else-if="installIds.indexOf(script.id || 0) > -1 &&
                                   installApplicationIds.indexOf(script.lastApplicationId || 0) === -1">更新
                         </a-button>
                         <a-button type="text" @click="install(script.id)" v-else>下载</a-button>
@@ -90,7 +94,13 @@ function update(id?: number) {
 }
 
 function uninstall(id?: number) {
-
+    if (!id) {
+        MessageUtil.warning("系统异常，脚本ID不存在")
+        return;
+    }
+    usePluginSettingStore().removeApplicationId(id)
+        .then(() => MessageUtil.success("卸载成功"))
+        .catch(e => MessageUtil.error("卸载失败", e))
 }
 </script>
 <style scoped>
