@@ -1,4 +1,7 @@
 export enum PluginSettingTypeEnum {
+
+    ALL = 0,
+
     THEME = 1,
     MARKDOWN_MENU =2,
     MARKDOWN_SYNTAX = 3,

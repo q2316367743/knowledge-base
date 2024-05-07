@@ -3,7 +3,7 @@ import {computed, h, ref} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {contains, group, map, MapWrap} from "@/utils/lang/ArrayUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {IconFile, IconFolder, IconShareAlt} from "@arco-design/web-vue/es/icon";
+import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {getFromOneByAsync, listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {PluginSettingContent, PluginSettingIndex, PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
@@ -15,6 +15,28 @@ export interface PluginItem {
     name: string;
     content: string;
 }
+
+export const pluginTypes = [{
+    key: PluginSettingTypeEnum.ALL,
+    title: '全部'
+}, {
+    key: PluginSettingTypeEnum.THEME,
+    title: '主题'
+}, {
+    key: PluginSettingTypeEnum.MARKDOWN_MENU,
+    title: 'markdown菜单'
+},{
+    key: PluginSettingTypeEnum.MARKDOWN_SYNTAX,
+    title: 'markdown语法'
+},{
+    key: PluginSettingTypeEnum.RICH_TEXT_PLUGIN,
+    title: '富文本语法'
+},{
+    key: PluginSettingTypeEnum.MARKDOWN_TEMPLATE,
+    title: 'markdown模板'
+}];
+
+export const pluginTypeMap = map(pluginTypes, 'key')
 
 export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, () => {
     const items = ref(new Array<PluginSettingIndex>())

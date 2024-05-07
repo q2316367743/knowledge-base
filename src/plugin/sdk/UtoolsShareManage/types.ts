@@ -28,10 +28,19 @@ export interface Pagination<T> {
     total?: number | null;
 }
 
+
 /**
  * PluginCategoryScriptList
  */
 export interface PluginCategoryScriptList {
+    /**
+     * 分类ID
+     */
+    categoryId?: number | null;
+    /**
+     * 分类名字
+     */
+    categoryName?: null | string;
     /**
      * 创建人
      */
@@ -40,11 +49,23 @@ export interface PluginCategoryScriptList {
      * 脚本描述
      */
     description?: string;
-    id: number;
+    /**
+     * 下载数量
+     */
+    downloadCount?: number | null;
+    id?: number;
+    /**
+     * 喜欢数量
+     */
+    likeCount?: number | null;
     /**
      * 脚本名字
      */
     name?: string;
+    /**
+     * 审核状态
+     */
+    verityStatus?: number;
     /**
      * 审核时间
      */
@@ -91,4 +112,11 @@ export interface PluginScriptApplicationView {
      * 脚本ID
      */
     id?: number;
+}
+
+export const verityStatusEnum: Record<number, string> = {
+    0: "待审核",
+    1: "审核通过",
+    2: "审核驳回",
+    3: "审核取消"
 }

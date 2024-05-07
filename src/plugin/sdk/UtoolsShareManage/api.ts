@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import {utools} from "@/plugin/utools";
 import Constant from "@/global/Constant";
+import {getTokenThrow} from "@/plugin/Statistics";
 
 const instance = axios.create({
     baseURL: utools.isDev() ? 'http://localhost:8080' : '',
@@ -40,4 +41,19 @@ export async function submit(categoryId: number, data: PluginScriptInstance) {
         return Promise.reject(new Event(res.msg));
     }
     return res.data;
+}
+
+export async function myself(categoryId: number, current: number, size: number): Promise<Pagination<PluginCategoryScriptList>> {
+    const rsp = await instance.get<Result<Pagination<PluginCategoryScriptList>>>(
+        `/public/plugin/myself/${Constant.uid}/${categoryId}/v1`, {
+            params: {
+                accessToken: await getTokenThrow(),
+                current,size
+            }
+        })
+    const data = rsp.data;
+    if (data.code !== 200) {
+        return Promise.reject(new Event(data.msg));
+    }
+    return data.data;
 }

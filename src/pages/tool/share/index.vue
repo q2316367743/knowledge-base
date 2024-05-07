@@ -2,13 +2,12 @@
     <a-layout>
         <a-layout-header>
             <a-tabs v-model:active-key="activeKey" hide-content>
-                <a-tab-pane :key="PluginSettingTypeEnum.THEME" title="主题"/>
-                <a-tab-pane :key="PluginSettingTypeEnum.MARKDOWN_MENU" title="markdown菜单"/>
-                <a-tab-pane :key="PluginSettingTypeEnum.MARKDOWN_SYNTAX" title="markdown语法"/>
-                <a-tab-pane :key="PluginSettingTypeEnum.RICH_TEXT_PLUGIN" title="富文本语法"/>
-                <a-tab-pane :key="PluginSettingTypeEnum.MARKDOWN_TEMPLATE" title="markdown模板"/>
+                <a-tab-pane v-for="pluginType in pluginTypes" :key="pluginType.key" :title="pluginType.title"/>
                 <template #extra>
-                    <a-button type="text" style="margin-right: 7px">我的</a-button>
+                    <a-button-group type="text">
+                        <a-button style="margin-right: 7px" v-if="isUtools">提交</a-button>
+                        <a-button style="margin-right: 7px" v-if="isUtools" @click="openMyself()">我的</a-button>
+                    </a-button-group>
                 </template>
             </a-tabs>
         </a-layout-header>
@@ -26,21 +25,22 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import { PluginCategoryScriptList} from "@/plugin/sdk/UtoolsShareManage/types";
-import {getPluginCategoryList, page} from "@/plugin/sdk/UtoolsShareManage/api";
+import {PluginCategoryScriptList} from "@/plugin/sdk/UtoolsShareManage/types";
+import {page} from "@/plugin/sdk/UtoolsShareManage/api";
 import {useWindowSize} from "@vueuse/core";
-import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
+import {isUtools} from "@/global/BeanFactory";
+import {pluginTypes} from "@/store/db/PluginSettingStore";
+import {openMyself} from "@/pages/tool/share/myself";
 
 const windowSize = useWindowSize();
 
-const activeKey = ref(PluginSettingTypeEnum.THEME);
+const activeKey = ref(0);
 const scripts = ref<Array<PluginCategoryScriptList>>([]);
 const current = ref(1);
 const size = ref(20);
 const loading = ref(false);
 
 const height = computed(() => windowSize.height.value - 46);
-
 
 watch(activeKey, categoryId => {
     scripts.value = [];
