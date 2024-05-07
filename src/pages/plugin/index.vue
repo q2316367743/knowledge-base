@@ -48,8 +48,8 @@ import {useRouter} from "vue-router";
 import Constant from "@/global/Constant";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
-import SettingPluginSide from "@/pages/setting/plugin/layout/SettingPluginSide.vue";
-import SettingPluginContent from "@/pages/setting/plugin/layout/SettingPluginContent.vue";
+import SettingPluginSide from "@/pages/plugin/layout/SettingPluginSide.vue";
+import SettingPluginContent from "@/pages/plugin/layout/SettingPluginContent.vue";
 
 const router = useRouter();
 
@@ -68,6 +68,7 @@ const toShare = () => router.push('/tool/share');
 function onSelect(selectKey: string | number) {
     // 文件
     load.value = false;
+    plugin.value = undefined;
     nextTick(() => {
         plugin.value = usePluginSettingStore().pluginMap.get(selectKey as number);
         load.value = !!plugin.value;

@@ -1,8 +1,13 @@
-import {Pagination, PluginCategory, PluginCategoryScriptList, Result} from "@/pages/tool/share/types";
+import {
+    Pagination,
+    PluginCategory,
+    PluginCategoryScriptList, PluginScriptApplicationView,
+    PluginScriptInstance,
+    Result
+} from "@/plugin/sdk/UtoolsShareManage/types";
 import axios from "axios";
 import {utools} from "@/plugin/utools";
 import Constant from "@/global/Constant";
-import OpenAI from "openai";
 
 const instance = axios.create({
     baseURL: utools.isDev() ? 'http://localhost:8080' : '',
@@ -25,5 +30,14 @@ export async function page(categoryId: number): Promise<Pagination<PluginCategor
     if (data.code !== 200) {
         return Promise.reject(new Event(data.msg));
     }
-    return rsp.data.data;
+    return data.data;
+}
+
+export async function submit(categoryId: number, data: PluginScriptInstance) {
+    const rsp = await instance.post<Result<PluginScriptApplicationView>>(`/public/plugin/submit/${Constant.uid}/${categoryId}/v1`, data);
+    const res = rsp.data;
+    if (res.code !== 200) {
+        return Promise.reject(new Event(res.msg));
+    }
+    return res.data;
 }

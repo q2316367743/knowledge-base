@@ -1,6 +1,6 @@
 import Constant from "@/global/Constant";
 import {generateUUID} from "@/utils/BrowserUtil";
-import {getItem, setItem} from "@/utils/utools/DbStorageUtil";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import axios from "axios";
 import {utools} from '@/plugin/utools';
@@ -14,13 +14,34 @@ if (user) {
     nickname = user.nickname;
 }
 
-let token = getItem<string>(LocalNameEnum.KEY_TOKEN);
+let token = getItemByDefault<string>(LocalNameEnum.KEY_TOKEN, "");
 if (!token) {
     token = generateUUID();
     setItem(LocalNameEnum.KEY_TOKEN, token);
 }
 const profileId = token;
 let expired = 0;
+
+
+export async function getTokenThrow() {
+    const now = new Date();
+    if (token === '' || now.getTime() > expired) {
+        const res = await utools.fetchUserServerTemporaryToken();
+        token = res.token;
+        expired = res.expiredAt + now.getTime();
+    }
+    return token;
+}
+
+function getToken() {
+    return getTokenThrow()
+        .catch(e => {
+            const now = new Date();
+            console.error(e);
+            token = generateUUID();
+            expired = 7200 + now.getTime();
+        })
+}
 
 
 export function login() {
@@ -106,18 +127,6 @@ export function track(event: EventIdentificationEnum, params?: Record<string, st
  * @param additional 附加
  */
 async function _access(operate: string, additional?: string) {
-    let now = new Date();
-    if (token === '' || now.getTime() > expired) {
-        try {
-            const res = await utools.fetchUserServerTemporaryToken();
-            token = res.token;
-            expired = res.expiredAt + now.getTime();
-        } catch (e) {
-            console.error(e);
-            token = generateUUID();
-            expired = 7200 + now.getTime();
-        }
-    }
     let system: string;
     if (utools.isWindows()) {
         system = "Windows";
@@ -135,7 +144,7 @@ async function _access(operate: string, additional?: string) {
             id: Constant.uid
         },
         data: {
-            token: token,
+            token: await getToken(),
             nickname: nickname,
             operate,
             additional,

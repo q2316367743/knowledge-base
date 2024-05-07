@@ -3,7 +3,7 @@ import {computed, h, ref} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {contains, group, map, MapWrap} from "@/utils/lang/ArrayUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
+import {IconFile, IconFolder, IconShareAlt} from "@arco-design/web-vue/es/icon";
 import {getFromOneByAsync, listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {PluginSettingContent, PluginSettingIndex, PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
@@ -112,6 +112,19 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         return save();
     }
 
+    function update(id: number, data: Partial<PluginSettingIndex>) {
+        const index = items.value.findIndex(item => item.id === id);
+        if (index === -1) {
+            // 不存在，新增一个
+            return Promise.reject(new Error("插件不存在"));
+        }
+        items.value[index] = {
+            ...items.value[index],
+            ...data
+        }
+        return save();
+    }
+
     function saveContent(id: number, content: string, contentRev: string | undefined) {
         if (items.value.findIndex(item => item.id === id) === -1) {
             // 不存在，新增一个
@@ -190,7 +203,7 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
 
     return {
         plugins: items,pluginTree, pluginMap,markdownTemplates,
-        init, save, add, rename, saveContent, remove, getContent,
+        init, save, add, update, rename, saveContent, remove, getContent,
         getPlugins, getThemeContent
     }
 

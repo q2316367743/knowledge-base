@@ -2,7 +2,11 @@
     <a-layout>
         <a-layout-header>
             <a-tabs v-model:active-key="activeKey" hide-content>
-                <a-tab-pane v-for="category in categories" :key="category.id" :title="category.name"/>
+                <a-tab-pane :key="PluginSettingTypeEnum.THEME" title="主题"/>
+                <a-tab-pane :key="PluginSettingTypeEnum.MARKDOWN_MENU" title="markdown菜单"/>
+                <a-tab-pane :key="PluginSettingTypeEnum.MARKDOWN_SYNTAX" title="markdown语法"/>
+                <a-tab-pane :key="PluginSettingTypeEnum.RICH_TEXT_PLUGIN" title="富文本语法"/>
+                <a-tab-pane :key="PluginSettingTypeEnum.MARKDOWN_TEMPLATE" title="markdown模板"/>
                 <template #extra>
                     <a-button type="text" style="margin-right: 7px">我的</a-button>
                 </template>
@@ -22,14 +26,14 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {PluginCategory, PluginCategoryScriptList} from "@/pages/tool/share/types";
-import {getPluginCategoryList, page} from "@/pages/tool/share/api";
+import { PluginCategoryScriptList} from "@/plugin/sdk/UtoolsShareManage/types";
+import {getPluginCategoryList, page} from "@/plugin/sdk/UtoolsShareManage/api";
 import {useWindowSize} from "@vueuse/core";
+import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 
 const windowSize = useWindowSize();
 
-const activeKey = ref(0);
-const categories = ref<Array<PluginCategory>>([]);
+const activeKey = ref(PluginSettingTypeEnum.THEME);
 const scripts = ref<Array<PluginCategoryScriptList>>([]);
 const current = ref(1);
 const size = ref(20);
@@ -37,12 +41,6 @@ const loading = ref(false);
 
 const height = computed(() => windowSize.height.value - 46);
 
-getPluginCategoryList().then(items => {
-    categories.value = items;
-    if (items.length > 0) {
-        activeKey.value = items[0].id;
-    }
-});
 
 watch(activeKey, categoryId => {
     scripts.value = [];
@@ -52,7 +50,7 @@ watch(activeKey, categoryId => {
         current.value = pagination.page || 1;
         size.value = pagination.size || 20;
     }).finally(() => loading.value = false);
-})
+}, {immediate: true})
 
 </script>
 <style scoped>

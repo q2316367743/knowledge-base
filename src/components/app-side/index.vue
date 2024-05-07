@@ -12,6 +12,12 @@
             </template>
             待办
         </a-menu-item>
+        <a-menu-item key="/plugin">
+            <template #icon>
+                <icon-code-block />
+            </template>
+            主题|插件|模板
+        </a-menu-item>
         <a-sub-menu key="/graph">
             <template #icon>
                 <icon-tool/>
@@ -43,9 +49,6 @@
             </a-menu-item>
             <a-menu-item key="/setting/feature" v-if="isUtools">
                 关键字设置
-            </a-menu-item>
-            <a-menu-item key="/setting/plugin">
-                主题|插件|模板
             </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="/more">

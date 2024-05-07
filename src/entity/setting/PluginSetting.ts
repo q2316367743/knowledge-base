@@ -15,9 +15,13 @@ export interface PluginSettingIndex {
     id: number;
     name: string;
     type: PluginSettingTypeEnum;
+    originId?: number,
+    originApplicationId?: number,
 }
 
 export interface PluginSettingContent {
     id: number;
     content: string;
+    // 描述。不超过255个字
+    description?: string;
 }

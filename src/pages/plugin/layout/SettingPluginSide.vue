@@ -10,6 +10,12 @@
                         </template>
                     </a-button>
                     <template #content>
+                        <a-doption @click="submitPlugin(nodeData.key)">
+                            <template #icon>
+                                <icon-share-external/>
+                            </template>
+                            提交审核
+                        </a-doption>
                         <a-doption @click="editPlugin(nodeData)">
                             <template #icon>
                                 <icon-edit/>
@@ -24,7 +30,7 @@
                         </a-doption>
                     </template>
                 </a-dropdown>
-                <a-button type="text" v-else @click="createPlugin(nodeData.key)">
+                <a-button type="text" v-else-if="nodeData.key !== 'share'" @click="createPlugin(nodeData.key)">
                     <template #icon>
                         <icon-plus/>
                     </template>
@@ -38,7 +44,7 @@ import {computed} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import {contains} from "@/utils/lang/ArrayUtil";
 import {PLUGIN_FOLDER_KEYS, usePluginSettingStore} from "@/store/db/PluginSettingStore";
-import {createPlugin, editPlugin, removePlugin} from "@/pages/setting/plugin/components/operation";
+import {createPlugin, editPlugin, removePlugin, submitPlugin} from "@/pages/plugin/components/operation";
 
 const emits = defineEmits(['select']);
 
