@@ -27,8 +27,8 @@ dependencies:
     specifier: ^1.6.8
     version: 1.6.8
   cherry-markdown:
-    specifier: ^0.8.40
-    version: 0.8.40
+    specifier: ^0.8.41
+    version: 0.8.41
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -1102,8 +1102,8 @@ packages:
       undici-types: 5.26.5
     dev: false
 
-  /@types/node@20.12.8:
-    resolution: {integrity: sha512-NU0rJLJnshZWdE/097cdCBbyW1h4hEg0xpovcoAQYHl8dnEyp/NAOiE45pvc+Bd1Dt+2r94v2eGFpQJ4R7g+2w==}
+  /@types/node@20.12.10:
+    resolution: {integrity: sha512-Eem5pH9pmWBHoGAT8Dr5fdc5rYA+4NAovdM4EktRPVAAiJhmWWfQrA0cFhAbOsQdSfIHjAud6YdkbL69+zSKjw==}
     dependencies:
       undici-types: 5.26.5
     dev: false
@@ -2305,8 +2305,8 @@ packages:
     resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
     dev: false
 
-  /cherry-markdown@0.8.40:
-    resolution: {integrity: sha512-rhZwR3fHrxaHIj8YIEBtweY2eQZf6GhFnqT8AtvzAMkWpUS+Fo2IBB3mH9n93HkRYI2N60yHmsvLwt97E4OLqw==}
+  /cherry-markdown@0.8.41:
+    resolution: {integrity: sha512-fVTNCM5WKUhS/lVE0OWWJ3WVxPUzrf4atiKyAP2fsn7guR2uS9VdMaifaFys9ujVBEAXgqGfKlYGdndVdjV3Yw==}
     engines: {node: '>=14'}
     dependencies:
       '@types/codemirror': 0.0.108
@@ -3098,8 +3098,8 @@ packages:
       tapable: 0.2.9
     dev: false
 
-  /enhanced-resolve@5.16.0:
-    resolution: {integrity: sha512-O+QWCviPNSSLAD9Ucn8Awv+poAkqn3T1XY5/N7kR7rQO9yfSGWkYZDwpJ+iKF7B8rxaQKWngSqACpgzeapSyoA==}
+  /enhanced-resolve@5.16.1:
+    resolution: {integrity: sha512-4U5pNsuDl0EhuZpq46M5xPslstkviJuhrdobaRDBk2Jy2KO37FDAJl4lb2KlNabxT0m4MTK2UHNrsAcphE8nyw==}
     engines: {node: '>=10.13.0'}
     dependencies:
       graceful-fs: 4.2.11
@@ -3871,7 +3871,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 20.12.8
+      '@types/node': 20.12.10
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: false
@@ -5819,7 +5819,7 @@ packages:
       acorn-import-assertions: 1.9.0(acorn@8.11.3)
       browserslist: 4.23.0
       chrome-trace-event: 1.0.3
-      enhanced-resolve: 5.16.0
+      enhanced-resolve: 5.16.1
       es-module-lexer: 1.5.2
       eslint-scope: 5.1.1
       events: 3.3.0

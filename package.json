@@ -1,7 +1,7 @@
 {
     "name": "knowledge-base",
     "private": true,
-    "version": "2.2.0",
+    "version": "2.2.1",
     "type": "module",
     "description": "知识库",
     "scripts": {
@@ -20,7 +20,7 @@
         "@wangeditor/editor": "^5.1.23",
         "@wangeditor/plugin-md": "^1.0.0",
         "axios": "^1.6.8",
-        "cherry-markdown": "^0.8.40",
+        "cherry-markdown": "^0.8.41",
         "dayjs": "^1.11.10",
         "fuse.js": "^7.0.0",
         "handsontable": "^14.3.0",

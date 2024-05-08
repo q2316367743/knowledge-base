@@ -30,7 +30,7 @@
                             </template>
                             前往设置
                         </a-button>
-                        <a-button type="primary" @click="toShare">
+                        <a-button type="primary" @click="toShare" disabled>
                             <template #icon>
                                 <icon-share-alt />
                             </template>

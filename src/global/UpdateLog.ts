@@ -8,8 +8,21 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.2.1',
+        sign: 221,
+        time: '2024-05-08',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: "【markdown编辑器】修复预览区点击回调事件失效的问题; 增加点击toc页面目录不更新location hash的特性"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【插件】修复系统bug，维护系统稳定性"
+        }],
+        url: 'https://txc.qq.com/products/612648/post/171517376866657157'
+    },
+    {
         version: '2.2.0',
-        sign: 212,
+        sign: 220,
         time: '2024-05-06',
         items: [{
             label: LogItemEnum.ADD,
