@@ -1,19 +1,22 @@
-import {myself} from "@/plugin/sdk/UtoolsShareManage/api";
 import {
     Button,
     ButtonGroup,
     Drawer,
     List,
     ListItem,
-    ListItemMeta,
+    ListItemMeta, Modal,
     Radio,
     RadioGroup,
     Space,
-    Tag
+    Tag, Typography
 } from "@arco-design/web-vue";
-import { pluginTypes} from "@/store/db/PluginSettingStore";
-import {ref, watch} from "vue";
-import {PluginCategoryScriptList, verityStatusEnum} from "@/plugin/sdk/UtoolsShareManage/types";
+import {pluginTypes, usePluginSettingStore} from "@/store/db/PluginSettingStore";
+import {computed, ref, watch} from "vue";
+import {PluginCategoryScriptList, verityStatusEnum} from "@/plugin/sdk/UtoolsShareManage/types/PluginScript";
+import {downloadHistory, history, myself} from "@/plugin/sdk/UtoolsShareManage/api/PluginScriptUser";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {IconDownload, IconHeart} from "@arco-design/web-vue/es/icon";
+import {submitModal} from "@/pages/tool/share/submit";
 
 export async function openMyself() {
     const categoryId = ref(0);
@@ -21,7 +24,7 @@ export async function openMyself() {
     const current = ref(1);
     const size = 20;
     const total = ref(0);
-    const loading =ref(false);
+    const loading = ref(false);
 
 
     watch(categoryId, id => {
@@ -47,11 +50,23 @@ export async function openMyself() {
                         <Space>
                             <Tag color={'arcoblue'}>{record.categoryName}</Tag>
                             <Tag color={'orange'}>{verityStatusEnum[record.verityStatus || 0]}</Tag>
+                            <Tag color={'arcoblue'}>
+                                {{
+                                    icon: () => <IconDownload/>,
+                                    default: () => <span>{record.downloadCount}</span>
+                                }}
+                            </Tag>
+                            <Tag color={'arcoblue'}>
+                                {{
+                                    icon: () => <IconHeart/>,
+                                    default: () => <span>{record.likeCount}</span>
+                                }}
+                            </Tag>
                         </Space>
                     </>,
                     extra: () => <ButtonGroup type={'text'}>
-                        <Button>记录</Button>
-                        <Button disabled={record.verityStatus === 0}>更新</Button>
+                        <Button onClick={() => openHistory(record.id || 0)}>记录</Button>
+                        <Button onClick={() => submitModal(record)} disabled={record.verityStatus === 0}>更新</Button>
                         {record.verityStatus === 0 && <Button status={'danger'}>取消审核</Button>}
                     </ButtonGroup>
                 }}
@@ -60,3 +75,67 @@ export async function openMyself() {
     })
 
 }
+
+export function openHistory(id: number) {
+    // 获取历史
+    _openHistory(id).catch(e => MessageUtil.error("获取脚本历史失败", e));
+}
+
+async function _openHistory(id: number) {
+    // 获取历史
+    const items = await history(id);
+    Drawer.open({
+        title: '脚本历史',
+        width: 500,
+        footer: false,
+        content: () => <List bordered={false}>
+            {items.map(item => <ListItem>
+                {{
+                    default: () => <>
+                        <ListItemMeta title={item.verityTime} description={item.log}/>
+                        <Space>
+                            <Tag color={'orange'}>{verityStatusEnum[item.verityStatus || 0]}</Tag>
+                            <Tag color={'arcoblue'}>
+                                {{
+                                    icon: () => <IconDownload/>,
+                                    default: () => <span>{item.downloadCount}</span>
+                                }}
+                            </Tag>
+                            <Tag color={'arcoblue'}>
+                                {{
+                                    icon: () => <IconHeart/>,
+                                    default: () => <span>{item.likeCount}</span>
+                                }}
+                            </Tag>
+                        </Space>
+                    </>,
+                    extra: () => {
+                        if (item.verityStatus === 0) {
+                            //
+                            return <Button type={'text'} status={'warning'}
+                                           onClick={() => showHistory(item.id || 0)}
+                            >撤销</Button>
+                        } else {
+                            return <Button type={'text'} onClick={() => showHistory(item.id || 0)}
+                            >查看</Button>
+                        }
+                    }
+                }}
+            </ListItem>)}
+        </List>
+    })
+}
+
+function showHistory(applicationId: number) {
+    downloadHistory(applicationId)
+        .then(res => {
+            Modal.open({
+                title: res.name,
+                footer: false,
+                content: () => <Typography>
+                    <pre>{res.content}</pre>
+                </Typography>
+            })
+        })
+}
+

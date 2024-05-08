@@ -5,7 +5,7 @@
                 <a-tab-pane v-for="pluginType in pluginTypes" :key="pluginType.key" :title="pluginType.title"/>
                 <template #extra>
                     <a-button-group type="text">
-                        <a-button style="margin-right: 7px" v-if="isUtools">提交</a-button>
+                        <a-button style="margin-right: 7px" v-if="isUtools" @click="submitModal()">提交</a-button>
                         <a-button style="margin-right: 7px" v-if="isUtools" @click="openMyself()">我的</a-button>
                     </a-button-group>
                 </template>
@@ -15,19 +15,48 @@
             <a-list :max-height="height" :loading="loading">
                 <a-list-item v-for="script in scripts" :key="script.id">
                     <a-list-item-meta :title="script.name" :description="script.description"/>
+                    <a-space class="mt-7">
+                        <a-avatar :image-url="script.createAvatar" :size="24"></a-avatar>
+                        {{script.createName}}
+                        <a-tag color="orange">
+                            <template #icon>
+                                <icon-clock-circle />
+                            </template>
+                            {{script.verityTime}}
+                        </a-tag>
+                        <a-tag color="arcoblue">
+                            <template #icon>
+                                <icon-download />
+                            </template>
+                            {{script.downloadCount}}
+                        </a-tag>
+                        <a-tag color="arcoblue">
+                            <template #icon>
+                                <icon-heart />
+                            </template>
+                            {{script.likeCount}}
+                        </a-tag>
+                        <a-tag color="arcoblue" v-if="activeKey === 0">
+                            <template #icon>
+                                <icon-tags />
+                            </template>
+                            {{script.categoryName}}
+                        </a-tag>
+                    </a-space>
                     <template #actions>
-                        <a-popconfirm content="是否卸载插件" v-if="installIds.indexOf(script.id || 0) > -1 &&
+                        <a-button-group type="text">
+                            <a-button @click="openHistory(script.id || 0)">历史记录</a-button>
+                            <a-popconfirm content="是否卸载插件" v-if="installIds.indexOf(script.id || 0) > -1 &&
                                   installApplicationIds.indexOf(script.lastApplicationId || 0) > -1"
-                        @ok="uninstall(script.id)">
-                            <a-button type="text" status="danger"
-                            >卸载
-                            </a-button>
-                        </a-popconfirm>
-                        <a-button type="text" status="success" @click="update(script.id)"
-                                  v-else-if="installIds.indexOf(script.id || 0) > -1 &&
+                                          @ok="uninstall(script.id)">
+                                <a-button status="danger">卸载</a-button>
+                            </a-popconfirm>
+                            <a-button status="success" @click="install(script.id)"
+                                      v-else-if="installIds.indexOf(script.id || 0) > -1 &&
                                   installApplicationIds.indexOf(script.lastApplicationId || 0) === -1">更新
-                        </a-button>
-                        <a-button type="text" @click="install(script.id)" v-else>下载</a-button>
+                            </a-button>
+                            <a-button @click="install(script.id)" v-else>下载</a-button>
+                        </a-button-group>
                     </template>
                 </a-list-item>
             </a-list>
@@ -36,14 +65,16 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {PluginCategoryScriptList} from "@/plugin/sdk/UtoolsShareManage/types";
-import {download, page} from "@/plugin/sdk/UtoolsShareManage/api";
+import {download, page} from "@/plugin/sdk/UtoolsShareManage/api/PluginScriptPublic";
 import {useWindowSize} from "@vueuse/core";
 import {isUtools} from "@/global/BeanFactory";
 import {pluginTypes, usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {openMyself} from "@/pages/tool/share/myself";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
+import {openHistory} from "@/pages/tool/share/history";
+import {submitModal} from "@/pages/tool/share/submit";
+import {PluginCategoryScriptList} from "@/plugin/sdk/UtoolsShareManage/types/PluginScript";
 
 const windowSize = useWindowSize();
 
@@ -87,10 +118,6 @@ function install(id?: number) {
         MessageUtil.error("下载失败", e);
         useGlobalStore().closeLoading();
     });
-}
-
-function update(id?: number) {
-
 }
 
 function uninstall(id?: number) {

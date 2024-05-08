@@ -152,12 +152,15 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
         return save();
     }
 
-    function saveContent(id: number, content: string, contentRev: string | undefined) {
+    function saveContent(id: number, content: PluginSettingContent, contentRev: string | undefined) {
         if (items.value.findIndex(item => item.id === id) === -1) {
             // 不存在，新增一个
             return Promise.reject(new Error("插件不存在"));
         }
-        return saveOneByAsync(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`, {id, content}, contentRev);
+        return saveOneByAsync(`${LocalNameEnum.LIST_PLUGIN_CONTENT}/${id}`, {
+            ...content,
+            id
+        }, contentRev);
     }
 
     async function remove(id: number) {

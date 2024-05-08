@@ -56,6 +56,7 @@ onMounted(() => {
         const res = await getContent(id);
 
         let rev = res.rev;
+        let description = res.record ? res.record.description : '';
         if (res.record) {
             editor.setValue(res.record?.content);
         }
@@ -65,7 +66,11 @@ onMounted(() => {
         editor.onDidChangeModelContent(() => {
             const value = editor.getValue()
             //给父组件实时返回最新文本
-            saveContent(id, value, rev).then(r => {
+            saveContent(id, {
+                id,
+                description,
+                content: value,
+            }, rev).then(r => {
                 rev= r;
             }).catch(e => MessageUtil.error("保存失败", e));
         });
