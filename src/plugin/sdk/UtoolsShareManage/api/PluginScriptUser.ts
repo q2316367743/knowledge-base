@@ -1,9 +1,7 @@
-import Constant from "@/global/Constant";
-import {getTokenThrow} from "@/plugin/Statistics";
 import {Pagination, Result} from "@/plugin/sdk/UtoolsShareManage/types";
 import {
     PluginCategoryScriptList,
-    PluginScriptApplicationView, PluginScriptContentView, PluginScriptHistoryItem, PluginScriptHistorySelfItem,
+    PluginScriptApplicationView, PluginScriptContentView, PluginScriptHistorySelfItem,
     PluginScriptInstance
 } from "@/plugin/sdk/UtoolsShareManage/types/PluginScript";
 import {instance} from "@/plugin/sdk/UtoolsShareManage/request";
@@ -11,7 +9,7 @@ import {instance} from "@/plugin/sdk/UtoolsShareManage/request";
 
 export async function myself(categoryId: number, current: number, size: number): Promise<Pagination<PluginCategoryScriptList>> {
     const rsp = await instance.get<Result<Pagination<PluginCategoryScriptList>>>(
-        `/plugin/script/user/myself/${categoryId}/v1`, {
+        `/api/script/user/myself/${categoryId}/v1`, {
             params: {
                 current,size
             },
@@ -25,7 +23,7 @@ export async function myself(categoryId: number, current: number, size: number):
 
 export async function submit(categoryId: number, data: PluginScriptInstance) {
     const rsp = await instance.post<Result<PluginScriptApplicationView>>(
-        `/plugin/script/user/submit/${categoryId}/v1`, data);
+        `/api/script/user/submit/${categoryId}/v1`, data);
     const res = rsp.data;
     if (res.code !== 200) {
         return Promise.reject(new Event(res.msg));
@@ -35,7 +33,7 @@ export async function submit(categoryId: number, data: PluginScriptInstance) {
 
 export async function history(id: number): Promise<Array<PluginScriptHistorySelfItem>> {
     const rsp = await instance.get<Result<Array<PluginScriptHistorySelfItem>>>(
-        `/plugin/script/user/history/list/${id}/v1`);
+        `/api/script/user/history/list/${id}/v1`);
     const data = rsp.data;
     if (data.code !== 200) {
         return Promise.reject(new Event(data.msg));
@@ -46,7 +44,7 @@ export async function history(id: number): Promise<Array<PluginScriptHistorySelf
 
 export async function downloadHistory(applicationId: number): Promise<PluginScriptContentView> {
     const rsp = await instance.get<Result<PluginScriptContentView>>(
-        `/plugin/script/user/history/download/${applicationId}/v1`)
+        `/api/script/user/history/download/${applicationId}/v1`)
     const data = rsp.data;
     if (data.code !== 200) {
         return Promise.reject(new Event(data.msg));

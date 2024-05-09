@@ -92,20 +92,12 @@ async function _submitPlugin(data: SubmitData) {
     const contentRecord = await getContent(data.id);
     const content = contentRecord.record;
     if (!content) return Promise.reject(new Error("插件内容不存在"));
-    let accessToken = '';
-    try {
-        accessToken = await getTokenThrow();
-    } catch (e) {
-        console.error(e);
-        return Promise.reject(new Error("获取token失败，请确认是否已经登录utools"))
-    }
     // 提交审核
     const res = await submit(plugin.type, {
         name: plugin.name,
         content: content.content,
         id: data.sourceId || plugin.originId,
         description: data.description,
-        accessToken: accessToken
     });
     // 更新到插件上
     await update(data.id, {

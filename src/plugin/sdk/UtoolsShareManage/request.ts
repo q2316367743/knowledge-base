@@ -12,7 +12,7 @@ export const instance = axios.create({
 });
 
 instance.interceptors.request.use(async config => {
-    if (config.url && config.url.startsWith("/plugin/script/user")) {
+    if (config.url && config.url.startsWith("/api/script/user")) {
         // 需要token
         config.headers.set('access-token', await getTokenThrow())
     }
