@@ -8,10 +8,10 @@ import {
     Radio,
     RadioGroup,
     Space,
-    Tag, Typography
+    Tag, Tooltip, Typography
 } from "@arco-design/web-vue";
-import {pluginTypes, usePluginSettingStore} from "@/store/db/PluginSettingStore";
-import {computed, ref, watch} from "vue";
+import {pluginTypes} from "@/store/db/PluginSettingStore";
+import {ref, watch} from "vue";
 import {PluginCategoryScriptList, verityStatusEnum} from "@/plugin/sdk/UtoolsShareManage/types/PluginScript";
 import {downloadHistory, history, myself} from "@/plugin/sdk/UtoolsShareManage/api/PluginScriptUser";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -49,7 +49,8 @@ export async function openMyself() {
                         <ListItemMeta title={record.name} description={record.description}/>
                         <Space>
                             <Tag color={'arcoblue'}>{record.categoryName}</Tag>
-                            <Tag color={'orange'}>{verityStatusEnum[record.verityStatus || 0]}</Tag>
+                            <Tag
+                                color={record.verityStatus === 2 ? 'red' : 'orange'}>{verityStatusEnum[record.verityStatus || 0]}</Tag>
                             <Tag color={'arcoblue'}>
                                 {{
                                     icon: () => <IconDownload/>,
@@ -94,7 +95,10 @@ async function _openHistory(id: number) {
                     default: () => <>
                         <ListItemMeta title={item.verityTime} description={item.log}/>
                         <Space>
-                            <Tag color={'orange'}>{verityStatusEnum[item.verityStatus || 0]}</Tag>
+                            <Tooltip content={item.reason}>
+                                <Tag
+                                    color={item.verityStatus === 2 ? 'red' : 'orange'}>{verityStatusEnum[item.verityStatus || 0]}</Tag>
+                            </Tooltip>
                             <Tag color={'arcoblue'}>
                                 {{
                                     icon: () => <IconDownload/>,

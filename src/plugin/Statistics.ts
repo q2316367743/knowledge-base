@@ -4,6 +4,7 @@ import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import axios from "axios";
 import {utools} from '@/plugin/utools';
+import {trackEvent} from "@/plugin/sdk/statistics";
 
 export type EventIdentificationEnum = 'update' | 'page_jump' |
     'feature' | 'recommend' | 'new_article' | 'keymap' | 'ai';
@@ -114,6 +115,7 @@ export function track(event: EventIdentificationEnum, params?: Record<string, st
         _access(event, additional)
             .then(() => console.log('自定义统计成功'))
             .catch(e => console.error("自定义统计失败", e));
+        trackEvent(event, additional)
     } catch (e) {
         console.error("自定义埋点统计失败", e);
     }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {utools} from "@/plugin/utools";
 import Constant from "@/global/Constant";
-import {getTokenThrow} from "@/plugin/Statistics";
+import {getTokenThrow} from "@/plugin/sdk/statistics";
 
 export const instance = axios.create({
     baseURL: utools.isDev() ? 'http://localhost:8080' : '',
@@ -12,7 +12,7 @@ export const instance = axios.create({
 });
 
 instance.interceptors.request.use(async config => {
-    if (config.url && config.url.startsWith("/api/script/user")) {
+    if (config.url && config.url.startsWith("/open/script/user")) {
         // 需要token
         config.headers.set('access-token', await getTokenThrow())
     }

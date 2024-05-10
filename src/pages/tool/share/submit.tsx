@@ -1,7 +1,6 @@
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
-import {getTokenThrow} from "@/plugin/Statistics";
 import {Form, FormItem, Modal, Textarea, TreeSelect} from "@arco-design/web-vue";
 import {ref, watch} from "vue";
 import {submit} from "@/plugin/sdk/UtoolsShareManage/api/PluginScriptUser";

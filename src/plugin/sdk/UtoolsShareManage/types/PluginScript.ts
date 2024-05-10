@@ -71,6 +71,10 @@ export interface PluginScriptHistoryItem {
      * 审核时间
      */
     verityTime?: string;
+    /**
+     * 原因
+     */
+    reason?: string;
 }
 
 /**
