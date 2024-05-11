@@ -21,6 +21,7 @@ export default [
             label: LogItemEnum.UPDATE,
             content: "【插件】修复系统bug，维护系统稳定性"
         }],
+        url: 'https://txc.qq.com/products/612648/post/171544217210000056/'
     },
     {
         version: '2.2.1',
