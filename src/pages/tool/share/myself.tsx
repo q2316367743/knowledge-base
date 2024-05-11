@@ -68,7 +68,7 @@ export async function openMyself() {
                     extra: () => <ButtonGroup type={'text'}>
                         <Button onClick={() => openHistory(record.id || 0)}>记录</Button>
                         <Button onClick={() => submitModal(record)} disabled={record.verityStatus === 0}>更新</Button>
-                        {record.verityStatus === 0 && <Button status={'danger'}>取消审核</Button>}
+                        {record.verityStatus === 0 && <Button status={'danger'} disabled>取消审核</Button>}
                     </ButtonGroup>
                 }}
             </ListItem>)}
@@ -116,7 +116,7 @@ async function _openHistory(id: number) {
                     extra: () => {
                         if (item.verityStatus === 0) {
                             //
-                            return <Button type={'text'} status={'warning'}
+                            return <Button type={'text'} status={'warning'} disabled
                                            onClick={() => showHistory(item.id || 0)}
                             >撤销</Button>
                         } else {

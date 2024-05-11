@@ -1,5 +1,6 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 import {track} from "@/plugin/Statistics";
+import {trackEvent} from "@/plugin/sdk/statistics";
 // 引入路由
 
 const routers: Array<RouteRecordRaw> = [{
@@ -84,7 +85,8 @@ router.afterEach((to, from) => {
         to_path: to.path,
         from_name: `${from.name as string}`,
         from_path: from.path
-    })
+    });
+    trackEvent('页面跳转', to.path);
 })
 
 export default router;

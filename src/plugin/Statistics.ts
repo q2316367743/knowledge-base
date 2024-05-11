@@ -44,6 +44,8 @@ export function access(event: EventIdentificationEnum, additional?: string) {
     track(event, additional ? {
         additional: additional
     } : undefined);
+
+    trackEvent(event, additional);
 }
 
 /**
@@ -77,12 +79,6 @@ export function track(event: EventIdentificationEnum, params?: Record<string, st
         });
     } catch (e) {
         console.error("埋点统计失败", e);
-    }
-    try {
-        const additional = params ? (params['additional'] ? params['additional'] : JSON.stringify(params)) : '';
-        trackEvent(event, additional)
-    } catch (e) {
-        console.error("自定义埋点统计失败", e);
     }
 }
 

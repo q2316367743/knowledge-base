@@ -1,10 +1,9 @@
 import axios from "axios";
-import {utools} from "@/plugin/utools";
 import Constant from "@/global/Constant";
 import {getTokenThrow} from "@/plugin/sdk/statistics";
 
 export const instance = axios.create({
-    baseURL: utools.isDev() ? 'http://localhost:8080' : '',
+    baseURL: 'https://utools.esion.xyz',
     timeout: 5000,
     headers: {
         'plugin-id': Constant.uid,
