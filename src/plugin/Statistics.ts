@@ -1,8 +1,4 @@
 import Constant from "@/global/Constant";
-import {generateUUID} from "@/utils/BrowserUtil";
-import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import axios from "axios";
 import {utools} from '@/plugin/utools';
 import {trackEvent} from "@/plugin/sdk/statistics";
 
@@ -15,35 +11,7 @@ if (user) {
     nickname = user.nickname;
 }
 
-let token = getItemByDefault<string>(LocalNameEnum.KEY_TOKEN, "");
-if (!token) {
-    token = generateUUID();
-    setItem(LocalNameEnum.KEY_TOKEN, token);
-}
-const profileId = token;
-let expired = 0;
-
-
-export async function getTokenThrow() {
-    const now = new Date();
-    if (token === '' || now.getTime() > expired) {
-        const res = await utools.fetchUserServerTemporaryToken();
-        token = res.token;
-        expired = res.expiredAt + now.getTime();
-    }
-    return token;
-}
-
-function getToken() {
-    return getTokenThrow()
-        .catch(e => {
-            const now = new Date();
-            console.error(e);
-            token = generateUUID();
-            expired = 7200 + now.getTime();
-        })
-}
-
+const profileId = utools.getNativeId();
 
 export function login() {
     if (utools.isDev()) {
@@ -112,9 +80,6 @@ export function track(event: EventIdentificationEnum, params?: Record<string, st
     }
     try {
         const additional = params ? (params['additional'] ? params['additional'] : JSON.stringify(params)) : '';
-        _access(event, additional)
-            .then(() => console.log('自定义统计成功'))
-            .catch(e => console.error("自定义统计失败", e));
         trackEvent(event, additional)
     } catch (e) {
         console.error("自定义埋点统计失败", e);
@@ -122,39 +87,5 @@ export function track(event: EventIdentificationEnum, params?: Record<string, st
 }
 
 
-/**
- * 自己的统计事件
- *
- * @param operate 操作
- * @param additional 附加
- */
-async function _access(operate: string, additional?: string) {
-    let system: string;
-    if (utools.isWindows()) {
-        system = "Windows";
-    } else if (utools.isMacOS()) {
-        system = "MacOS"
-    } else if (utools.isLinux()) {
-        system = "Linux"
-    } else {
-        system = navigator.userAgent;
-    }
-    await axios({
-        url: Constant.statistics,
-        method: "POST",
-        params: {
-            id: Constant.uid
-        },
-        data: {
-            token: await getToken(),
-            nickname: nickname,
-            operate,
-            additional,
-            system,
-            version: Constant.version
-        },
-    });
-
-}
 
 

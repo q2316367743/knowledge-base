@@ -48,7 +48,7 @@ async function request(url: string, event?: string, data?: string) {
     }
     await axios.request({
         method: "POST",
-        baseURL: utools.isDev() ? 'http://localhost:8080/open/statistics' : '',
+        baseURL: 'https://utools.esion.xyz/open/statistics',
         url: url + '/v1',
         data: {
             "channel": isUtools ? 'utools' : 'chrome',

@@ -69,9 +69,6 @@ export const useArticleStore = defineStore('article', {
             if (article.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
             }
-            if (this.articleNames.has(article.name)) {
-                return Promise.reject("文章标题已存在，请重新输入！");
-            }
             const now = new Date();
             const id = now.getTime();
 

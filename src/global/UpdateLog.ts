@@ -8,6 +8,18 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.2.2',
+        sign: 222,
+        time: '2024-05-11',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: "【文章】新建文章不再校验文件名是否重复"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【插件】修复系统bug，维护系统稳定性"
+        }],
+    },
+    {
         version: '2.2.1',
         sign: 221,
         time: '2024-05-08',
