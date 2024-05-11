@@ -10,8 +10,11 @@ export default [
     {
         version: '2.2.2',
         sign: 222,
-        time: '2024-05-11',
+        time: '2024-05-12',
         items: [{
+            label: LogItemEnum.ADD,
+            content: "【插件】 新增分享中心。分享中心中，你可以分享自己的脚本、也可以下载别人的脚本"
+        }, {
             label: LogItemEnum.REPAIR,
             content: "【文章】新建文章不再校验文件名是否重复"
         }, {
