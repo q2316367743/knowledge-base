@@ -12,6 +12,7 @@
         </a-spin>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
         <update-check/>
+        <privacy />
     </div>
 </template>
 <script lang="ts" setup>
@@ -33,6 +34,7 @@ import {enter, out} from "@/plugin/sdk/statistics";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
+const privacy = defineAsyncComponent(() => import("@/components/update-check/privacy.vue"));
 const AppSide = defineAsyncComponent(() => import("@/components/app-side/index.vue"))
 
 const router = useRouter();

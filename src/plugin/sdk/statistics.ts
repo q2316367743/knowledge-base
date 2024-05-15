@@ -2,6 +2,7 @@ import axios from "axios";
 import {utools} from "@/plugin/utools";
 import Constant from "@/global/Constant";
 import {isUtools} from "@/global/BeanFactory";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 let token = '';
 let expired = 0;
@@ -46,24 +47,23 @@ async function request(url: string, event?: string, data?: string) {
     if (utools.isDev()) {
         return Promise.resolve();
     }
-    await axios.request({
-        method: "POST",
-        baseURL: 'https://utools.esion.xyz/open/statistics',
-        url: url + '/v1',
-        data: {
-            "channel": isUtools ? 'utools' : 'chrome',
-            "devicePixelRatio": devicePixelRatio + '',
-            "height": window.innerHeight,
-            "nativeId": utools.getNativeId(),
-            "pluginId": Constant.uid,
-            "system": system,
-            "token": await getToken(),
-            "version": Constant.version,
-            "width": window.innerWidth,
-            "data": data,
-            "event": event
-        }
-    })
+    if (useGlobalStore().privacy !== 1) {
+        // 没有同意隐私协议
+        return Promise.resolve();
+    }
+    navigator.sendBeacon(`https://utools.esion.xyz/open/statistics/${url}/v1`, JSON.stringify({
+        "channel": isUtools ? 'utools' : 'chrome',
+        "devicePixelRatio": devicePixelRatio + '',
+        "height": window.innerHeight,
+        "nativeId": utools.getNativeId(),
+        "pluginId": Constant.uid,
+        "system": system,
+        "token": await getToken(),
+        "version": Constant.version,
+        "width": window.innerWidth,
+        "data": data,
+        "event": event
+    }));
 }
 
 export function trackEvent(event: string, data?: string) {

@@ -1,6 +1,7 @@
 import Constant from "@/global/Constant";
 import {utools} from '@/plugin/utools';
 import {trackEvent} from "@/plugin/sdk/statistics";
+import {useGlobalStore} from "@/store/GlobalStore";
 
 export type EventIdentificationEnum = 'update' | 'page_jump' |
     'feature' | 'recommend' | 'new_article' | 'keymap' | 'ai';
@@ -56,6 +57,10 @@ export function access(event: EventIdentificationEnum, additional?: string) {
 export function track(event: EventIdentificationEnum, params?: Record<string, string>) {
     if (utools.isDev()) {
         return;
+    }
+    if (useGlobalStore().privacy !== 1) {
+        // 没有同意隐私协议
+        return Promise.resolve();
     }
     let system;
     if (utools.isWindows()) {

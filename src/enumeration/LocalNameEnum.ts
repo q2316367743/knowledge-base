@@ -126,7 +126,12 @@ enum LocalNameEnum {
      */
     CARD_TODO_SETTING = '/card/todo/setting',
 
-    KEY_TOKEN = '/key/version'
+    KEY_TOKEN = '/key/token',
+
+    /**
+     * 隐私协议
+     */
+    KEY_PRIVACY = '/key/privacy'
 
 }
 

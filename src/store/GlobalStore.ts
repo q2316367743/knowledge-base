@@ -2,6 +2,8 @@ import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ref} from "vue";
+import {useStorage} from "@vueuse/core";
+import {utools} from '@/plugin/utools';
 
 export enum GlobalType {
     DARK = 1,
@@ -14,6 +16,7 @@ export const useGlobalStore = defineStore('global', () => {
     const loading = ref(false);
     const loadingText = ref('');
     const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
+    const privacy = useStorage(LocalNameEnum.KEY_PRIVACY, 0, utools.dbStorage);
 
     function renderTheme(): boolean {
         if (globalType.value === GlobalType.AUTO) {
@@ -47,12 +50,13 @@ export const useGlobalStore = defineStore('global', () => {
         loading.value = true;
         loadingText.value = text || '加载中...';
     }
+
     function closeLoading() {
         loading.value = false;
     }
 
     return {
-        isDark, globalType,loading, loadingText,
+        isDark, globalType, loading, loadingText, privacy,
         initDarkColors, switchDarkColors, startLoading, closeLoading
     }
 
