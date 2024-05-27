@@ -48,7 +48,7 @@
                             <template #content>
                                 <a-doption @click="multiCheckStart(nodeData.key)">
                                     <template #icon>
-                                        <icon-check-square />
+                                        <icon-check-square/>
                                     </template>
                                     多选
                                 </a-doption>
@@ -76,11 +76,12 @@
 
                         <a-doption v-if="nodeData.isLeaf" @click="multiCheckStart(nodeData.key)">
                             <template #icon>
-                                <icon-check-square />
+                                <icon-check-square/>
                             </template>
                             多选
                         </a-doption>
-                        <a-doption v-if="nodeData.isLeaf" @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                        <a-doption v-if="nodeData.isLeaf"
+                                   @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
                             <template #icon>
                                 <icon-edit/>
                             </template>
@@ -93,7 +94,8 @@
                             </template>
                             删除
                         </a-doption>
-                        <a-doption v-if="nodeData.isLeaf" @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                        <a-doption v-if="nodeData.isLeaf"
+                                   @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
                             <template #icon>
                                 <icon-to-right/>
                             </template>
@@ -154,7 +156,7 @@ import {TreeNodeData} from "@arco-design/web-vue";
 import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {useElementSize, useWindowSize} from "@vueuse/core";
+import {useElementSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";

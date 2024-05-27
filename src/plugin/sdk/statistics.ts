@@ -47,10 +47,6 @@ async function request(url: string, event?: string, data?: string) {
     if (utools.isDev()) {
         return Promise.resolve();
     }
-    if (useGlobalStore().privacy !== 1) {
-        // 没有同意隐私协议
-        return Promise.resolve();
-    }
     navigator.sendBeacon(`https://utools.esion.xyz/open/statistics/${url}/v1`, JSON.stringify({
         "channel": isUtools ? 'utools' : 'chrome',
         "devicePixelRatio": devicePixelRatio + '',
@@ -67,6 +63,10 @@ async function request(url: string, event?: string, data?: string) {
 }
 
 export function trackEvent(event: string, data?: string) {
+    if (useGlobalStore().privacy !== 1) {
+        // 没有同意隐私协议
+        return;
+    }
     request('track', event, data)
         .catch(e => console.error(e));
 }

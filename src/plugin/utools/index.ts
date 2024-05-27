@@ -155,6 +155,9 @@ let web = {
         } else {
             copy(content, false);
         }
+    },
+    onPluginOut(callback: () => void) {
+        window.addEventListener('close', callback);
     }
 }
 
