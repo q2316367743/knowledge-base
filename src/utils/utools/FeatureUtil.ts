@@ -8,7 +8,7 @@ export interface Feature {
     explain: string,
     platform: FeaturePlatform | Array<FeaturePlatform>,
     icon?: string,
-    cmds: Array<FeatureCmd>
+    cmds: Array<string | FeatureCmd>
 }
 
 /**
@@ -23,7 +23,7 @@ export interface FeatureCmd {
     type: FeatureCmdType,
     label: string,
     fileType?: FeatureCmdFileType,
-    match? : string,
+    match?: string,
     minLength?: number
     maxLength?: number
 }
@@ -32,7 +32,12 @@ export type FeatureCmdType = 'img' | 'files' | 'regex' | 'over' | 'window';
 
 export type FeatureCmdFileType = 'file' | 'directory';
 
-export function setFeatureOne(code: string, cmd: FeatureCmd | string): boolean {
+/**
+ * 设置一个关键字
+ * @param code code
+ * @param cmd 关键字
+ */
+export function setFeatureOneSimple(code: string, cmd: FeatureCmd | string): boolean {
     return utools.setFeature({
         code: code,
         explain: Constant.name,
@@ -44,6 +49,14 @@ export function setFeatureOne(code: string, cmd: FeatureCmd | string): boolean {
         ],
         cmds: [cmd]
     });
+}
+
+/**
+ * 设置一个关键字
+ * @param feature 关键字
+ */
+export function setFeatureOne(feature: Feature) {
+    return utools.setFeature(feature);
 }
 
 /**
@@ -64,11 +77,29 @@ export function getFeatureOne(code: string): Feature | null {
     return null;
 }
 
+/**
+ * 移出一个关键字
+ * @param code code
+ */
 export function removeFeatureOne(code: string): boolean {
     return utools.removeFeature(code);
 }
 
-export function listFeature(preview: string, keys: Array<any>): Array<string> {
-    const features = utools.getFeatures(keys.map(key => preview + key));
+/**
+ * 列出多个
+ * @param prefix 前缀/数组
+ * @param keys 如果prefix是数组，则此参数无效
+ */
+export function listFeature(prefix: string | string[], keys?: Array<any>): Array<string> {
+    let features;
+    if (typeof prefix === 'string') {
+        if (keys) {
+            features = utools.getFeatures(keys.map(key => prefix + key));
+        } else {
+            features = utools.getFeatures([prefix]);
+        }
+    } else {
+        features = utools.getFeatures(prefix);
+    }
     return features.map(feature => feature.code);
 }

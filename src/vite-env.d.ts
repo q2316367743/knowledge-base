@@ -86,7 +86,7 @@ declare interface TtDbResultRow {
     key: string;
     error?: string;
     id?: string;
-    value?: {rev: string}
+    value?: { rev: string }
 
 }
 
@@ -96,11 +96,13 @@ declare interface TtAllDocResult {
 }
 
 
-
 declare interface TtDb {
     allDocs(keys?: string | string[]): Promise<TtAllDocResult>;
+
     put(doc: DbDoc): Promise<DbReturn>;
+
     get(key: string): Promise<DbDoc>;
+
     remove(key: string): Promise<DbReturn>;
 }
 
@@ -121,6 +123,15 @@ declare interface Window {
 
         // 写入文件
         writeToFile: (dir: string, name: string, content: Blob) => Promise<string>;
+
+        customer: {
+            checkFileExist(root: string, dir: string, file: string): boolean;
+            downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
+        },
+
+        path: {
+            join(...paths: string[]): string;
+        }
     }
     bs: {
         db: TtDb

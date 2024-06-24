@@ -3,9 +3,12 @@ import {clone} from "xe-utils";
 import {utools} from '@/plugin/utools';
 
 
-
 // 对象
 
+/**
+ * 获取一个值
+ * @param key 键
+ */
 export function getItem<T>(key: string): T | null {
     let value = utools.dbStorage.getItem(key);
     if (typeof value === 'undefined' || value == null) {
@@ -14,6 +17,11 @@ export function getItem<T>(key: string): T | null {
     return value;
 }
 
+/**
+ * 获取一个值，如果不存在，则返回默认值
+ * @param key 键
+ * @param defaultValue 默认值
+ */
 export function getItemByDefault<T>(key: string, defaultValue: T): T {
     let value = utools.dbStorage.getItem(key);
     if (typeof value === 'undefined' || value == null) {
@@ -22,6 +30,11 @@ export function getItemByDefault<T>(key: string, defaultValue: T): T {
     return value;
 }
 
+/**
+ * 设置一个值
+ * @param key 键
+ * @param value 值
+ */
 export function setItem<T = any>(key: string, value: T) {
     utools.dbStorage.setItem(key, toRaw(value));
 }
@@ -48,6 +61,12 @@ export interface DbRecord<T> {
 
 // --------------------------------------- 列表操作 ---------------------------------------
 
+/**
+ * 异步获取一个对象，并且对象需要时数组
+ *
+ * 如果一个存储是是个数组，可以使用此方法
+ * @param key 键
+ */
 export async function listByAsync<T = any>(key: string): Promise<DbList<T>> {
     const res = await utools.db.promises.get(key);
     if (res) {
@@ -59,6 +78,12 @@ export async function listByAsync<T = any>(key: string): Promise<DbList<T>> {
     return {list: []};
 }
 
+/**
+ * 异步保存一个数组到一个存储中
+ * @param key 键
+ * @param records 数组
+ * @param rev 恢复值
+ */
 export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: string): Promise<undefined | string> {
     try {
         const res = await utools.db.promises.put({
@@ -75,7 +100,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
                 return await saveListByAsync(key, clone(records, true), rev);
             } else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.") {
                 return await saveListByAsync(key, clone(records, true), rev);
-            }else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': #<Object> could not be cloned.") {
+            } else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': #<Object> could not be cloned.") {
                 return await saveListByAsync(key, clone(records, true), rev);
             }
             console.error(res)
@@ -92,6 +117,10 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
     }
 }
 
+/**
+ * 通过多个键，获取多个值
+ * @param key 多个键，如果是数组，则绝对匹配，如果是字符串，则前缀匹配
+ */
 export async function listRecordByAsync<T>(key?: string | string[]): Promise<Array<DbRecord<T>>> {
     // @ts-ignore
     const items = await utools.db.promises.allDocs(key);
@@ -104,18 +133,27 @@ export async function listRecordByAsync<T>(key?: string | string[]): Promise<Arr
 
 // --------------------------------------- 单一对象操作 ---------------------------------------
 
-export async function getFromOneWithDefaultByAsync<T>(key: string, record: T): Promise<DbRecord<T>> {
+/**
+ * 获取一个值，如果不存在，则使用默认值
+ * @param key 键
+ * @param defaultValue 默认值
+ */
+export async function getFromOneWithDefaultByAsync<T>(key: string, defaultValue: T): Promise<DbRecord<T>> {
     const res = await utools.db.promises.get(key);
     if (!res) {
-        return {record, id: key}
+        return {record: defaultValue, id: key}
     }
     return Promise.resolve({
         id: key,
-        record: Object.assign(record || {}, res.value),
+        record: Object.assign(defaultValue || {}, res.value),
         rev: res._rev
     });
 }
 
+/**
+ * 获取一个值，不存在则返回null
+ * @param key 键
+ */
 export async function getFromOneByAsync<T = any>(key: string): Promise<DbRecord<T | null>> {
     const res = await utools.db.promises.get(key);
     if (!res) {
@@ -250,6 +288,10 @@ export async function getAttachmentByAsync(docId: string): Promise<string> {
     return Promise.resolve(window.URL.createObjectURL(blob));
 }
 
+/**
+ * 同步获取附件，并转为url链接
+ * @param docId 文档ID
+ */
 export function getAttachmentBySync(docId: string): string {
     const data = utools.db.getAttachment(docId);
     if (!data) {

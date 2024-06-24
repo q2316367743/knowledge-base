@@ -5,7 +5,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {map} from "@/utils/lang/ArrayUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {useTodoStore} from "@/store/components/TodoStore";
-import {listFeature, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
+import {listFeature, removeFeatureOne, setFeatureOneSimple} from "@/utils/utools/FeatureUtil";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
@@ -110,7 +110,7 @@ export const useTodoCategoryStore = defineStore('todo-category', {
                 return;
             }
             const feature = Constant.feature.TODO_CATEGORY + id;
-            setFeatureOne(feature, this.value[index].name);
+            setFeatureOneSimple(feature, this.value[index].name);
             this.featureKeys.add(feature);
         },
         removeFeature(id: number) {

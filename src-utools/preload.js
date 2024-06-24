@@ -1,5 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+
+const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync} = require('node:fs');
+const {join} = require('node:path');
+const {get} = require('node:https');
+
 
 /**
  * Blob转Buffer
@@ -28,14 +31,46 @@ window.preload = {
      */
     writeToFile(dir, name, content) {
         // 判断文件夹是否存在
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, {recursive: true});
+        if (!existsSync(dir)) {
+            mkdirSync(dir, {recursive: true});
         }
         // blob转buffer
         return blobToBuffer(content).then(buffer => {
-            const filePath = path.join(dir, name);
-            fs.writeFileSync(filePath, buffer);
+            const filePath = join(dir, name);
+            writeFileSync(filePath, buffer);
             return filePath;
         });
+    },
+    customer: {
+        // 检查文件是否存在
+        checkFileExist(root, dir, file) {
+            const filePath = join(root, dir, file);
+            return existsSync(filePath);
+        },
+        downloadFile(root, dir, fileName, url) {
+            return new Promise((resolve, reject) => {
+                const folder = join(root, dir);
+                if (!existsSync(folder)) {
+                    mkdirSync(folder, {recursive: true});
+                }
+                const filePath = join(folder, fileName);
+                const file = createWriteStream(filePath);
+                get(url, function (response) {
+                    response.pipe(file);
+                    file.on('finish', function () {
+                        file.close(resolve);
+                    });
+                }).on('error', function (err) {
+                    unlink(filePath, () => {
+                    });
+                    reject(err)
+                });
+            })
+        }
+    },
+    path: {
+        join: join
     }
 };
+
+

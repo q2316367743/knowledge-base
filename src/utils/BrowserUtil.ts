@@ -44,6 +44,11 @@ export function copy(content: string, showMessage: boolean = true) {
     }
 }
 
+/**
+ * 下载一个url
+ * @param url url
+ * @param fileName 文件名
+ */
 export function downloadByUrl(url: string, fileName?: string) {
     let downA = document.createElement("a");
     downA.href = url;
@@ -102,6 +107,11 @@ export function svg2png(svg: SVGSVGElement): Promise<string> {
     })
 }
 
+/**
+ * 下载一个base64格式的文件
+ * @param base64 base64内容
+ * @param fileName 文件名
+ */
 export function downloadByBase64(base64: string, fileName?: string) {
     let byteCharacters = atob(
         base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, "")
@@ -145,6 +155,9 @@ export function prettyDataUnit(value: number) {
 
 }
 
+/**
+ * 生成uuid
+ */
 export function generateUUID(): string {
     let d = new Date().getTime();
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -154,6 +167,10 @@ export function generateUUID(): string {
     });
 }
 
+/**
+ * 异步函数中休眠指定时间
+ * @param timestamp 休眠时间，ms
+ */
 export function sleep(timestamp: number) {
     return new Promise<void>(resolve => setTimeout(resolve, timestamp));
 }
@@ -174,6 +191,10 @@ export function randomColor(str?: string): string {
     return colors[index]
 }
 
+/**
+ * arraybuffer转为base64
+ * @param buffer arraybuffer
+ */
 export function arrayBufferToBase64(buffer: ArrayBuffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
@@ -183,6 +204,12 @@ export function arrayBufferToBase64(buffer: ArrayBuffer) {
     }
     return window.btoa(binary);
 }
+
+/**
+ * base64转为blob
+ * @param base64 base64字符串
+ * @param type 生成的blob类型
+ */
 export function base64toBlob(base64: string, type = 'application/octet-stream'): Blob {
     const bStr = atob(base64);
     let n = bStr.length;
@@ -193,6 +220,10 @@ export function base64toBlob(base64: string, type = 'application/octet-stream'):
     return new Blob([u8arr], {type});
 }
 
+/**
+ * blob转为base64
+ * @param file blob
+ */
 export function blobToBase64(file: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -223,6 +254,10 @@ export function getRandomChar(len: number): string {
     return timestamp + tmp;
 }
 
+/**
+ * 获取一个图片的大小
+ * @param src 图片链接
+ */
 export const getImageSize = (src: string): Promise<{width: number,height: number}> => {
     return new Promise(resolve => {
         let img = new Image()

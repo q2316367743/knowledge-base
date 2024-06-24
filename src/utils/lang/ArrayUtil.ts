@@ -1,3 +1,8 @@
+/**
+ * 判断一个数组中，是否存在关键字
+ * @param arr 数组
+ * @param keyword 关键字
+ */
 export function contains<T>(arr: T[], keyword: T): boolean {
     try {
         for (let item of arr) {
@@ -86,7 +91,13 @@ export function count<T, K extends keyof T, V extends T[K]>(arr: T[], attrName: 
     return result;
 }
 
-export function size<T, K extends keyof T>(arr: Array<T>, attrName: K, value: any): number {
+/**
+ * 统计一个数组中，指定属性的值和目标值相等的次数
+ * @param arr
+ * @param attrName
+ * @param value
+ */
+export function size<T extends Record<string, V>, K extends keyof T, V>(arr: Array<T>, attrName: K, value: V): number {
     try {
         let count = 0;
         for (let t of arr) {
@@ -119,6 +130,9 @@ export function distinct<T extends Record<string, any>, K extends keyof T>(items
     return results;
 }
 
+/**
+ * map增强，主要增加getOrDefault方法
+ */
 export class MapWrap<K, V> extends Map<K, V> {
 
     getOrDefault(key: K, defaultValue: V): V {
@@ -127,6 +141,10 @@ export class MapWrap<K, V> extends Map<K, V> {
 
 }
 
+/**
+ * 生成一个指定长度的数组
+ * @param num 数组长度
+ */
 export function traverseNumber(num: number) {
     const arr = new Array<number>()
     for (let i = 0; i < num; i++) {
