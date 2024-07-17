@@ -116,12 +116,39 @@ body[arco-theme=dark] {
         .cherry-toc-one-a {
             color: var(--color-text-1) !important;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
             &:hover {
                 color: rgb(var(--arcoblue-5)) !important;
             }
+
             &.current {
                 color: rgb(var(--arcoblue-6)) !important;
             }
+        }
+    }
+
+    .cherry-dropdown {
+        color: var(--color-text-1) !important;
+        background-color: var(--color-bg-2) !important;
+
+        .cherry-toolbar-button {
+            color: var(--color-text-1) !important;
+            background-color: var(--color-fill-2) !important;
+        }
+
+        .cherry-insert-formula-tab {
+            &.active {
+                color: var(--color-text-3) !important;
+                border: 1px solid var(--color-text-3) !important;
+            }
+        }
+        .cherry-insert-formula-categary__func {
+            color: var(--color-text-1) !important;
+            background-color: var(--color-fill-2) !important;
+        }
+        .cherry-insert-formula-categary__func-item {
+            color: var(--color-text-1) !important;
+            background-color: var(--color-fill-3) !important;
         }
     }
 }

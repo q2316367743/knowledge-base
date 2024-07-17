@@ -71,14 +71,6 @@ function create() {
         onChange(editor) {
             content.value = editor.getHtml();
         },
-        toolbarKeys: ["undo", "redo", "brush", "eraser",
-            "|", "heading", "font-family", "font-size", "font-color",
-            "|", "bold", "italic", "underline", "strike", "link", "code", "subscript", "superscript", "hr", "todo", "emoji",
-            "|", "align", "line-height",
-            "|", "bullet-list", "ordered-list", "indent-decrease", "indent-increase", "break",
-            "|", "code-block", "table",
-            "|", "printer", "fullscreen", "ai"
-        ],
     })
 }
 
@@ -140,10 +132,6 @@ function getToc(): Array<TocItem> {
     left: 0;
     right: 0;
     bottom: 0;
-
-    #editor—wrapper {
-        height: calc(100% - 40px);
-    }
 
 }
 

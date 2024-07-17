@@ -58,6 +58,11 @@ export interface BaseSetting {
      */
     tableColCount: number;
 
+    /**
+     * 经典换行
+     */
+    classicBr: boolean;
+
 }
 
 export enum ArticleActionEnum {
@@ -79,6 +84,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         todoArticleAction: ArticleActionEnum.DRAWER,
         relationArticleAction: ArticleActionEnum.TO_ARTICLE,
         tableColumnCount: 26,
-        tableColCount: 26
+        tableColCount: 26,
+        classicBr: true
     }
 }

@@ -99,16 +99,11 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
     }
 });
 
-const oldOpen = window.open;
-window.open = (url?: string | URL, target?: string, features?: string): WindowProxy | null => {
-    if (!url || !target || !features) {
-        return oldOpen(url, target, features);
-    }
-    if (typeof url === 'string') {
-        utools.shellOpenExternal(url);
+window.open = (url?: string | URL): WindowProxy | null => {
+    if (!url) {
         return null;
-    } else {
-        return oldOpen(url, target, features);
     }
+    utools.shellOpenExternal(typeof url === 'string' ? url : url?.toString());
+    return null;
 
 }

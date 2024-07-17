@@ -33,9 +33,11 @@ export async function buildConfig(
     update: (content: string) => void,
     sendToChat: (content: string) => void): Promise<CherryOptions> {
 
+    const {defaultModel, classicBr} = useBaseSettingStore();
+
     // 默认模式
-    const defaultModel = preview ?
-        'previewOnly' : useBaseSettingStore().defaultModel;
+    const model = preview ?
+        'previewOnly' : defaultModel;
 
     const toolbar = [];
     const bubble: Array<string> = [];
@@ -112,8 +114,7 @@ export async function buildConfig(
             More: [...plugins.map(plugin => plugin.name)],
         });
     }
-
-    const config = {
+    return {
         id: id,
         value: value,
         previewer: {
@@ -152,7 +153,8 @@ export async function buildConfig(
                         }
                     }
                     return url;
-                }
+                },
+                classicBr: classicBr
             },
             customSyntax: {
                 RelationArticle: {
@@ -163,7 +165,7 @@ export async function buildConfig(
             },
         },
         editor: {
-            defaultModel: defaultModel,
+            defaultModel: model,
             codemirror: {
                 theme: useGlobalStore().isDark ? 'material-ocean' : 'default',
             },
@@ -248,8 +250,6 @@ export async function buildConfig(
                 .catch(e => MessageUtil.error("图片上传失败", e))
 
         },
-    };
-
-    return config as any;
+    } as any;
 
 }

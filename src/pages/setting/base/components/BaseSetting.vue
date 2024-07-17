@@ -38,6 +38,7 @@
                     当插件宽度小于1080px时生效
                 </template>
             </a-form-item>
+            <a-divider>新建文章</a-divider>
             <a-form-item label="新建文章是否自动命名">
                 <a-switch v-model="instance.newArticleAutoName" type="round">
                     <template #checked>是</template>
@@ -58,6 +59,16 @@
             <a-form-item label="默认代码拓展名" v-if="instance.newArticleAutoName">
                 <a-input v-model="instance.codeExtraName" allow-clear style="width: 200px;"/>
             </a-form-item>
+            <a-divider>markdown编辑器设置</a-divider>
+            <a-form-item label="md编辑器是否启用经典换行">
+                <a-switch v-model="instance.classicBr"/>
+                <template #help v-if="instance.classicBr">
+                    一个换行会被忽略，两个以上连续换行会分割成段落，
+                </template>
+                <template #help v-else>
+                    一个换行会转成&lt;br&gt;，两个连续换行会分割成段落，三个以上连续换行会转成&lt;br&gt;并分割段落
+                </template>
+            </a-form-item>
             <a-form-item label="md编辑器默认编辑模式">
                 <a-radio-group v-model="instance.mdEditorEditMode">
                     <a-radio :value="MdEditorEditModeEnum.EDIT_ONLY">仅编辑</a-radio>
@@ -75,6 +86,7 @@
                     </span>
                 </template>
             </a-form-item>
+            <a-divider>动作设置</a-divider>
             <a-form-item label="待办文章动作">
                 <a-radio-group v-model="instance.todoArticleAction">
                     <a-radio :value="ArticleActionEnum.TO_ARTICLE">前往文章</a-radio>
