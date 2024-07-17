@@ -1,4 +1,4 @@
-import {MindMapNode, MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
+import {MindMapNode, MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {ref} from "vue";
 import {Modal, Option, Select} from "@arco-design/web-vue";
 import MindMap from "simple-mind-map";

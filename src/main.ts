@@ -9,11 +9,11 @@ import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
-import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';
 import 'virtual:uno.css'
 import 'handsontable/dist/handsontable.full.min.css';
+import 'aieditor/dist/style.css'
 // 编辑器
 // @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
@@ -25,11 +25,7 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-// 安装wangEditor插件
-import {Boot} from '@wangeditor/editor'
-import markdownModule from '@wangeditor/plugin-md'
-import {OpenByUtoolsMenu} from "@/components/WangEditor/OpenByUtools";
-import {useDeleteEvent, useNewEvent, useSearchContentEvent} from './global/BeanFactory';
+import {useDeleteEvent, useNewEvent, useSearchContentEvent} from '@/global/BeanFactory';
 import {track} from "@/plugin/Statistics";
 import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
@@ -60,10 +56,6 @@ createApp(App)
     .mount('#app');
 
 
-
-Boot.registerModule(markdownModule);
-Boot.registerMenu(OpenByUtoolsMenu);
-
 window.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.ctrlKey || e.altKey) {
         if (e.code === 'KeyN') {
@@ -83,11 +75,11 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
                 alt: e.altKey ? 'true' : 'false',
                 code: e.code,
             });
-        }else if(e.code == 'KeyQ') {
+        } else if (e.code == 'KeyQ') {
             e.preventDefault();
             e.stopPropagation();
             useArticlePreviewEvent.emit(useHomeEditorStore().id);
-        }else if (e.code === 'KeyP') {
+        } else if (e.code === 'KeyP') {
             e.preventDefault();
             e.stopPropagation();
             useArticleExportEvent.emit(useHomeEditorStore().id);
@@ -106,3 +98,17 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
         }
     }
 });
+
+const oldOpen = window.open;
+window.open = (url?: string | URL, target?: string, features?: string): WindowProxy | null => {
+    if (!url || !target || !features) {
+        return oldOpen(url, target, features);
+    }
+    if (typeof url === 'string') {
+        utools.shellOpenExternal(url);
+        return null;
+    } else {
+        return oldOpen(url, target, features);
+    }
+
+}

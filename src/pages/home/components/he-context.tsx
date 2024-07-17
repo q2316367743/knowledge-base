@@ -22,7 +22,7 @@ import {
     IconPalette, IconRefresh
 } from "@arco-design/web-vue/es/icon";
 import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
-import {MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
+import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
 import {track} from "@/plugin/Statistics";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";

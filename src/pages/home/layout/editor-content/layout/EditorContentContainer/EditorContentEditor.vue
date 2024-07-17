@@ -21,13 +21,13 @@
 import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 // 编辑器
-import WangEditor from "@/pages/home/editor/WangEditor.vue";
-import MonacoEditor from "@/pages/home/editor/MonacoEditor/index.vue";
-import MarkdownEditor from "@/pages/home/editor/MarkdownEditor/index.vue";
-import ExcelEditor from "@/pages/home/editor/ExcelEditor/index.vue";
-import MindMapEditor from "@/pages/home/editor/MindMapEditor/index.vue";
-import DrauuEditor from "@/pages/home/editor/DrauuEditor/index.vue";
-import HandsontableEditor from "@/pages/home/editor/HandsontableEditor/index.vue";
+import WangEditor from "@/editor/RichTextEditor/index.vue";
+import MonacoEditor from "@/editor/MonacoEditor/index.vue";
+import MarkdownEditor from "@/editor/MarkdownEditor/index.vue";
+import ExcelEditor from "@/editor/ExcelEditor/index.vue";
+import MindMapEditor from "@/editor/MindMapEditor/index.vue";
+import DrauuEditor from "@/editor/DrauuEditor/index.vue";
+import HandsontableEditor from "@/editor/HandsontableEditor/index.vue";
 
 import {ArticleIndex} from "@/entity/article";
 import {ArticleContent} from "@/entity/article/ArticleContent";

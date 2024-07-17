@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import {computed, onMounted, PropType, ref, shallowRef} from "vue";
 import MindMap from "simple-mind-map";
-import {MindMapNode, MindMapNodeData} from "@/pages/home/editor/MindMapEditor/domain";
+import {MindMapNode, MindMapNodeData} from "@/editor/MindMapEditor/domain";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>

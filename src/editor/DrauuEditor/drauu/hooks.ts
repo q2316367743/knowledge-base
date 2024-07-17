@@ -1,4 +1,4 @@
-import {Brush, createDrauu, Drauu, DrawingMode, Options} from "@/components/drauu";
+import {Brush, createDrauu, Drauu, DrawingMode, Options} from "@/editor/DrauuEditor/drauu/index";
 import {ref, Ref, watch} from "vue";
 import {createEventHook, EventHookOn, Fn, MaybeComputedElementRef, tryOnScopeDispose, unrefElement} from "@vueuse/core";
 

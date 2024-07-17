@@ -11,7 +11,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
 import {toDateString} from "xe-utils";
-import {MindMapTreeNode} from "@/pages/home/editor/MindMapEditor/domain";
+import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 
 /**
  * html转为markdown

@@ -47,7 +47,7 @@
             <div class="side-btn" :class="brush === 'text' ? 'active' : ''" @click="brush = 'text'">文</div>
             <div class="side-btn" :class="brush === 'eraseLine' ? 'active' : ''" @click="brush = 'eraseLine'">🧹</div>
             <a-divider/>
-            <div class="side-btn" :class="{active: !dasharray}" @click="dasharray = undefined">—</div>
+            <div class="side-btn" :class="{active: !dasharray}" @click="dasharray = ''">—</div>
             <div class="side-btn" :class="{active: dasharray === '4'}" @click="dasharray = '4'">┅</div>
             <div class="side-btn" :class="{active: dasharray === '1 7'}" @click="dasharray = '1 7'">⋯</div>
         </div>
@@ -62,8 +62,8 @@ import {onMounted, ref, watch} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {downloadByBase64, svg2png} from "@/utils/BrowserUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {DrawingMode} from "@/components/drauu";
-import {useDrauu} from "@/components/drauu/hooks";
+import {DrawingMode} from "@/editor/DrauuEditor/drauu";
+import {useDrauu} from "@/editor/DrauuEditor/drauu/hooks";
 
 
 const props = defineProps({
@@ -82,7 +82,7 @@ const target = ref<SVGSVGElement>();
 const color = ref('#000000');
 const size = ref(3);
 const brush = ref<DrawingMode | 'arrow'>("stylus");
-const dasharray = ref<string>();
+const dasharray = ref<string>('');
 const drauu = useDrauu(target, {
     brush: {
         color: useGlobalStore().isDark ? '#f2f2f2' : '#000000',

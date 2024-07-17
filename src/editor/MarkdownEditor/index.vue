@@ -6,7 +6,7 @@ import Cherry from "cherry-markdown";
 import {onMounted, onBeforeUnmount, shallowRef, watch} from "vue";
 import {
     editorProps
-} from "@/pages/home/editor/MarkdownEditor/CherryMarkdownOption";
+} from "@/editor/MarkdownEditor/CherryMarkdownOption";
 import {useWindowSize} from "@vueuse/core";
 
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -28,7 +28,7 @@ import {openMarkdownExport} from "./common/MarkdownExport";
 
 import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
 
-import {buildConfig} from "@/pages/home/editor/MarkdownEditor/common/build-config";
+import {buildConfig} from "@/editor/MarkdownEditor/common/build-config";
 
 const props = defineProps(editorProps);
 const emits = defineEmits(['update:modelValue', 'sendToChat']);

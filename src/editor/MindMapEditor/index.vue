@@ -13,14 +13,14 @@ import MindMap from "simple-mind-map";
 import {useElementSize} from "@vueuse/core";
 
 // 组件
-import MindMapCount from "@/pages/home/editor/MindMapEditor/components/MindMapCount.vue";
-import MindMapTool from "@/pages/home/editor/MindMapEditor/components/MindMapTool/index.vue";
+import MindMapCount from "@/editor/MindMapEditor/components/MindMapCount.vue";
+import MindMapTool from "@/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
-    from "@/pages/home/editor/MindMapEditor/components/MindMapSetting/index.vue";
+    from "@/editor/MindMapEditor/components/MindMapSetting/index.vue";
 import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
 import {useArticleExportEvent, useArticleImportEvent} from "@/store/components/HomeEditorStore";
-import {openMindMapExport} from "@/pages/home/editor/MindMapEditor/components/MindMapExport";
-import MindMapContext from "@/pages/home/editor/MindMapEditor/components/MindMapContext.vue";
+import {openMindMapExport} from "@/editor/MindMapEditor/components/MindMapExport";
+import MindMapContext from "@/editor/MindMapEditor/components/MindMapContext.vue";
 
 // 插件
 import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js';

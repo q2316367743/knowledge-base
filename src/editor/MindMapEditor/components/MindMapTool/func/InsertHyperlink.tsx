@@ -1,4 +1,4 @@
-import {MindMapNode} from "@/pages/home/editor/MindMapEditor/domain";
+import {MindMapNode} from "@/editor/MindMapEditor/domain";
 import {Form, FormItem, Input, Modal} from "@arco-design/web-vue";
 import {ref} from "vue";
 

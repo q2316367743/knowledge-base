@@ -52,15 +52,15 @@ import {clone} from "xe-utils";
 import Handsontable from 'handsontable';
 import {HyperFormula} from "hyperformula";
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
-import {updateColumns} from "@/pages/home/editor/HandsontableEditor/drawer/ColumnDrawer";
-import {useHandsontableImport} from "@/pages/home/editor/HandsontableEditor/hooks/ImportHook";
+import {updateColumns} from "@/editor/HandsontableEditor/drawer/ColumnDrawer";
+import {useHandsontableImport} from "@/editor/HandsontableEditor/hooks/ImportHook";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {
     handsontableExport,
     useHandsontableExport
-} from "@/pages/home/editor/HandsontableEditor/hooks/ExportHook";
-import {openFormulaDrawer} from "@/pages/home/editor/HandsontableEditor/drawer/FormulaDrawer";
-import {ColumnConditions} from "@/pages/home/editor/HandsontableEditor/types";
+} from "@/editor/HandsontableEditor/hooks/ExportHook";
+import {openFormulaDrawer} from "@/editor/HandsontableEditor/drawer/FormulaDrawer";
+import {ColumnConditions} from "@/editor/HandsontableEditor/types";
 
 registerLanguageDictionary(zhCN)
 

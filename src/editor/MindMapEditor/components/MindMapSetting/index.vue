@@ -36,10 +36,10 @@ import MindMapMiniMap from "./MindMapMiniMap.vue";
 import {openMindMapShortcut} from "./MindMapShortcut";
 import {
     openMindMapTheme
-} from "@/pages/home/editor/MindMapEditor/components/MindMapSetting/MindMapTheme";
+} from "@/editor/MindMapEditor/components/MindMapSetting/MindMapTheme";
 import {
     openMindMapLayout
-} from "@/pages/home/editor/MindMapEditor/components/MindMapSetting/MindMapLayout";
+} from "@/editor/MindMapEditor/components/MindMapSetting/MindMapLayout";
 
 const props = defineProps({
     mindMap: Object as PropType<MindMap>

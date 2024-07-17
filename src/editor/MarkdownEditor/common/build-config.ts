@@ -2,15 +2,15 @@ import {isUtools} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {useScreenShotMenu} from "@/components/CherryMarkdown/menu/ScreenShotMenu";
-import {usePanGu} from "@/components/CherryMarkdown/menu/PanGuMenu";
-import {useFanYi} from "@/components/CherryMarkdown/menu/FanYiMenu";
-import {useRelationMenu} from "@/components/CherryMarkdown/menu/RelationMenu";
+import {useScreenShotMenu} from "@/editor/MarkdownEditor/menu/ScreenShotMenu";
+import {usePanGu} from "@/editor/MarkdownEditor/menu/PanGuMenu";
+import {useFanYi} from "@/editor/MarkdownEditor/menu/FanYiMenu";
+import {useRelationMenu} from "@/editor/MarkdownEditor/menu/RelationMenu";
 import {
     useAnWeiMenu, useMingRenMingYanMenu,
     usePyqMenu, useQingGanMenu, useTianGouRiJiMenu,
     useYiYanMenu
-} from "@/components/CherryMarkdown/menu/XiaRouMenu";
+} from "@/editor/MarkdownEditor/menu/XiaRouMenu";
 import Cherry from "cherry-markdown";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -18,9 +18,9 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {Ref} from "vue";
 import {CherryOptions} from "cherry-markdown/dist/types/Cherry";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {useAskAi} from "@/components/CherryMarkdown/menu/AskAi";
-import {RelationArticleSyntaxHook} from "@/components/CherryMarkdown/syntax/RelationArticle";
-import {useMoreItemMenu, useMoreMenu} from "@/components/CherryMarkdown/menu/MoreMenu";
+import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
+import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
+import {useMoreItemMenu, useMoreMenu} from "@/editor/MarkdownEditor/menu/MoreMenu";
 
 const DEV_URL = "http://localhost:5173/#";
 
