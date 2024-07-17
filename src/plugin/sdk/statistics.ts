@@ -1,4 +1,3 @@
-import axios from "axios";
 import {utools} from "@/plugin/utools";
 import Constant from "@/global/Constant";
 import {isUtools} from "@/global/BeanFactory";
@@ -62,6 +61,7 @@ async function request(url: string, event?: string, data?: string) {
     }));
 }
 
+// TODO: 此处需要处理
 export function trackEvent(event: string, data?: string) {
     if (useGlobalStore().privacy !== 1) {
         // 没有同意隐私协议
