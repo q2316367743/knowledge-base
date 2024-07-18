@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import Constant from "@/global/Constant";
-import {getFeatureOne, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
+import {getFeatureOne, removeFeatureOne, setFeatureOneSimple} from "@/utils/utools/FeatureUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
 
@@ -30,15 +30,16 @@ const instance = ref({
 
 const feature = getFeatureOne(Constant.feature.ADD);
 if (feature) {
+    const cmd = feature.cmds[0];
     instance.value = {
-        maxLength: feature.cmds[0].maxLength || 999999,
-        minLength: feature.cmds[0].minLength || 20,
+        maxLength: typeof cmd !== 'string' ? cmd.maxLength || 999999 : 999999,
+        minLength: typeof cmd !== 'string' ? cmd.minLength || 999999 : 999999,
         enable: true
     }
 }
 
 function open() {
-    const res = setFeatureOne(Constant.feature.ADD, {
+    const res = setFeatureOneSimple(Constant.feature.ADD, {
         type: "over",
         label: "新增文章",
         minLength: instance.value.minLength,

@@ -10,9 +10,6 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
 import '@wangeditor/editor/dist/css/style.css';
-// 富文本
-import {Boot} from "@wangeditor/editor";
-import markdownModule from "@wangeditor/plugin-md";
 
 window.utools = window.utools || utools;
 
@@ -22,6 +19,3 @@ createApp(App)
     .use(createPinia())
     .use(router)
     .mount('#app');
-
-
-Boot.registerModule(markdownModule);

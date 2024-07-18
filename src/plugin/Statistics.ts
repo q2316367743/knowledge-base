@@ -2,6 +2,47 @@ import Constant from "@/global/Constant";
 import {utools} from '@/plugin/utools';
 import {useGlobalStore} from "@/store/GlobalStore";
 
+
+let token = '';
+let expired = 0;
+
+let system = navigator.userAgent;
+if (utools.isWindows()) {
+    system = "Windows";
+} else if (utools.isMacOS()) {
+    system = "MacOS"
+} else if (utools.isLinux()) {
+    system = "Linux"
+}
+
+
+export async function getToken() {
+    const now = new Date();
+    if (token === '' || now.getTime() > expired) {
+        try {
+            const res = await utools.fetchUserServerTemporaryToken();
+            token = res.token;
+            expired = res.expiredAt + now.getTime();
+        } catch (e) {
+            token = '';
+            expired = 0;
+        }
+    }
+    return token;
+}
+
+export async function getTokenThrow() {
+    const now = new Date();
+    if (token === '' || now.getTime() > expired) {
+        const res = await utools.fetchUserServerTemporaryToken();
+        token = res.token;
+        expired = res.expiredAt + now.getTime();
+    }
+    return token;
+}
+
+
+
 export type EventIdentificationEnum = 'update' | 'page_jump' |
     'feature' | 'recommend' | 'new_article' | 'keymap' | 'ai';
 

@@ -5,7 +5,7 @@ import {computed, nextTick, ref} from "vue";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
-import {TocItem} from "@/editor/MarkdownEditor/common/TocItem";
+import {TocItem} from "@/editor/types/TocItem";
 import {map} from "@/utils/lang/ArrayUtil";
 import {useEventBus} from "@vueuse/core";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";

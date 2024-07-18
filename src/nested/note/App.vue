@@ -18,58 +18,39 @@
             </a-space>
         </div>
         <div class="container kb-wang-editor">
-            <div ref="noteRef" class="note"/>
+            <rich-text-editor v-model="content"/>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
+import {computed, ref} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {computed, onMounted, ref, shallowRef} from "vue";
-import {IDomEditor} from "@wangeditor/editor";
-import {buildRickText} from "@/nested/note/func";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {_addArticle} from "@/pages/home/components/he-context";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 
 useGlobalStore().initDarkColors();
 useArticleStore().init();
 useFolderStore().init();
 
 const folder = ref(0);
-const noteRef = ref<HTMLDivElement>();
-const instance = shallowRef<IDomEditor>();
 const loading = ref(false);
 const isFocus = ref(false);
+const content = ref('');
 
 const folderTree = computed(() => useFolderStore().folderTree);
 
-onMounted(() => {
-    instance.value = buildRickText(noteRef, isFocus);
-});
 
 function onReset() {
-    instance.value && instance.value.setHtml("")
+    content.value = '';
 }
 
 function onSubmit() {
-    if (instance.value) {
-        const text = instance.value.getText();
-        const html = instance.value.getHtml();
-        if (text.trim() === '') {
-            if (html.indexOf("img") > -1) {
-                onAdd(html)
-            } else {
-                onAdd(html)
-            }
-        } else {
-            onAdd(html)
-        }
-        // 重置
-    } else {
-        MessageUtil.error("系统异常，编辑器实例未找到");
-    }
+    onAdd(content.value);
+    content.value = '';
 }
 
 function onAdd(html: string) {

@@ -15,48 +15,39 @@
             </a-button>
         </div>
         <div class='container kb-wang-editor'>
-            <div class='editor' ref='editorRef'/>
+            <rich-text-editor v-model="content"/>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-
-import {onMounted, onUnmounted, ref, shallowRef} from "vue";
+import {onMounted, ref} from "vue";
 import {getDefaultTodoItem} from "@/entity/todo/TodoItem";
-import {IDomEditor} from "@wangeditor/editor";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRoute, useRouter} from "vue-router";
-import {buildRickText} from "@/nested/todo/pages/info/func";
+import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 
 const route = useRoute();
 const router = useRouter();
 
-const editorRef = ref();
 const loading = ref(false);
 const todoItem = ref(getDefaultTodoItem());
-const editor = shallowRef<IDomEditor>()
+const content = ref('');
 
 const id = parseInt(route.params.id as string);
 
 onMounted(() => {
     useTodoStore().getTodoItem(id).then(res => {
         todoItem.value = res;
-        editor.value = buildRickText(editorRef, value => {
-            todoItem.value.content.record.content = value;
-        });
-        editor.value.setHtml(res.content.record.content);
+        content.value = res.content.record.content;
     });
 });
 
-onUnmounted(() => {
-    editor.value && editor.value.destroy();
-})
 
 function onSave() {
     loading.value = true;
     useTodoStore().updateContent(id, todoItem.value.index, {
-        content: todoItem.value.content.record.content
+        content: content.value
     })
         .then(() => {
             MessageUtil.success("保存成功")

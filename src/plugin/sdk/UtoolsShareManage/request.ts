@@ -1,6 +1,6 @@
 import axios from "axios";
 import Constant from "@/global/Constant";
-import {getTokenThrow} from "@/plugin/sdk/statistics";
+import {getTokenThrow} from "@/plugin/Statistics";
 
 export const instance = axios.create({
     baseURL: 'https://utools.esion.xyz',

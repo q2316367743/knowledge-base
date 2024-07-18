@@ -17,12 +17,12 @@ export default [
             content: "【插件】导出增强，除思维导图外都可以导出"
         }, {
             label: LogItemEnum.ADD,
-            content: "【插件】增加在页面中搜索功能"
+            content: "【插件】首页增加页面搜索"
         }, {
             label: LogItemEnum.UPDATE,
             content: "【插件】修复系统bug，维护系统稳定性"
         }],
-        url: 'https://txc.qq.com/products/612648/post/171544217210000056/'
+        url: 'https://txc.qq.com/products/612648/post/172127426599925682'
     },
     {
         version: '2.2.2',

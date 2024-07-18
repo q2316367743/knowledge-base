@@ -10,7 +10,7 @@
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
-import {getFeatureOne, removeFeatureOne, setFeatureOne} from "@/utils/utools/FeatureUtil";
+import {getFeatureOne, removeFeatureOne, setFeatureOneSimple} from "@/utils/utools/FeatureUtil";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
@@ -22,7 +22,7 @@ if (feature) {
 }
 
 function open() {
-    const res = setFeatureOne(Constant.feature.IMPORT, {
+    const res = setFeatureOneSimple(Constant.feature.IMPORT, {
         type: "files",
         label: "从md导入文章",
         fileType: "file",
