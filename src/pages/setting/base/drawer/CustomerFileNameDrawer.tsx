@@ -2,7 +2,7 @@ import {Alert, Button, Col, Drawer, Input, Row, Space, TreeSelect} from "@arco-d
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useCustomerFileNameStore} from "@/store/setting/CustomerFileNameStore";
 import {ref} from "vue";
-import {clone} from "xe-utils";
+import {clone} from "@/utils/lang/ObjUtil";
 import {createCustomerFileNameSetting, CustomerFileNameSetting} from "@/entity/setting/CustomerFileNameSetting";
 import MessageUtil from "@/utils/modal/MessageUtil";
 

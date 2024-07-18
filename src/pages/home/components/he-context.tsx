@@ -26,7 +26,6 @@ import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
 import {track} from "@/plugin/Statistics";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
-import {trackEvent} from "@/plugin/sdk/statistics";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -179,7 +178,6 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
         track('new_article', {
             type: renderArticleType(type)
         });
-        trackEvent("新建文章", renderArticleType(type));
     })
         .catch(e => MessageUtil.error("新增失败", e));
 }

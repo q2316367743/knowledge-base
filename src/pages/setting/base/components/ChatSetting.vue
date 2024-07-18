@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {clone} from "xe-utils";
+import {clone} from "@/utils/lang/ObjUtil";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {ChatSetting} from "@/entity/setting/ChatSetting";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";

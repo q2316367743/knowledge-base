@@ -21,7 +21,7 @@ import {
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {clone} from "xe-utils";
+import {clone} from "@/utils/lang/ObjUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";

@@ -18,7 +18,7 @@ import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {turndownService} from "@/plugin/sdk/Turndown";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {toDateString} from "xe-utils";
+import {toDateString} from "@/utils/lang/FormatUtil";
 
 enum ExportFileTypeEnum {
     TEXT = 1,

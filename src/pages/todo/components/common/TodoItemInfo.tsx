@@ -1,11 +1,11 @@
 import {handlePriorityColor, handlePriorityText, TodoItemIndex} from "@/entity/todo/TodoItem";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {
-    Descriptions, DescriptionsItem, Drawer, PageHeader, Tag, TypographyTitle
+    Descriptions, DescriptionsItem, Drawer, Tag, TypographyTitle
 } from "@arco-design/web-vue";
 import {ref} from "vue";
-import {handleDate} from "@/utils/lang/ObjUtil";
-import {toDateString} from "xe-utils";
+import {handleDate} from "@/utils/lang/FormatUtil";
+import {toDateString} from "@/utils/lang/FormatUtil";
 import {IconClockCircle} from "@arco-design/web-vue/es/icon";
 
 export async function openTodoItemInfo(index: TodoItemIndex) {
@@ -21,8 +21,8 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
         hasAttr.value = true;
     }
     if (attr.end !== '' && attr.start !== attr.end && attr.start !== '') {
-        start.value = toDateString(attr.start, "yyyy-MM-dd");
-        end.value = toDateString(attr.end, "yyyy-MM-dd");
+        start.value = toDateString(attr.start, "YYYY-MM-dd");
+        end.value = toDateString(attr.end, "YYYY-MM-dd");
         hasAttr.value = true;
     }
 

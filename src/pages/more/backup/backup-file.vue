@@ -13,14 +13,12 @@
 import {computed, ref} from "vue";
 import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import JSZip from "jszip";
 import {download} from "@/utils/BrowserUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {toDateString} from "xe-utils";
+import {toDateString} from "@/utils/lang/FormatUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
 import {useFileSystemAccess} from "@vueuse/core";
-import {listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import updateCheck from "@/components/update-check/UpdateCheck";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
 
@@ -58,7 +56,7 @@ function execFileBackup() {
     buildBackup()
         .then(content => {
             download(content,
-                FOLDER + "|" + toDateString(new Date(), "yyyy-MM-dd_HH_mm_ss") + ".zip",
+                FOLDER + "|" + toDateString(new Date(), "YYYY-MM-dd_HH_mm_ss") + ".zip",
                 "application/zip");
             MessageUtil.success("备份完成");
         }).catch(e => MessageUtil.error("备份失败", e))

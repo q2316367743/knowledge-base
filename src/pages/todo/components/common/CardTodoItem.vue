@@ -45,7 +45,7 @@ import {
 } from "@/entity/todo/TodoItem";
 import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
 import {useTodoStore} from "@/store/components/TodoStore";
-import {toDateString} from "xe-utils";
+import {toDateString} from "@/utils/lang/FormatUtil";
 import {handleDate} from "@/utils/lang/ObjUtil";
 import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -123,8 +123,8 @@ function initAttr(id: number) {
                 hasAttr.value = true;
             }
             if (res.end !== '' && res.start !== res.end && res.start !== '') {
-                start.value = toDateString(res.start, "yyyy-MM-dd");
-                end.value = toDateString(res.end, "yyyy-MM-dd");
+                start.value = toDateString(res.start, "YYYY-MM-dd");
+                end.value = toDateString(res.end, "YYYY-MM-dd");
                 hasAttr.value = true;
             }
 

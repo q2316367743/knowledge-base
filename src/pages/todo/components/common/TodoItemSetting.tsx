@@ -14,7 +14,7 @@ import {ref, shallowRef, watch} from "vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {IconEdit} from "@arco-design/web-vue/es/icon";
-import {clone} from "xe-utils";
+import {clone} from "@/utils/lang/ObjUtil";
 import {createEditor, createToolbar, IDomEditor, IToolbarConfig} from "@wangeditor/editor";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useImageUpload} from "@/plugin/image";

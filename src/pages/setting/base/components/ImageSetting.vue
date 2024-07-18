@@ -37,7 +37,7 @@
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
-import {clone} from "xe-utils";
+import {clone} from "@/utils/lang/ObjUtil";
 import {useImageSettingStore} from "@/store/setting/ImageSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";

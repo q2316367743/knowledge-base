@@ -9,7 +9,6 @@ import {updateTo140FromUnder} from "@/components/update-check/record/updateTo140
 import {updateTo150FromUnder} from "@/components/update-check/record/updateTo150";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {login, register, track} from "@/plugin/Statistics";
-import {trackEvent} from "@/plugin/sdk/statistics";
 
 export default async function updateCheck(toUpdate?: () => void) {
     const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)
@@ -23,7 +22,6 @@ export default async function updateCheck(toUpdate?: () => void) {
                 to: Constant.version,
                 action: 'update'
             });
-            trackEvent('版本更新', `从【${res.record}】更新到【${Constant.version}】`)
             login();
 
             const oldVersion = parseVersion(res.record);
@@ -62,7 +60,6 @@ export default async function updateCheck(toUpdate?: () => void) {
             to: Constant.version,
             action: 'new'
         });
-        trackEvent("新用户使用")
         register()
     }
 }

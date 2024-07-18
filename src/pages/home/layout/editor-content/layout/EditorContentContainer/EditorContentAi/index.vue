@@ -122,7 +122,6 @@ import {ArticleContent} from "@/entity/article/ArticleContent";
 import {htmlToMarkdown, mindMapToMarkdown, stringToBlob} from "@/utils/file/ConvertUtil";
 import {openAiAskPromptDrawer, useAiAskPromptStore} from "@/store/components/AiAskPromptStore";
 import {track} from "@/plugin/Statistics";
-import {trackEvent} from "@/plugin/sdk/statistics";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -204,8 +203,6 @@ function sendChat() {
             model,
             func: 'chat'
         });
-        trackEvent('ai-模块', '聊天');
-        trackEvent('ai-模型', model);
 
     }).catch(e => MessageUtil.error("聊天发生错误", e)).finally(() => loading.value = false);
 }
@@ -285,8 +282,6 @@ async function _sendToAsk() {
         model,
         func: 'ask'
     });
-    trackEvent('ai-模块', '问答');
-    trackEvent('ai-模型', model);
 }
 
 // ------------------------------------------ 相关事件 ------------------------------------------

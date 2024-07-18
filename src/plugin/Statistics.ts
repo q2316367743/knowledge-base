@@ -1,6 +1,5 @@
 import Constant from "@/global/Constant";
 import {utools} from '@/plugin/utools';
-import {trackEvent} from "@/plugin/sdk/statistics";
 import {useGlobalStore} from "@/store/GlobalStore";
 
 export type EventIdentificationEnum = 'update' | 'page_jump' |
@@ -46,7 +45,6 @@ export function access(event: EventIdentificationEnum, additional?: string) {
         additional: additional
     } : undefined);
 
-    trackEvent(event, additional);
 }
 
 /**
@@ -72,16 +70,22 @@ export function track(event: EventIdentificationEnum, params?: Record<string, st
     } else {
         system = navigator.userAgent;
     }
+    const data: Record<string, any> = {
+        ...(params || {}),
+        // 操作系统
+        system,
+        // 当前用户
+        nickname: nickname,
+        // 使用的版本
+        version: Constant.version
+    };
     try {
-        window.TDAPP.onEvent(event, "", {
-            ...(params || {}),
-            // 操作系统
-            system,
-            // 当前用户
-            nickname: nickname,
-            // 使用的版本
-            version: Constant.version
-        });
+        window.TDAPP.onEvent(event, "", data);
+    } catch (e) {
+        console.error("埋点统计失败", e);
+    }
+    try {
+        window.umami.track(event, data);
     } catch (e) {
         console.error("埋点统计失败", e);
     }

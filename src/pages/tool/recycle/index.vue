@@ -44,7 +44,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useWindowSize} from "@vueuse/core";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {ArticleIndex} from "@/entity/article";
-import {toDateString} from "xe-utils";
+import {toDateString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
 const size = useWindowSize();

@@ -107,6 +107,33 @@ declare interface TtDb {
 }
 
 
+interface UmamiProps {
+    hostname?: string;
+    language?: string;
+    referrer?: string;
+    screen?: string;
+    title?: string;
+    url?: string;
+    website: string;
+}
+
+interface UmamiPropData extends UmamiProps {
+    name?: string;
+    data?: Record<string, string | number | boolean>;
+}
+
+interface UmamiInstance {
+
+    track(event: string, data?: Record<string, string | number | boolean>): void;
+
+    track(data: UmamiProps): void;
+
+    track(func: (props: Required<UmamiProps>) => UmamiPropData): void;
+
+}
+
+declare const umami: UmamiInstance
+
 declare interface Window {
     /**
      * 打开图片预览
@@ -136,6 +163,8 @@ declare interface Window {
     bs: {
         db: TtDb
     },
-    TDAPP: TDAPP
+    TDAPP: TDAPP,
+    umami: UmamiInstance
 }
+
 

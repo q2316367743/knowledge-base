@@ -12,7 +12,7 @@ import {
     UploadRequest
 } from "@arco-design/web-vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {isObject} from "xe-utils";
+import {isObject} from "radash";
 
 function openImportModal(): Promise<string> {
 
