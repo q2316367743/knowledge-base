@@ -17,8 +17,10 @@ import {useWindowSize} from "@vueuse/core";
 import {useSearchContentEvent} from "@/global/BeanFactory";
 import {openSearchContent} from "@/pages/home/components/SearchContent";
 import {useCustomerFileNameStore} from "@/store/setting/CustomerFileNameStore";
+import {usePageSearch} from "@/hooks/PageSearch";
 
 const windowSize = useWindowSize();
+usePageSearch()
 
 const size = ref(useHomeEditorStore().width);
 const min = computed(() => useHomeEditorStore().collapsed ? "0px" : "270px");

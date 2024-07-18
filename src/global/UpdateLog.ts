@@ -1,12 +1,29 @@
 import {Log, LogItemEnum} from "@/components/update-check/domain";
 
-// 数学笔记-公式对话框增加目录
-// 编辑器标签栏右键增加预览切换
-// 新增快捷键：Ctrl/Alt + Q（预览），Ctrl/Alt + P（打印）
-// 支持更加细致的文件名自定义
-// 新增markdown模板，在创建markdown笔记的时候，根据名字正则匹配markdown模板（重要功能）
 
 export default [
+    {
+        version: '2.2.3',
+        sign: 223,
+        time: '2024-07-18',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: "【插件】富文本更换组件，使用AiEditor，带来更加AI功能"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【插件】Markdown编辑器增加对于公式的支持"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【插件】导出增强，除思维导图外都可以导出"
+        }, {
+            label: LogItemEnum.ADD,
+            content: "【插件】增加在页面中搜索功能"
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: "【插件】修复系统bug，维护系统稳定性"
+        }],
+        url: 'https://txc.qq.com/products/612648/post/171544217210000056/'
+    },
     {
         version: '2.2.2',
         sign: 222,

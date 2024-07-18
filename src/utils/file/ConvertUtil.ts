@@ -12,6 +12,9 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
 import {toDateString} from "@/utils/lang/FormatUtil";
 import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
+import {isUtools} from "@/global/BeanFactory";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {createDataByColumns, createDataNotColumns} from "@/editor/HandsontableEditor/hooks/ExportHook";
 
 /**
  * html转为markdown
@@ -58,24 +61,44 @@ export async function articleToZip(folder: number): Promise<void> {
     const zip = new JSZip();
     // 查询全部目录结构
     let map = listToList(useFolderStore().folders, useArticleStore().folderMap, folder);
+    let hasExcel = false;
     // 获取markdown内容
     for (let path of map.keys()) {
         const articleId = map.get(path);
         if (articleId) {
-            const content = await getFromOneByAsync<ArticleContent>(
+            const content = await getFromOneByAsync<ArticleContent<any>>(
                 LocalNameEnum.ARTICLE_CONTENT + articleId);
             if (content.record) {
                 const articleIndex = articleMap.get(articleId);
                 if (articleIndex) {
+                    let cnt = content.record.content;
                     if (articleIndex.type === ArticleTypeEnum.MARKDOWN || typeof articleIndex.type === 'undefined') {
+                        // markdown
                         path = path + '.md'
                     } else if (articleIndex.type === ArticleTypeEnum.RICH_TEXT) {
+                        // 富文本
                         path = path + '.html';
+                    } else if (articleIndex.type === ArticleTypeEnum.CODE) {
+                        // 代码笔记
+                    } else if (articleIndex.type === ArticleTypeEnum.DRAUU) {
+                        // 画板笔记
+                        path = path + '.svg';
+                    } else if (articleIndex.type === ArticleTypeEnum.HANDSONTABLE) {
+                        // 表格笔记，以JSON形式导出
+                        path = path + '.json';
+                        hasExcel = true;
+                        // 需要处理
+                        const data =  cnt.data;
+                        const columns =  cnt.columns;
+                        if (!data) {
+                            continue;
+                        }
+                        cnt = columns ? createDataByColumns(data, columns) : createDataNotColumns(data);
                     } else {
                         // 其他的不导出
                         continue;
                     }
-                    zip.file(path, content.record.content);
+                    zip.file(path, cnt);
                 }
             }
         }
@@ -84,10 +107,18 @@ export async function articleToZip(folder: number): Promise<void> {
     download(zipContent,
         "知识库|" + toDateString(new Date(), "YYYY-MM-dd_HH_mm_ss") + ".zip",
         "application/zip");
+    if (hasExcel) {
+        const msg: string = '导出的笔记中包含表格笔记，请使用插件【Json & Excel】插件将json文件转为表格';
+        if (isUtools) {
+            utools.showNotification(msg);
+        }else {
+            MessageUtil.warning(msg);
+        }
+    }
 }
 
 export function stringToBlob(str: string) {
-    return new Blob([str], { type: 'text/plain' });
+    return new Blob([str], {type: 'text/plain'});
 }
 
 export function mindMapToMarkdown(data: any): string {

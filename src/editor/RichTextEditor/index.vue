@@ -49,6 +49,15 @@ function create() {
     if (!editorDom.value) {
         return;
     }
+    const toolbarKeys = ["undo", "redo", "brush", "eraser",
+        "|", "heading", "font-family", "font-size",
+        "|", "bold", "italic", "underline", "strike", "link", "code", "subscript", "superscript", "hr", "todo", "emoji",
+        "|", "highlight", "font-color",
+        "|", "align", "line-height",
+        "|", "bullet-list", "ordered-list", "indent-decrease", "indent-increase", "break",
+        "|", "image", "video", "attachment", "quote", "code-block", "table",
+        "|", "printer", "fullscreen"
+    ]
     const {isDark} = useGlobalStore();
 
     const {chatSetting, enable} = useChatSettingStore();
@@ -59,6 +68,7 @@ function create() {
             endpoint: chatSetting.api,
             model: chatSetting.model
         }
+        toolbarKeys.push('ai')
     }
     editor = new AiEditor({
         element: editorDom.value as Element,
@@ -71,6 +81,7 @@ function create() {
         onChange(editor) {
             content.value = editor.getHtml();
         },
+        toolbarKeys,
     })
 }
 

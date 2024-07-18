@@ -22,13 +22,13 @@
             <a-tooltip content="完成" v-if="only">
                 <a-button type="text" status="success" @click.stop="onCheck()">
                     <template #icon>
-                        <icon-check />
+                        <icon-check/>
                     </template>
                 </a-button>
             </a-tooltip>
             <a-button type="text" @click="_openTodoItemSetting($event)">
                 <template #icon>
-                    <icon-more />
+                    <icon-more/>
                 </template>
             </a-button>
         </div>
@@ -46,7 +46,7 @@ import {
 import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {toDateString} from "@/utils/lang/FormatUtil";
-import {handleDate} from "@/utils/lang/ObjUtil";
+import {handleDate} from "@/utils/lang/FormatUtil";
 import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
@@ -167,16 +167,18 @@ function onCheck() {
         bottom: 0;
         background-color: rgb(var(--orange-6));
         color: var(--color-fill-2);
-        clip-path: polygon(100% 0, 0 100% ,100% 100%);
+        clip-path: polygon(100% 0, 0 100%, 100% 100%);
         width: 25px;
         height: 25px;
         text-align: right;
+
         .arco-icon {
             position: absolute;
             right: 0;
             bottom: 0;
         }
     }
+
     .more {
         position: absolute;
         top: 0;

@@ -4,43 +4,44 @@ import {Alert, Button, ButtonGroup, Drawer, Link, Space} from "@arco-design/web-
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {copy} from "@/utils/BrowserUtil";
 
+export function createDataByColumns(data: Array<Array<string>>, columns: Array<Handsontable.ColumnSettings> | null): string {
+    if (!columns) {
+        return "";
+    }
+    const records = new Array<Record<string, string>>();
+    for (let valueElement of data) {
+        const record: Record<string, string> = {};
+        columns?.forEach((column, i) => {
+            record[column.title || `column_${i + 1}`] = valueElement[i];
+        });
+        records.push(record);
+    }
+    return JSON.stringify(records);
+}
+
+export function createDataNotColumns(data: Array<Array<string>>): string {
+    const records = new Array<Record<string, string>>();
+    for (let valueElement of data) {
+        const record: Record<string, string> = {};
+        valueElement.forEach((str, i) => {
+            record[`column_${i + 1}`] = str;
+        })
+    }
+    return JSON.stringify(records);
+}
+
 
 export function handsontableExport(data: Ref<Array<Array<string>>>, columns: Ref<Array<Handsontable.ColumnSettings> | null>) {
-    function createDataByColumns(): string {
-        if (!columns.value) {
-            return "";
-        }
-        const records = new Array<Record<string, string>>();
-        for (let valueElement of data.value) {
-            const record: Record<string, string> = {};
-            columns.value?.forEach((column, i) => {
-                record[column.title || `column_${i + 1}`] = valueElement[i];
-            });
-            records.push(record);
-        }
-        return JSON.stringify(records);
-    }
-
-    function createDataNotColumns(): string {
-        const records = new Array<Record<string, string>>();
-        for (let valueElement of data.value) {
-            const record: Record<string, string> = {};
-            valueElement.forEach((str, i) => {
-                record[`column_${i + 1}`] = str;
-            })
-        }
-        return JSON.stringify(records);
-    }
 
     function conversionAndPaste() {
         utools.redirect(['Json & Excel', '转换成Excel'], {
             type: 'text',
-            data: columns.value ? createDataByColumns() : createDataNotColumns()
+            data: columns.value ? createDataByColumns(data.value, columns.value) : createDataNotColumns(data.value)
         })
     }
 
     function onPaste() {
-        copy(columns.value ? createDataByColumns() : createDataNotColumns());
+        copy(columns.value ? createDataByColumns(data.value, columns.value) : createDataNotColumns(data.value));
     }
 
     Drawer.open({

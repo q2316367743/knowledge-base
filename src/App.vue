@@ -16,7 +16,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, defineAsyncComponent, ref,} from "vue";
+import {computed, defineAsyncComponent, ref} from "vue";
 import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -30,7 +30,6 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {access} from "@/plugin/Statistics";
-import {enter, out} from "@/plugin/sdk/statistics";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -50,14 +49,12 @@ const loadingText = computed(() => useGlobalStore().loadingText);
 
 // 插件进入
 utools.onPluginEnter(action => {
-    enter(action.code, action.type);
     const code = action.code as string;
     const items = code.split(":");
     if (items.length == 2) {
         onPluginEnter(items[0], items[1], action.payload)
     }
 });
-utools.onPluginOut(() => out());
 // 主题
 useGlobalStore().initDarkColors();
 
