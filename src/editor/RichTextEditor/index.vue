@@ -19,7 +19,8 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 
 const content = defineModel({
-    type: String
+    type: String,
+    default: ''
 })
 
 const props = defineProps({
@@ -42,8 +43,7 @@ watch(() => props.readOnly, value => {
             editor.setEditable(true);
         }
     }
-})
-
+});
 
 function create() {
     if (!editorDom.value) {
@@ -80,6 +80,7 @@ function create() {
         },
         onChange(editor) {
             content.value = editor.getHtml();
+            console.log(content.value, editor.getHtml())
         },
         toolbarKeys,
     })

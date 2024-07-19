@@ -1,8 +1,12 @@
 <template>
     <div class="content">
         <main class="container kb-wang-editor">
-            <rich-text-editor v-model="item.content"/>
-            <!-- 标签 -->
+            <rich-text-editor v-model="item.content" v-if="isInit"/>
+            <a-result v-else title="正在加载中" >
+                <template #icon>
+                    <icon-loading :size="32" />
+                </template>
+            </a-result>
         </main>
         <footer class="footer">
             <div class="tags">
@@ -45,10 +49,8 @@ import RichTextEditor from "@/editor/RichTextEditor/index.vue";
 let lock = false;
 let todo = false;
 
-
-
-
 const item = ref<TodoItemContent>(getDefaultTodoItemContent());
+const isInit = ref(false);
 let rev: undefined | string = undefined
 
 const tagInputRef = ref<HTMLInputElement | null>(null);
@@ -63,6 +65,7 @@ async function init() {
     const res = await useTodoStore().getTodoItemContent(useTodoStore().itemId);
     item.value = res.record;
     rev = res.rev;
+    isInit.value = true;
     // 重新设置编辑器的值
     watch(() => item.value.content, () => autoSave());
 }
