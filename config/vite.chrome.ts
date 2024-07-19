@@ -20,7 +20,16 @@ export default defineConfig({
     ],
     base: "./",
     build: {
-        outDir: "src-chrome/dist"
+        outDir: "src-chrome/dist",
+        rollupOptions: {
+            input: {
+                main: _resolve('index.html'),
+                note: _resolve('note.html'),
+                todo: _resolve('todo.html'),
+                canvas: _resolve('canvas.html'),
+                preview: _resolve('preview.html'),
+            },
+        },
     },
     // 强制预构建插件包
     optimizeDeps: {

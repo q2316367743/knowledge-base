@@ -12,7 +12,7 @@
         </a-spin>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
         <update-check/>
-        <privacy />
+        <privacy/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -161,6 +161,14 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
             useArticleStore().addSimple(extra)
                 .then(id => useHomeEditorStore().openArticle(id));
         }
+    } else if (operate === 'window') {
+        utools.createBrowserWindow(`dist/${preload}.html`, {
+            width: 1200,
+            height: 800
+        }, () => {
+            utools.hideMainWindow();
+            utools.outPlugin()
+        })
     }
 }
 

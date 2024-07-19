@@ -61,7 +61,7 @@ function onAdd() {
 </script>
 <style scoped lang="less">
 .kb-canvas {
-    background-color: transparent;
+    background-color: var(--color-bg-1);
     .header {
         display: flex;
         justify-content: space-between;

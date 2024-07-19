@@ -8,7 +8,8 @@ import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
-import '@wangeditor/editor/dist/css/style.css';
+import 'aieditor/dist/style.css';
+
 window.utools = window.utools || utools;
 
 createApp(App)

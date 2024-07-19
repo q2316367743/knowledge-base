@@ -5,9 +5,9 @@
     "type": "module",
     "description": "知识库",
     "scripts": {
-        "dev": "vite -c config/vite.config.ts",
+        "dev": "vite -c config/vite.utools.ts",
         "dev:tt": "vite -c config/vite.tt.ts",
-        "build": "vue-tsc && vite build -c config/vite.config.ts",
+        "build": "vue-tsc && vite build -c config/vite.utools.ts",
         "build:chrome": "vue-tsc && vite build -c config/vite.chrome.ts",
         "build:tt": "vue-tsc && vite build -c config/vite.tt.ts",
         "preview": "vite preview"

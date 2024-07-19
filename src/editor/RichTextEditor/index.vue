@@ -24,7 +24,10 @@ const content = defineModel({
 })
 
 const props = defineProps({
-    readOnly: Boolean,
+    readOnly: {
+        type: Boolean,
+        default: false
+    },
     articleId: Number
 });
 const emits = defineEmits(['update:modelValue']);
@@ -83,6 +86,7 @@ function create() {
             console.log(content.value, editor.getHtml())
         },
         toolbarKeys,
+        editable: !props.readOnly
     })
 }
 
