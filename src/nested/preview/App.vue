@@ -30,6 +30,6 @@ window.onImagePreview = (src: string) => {
 </script>
 <style scoped lang="less">
 .kb-preview {
-    background-color: transparent;
+    background-color: var(--color-bg-1);
 }
 </style>

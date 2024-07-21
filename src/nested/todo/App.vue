@@ -17,6 +17,6 @@ useSettingStore().init();
 </script>
 <style scoped>
 .app {
-    background-color: transparent;
+    background-color: var(--color-bg-1);
 }
 </style>

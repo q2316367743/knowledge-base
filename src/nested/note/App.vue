@@ -68,7 +68,7 @@ function onAdd(html: string) {
 </script>
 <style scoped lang="less">
 .kb-note {
-    background-color: transparent;
+    background-color: var(--color-bg-1);
 
     .option {
         display: flex;

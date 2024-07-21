@@ -1,11 +1,7 @@
 // vite.config.js
-// @ts-ignore
 import vue from "@vitejs/plugin-vue";
-// @ts-ignore
 import vueJsx from "@vitejs/plugin-vue-jsx";
-// @ts-ignore
 import {defineConfig} from "vite";
-// @ts-ignore
 import path from "path";
 import UnoCSS from 'unocss/vite';
 
@@ -25,7 +21,16 @@ export default defineConfig({
     ],
     base: "./",
     build: {
-        outDir: "src-utools/dist"
+        outDir: "src-utools/dist",
+        rollupOptions: {
+            input: {
+                main: _resolve('index.html'),
+                note: _resolve('note.html'),
+                todo: _resolve('todo.html'),
+                canvas: _resolve('canvas.html'),
+                preview: _resolve('preview.html'),
+            },
+        },
     },
     // 强制预构建插件包
     optimizeDeps: {

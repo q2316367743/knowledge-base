@@ -79,6 +79,62 @@
                     "maxLength": 500
                 }
             ]
+        },
+        {
+            "code": "window:canvas",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "mainPush": true,
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                "画布"
+            ]
+        },
+        {
+            "code": "window:note",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "mainPush": true,
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                "笔记"
+            ]
+        },
+        {
+            "code": "window:preview",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "mainPush": true,
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                "笔记浏览"
+            ]
+        },
+        {
+            "code": "window:todo",
+            "explain": "知识库",
+            "icon": "public/logo.png",
+            "mainPush": true,
+            "platform": [
+                "win32",
+                "darwin",
+                "linux"
+            ],
+            "cmds": [
+                "桌面待办"
+            ]
         }
     ]
 }

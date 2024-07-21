@@ -9,8 +9,8 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
 import router from "@/nested/preview/router";
-import '@wangeditor/editor/dist/css/style.css'
 import 'cherry-markdown/dist/cherry-markdown.min.css'
+import 'aieditor/dist/style.css';
 
 window.utools = window.utools || utools;
 
