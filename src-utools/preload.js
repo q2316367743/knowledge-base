@@ -1,7 +1,7 @@
-
 const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync} = require('node:fs');
 const {join} = require('node:path');
 const {get} = require('node:https');
+const {ipcRenderer} = require('electron');
 
 
 /**
@@ -20,6 +20,19 @@ const blobToBuffer = async (blob) => {
         reader.readAsArrayBuffer(blob);
     });
 };
+
+/**
+ * 接收消息发过来的消息
+ * @param event {string} 事件
+ * @param callback {(msg: string) => void} 接收消息回调
+ */
+function receiveMessage(event, callback) {
+    ipcRenderer.on(event, (_event, res) => {
+        if (callback) {
+            callback(res);
+        }
+    })
+}
 
 window.preload = {
     /**
@@ -70,6 +83,9 @@ window.preload = {
     },
     path: {
         join: join
+    },
+    ipcRenderer: {
+        receiveMessage
     }
 };
 

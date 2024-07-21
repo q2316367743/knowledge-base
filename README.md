@@ -12,11 +12,6 @@
 
 - [utools](https://u.tools/plugins/detail/知识库/)
 - [chrome](https://chromewebstore.google.com/detail/知识库/dijccegekgmhjfblcbgjbnkhffegaiel)
-- [web](https://blog.esion.xyz/apps/knowledge-base/)
-
-### 使用文档
-
-- [知识库](https://blog.esion.xyz/docs/knowledge-base/%E7%9F%A5%E8%AF%86%E5%BA%93.html)
 
 ## 📝文章
 

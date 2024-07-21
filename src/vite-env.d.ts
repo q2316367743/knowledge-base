@@ -158,6 +158,9 @@ declare interface Window {
 
         path: {
             join(...paths: string[]): string;
+        },
+        ipcRenderer: {
+            receiveMessage(event: string, callback: (msg: string) => void): void;
         }
     }
     bs: {

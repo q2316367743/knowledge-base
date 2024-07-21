@@ -21,6 +21,7 @@ export const usePageJumpEvent = useEventBus<string>('page-jump');
 export const useNewEvent = useEventBus('new');
 export const useDeleteEvent = useEventBus('delete');
 export const useSearchContentEvent = useEventBus('search-content');
+export const useDbKeyRefreshEvent = useEventBus<string>('db-key-refresh');
 
 // 首页的关键字
 export const keyword = ref('');

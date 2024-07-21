@@ -17,7 +17,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref} from "vue";
-import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
+import {keyword, useDbKeyRefreshEvent, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -163,6 +163,10 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         }
     }
 }
+
+window.preload.ipcRenderer.receiveMessage('db', message => {
+    useDbKeyRefreshEvent.emit(message);
+})
 
 </script>
 <style lang="less">
