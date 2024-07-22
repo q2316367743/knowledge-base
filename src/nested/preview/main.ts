@@ -8,7 +8,6 @@ import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
-import router from "@/nested/preview/router";
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'aieditor/dist/style.css';
 
@@ -18,5 +17,4 @@ createApp(App)
     .use(ArcoVue)
     .use(ArcoVueIcon)
     .use(createPinia())
-    .use(router)
     .mount('#app');

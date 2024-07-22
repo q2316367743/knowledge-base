@@ -1,9 +1,22 @@
 <template>
     <div class="preview-home" ref="previewHome">
         <header style="margin: 7px;">
-            <a-input-group style="width: 100%">
-                <a-input-search v-model="keyword" allow-clear/>
-            </a-input-group>
+            <a-row :gutter="8">
+                <a-col flex="auto">
+                    <a-input v-model="keyword" allow-clear>
+                        <template #suffix>
+                            <icon-search />
+                        </template>
+                    </a-input>
+                </a-col>
+                <a-col flex="32px">
+                    <a-button type="primary" @click="onRefresh()">
+                        <template #icon>
+                            <icon-refresh/>
+                        </template>
+                    </a-button>
+                </a-col>
+            </a-row>
         </header>
         <a-tree :data="treeNodeData" :virtual-list-props="virtualListProps"
                 :default-expand-all="false" block-node draggable
@@ -13,18 +26,17 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {keyword} from "@/global/BeanFactory";
-import {
-    buildArticleIcon,
-} from "@/pages/home/components/he-context";
 import {computed, ref} from "vue";
+import {useRouter} from "vue-router";
+import {useElementSize} from "@vueuse/core";
+import {TreeNodeData} from "@arco-design/web-vue";
+import {keyword} from "@/global/BeanFactory";
+import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {TreeNodeData} from "@arco-design/web-vue";
-import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useElementSize} from "@vueuse/core";
-import {useRouter} from "vue-router";
+import {buildArticleIcon} from "@/pages/home/components/he-context";
+import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
 const expandedKeys = ref<Array<number>>([]);
 const previewHome = ref<HTMLDivElement>();
@@ -78,7 +90,8 @@ function _expandTo(id: number) {
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
     if (useArticleStore().articleMap.has(id)) {
-        router.push('/info/' + id);
+        // router.push('/info/' + id);
+        openArticle(id);
     } else {
         const index = expandedKeys.value.indexOf(id);
         if (index === -1) {
@@ -90,6 +103,11 @@ function onSelect(selectKeys: Array<number | string>) {
         }
     }
 
+}
+
+function onRefresh() {
+    useArticleStore().init(true);
+    useFolderStore().init();
 }
 </script>
 <style scoped>

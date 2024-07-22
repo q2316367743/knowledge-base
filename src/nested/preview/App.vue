@@ -1,14 +1,15 @@
 <template>
     <a-layout class="app kb-preview">
-        <router-view/>
+        <home/>
         <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
     </a-layout>
 </template>
 <script lang="ts" setup>
+import {ref} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {ref} from "vue";
+import Home from '@/nested/preview/pages/home/index.vue';
 
 useGlobalStore().initDarkColors();
 useArticleStore().init();

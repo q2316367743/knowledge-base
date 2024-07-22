@@ -30,6 +30,7 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {access} from "@/plugin/Statistics";
+import {windowConfig} from "@/global/WindowConfig";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -163,8 +164,9 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         }
     } else if (operate === 'window') {
         utools.createBrowserWindow(`dist/${preload}.html`, {
-            width: 1200,
-            height: 800
+            width: 800,
+            height: 600,
+            ...windowConfig[preload]
         }, () => {
             utools.hideMainWindow();
             utools.outPlugin()
@@ -172,9 +174,9 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     }
 }
 
-// window.preload && window.preload.ipcRenderer.receiveMessage('db', message => {
-//     useDbKeyRefreshEvent.emit(message);
-// })
+window.preload && window.preload.ipcRenderer.receiveMessage('db', message => {
+    useDbKeyRefreshEvent.emit(message);
+})
 
 </script>
 <style lang="less">
