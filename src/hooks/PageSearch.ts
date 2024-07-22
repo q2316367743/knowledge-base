@@ -50,9 +50,6 @@ export function usePageSearch(placeholder = '在页面中搜索', isFocus?: bool
     }
 
     onMounted(() => {
-        ;
-
-
         // 使用定时器，确保一定注册成功
         const interval = setInterval(() => {
             let res = utools.setSubInput(({text}) => keyword.value = text, placeholder, isFocus);
