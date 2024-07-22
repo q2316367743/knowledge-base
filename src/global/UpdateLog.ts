@@ -1,7 +1,21 @@
-import {Log, LogItemEnum} from "@/components/update-check/domain";
+import { Log, LogItemEnum } from "@/components/update-check/domain";
 
 
 export default [
+    {
+        version: '2.2.4',
+        sign: 224,
+        time: '2024-07-22',
+        items: [{
+            label: LogItemEnum.REPAIR,
+            content: '修复了待办默认布局备注内容不显示问题'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '实验性新增了一些关键字，用于不通过utools窗口进行编辑。'
+        }],
+        remark: '新增的关键字目前只是实验性的，主要问题在于在外部编辑的内容需要重启插件，才可以在插件中显示出来。',
+        url: 'https://txc.qq.com/products/612648/post/172161418334207587'
+    },
     {
         version: '2.2.3',
         sign: 223,
@@ -63,13 +77,13 @@ export default [
         }, {
             label: LogItemEnum.ADD,
             content: "【编辑器】编辑器标签栏右键增加预览切换"
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: "【插件】新增快捷键：Ctrl/Alt + Q（预览），Ctrl/Alt + P（打印）"
-        },{
+        }, {
             label: LogItemEnum.ADD,
             content: "【设置】支持更加细致的文件名自定义"
-        },{
+        }, {
             label: LogItemEnum.MAJOR,
             content: "【编辑器】新增markdown模板，在创建markdown笔记的时候，根据名字正则匹配markdown模板"
         }],

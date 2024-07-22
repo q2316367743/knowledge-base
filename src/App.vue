@@ -172,9 +172,9 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     }
 }
 
-window.preload.ipcRenderer.receiveMessage('db', message => {
-    useDbKeyRefreshEvent.emit(message);
-})
+// window.preload && window.preload.ipcRenderer.receiveMessage('db', message => {
+//     useDbKeyRefreshEvent.emit(message);
+// })
 
 </script>
 <style lang="less">
