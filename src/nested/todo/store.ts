@@ -5,6 +5,7 @@ import {buildCardTodoSetting, CardTodoSetting} from "@/nested/todo/types/CardTod
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {clone} from "@/utils/lang/ObjUtil";
 
+// TODO 此处应该为useUtoolsDbStorage
 export const useSettingStore = defineStore(LocalNameEnum.CARD_TODO_SETTING, () => {
     const setting = ref(buildCardTodoSetting());
     let rev: string | undefined;

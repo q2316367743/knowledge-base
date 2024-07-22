@@ -5,13 +5,6 @@
                 <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
             </div>
             <a-space>
-                <a-tooltip content="编辑时开启，以优化编辑体验" position="br">
-                    <a-switch v-model="isFocus" type="round">
-                        <template #checked>聚焦</template>
-                        <template #unchecked>失焦</template>
-                    </a-switch>
-                </a-tooltip>
-                <a-button @click="onReset()" :loading="loading">重置</a-button>
                 <a-popconfirm content="二次确认" @ok="onSubmit()" ok-text="新建" position="br">
                     <a-button type="primary" :loading="loading">新建</a-button>
                 </a-popconfirm>
@@ -31,22 +24,19 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {_addArticle} from "@/pages/home/components/he-context";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import RichTextEditor from '@/editor/RichTextEditor/index.vue';
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 useGlobalStore().initDarkColors();
 useArticleStore().init();
 useFolderStore().init();
 
-const folder = ref(0);
+const folder = useUtoolsDbStorage(LocalNameEnum.WINDOW_NOTE_FOLDER, 0);
 const loading = ref(false);
-const isFocus = ref(false);
 const content = ref('');
 
 const folderTree = computed(() => useFolderStore().folderTree);
 
-
-function onReset() {
-    content.value = '';
-}
 
 function onSubmit() {
     onAdd(content.value);

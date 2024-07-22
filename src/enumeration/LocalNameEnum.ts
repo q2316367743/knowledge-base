@@ -131,7 +131,13 @@ enum LocalNameEnum {
     /**
      * 隐私协议
      */
-    KEY_PRIVACY = '/key/privacy'
+    KEY_PRIVACY = '/key/privacy',
+
+    // ========================== 窗口 ==========================
+
+    WINDOW_CANVAS_FOLDER = '/window/canvas/folder',
+
+    WINDOW_NOTE_FOLDER = '/window/note/folder'
 
 }
 

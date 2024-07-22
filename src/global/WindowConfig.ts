@@ -1,7 +1,7 @@
 export const windowConfig: Record<string, Record<string, any>> = {
     todo: {
-        width: 600,
-        height: 400,
+        width: 800,
+        height: 600,
     },
     preview: {
         width: 1200,

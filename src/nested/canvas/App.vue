@@ -25,12 +25,14 @@ import DrauuEditor from "@/editor/DrauuEditor/index.vue";
 import {_addArticle} from "@/pages/home/components/he-context";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 useGlobalStore().initDarkColors();
 useArticleStore().init();
 useFolderStore().init();
 
-const folder = ref(0);
+const folder = useUtoolsDbStorage(LocalNameEnum.WINDOW_CANVAS_FOLDER, 0);
 const init = ref(true);
 const loading = ref(false);
 const id = ref(0)
@@ -62,13 +64,16 @@ function onAdd() {
 <style scoped lang="less">
 .kb-canvas {
     background-color: var(--color-bg-1);
+
     .header {
         display: flex;
         justify-content: space-between;
+        padding: 8px;
     }
+
     .container {
         position: absolute;
-        top: 46px;
+        top: 48px;
         left: 0;
         right: 0;
         bottom: 0;
