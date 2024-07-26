@@ -1,5 +1,5 @@
 import {InputSearch, Modal, Tree, TreeNodeData} from "@arco-design/web-vue";
-import {computed, h, ref} from "vue";
+import {computed, ref} from "vue";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {searchData, treeEach} from "@/entity/ListTree";
@@ -7,6 +7,7 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
 import {buildArticleIcon} from "@/pages/home/components/he-context";
+import {access} from "@/plugin/Statistics";
 
 export function openAddRelationArticle() {
     const keyword = ref('');
@@ -58,7 +59,10 @@ export function openAddRelationArticle() {
         closable: false,
         onOk() {
             useTodoStore().associationArticle(checkedKeys.value)
-                .then(() => MessageUtil.success("关联成功"))
+                .then(() => {
+                    MessageUtil.success("关联成功");
+                    access("待办关联文章");
+                })
                 .catch(e => MessageUtil.error("关联失败", e));
         }
     })

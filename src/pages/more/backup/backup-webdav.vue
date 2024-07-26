@@ -152,7 +152,7 @@ async function _execBackup() {
     });
 
     await client.putFileContents(
-        urlJoin(FOLDER_PATH, toDateString(new Date(), "YYYY-MM-dd_HH_mm_ss") + ".zip"),
+        urlJoin(FOLDER_PATH, toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip"),
         content)
 
 }

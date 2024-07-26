@@ -19,6 +19,7 @@ import {turndownService} from "@/plugin/sdk/Turndown";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toDateString} from "@/utils/lang/FormatUtil";
+import {access} from "@/plugin/Statistics";
 
 enum ExportFileTypeEnum {
     TEXT = 1,
@@ -76,6 +77,7 @@ function copyToClipboard(config: Config, close: () => void) {
 }
 
 function exportTo(config: Config): Promise<string> {
+    access("导出待办")
     const start = dayjs(config.rangeValue[0]).valueOf();
     const end = dayjs(config.rangeValue[1]).valueOf();
     const items = useTodoStore().todoItems.filter(e => e.id >= start && e.id <= end)
@@ -186,7 +188,7 @@ async function exportToCustomer(items: Array<TodoItemIndex>, config: Config): Pr
     for (let item of items) {
         const todoItem = await useTodoStore().getTodoItem(item.id);
         lines.push(run(todoItem, {
-            toDateString: toDateString
+            toDateString
         }))
     }
     return Promise.resolve(lines.join("\n"));
@@ -220,7 +222,6 @@ function openArgs() {
 }
 
 export function openTodoExport() {
-
     const config = ref<Config>({
         rangeValue: [dayjs().add(-1, 'week').format("YYYY-MM-DD"),
             dayjs().format("YYYY-MM-DD")],

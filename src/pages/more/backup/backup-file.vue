@@ -56,7 +56,7 @@ function execFileBackup() {
     buildBackup()
         .then(content => {
             download(content,
-                FOLDER + "|" + toDateString(new Date(), "YYYY-MM-dd_HH_mm_ss") + ".zip",
+                FOLDER + "|" + toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
                 "application/zip");
             MessageUtil.success("备份完成");
         }).catch(e => MessageUtil.error("备份失败", e))

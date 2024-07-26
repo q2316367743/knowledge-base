@@ -123,8 +123,8 @@ function initAttr(id: number) {
                 hasAttr.value = true;
             }
             if (res.end !== '' && res.start !== res.end && res.start !== '') {
-                start.value = toDateString(res.start, "YYYY-MM-dd");
-                end.value = toDateString(res.end, "YYYY-MM-dd");
+                start.value = toDateString(res.start, "YYYY-MM-DD");
+                end.value = toDateString(res.end, "YYYY-MM-DD");
                 hasAttr.value = true;
             }
 

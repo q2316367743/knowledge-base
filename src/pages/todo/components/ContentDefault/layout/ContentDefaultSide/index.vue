@@ -139,9 +139,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {useWindowSize} from "@vueuse/core";
 import {computed, ref, watch} from "vue";
-import {useRouter} from "vue-router";
 import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 // 存储
@@ -155,10 +153,8 @@ import SideHeader from "@/pages/todo/components/ContentDefault/layout/ContentDef
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
+import {access} from "@/plugin/Statistics";
 
-
-const size = useWindowSize();
-const router = useRouter();
 
 const hideOfTodo = ref(false);
 const hideOfComplete = ref(false);
@@ -239,7 +235,10 @@ function updateStatus(itemId: number, status: TodoItemStatus) {
     useTodoStore().updateById(itemId, {status: status})
         .then(record => {
             if (record.status === TodoItemStatus.COMPLETE) {
-                MessageUtil.success(`【${record.title}】已完成`)
+                MessageUtil.success(`【${record.title}】已完成`);
+                access('完成待办');
+            } else if (record.status === TodoItemStatus.ABANDON) {
+                access('放弃待办');
             }
         })
         .catch(e => MessageUtil.error("更新失败", e))

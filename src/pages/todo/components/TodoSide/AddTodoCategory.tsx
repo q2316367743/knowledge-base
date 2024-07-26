@@ -2,7 +2,7 @@ import {Ref, ref} from "vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {Form, FormItem, Input, Modal, Radio, RadioGroup} from "@arco-design/web-vue";
 import {
-    getDefaultTodoCategory,
+    getDefaultTodoCategory, renderTodoCategoryType,
     TodoCategoryRecord,
     TodoCategoryTypeEnum,
     TodoListLayoutEnum
@@ -11,6 +11,7 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {clone} from "@/utils/lang/ObjUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
+import {access} from "@/plugin/Statistics";
 
 
 function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
@@ -56,6 +57,7 @@ export function openAddTodoCategory(pid: number) {
             try {
                 await useTodoCategoryStore().add(record.value);
                 MessageUtil.success("新增成功");
+                access(`新增${renderTodoCategoryType(record.value.type)}`);
                 return true;
             } catch (e) {
                 MessageUtil.error("新增失败", e);

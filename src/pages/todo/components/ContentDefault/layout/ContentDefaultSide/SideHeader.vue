@@ -9,7 +9,7 @@
             <div class="title">{{ title }}</div>
             <a-button-group type="text">
                 <!-- 排序 -->
-                <a-dropdown position="br" @select="setTodoListSort($event)"  :disabled="disabled">
+                <a-dropdown position="br" @select="setTodoListSort($event)" :disabled="disabled">
                     <a-button>
                         <template #icon>
                             <icon-sort/>
@@ -19,35 +19,35 @@
                         <a-doption :value="TodoListSortEnum.PRIORITY">
                             <template #icon>
                                 <icon-check v-if="todoListSort === TodoListSortEnum.PRIORITY"/>
-                                <a-icon v-else/>
+                                <svg class="arco-icon" v-else/>
                             </template>
                             优先级
                         </a-doption>
                         <a-doption :value="TodoListSortEnum.NAME_ASC">
                             <template #icon>
                                 <icon-check v-if="todoListSort === TodoListSortEnum.NAME_ASC"/>
-                                <a-icon v-else/>
+                                <svg class="arco-icon" v-else/>
                             </template>
                             名称正序
                         </a-doption>
                         <a-doption :value="TodoListSortEnum.NAME_DESC">
                             <template #icon>
                                 <icon-check v-if="todoListSort === TodoListSortEnum.NAME_DESC"/>
-                                <a-icon v-else/>
+                                <svg class="arco-icon" v-else/>
                             </template>
                             名称倒序
                         </a-doption>
                         <a-doption :value="TodoListSortEnum.CREATE_TIME_ASC">
                             <template #icon>
                                 <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_ASC"/>
-                                <a-icon v-else/>
+                                <svg class="arco-icon" v-else/>
                             </template>
                             创建时间正序
                         </a-doption>
                         <a-doption :value="TodoListSortEnum.CREATE_TIME_DESC">
                             <template #icon>
                                 <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_DESC"/>
-                                <a-icon v-else/>
+                                <svg class="arco-icon" v-else/>
                             </template>
                             创建时间倒序
                         </a-doption>
@@ -87,10 +87,10 @@
             <a-progress :percent="percent"/>
         </div>
         <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
-                 :disabled="id === 0" >
+                 :disabled="id === 0">
             <template #suffix>
                 <!-- 优先级 -->
-                <a-dropdown position="br" @select="updatePriority($event)"  :disabled="disabled">
+                <a-dropdown position="br" @select="updatePriority($event)" :disabled="disabled">
                     <a-button type="text" :style="{color: color}" class="priority">
                         <template #icon>
                             <icon-thunderbolt/>
@@ -199,7 +199,6 @@ const setTodoListSort = (value: any) => {
         })
         .catch(e => MessageUtil.error("更新待办列表排序异常", e));
 }
-
 
 
 function updatePriority(value: any) {

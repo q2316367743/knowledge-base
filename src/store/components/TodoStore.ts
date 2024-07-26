@@ -25,8 +25,9 @@ import {clone} from "@/utils/lang/ObjUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {renderTodoListLayout, TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {map} from "@/utils/lang/ArrayUtil";
+import {access} from "@/plugin/Statistics";
 
 export function sortTodoIndex(a: TodoItemIndex, b: TodoItemIndex, sort: TodoListSortEnum): number {
     if (a.top) {
@@ -138,6 +139,9 @@ export const useTodoStore = defineStore('todo', {
                 this.hides = new Array<string>();
                 useGlobalStore().startLoading("正在获取待办项");
                 this.layout = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;
+                const layoutStr = renderTodoListLayout(this.layout);
+                // 事件
+                access(`打开待办，布局方式：${layoutStr}`, layoutStr)
                 this.sort = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
                 todoCategory.hideOfTodo && this.hides.push('1');
                 todoCategory.hideOfComplete && this.hides.push('2');
@@ -195,6 +199,7 @@ export const useTodoStore = defineStore('todo', {
             this.todoItems.push(item);
             // 同步
             await this._sync();
+            access("新增待办")
         },
         async getTodoItem(id: number): Promise<TodoItem> {
             if (id === 0) {

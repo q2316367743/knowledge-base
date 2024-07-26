@@ -105,7 +105,7 @@ export async function articleToZip(folder: number): Promise<void> {
     }
     const zipContent = await zip.generateAsync({type: "arraybuffer"});
     download(zipContent,
-        "知识库|" + toDateString(new Date(), "YYYY-MM-dd_HH_mm_ss") + ".zip",
+        "知识库|" + toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
         "application/zip");
     if (hasExcel) {
         const msg: string = '导出的笔记中包含表格笔记，请使用插件【Json & Excel】插件将json文件转为表格';

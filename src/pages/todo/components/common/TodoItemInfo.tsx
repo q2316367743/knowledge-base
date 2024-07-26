@@ -21,8 +21,8 @@ export async function openTodoItemInfo(index: TodoItemIndex) {
         hasAttr.value = true;
     }
     if (attr.end !== '' && attr.start !== attr.end && attr.start !== '') {
-        start.value = toDateString(attr.start, "YYYY-MM-dd");
-        end.value = toDateString(attr.end, "YYYY-MM-dd");
+        start.value = toDateString(attr.start, "YYYY-MM-DD");
+        end.value = toDateString(attr.end, "YYYY-MM-DD");
         hasAttr.value = true;
     }
 

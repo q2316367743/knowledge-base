@@ -64,6 +64,17 @@ export enum TodoCategoryTypeEnum {
 
 }
 
+export function renderTodoCategoryType(type: TodoCategoryTypeEnum) {
+    switch (type) {
+        case TodoCategoryTypeEnum.TODO:
+            return "待办清单";
+        case TodoCategoryTypeEnum.FOLDER:
+            return "待办文件夹";
+        default:
+            return type + '';
+    }
+}
+
 export enum TodoListLayoutEnum {
 
     /**
@@ -79,6 +90,17 @@ export enum TodoListLayoutEnum {
      */
     CALENDAR = 3
 
+}
+
+export function renderTodoListLayout(layout: TodoListLayoutEnum): string {
+    switch (layout){
+        case TodoListLayoutEnum.CALENDAR:
+            return "日历布局";
+        case TodoListLayoutEnum.CARD:
+            return "卡片布局";
+        default:
+            return "默认布局";
+    }
 }
 
 export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCategory {
