@@ -46,7 +46,7 @@
                             <a-tooltip content="跳转到编辑器">
                                 <a-button type="text" @click="jumpToArticle(item.value)">
                                     <template #icon>
-                                        <icon-share-alt />
+                                        <icon-edit />
                                     </template>
                                 </a-button>
                             </a-tooltip>

@@ -3,7 +3,6 @@ import {createPinia} from 'pinia';
 import App from './App.vue'
 import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
-import { VuePageStackPlugin } from 'vue-page-stack';
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';
@@ -52,39 +51,47 @@ createApp(App)
     .use(ArcoVue)
     .use(ArcoVueIcon)
     .use(createPinia())
-    .use(VuePageStackPlugin, { router })
     .use(router)
     .use(setupCalendar, {})
     .mount('#app');
 
+function getKey(e: KeyboardEvent) {
+    const keys = new Array<string>();
+    e.ctrlKey && keys.push('ctrl');
+    e.altKey && keys.push('alt');
+    e.shiftKey && keys.push('shift');
+    keys.push(e.code);
+    return keys.join(" | ");
+}
 
 window.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.ctrlKey || e.altKey) {
         if (e.code === 'KeyN') {
             e.preventDefault();
             useNewEvent.emit();
-            access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
-            access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
+            access("使用快捷键", getKey(e));
         } else if (e.code === 'Delete') {
             e.preventDefault();
             e.stopPropagation();
             useDeleteEvent.emit();
-            access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
+            access("使用快捷键", getKey(e));
         } else if (e.code == 'KeyQ') {
             e.preventDefault();
             e.stopPropagation();
             useArticlePreviewEvent.emit(useHomeEditorStore().id);
+            access("使用快捷键", getKey(e));
         } else if (e.code === 'KeyP') {
             e.preventDefault();
             e.stopPropagation();
             useArticleExportEvent.emit(useHomeEditorStore().id);
+            access("使用快捷键", getKey(e));
         }
         if (e.shiftKey) {
             if (e.code === 'KeyF') {
                 // 全局搜索
                 e.preventDefault();
                 useSearchContentEvent.emit();
-                access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
+                access("使用快捷键", getKey(e));
             }
         }
     }

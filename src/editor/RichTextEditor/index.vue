@@ -83,7 +83,6 @@ function create() {
         },
         onChange(editor) {
             content.value = editor.getHtml();
-            console.log(content.value, editor.getHtml())
         },
         toolbarKeys,
         editable: !props.readOnly

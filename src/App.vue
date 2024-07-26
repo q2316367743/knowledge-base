@@ -6,11 +6,7 @@
                     <app-side/>
                 </a-layout-sider>
                 <a-layout-content>
-                    <router-view v-slot="{ Component }">
-                        <vue-page-stack>
-                            <component :is="Component" :key="$route.fullPath"></component>
-                        </vue-page-stack>
-                    </router-view>
+                    <router-view />
                 </a-layout-content>
             </a-layout>
         </a-spin>

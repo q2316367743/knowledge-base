@@ -53,19 +53,8 @@ export function register() {
  * @param additional 附加
  */
 export function access(event: string, additional?: string) {
-    track(event, additional ? {
-        additional: additional
-    } : undefined);
-
-}
-
-/**
- * 时间埋点
- * @param event 操作
- * @param params 附加参数
- */
-function track(event: string, params?: Record<string, string>) {
     if (utools.isDev()) {
+        console.log(event, additional)
         return;
     }
     if (useGlobalStore().privacy !== 1) {
@@ -83,7 +72,7 @@ function track(event: string, params?: Record<string, string>) {
         system = navigator.userAgent;
     }
     const data: Record<string, any> = {
-        ...(params || {}),
+        additional,
         // 操作系统
         system,
         // 当前用户
@@ -97,7 +86,7 @@ function track(event: string, params?: Record<string, string>) {
         console.error("埋点统计失败", e);
     }
     try {
-        window.umami.track(event, data);
+        window.umami.track(event, additional ? {additional} : undefined);
     } catch (e) {
         console.error("埋点统计失败", e);
     }
