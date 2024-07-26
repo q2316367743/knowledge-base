@@ -6,7 +6,7 @@
                     <app-side/>
                 </a-layout-sider>
                 <a-layout-content>
-                    <router-view />
+                    <router-view/>
                 </a-layout-content>
             </a-layout>
         </a-spin>
@@ -17,7 +17,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref} from "vue";
-import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
+import {keyword, useDbKeyRefreshEvent, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -31,6 +31,7 @@ import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {access} from "@/plugin/Statistics";
 import {windowConfig} from "@/global/WindowConfig";
+import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -74,9 +75,8 @@ window.onImagePreview = (src: string) => {
 }
 // @ts-ignore 全局事件
 window.jumpToArticle = (title: string) => {
-    console.log(title);
     title = decodeURIComponent(title);
-    console.log(title);
+    toArticleByRelation(title)
 }
 
 // 适配新版，快速启动，推送数据到主程序
@@ -163,10 +163,12 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
                 .then(id => useHomeEditorStore().openArticle(id));
         }
     } else if (operate === 'window') {
+        const config = windowConfig[preload];
+        access('打开窗口：' + config['title']);
         utools.createBrowserWindow(`dist/${preload}.html`, {
             width: 800,
             height: 600,
-            ...windowConfig[preload]
+            ...config
         }, () => {
             utools.hideMainWindow();
             utools.outPlugin()

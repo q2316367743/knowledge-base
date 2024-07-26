@@ -17,6 +17,7 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
 import {clone} from "@/utils/lang/ObjUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
+import {access} from "@/plugin/Statistics";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
     if (attr.start === '' && attr.end === '') {
@@ -27,6 +28,8 @@ function renderIsRange(attr: TodoItemAttr): boolean {
 }
 
 export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
+    access("编辑卡片信息")
+
     const base = ref(clone(index, true));
     const todoItem = await useTodoStore().getTodoItem(index.id);
     const content = ref(todoItem.content);

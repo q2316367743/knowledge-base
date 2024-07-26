@@ -10,6 +10,7 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import Home from '@/nested/preview/pages/home/index.vue';
+import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 
 useGlobalStore().initDarkColors();
 useArticleStore().init();
@@ -27,6 +28,13 @@ window.onImagePreview = (src: string) => {
         src
     }
 }
+
+// @ts-ignore 全局事件
+window.jumpToArticle = (title: string) => {
+    title = decodeURIComponent(title);
+    toArticleByRelation(title)
+}
+
 
 </script>
 <style scoped lang="less">
