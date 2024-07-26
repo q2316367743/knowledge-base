@@ -11,7 +11,7 @@
             </a-space>
         </div>
         <div class="container kb-wang-editor">
-            <rich-text-editor v-model="content"/>
+            <rich-text-editor v-model="content" ref="editorRef"/>
         </div>
     </div>
 </template>
@@ -27,6 +27,8 @@ import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
+const editorRef = ref();
+
 useGlobalStore().initDarkColors();
 useArticleStore().init();
 useFolderStore().init();
@@ -38,17 +40,14 @@ const content = ref('');
 const folderTree = computed(() => useFolderStore().folderTree);
 
 
-function onSubmit() {
-    onAdd(content.value);
-    content.value = '';
-}
 
-function onAdd(html: string) {
+function onSubmit() {
     loading.value = true;
-    _addArticle(folder.value, ArticleTypeEnum.RICH_TEXT, html)
+    _addArticle(folder.value, ArticleTypeEnum.RICH_TEXT, content.value)
         .then(() => {
             MessageUtil.success("新建成功");
-            onReset();
+            content.value = '';
+            editorRef.value && editorRef.value.setContent("");
         })
         .catch(e => MessageUtil.error("新建失败", e))
         .finally(() => loading.value = false);

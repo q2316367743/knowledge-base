@@ -25,7 +25,7 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import {useDeleteEvent, useNewEvent, useSearchContentEvent} from '@/global/BeanFactory';
+import {isUtools, useDeleteEvent, useNewEvent, useSearchContentEvent} from '@/global/BeanFactory';
 import {access} from "@/plugin/Statistics";
 import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
@@ -105,3 +105,18 @@ window.open = (url?: string | URL): WindowProxy | null => {
     return null;
 
 }
+window.addEventListener('click', e => {
+    if (!isUtools) {
+        return;
+    }
+    const ele = e.target as HTMLElement;
+    if (ele && ele.tagName && ele.tagName.toUpperCase() === 'A') {
+        // a标签
+        const href = ele.getAttribute('href');
+        if (href) {
+            utools.shellOpenExternal(href);
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+});

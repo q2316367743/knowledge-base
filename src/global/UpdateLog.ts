@@ -3,6 +3,19 @@ import { Log, LogItemEnum } from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.2.5',
+        sign: 225,
+        time: '2024-07-26',
+        items: [{
+            label: LogItemEnum.UPDATE,
+            content: '优化小窗口'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '修复系统bug，优化系统问题性'
+        }],
+        url: 'https://txc.qq.com/products/612648/post/172199323518891744'
+    },
+    {
         version: '2.2.4',
         sign: 224,
         time: '2024-07-22',

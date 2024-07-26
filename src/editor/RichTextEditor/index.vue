@@ -31,7 +31,7 @@ const props = defineProps({
     articleId: Number
 });
 const emits = defineEmits(['update:modelValue']);
-defineExpose({getToc})
+defineExpose({getToc, setContent})
 
 
 const editorDom = ref<HTMLDivElement>();
@@ -138,6 +138,11 @@ function onExport(id: number) {
 function getToc(): Array<TocItem> {
     return [];
 }
+
+function setContent(text: string) {
+    editor && editor.setContent(text);
+}
+
 
 </script>
 <style lang="less">
