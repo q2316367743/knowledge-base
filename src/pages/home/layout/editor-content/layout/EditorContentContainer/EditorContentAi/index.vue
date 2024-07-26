@@ -21,7 +21,8 @@
                             <div class="message-user">
                                 {{ renderRole(message.role) }}
                             </div>
-                            <a-typography-paragraph class="message-content preview" v-html="renderContent(message.content)">
+                            <a-typography-paragraph class="message-content preview"
+                                                    v-html="renderContent(message.content)">
                             </a-typography-paragraph>
                             <div class="message-tool">
                                 <a-button-group type="text" v-if="message.role !== 'system'">
@@ -83,9 +84,15 @@
                         <a-button size="small" type="text" @click="closeWarn()">不再提示</a-button>
                     </template>
                 </a-alert>
-                <a-typography-paragraph class="question" v-if="ai.ask.question">{{ ai.ask.question }}</a-typography-paragraph>
-                <div class="answer" v-if="loading">正在回答中 <icon-refresh spin /></div>
-                <a-typography-paragraph class="answer preview" v-else v-html="renderContent(ai.ask.answer)"></a-typography-paragraph>
+                <a-typography-paragraph class="question" v-if="ai.ask.question">{{
+                        ai.ask.question
+                    }}
+                </a-typography-paragraph>
+                <div class="answer" v-if="loading">正在回答中
+                    <icon-refresh spin/>
+                </div>
+                <a-typography-paragraph class="answer preview" v-else
+                                        v-html="renderContent(ai.ask.answer)"></a-typography-paragraph>
             </a-typography>
             <div class="input">
                 <a-input-group>
@@ -94,8 +101,9 @@
                             <icon-settings/>
                         </template>
                     </a-button>
-                    <a-auto-complete placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="question" :data="prompts"
-                             :disabled="loading" @keydown.enter="sendToAsk()">
+                    <a-auto-complete placeholder="对于这篇文章，你有什么想问的？" allow-clear v-model="question"
+                                     :data="prompts"
+                                     :disabled="loading" @keydown.enter="sendToAsk()">
                     </a-auto-complete>
                     <a-button type="text" @click="sendToAsk()" :loading="loading" :disabled="!allowInsert">
                         <template #icon>
@@ -121,7 +129,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import {htmlToMarkdown, mindMapToMarkdown, stringToBlob} from "@/utils/file/ConvertUtil";
 import {openAiAskPromptDrawer, useAiAskPromptStore} from "@/store/components/AiAskPromptStore";
-import {track} from "@/plugin/Statistics";
+import {access} from "@/plugin/Statistics";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>
@@ -198,11 +206,7 @@ function sendChat() {
         content.value = '';
         scrollBottom();
 
-        track('ai', {
-            api,
-            model,
-            func: 'chat'
-        });
+        access('使用AI聊天');
 
     }).catch(e => MessageUtil.error("聊天发生错误", e)).finally(() => loading.value = false);
 }
@@ -277,11 +281,7 @@ async function _sendToAsk() {
         }]
     })
     ai.value.ask.answer = res.choices.sort((a, b) => a.index - b.index).map(e => e.message.content).join("/n");
-    track('ai', {
-        api,
-        model,
-        func: 'ask'
-    });
+    access('使用AI问答');
 }
 
 // ------------------------------------------ 相关事件 ------------------------------------------

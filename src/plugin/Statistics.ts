@@ -6,30 +6,6 @@ import {useGlobalStore} from "@/store/GlobalStore";
 let token = '';
 let expired = 0;
 
-let system = navigator.userAgent;
-if (utools.isWindows()) {
-    system = "Windows";
-} else if (utools.isMacOS()) {
-    system = "MacOS"
-} else if (utools.isLinux()) {
-    system = "Linux"
-}
-
-
-export async function getToken() {
-    const now = new Date();
-    if (token === '' || now.getTime() > expired) {
-        try {
-            const res = await utools.fetchUserServerTemporaryToken();
-            token = res.token;
-            expired = res.expiredAt + now.getTime();
-        } catch (e) {
-            token = '';
-            expired = 0;
-        }
-    }
-    return token;
-}
 
 export async function getTokenThrow() {
     const now = new Date();
@@ -40,11 +16,6 @@ export async function getTokenThrow() {
     }
     return token;
 }
-
-
-
-export type EventIdentificationEnum = 'update' | 'page_jump' |
-    'feature' | 'recommend' | 'new_article' | 'keymap' | 'ai';
 
 let user = utools.getUser();
 let nickname = '';
@@ -81,7 +52,7 @@ export function register() {
  * @param event 操作
  * @param additional 附加
  */
-export function access(event: EventIdentificationEnum, additional?: string) {
+export function access(event: string, additional?: string) {
     track(event, additional ? {
         additional: additional
     } : undefined);
@@ -93,7 +64,7 @@ export function access(event: EventIdentificationEnum, additional?: string) {
  * @param event 操作
  * @param params 附加参数
  */
-export function track(event: EventIdentificationEnum, params?: Record<string, string>) {
+function track(event: string, params?: Record<string, string>) {
     if (utools.isDev()) {
         return;
     }

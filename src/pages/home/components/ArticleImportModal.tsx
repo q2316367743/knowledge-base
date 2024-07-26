@@ -24,6 +24,7 @@ import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {readAsText} from "@/utils/file/FileUtil";
+import {access} from "@/plugin/Statistics";
 
 interface FileItem {
     file: File;
@@ -165,6 +166,7 @@ function getOptions(name: string): OptionItem[] {
 }
 
 async function onImport(files: Array<FileItem>, folderId: number) {
+    access("导入数据")
     const loadingReturn = MessageBoxUtil.loading("正在导入...");
     const count = files.length + '';
     try {

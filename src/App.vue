@@ -6,7 +6,11 @@
                     <app-side/>
                 </a-layout-sider>
                 <a-layout-content>
-                    <router-view/>
+                    <router-view v-slot="{ Component }">
+                        <vue-page-stack>
+                            <component :is="Component" :key="$route.fullPath"></component>
+                        </vue-page-stack>
+                    </router-view>
                 </a-layout-content>
             </a-layout>
         </a-spin>
@@ -17,7 +21,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, defineAsyncComponent, ref} from "vue";
-import {keyword, useDbKeyRefreshEvent, usePageJumpEvent} from "@/global/BeanFactory";
+import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";

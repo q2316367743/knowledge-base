@@ -1,37 +1,58 @@
 <template>
     <div class="graph-search">
         <header class="header">
-            <a-input-group class="search" :style="{width: searchWidth + 'px'}">
-                <a-select v-model="type" style="width: 120px">
-                    <a-option :value="0">全部</a-option>
-                    <a-option v-for="articleType in articleTextTypes" :key="articleType.key" :value="articleType.key">
-                        {{ articleType.name }}
-                    </a-option>
-                </a-select>
-                <a-input-search v-model="keyword" :placeholder="SearchContentPlaceholder" allow-clear :loading="loading"
-                                search-button @search="searchContent()" @clear="searchContent()"
-                                @keydown.enter="searchContent"/>
-                <a-button type="primary" status="danger" :disabled="!loading" @click="stop()">
-                    <template #icon>
-                        <icon-close/>
-                    </template>
-                </a-button>
-            </a-input-group>
+            <a-row :gutter="8" class="search">
+                <a-col flex="120px">
+                    <a-select v-model="type" style="width: 120px">
+                        <a-option :value="0">全部</a-option>
+                        <a-option v-for="articleType in articleTextTypes" :key="articleType.key"
+                                  :value="articleType.key">
+                            {{ articleType.name }}
+                        </a-option>
+                    </a-select>
+                </a-col>
+                <a-col flex="auto">
+                    <a-input-search v-model="keyword" :placeholder="SearchContentPlaceholder" allow-clear
+                                    :loading="loading"
+                                    search-button @search="searchContent()" @clear="searchContent()"
+                                    @keydown.enter="searchContent"/>
+                </a-col>
+                <a-col flex="32px">
+                    <a-button type="primary" status="danger" :disabled="!loading" @click="stop()">
+                        <template #icon>
+                            <icon-close/>
+                        </template>
+                    </a-button>
+                </a-col>
+            </a-row>
         </header>
         <main class="container">
             <a-alert v-if="loading">{{ text }}</a-alert>
-            <a-list :bordered="false">
-                <a-list-item v-for="item in items">
-                    <a-list-item-meta>
-                        <template #title>
-                            <a-tag color="blue">{{ renderArticleType(item.type) }}</a-tag>
-                            <a-link @click="toArticle(item.value)">{{ item.title }}</a-link>
+            <a-list :bordered="false" :virtual-list-props="{height: maxHeight}" :data="items">
+                <template #item="{item}">
+                    <a-list-item>
+                        <a-list-item-meta>
+                            <template #title>
+                                <a-tag color="blue">{{ renderArticleType(item.type) }}</a-tag>
+                                <a-tooltip content="打开预览">
+                                    <a-link @click="openArticle(item.value)">{{ item.title }}</a-link>
+                                </a-tooltip>
+                            </template>
+                            <template #description>
+                                <span v-html="item.html"></span>
+                            </template>
+                        </a-list-item-meta>
+                        <template #actions>
+                            <a-tooltip content="跳转到编辑器">
+                                <a-button type="text" @click="jumpToArticle(item.value)">
+                                    <template #icon>
+                                        <icon-share-alt />
+                                    </template>
+                                </a-button>
+                            </a-tooltip>
                         </template>
-                        <template #description>
-                            <span v-html="item.html"></span>
-                        </template>
-                    </a-list-item-meta>
-                </a-list-item>
+                    </a-list-item>
+                </template>
             </a-list>
         </main>
     </div>
@@ -45,6 +66,7 @@ import {useRouter} from "vue-router";
 import {_searchContent, SearchContentItem, SearchContentPlaceholder} from "@/pages/home/components/SearchContent";
 import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
 
 const size = useWindowSize();
@@ -57,7 +79,7 @@ const text = ref('');
 const items = ref(new Array<SearchContentItem>())
 const type = ref<ArticleTypeEnum | 0>(0)
 
-const searchWidth = computed(() => size.width.value / 2);
+const maxHeight = computed(() => size.height.value - 56);
 
 function searchContent() {
     loading.value = true;
@@ -87,28 +109,17 @@ function stop() {
     close.value = true;
 }
 
-function toArticle(id: number) {
+function jumpToArticle(id: number) {
     useHomeEditorStore().openArticle(id);
     router.push('/home')
-
 }
 
 </script>
 <style scoped lang="less">
 .graph-search {
     .header {
-        display: flex;
-        justify-content: center;
-        padding: 14px 0;
+        padding: 8px 16px;
     }
 
-    .container {
-        position: absolute;
-        top: 67px;
-        left: 7px;
-        right: 7px;
-        bottom: 7px;
-        overflow: auto;
-    }
 }
 </style>

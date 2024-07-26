@@ -24,7 +24,7 @@ import {
 import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
-import {track} from "@/plugin/Statistics";
+import {access} from "@/plugin/Statistics";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 
 // ------------------------------------------------------------------------------------------------------
@@ -175,9 +175,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
         MessageUtil.success("新增成功");
         useHomeEditorStore().openArticle(id);
         // 新建文章
-        track('new_article', {
-            type: renderArticleType(type)
-        });
+        access('新建文章', renderArticleType(type));
     })
         .catch(e => MessageUtil.error("新增失败", e));
 }
@@ -268,6 +266,7 @@ export function addArticleModal() {
  * @param pid 文件夹父ID
  */
 export function addFolder(pid: number) {
+    access('新建文件夹')
     MessageBoxUtil.prompt("请输入文件夹名称", "新建文件夹", {
         confirmButtonText: "新增",
         cancelButtonText: "取消"
@@ -353,6 +352,7 @@ export function rename(id: number, name: string, article: boolean) {
 
 
 export function exportToMd(pid: number) {
+    access("导出数据")
     useGlobalStore().startLoading("正在准备数据")
     articleToZip(pid)
         .then(() => MessageUtil.success("导出成功"))

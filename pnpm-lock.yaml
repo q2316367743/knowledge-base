@@ -98,6 +98,9 @@ importers:
       vue:
         specifier: ^3.4.25
         version: 3.4.25(typescript@4.9.5)
+      vue-page-stack:
+        specifier: ^3.1.5
+        version: 3.1.5(vue-router@4.3.2(vue@3.4.25(typescript@4.9.5)))(vue@3.4.25(typescript@4.9.5))
       vue-router:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.25(typescript@4.9.5))
@@ -1750,6 +1753,12 @@ packages:
   destr@2.0.3:
     resolution: {integrity: sha512-2N3BOUU4gYMpTP24s5rF5iP7BDr7uNTCs4ozw3kf/eKfvWSIu93GEBi5m427YoyJoeOzQ5smuu4nNAPGb8idSQ==}
 
+  detect-browser-navigation-in-vue-router@1.0.0:
+    resolution: {integrity: sha512-15ORBXX/ftvjOv93RME27fx4k16vWMoRWbgd6nwIEQmktbEJA2X7N6TTK2XInzfI4O/czcTXl0U4/9Vg/spLLA==}
+    peerDependencies:
+      vue: '>=3.3.0'
+      vue-router: '>=4.2.0'
+
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
 
@@ -3264,6 +3273,12 @@ packages:
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+
+  vue-page-stack@3.1.5:
+    resolution: {integrity: sha512-67GTfBOgKUS31DfOjZRqWuJ56CRN8o9SGFFOJXbGT37M4gRTdtSXxPO+GpYMx6PUbvhzSqkRMUfiKP8NqLC+hA==}
+    peerDependencies:
+      vue: ^3.3.4
+      vue-router: ^4.2.2
 
   vue-router@4.3.2:
     resolution: {integrity: sha512-hKQJ1vDAZ5LVkKEnHhmm1f9pMiWIBNGF5AwU67PdH7TyXCj/a4hTccuUuYCAMgJK6rO/NVYtQIEN3yL8CECa7Q==}
@@ -5373,6 +5388,11 @@ snapshots:
 
   destr@2.0.3: {}
 
+  detect-browser-navigation-in-vue-router@1.0.0(vue-router@4.3.2(vue@3.4.25(typescript@4.9.5)))(vue@3.4.25(typescript@4.9.5)):
+    dependencies:
+      vue: 3.4.25(typescript@4.9.5)
+      vue-router: 4.3.2(vue@3.4.25(typescript@4.9.5))
+
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
@@ -7055,6 +7075,13 @@ snapshots:
   vue-demi@0.14.7(vue@3.4.25(typescript@4.9.5)):
     dependencies:
       vue: 3.4.25(typescript@4.9.5)
+
+  vue-page-stack@3.1.5(vue-router@4.3.2(vue@3.4.25(typescript@4.9.5)))(vue@3.4.25(typescript@4.9.5)):
+    dependencies:
+      '@vue/shared': 3.4.25
+      detect-browser-navigation-in-vue-router: 1.0.0(vue-router@4.3.2(vue@3.4.25(typescript@4.9.5)))(vue@3.4.25(typescript@4.9.5))
+      vue: 3.4.25(typescript@4.9.5)
+      vue-router: 4.3.2(vue@3.4.25(typescript@4.9.5))
 
   vue-router@4.3.2(vue@3.4.25(typescript@4.9.5)):
     dependencies:

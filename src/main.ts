@@ -3,6 +3,7 @@ import {createPinia} from 'pinia';
 import App from './App.vue'
 import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
+import { VuePageStackPlugin } from 'vue-page-stack';
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';
@@ -26,7 +27,7 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {useDeleteEvent, useNewEvent, useSearchContentEvent} from '@/global/BeanFactory';
-import {track} from "@/plugin/Statistics";
+import {access} from "@/plugin/Statistics";
 import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 
 self.MonacoEnvironment = {
@@ -51,6 +52,7 @@ createApp(App)
     .use(ArcoVue)
     .use(ArcoVueIcon)
     .use(createPinia())
+    .use(VuePageStackPlugin, { router })
     .use(router)
     .use(setupCalendar, {})
     .mount('#app');
@@ -61,20 +63,13 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.code === 'KeyN') {
             e.preventDefault();
             useNewEvent.emit();
-            track('keymap', {
-                ctrl: e.ctrlKey ? 'true' : 'false',
-                alt: e.altKey ? 'true' : 'false',
-                code: e.code,
-            });
+            access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
+            access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
         } else if (e.code === 'Delete') {
             e.preventDefault();
             e.stopPropagation();
             useDeleteEvent.emit();
-            track('keymap', {
-                ctrl: e.ctrlKey ? 'true' : 'false',
-                alt: e.altKey ? 'true' : 'false',
-                code: e.code,
-            });
+            access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
         } else if (e.code == 'KeyQ') {
             e.preventDefault();
             e.stopPropagation();
@@ -89,11 +84,7 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
                 // 全局搜索
                 e.preventDefault();
                 useSearchContentEvent.emit();
-                track('keymap', {
-                    ctrl: e.ctrlKey ? 'true' : 'false',
-                    alt: e.altKey ? 'true' : 'false',
-                    code: e.code,
-                });
+                access("使用快捷键", `${e.ctrlKey ? 'ctrl' : ''}|${e.altKey ? 'alt' : ''}|${e.code}`);
             }
         }
     }

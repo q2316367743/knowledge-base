@@ -1,5 +1,4 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
-import {track} from "@/plugin/Statistics";
 // 引入路由
 
 const routers: Array<RouteRecordRaw> = [{
@@ -77,14 +76,5 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes: routers
 });
-
-router.afterEach((to, from) => {
-    track('page_jump', {
-        to_name: `${to.name as string}`,
-        to_path: to.path,
-        from_name: `${from.name as string}`,
-        from_path: from.path
-    });
-})
 
 export default router;

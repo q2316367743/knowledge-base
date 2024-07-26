@@ -8,7 +8,7 @@ import {updateTo130FromUnder} from "@/components/update-check/record/updateTo130
 import {updateTo140FromUnder} from "@/components/update-check/record/updateTo140";
 import {updateTo150FromUnder} from "@/components/update-check/record/updateTo150";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {login, register, track} from "@/plugin/Statistics";
+import {login, register, access} from "@/plugin/Statistics";
 
 export default async function updateCheck(toUpdate?: () => void) {
     const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)
@@ -17,11 +17,7 @@ export default async function updateCheck(toUpdate?: () => void) {
             saveOneByAsync(LocalNameEnum.VERSION, Constant.version, res.rev).then(() => console.log("版本更新"));
             // 更新
             toUpdate && toUpdate();
-            track('update', {
-                from: res.record,
-                to: Constant.version,
-                action: 'update'
-            });
+            access('版本更新', `[${res.record}] => [${Constant.version}]`);
             login();
 
             const oldVersion = parseVersion(res.record);
@@ -55,11 +51,7 @@ export default async function updateCheck(toUpdate?: () => void) {
         NotificationUtil.success("欢迎您使用知识库");
         saveOneByAsync(LocalNameEnum.VERSION, Constant.version).then(() => console.log("版本更新"));
         init();
-        track('update', {
-            from: '0.0.0',
-            to: Constant.version,
-            action: 'new'
-        });
+        access('新用户', `[0.0.0] => [${Constant.version}]`);
         register()
     }
 }

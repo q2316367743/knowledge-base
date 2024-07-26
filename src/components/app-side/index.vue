@@ -12,25 +12,25 @@
             </template>
             待办
         </a-menu-item>
-        <a-menu-item key="/plugin">
+        <a-menu-item key="/tool/search">
             <template #icon>
-                <icon-code-block />
+                <icon-search />
             </template>
-            主题|插件|模板
+            搜索内容
         </a-menu-item>
         <a-sub-menu key="/graph">
             <template #icon>
                 <icon-tool/>
             </template>
             <template #title>工具</template>
-            <a-menu-item key="/tool/search">
-                搜索内容
-            </a-menu-item>
             <a-menu-item key="/tool/recycle">
                 回收站
             </a-menu-item>
             <a-menu-item key="/tool/category">
                 分类图
+            </a-menu-item>
+            <a-menu-item key="/plugin">
+                主题|插件|模板
             </a-menu-item>
             <a-menu-item key="/tool/share">
                 分享中心

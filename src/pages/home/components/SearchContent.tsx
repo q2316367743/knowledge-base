@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
     ListItemMeta,
-    Modal, Option, Select, Space, Tag
+    Modal, Option, Select, Tag
 } from "@arco-design/web-vue";
 import {Ref, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
@@ -31,7 +31,10 @@ export interface SearchContentItem {
 }
 
 export async function _searchContent(
-    keyword: string, close: Ref<boolean>, items: Ref<Array<SearchContentItem>>, text: Ref<string>,
+    keyword: string,
+    close: Ref<boolean>,
+    items: Ref<Array<SearchContentItem>>,
+    text: Ref<string>,
     type: ArticleTypeEnum | 0
 ): Promise<void> {
     const articles = useArticleStore().articles.filter(a =>
