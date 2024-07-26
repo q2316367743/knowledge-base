@@ -4,6 +4,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ref} from "vue";
 import {useStorage} from "@vueuse/core";
 import {utools} from '@/plugin/utools';
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 
 export enum GlobalType {
     DARK = 1,
@@ -16,7 +17,7 @@ export const useGlobalStore = defineStore('global', () => {
     const loading = ref(false);
     const loadingText = ref('');
     const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
-    const privacy = useStorage(LocalNameEnum.KEY_PRIVACY, 0, utools.dbStorage);
+    const privacy = useUtoolsDbStorage<number>(LocalNameEnum.KEY_PRIVACY, 0);
 
     function renderTheme(): boolean {
         if (globalType.value === GlobalType.AUTO) {

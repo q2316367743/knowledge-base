@@ -1,14 +1,16 @@
-import {handlePriorityColor, handlePriorityText, TodoItemIndex} from "@/entity/todo/TodoItem";
-import {useTodoStore} from "@/store/components/TodoStore";
+import {ref} from "vue";
 import {
     Descriptions, DescriptionsItem, Drawer, Tag, TypographyTitle
 } from "@arco-design/web-vue";
-import {ref} from "vue";
+import {IconClockCircle} from "@arco-design/web-vue/es/icon";
 import {handleDate} from "@/utils/lang/FormatUtil";
 import {toDateString} from "@/utils/lang/FormatUtil";
-import {IconClockCircle} from "@arco-design/web-vue/es/icon";
+import {handlePriorityColor, handlePriorityText, TodoItemIndex} from "@/entity/todo/TodoItem";
+import {useTodoStore} from "@/store/components/TodoStore";
+import {access} from '@/plugin/Statistics';
 
 export async function openTodoItemInfo(index: TodoItemIndex) {
+    access("打开待办详情")
     const todoItem = await useTodoStore().getTodoItem(index.id);
 
     const content = todoItem.content;
