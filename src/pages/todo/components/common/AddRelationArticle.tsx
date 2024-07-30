@@ -35,7 +35,7 @@ export function openAddRelationArticle() {
                     key: article.id,
                     title: article.name,
                     isLeaf: true,
-                    icon: () => buildArticleIcon(article.type),
+                    icon: () => buildArticleIcon(article.type, article.preview),
                     checkable: true
                 })).forEach(article => treeData.push(article));
             }

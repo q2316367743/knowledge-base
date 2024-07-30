@@ -16,37 +16,20 @@ import {h, ref} from "vue";
 import {
     IconBook,
     IconCode,
-    IconFile,
+    IconFile, IconLock,
     IconMindMapping,
     IconNav,
     IconPalette, IconRefresh
 } from "@arco-design/web-vue/es/icon";
 import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
-import {traverseNumber} from "@/utils/lang/ArrayUtil";
+import {map, traverseNumber} from "@/utils/lang/ArrayUtil";
 import {access} from "@/plugin/Statistics";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
-
-
-export function buildArticleIcon(type: ArticleTypeEnum) {
-    if (type === ArticleTypeEnum.CODE) {
-        return h(IconCode, {})
-    } else if (type === ArticleTypeEnum.RICH_TEXT) {
-        return h(IconBook, {})
-    } else if (type === ArticleTypeEnum.EXCEL || type === ArticleTypeEnum.HANDSONTABLE) {
-        return h(IconNav, {})
-    } else if (type === ArticleTypeEnum.MIND_MAP) {
-        return h(IconMindMapping, {})
-    } else if (type === ArticleTypeEnum.DRAUU) {
-        return h(IconPalette, {})
-    } else {
-        return h(IconFile, {})
-    }
-}
 
 export const articleTextTypes = [{
     key: ArticleTypeEnum.RICH_TEXT,
@@ -75,7 +58,16 @@ export const articleTypes = [
         key: ArticleTypeEnum.HANDSONTABLE,
         name: '表格',
         icon: IconNav
-    }]
+    }];
+const articleTypeMap = map(articleTypes, 'key');
+
+export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
+    if (readonly) {
+        return h(IconLock, {});
+    }
+    const icon = articleTypeMap.get(type);
+    return h(icon ? icon.icon : IconFile, {})
+}
 
 export function renderArticleType(type: ArticleTypeEnum): string {
     switch (type) {

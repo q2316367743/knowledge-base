@@ -200,7 +200,7 @@ const treeData = computed<Array<TreeNodeData>>(() => {
                 key: article.id,
                 title: article.name,
                 isLeaf: true,
-                icon: () => buildArticleIcon(article.type),
+                icon: () => buildArticleIcon(article.type, article.preview),
             })).forEach(article => treeData.push(article));
         }
     });

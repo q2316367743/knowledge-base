@@ -87,7 +87,7 @@ export function treeEach(
                 key: article.id,
                 title: article.name,
                 isLeaf: true,
-                icon: () => buildArticleIcon(article.type)
+                icon: () => buildArticleIcon(article.type, article.preview)
             } as TreeNodeData)).forEach(article => {
 
                 if (map) {
