@@ -208,8 +208,8 @@ function openArgs() {
                 <DescriptionsItem label={'优先级'}>item.index.priority: 1高，2中，3低，4无</DescriptionsItem>
                 <DescriptionsItem label={'开始时间'}>item.attr.start: string</DescriptionsItem>
                 <DescriptionsItem label={'结束时间'}>item.attr.end: string</DescriptionsItem>
-                <DescriptionsItem label={'标签'}>item.content.tags: Array string</DescriptionsItem>
-                <DescriptionsItem label={'内容（html）'}>item.content.content: string</DescriptionsItem>
+                <DescriptionsItem label={'标签'}>item.content.record.tags: Array string</DescriptionsItem>
+                <DescriptionsItem label={'内容（html）'}>item.content.record.content: string</DescriptionsItem>
             </Descriptions>
             <Descriptions column={1} title={'方法'}>
                 <DescriptionsItem label={'格式化时间'}>
