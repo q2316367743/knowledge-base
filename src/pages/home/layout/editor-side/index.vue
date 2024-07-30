@@ -153,28 +153,28 @@
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
 import {TreeNodeData} from "@arco-design/web-vue";
-import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useElementSize} from "@vueuse/core";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import Constant from "@/global/Constant";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {
     addArticle,
-    addFolder, articleTypes, buildArticleIcon,
+    addFolder, articleTypes,
     exportToMd,
     remove,
     rename
 } from "@/pages/home/components/he-context";
-import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
 import {keyword} from "@/global/BeanFactory";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import Constant from "@/global/Constant";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useNoteTree} from "@/hooks/NoteTree";
+import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
+import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 
 const homeEditorSideRef = ref();
 const size = useElementSize(homeEditorSideRef);
@@ -183,35 +183,10 @@ const selectedKeys = ref<Array<number>>(useHomeEditorStore().id === 0 ? [] : [us
 const checkKeys = ref<Array<number>>([]);
 const expandedKeys = ref<Array<number>>(getItemByDefault<Array<number>>(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, []));
 
-const folderTree = computed(() => useFolderStore().folderTree);
-const folderMap = computed(() => useArticleStore().folderMap);
-const treeData = computed<Array<TreeNodeData>>(() => {
-    let treeData = new Array<TreeNodeData>();
-    treeEach(folderTree.value, treeData, folderMap.value);
-    treeData = treeData.length === 0 ? [] : (treeData[0].children || []);
-    // 文件夹被删除或没有的
-    const articleFolders = new Set(Array.from(folderMap.value.keys()));
-    useFolderStore().folderIds.forEach(folderId => articleFolders.delete(folderId));
-    articleFolders.delete(0);
-    articleFolders.forEach(folderId => {
-        const articles = folderMap.value.get(folderId);
-        if (articles && articles.length > 0) {
-            articles.map(article => ({
-                key: article.id,
-                title: article.name,
-                isLeaf: true,
-                icon: () => buildArticleIcon(article.type, article.preview),
-            })).forEach(article => treeData.push(article));
-        }
-    });
-    // 树排序
-    treeSort(treeData, useHomeEditorStore().articleSort);
-    return treeData;
-});
 const virtualListProps = computed(() => ({
     height: size.height.value - 56
 }));
-const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
+const {treeNodeData} = useNoteTree(keyword);
 
 watch(() => useHomeEditorStore().id, id => {
     selectedKeys.value = [id];
@@ -359,8 +334,9 @@ function moveMultiTo() {
                     folder: folder.id
                 })))
             }
+            const {folderMap} = useArticleStore();
             // 文件夹
-            const folderIds = checkKeys.value.filter(id => folderMap.value.has(id));
+            const folderIds = checkKeys.value.filter(id => folderMap.has(id));
             if (folderIds.length > 0) {
                 useFolderStore().updateMulti(folderIds.map(id => ({
                     id,

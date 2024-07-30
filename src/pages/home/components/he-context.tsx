@@ -1,3 +1,13 @@
+import {h, ref} from "vue";
+import {
+    IconBook,
+    IconCode,
+    IconFile,
+    IconMindMapping,
+    IconNav,
+    IconPalette, IconRefresh
+} from "@arco-design/web-vue/es/icon";
+import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 // 存储
@@ -11,21 +21,18 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {articleToZip} from "@/utils/file/ConvertUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
-// 组件
-import {h, ref} from "vue";
-import {
-    IconBook,
-    IconCode,
-    IconFile, IconLock,
-    IconMindMapping,
-    IconNav,
-    IconPalette, IconRefresh
-} from "@arco-design/web-vue/es/icon";
-import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
-import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {map, traverseNumber} from "@/utils/lang/ArrayUtil";
+// 组件
+import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {access} from "@/plugin/Statistics";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
+// 图标
+import FileMarkdown from '@/components/KbIcon/FileMarkdown.vue';
+import IconRichText from '@/components/KbIcon/FileRichText.vue';
+import FileCode from '@/components/KbIcon/FileCode.vue';
+import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
+import FileDrauu from '@/components/KbIcon/FileDrauu.vue';
+import FileHandsontable from '@/components/KbIcon/FileHandsonTable.vue';
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -35,38 +42,41 @@ export const articleTextTypes = [{
     key: ArticleTypeEnum.RICH_TEXT,
     name: '富文本',
     icon: IconBook,
+    lock: IconRichText
 }, {
     key: ArticleTypeEnum.MARKDOWN,
     name: 'markdown',
-    icon: IconFile
+    icon: IconFile,
+    lock: FileMarkdown
 }, {
     key: ArticleTypeEnum.CODE,
     name: '代码',
-    icon: IconCode
+    icon: IconCode,
+    lock: FileCode
 }, {
     key: ArticleTypeEnum.MIND_MAP,
     name: '思维导图',
-    icon: IconMindMapping
+    icon: IconMindMapping,
+    lock: FileMindMap
 }]
 
 export const articleTypes = [
     ...articleTextTypes, {
         key: ArticleTypeEnum.DRAUU,
         name: '画板',
-        icon: IconPalette
+        icon: IconPalette,
+        lock: FileDrauu
     }, {
         key: ArticleTypeEnum.HANDSONTABLE,
         name: '表格',
-        icon: IconNav
+        icon: IconNav,
+        lock: FileHandsontable
     }];
 const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
-    if (readonly) {
-        return h(IconLock, {});
-    }
     const icon = articleTypeMap.get(type);
-    return h(icon ? icon.icon : IconFile, {})
+    return h(icon ? (readonly ? icon.lock : icon.icon) : IconFile, {})
 }
 
 export function renderArticleType(type: ArticleTypeEnum): string {

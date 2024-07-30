@@ -15,17 +15,22 @@ export interface DbPromiseInstance {
     /**
      * 获取文档
      */
-    get(id: string): Promise<DbDoc | undefined>;
+    get(id: string): Promise<DbDoc | null>;
 
     /**
      * 删除文档
      */
-    remove(id: string): Promise<DbReturn>;
+    remove(doc: string | DbDoc): Promise<DbReturn>;
+
+    /**
+     * 执行该方法将会批量更新数据库文档，传入需要更改的文档对象合并成数组进行批量更新。
+     */
+    bulkDocs(docs: DbDoc[]): Promise<DbReturn[]>;
 
     /**
      * 获取所有文档 可根据文档id前缀查找
      */
-    allDocs(key?: string | string[]): Promise<DbDoc[]>;
+    allDocs(key?: string): Promise<DbDoc[]>;
 
     /**
      * 存储附件到新文档
@@ -46,4 +51,9 @@ export interface DbPromiseInstance {
      * @param docId 文档ID
      */
     getAttachmentType(docId: string): Promise<string | null>;
+
+    /**
+     * 云端复制数据状态 (null: 未开启数据同步、0: 已完成复制、1：复制中)
+     */
+    replicateStateFromCloud(): Promise<null | 0 | 1>;
 }

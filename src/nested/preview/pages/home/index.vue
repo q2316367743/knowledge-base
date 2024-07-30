@@ -27,52 +27,22 @@
 </template>
 <script lang="ts" setup>
 import {computed, ref} from "vue";
-import {useRouter} from "vue-router";
 import {useElementSize} from "@vueuse/core";
-import {TreeNodeData} from "@arco-design/web-vue";
 import {keyword} from "@/global/BeanFactory";
-import {searchData, treeEach, treeSort} from "@/entity/ListTree";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {buildArticleIcon} from "@/pages/home/components/he-context";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
+import {useNoteTree} from "@/hooks/NoteTree";
 
 const expandedKeys = ref<Array<number>>([]);
 const previewHome = ref<HTMLDivElement>();
 
 const size = useElementSize(previewHome);
-const router = useRouter();
 
-const folderTree = computed(() => useFolderStore().folderTree);
-const folderMap = computed(() => useArticleStore().folderMap);
-const treeData = computed<Array<TreeNodeData>>(() => {
-    let treeData = new Array<TreeNodeData>();
-    treeEach(folderTree.value, treeData, folderMap.value);
-    treeData = treeData.length === 0 ? [] : (treeData[0].children || []);
-    // 文件夹被删除或没有的
-    const articleFolders = new Set(Array.from(folderMap.value.keys()));
-    useFolderStore().folderIds.forEach(folderId => articleFolders.delete(folderId));
-    articleFolders.delete(0);
-    articleFolders.forEach(folderId => {
-        const articles = folderMap.value.get(folderId);
-        if (articles && articles.length > 0) {
-            articles.map(article => ({
-                key: article.id,
-                title: article.name,
-                isLeaf: true,
-                icon: () => buildArticleIcon(article.type, article.preview),
-            })).forEach(article => treeData.push(article));
-        }
-    });
-    // 树排序
-    treeSort(treeData, useHomeEditorStore().articleSort);
-    return treeData;
-});
 const virtualListProps = computed(() => ({
     height: size.height.value - 46
 }));
-const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
+const {treeNodeData} = useNoteTree(keyword);
 
 function _expandTo(id: number) {
     if (id === 0) {
