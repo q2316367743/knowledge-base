@@ -18,8 +18,10 @@ import {
 import {isEmptyObj} from "openai/core";
 import {keys} from "radash";
 import CherryEngine from 'cherry-markdown/dist/cherry-markdown.engine.core';
-import style from 'cherry-markdown/dist/cherry-markdown.min.css?raw'
 import {isUtools} from "@/global/BeanFactory";
+import style from 'cherry-markdown/dist/cherry-markdown.min.css?raw'
+import UtoolsStyle from '@/assets/style/utools-export.css?raw'
+import JetBrainsMono from '@/assets/fonts/JetBrainsMono-Regular.woff2'
 
 export function exportToMd(pid: number) {
     access("导出数据为md")
@@ -50,7 +52,7 @@ export async function exportToUTools(folder: number) {
         engine: {
             global: {
                 urlProcessor: (url: string) => {
-                    // 此处处理图片的路径，将相对路径转为绝对路径
+                    // TODO: 此处处理图片的路径，将相对路径转为绝对路径
                     if (url.startsWith("attachment:")) {
                         if (isUtools) {
                             let id = url.replace("attachment:", "");
@@ -117,12 +119,14 @@ export async function exportToUTools(folder: number) {
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<link href="/style.css" type="text/css" rel="stylesheet">
+<link href="../assets/style.css" type="text/css" rel="stylesheet">
+<link href="../assets/utools-export.css" type="text/css" rel="stylesheet">
 <title>${path}</title>
 </head>
 <body>
 <div class="cherry-markdown">${cnt}</div>
 </body>
+<script src="../assets/theme.js"></script>
 </html>`);
                     indexes.push({
                         t: articleIndex.name,
@@ -175,9 +179,6 @@ window.exports = {
     ]
 }
 `);
-    // 图片文件
-    let logo = await fetch('/logo.png').then((res) => res.blob());
-    zip.file('/logo.png', logo);
     // 说明
 
     zip.file('/README.md', "#  知识库导出文档插件\n" +
@@ -219,8 +220,24 @@ window.exports = {
             zip.file(image + '.png', attachment);
         }
     }
+
     // 样式的处理
-    zip.file('/style.css', style);
+    zip.file('/assets/style.css', style);
+    zip.file('/assets/utools-export.css', UtoolsStyle);
+    zip.file('/assets/theme.js', `
+// 判断是否是暗黑模式
+const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+if (isDark){
+    document.querySelector('.cherry-markdown').classList.add('theme__dark');
+}
+    `)
+    // 图片文件
+    let logo = await fetch('/logo.png').then((res) => res.blob());
+    zip.file('/logo.png', logo);
+    // 字体
+    let font = await fetch(JetBrainsMono).then((res) => res.blob());
+    zip.file('/assets/JetBrainsMono-Regular.woff2', font);
+
 
     const zipContent = await zip.generateAsync({type: "arraybuffer"});
     download(zipContent,

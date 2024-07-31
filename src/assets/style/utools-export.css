@@ -1,0 +1,20 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+.cherry-markdown {
+    padding: 20px;
+}
+@font-face {
+    font-family: JetBrainsMono;
+    src: url('./JetBrainsMono-Regular.woff2');
+}
+
+pre {
+    font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
+
+    code,
+    span {
+        font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
+    }
+}
