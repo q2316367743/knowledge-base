@@ -29,9 +29,9 @@ export async function buildConfig(
     id: string,
     value: string,
     preview: boolean,
-    instance: Ref<Cherry | undefined>,
-    update: (content: string) => void,
-    sendToChat: (content: string) => void): Promise<CherryOptions> {
+    instance: Ref<Cherry | undefined> | null,
+    update: ((content: string) => void) | null,
+    sendToChat: ((content: string) => void) | null): Promise<CherryOptions> {
 
     const {defaultModel, classicBr} = useBaseSettingStore();
 
@@ -84,36 +84,39 @@ export async function buildConfig(
         toolbar.push('ScreenShotMenu')
     }
 
+    let customMenu: Record<string, any> = {};
+    if (instance && sendToChat) {
 
-    const customMenu: Record<string, any> = {
-        // 菜单
-        AI: useAskAi(articleId, sendToChat),
-        ScreenShotMenu: useScreenShotMenu(instance),
-        PanGu: usePanGu(),
-        FanYi: useFanYi(),
-        Relation: useRelationMenu(instance),
-        // 夏柔API
-        YiYan: useYiYanMenu(instance),
-        AnWei: useAnWeiMenu(instance),
-        Pyq: usePyqMenu(instance),
-        TianGouRiJi: useTianGouRiJiMenu(instance),
-        QingGan: useQingGanMenu(instance),
-        MingRenMingYan: useMingRenMingYanMenu(instance),
-        // 分组
-        YangShi: Cherry.createMenuHook("样式", {}),
-        ZiTi: Cherry.createMenuHook("字体", {}),
-        WenAn: Cherry.createMenuHook("文案", {}),
-        // 更多
-        More: useMoreMenu
+        customMenu = {
+            // 菜单
+            AI: useAskAi(articleId, sendToChat),
+            ScreenShotMenu: useScreenShotMenu(instance),
+            PanGu: usePanGu(),
+            FanYi: useFanYi(),
+            Relation: useRelationMenu(instance),
+            // 夏柔API
+            YiYan: useYiYanMenu(instance),
+            AnWei: useAnWeiMenu(instance),
+            Pyq: usePyqMenu(instance),
+            TianGouRiJi: useTianGouRiJiMenu(instance),
+            QingGan: useQingGanMenu(instance),
+            MingRenMingYan: useMingRenMingYanMenu(instance),
+            // 分组
+            YangShi: Cherry.createMenuHook("样式", {}),
+            ZiTi: Cherry.createMenuHook("字体", {}),
+            WenAn: Cherry.createMenuHook("文案", {}),
+            // 更多
+            More: useMoreMenu
+        }
+        const plugins = await useMoreItemMenu(instance);
+        if (plugins.length > 0) {
+            plugins.forEach(plugin => customMenu[plugin.name] = plugin.hook);
+            toolbar.push({
+                More: [...plugins.map(plugin => plugin.name)],
+            });
+        }
     }
-    const plugins = await useMoreItemMenu(instance);
 
-    if (plugins.length > 0) {
-        plugins.forEach(plugin => customMenu[plugin.name] = plugin.hook);
-        toolbar.push({
-            More: [...plugins.map(plugin => plugin.name)],
-        });
-    }
     return {
         id: id,
         value: value,
@@ -185,7 +188,7 @@ export async function buildConfig(
         },
         callback: {
             afterChange(value: string) {
-                update(value)
+                update && update(value)
             },
             onClickPreview(event: MouseEvent) {
                 const aEle = event.target as HTMLElement;
@@ -239,15 +242,17 @@ export async function buildConfig(
             }
         },
         fileUpload(file: File, callback: (url: string) => void) {
-            useImageUpload(file)
-                .then(url => {
-                    if (instance.value) {
-                        instance.value.insertValue(`![图片#100%](${url})`);
-                    } else {
-                        callback(url)
-                    }
-                })
-                .catch(e => MessageUtil.error("图片上传失败", e))
+            if (instance) {
+                useImageUpload(file)
+                    .then(url => {
+                        if (instance.value) {
+                            instance.value.insertValue(`![图片#100%](${url})`);
+                        } else {
+                            callback(url)
+                        }
+                    })
+                    .catch(e => MessageUtil.error("图片上传失败", e))
+            }
 
         },
     } as any;
