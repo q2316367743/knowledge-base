@@ -3,35 +3,34 @@
         <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
             <a-layout class="app-layout">
                 <a-layout-sider collapsed style="z-index: 50">
-                    <app-side/>
+                    <app-side />
                 </a-layout-sider>
                 <a-layout-content>
-                    <router-view/>
+                    <router-view />
                 </a-layout-content>
             </a-layout>
         </a-spin>
-        <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
-        <update-check/>
-        <privacy/>
+        <a-image-preview v-model:visible="preview.visible" :src="preview.src" />
+        <update-check />
+        <privacy />
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, defineAsyncComponent, ref} from "vue";
-import {keyword, useDbKeyRefreshEvent, usePageJumpEvent} from "@/global/BeanFactory";
+import { computed, defineAsyncComponent, ref } from "vue";
+import { keyword, useDbKeyRefreshEvent, usePageJumpEvent } from "@/global/BeanFactory";
 // 存储
-import {useGlobalStore} from "@/store/GlobalStore";
-import {useArticleStore} from "@/store/db/ArticleStore";
+import { useGlobalStore } from "@/store/GlobalStore";
+import { useArticleStore } from "@/store/db/ArticleStore";
 // 组件
-import {ArticleIndex} from "@/entity/article";
+import { ArticleIndex } from "@/entity/article";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useRouter} from "vue-router";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useTodoStore} from "@/store/components/TodoStore";
-import {htmlToArticle} from "@/components/export-component/htmlToArticle";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {access} from "@/plugin/Statistics";
-import {windowConfig} from "@/global/WindowConfig";
-import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
+import { useRouter } from "vue-router";
+import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
+import { useTodoStore } from "@/store/components/TodoStore";
+import { htmlToArticle } from "@/components/export-component/htmlToArticle";
+import { access } from "@/plugin/Statistics";
+import { windowConfig } from "@/global/WindowConfig";
+import { toArticleByRelation } from "@/components/ArticePreview/OpenArticle";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -60,8 +59,6 @@ utools.onPluginEnter(action => {
 // 主题
 useGlobalStore().initDarkColors();
 
-useHomeEditorStore().init();
-useChatSettingStore().init();
 
 usePageJumpEvent.reset();
 usePageJumpEvent.on(path => router.push(path));
@@ -160,7 +157,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         } else if (preload === 'add') {
             access("feature", "新增文章");
             useArticleStore().addSimple(extra)
-                .then(id => useHomeEditorStore().openArticle(id));
+                .then(({ id }) => useHomeEditorStore().openArticle(id));
         }
     } else if (operate === 'window') {
         const config = windowConfig[preload];
@@ -181,5 +178,4 @@ window.preload && window.preload.ipcRenderer.receiveMessage('db', message => {
 })
 
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

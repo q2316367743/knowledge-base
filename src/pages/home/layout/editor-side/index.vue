@@ -2,33 +2,32 @@
     <div class="home-editor-side" ref="homeEditorSideRef">
         <header class="m-2">
             <a-input-group style="width: 100%">
-                <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
-                <he-more/>
+                <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear />
+                <he-more />
             </a-input-group>
         </header>
         <a-tree :data="treeNodeData" :virtual-list-props="virtualListProps" :checkable="checkKeys.length > 0"
-                :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable
-                @select="onSelect($event)" @drop="onDrop($event)" style="margin: 0 7px;"
-                v-model:selected-keys="selectedKeys" v-model:checked-keys="checkKeys"
-                v-model:expanded-keys="expandedKeys">
+            :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable @select="onSelect($event)"
+            @drop="onDrop($event)" style="margin: 0 7px;" v-model:selected-keys="selectedKeys"
+            v-model:checked-keys="checkKeys" v-model:expanded-keys="expandedKeys">
             <template #extra="nodeData">
                 <a-dropdown trigger="click" :popup-max-height="false">
                     <a-button type="text">
                         <template #icon>
-                            <icon-more/>
+                            <icon-more />
                         </template>
                     </a-button>
                     <template #content>
                         <a-dsubmenu v-if="!nodeData.isLeaf">
                             <template #icon>
-                                <icon-plus/>
+                                <icon-plus />
                             </template>
                             新增笔记
                             <template #content>
                                 <a-doption v-for="articleType in articleTypes" :key="articleType.key"
-                                           @click="addArticle(nodeData.key, articleType.key)">
+                                    @click="addArticle(nodeData.key, articleType.key)">
                                     <template #icon>
-                                        <component :is="articleType.icon"/>
+                                        <component :is="articleType.icon" />
                                     </template>
                                     {{ articleType.name }}
                                 </a-doption>
@@ -36,38 +35,38 @@
                         </a-dsubmenu>
                         <a-doption v-if="!nodeData.isLeaf" @click="addFolder(nodeData.key)">
                             <template #icon>
-                                <icon-folder-add/>
+                                <icon-folder-add />
                             </template>
                             新建文件夹
                         </a-doption>
                         <a-dsubmenu v-if="!nodeData.isLeaf">
                             <template #icon>
-                                <icon-apps/>
+                                <icon-apps />
                             </template>
                             更多操作
                             <template #content>
                                 <a-doption @click="multiCheckStart(nodeData.key)">
                                     <template #icon>
-                                        <icon-check-square/>
+                                        <icon-check-square />
                                     </template>
                                     多选
                                 </a-doption>
                                 <a-doption @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
                                     <template #icon>
-                                        <icon-edit/>
+                                        <icon-edit />
                                     </template>
                                     重命名
                                 </a-doption>
                                 <a-doption @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)"
-                                           style="color: red;">
+                                    style="color: red;">
                                     <template #icon>
-                                        <icon-delete/>
+                                        <icon-delete />
                                     </template>
                                     删除
                                 </a-doption>
                                 <a-doption @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
                                     <template #icon>
-                                        <icon-to-right/>
+                                        <icon-to-right />
                                     </template>
                                     移动到
                                 </a-doption>
@@ -76,41 +75,41 @@
 
                         <a-doption v-if="nodeData.isLeaf" @click="multiCheckStart(nodeData.key)">
                             <template #icon>
-                                <icon-check-square/>
+                                <icon-check-square />
                             </template>
                             多选
                         </a-doption>
                         <a-doption v-if="nodeData.isLeaf"
-                                   @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                            @click="rename(nodeData.key, nodeData.title, nodeData.isLeaf)">
                             <template #icon>
-                                <icon-edit/>
+                                <icon-edit />
                             </template>
                             重命名
                         </a-doption>
                         <a-doption v-if="nodeData.isLeaf" @click="remove(nodeData.key, nodeData.title, nodeData.isLeaf)"
-                                   style="color: red;">
+                            style="color: red;">
                             <template #icon>
-                                <icon-delete/>
+                                <icon-delete />
                             </template>
                             删除
                         </a-doption>
                         <a-doption v-if="nodeData.isLeaf"
-                                   @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
+                            @click="moveTo(nodeData.key, nodeData.title, nodeData.isLeaf)">
                             <template #icon>
-                                <icon-to-right/>
+                                <icon-to-right />
                             </template>
                             移动到
                         </a-doption>
 
                         <a-doption v-if="!nodeData.isLeaf" @click="showArticleImportModal(nodeData.key)">
                             <template #icon>
-                                <icon-import/>
+                                <icon-import />
                             </template>
                             导入
                         </a-doption>
                         <a-doption v-if="!nodeData.isLeaf" @click="exportToMd(nodeData.key)">
                             <template #icon>
-                                <icon-export/>
+                                <icon-export />
                             </template>
                             导出为ZIP
                         </a-doption>
@@ -123,27 +122,27 @@
                 <a-popconfirm content="确认删除这些文章，注意：不会删除目录" @ok="multiCheckDelete()">
                     <a-button status="danger" type="text">
                         <template #icon>
-                            <icon-delete/>
+                            <icon-delete />
                         </template>
                     </a-button>
                 </a-popconfirm>
                 <a-tooltip content="移动到">
                     <a-button type="text" @click="moveMultiTo()">
                         <template #icon>
-                            <icon-to-right/>
+                            <icon-to-right />
                         </template>
                     </a-button>
                 </a-tooltip>
                 <a-tooltip content="全选">
                     <a-button type="text" @click="selectAll()">
                         <template #icon>
-                            <icon-select-all/>
+                            <icon-select-all />
                         </template>
                     </a-button>
                 </a-tooltip>
                 <a-button type="text" @click="multiCheckStop()">
                     <template #icon>
-                        <icon-close/>
+                        <icon-close />
                     </template>
                 </a-button>
             </a-space>
@@ -151,14 +150,14 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
-import {TreeNodeData} from "@arco-design/web-vue";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {useFolderStore} from "@/store/db/FolderStore";
-import {useElementSize} from "@vueuse/core";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {useGlobalStore} from "@/store/GlobalStore";
+import { computed, ref, watch } from "vue";
+import { TreeNodeData } from "@arco-design/web-vue";
+import { useArticleStore } from "@/store/db/ArticleStore";
+import { useFolderStore } from "@/store/db/FolderStore";
+import { useElementSize } from "@vueuse/core";
+import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
+import { useBaseSettingStore } from "@/store/setting/BaseSettingStore";
+import { useGlobalStore } from "@/store/GlobalStore";
 import {
     addArticle,
     addFolder, articleTypes,
@@ -166,14 +165,14 @@ import {
     remove,
     rename
 } from "@/pages/home/components/he-context";
-import {keyword} from "@/global/BeanFactory";
+import { keyword } from "@/global/BeanFactory";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";
-import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
-import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import { openFolderChoose } from "@/components/ArticePreview/FolderChoose";
+import { getItemByDefault, setItem } from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useNoteTree} from "@/hooks/NoteTree";
-import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
+import { useNoteTree } from "@/hooks/NoteTree";
+import { showArticleImportModal } from "@/pages/home/components/ArticleImportModal";
 import HeMore from "@/pages/home/layout/editor-side/components/he-more.vue";
 
 const homeEditorSideRef = ref();
@@ -186,7 +185,7 @@ const expandedKeys = ref<Array<number>>(getItemByDefault<Array<number>>(LocalNam
 const virtualListProps = computed(() => ({
     height: size.height.value - 56
 }));
-const {treeNodeData} = useNoteTree(keyword);
+const { treeNodeData } = useNoteTree(keyword);
 
 watch(() => useHomeEditorStore().id, id => {
     selectedKeys.value = [id];
@@ -194,7 +193,7 @@ watch(() => useHomeEditorStore().id, id => {
 });
 
 
-watch(() => expandedKeys.value, value => setItem(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, value), {deep: true});
+watch(() => expandedKeys.value, value => setItem(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, value), { deep: true });
 
 function onSelect(selectKeys: Array<number | string>) {
     const id = selectKeys[0] as number;
@@ -313,7 +312,7 @@ function moveTo(id: number, name: string, article: boolean) {
     openFolderChoose(folderId).then(folder => {
         if (article) {
             // 更新文章文件夹
-            useArticleStore().updateIndex(id, {folder: folder.id})
+            useArticleStore().updateIndex(id, { folder: folder.id })
                 .then(() => MessageUtil.success("移动成功"))
         } else {
             useFolderStore().drop(id, folder.id);
@@ -334,7 +333,7 @@ function moveMultiTo() {
                     folder: folder.id
                 })))
             }
-            const {folderMap} = useArticleStore();
+            const { folderMap } = useArticleStore();
             // 文件夹
             const folderIds = checkKeys.value.filter(id => folderMap.has(id));
             if (folderIds.length > 0) {

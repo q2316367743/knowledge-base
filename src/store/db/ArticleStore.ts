@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import {
     ArticleBase,
     ArticleIndex,
@@ -6,12 +6,12 @@ import {
     getDefaultArticleIndex
 } from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {group, map} from "@/utils/lang/ArrayUtil";
-import {toRaw} from "vue";
+import { group, map } from "@/utils/lang/ArrayUtil";
+import { toRaw } from "vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {ArticleContent} from "@/entity/article/ArticleContent";
+import { listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync } from "@/utils/utools/DbStorageUtil";
+import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
+import { ArticleContent } from "@/entity/article/ArticleContent";
 
 let isInit = false;
 
@@ -56,15 +56,15 @@ export const useArticleStore = defineStore('article', {
         async _sync() {
             this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value, this.rev);
         },
-        addSimple(content: string, title?: string): Promise<number> {
+        addSimple(content: string, title?: string): Promise<ArticleIndex> {
             return this.add(getDefaultArticleIndex({
                 name: title || ('导入文章' + new Date().getTime()),
-            }), getDefaultArticleBase({source: "快捷导入"}), content);
+            }), getDefaultArticleBase({ source: "快捷导入" }), content);
         },
         async add(
             article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
             base: ArticleBase,
-            content: any): Promise<number> {
+            content: any): Promise<ArticleIndex> {
             // 校验
             if (article.name.trim() === '') {
                 return Promise.reject("文章标题不能为空");
@@ -86,28 +86,28 @@ export const useArticleStore = defineStore('article', {
                 toRaw(base)
             )
 
-            // 新增索引
-            this.value.push(getDefaultArticleIndex({
+            const target = getDefaultArticleIndex({
                 ...article,
                 createTime: now,
                 updateTime: now,
                 id,
-            }));
+            });
+            // 新增索引
+            this.value.push(target);
             await this._sync();
-            return Promise.resolve(id);
+            return Promise.resolve(target);
         },
         async updateIndex(
             id: number,
             article: Partial<ArticleIndex>
-        ) {
+        ): Promise<ArticleIndex> {
             const index = this.value.findIndex(e => e.id === id);
             if (index === -1) {
                 await MessageBoxUtil.confirm("文章未找到，是否新增文章", "更新失败", {
                     confirmButtonText: "新增",
                     cancelButtonText: "取消"
                 });
-                await this.add(Object.assign(getDefaultArticleIndex(), article), getDefaultArticleBase(), "");
-                return Promise.resolve();
+                return this.add(Object.assign(getDefaultArticleIndex(), article), getDefaultArticleBase(), "");
             }
             // 新增索引
             this.value[index] = {
@@ -117,6 +117,8 @@ export const useArticleStore = defineStore('article', {
             };
 
             await this._sync();
+
+            return this.value[index];
         },
         async updateMultiIndex(
             articles: Array<Pick<ArticleIndex, 'id'> & Partial<ArticleIndex>>
@@ -221,7 +223,7 @@ export const useArticleStore = defineStore('article', {
         async removeFolder(folderId: number) {
             let articleIndices = this.folderMap.get(folderId);
             if (!articleIndices) {
-                return ;
+                return;
             }
             await this.updateMultiIndex(articleIndices.map(e => ({
                 id: e.id,

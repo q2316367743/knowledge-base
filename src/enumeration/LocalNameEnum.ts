@@ -92,6 +92,11 @@ enum LocalNameEnum {
     KEY_HOME_EDITOR_ID = '/key/home/editor/id',
 
     /**
+     * 打开的文章ID
+     */
+    KEY_HOME_EDITOR_IDS = '/key/home/editor/ids',
+
+    /**
      * 展开的目录
      */
     KEY_HOME_EXPANDED_KEYS = '/key/home/expanded/keys',

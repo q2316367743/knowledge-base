@@ -10,19 +10,19 @@ interface UseNoteTree {
     treeNodeData: ComputedRef<Array<TreeNodeData>>
 }
 
-export function useNoteTree(keyword?: Ref<string>, map?: (data: TreeNodeData) => TreeNodeData): UseNoteTree {
-    const folderTree = computed(() => useFolderStore().folderTree);
-    const folderMap = computed(() => useArticleStore().folderMap);
+export function useNoteTree(keyword: Ref<string>, map?: (data: TreeNodeData) => TreeNodeData): UseNoteTree {
     const treeData = computed<Array<TreeNodeData>>(() => {
+        const {folderTree} = useFolderStore();
+        const {folderMap} = useArticleStore();
         let treeData = new Array<TreeNodeData>();
-        treeEach(folderTree.value, treeData, folderMap.value, map);
+        treeEach(folderTree, treeData, folderMap, map);
         treeData = treeData.length === 0 ? [] : (treeData[0].children || []);
         // 文件夹被删除或没有的
-        const articleFolders = new Set(Array.from(folderMap.value.keys()));
+        const articleFolders = new Set(Array.from(folderMap.keys()));
         useFolderStore().folderIds.forEach(folderId => articleFolders.delete(folderId));
         articleFolders.delete(0);
         articleFolders.forEach(folderId => {
-            const articles = folderMap.value.get(folderId);
+            const articles = folderMap.get(folderId);
             if (articles && articles.length > 0) {
                 articles.map(article => ({
                     key: article.id,
@@ -35,11 +35,7 @@ export function useNoteTree(keyword?: Ref<string>, map?: (data: TreeNodeData) =>
         })
         return treeData;
     });
-    if (!keyword) {
-        keyword = ref('');
-    }
-    const _k = keyword;
-    const treeNodeData = computed(() => searchData(_k.value, treeData.value));
+    const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
 
     return {treeData, treeNodeData};
 }

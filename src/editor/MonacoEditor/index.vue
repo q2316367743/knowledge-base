@@ -132,7 +132,7 @@ export default defineComponent({
                     editor && editor.setValue(text);
                     useArticleStore().updateIndex(id, {
                         name: file.name
-                    }).then(() => useHomeEditorStore().updateTitle(id, file.name));
+                    }).then(res => useHomeEditorStore().update(id, res));
                 }));
             }
 

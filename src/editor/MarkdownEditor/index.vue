@@ -99,7 +99,7 @@ function setValue(text: string, name: string, id: number) {
     const fileName = parseFileName(name);
     useArticleStore().updateIndex(id, {
         name: fileName
-    }).then(() => useHomeEditorStore().updateTitle(id, fileName));
+    }).then(res => useHomeEditorStore().update(id, res));
 }
 
 function onImport(id: number) {

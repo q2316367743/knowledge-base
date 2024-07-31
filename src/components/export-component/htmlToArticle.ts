@@ -13,7 +13,7 @@ export async function htmlToArticle(content: string) {
         MessageUtil.error("文章内容为必填！");
         return;
     }
-    const id = await useArticleStore().add(getDefaultArticleIndex({
+    const {id} = await useArticleStore().add(getDefaultArticleIndex({
         name: article.title,
         folder: 0,
         preview: false

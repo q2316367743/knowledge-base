@@ -1,15 +1,15 @@
-import {defineStore} from "pinia";
-import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import { defineStore } from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {computed, nextTick, ref} from "vue";
-import {useArticleStore} from "@/store/db/ArticleStore";
+import { computed, ref, watch } from "vue";
+import { useArticleStore } from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {ArticleIndex} from "@/entity/article";
-import {TocItem} from "@/editor/types/TocItem";
-import {map} from "@/utils/lang/ArrayUtil";
-import {useEventBus} from "@vueuse/core";
+import { ArticleIndex } from "@/entity/article";
+import { TocItem } from "@/editor/types/TocItem";
+import { map } from "@/utils/lang/ArrayUtil";
+import { useEventBus } from "@vueuse/core";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
+import { useUtoolsDbStorage } from "@/hooks/UtoolsDbStorage";
 
 // 当前是否预览
 export const preview = computed(() => {
@@ -51,11 +51,12 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
     // 打开的文章
     const indexes = ref(new Array<ArticleIndex>());
-    const articleSort = ref(ArticleSortEnum.CREATE_TIME_ASC)
+    const articleSort = useUtoolsDbStorage<ArticleSortEnum>(LocalNameEnum.KEY_HOME_SORT, ArticleSortEnum.CREATE_TIME_ASC)
 
-    const id = ref(0);
-    const collapsed = ref(false);
-    const widthWrap = ref('264px');
+    const id = useUtoolsDbStorage<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, 0);
+    const ids = useUtoolsDbStorage<Array<number>>(LocalNameEnum.KEY_HOME_EDITOR_IDS, []);
+    const collapsed = ref<boolean>(false);
+    const widthWrap = useUtoolsDbStorage<string>(LocalNameEnum.KEY_HOME_WIDTH, '264px');
 
     const width = computed(() => {
         if (collapsed.value) {
@@ -66,15 +67,18 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
     });
 
     async function init() {
-        id.value = getItemByDefault(LocalNameEnum.KEY_HOME_EDITOR_ID, 0);
-        widthWrap.value = getItemByDefault(LocalNameEnum.KEY_HOME_WIDTH, '264px');
         collapsed.value = widthWrap.value === '0px';
-        articleSort.value = getItemByDefault(LocalNameEnum.KEY_HOME_SORT, ArticleSortEnum.CREATE_TIME_ASC);
 
         useArticleStore().init().then(items => {
             const tempMap = map(items.filter(e => !e.isDelete), 'id');
-            id.value > 0 && nextTick(() => openArticle(tempMap.get(id.value)))
+            ids.value.map(e => openArticle(tempMap.get(e)))
+            if (id.value > 0 && !ids.value.includes(id.value)) {
+                openArticle(tempMap.get(id.value))
+            }
+            //  增加观察器
+            watch(indexes, value => ids.value = value.map(e => e.id));
         });
+
 
     }
 
@@ -84,7 +88,6 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
     function setId(res: number) {
         id.value = res;
-        setItem<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, id.value);
     }
 
     function setWidth(width: string) {
@@ -92,19 +95,18 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
             return;
         }
         widthWrap.value = width;
-        setItem<string>(LocalNameEnum.KEY_HOME_WIDTH, widthWrap.value);
     }
 
     function setSort(res: ArticleSortEnum) {
         articleSort.value = res;
-        setItem(LocalNameEnum.KEY_HOME_SORT, articleSort.value);
     }
 
-    function updateTitle(id: number, title: string) {
-        for (let valueElement of indexes.value) {
-            if (valueElement.id === id) {
-                valueElement.name = title;
-                return;
+    function update(id: number, article: ArticleIndex) {
+        for(let i = 0;i < indexes.value.length; i++) {
+            const value = indexes.value[i];
+            if (value.id === id) {
+                indexes.value[i] = article;
+                return
             }
         }
     }
@@ -179,15 +181,16 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
         width,
         widthWrap,
         articleSort,
+        indexes,
 
         init,
-        switchCollapsed,
         setId,
+        switchCollapsed,
         setWidth,
         setSort,
-        updateTitle,
+        update,
 
-        indexes,
+        // 标签栏管理
         openArticle,
         closeArticle,
         closeAll,

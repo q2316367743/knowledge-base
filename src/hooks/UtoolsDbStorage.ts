@@ -17,7 +17,7 @@ interface DbStorageLike {
     removeItem(key: string): void
 }
 
-export const wenDbStorage: DbStorageLike = {
+export const webDbStorage: DbStorageLike = {
     /**
      * 键值对存储，如果键名存在，则更新其对应的值
      * @param key 键名(同时为文档ID)
@@ -71,7 +71,7 @@ export function useUtoolsDbStorage<T extends (string | number | boolean | object
         },
     } = options
 
-    const dbStorage: DbStorageLike = window.utools ? window.utools.dbStorage : wenDbStorage;
+    const dbStorage: DbStorageLike = window.utools ? window.utools.dbStorage : webDbStorage;
     const sourceValue = dbStorage.getItem(key);
     const data = (shallow ? shallowRef : ref)((typeof sourceValue === 'undefined' || sourceValue === null) ? initialValue : sourceValue) as Ref<T>;
 
