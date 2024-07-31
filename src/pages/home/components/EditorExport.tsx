@@ -52,6 +52,7 @@ export async function exportToUTools(folder: number) {
             const content = await getFromOneByAsync<ArticleContent<any>>(
                 LocalNameEnum.ARTICLE_CONTENT + articleId);
             if (content.record) {
+                // TODO: 此处应获取文章全部信息，包括描述
                 const articleIndex = articleMap.get(articleId);
                 if (articleIndex) {
                     let cnt = content.record.content;
@@ -106,7 +107,7 @@ window.exports = {
    "application": { // 注意：键对应的是 plugin.json 中的 features.code
       mode: "doc", // 文档模式
       args: {
-         indexes: require('./indexes.json')
+         indexes: require('./indexes.json'),
          // 子输入框为空时的占位符，默认为字符串"搜索"
          placeholder: "搜索"
       }
@@ -176,6 +177,10 @@ window.exports = {
         "\n" +
         "- **features[0].explain**：对此功能的说明，将在搜索列表对应位置中显示\n" +
         "- **features[0].cmds**：这个是实际使用的关键字，请注意修改\n")
+
+    // TODO: 图片资源的处理
+    // TODO: 样式的处理
+    // TODO: 增加描述
 
     const zipContent = await zip.generateAsync({type: "arraybuffer"});
     download(zipContent,
