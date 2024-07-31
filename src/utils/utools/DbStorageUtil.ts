@@ -279,13 +279,12 @@ export async function postAttachment(docId: string, attachment: Blob | File): Pr
  * @param docId 文档ID
  * @return 文件链接
  */
-export async function getAttachmentByAsync(docId: string): Promise<string> {
+export async function getAttachmentByAsync(docId: string): Promise<Blob | null> {
     const data = await utools.db.promises.getAttachment(docId);
     if (!data) {
-        return Promise.resolve("./logo.png")
+        return null;
     }
-    const blob = new Blob([data]);
-    return Promise.resolve(window.URL.createObjectURL(blob));
+    return  new Blob([data]);
 }
 
 /**

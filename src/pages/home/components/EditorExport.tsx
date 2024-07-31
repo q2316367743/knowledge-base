@@ -6,7 +6,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import JSZip from "jszip";
 import {listToList} from "@/entity/ListTree";
 import {useFolderStore} from "@/store/db/FolderStore";
-import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {getAttachmentByAsync, getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
@@ -18,7 +18,8 @@ import {
 import {isEmptyObj} from "openai/core";
 import {keys} from "radash";
 import CherryEngine from 'cherry-markdown/dist/cherry-markdown.engine.core';
-import {buildConfig} from "@/editor/MarkdownEditor/common/build-config";
+import style from 'cherry-markdown/dist/cherry-markdown.min.css?raw'
+import {isUtools} from "@/global/BeanFactory";
 
 export function exportToMd(pid: number) {
     access("导出数据为md")
@@ -38,13 +39,34 @@ interface Index {
 export async function exportToUTools(folder: number) {
     access("导出数据为uTools文档插件")
 
-    const articleMap = useArticleStore().articleMap;
+    const indexes = new Array<Index>();
+    const images = new Array<string>();
+
+    const {getArticleById} = useArticleStore();
     const zip = new JSZip();
     // 查询全部目录结构
     const map = listToList(useFolderStore().folders, useArticleStore().folderMap, folder);
-    const engine = new CherryEngine(buildConfig(0, '', '', true,
-        null, null, null));
-    const indexes = new Array<Index>();
+    const engine = new CherryEngine({
+        engine: {
+            global: {
+                urlProcessor: (url: string) => {
+                    // 此处处理图片的路径，将相对路径转为绝对路径
+                    if (url.startsWith("attachment:")) {
+                        if (isUtools) {
+                            let id = url.replace("attachment:", "");
+                            if (!id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
+                                id = LocalNameEnum.ARTICLE_ATTACHMENT + id;
+                                // 记录下来
+                                images.push(id);
+                                return `..${id}.png`;
+                            }
+                        }
+                    }
+                    return url;
+                }
+            }
+        }
+    });
     // 获取markdown内容
     for (let path of map.keys()) {
         const articleId = map.get(path);
@@ -53,8 +75,9 @@ export async function exportToUTools(folder: number) {
                 LocalNameEnum.ARTICLE_CONTENT + articleId);
             if (content.record) {
                 // TODO: 此处应获取文章全部信息，包括描述
-                const articleIndex = articleMap.get(articleId);
-                if (articleIndex) {
+                const article = await getArticleById(articleId);
+                if (article) {
+                    const articleIndex = article.index;
                     let cnt = content.record.content;
                     if (articleIndex.type === ArticleTypeEnum.MARKDOWN || typeof articleIndex.type === 'undefined') {
                         // markdown
@@ -90,10 +113,21 @@ export async function exportToUTools(folder: number) {
                         // 其他的不导出
                         continue;
                     }
-                    zip.file(`/doc/${articleId}.html`, `<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><title>${path}</title></head><body>${cnt}</body></html>`);
+                    zip.file(`/doc/${articleId}.html`, `<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<link href="/style.css" type="text/css" rel="stylesheet">
+<title>${path}</title>
+</head>
+<body>
+<div class="cherry-markdown">${cnt}</div>
+</body>
+</html>`);
                     indexes.push({
                         t: articleIndex.name,
-                        d: '',
+                        // 增加描述
+                        d: article.base.description,
                         p: `doc/${articleId}.html`,
                     })
                 }
@@ -178,9 +212,15 @@ window.exports = {
         "- **features[0].explain**：对此功能的说明，将在搜索列表对应位置中显示\n" +
         "- **features[0].cmds**：这个是实际使用的关键字，请注意修改\n")
 
-    // TODO: 图片资源的处理
-    // TODO: 样式的处理
-    // TODO: 增加描述
+    // 图片资源的处理
+    for (let image of images) {
+        const attachment = await getAttachmentByAsync(image);
+        if (attachment) {
+            zip.file(image + '.png', attachment);
+        }
+    }
+    // 样式的处理
+    zip.file('/style.css', style);
 
     const zipContent = await zip.generateAsync({type: "arraybuffer"});
     download(zipContent,

@@ -1,17 +1,24 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import {
+    Article,
     ArticleBase,
     ArticleIndex,
     getDefaultArticleBase,
     getDefaultArticleIndex
 } from "@/entity/article";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import { group, map } from "@/utils/lang/ArrayUtil";
-import { toRaw } from "vue";
+import {group, map} from "@/utils/lang/ArrayUtil";
+import {toRaw} from "vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import { listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync } from "@/utils/utools/DbStorageUtil";
-import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
-import { ArticleContent } from "@/entity/article/ArticleContent";
+import {
+    getFromOneByAsync,
+    listByAsync,
+    removeOneByAsync,
+    saveListByAsync,
+    saveOneByAsync
+} from "@/utils/utools/DbStorageUtil";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {ArticleContent} from "@/entity/article/ArticleContent";
 
 let isInit = false;
 
@@ -59,7 +66,7 @@ export const useArticleStore = defineStore('article', {
         addSimple(content: string, title?: string): Promise<ArticleIndex> {
             return this.add(getDefaultArticleIndex({
                 name: title || ('导入文章' + new Date().getTime()),
-            }), getDefaultArticleBase({ source: "快捷导入" }), content);
+            }), getDefaultArticleBase({source: "快捷导入"}), content);
         },
         async add(
             article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
@@ -232,5 +239,22 @@ export const useArticleStore = defineStore('article', {
             useHomeEditorStore().closeArticle(...articleIndices.map(e => e.id));
             return Promise.resolve();
         },
+        async getArticleById(id: number): Promise<Article | null> {
+            const idx = this.articleMap.get(id);
+            if (!idx) {
+                return null;
+            }
+
+            const content = await getFromOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + id);
+            const base = await getFromOneByAsync<ArticleBase>(LocalNameEnum.ARTICLE_BASE + id);
+            if (!content.record) {
+                return null;
+            }
+            return {
+                index: idx,
+                content: content.record,
+                base: getDefaultArticleBase(base.record || {})
+            }
+        }
     }
 });
