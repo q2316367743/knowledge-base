@@ -347,17 +347,3 @@ export function rename(id: number, name: string, article: boolean) {
         }
     })
 }
-
-// ------------------------------------------------------------------------------------------------------
-// ----------------------------------------------- 导入相关 -----------------------------------------------
-// ------------------------------------------------------------------------------------------------------
-
-
-export function exportToMd(pid: number) {
-    access("导出数据")
-    useGlobalStore().startLoading("正在准备数据")
-    articleToZip(pid)
-        .then(() => MessageUtil.success("导出成功"))
-        .catch(e => MessageUtil.error("导出失败", e))
-        .finally(() => useGlobalStore().closeLoading());
-}

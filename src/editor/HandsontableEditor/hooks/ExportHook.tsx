@@ -4,9 +4,9 @@ import {Alert, Button, ButtonGroup, Drawer, Link, Space} from "@arco-design/web-
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {copy} from "@/utils/BrowserUtil";
 
-export function createDataByColumns(data: Array<Array<string>>, columns: Array<Handsontable.ColumnSettings> | null): string {
+export function _createDataByColumns(data: Array<Array<string>>, columns: Array<Handsontable.ColumnSettings> | null): Array<Record<string, string>> {
     if (!columns) {
-        return "";
+        return [];
     }
     const records = new Array<Record<string, string>>();
     for (let valueElement of data) {
@@ -16,10 +16,14 @@ export function createDataByColumns(data: Array<Array<string>>, columns: Array<H
         });
         records.push(record);
     }
-    return JSON.stringify(records);
+    return records;
 }
 
-export function createDataNotColumns(data: Array<Array<string>>): string {
+export function createDataByColumns(data: Array<Array<string>>, columns: Array<Handsontable.ColumnSettings> | null): string {
+    return JSON.stringify(_createDataByColumns(data, columns));
+}
+
+export function _createDataNotColumns(data: Array<Array<string>>): Array<Record<string, string>> {
     const records = new Array<Record<string, string>>();
     for (let valueElement of data) {
         const record: Record<string, string> = {};
@@ -27,7 +31,11 @@ export function createDataNotColumns(data: Array<Array<string>>): string {
             record[`column_${i + 1}`] = str;
         })
     }
-    return JSON.stringify(records);
+    return records;
+}
+
+export function createDataNotColumns(data: Array<Array<string>>): string {
+    return JSON.stringify(_createDataNotColumns(data));
 }
 
 
