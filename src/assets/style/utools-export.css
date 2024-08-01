@@ -1,10 +1,13 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
+
 .cherry-markdown {
     padding: 20px;
 }
+
 @font-face {
     font-family: JetBrainsMono;
     src: url('./JetBrainsMono-Regular.woff2');
@@ -13,8 +16,13 @@ html, body {
 pre {
     font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
 
-    code,
-    span {
-        font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
-    }
+}
+
+pre code,
+pre span {
+    font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
+}
+
+img {
+    width: 100%;
 }

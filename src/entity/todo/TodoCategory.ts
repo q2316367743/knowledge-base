@@ -30,7 +30,7 @@ export interface TodoCategory extends ListTree {
     hideOfTodo: boolean;
 
     /**
-     * 隐藏已完成
+     * 隐藏进行中
      */
     hideOfDoing: boolean;
 

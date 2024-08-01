@@ -45,7 +45,8 @@ export function openAddTodoCategory(pid: number) {
         hideOfTodo: false,
         hideOfAbandon: false,
         hideOfArticle: false,
-        hideOfComplete: false
+        hideOfComplete: false,
+        hideOfDoing: false
     });
 
     Modal.open({

@@ -3,6 +3,29 @@ import { Log, LogItemEnum } from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.2.6',
+        sign: 226,
+        time: '2024-08-01',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: '新增了一个新的导出格式：uTools文档插件，教程：知识库导出为uTools文档插件'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '待办新增进行中分组，感谢@RanLiuLian同学提交的pr：待办-新增【进行中】状态.'
+        }, {
+            label: LogItemEnum.ADD,
+            content: 'markdown编辑器新增快捷键选项，可以使用vim快捷键解析编辑，解放双手'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '自定义待办导出文案修复'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '表格笔记暗黑模式下，菜单颜色异常'
+        }],
+        remark: '导出为uTools插件，请查看兔小巢中的更新日志，里面有教程。',
+        url: 'https://txc.qq.com/products/612648/post/172249350048969888'
+    },
+    {
         version: '2.2.5',
         sign: 225,
         time: '2024-07-26',

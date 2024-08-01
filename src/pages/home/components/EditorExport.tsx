@@ -232,7 +232,7 @@ if (isDark){
 }
     `)
     // 图片文件
-    let logo = await fetch('/logo.png').then((res) => res.blob());
+    let logo = await fetch('./logo.png').then((res) => res.blob());
     zip.file('/logo.png', logo);
     // 字体
     let font = await fetch(JetBrainsMono).then((res) => res.blob());
