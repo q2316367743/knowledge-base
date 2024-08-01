@@ -72,6 +72,10 @@
     .handsontable {
         tr {
             background-color: var(--color-fill-2);
+
+            &:hover {
+                background-color: var(--color-fill-1);
+            }
         }
 
         .htUISelectCaption {
@@ -92,6 +96,10 @@
     .ht_master table td.htCustomMenuRenderer {
         background-color: var(--color-neutral-2);
     }
+}
+
+.htContextMenu table tbody tr td {
+    background-color: var(--color-fill-1) !important;
 }
 
 .handsontableInput {
