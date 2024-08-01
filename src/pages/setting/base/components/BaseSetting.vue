@@ -9,7 +9,8 @@
                 </a-radio-group>
                 <template #help>
                     <span v-if="instance.imageStrategy === ImageStrategyEnum.INNER">
-                        <span v-if="isUtools">markdown图片上传到插件内部，占用个人存储空间，最大图片仅支持10m，富文本将转为base64存储在文章中，文章最大1m，请谨慎上传</span>
+                        <span
+                            v-if="isUtools">markdown图片上传到插件内部，占用个人存储空间，最大图片仅支持10m，富文本将转为base64存储在文章中，文章最大1m，请谨慎上传</span>
                         <span v-else>转为base64存储到文章中</span>
                     </span>
                     <span v-else-if="instance.imageStrategy === ImageStrategyEnum.IMAGE">
@@ -86,6 +87,12 @@
                     </span>
                 </template>
             </a-form-item>
+            <a-form-item label="md编辑器快捷键">
+                <a-radio-group v-model="instance.mdEditorKeyMap">
+                    <a-radio value="sublime">sublime</a-radio>
+                    <a-radio value="vim">vim</a-radio>
+                </a-radio-group>
+            </a-form-item>
             <a-divider>动作设置</a-divider>
             <a-form-item label="待办文章动作">
                 <a-radio-group v-model="instance.todoArticleAction">
@@ -100,7 +107,8 @@
                 </a-radio-group>
             </a-form-item>
             <a-form-item label="表格组件初始化表格大小">
-                <a-input-number v-model="instance.tableColumnCount" placeholder="请输入列数" style="width: 120px" :min="1">
+                <a-input-number v-model="instance.tableColumnCount" placeholder="请输入列数" style="width: 120px"
+                                :min="1">
                     <template #suffix>
                         列
                     </template>

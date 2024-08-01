@@ -42,6 +42,7 @@ export const useBaseSettingStore = defineStore('base-setting', {
         tableColumnCount: state => state.baseSetting.tableColumnCount,
         tableColCount: state => state.baseSetting.tableColCount,
         classicBr: state => state.baseSetting.classicBr,
+        mdEditorKeyMap: state => state.baseSetting.mdEditorKeyMap ||  'sublime',
     },
     actions: {
         async init() {

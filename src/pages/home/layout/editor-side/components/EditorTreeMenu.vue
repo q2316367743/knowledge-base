@@ -85,20 +85,25 @@
                 移动到
             </a-doption>
 
-            <a-doption v-if="folder" @click="showArticleImportModal(id)">
+            <a-dsubmenu v-if="folder">
                 <template #icon>
                     <icon-import/>
                 </template>
-                导入
-            </a-doption>
+                文章导入
+                <template #content>
+                    <a-doption @click="showArticleImportModal(id)">常规导入</a-doption>
+                    <a-doption disabled>Gitee</a-doption>
+                    <a-doption disabled>GitHub</a-doption>
+                </template>
+            </a-dsubmenu>
             <a-dsubmenu v-if="folder">
                 <template #icon>
                     <icon-export/>
                 </template>
                 文章导出
                 <template #content>
-                    <a-doption v-if="folder" @click="exportToMd(id)">ZIP</a-doption>
-                    <a-doption v-if="folder" @click="exportToUTools(id)">uTools文档插件</a-doption>
+                    <a-doption @click="exportToMd(id)">ZIP</a-doption>
+                    <a-doption @click="exportToUTools(id)">uTools文档插件</a-doption>
                 </template>
             </a-dsubmenu>
         </template>

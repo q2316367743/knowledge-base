@@ -31,9 +31,9 @@ export async function buildConfig(
     preview: boolean,
     instance: Ref<Cherry | undefined> | null,
     update: ((content: string) => void) | null,
-    sendToChat: ((content: string) => void) | null): Promise<CherryOptions> {
+    sendToChat: ((content: string) => void) | null): Promise<Partial<CherryOptions>> {
 
-    const {defaultModel, classicBr} = useBaseSettingStore();
+    const {defaultModel, classicBr, mdEditorKeyMap} = useBaseSettingStore();
 
     // 默认模式
     const model = preview ?
@@ -172,6 +172,7 @@ export async function buildConfig(
             codemirror: {
                 theme: useGlobalStore().isDark ? 'material-ocean' : 'default',
             },
+            keyMap: mdEditorKeyMap
         },
         toolbars: {
             theme: useGlobalStore().isDark ? 'dark' : 'light',
@@ -182,7 +183,7 @@ export async function buildConfig(
             sidebar: ['theme', 'settings'],
             toc: {
                 updateLocationHash: false, // 要不要更新URL的hash
-                defaultModel: 'pure', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
+                defaultModel: 'pure', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题,
             },
             customMenu
         },

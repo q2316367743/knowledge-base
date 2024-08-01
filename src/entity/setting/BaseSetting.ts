@@ -39,6 +39,11 @@ export interface BaseSetting {
     mdEditorEditMode: MdEditorEditModeEnum;
 
     /**
+     * markdown编辑器快捷键风格，目前仅支持 sublime 和 vim
+     */
+    mdEditorKeyMap: 'sublime' | 'vim';
+
+    /**
      * 待办文章动作
      */
     todoArticleAction: ArticleActionEnum;
@@ -85,6 +90,7 @@ export function getDefaultBaseSetting(): BaseSetting {
         relationArticleAction: ArticleActionEnum.TO_ARTICLE,
         tableColumnCount: 26,
         tableColCount: 26,
-        classicBr: true
+        classicBr: true,
+        mdEditorKeyMap: 'sublime'
     }
 }

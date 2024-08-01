@@ -22,7 +22,6 @@ import {isUtools} from "@/global/BeanFactory";
 import style from 'cherry-markdown/dist/cherry-markdown.min.css?raw'
 import UtoolsStyle from '@/assets/style/utools-export.css?raw'
 import JetBrainsMono from '@/assets/fonts/JetBrainsMono-Regular.woff2'
-import {asyncReplaceAll} from "@/utils/lang/StringUtil";
 
 export function exportToMd(pid: number) {
     access("导出数据为md")
