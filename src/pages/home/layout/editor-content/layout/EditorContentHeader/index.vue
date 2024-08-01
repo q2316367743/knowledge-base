@@ -53,10 +53,13 @@
                         </a-dropdown>
                     </a-button-group>
                 </template>
-                <a-tab-pane v-for="article in indexes" :key="article.id">
+                <a-tab-pane v-for="article in indexes" :key="article.id"  style="height: auto">
                     <template #title>
                         <a-dropdown position="bottom" trigger="contextMenu" :popup-max-height="false">
-                            <div>{{article.name}}</div>
+                            <div >
+                                <icon-lock v-if="article.preview" style="margin-right: 4px"/>
+                                <span>{{article.name}}</span>
+                            </div>
                             <template #content>
                                 <a-doption @click="close(article.id)">
                                     关闭
@@ -75,7 +78,7 @@
                                         删除
                                     </a-doption>
                                     <a-doption @click="switchPreview(article.id)" :disabled="editorType === ArticleTypeEnum.EXCEL">
-                                        编辑/预览
+                                        {{ article.preview ? '编辑' : '预览'}}
                                     </a-doption>
                                 </a-dgroup>
                             </template>

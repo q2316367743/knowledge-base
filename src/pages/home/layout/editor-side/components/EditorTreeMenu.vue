@@ -104,6 +104,7 @@
                 <template #content>
                     <a-doption @click="exportToMd(id)">ZIP</a-doption>
                     <a-doption @click="exportToUTools(id)">uTools文档插件</a-doption>
+                    <a-doption disabled>epub</a-doption>
                 </template>
             </a-dsubmenu>
         </template>

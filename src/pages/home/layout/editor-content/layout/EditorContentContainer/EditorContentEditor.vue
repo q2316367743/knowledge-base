@@ -36,7 +36,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useArticlePreviewEvent} from "@/store/components/HomeEditorStore";
+import {useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 
@@ -149,7 +149,10 @@ function onPreview(id: number) {
             preview.value = !preview.value;
             // 此处处理
             useArticleStore().updateIndex(id, {preview: preview.value})
-                .then(() => console.debug("自动更新文章预览状态"))
+                .then(res => {
+                    useHomeEditorStore().update(id, res);
+                    console.debug("自动更新文章预览状态");
+                })
                 .catch(e => MessageUtil.error("自动更新文章预览状态失败", e));
         }
     }
