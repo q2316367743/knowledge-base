@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ref} from "vue";
-import {useStorage} from "@vueuse/core";
 import {utools} from '@/plugin/utools';
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 

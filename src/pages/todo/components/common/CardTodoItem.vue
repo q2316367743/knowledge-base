@@ -1,5 +1,5 @@
 <template>
-    <div class="card-todo-item" :class="{deleted: index.status !== TodoItemStatus.TODO}"
+    <div class="card-todo-item" :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
          :style="style" @click="_openTodoItemInfo()"
          @contextmenu="_openTodoItemSetting($event)">
         <a-typography-paragraph style="margin-top: 1rem" :ellipsis="ellipsis">

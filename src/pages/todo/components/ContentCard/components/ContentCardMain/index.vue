@@ -13,7 +13,7 @@
                 </a-button>
             </div>
             <div class="content" ref="todoRef">
-                <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" :attr="true"
+                <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" attr
                                 :only="hides.length == 3"/>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 <a-tag class="length" color="purple">{{ doingList.length }}</a-tag>
             </div>
             <div class="content" ref="doingRef">
-                <card-todo-item v-for="item in doingList" :key="item.id" :item="item" :data-id="item.id"
+                <card-todo-item v-for="item in doingList" :key="item.id" :item="item" :data-id="item.id" attr
                                 :show-top="false"/>
             </div>
         </div>

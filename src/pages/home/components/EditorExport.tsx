@@ -22,6 +22,7 @@ import {isUtools} from "@/global/BeanFactory";
 import style from 'cherry-markdown/dist/cherry-markdown.min.css?raw'
 import UtoolsStyle from '@/assets/style/utools-export.css?raw'
 import JetBrainsMono from '@/assets/fonts/JetBrainsMono-Regular.woff2'
+import {asyncReplaceAll} from "@/utils/lang/StringUtil";
 
 export function exportToMd(pid: number) {
     access("导出数据为md")
@@ -52,16 +53,15 @@ export async function exportToUTools(folder: number) {
         engine: {
             global: {
                 urlProcessor: (url: string) => {
-                    // TODO: 此处处理图片的路径，将相对路径转为绝对路径
                     if (url.startsWith("attachment:")) {
                         if (isUtools) {
                             let id = url.replace("attachment:", "");
                             if (!id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
                                 id = LocalNameEnum.ARTICLE_ATTACHMENT + id;
                                 // 记录下来
-                                images.push(id);
-                                return `..${id}.png`;
                             }
+                            images.push(id);
+                            return `..${id}.png`;
                         }
                     }
                     return url;
@@ -83,6 +83,7 @@ export async function exportToUTools(folder: number) {
                     let cnt = content.record.content;
                     if (articleIndex.type === ArticleTypeEnum.MARKDOWN || typeof articleIndex.type === 'undefined') {
                         // markdown
+
                         // @ts-ignore
                         cnt = engine.makeHtml(cnt);
                     } else if (articleIndex.type === ArticleTypeEnum.RICH_TEXT) {
