@@ -19,10 +19,11 @@
             </div>
         </a-tooltip>
         <div class="more">
-            <a-tooltip content="完成" v-if="only">
-                <a-button type="text" status="success" @click.stop="onCheck()">
+            <a-tooltip :content="index.status == TodoItemStatus.TODO ? '开始' : '完成'" v-if="only">
+                <a-button type="text" status="success" @click.stop="onCheck(index)">
                     <template #icon>
-                        <icon-check/>
+                        <icon-play-arrow v-if="index.status == TodoItemStatus.TODO"/>
+                        <icon-check v-if="index.status == TodoItemStatus.DOING"/>
                     </template>
                 </a-button>
             </a-tooltip>
@@ -35,22 +36,21 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, PropType, ref} from "vue";
-import {
+  import {computed, PropType, ref} from "vue";
+  import {
     getDefaultTodoItemAttr,
     getDefaultTodoItemIndex,
     handlePriorityColor,
     TodoItemIndex,
     TodoItemStatus
-} from "@/entity/todo/TodoItem";
-import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
-import {useTodoStore} from "@/store/components/TodoStore";
-import {toDateString} from "@/utils/lang/FormatUtil";
-import {handleDate} from "@/utils/lang/FormatUtil";
-import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
-import MessageUtil from "@/utils/modal/MessageUtil";
+  } from "@/entity/todo/TodoItem";
+  import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
+  import {useTodoStore} from "@/store/components/TodoStore";
+  import {handleDate, toDateString} from "@/utils/lang/FormatUtil";
+  import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
+  import MessageUtil from "@/utils/modal/MessageUtil";
 
-const props = defineProps({
+  const props = defineProps({
     item: Object as PropType<TodoItemIndex>,
     attr: {
         type: Boolean,
@@ -136,9 +136,18 @@ if (props.attr && index.value) {
     initAttr(index.value.id);
 }
 
-function onCheck() {
-    useTodoStore().updateById(index.value.id, {status: TodoItemStatus.COMPLETE})
-        .then(() => MessageUtil.success("操作成功！"));
+function onCheck(item:TodoItemIndex) {
+    let newStatus = item.status
+    if(item.status == TodoItemStatus.TODO){
+        newStatus = TodoItemStatus.DOING;
+    } else if(item.status == TodoItemStatus.DOING){
+        newStatus = TodoItemStatus.COMPLETE;
+    }
+    useTodoStore().updateById(index.value.id, {status: newStatus})
+        .then(() => {
+          item.status = newStatus
+          MessageUtil.success("操作成功！")
+        });
 }
 
 </script>

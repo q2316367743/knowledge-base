@@ -32,6 +32,11 @@ export interface TodoCategory extends ListTree {
     /**
      * 隐藏已完成
      */
+    hideOfDoing: boolean;
+
+    /**
+     * 隐藏已完成
+     */
     hideOfComplete: boolean;
 
     /**
@@ -115,6 +120,7 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
         hideOfTodo: false,
         hideOfAbandon: false,
         hideOfComplete: false,
+        hideOfDoing: false,
         hideOfArticle: false,
         todoListSort: TodoListSortEnum.PRIORITY,
         todoListLayout: TodoListLayoutEnum.DEFAULT
