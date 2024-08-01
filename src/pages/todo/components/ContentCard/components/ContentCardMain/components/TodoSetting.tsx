@@ -16,6 +16,7 @@ export function openTodoSetting() {
     todoCategory.hideOfComplete && hides.value.push('2');
     todoCategory.hideOfAbandon && hides.value.push('3');
     todoCategory.hideOfArticle && hides.value.push('4');
+    todoCategory.hideOfDoing && hides.value.push('5');
     const config = ref({
         todoListLayout: todoCategory.todoListLayout
     });
@@ -27,6 +28,7 @@ export function openTodoSetting() {
             <FormItem label={'模块开关'}>
                 <CheckboxGroup v-model={hides.value}>
                     <Checkbox value={'1'}>隐藏待办</Checkbox>
+                    <Checkbox value={'5'}>隐藏进行</Checkbox>
                     <Checkbox value={'2'}>隐藏完成</Checkbox>
                     <Checkbox value={'3'}>隐藏放弃</Checkbox>
                     <Checkbox value={'4'}>隐藏文章</Checkbox>

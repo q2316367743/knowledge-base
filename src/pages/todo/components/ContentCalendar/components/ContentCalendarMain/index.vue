@@ -60,6 +60,7 @@ const title = ref("请选择日期");
 
 const todoList = computed(() => useTodoStore().todoList);
 const completeList = computed(() => useTodoStore().completeList);
+const doingList = computed(() => useTodoStore().doingList);
 const abandonList = computed(() => useTodoStore().abandonList);
 const articleList = computed(() => useTodoStore().articleList);
 
@@ -75,6 +76,7 @@ const items = computed<Array<TodoItemIndex>>(() => {
 
     !todoCategory.value.hideOfTodo && temp.push(...todoList.value);
     !todoCategory.value.hideOfComplete && temp.push(...completeList.value);
+    !todoCategory.value.hideOfDoing && temp.push(...doingList.value);
     !todoCategory.value.hideOfAbandon && temp.push(...abandonList.value);
 
     return temp;

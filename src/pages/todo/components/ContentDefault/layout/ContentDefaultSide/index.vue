@@ -15,7 +15,7 @@
             <div v-if="!hideOfTodo" v-for="item in todoList" class="todo-layout-list-item"
                  :class="itemId === item.id ? 'active' : ''"
                  :key="item.id" @click.stop>
-                <a-checkbox :default-checked="false" @change="updateStatus(item.id, TodoItemStatus.COMPLETE)">
+                <a-checkbox :default-checked="false" @change="updateStatus(item.id, TodoItemStatus.DOING)">
                 </a-checkbox>
                 <a-dropdown align-point trigger="contextMenu">
                     <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
@@ -73,7 +73,38 @@
                     </a-button>
                 </a-tooltip>
             </div>
-            <!-- 已完成 -->
+
+          <!-- 进行中 -->
+          <a-divider orientation="left" v-if="doingList.length > 0"
+                     :style="{marginBottom: hideOfDoing ? '33px':'13px'}">
+                <span style="cursor: pointer;color: rgb(var(--purple-6));"
+                      @click.stop="hideOfDoing = !hideOfDoing">
+                    <icon-right v-if="hideOfDoing"/>
+                    <icon-down v-else/>
+                    进行中
+                </span>
+          </a-divider>
+          <div v-if="!hideOfDoing" v-for="item in doingList" class="todo-layout-list-item"
+               :class="itemId === item.id ? 'active' : ''"
+               :key="item.id" @click.stop>
+            <a-checkbox :default-checked="true" @change="updateStatus(item.id, TodoItemStatus.COMPLETE)">
+            </a-checkbox>
+            <a-dropdown align-point trigger="contextMenu">
+              <div class="title gray" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
+                {{ item.title }}
+              </div>
+              <template #content>
+                <a-doption style="color: rgb(var(--red-6));" @click="removeById(item.id)">
+                  <template #icon>
+                    <icon-delete/>
+                  </template>
+                  删除
+                </a-doption>
+              </template>
+            </a-dropdown>
+          </div>
+
+          <!-- 已完成 -->
             <a-divider orientation="left" v-if="completeList.length > 0"
                        :style="{marginBottom: hideOfComplete ? '33px':'13px'}">
                 <span style="cursor: pointer;color: rgb(var(--green-6));"
@@ -158,6 +189,7 @@ import {access} from "@/plugin/Statistics";
 
 const hideOfTodo = ref(false);
 const hideOfComplete = ref(false);
+const hideOfDoing = ref(false);
 const hideOfAbandon = ref(false);
 const hideOfArticle = ref(false);
 
@@ -168,6 +200,7 @@ const todoList = computed(() => {
         .sort((a, b) => sortTodoIndex(a, b, ifObjectIsNull(category, 'todoListSort', TodoListSortEnum.PRIORITY)));
 });
 const completeList = computed(() => useTodoStore().completeList);
+const doingList = computed(() => useTodoStore().doingList);
 const abandonList = computed(() => useTodoStore().abandonList);
 const articleList = computed(() => useTodoStore().articleList);
 

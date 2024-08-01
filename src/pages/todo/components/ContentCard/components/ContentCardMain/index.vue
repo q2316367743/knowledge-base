@@ -1,6 +1,6 @@
 <template>
     <main class="main">
-        <div class="card-item" v-if="showTodo" :style="style">
+      <div class="card-item" v-if="showDoing" :style="style">
             <div class="title">
                 待办
                 <a-tag class="length">{{ todoList.length }}</a-tag>
@@ -15,6 +15,16 @@
             <div class="content" ref="todoRef">
                 <card-todo-item v-for="item in todoList" :key="item.id" :item="item" :data-id="item.id" :attr="true"
                                 :only="hides.length == 3"/>
+            </div>
+        </div>
+        <div class="card-item" v-if="showDoing" :style="style">
+            <div class="title">
+                进行中
+                <a-tag class="length" color="purple">{{ doingList.length }}</a-tag>
+            </div>
+            <div class="content" ref="doingRef">
+                <card-todo-item v-for="item in doingList" :key="item.id" :item="item" :data-id="item.id"
+                                :show-top="false"/>
             </div>
         </div>
         <div class="card-item" v-if="showComplete" :style="style">
@@ -80,6 +90,7 @@ import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 const router = useRouter();
 
 const todoRef = ref<HTMLDivElement>();
+const doingRef = ref<HTMLDivElement>();
 const completeRef = ref<HTMLDivElement>();
 const abandonRef = ref<HTMLDivElement>();
 
@@ -88,6 +99,7 @@ const todoList = computed(() => {
     return useTodoStore().todoList
         .sort((a, b) => sortTodoIndex(a, b, ifObjectIsNull(category, 'todoListSort', TodoListSortEnum.PRIORITY)));
 });
+const doingList = computed(() => useTodoStore().doingList);
 const completeList = computed(() => useTodoStore().completeList);
 const abandonList = computed(() => useTodoStore().abandonList);
 const articleList = computed(() => useTodoStore().articleList);
@@ -96,6 +108,7 @@ const hides = computed(() => useTodoStore().hides);
 
 
 const showTodo = computed(() => !contains(hides.value, '1'));
+const showDoing = computed(() => !contains(hides.value, '5'));
 const showComplete = computed(() => !contains(hides.value, '2'));
 const showAbandon = computed(() => !contains(hides.value, '3'));
 const showArticle = computed(() => !contains(hides.value, '4'));
@@ -119,6 +132,14 @@ onMounted(() => {
         animation: 150,
         onAdd(e: SortableEvent) {
             updateItem(e, TodoItemStatus.TODO);
+        }
+    });
+
+    doingRef.value && new Sortable(doingRef.value, {
+        group: 'shared', // set both lists to same group
+        animation: 150,
+        onAdd(e: SortableEvent) {
+            updateItem(e, TodoItemStatus.DOING);
         }
     });
 

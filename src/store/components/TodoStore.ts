@@ -87,6 +87,9 @@ export const useTodoStore = defineStore('todo', {
         completeList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.COMPLETE).sort((a, b) => a.id - b.id);
         },
+        doingList: (state): Array<TodoItemIndex> => {
+            return state.todoItems.filter(e => e.status === TodoItemStatus.DOING).sort((a, b) => a.id - b.id);
+        },
         abandonList: (state): Array<TodoItemIndex> => {
             return state.todoItems.filter(e => e.status === TodoItemStatus.ABANDON).sort((a, b) => a.id - b.id);
         },

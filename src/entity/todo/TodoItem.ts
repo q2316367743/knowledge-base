@@ -127,7 +127,12 @@ export enum TodoItemStatus {
     /**
      * 放弃
      */
-    ABANDON = 3
+    ABANDON = 3,
+
+    /**
+     * 进行中
+     */
+    DOING = 4
 
 }
 
@@ -178,7 +183,7 @@ export function getDefaultTodoItem(): TodoItem {
 }
 
 export function handleSimplePriorityColor(priority: TodoItemPriority): string {
-    switch (priority){
+    switch (priority) {
         case TodoItemPriority.HIGH:
             return 'red';
         case TodoItemPriority.MIDDLE:
@@ -191,7 +196,7 @@ export function handleSimplePriorityColor(priority: TodoItemPriority): string {
 }
 
 export function handlePriorityColor(priority: TodoItemPriority): string {
-    switch (priority){
+    switch (priority) {
         case TodoItemPriority.HIGH:
             return 'rgb(var(--red-6))';
         case TodoItemPriority.MIDDLE:
@@ -207,7 +212,7 @@ export function handlePriorityColor(priority: TodoItemPriority): string {
 
 
 export function handlePriorityText(priority: TodoItemPriority): string {
-    switch (priority){
+    switch (priority) {
         case TodoItemPriority.HIGH:
             return '高优先级';
         case TodoItemPriority.MIDDLE:
