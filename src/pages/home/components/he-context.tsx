@@ -5,13 +5,12 @@ import {
     IconFile,
     IconMindMapping,
     IconNav,
-    IconPalette, IconRefresh
+    IconRefresh
 } from "@arco-design/web-vue/es/icon";
 import { Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect } from "@arco-design/web-vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import { getDefaultArticleBase, getDefaultArticleIndex } from "@/entity/article";
 // 存储
-import { useGlobalStore } from "@/store/GlobalStore";
 import { useArticleStore } from "@/store/db/ArticleStore";
 import { buildArticleName, useBaseSettingStore } from "@/store/setting/BaseSettingStore";
 import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
@@ -19,7 +18,6 @@ import { useFolderStore } from "@/store/db/FolderStore";
 // 工具类
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import { articleToZip } from "@/utils/file/ConvertUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import { map, traverseNumber } from "@/utils/lang/ArrayUtil";
 // 组件
@@ -31,7 +29,6 @@ import FileMarkdown from '@/components/KbIcon/FileMarkdown.vue';
 import IconRichText from '@/components/KbIcon/FileRichText.vue';
 import FileCode from '@/components/KbIcon/FileCode.vue';
 import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
-import FileDrauu from '@/components/KbIcon/FileDrauu.vue';
 import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 
 // ------------------------------------------------------------------------------------------------------
@@ -79,7 +76,7 @@ export function renderArticleType(type: ArticleTypeEnum): string {
         case ArticleTypeEnum.CODE:
             return "代码笔记";
         case ArticleTypeEnum.DRAUU:
-            return "画板";
+            return "画板（已弃用）";
         case ArticleTypeEnum.EDITOR_JS:
             return "富文本（已弃用）";
         case ArticleTypeEnum.EXCEL:

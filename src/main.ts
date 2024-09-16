@@ -25,9 +25,10 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import {isUtools, useDeleteEvent, useNewEvent, useSearchContentEvent} from '@/global/BeanFactory';
+import {isUtools, useDeleteEvent, useSearchContentEvent} from '@/global/BeanFactory';
 import {access} from "@/plugin/Statistics";
 import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {addArticleModal} from "@/pages/home/components/he-context";
 
 self.MonacoEnvironment = {
     getWorker(_: string, label: string) {
@@ -68,7 +69,7 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.ctrlKey || e.altKey) {
         if (e.code === 'KeyN') {
             e.preventDefault();
-            useNewEvent.emit();
+            addArticleModal();
             access("使用快捷键", getKey(e));
         } else if (e.code === 'Delete') {
             e.preventDefault();

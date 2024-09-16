@@ -162,6 +162,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     } else if (operate === 'window') {
         const config = windowConfig[preload];
         access('打开窗口：' + config['title']);
+        // @ts-ignore
         utools.createBrowserWindow(`dist/${preload}.html`, {
             width: 800,
             height: 600,
