@@ -62,11 +62,6 @@ export const articleTextTypes = [{
 
 export const articleTypes = [
     ...articleTextTypes, {
-        key: ArticleTypeEnum.DRAUU,
-        name: '画板',
-        icon: IconPalette,
-        lock: FileDrauu
-    }, {
         key: ArticleTypeEnum.HANDSONTABLE,
         name: '表格',
         icon: IconNav,
