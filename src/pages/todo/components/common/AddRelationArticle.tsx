@@ -16,7 +16,7 @@ export function openAddRelationArticle() {
     Modal.open({
         title: () => <InputSearch v-model={keyword.value}/>,
         content: () => <Tree v-model={[checkedKeys.value, 'checkedKeys']} data={treeNodeData.value}
-                             defaultExpandAll={false}
+                             defaultExpandAll={false} checkable={true}
                              blockNode virtualListProps={{height: size.height.value / 2}}/>,
         okText: '保存',
         bodyClass: 'todo-item-article',
