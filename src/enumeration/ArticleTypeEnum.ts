@@ -24,7 +24,7 @@ enum ArticleTypeEnum {
 
     /**
      * 表格
-     * @deprecated
+     * @deprecated 不再使用
      */
     EXCEL = 5,
 
@@ -35,13 +35,19 @@ enum ArticleTypeEnum {
 
     /**
      * drauu实现的画板
+     * @deprecated 不再使用
      */
     DRAUU = 7,
 
     /**
      * 表格
      */
-    HANDSONTABLE = 8
+    HANDSONTABLE = 8,
+
+    /**
+     * Leafer实现的画板
+     */
+    LEAFER = 9
 
 }
 

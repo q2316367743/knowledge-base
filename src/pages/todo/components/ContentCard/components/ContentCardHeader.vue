@@ -75,6 +75,12 @@
                         </template>
                         关联文章
                     </a-doption>
+                    <a-doption :disabled="disabled" @click="todoSearch()">
+                        <template #icon>
+                            <icon-search/>
+                        </template>
+                        搜索
+                    </a-doption>
                     <a-doption :disabled="disabled" @click="openTodoSetting()">
                         <template #icon>
                             <icon-settings/>
@@ -93,8 +99,9 @@ import {computed} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
-import {openTodoSetting} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoSetting";
+import {openTodoSetting} from "@/pages/todo/components/common/TodoSetting";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
+import {todoSearch} from "@/pages/todo/components/common/TodoSearch";
 
 const disabled = computed(() => useTodoStore().id === 0);
 const title = computed(() => useTodoStore().title);

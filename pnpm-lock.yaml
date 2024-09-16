@@ -62,18 +62,12 @@ importers:
       monaco-editor:
         specifier: ^0.44.0
         version: 0.44.0
-      nanoevents:
-        specifier: ^9.0.0
-        version: 9.0.0
       openai:
         specifier: ^4.53.2
         version: 4.53.2(encoding@0.1.13)
       pangu:
         specifier: ^4.0.7
         version: 4.0.7
-      perfect-freehand:
-        specifier: ^1.2.2
-        version: 1.2.2
       pinia:
         specifier: ^2.2.0
         version: 2.2.0(typescript@4.9.5)(vue@3.4.34(typescript@4.9.5))
@@ -133,8 +127,8 @@ importers:
         specifier: ^0.59.4
         version: 0.59.4(postcss@8.4.40)(rollup@3.29.4)(vite@4.5.3(@types/node@22.0.0)(less@4.2.0)(terser@5.31.3))
       utools-api-types:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.2.0
+        version: 5.2.0
       vite:
         specifier: ^4.5.3
         version: 4.5.3(@types/node@22.0.0)(less@4.2.0)(terser@5.31.3)
@@ -2441,10 +2435,6 @@ packages:
   mutation-observer@1.0.3:
     resolution: {integrity: sha512-M/O/4rF2h776hV7qGMZUH3utZLO/jK7p8rnNgGkjKUw8zCGjRQPxB8z6+5l8+VjRUQ3dNYu4vjqXYLr+U8ZVNA==}
 
-  nanoevents@9.0.0:
-    resolution: {integrity: sha512-X8pU7IOpgKXVLPxYUI55ymXc8XuBE+uypfEyEFBtHkD1EX9KavYTVc+vXZHFyHKzA1TaZoVDqklLdQBBrxIuAw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-
   nanoid@3.3.7:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -2600,9 +2590,6 @@ packages:
 
   perfect-debounce@1.0.0:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
-
-  perfect-freehand@1.2.2:
-    resolution: {integrity: sha512-eh31l019WICQ03pkF3FSzHxB8n07ItqIQ++G5UV8JX0zVOXzgTGCqnRR0jJ2h9U8/2uW4W4mtGJELt9kEV0CFQ==}
 
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
@@ -3103,8 +3090,8 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  utools-api-types@5.0.0:
-    resolution: {integrity: sha512-XLwJYo+6Tfhq6W5yGtzllIS0Dt0byy2fpyhdohwGJIju5+VsmJ2Nljvc63mStvx8uzWwEyIwr6fFmrycf3rAEw==}
+  utools-api-types@5.2.0:
+    resolution: {integrity: sha512-3QfAioW6k1QxBtlpEwvcadpaPz/r6WBF/5s38smy58r372my217K8OmN9mD6aHHfZqeVkBawfr0HIDQ9rz9IEQ==}
 
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
@@ -6014,8 +6001,6 @@ snapshots:
 
   mutation-observer@1.0.3: {}
 
-  nanoevents@9.0.0: {}
-
   nanoid@3.3.7: {}
 
   needle@3.3.1:
@@ -6160,8 +6145,6 @@ snapshots:
       tslib: 1.14.1
 
   perfect-debounce@1.0.0: {}
-
-  perfect-freehand@1.2.2: {}
 
   picocolors@1.0.1: {}
 
@@ -6727,7 +6710,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  utools-api-types@5.0.0: {}
+  utools-api-types@5.2.0: {}
 
   utrie@1.0.2:
     dependencies:

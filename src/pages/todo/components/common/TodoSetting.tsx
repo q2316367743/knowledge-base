@@ -26,7 +26,7 @@ export function openTodoSetting() {
         width: 400,
         content: () => <Form model={config.value} layout={'vertical'}>
             <FormItem label={'模块开关'}>
-                <CheckboxGroup v-model={hides.value}>
+                <CheckboxGroup v-model={hides.value} defaultValue={[]}>
                     <Checkbox value={'1'}>隐藏待办</Checkbox>
                     <Checkbox value={'5'}>隐藏进行</Checkbox>
                     <Checkbox value={'2'}>隐藏完成</Checkbox>
@@ -35,7 +35,7 @@ export function openTodoSetting() {
                 </CheckboxGroup>
             </FormItem>
             <FormItem label="布局">
-                <RadioGroup v-model={config.value.todoListLayout}>
+                <RadioGroup v-model={config.value.todoListLayout} defaultValue={TodoListLayoutEnum.DEFAULT}>
                     <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
                     <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
                     <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>

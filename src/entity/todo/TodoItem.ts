@@ -226,3 +226,19 @@ export function handlePriorityText(priority: TodoItemPriority): string {
     }
 
 }
+
+export function handleStatusText(status: TodoItemStatus): string {
+    switch (status) {
+        case TodoItemStatus.TODO:
+            return '待办';
+        case TodoItemStatus.COMPLETE:
+            return '已完成';
+        case TodoItemStatus.DOING:
+            return '进行中';
+        case TodoItemStatus.ABANDON:
+            return '已放弃';
+        default:
+            return '无状态';
+    }
+
+}

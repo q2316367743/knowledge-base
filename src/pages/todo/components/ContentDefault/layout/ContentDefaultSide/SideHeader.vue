@@ -73,6 +73,12 @@
                             </template>
                             导出
                         </a-doption>
+                        <a-doption :disabled="disabled" @click="todoSearch()">
+                            <template #icon>
+                                <icon-search/>
+                            </template>
+                            搜索
+                        </a-doption>
                         <a-doption :disabled="disabled" @click="openTodoSetting()">
                             <template #icon>
                                 <icon-settings/>
@@ -132,7 +138,8 @@ import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 // 组件
 import {openTodoExport} from "@/pages/todo/components/common/TodoExport";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
-import {openTodoSetting} from "@/pages/todo/components/ContentCard/components/ContentCardMain/components/TodoSetting";
+import {openTodoSetting} from "@/pages/todo/components/common/TodoSetting";
+import {todoSearch} from "@/pages/todo/components/common/TodoSearch";
 
 const id = computed(() => useTodoStore().id);
 const title = computed(() => useTodoStore().title);
