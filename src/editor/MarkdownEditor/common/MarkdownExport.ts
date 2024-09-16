@@ -26,7 +26,7 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
         name: 'html',
         desc: '易于复制'
     }]).then(res => {
-
+        console.log(res);
         if (res.type === 1) {
             // 导出图片
             const markdown = cherry.getMarkdown();
@@ -39,9 +39,10 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
                 })
                 return `![](./image/${code[0]}.png)`;
             });
+            console.log(images);
             if (images.length ===0) {
                 // 文件导出
-                cherry.export('markdown', res.title);
+                download(markdown, res.title + '.md', 'text/plain')
             }else {
                 const jsZip = new JSZip();
                 jsZip.file('index.md', replacedStr);
