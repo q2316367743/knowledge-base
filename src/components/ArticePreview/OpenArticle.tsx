@@ -28,7 +28,7 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
                     icon: () => <IconEdit/>
                 }}
             </Button>
-            <span style={{marginLeft: '7px'}}>articleIndex.name</span>
+            <span style={{marginLeft: '7px'}}>{articleIndex.name}</span>
         </div>,
         width: width,
         footer: false,
