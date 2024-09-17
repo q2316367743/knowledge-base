@@ -11,9 +11,6 @@ importers:
       '@arco-design/web-vue':
         specifier: ^2.56.0
         version: 2.56.0(vue@3.4.34(typescript@4.9.5))
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
       '@vueuse/core':
         specifier: ^9.13.0
         version: 9.13.0(vue@3.4.34(typescript@4.9.5))
@@ -22,7 +19,7 @@ importers:
         version: 10.11.0(axios@1.7.2)(fuse.js@7.0.0)(idb-keyval@6.2.1)(sortablejs@1.15.2)(vue@3.4.34(typescript@4.9.5))
       aieditor:
         specifier: ^1.0.13
-        version: 1.0.13(@tiptap/extension-code-block@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8))
+        version: 1.0.13(@tiptap/extension-code-block@2.6.6(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8))
       axios:
         specifier: ^1.7.2
         version: 1.7.2
@@ -38,9 +35,6 @@ importers:
       handsontable:
         specifier: ^14.5.0
         version: 14.5.0
-      html2canvas:
-        specifier: ^1.4.1
-        version: 1.4.1
       hyperformula:
         specifier: ^2.7.1
         version: 2.7.1
@@ -551,6 +545,12 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.5.8
       '@tiptap/pm': ^2.5.8
+
+  '@tiptap/extension-code-block@2.6.6':
+    resolution: {integrity: sha512-1YLp/zHMHSkE2xzht8nPR6T4sQJJ3ket798czxWuQEbetFv/l0U/mpiPpYSLObj6oTAoqYZ0kWXZj5eQSpPB8Q==}
+    peerDependencies:
+      '@tiptap/core': ^2.6.6
+      '@tiptap/pm': ^2.6.6
 
   '@tiptap/extension-code@2.5.8':
     resolution: {integrity: sha512-56lb4NnaYAbIkqBTCIg4ZoITrw86Dj8C2HSi6DrU7f5q9cfvGuH+2057I5n8eEEfASu1AeDN6tSnCz3NR+yiHw==}
@@ -1208,10 +1208,6 @@ packages:
   base-64@1.0.0:
     resolution: {integrity: sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==}
 
-  base64-arraybuffer@1.0.2:
-    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
-    engines: {node: '>= 0.6.0'}
-
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
@@ -1403,9 +1399,6 @@ packages:
 
   css-in-js-utils@3.1.0:
     resolution: {integrity: sha512-fJAcud6B3rRu+KHYk+Bwf+WFL2MDCJJ1XG9x137tJQ0xYxor7XziQtuGFbWNdqrvF4Tk26O3H73nfVqXt/fW1A==}
-
-  css-line-break@2.1.0:
-    resolution: {integrity: sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==}
 
   css-select@5.1.0:
     resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
@@ -1982,10 +1975,6 @@ packages:
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
     engines: {node: '>=8'}
-
-  html2canvas@1.4.1:
-    resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
-    engines: {node: '>=8.0.0'}
 
   http-proxy-agent@5.0.0:
     resolution: {integrity: sha512-n2hY8YdoRE1i7r6M0w9DIw5GgZN0G25P8zLCRQ8rjXtTU3vsNFBI/vWK/UIeE6g5MUUz6avwAPXmL6Fy9D/90w==}
@@ -2970,9 +2959,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  text-segmentation@1.0.3:
-    resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==}
-
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
@@ -3092,9 +3078,6 @@ packages:
 
   utools-api-types@5.2.0:
     resolution: {integrity: sha512-3QfAioW6k1QxBtlpEwvcadpaPz/r6WBF/5s38smy58r372my217K8OmN9mD6aHHfZqeVkBawfr0HIDQ9rz9IEQ==}
-
-  utrie@1.0.2:
-    resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
@@ -3756,13 +3739,18 @@ snapshots:
       '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
       '@tiptap/pm': 2.5.8
 
-  '@tiptap/extension-code-block-lowlight@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-code-block@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)':
+  '@tiptap/extension-code-block-lowlight@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-code-block@2.6.6(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)':
     dependencies:
       '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
-      '@tiptap/extension-code-block': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
+      '@tiptap/extension-code-block': 2.6.6(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
       '@tiptap/pm': 2.5.8
 
   '@tiptap/extension-code-block@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)':
+    dependencies:
+      '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
+      '@tiptap/pm': 2.5.8
+
+  '@tiptap/extension-code-block@2.6.6(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)':
     dependencies:
       '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
       '@tiptap/pm': 2.5.8
@@ -4499,12 +4487,12 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  aieditor@1.0.13(@tiptap/extension-code-block@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)):
+  aieditor@1.0.13(@tiptap/extension-code-block@2.6.6(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)):
     dependencies:
       '@tiptap/core': 2.5.8(@tiptap/pm@2.5.8)
       '@tiptap/extension-bubble-menu': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
       '@tiptap/extension-character-count': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
-      '@tiptap/extension-code-block-lowlight': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-code-block@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
+      '@tiptap/extension-code-block-lowlight': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-code-block@2.6.6(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
       '@tiptap/extension-color': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-text-style@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8)))
       '@tiptap/extension-font-family': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/extension-text-style@2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8)))
       '@tiptap/extension-gapcursor': 2.5.8(@tiptap/core@2.5.8(@tiptap/pm@2.5.8))(@tiptap/pm@2.5.8)
@@ -4589,8 +4577,6 @@ snapshots:
   balanced-match@1.0.2: {}
 
   base-64@1.0.0: {}
-
-  base64-arraybuffer@1.0.2: {}
 
   base64-js@1.5.1: {}
 
@@ -4787,10 +4773,6 @@ snapshots:
   css-in-js-utils@3.1.0:
     dependencies:
       hyphenate-style-name: 1.1.0
-
-  css-line-break@2.1.0:
-    dependencies:
-      utrie: 1.0.2
 
   css-select@5.1.0:
     dependencies:
@@ -5423,11 +5405,6 @@ snapshots:
       whatwg-encoding: 2.0.0
 
   html-tags@3.3.1: {}
-
-  html2canvas@1.4.1:
-    dependencies:
-      css-line-break: 2.1.0
-      text-segmentation: 1.0.3
 
   http-proxy-agent@5.0.0:
     dependencies:
@@ -6582,10 +6559,6 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  text-segmentation@1.0.3:
-    dependencies:
-      utrie: 1.0.2
-
   through@2.3.8: {}
 
   tiny-emitter@2.1.0: {}
@@ -6711,10 +6684,6 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   utools-api-types@5.2.0: {}
-
-  utrie@1.0.2:
-    dependencies:
-      base64-arraybuffer: 1.0.2
 
   uuid@9.0.1: {}
 

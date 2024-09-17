@@ -161,37 +161,13 @@ declare interface Window {
         },
         ipcRenderer: {
             receiveMessage(event: string, callback: (msg: string) => void): void;
-        }
+        },
+
+        createServer(success: (port: number) => void, error: (error: Error) => void): void;
     }
     bs: {
         db: TtDb
     },
     TDAPP: TDAPP,
     umami: UmamiInstance
-}
-
-
-declare module 'vue-page-stack' {
-    import type { Router } from 'vue-router'
-    export const VuePageStackPlugin: {
-        install: (app: any, options: { router: Router }) => void
-    }
-    export const VuePageStack: import('vue').DefineComponent<
-        {
-            onForward: () => void,
-            onBack: () => void,
-        }
-    >
-}
-declare module 'vue-page-stack' {
-    import type { Router } from 'vue-router'
-    export const VuePageStackPlugin: {
-        install: (app: any, options: { router: Router }) => void
-    }
-    export const VuePageStack: import('vue').DefineComponent<
-        {
-            onForward: () => void,
-            onBack: () => void,
-        }
-    >
 }

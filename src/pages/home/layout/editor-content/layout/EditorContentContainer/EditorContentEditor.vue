@@ -3,7 +3,7 @@
     <div class="ec-container-item" v-if="articleIndex">
         <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
                          v-if="editorType === ArticleTypeEnum.MARKDOWN && load" @send-to-chat="sendToChat"/>
-        <wang-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
+        <rich-text-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
                      v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
         <monaco-editor v-model="content" :language="language" :read-only="preview" :article-id="articleIndex.id"
                        v-else-if="editorType === ArticleTypeEnum.CODE && load"/>
@@ -21,7 +21,7 @@
 import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 // 编辑器
-import WangEditor from "@/editor/RichTextEditor/index.vue";
+import RichTextEditor from "@/editor/RichTextEditor/index.vue";
 import MonacoEditor from "@/editor/MonacoEditor/index.vue";
 import MarkdownEditor from "@/editor/MarkdownEditor/index.vue";
 import ExcelEditor from "@/editor/ExcelEditor/index.vue";

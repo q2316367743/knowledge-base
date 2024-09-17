@@ -42,7 +42,7 @@ async function selfImageUpload(data: File | Blob | string, isLocal: boolean): Pr
                 // utools的富文本转为base64
                 return useImageUploadByBase64(data);
             }else {
-                return useImageUploadByUtools(data);
+                return _useImageUploadByUtools(data);
             }
         } else {
             // web版直接使用base64
@@ -92,7 +92,7 @@ async function useImageUploadByPlugin(data: File | Blob | string): Promise<void>
 }
 
 
-async function useImageUploadByUtools(data: Blob | File | string): Promise<string> {
+async function _useImageUploadByUtools(data: Blob | File | string): Promise<string> {
     if (typeof data === 'string') {
         data = base64toBlob(data.replace(BASE64_PREFIX, ""));
     }
@@ -109,6 +109,22 @@ async function useImageUploadByLskyPro(data: Blob | File | string): Promise<stri
         data = base64toBlob(data.replace(BASE64_PREFIX, ""));
     }
     return useLskyProSettingStore().upload(data)
+}
+
+
+
+export async function useImageUploadByUtools(data: Blob | File | string): Promise<string> {
+    if (typeof data === 'string') {
+        data = base64toBlob(data.replace(BASE64_PREFIX, ""));
+    }
+    const id = new Date().getTime() + '';
+    const key = LocalNameEnum.ARTICLE_ATTACHMENT + id;
+    await postAttachment(
+        key,
+        data
+    );
+    return key;
+
 }
 
 // --------------------------------------------------------------------------------------------------------------

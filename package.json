@@ -14,7 +14,6 @@
     },
     "dependencies": {
         "@arco-design/web-vue": "^2.56.0",
-        "@popperjs/core": "^2.11.8",
         "@vueuse/core": "^9.13.0",
         "@vueuse/integrations": "^10.11.0",
         "aieditor": "^1.0.13",
@@ -23,7 +22,6 @@
         "dayjs": "^1.11.12",
         "fuse.js": "^7.0.0",
         "handsontable": "^14.5.0",
-        "html2canvas": "^1.4.1",
         "hyperformula": "^2.7.1",
         "idb": "^8.0.0",
         "jszip": "^3.10.1",
