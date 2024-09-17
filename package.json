@@ -14,6 +14,8 @@
     },
     "dependencies": {
         "@arco-design/web-vue": "^2.56.0",
+        "@logicflow/core": "^2.0.4",
+        "@logicflow/extension": "^2.0.8",
         "@vueuse/core": "^9.13.0",
         "@vueuse/integrations": "^10.11.0",
         "aieditor": "^1.0.13",

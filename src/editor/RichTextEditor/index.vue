@@ -30,7 +30,6 @@ const props = defineProps({
     },
     articleId: Number
 });
-const emits = defineEmits(['update:modelValue']);
 defineExpose({getToc, setContent})
 
 
