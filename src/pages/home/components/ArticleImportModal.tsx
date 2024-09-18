@@ -153,14 +153,12 @@ async function importToFolder(file: FileItem, folderId: number): Promise<{folder
     const {folders, addFolder} = useFolderStore();
     const folderGroupMap = group(folders, 'pid');
     let paths = file.name.split(/\\|\//);
-    console.log('---------------start---------------\n', file.name, paths, folders);
     let fileName = paths.pop() || file.name;
     for (let path of paths) {
         if (!path) {
             continue;
         }
         const children  = folderGroupMap.get(folderId);
-        console.log(path, folderId, children)
         if (children) {
             const child = children.find(f => f.name === path);
             if (child) {
@@ -176,7 +174,6 @@ async function importToFolder(file: FileItem, folderId: number): Promise<{folder
             folderId = newFolder.id;
         }
     }
-    console.log('--------------end----------------\n', folderId, fileName);
     return {folder: folderId, fileName};
 }
 
