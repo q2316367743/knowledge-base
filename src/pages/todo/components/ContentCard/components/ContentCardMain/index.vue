@@ -83,11 +83,8 @@ import {TodoItemStatus} from "@/entity/todo/TodoItem";
 import {
     openAddRelationArticle
 } from "@/pages/todo/components/common/AddRelationArticle";
-import {useRouter} from "vue-router";
 import {contains} from "@/utils/lang/ArrayUtil";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
-
-const router = useRouter();
 
 const todoRef = ref<HTMLDivElement>();
 const doingRef = ref<HTMLDivElement>();

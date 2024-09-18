@@ -5,9 +5,7 @@ import {
     InputGroup,
     List,
     ListItem,
-    Option,
     RequestOption,
-    Select,
     Space,
     TreeSelect,
     Upload,
@@ -16,7 +14,7 @@ import {
 import {computed, ref} from "vue";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
-import {docxToHtml, docxToMarkdown, htmlToMarkdown, zipToFiles} from "@/utils/file/ConvertUtil";
+import {zipToFiles} from "@/utils/file/ConvertUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -30,15 +28,9 @@ interface FileItem {
     file: File;
     name: string;
     type: OptionItemType;
-    options: Array<OptionItem>
 }
 
-interface OptionItem {
-    label: string;
-    value: OptionItemType;
-}
-
-type OptionItemType = 'markdown' | 'html' | 'code';
+type OptionItemType = 'markdown' | 'code';
 
 
 export function showArticleImportModal(id: number) {
@@ -88,19 +80,9 @@ export function showArticleImportModal(id: number) {
                     {files.value.map((file, index) => <ListItem>
                         {{
                             default: () => <div>{file.name}</div>,
-                            actions: () => <Space>
-                                <Select v-model={file.type}>
-                                    {file.options.map(option =>
-                                        <Option value={option.value} label={option.label}>
-                                            {option.label}
-                                        </Option>)}
-                                </Select>
-                                <Button type={'text'} status={'danger'} onClick={() => removeFile(index)}>
-                                    {{
-                                        icon: () => <IconDelete/>
-                                    }}
-                                </Button>
-                            </Space>
+                            actions: () => <Button type={'text'} status={'danger'} onClick={() => removeFile(index)}>{{
+                                icon: () => <IconDelete/>
+                            }}</Button>
                         }}
                     </ListItem>)}
                 </List>}
@@ -122,47 +104,14 @@ export function showArticleImportModal(id: number) {
 }
 
 function renderFileItem(file: File): FileItem {
-    return {file, name: file.name, type: getDefaultOption(file.name), options: getOptions(file.name)};
+    return {file, name: file.name, type: getDefaultOption(file.name)};
 }
 
 function getDefaultOption(name: string): OptionItemType {
     if (name.endsWith('md') || name.endsWith('markdown')) {
         return 'markdown';
-    } else if (name.endsWith('html')) {
-        return 'html'
-    } else if (name.endsWith('docx')) {
-        return 'html';
     }
     return 'code';
-}
-
-function getOptions(name: string): OptionItem[] {
-    if (name.endsWith('md') || name.endsWith('markdown')) {
-        return [{
-            label: 'markdown',
-            value: 'markdown'
-        }]
-    } else if (name.endsWith('docx')) {
-        return [{
-            label: 'markdown',
-            value: 'markdown'
-        }, {
-            label: '富文本',
-            value: 'html'
-        }]
-    } else if (name.endsWith('html')) {
-        return [{
-            label: 'markdown',
-            value: 'markdown'
-        }, {
-            label: '富文本',
-            value: 'html'
-        }]
-    }
-    return [{
-        label: '代码文件',
-        value: 'code'
-    }]
 }
 
 async function onImport(files: Array<FileItem>, folderId: number) {
@@ -191,9 +140,6 @@ async function importOne(file: FileItem, folderId: number) {
         const text = await readAsText(file.file);
         // 直接解析文字
         await importToCode(text, file, folderId);
-    } else if (file.type === 'html') {
-        // 判断原始类型
-        await importToHtml(file, folderId);
     } else if (file.type === 'markdown') {
         await importToMarkdown(file, folderId);
     } else {
@@ -201,49 +147,50 @@ async function importOne(file: FileItem, folderId: number) {
     }
 }
 
-function importToCode(text: string, file: FileItem, folderId: number) {
-    return useArticleStore().add(getDefaultArticleIndex({
-        type: ArticleTypeEnum.CODE,
-        name: file.name,
-        folder: folderId
-    }), getDefaultArticleBase(), text);
+// 导入到文件夹
+async function importToFolder(file: FileItem, folderId: number): Promise<{folder: number, fileName: string}> {
+    if (folderId === 0) {
+        return Promise.resolve({folder: 0, fileName: file.name});
+    }
+    const {folderGroupMap, addFolder} = useFolderStore();
+    let paths = file.name.split("/");
+    let fileName = paths.pop() || file.name;
+    for (let path of paths) {
+        const children  = folderGroupMap.get(folderId);
+        if (children) {
+            const child = children.find(f => f.name === path);
+            if (child) {
+                folderId = child.id;
+            } else {
+                // 创建子文件夹
+                const newFolder = await addFolder(folderId, path);
+                folderId = newFolder.id;
+            }
+        }else {
+            // 创建子文件夹，挂载到根目录
+            const newFolder = await addFolder(0, path);
+            folderId = newFolder.id;
+        }
+    }
+    return {folder: folderId, fileName};
 }
 
-async function importToHtml(file: FileItem, folderId: number) {
-    let text: string;
-    if (file.name.endsWith('html')) {
-        text = await readAsText(file.file);
-        // 直接导入
-    } else if (file.name.endsWith('docx')) {
-        text = await docxToHtml(await file.file.arrayBuffer());
-    } else {
-        return Promise.reject("系统异常，不支持的文件格式：" + file.name);
-    }
+async function importToCode(text: string, file: FileItem, folderId: number) {
+    const {folder, fileName} = await importToFolder(file, folderId);
     return useArticleStore().add(getDefaultArticleIndex({
-        type: ArticleTypeEnum.RICH_TEXT,
-        name: file.name,
-        folder: folderId
+        type: ArticleTypeEnum.CODE,
+        name: fileName,
+        folder
     }), getDefaultArticleBase(), text);
 }
 
 async function importToMarkdown(file: FileItem, folderId: number) {
-    let text: string;
-    if (file.name.endsWith('html')) {
-        text = htmlToMarkdown(await readAsText(file.file));
-        // 直接导入
-    } else if (file.name.endsWith('docx')) {
-        text = await docxToMarkdown(await file.file.arrayBuffer());
-    } else if (file.name.endsWith('md')) {
-        text = await readAsText(file.file);
-    } else if (file.name.endsWith('markdown')) {
-        text = await readAsText(file.file);
-    } else {
-        return Promise.reject("系统异常，不支持的文件格式：" + file.name);
-    }
+    let text = await readAsText(file.file);
+    const {folder, fileName} = await importToFolder(file, folderId);
     return useArticleStore().add(getDefaultArticleIndex({
         type: ArticleTypeEnum.MARKDOWN,
-        name: file.name,
-        folder: folderId
+        name: fileName,
+        folder
     }), getDefaultArticleBase(), text);
 }
 

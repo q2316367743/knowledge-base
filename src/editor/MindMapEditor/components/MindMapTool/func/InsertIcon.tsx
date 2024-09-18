@@ -1,18 +1,8 @@
 import {MindMapNode} from "@/editor/MindMapEditor/domain";
 import {Checkbox, CheckboxGroup, Divider, Drawer} from "@arco-design/web-vue";
 import {ref, watch} from "vue";
-import styled from "vue3-styled-components";
 import {nodeIconList} from "@/editor/MindMapEditor/config/icons";
 
-const IconDiv = styled.div`
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border-radius: 50%;
-    overflow: hidden;
-    padding: 4px;
-`;
 
 
 export function openInsertIcon(activeNodes: MindMapNode[]) {
@@ -46,13 +36,20 @@ export function openInsertIcon(activeNodes: MindMapNode[]) {
                     <CheckboxGroup v-model={iconList.value}>
                         {g.list.map(i => <Checkbox value={g.type + '_' + i.name}>
                             {{
-                                checkbox: (res: { checked: boolean }) => <IconDiv style={{
-                                    border: '1px solid ' + (res.checked ? 'rgb(var(--arcoblue-6))' : 'transparent')
+                                checkbox: (res: { checked: boolean }) => <div style={{
+                                    border: '1px solid ' + (res.checked ? 'rgb(var(--arcoblue-6))' : 'transparent'),
+                                    width: '24px',
+                                    height: '24px',
+                                    'marginRight': '10px',
+                                    'marginBottom': '10px',
+                                    borderRadius: '50%',
+                                    overflow: 'hidden',
+                                    padding: '4px',
                                 }}>
                                     <div key={i.name} innerHTML={getHtml(i.icon)} class={{
                                         selected: res.checked
                                     }}></div>
-                                </IconDiv>
+                                </div>
                             }}
                         </Checkbox>)}
                     </CheckboxGroup>

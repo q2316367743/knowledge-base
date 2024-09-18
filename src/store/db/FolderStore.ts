@@ -27,14 +27,16 @@ export const useFolderStore = defineStore('folder', {
         },
         async addFolder(pid: number, name: string) {
             const now = new Date();
-            this.folders.push({
+            const folder = {
                 id: now.getTime(),
                 createTime: now,
                 updateTime: now,
                 name: name,
                 pid: pid
-            });
+            };
+            this.folders.push(folder);
             await this._sync();
+            return folder
         },
         async removeFolder(id: number) {
             const index = this.folders.findIndex(folder => folder.id === id);

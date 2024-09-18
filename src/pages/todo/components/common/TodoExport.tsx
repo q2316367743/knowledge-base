@@ -15,11 +15,11 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {download} from "@/utils/BrowserUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
-import {turndownService} from "@/plugin/sdk/Turndown";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toDateString} from "@/utils/lang/FormatUtil";
 import {access} from "@/plugin/Statistics";
+import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 enum ExportFileTypeEnum {
     TEXT = 1,
@@ -133,7 +133,7 @@ async function exportToMarkdown(items: Array<TodoItemIndex>, config: Config): Pr
                 MessageUtil.warning(`导出待办【${item.title}】时错误`, e)
                 console.error("导出异常", e);
             }
-            const markdown = turndownService.turndown(content);
+            const markdown = htmlToMarkdown(content);
             lines.push(markdown, '')
         }
         lines.push('---', '')

@@ -20,7 +20,7 @@ import {
 
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
-import {docxToMarkdown, htmlToMarkdown} from "@/utils/file/ConvertUtil";
+import { htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 import Constant from "@/global/Constant";
 
@@ -118,10 +118,6 @@ function onImport(id: number) {
                         }
                         setValue(text, file.name, id);
                     })
-                } else if (ext === 'docx') {
-                    file.arrayBuffer().then(arrayBuffer =>
-                        docxToMarkdown(arrayBuffer).then(text =>
-                            setValue(text, file.name, id)))
                 }
             });
     }

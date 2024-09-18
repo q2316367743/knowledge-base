@@ -298,57 +298,6 @@ function insertToArticle(content: string) {
 
 // ------------------------------------------ 你问我答 ------------------------------------------
 
-async function uploadFile() {
-    const {openAi} = useChatSettingStore();
-    try {
-        loading.value = true;
-        if (openAi) {
-            if (props.articleIndex) {
-                const res = await getFromOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + props.articleIndex.id);
-                const record = res.record;
-                if (record) {
-                    // 获取文件
-                    let file: Blob;
-                    let fileName = '';
-                    if (props.articleIndex.type === ArticleTypeEnum.MARKDOWN) {
-                        file = stringToBlob(record.content);
-                        fileName = props.articleIndex.name + '.md';
-                    } else if (props.articleIndex.type === ArticleTypeEnum.CODE) {
-                        file = stringToBlob(record.content)
-                        fileName = props.articleIndex.name;
-                    } else if (props.articleIndex.type === ArticleTypeEnum.RICH_TEXT) {
-                        file = stringToBlob(htmlToMarkdown(record.content));
-                        fileName = props.articleIndex.name + '.md';
-                    } else if (props.articleIndex.type === ArticleTypeEnum.MIND_MAP) {
-                        // mind-map转md
-                        file = stringToBlob(mindMapToMarkdown(record.content));
-                        fileName = props.articleIndex.name + '.md';
-                    } else if (props.articleIndex.type === ArticleTypeEnum.DRAUU) {
-                        throw new Error("画板不支持一问一答")
-                    } else {
-                        throw new Error("文章类型不支持");
-                    }
-                    // 文件上传
-                    const fileObj = await openAi.files.create({
-                        file: new File([file], fileName),
-                        purpose: 'assistants'
-                    });
-                    ai.value.ask = {
-                        ...ai.value.ask,
-                        fileId: fileObj.id,
-                        version: res.rev ? res.rev.split('-').pop() || '1' : '1',
-                    }
-                }
-            }
-        }
-    } catch (e) {
-        MessageUtil.error("文件上传失败", e);
-    } finally {
-        loading.value = false;
-    }
-
-}
-
 async function getFileContent(): Promise<string> {
     if (props.articleIndex) {
         const res = await getFromOneByAsync<ArticleContent>(LocalNameEnum.ARTICLE_CONTENT + props.articleIndex.id);

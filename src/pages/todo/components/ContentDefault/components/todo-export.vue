@@ -33,7 +33,7 @@ import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
-import {turndownService} from "@/plugin/sdk/Turndown";
+import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 
 enum ExportFileTypeEnum {
     TEXT = 1,
@@ -151,7 +151,7 @@ async function exportToMarkdown(items: Array<TodoItemIndex>): Promise<string> {
                 MessageUtil.warning(`导出待办【${item.title}】时错误`, e)
                 console.error("导出异常", e);
             }
-            const markdown = turndownService.turndown(content);
+            const markdown = htmlToMarkdown(content);
             lines.push(markdown, '')
         }
         lines.push('---', '')
