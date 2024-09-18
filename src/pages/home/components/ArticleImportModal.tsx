@@ -23,6 +23,7 @@ import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {readAsText} from "@/utils/file/FileUtil";
 import {access} from "@/plugin/Statistics";
+import {group} from '@/utils/lang/ArrayUtil';
 
 interface FileItem {
     file: File;
@@ -149,14 +150,17 @@ async function importOne(file: FileItem, folderId: number) {
 
 // 导入到文件夹
 async function importToFolder(file: FileItem, folderId: number): Promise<{folder: number, fileName: string}> {
-    if (folderId === 0) {
-        return Promise.resolve({folder: 0, fileName: file.name});
-    }
-    const {folderGroupMap, addFolder} = useFolderStore();
-    let paths = file.name.split("/");
+    const {folders, addFolder} = useFolderStore();
+    const folderGroupMap = group(folders, 'pid');
+    let paths = file.name.split(/\\|\//);
+    console.log('---------------start---------------\n', file.name, paths, folders);
     let fileName = paths.pop() || file.name;
     for (let path of paths) {
+        if (!path) {
+            continue;
+        }
         const children  = folderGroupMap.get(folderId);
+        console.log(path, folderId, children)
         if (children) {
             const child = children.find(f => f.name === path);
             if (child) {
@@ -167,11 +171,12 @@ async function importToFolder(file: FileItem, folderId: number): Promise<{folder
                 folderId = newFolder.id;
             }
         }else {
-            // 创建子文件夹，挂载到根目录
-            const newFolder = await addFolder(0, path);
+            // 创建子文件夹，挂载到当前目录下
+            const newFolder = await addFolder(folderId, path);
             folderId = newFolder.id;
         }
     }
+    console.log('--------------end----------------\n', folderId, fileName);
     return {folder: folderId, fileName};
 }
 

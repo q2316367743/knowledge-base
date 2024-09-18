@@ -38,7 +38,7 @@ export async function zipToFiles(file: File): Promise<File[]> {
             continue;
         }
         const text = await item.async('blob');
-        files.push(new File([text], basename(path)));
+        files.push(new File([text], path));
     }
     return files;
 }
