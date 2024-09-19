@@ -16,6 +16,7 @@
         "@arco-design/web-vue": "^2.56.0",
         "@vueuse/core": "^9.13.0",
         "@vueuse/integrations": "^10.11.0",
+        "@wangeditor/editor": "^5.1.23",
         "axios": "^1.7.2",
         "cherry-markdown": "^0.8.45",
         "dayjs": "^1.11.12",

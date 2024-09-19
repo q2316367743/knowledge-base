@@ -13,7 +13,7 @@ import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';
 import 'virtual:uno.css'
 import 'handsontable/dist/handsontable.full.min.css';
-import 'aieditor/dist/style.css'
+import '@wangeditor/editor/dist/css/style.css';
 // 编辑器
 // @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'

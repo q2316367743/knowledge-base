@@ -1,14 +1,12 @@
 <template>
     <main class="edit-wang-editor kb-wang-editor">
-        <div ref="editorDom" class="aie-container">
-            <div class="aie-container-header"></div>
-            <div class="aie-container-main"></div>
-            <div class="aie-container-footer"></div>
-        </div>
+        <div class="wang-editor-header" ref=editorHeaderDom></div>
+        <div class="wang-editor-main" ref="editorContainerDom"></div>
     </main>
 </template>
 <script lang="ts" setup>
-import {onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
+import {createEditor, createToolbar, IDomEditor, Toolbar} from '@wangeditor/editor'
 import {TocItem} from "@/editor/types/TocItem";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
@@ -25,17 +23,50 @@ const props = defineProps({
     },
     articleId: Number
 });
-defineExpose({getToc, setContent})
 
+const editorHeaderDom = ref<HTMLDivElement>();
+const editorContainerDom = ref<HTMLDivElement>();
 
-const editorDom = ref<HTMLDivElement>();
-
+const editorRef = shallowRef<IDomEditor>()
+const toolbarRef = shallowRef<Toolbar>()
 
 watch(() => props.readOnly, value => {
-});
+    value ? editorRef.value?.disable() : editorRef.value?.enable();
+}, {immediate: true});
+
+function init() {
+    if(!editorHeaderDom.value || !editorHeaderDom.value) {
+        return;
+    }
+    const editor = createEditor({
+        selector: editorContainerDom.value,
+        html: content.value,
+        mode: 'default',
+        config: {
+            onChange: (editor: IDomEditor) => {
+                content.value = editor.getHtml();
+            },
+            placeholder: '请输入内容...',
+            readOnly: props.readOnly,
+        }
+    });
+    const toolbarConfig = {}
+
+    const toolbar = createToolbar({
+        editor,
+        selector: editorHeaderDom.value,
+        config: toolbarConfig,
+        mode: 'default', // or 'simple'
+    });
+
+    editorRef.value = editor;
+    toolbarRef.value = toolbar;
+}
 
 
 onMounted(() => {
+    // 初始化
+    init();
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
 });
@@ -68,14 +99,6 @@ function onExport(id: number) {
     }
 }
 
-function getToc(): Array<TocItem> {
-    return [];
-}
-
-function setContent(text: string) {
-}
-
-
 </script>
 <style lang="less">
 .edit-wang-editor {
@@ -84,11 +107,14 @@ function setContent(text: string) {
     left: 0;
     right: 0;
     bottom: 0;
+    background-color: var(--color-bg-1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
 
-}
-
-.aie-container {
-    margin: 0;
-    border: none;
+    .wang-editor-main {
+        flex: 1;
+        overflow: hidden;
+    }
 }
 </style>

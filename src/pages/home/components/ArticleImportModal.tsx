@@ -195,4 +195,3 @@ async function importToMarkdown(file: FileItem, folderId: number) {
         folder
     }), getDefaultArticleBase(), text);
 }
-
