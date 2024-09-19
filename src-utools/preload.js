@@ -2,6 +2,7 @@ const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync} = requir
 const {join} = require('node:path');
 const {get} = require('node:https');
 const {ipcRenderer} = require('electron');
+const {createServer} = require('./src/server');
 
 
 /**
@@ -79,7 +80,8 @@ window.preload = {
                     reject(err)
                 });
             })
-        }
+        },
+        createServer
     },
     path: {
         join: join

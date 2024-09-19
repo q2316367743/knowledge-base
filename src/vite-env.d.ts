@@ -154,6 +154,7 @@ declare interface Window {
         customer: {
             checkFileExist(root: string, dir: string, file: string): boolean;
             downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
+            createServer(success: (port: number) => void, error: (error: Error) => void): void;
         },
 
         path: {
@@ -162,8 +163,6 @@ declare interface Window {
         ipcRenderer: {
             receiveMessage(event: string, callback: (msg: string) => void): void;
         },
-
-        createServer(success: (port: number) => void, error: (error: Error) => void): void;
     }
     bs: {
         db: TtDb

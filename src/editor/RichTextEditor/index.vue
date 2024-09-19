@@ -7,9 +7,12 @@
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
 import {createEditor, createToolbar, IDomEditor, Toolbar} from '@wangeditor/editor'
-import {TocItem} from "@/editor/types/TocItem";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
-import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {useImageUploadByUtools} from "@/plugin/image";
+import {renderAttachmentUrl} from "@/plugin/server";
+import {onRichTextImport} from "@/editor/RichTextEditor/func";
+
+type InsertFnType = (url: string, alt: string, href: string) => void
 
 const content = defineModel({
     type: String,
@@ -35,7 +38,7 @@ watch(() => props.readOnly, value => {
 }, {immediate: true});
 
 function init() {
-    if(!editorHeaderDom.value || !editorHeaderDom.value) {
+    if (!editorHeaderDom.value || !editorHeaderDom.value) {
         return;
     }
     const editor = createEditor({
@@ -48,6 +51,28 @@ function init() {
             },
             placeholder: '请输入内容...',
             readOnly: props.readOnly,
+            MENU_CONF: {
+                uploadImage: {
+                    server: '/api/upload',
+                    // 自定义上传
+                    customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
+                        useImageUploadByUtools(file)
+                            .then(key => {
+                                insertFn(renderAttachmentUrl(key), key, '')
+                            })
+                    }
+                },
+                uploadVideo: {
+                    server: '/api/upload',
+                    customUpload(file: File, insertFn: InsertFnType) {
+                        useImageUploadByUtools(file)
+                            .then(key => {
+                                insertFn(renderAttachmentUrl(key), key, '')
+                            })
+                    }
+                }
+            }
+
         }
     });
     const toolbarConfig = {}
@@ -73,30 +98,13 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     useArticleExportEvent.off(onExport);
+    toolbarRef.value?.destroy();
+    editorRef.value?.destroy();
 })
 
 
 function onExport(id: number) {
-    if (props.articleId === id) {
-        createArticleExport(id, [{
-            key: 1,
-            name: 'Markdown',
-            desc: '便于分享'
-        }, {
-            key: 2,
-            name: 'HTML',
-            desc: '便于发布'
-        }, {
-            key: 3,
-            name: '纯文本',
-            desc: '便于阅读'
-        }, {
-            key: 4,
-            name: 'Word文档',
-            desc: '便于阅读'
-        }]).then(res => {
-        })
-    }
+    onRichTextImport(id, props.articleId, editorRef.value)
 }
 
 </script>

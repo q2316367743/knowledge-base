@@ -31,6 +31,7 @@ import { htmlToArticle } from "@/components/export-component/htmlToArticle";
 import { access } from "@/plugin/Statistics";
 import { windowConfig } from "@/global/WindowConfig";
 import { toArticleByRelation } from "@/components/ArticePreview/OpenArticle";
+import {createServer} from "@/plugin/server";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -173,6 +174,9 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         })
     }
 }
+
+// 启动http
+createServer();
 
 window.preload && window.preload.ipcRenderer.receiveMessage('db', message => {
     useDbKeyRefreshEvent.emit(message);
