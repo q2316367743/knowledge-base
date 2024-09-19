@@ -3,6 +3,29 @@ import { Log, LogItemEnum } from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.2.7',
+        sign: 227,
+        time: '2024-09-20',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: '移除了画板笔记，请使用其他笔记替代'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '富文本可以上传任意大小的图片，并支持图片懒加载'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '思维带图支持上传图片'
+        }, {
+            label: LogItemEnum.ADD,
+            content: '待办支持搜索功能，位置：待办->更多->搜索'
+        }, {
+            label: LogItemEnum.REPAIR,
+            content: '关联文章失败'
+        }],
+        remark: '下个版本会上流程图，并尝试改善备份问题',
+        url: 'https://txc.qq.com/products/612648/post/172675914877620901'
+    },
+    {
         version: '2.2.6',
         sign: 226,
         time: '2024-08-01',

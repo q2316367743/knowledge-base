@@ -152,7 +152,7 @@ async function importOne(file: FileItem, folderId: number) {
 async function importToFolder(file: FileItem, folderId: number): Promise<{folder: number, fileName: string}> {
     const {folders, addFolder} = useFolderStore();
     const folderGroupMap = group(folders, 'pid');
-    let paths = file.name.split(/\\|\//);
+    let paths = file.name.split(/[\\/]/);
     let fileName = paths.pop() || file.name;
     for (let path of paths) {
         if (!path) {

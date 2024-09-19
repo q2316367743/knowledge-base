@@ -9,7 +9,7 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import '@/assets/style/global.less';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
-import 'aieditor/dist/style.css';
+import '@wangeditor/editor/dist/css/style.css';
 
 window.utools = window.utools || utools;
 
