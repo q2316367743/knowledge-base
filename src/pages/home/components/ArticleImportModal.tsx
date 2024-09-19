@@ -191,7 +191,7 @@ async function importToMarkdown(file: FileItem, folderId: number) {
     const {folder, fileName} = await importToFolder(file, folderId);
     return useArticleStore().add(getDefaultArticleIndex({
         type: ArticleTypeEnum.MARKDOWN,
-        name: fileName,
+        name: fileName.replace(/\.md|\.markdown/, ''),
         folder
     }), getDefaultArticleBase(), text);
 }
