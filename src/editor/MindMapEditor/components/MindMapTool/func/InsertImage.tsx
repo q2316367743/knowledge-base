@@ -1,8 +1,10 @@
-import {Form, FormItem, Modal, Input} from "@arco-design/web-vue";
+import {Form, FormItem, Modal, Input, Row, Col, Button, InputGroup} from "@arco-design/web-vue";
 import {ref} from "vue";
 import {MindMapNode} from "@/editor/MindMapEditor/domain";
 import {getImageSize} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
+import {useImageUploadByUtools} from "@/plugin/image";
+import {renderAttachmentUrl} from "@/plugin/server";
 
 export function openInsertImage(activeNodes: MindMapNode[]) {
     if (activeNodes.length === 0) {
@@ -14,15 +16,38 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
         link: first.getData('image') || ''
     });
 
+    function handleImageUpload() {
+        window.preload.customer.openFile({
+            title: '选择图片',
+            buttonLabel: '选择',
+            defaultPath: utools.getPath('pictures'),
+            filters: [{
+                name: 'Images',
+                extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp']
+            }]
+        }).then(file => {
+            useImageUploadByUtools(file)
+                .then(key => {
+                    data.value = {
+                        title: file.name,
+                        link: renderAttachmentUrl(key)
+                    }
+                })
+        })
+    }
+
     Modal.open({
-        title:"图片",
+        title: "图片",
         draggable: true,
         content: () => <Form model={data.value} layout={'vertical'}>
             <FormItem label={'图片链接'}>
-                <Input v-model={data.value.link} />
+                <InputGroup style={{width: '100%'}}>
+                    <Input v-model={data.value.link}/>
+                    <Button type={'primary'} onClick={handleImageUpload}>本地上传</Button>
+                </InputGroup>
             </FormItem>
             <FormItem label={"图片标题（可选）"}>
-                <Input v-model={data.value.title} />
+                <Input v-model={data.value.title}/>
             </FormItem>
         </Form>,
         onOk() {

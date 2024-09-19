@@ -86,7 +86,13 @@ onMounted(() => {
 
 });
 
-watch(() => size.width.value, () => mindMap.value && mindMap.value.resize());
+watch(() => size.width.value, () => {
+    try {
+        mindMap.value && mindMap.value.resize()
+    }catch (e) {
+        console.error(e)
+    }
+});
 watch(() => size.height.value, () => mindMap.value && mindMap.value.resize());
 watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(value ? 'readonly' : 'edit'))
 

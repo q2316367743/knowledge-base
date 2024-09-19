@@ -1,4 +1,4 @@
-import { h, ref } from "vue";
+import {h, ref, shallowRef} from "vue";
 import {
     IconBook,
     IconCode,
@@ -38,22 +38,22 @@ import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 export const articleTextTypes = [{
     key: ArticleTypeEnum.RICH_TEXT,
     name: '富文本',
-    icon: IconBook,
+    icon: shallowRef(IconBook),
     lock: IconRichText
 }, {
     key: ArticleTypeEnum.MARKDOWN,
     name: 'markdown',
-    icon: IconFile,
+    icon: shallowRef(IconFile),
     lock: FileMarkdown
 }, {
     key: ArticleTypeEnum.CODE,
     name: '代码',
-    icon: IconCode,
+    icon: shallowRef(IconCode),
     lock: FileCode
 }, {
     key: ArticleTypeEnum.MIND_MAP,
     name: '思维导图',
-    icon: IconMindMapping,
+    icon: shallowRef(IconMindMapping),
     lock: FileMindMap
 }]
 
@@ -61,14 +61,14 @@ export const articleTypes = [
     ...articleTextTypes, {
         key: ArticleTypeEnum.HANDSONTABLE,
         name: '表格',
-        icon: IconNav,
+        icon: shallowRef(IconNav),
         lock: FileHandsontable
     }];
 const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
     const icon = articleTypeMap.get(type);
-    return h(icon ? (readonly ? icon.lock : icon.icon) : IconFile, {})
+    return h(icon ? (readonly ? icon.lock : icon.icon.value) : IconFile, {})
 }
 
 export function renderArticleType(type: ArticleTypeEnum): string {

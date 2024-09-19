@@ -134,6 +134,16 @@ interface UmamiInstance {
 
 declare const umami: UmamiInstance
 
+interface OpenFileOption {
+    title ?: string,
+    defaultPath ?: string,
+    buttonLabel ?: string,
+    filters ?: { name: string, extensions: string[] }[],
+    properties ?: Array < 'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles' | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent' >,
+    message ?: string,
+    securityScopedBookmarks ?: boolean
+}
+
 declare interface Window {
     /**
      * 打开图片预览
@@ -155,6 +165,12 @@ declare interface Window {
             checkFileExist(root: string, dir: string, file: string): boolean;
             downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
             createServer(success: (port: number) => void, error: (error: Error) => void): void;
+            /**
+             * 打开一个文件，并返回blob对象
+             * @param options 参数
+             * @return 返回blob对象
+             */
+            openFile(options: OpenFileOption): Promise<File>
         },
 
         path: {
