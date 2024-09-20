@@ -110,14 +110,18 @@ window.addEventListener('click', e => {
     if (!isUtools) {
         return;
     }
-    const ele = e.target as HTMLElement;
-    if (ele && ele.tagName && ele.tagName.toUpperCase() === 'A') {
-        // a标签
-        const href = ele.getAttribute('href');
-        if (href) {
+    // @ts-ignore
+    const elements: Array<HTMLElement> = e.path;
+    for (let element of elements) {
+        if (element.tagName && element.tagName.toLowerCase() === 'a') {
+            const href = (element as HTMLLinkElement).href;
+            if (href.startsWith("http://localhost:5173")) {
+                return;
+            }
             utools.shellOpenExternal(href);
             e.preventDefault();
             e.stopPropagation();
+            return;
         }
     }
 });
