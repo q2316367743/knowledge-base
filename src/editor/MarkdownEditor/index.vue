@@ -105,7 +105,7 @@ function setValue(text: string, name: string, id: number) {
 function onImport(id: number) {
 
     if (props.articleId === id && instance.value) {
-        openArticleImport(['.md', '.markdown', '.html', '.docx'])
+        openArticleImport(['.md', '.markdown'])
             .then(file => {
                 const ext = extname(file.name);
                 if (ext === 'md' || ext === 'markdown' || ext === 'html') {

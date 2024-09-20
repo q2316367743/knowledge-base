@@ -1,3 +1,6 @@
+import {Ref} from "vue";
+import Cherry from "cherry-markdown";
+import {CherryOptions} from "cherry-markdown/types/cherry";
 import {isUtools} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
@@ -11,12 +14,9 @@ import {
     usePyqMenu, useQingGanMenu, useTianGouRiJiMenu,
     useYiYanMenu
 } from "@/editor/MarkdownEditor/menu/XiaRouMenu";
-import Cherry from "cherry-markdown";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {Ref} from "vue";
-import {CherryOptions} from "cherry-markdown/dist/types/Cherry";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
