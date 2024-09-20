@@ -116,9 +116,12 @@ function onExport(id: number) {
     right: 0;
     bottom: 0;
     background-color: var(--color-bg-1);
-    z-index: 1000;
     display: flex;
     flex-direction: column;
+
+    &.w-e-full-screen-container {
+        z-index: 1000;
+    }
 
     .wang-editor-main {
         flex: 1;
