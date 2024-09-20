@@ -1,7 +1,6 @@
 import {createApp} from 'vue'
 import {createPinia} from 'pinia';
 import App from './App.vue'
-import {utools} from "@/plugin/utools";
 import router from "@/nested/todo/router";
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';

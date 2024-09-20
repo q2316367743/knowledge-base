@@ -1,5 +1,4 @@
 import {CommonResult} from "@/plugin/sdk/LskyPro";
-import {utools} from "@/plugin/utools";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {Descriptions, DescriptionsItem, Link, Modal} from "@arco-design/web-vue";
 import {h} from "vue";

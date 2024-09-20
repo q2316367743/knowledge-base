@@ -14,6 +14,8 @@ import 'v-calendar/style.css';
 import 'virtual:uno.css'
 import 'handsontable/dist/handsontable.full.min.css';
 import '@wangeditor/editor/dist/css/style.css';
+import '@logicflow/core/dist/index.css';
+import '@logicflow/extension/dist/index.css';
 // 编辑器
 // @ts-ignore
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'

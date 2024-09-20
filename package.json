@@ -6,14 +6,13 @@
     "description": "知识库",
     "scripts": {
         "dev": "vite -c config/vite.utools.ts",
-        "dev:tt": "vite -c config/vite.tt.ts",
         "build": "vue-tsc && vite build -c config/vite.utools.ts",
-        "build:chrome": "vue-tsc && vite build -c config/vite.chrome.ts",
-        "build:tt": "vue-tsc && vite build -c config/vite.tt.ts",
         "preview": "vite preview"
     },
     "dependencies": {
         "@arco-design/web-vue": "^2.56.0",
+        "@logicflow/core": "^2.0.4",
+        "@logicflow/extension": "^2.0.8",
         "@vueuse/core": "^9.13.0",
         "@vueuse/integrations": "^10.11.0",
         "@wangeditor/editor": "^5.1.23",

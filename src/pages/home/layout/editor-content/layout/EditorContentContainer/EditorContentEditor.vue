@@ -4,7 +4,7 @@
         <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
                          v-if="editorType === ArticleTypeEnum.MARKDOWN && load" @send-to-chat="sendToChat"/>
         <rich-text-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
-                     v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
+                          v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
         <monaco-editor v-model="content" :language="language" :read-only="preview" :article-id="articleIndex.id"
                        v-else-if="editorType === ArticleTypeEnum.CODE && load"/>
         <excel-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
@@ -15,6 +15,8 @@
                       v-else-if="editorType === ArticleTypeEnum.DRAUU && load"/>
         <handsontable-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                              v-else-if="editorType === ArticleTypeEnum.HANDSONTABLE && load"/>
+        <logic-flow v-else-if="editorType === ArticleTypeEnum.LOGIC_FLOW && load"
+                    v-model="content" :read-only="preview" :article-id="articleIndex.id"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -39,6 +41,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
 
 const props = defineProps({
     articleIndex: Object as PropType<ArticleIndex>

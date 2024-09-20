@@ -1,29 +1,29 @@
 import {h, ref, shallowRef} from "vue";
 import {
     IconBook,
+    IconBranch,
     IconCode,
     IconFile,
     IconMindMapping,
     IconNav,
     IconRefresh
 } from "@arco-design/web-vue/es/icon";
-import { Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect } from "@arco-design/web-vue";
+import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
 import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
-import { getDefaultArticleBase, getDefaultArticleIndex } from "@/entity/article";
+import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 // 存储
-import { useArticleStore } from "@/store/db/ArticleStore";
-import { buildArticleName, useBaseSettingStore } from "@/store/setting/BaseSettingStore";
-import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
-import { useFolderStore } from "@/store/db/FolderStore";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import {buildArticleName, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {useFolderStore} from "@/store/db/FolderStore";
 // 工具类
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import NotificationUtil from "@/utils/modal/NotificationUtil";
-import { map, traverseNumber } from "@/utils/lang/ArrayUtil";
+import {map, traverseNumber} from "@/utils/lang/ArrayUtil";
 // 组件
-import { MindMapTreeNode } from "@/editor/MindMapEditor/domain";
-import { access } from "@/plugin/Statistics";
-import { usePluginSettingStore } from "@/store/db/PluginSettingStore";
+import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
+import {access} from "@/plugin/Statistics";
+import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 // 图标
 import FileMarkdown from '@/components/KbIcon/FileMarkdown.vue';
 import IconRichText from '@/components/KbIcon/FileRichText.vue';
@@ -63,6 +63,11 @@ export const articleTypes = [
         name: '表格',
         icon: shallowRef(IconNav),
         lock: FileHandsontable
+    }, {
+        key: ArticleTypeEnum.LOGIC_FLOW,
+        name: '流程图',
+        icon: shallowRef(IconBranch),
+        lock: IconBranch
     }];
 const articleTypeMap = map(articleTypes, 'key');
 
@@ -72,26 +77,12 @@ export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
 }
 
 export function renderArticleType(type: ArticleTypeEnum): string {
-    switch (type) {
-        case ArticleTypeEnum.CODE:
-            return "代码笔记";
-        case ArticleTypeEnum.DRAUU:
-            return "画板（已弃用）";
-        case ArticleTypeEnum.EDITOR_JS:
-            return "富文本（已弃用）";
-        case ArticleTypeEnum.EXCEL:
-            return "表格（已弃用）";
-        case ArticleTypeEnum.MARKDOWN:
-            return "markdown笔记";
-        case ArticleTypeEnum.MIND_MAP:
-            return "思维导图";
-        case ArticleTypeEnum.RICH_TEXT:
-            return "富文本笔记";
-        case ArticleTypeEnum.HANDSONTABLE:
-            return "表格";
-        default:
-            return "未知笔记类型";
+    for (let articleType of articleTypes) {
+        if (articleType.key === type) {
+            return articleType.name;
+        }
     }
+    return "未知类型";
 }
 
 async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<any> {
@@ -108,7 +99,7 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
                         richText: false,
                     }, "children": []
                 } as MindMapTreeNode,
-                "theme": { "template": 'default', "config": {} },
+                "theme": {"template": 'default', "config": {}},
                 "view": {
                     "transform": {
                         "scaleX": 1,
@@ -126,13 +117,13 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
                         "e": 0,
                         "f": 0
                     },
-                    "state": { "scale": 1, "x": 0, "y": 0, "sx": 0, "sy": 0 }
+                    "state": {"scale": 1, "x": 0, "y": 0, "sx": 0, "sy": 0}
                 }
             }
         case ArticleTypeEnum.EXCEL:
             return {};
         case ArticleTypeEnum.HANDSONTABLE:
-            const { tableColumnCount, tableColCount } = useBaseSettingStore();
+            const {tableColumnCount, tableColCount} = useBaseSettingStore();
             return {
                 data: [
                     ...traverseNumber(tableColCount).map(() => {
@@ -143,17 +134,38 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
             };
         case ArticleTypeEnum.MARKDOWN:
             // 查看是否有模板
-            const { markdownTemplates } = usePluginSettingStore();
+            const {markdownTemplates} = usePluginSettingStore();
             for (let markdownTemplate of markdownTemplates) {
                 // 名字匹配
                 if (name.match(markdownTemplate.name)) {
                     // 获取内容
-                    const { getContent } = usePluginSettingStore();
+                    const {getContent} = usePluginSettingStore();
                     const res = await getContent(markdownTemplate.id);
                     return res.record ? res.record?.content : '';
                 }
             }
             return '';
+        case ArticleTypeEnum.LOGIC_FLOW:
+            return {
+                data: {},
+                config: {
+                    grid: {
+                        size: 10,
+                        type: 'dot',
+                    },
+                    keyboard: {
+                        enabled: true,
+                    },
+                    snapline: true,
+                    background: {
+                        backgroundImage: 'var(--color-bg-1)'
+                    }
+                },
+                option: {
+                    nodeKeys: ['basic-node', 'graph-node', 'polygon-node', 'lct'],
+                    activeNodeKeys: ['basic-node', 'lct']
+                }
+            }
         default:
             return "";
     }
@@ -175,10 +187,7 @@ export function addArticle(pid: number, type: ArticleTypeEnum) {
 }
 
 export async function _addArticle(pid: number, type: ArticleTypeEnum, content?: string) {
-    if (type === ArticleTypeEnum.EXCEL) {
-        NotificationUtil.warning("未来版本中，将会删除表格笔记，请使用其他类型笔记！");
-    }
-    const { newArticleAutoName, newArticleTemplateByName, codeExtraName } = useBaseSettingStore();
+    const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
     let name: string;
     if (newArticleAutoName) {
         name = buildArticleName(type, newArticleTemplateByName, codeExtraName, pid);
@@ -197,11 +206,11 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum, content?: 
 }
 
 export function addArticleModal() {
-    const { newArticleAutoName, newArticleTemplateByName, codeExtraName } = useBaseSettingStore();
+    const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
     const type = ref(ArticleTypeEnum.MARKDOWN);
     const folder = ref(0);
     const name = ref('');
-    const { folderTree } = useFolderStore();
+    const {folderTree} = useFolderStore();
 
     function refreshFileName() {
         name.value = buildArticleName(ArticleTypeEnum.MARKDOWN, newArticleTemplateByName, codeExtraName, folder.value);
@@ -224,14 +233,14 @@ export function addArticleModal() {
                 </RadioGroup>
             </FormItem>
             <FormItem label={'所在文件夹'} required>
-                <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'} />
+                <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
             </FormItem>
             <FormItem label={'文章名称'} required>
                 <Input v-model={name.value} class={'arco-input'} placeholder={'请输入文章名称'} allowClear>
                     {{
                         suffix: () => newArticleAutoName && <Button type={'text'} onClick={refreshFileName}>
                             {{
-                                icon: () => <IconRefresh />
+                                icon: () => <IconRefresh/>
                             }}
                         </Button>
                     }}
@@ -326,7 +335,7 @@ export function rename(id: number, name: string, article: boolean) {
     }).then(newName => {
         if (article) {
             // 重命名文件
-            useArticleStore().updateIndex(id, { name: newName })
+            useArticleStore().updateIndex(id, {name: newName})
                 .then(res => {
                     MessageUtil.success("重命名成功");
                     useHomeEditorStore().update(id, res);

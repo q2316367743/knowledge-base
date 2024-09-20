@@ -45,9 +45,9 @@ enum ArticleTypeEnum {
     HANDSONTABLE = 8,
 
     /**
-     * Leafer实现的画板
+     * logic flow 流程图
      */
-    LEAFER = 9
+    LOGIC_FLOW = 9
 
 }
 

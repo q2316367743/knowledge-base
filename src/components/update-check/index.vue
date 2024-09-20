@@ -27,7 +27,6 @@ import updateCheck from "@/components/update-check/UpdateCheck";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
-import {utools} from "@/plugin/utools";
 
 const router = useRouter();
 

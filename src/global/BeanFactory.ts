@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import { useEventBus } from "@vueuse/core";
-import { utools } from '@/plugin/utools';
 // 状态管理
 import { useFolderStore } from "@/store/db/FolderStore";
 import { useCategoryStore } from "@/store/db/CategoryStore";
@@ -16,7 +15,6 @@ import { useChatSettingStore } from "@/store/setting/ChatSettingStore";
 
 // utools注入
 export const isUtools: boolean = typeof window.utools !== 'undefined'
-window.utools = window.utools || utools;
 
 export const usePageJumpEvent = useEventBus<string>('page-jump');
 export const useDeleteEvent = useEventBus('delete');
