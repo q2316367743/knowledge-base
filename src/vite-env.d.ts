@@ -134,7 +134,7 @@ interface UmamiInstance {
 
 declare const umami: UmamiInstance
 
-interface OpenFileOption {
+declare interface OpenFileOption {
     title ?: string,
     defaultPath ?: string,
     buttonLabel ?: string,

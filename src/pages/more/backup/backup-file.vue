@@ -10,44 +10,22 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
-import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
+import {ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateString} from "@/utils/lang/FormatUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
-import {useFileSystemAccess} from "@vueuse/core";
-import updateCheck from "@/components/update-check/UpdateCheck";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
+import {Notification} from "@arco-design/web-vue";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
 
 const FOLDER = Constant.id;
 
-const notBackup = new Set<string>();
-notBackup.add(LocalNameEnum.SETTING_BACKUP);
-
-const instance = ref({
-    visible: false,
-    loading: false,
-    record: getDefaultBackupSetting()
-});
 const loading = ref({
     exec: false,
     load: false
 })
-const backupSetting = computed(() => useBackupSettingStore().backupSetting);
-instance.value.record = Object.assign(instance.value.record, backupSetting.value);
-
-function save() {
-    instance.value.loading = true;
-    useBackupSettingStore().save(instance.value.record)
-        .then(() => MessageUtil.success("保存成功"))
-        .catch(e => MessageUtil.error("保存失败", e))
-        .finally(() => instance.value.loading = false);
-}
-
 
 // -------------------------------------- 文件备份 --------------------------------------
 
@@ -63,51 +41,42 @@ function execFileBackup() {
         .finally(() => loading.value.exec = false);
 }
 
-const {isSupported, open, data} = useFileSystemAccess({
-    dataType: 'ArrayBuffer',
-    types: [{
-        description: "ZIP文件",
-        accept: {
-            "application/zip": ['.zip']
-        }
-    }]
-});
 
 function restoreByFile() {
-    if (!isSupported.value) {
-        MessageUtil.error("您的浏览器版本不支持showOpenFilePicker方法，无法使用文件备份");
-        return;
-    }
     loading.value.load = true;
     _restoreByFile()
         .then(() => {
-            MessageUtil.success("恢复成功");
-            // 重新初始化数据
-            import('@/global/BeanFactory').then(data => {
-                useGlobalStore().startLoading("开始初始化数据...");
-                // 检查更新、执行更新
-                updateCheck().catch(e => MessageUtil.error("更新失败", e))
-                        .finally(() =>
-                                data.initData().catch(e => MessageUtil.error("数据初始化失败", e))
-                                        .finally(() => useGlobalStore().closeLoading()))
-            });
+            if (utools.getWindowType() === 'main') {
+                Notification.success({
+                    title: "恢复成功",
+                    content: "恢复成功，3s后自动关闭插件",
+                    duration: 3000,
+                    onClose: () => {
+                        utools.hideMainWindow();
+                        utools.outPlugin(true);
+                    }
+                })
+            } else {
+                // 窗口分离，用户自行关闭
+                MessageBoxUtil.loading("恢复成功，请关闭插件窗口，重新打开后生效", "恢复成功")
+            }
 
         })
         .catch(e => {
-            if ((e + '') === 'AbortError: The user aborted a request.') {
-                return;
-            }
             MessageUtil.error("恢复失败", e);
         })
         .finally(() => loading.value.load = false);
 }
 
 async function _restoreByFile() {
-    await (open() as Promise<void>);
-    if (!data.value) {
-        return Promise.reject("未选择文件");
-    }
-    await restoreBackup(data.value);
+    window.preload.customer.openFile({
+        title: "选择备份文件",
+        filters: [{name: "zip", extensions: ["zip"]}],
+        properties: ["openFile"],
+        buttonLabel: "选择文件"
+    })
+        .then(file => file.arrayBuffer())
+        .then(restoreBackup)
 }
 
 </script>
