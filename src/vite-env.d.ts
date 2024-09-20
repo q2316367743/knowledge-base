@@ -164,7 +164,13 @@ declare interface Window {
         customer: {
             checkFileExist(root: string, dir: string, file: string): boolean;
             downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
-            createServer(success: (port: number) => void, error: (error: Error) => void): void;
+            /**
+             * 创建本地服务器
+             * @param port 端口号
+             * @param success 成功回调
+             * @param error 失败回调
+             */
+            createServer(port: number,success: () => void, error: (error: Error) => void): void;
             /**
              * 打开一个文件，并返回blob对象
              * @param options 参数

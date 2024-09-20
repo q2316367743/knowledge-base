@@ -10,7 +10,7 @@ import {createEditor, createToolbar, IDomEditor, Toolbar} from '@wangeditor/edit
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {useImageUploadByUtools} from "@/plugin/image";
 import {renderAttachmentUrl} from "@/plugin/server";
-import {onRichTextImport} from "@/editor/RichTextEditor/func";
+import {onRichTextExport} from "@/editor/RichTextEditor/func";
 
 type InsertFnType = (url: string, alt: string, href: string) => void
 
@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
 
 
 function onExport(id: number) {
-    onRichTextImport(id, props.articleId, editorRef.value)
+    onRichTextExport(id, props.articleId, editorRef.value)
 }
 
 </script>

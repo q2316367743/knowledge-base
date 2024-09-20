@@ -1,7 +1,7 @@
 const http = require('node:http');
 const url = require('node:url');
 
-function createServer(successCallback, errorCallback) {
+function createServer(port, successCallback, errorCallback) {
 
     const server = http.createServer((req, res) => {
         if (req.method === 'GET' && req.url.startsWith('/attachment')) {
@@ -34,9 +34,9 @@ function createServer(successCallback, errorCallback) {
     });
 
 
-    server.listen(11000, () => {
-        successCallback(11000);
-        console.log(`服务器已启动，监听端口 http://localhost:${11000}`);
+    server.listen(port, () => {
+        successCallback();
+        console.log(`服务器已启动，监听端口 http://localhost:${port}`);
     });
 
     server.on('error', errorCallback);
