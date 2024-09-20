@@ -2,7 +2,7 @@
     <div class="more-attachment">
         <div class="side" ref="side">
             <div v-for="attachment in attachments" :key="attachment" class="item"
-                 :style="{backgroundImage: `url('${render(attachment)}')`}" :data-id="attachment"/>
+                 :style="{backgroundImage: `url('${renderAttachmentUrl(attachment)}')`}" :data-id="attachment"/>
         </div>
         <div class="buttons">
             <a-button :disabled="attachments.length === 0" type="primary" @click="pre()">上一张</a-button>
@@ -17,14 +17,14 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {onBeforeUnmount, ref} from "vue";
+import {ref} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {listRecordByAsync, removeOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {renderAttachmentUrl} from "@/plugin/server";
 
 const attachments = ref(new Array<string>());
-let resources = new Array<string>();
 
 function fetchAttachment() {
     attachments.value = [];
@@ -35,22 +35,6 @@ function fetchAttachment() {
 }
 
 fetchAttachment();
-
-function render(id: string): string {
-    // TODO: 此处错误
-    const buffer = utools.db.getAttachment(id);
-    if (!buffer) {
-        return "";
-    }
-    return window.URL.createObjectURL(new Blob([buffer]));
-}
-
-function revokeAll() {
-    resources.forEach(url => window.URL.revokeObjectURL(url));
-    resources = [];
-}
-
-onBeforeUnmount(() => revokeAll());
 
 // 动画处理
 const side = ref<HTMLDivElement | null>(null);
@@ -86,8 +70,7 @@ function pre() {
 function copy() {
     const item = document.querySelector(".more-attachment .item:nth-child(1)")!;
     let id = item?.attributes.getNamedItem('data-id')?.value;
-    const index = id?.lastIndexOf("/") || 0;
-    utools.copyText(`![](attachment:${id?.substring(index + 1)})`);
+    utools.copyText(`![](${id})`);
     MessageUtil.success("成功复制到剪切板");
 }
 
