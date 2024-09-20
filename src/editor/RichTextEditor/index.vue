@@ -1,5 +1,5 @@
 <template>
-    <main class="edit-wang-editor kb-wang-editor">
+    <main class="edit-wang-editor kb-wang-editor" :class="{readonly: readOnly}">
         <div class="wang-editor-header" ref=editorHeaderDom></div>
         <div class="wang-editor-main" ref="editorContainerDom"></div>
     </main>
@@ -121,6 +121,12 @@ function onExport(id: number) {
 
     &.w-e-full-screen-container {
         z-index: 1000;
+    }
+
+    &.readonly {
+        .wang-editor-header {
+            display: none;
+        }
     }
 
     .wang-editor-main {
