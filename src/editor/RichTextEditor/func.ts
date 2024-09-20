@@ -39,24 +39,22 @@ export function onRichTextExport(id: number, articleId?: number, editorRef?: IDo
                 const html = editorRef.getHtml();
                 if (html) {
                     // 此处需要将html中图片、视频的src中的链接替换为绝对路径
-                    const attachments = new Array<{ key: string , src: string }>();
-                    let now = Date.now();
-                    let document = new DOMParser().parseFromString(html, 'text/html');
-                    document.body.querySelectorAll('img, video').forEach(item => {
+                    const attachments = new Array<string>();
+                    const document = new DOMParser().parseFromString(html, 'text/html');
+                    const baseUrl = renderAttachmentBaseUrl();
+                    document.body.querySelectorAll('img, video, source').forEach(item => {
                         const src = item.getAttribute('src');
                         if (src) {
-                            if (src.startsWith(renderAttachmentBaseUrl())) {
+                            if (src.startsWith(baseUrl)) {
                                 // 获取key
                                 let key = new URL(src).searchParams.get('key');
                                 if (key) {
-                                    const src = `attachments/${now++}.png`;
                                     // 获取key，
-                                    attachments.push({key, src});
+                                    attachments.push(key);
                                     // 替换src
-                                    item.setAttribute('src', src)
+                                    item.setAttribute('src', key.substring(1))
                                 }
                             }
-                            item.setAttribute('src', `${window.location.origin}/api/articles/${articleId}/content/${src}`)
                         }
                     });
                     if (attachments.length > 0) {
@@ -65,14 +63,14 @@ export function onRichTextExport(id: number, articleId?: number, editorRef?: IDo
                         const zip = new JSZip();
                         zip.file('index.html', htmlStr);
                         for (let attachment of attachments) {
-                            const blob = await getAttachmentByAsync(attachment.key);
+                            const blob = await getAttachmentByAsync(attachment);
                             if (blob) {
-                                zip.file(attachment.src, blob);
+                                zip.file(attachment, blob);
                             }
                         }
                         const content = await zip.generateAsync({type: 'blob'});
                         download(content, `${article?.index.name || 'article'}.zip`, 'application/zip')
-                    }else {
+                    } else {
                         // 直接下载
                         download(html, `${article?.index.name || 'article'}.html`, 'text/html')
                     }

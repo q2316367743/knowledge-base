@@ -7,6 +7,7 @@ import {getAttachmentBySync, postAttachment} from "@/utils/utools/DbStorageUtil"
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
+import {isEmptyString} from "@/utils/lang/StringUtil";
 
 const BASE64_PREFIX: string = 'data:image/png;base64,';
 
@@ -117,8 +118,12 @@ export async function useImageUploadByUtools(data: Blob | File | string): Promis
     if (typeof data === 'string') {
         data = base64toBlob(data.replace(BASE64_PREFIX, ""));
     }
+    let extname = '';
+    if (data instanceof File) {
+        extname = data.name.split('.').pop() || extname;
+    }
     const id = new Date().getTime() + '';
-    const key = LocalNameEnum.ARTICLE_ATTACHMENT + id;
+    const key = LocalNameEnum.ARTICLE_ATTACHMENT + id + (isEmptyString(extname) ? '' : ('.' + extname));
     await postAttachment(
         key,
         data
