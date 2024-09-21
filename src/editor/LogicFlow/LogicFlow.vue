@@ -24,8 +24,13 @@
             </div>
             <!-- 右侧配置面板 -->
             <div class="config">
-                <a-button type="text" @click="onOpenOption">配置</a-button>
-                <a-button type="text">帮助</a-button>
+                <a-dropdown>
+                    <a-button type="text">更多</a-button>
+                    <template #content>
+                        <a-doption @click="onOpenOption">功能配置</a-doption>
+                        <a-doption @click="onOpenEditConfig">编辑配置</a-doption>
+                    </template>
+                </a-dropdown>
             </div>
         </div>
     </div>
@@ -46,6 +51,7 @@ import {onLogicFlowExport} from "@/editor/LogicFlow/func";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {assign} from "radash";
 import {updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
+import {updateLogicFlowEditConfig} from "@/editor/LogicFlow/components/LogicFlowEditConfig";
 
 const content = defineModel({
     type: Object,
@@ -81,6 +87,7 @@ const config = ref({});
 const option = ref({
     mindMap: false
 });
+const editConfig = ref<any>({});
 
 const showPanel = computed(() => {
     // 选中元素、不是只读、有属性，显示属性面板
@@ -104,9 +111,11 @@ onMounted(() => {
     if (!containerRef.value) {
         return;
     }
+    console.log(content.value)
     const data = content.value['data'] || {};
     config.value = content.value['config'] || {}
     option.value = assign(option.value, content.value['option'])
+    editConfig.value = content.value['editConfig'] || {}
     instance.value = new LogicFlow({
         ...config.value,
         container: containerRef.value,
@@ -115,11 +124,13 @@ onMounted(() => {
         height: elementSize.height.value,
         isSilentMode: props.readOnly,
     });
+    // 初始化赋值
     registerCustomElement(instance.value).then(nodes => diagramNodes.value = nodes);
     instance.value.setDefaultEdgeType('pro-polyline');
     instance.value.renderRawData(data);
     instance.value.setTheme(DefaultTheme);
     instance.value.resize(elementSize.width.value, elementSize.height.value);
+    instance.value.updateEditConfig(editConfig.value);
     // 初始化配置
     initOption();
     // 画布事件监听
@@ -169,7 +180,8 @@ function onSave() {
     content.value = {
         data: instance.value.getGraphRawData(),
         config: config.value,
-        option: option.value
+        option: option.value,
+        editConfig: editConfig.value
     }
 }
 
@@ -203,7 +215,6 @@ function onExport(id: number) {
 }
 
 function initOption() {
-    console.log(instance.value, option.value);
     if (!instance.value) {
         return;
     }
@@ -220,6 +231,13 @@ function onOpenOption() {
     updateLogicFlowOption(option,() => {
         onSave();
         initOption();
+    });
+}
+
+function onOpenEditConfig() {
+    updateLogicFlowEditConfig(editConfig,() => {
+        instance.value?.updateEditConfig(editConfig.value);
+        onSave();
     });
 }
 

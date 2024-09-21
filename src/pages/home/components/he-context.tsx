@@ -188,6 +188,25 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
                 },
                 option: {
                     miniMap: true
+                },
+                editConfig: {
+                    stopZoomGraph: false,
+                    stopScrollGraph: false,
+                    stopMoveGraph: false,
+                    adjustEdge: true,
+                    adjustEdgeMiddle: false,
+                    adjustEdgeStartAndEnd: false,
+                    adjustNodePosition: true,
+                    hideAnchors: false,
+                    hoverOutline: true,
+                    nodeSelectedOutline: true,
+                    edgeSelectedOutline: true,
+                    nodeTextEdit: true,
+                    edgeTextEdit: true,
+                    textEdit: true,
+                    nodeTextDraggable: false,
+                    edgeTextDraggable: false,
+                    autoExpand: true
                 }
             }
         default:
