@@ -1,5 +1,11 @@
 import { Log, LogItemEnum } from "@/components/update-check/domain";
 
+// 1. 【优化】富文本导出增强，可以导出图片、视频和附件
+// 2. 【优化】附件管理优化
+// 3. 【优化】备份优化，支持附件备份
+// 4. 【优化】支持链接打开
+// 5. 【优化】优化了一些细节，提升了用户体验
+// 6. 【重大更新】新增流程图
 
 export default [
     {
