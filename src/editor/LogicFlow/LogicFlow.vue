@@ -29,6 +29,7 @@
                     <template #content>
                         <a-doption @click="onOpenOption">功能配置</a-doption>
                         <a-doption @click="onOpenEditConfig">编辑配置</a-doption>
+                        <a-doption @click="openLogicFlowKeyboard">快捷键</a-doption>
                     </template>
                 </a-dropdown>
             </div>
@@ -47,11 +48,12 @@ import LogicFlowSidebar from "@/editor/LogicFlow/components/LogicFlowSidebar.vue
 import LogicFlowToolbar from "@/editor/LogicFlow/components/LogicFlowToolbar.vue";
 import LogicFlowSave from "@/editor/LogicFlow/components/LogicFlowSave.vue";
 import LogicFlowPanel from "@/editor/LogicFlow/components/LogicFlowPanel.vue";
-import {buildLogicFlowConfigFromOptions, onLogicFlowExport} from "@/editor/LogicFlow/func";
+import {buildLogicFlowConfigFromOptions, firstUseLogicFlow, onLogicFlowExport} from "@/editor/LogicFlow/func";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {assign} from "radash";
 import {LogicFlowOption, updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
 import {updateLogicFlowEditConfig} from "@/editor/LogicFlow/components/LogicFlowEditConfig";
+import {openLogicFlowKeyboard} from "@/editor/LogicFlow/components/LogicFlowKeyboard";
 
 const content = defineModel({
     type: Object,
@@ -218,6 +220,12 @@ function onKeyboardEvent(event: KeyboardEvent) {
     if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         onSave();
+    }else if (event.key === 'm' && (event.ctrlKey || event.metaKey)) {
+        option.value.miniMap = !option.value.miniMap;
+        initOption();
+        onSave();
+    }else if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+        instance.value && instance.value.history.undo();
     }
 }
 
@@ -254,7 +262,8 @@ function onOpenEditConfig() {
     });
 }
 
-// TODO: 首次使用，打开帮助说明
+// 首次使用，打开帮助说明
+firstUseLogicFlow();
 </script>
 <style lang="less">
 .logic-flow {
@@ -342,6 +351,7 @@ function onOpenEditConfig() {
     .lf-menu-item:hover {
         background-color: var(--color-neutral-4) !important;
     }
+
     .lf-mini-map {
         background: var(--color-fill-2) !important;
     }

@@ -142,7 +142,14 @@ enum LocalNameEnum {
 
     WINDOW_CANVAS_FOLDER = '/window/canvas/folder',
 
-    WINDOW_NOTE_FOLDER = '/window/note/folder'
+    WINDOW_NOTE_FOLDER = '/window/note/folder',
+
+    // ========================== 一次性变量 ==========================
+
+    /**
+     * 是否第一次使用流程图
+     */
+    FIRST_USE_LOGIC_FLOW = '/first/use/logic-flow',
 
 }
 

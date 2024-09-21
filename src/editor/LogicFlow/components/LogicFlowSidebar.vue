@@ -81,7 +81,7 @@ export default defineComponent({
     flex-wrap: wrap;
     gap: 8px;
     padding: 8px;
-    background-color: var(--color-fill-1);
+    background-color: var(--color-bg-2);
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 200px;
