@@ -30,6 +30,7 @@ import IconRichText from '@/components/KbIcon/FileRichText.vue';
 import FileCode from '@/components/KbIcon/FileCode.vue';
 import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
 import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
+import FileLct from "@/components/KbIcon/FileLct.vue";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -67,7 +68,7 @@ export const articleTypes = [
         key: ArticleTypeEnum.LOGIC_FLOW,
         name: '流程图',
         icon: shallowRef(IconBranch),
-        lock: IconBranch
+        lock: FileLct
     }];
 const articleTypeMap = map(articleTypes, 'key');
 
@@ -148,46 +149,76 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
         case ArticleTypeEnum.LOGIC_FLOW:
             return {
                 data: {
-                    // 节点
-                    nodes: [
+                    "nodes": [
                         {
-                            id: 50,
-                            type: 'rect',
-                            x: 100,
-                            y: 150,
-                            text: '你好',
+                            "id": "387d7ca1-a582-4e2e-bf51-a056dbd70783",
+                            "type": "pro-rect",
+                            "x": 36,
+                            "y": 89,
+                            "properties": {
+                                "backgroundColor": "#ffffff",
+                                "borderType": 0,
+                                "borderColor": "",
+                                "borderWidth": 2,
+                                "borderStyle": "solid",
+                                "fontSize": 12,
+                                "fontColor": "#000000",
+                                "fontWeight": "",
+                                "fontFamily": "",
+                                "lineHeight": "1",
+                                "textAlign": "center",
+                                "fontStyle": "",
+                                "textDecoration": ""
+                            },
+                            "text": {
+                                "x": 36,
+                                "y": 89,
+                                "value": "你好"
+                            }
                         },
                         {
-                            id: 21,
-                            type: 'circle',
-                            x: 300,
-                            y: 150,
-                        },
+                            "id": "3f32b304-4e84-4fe4-9375-48e3ada0c80b",
+                            "type": "pro-circle",
+                            "x": 296,
+                            "y": 89,
+                            "properties": {}
+                        }
                     ],
-                    // 边
-                    edges: [
+                    "edges": [
                         {
-                            type: 'polyline',
-                            sourceNodeId: 50,
-                            targetNodeId: 21,
-                        },
-                    ],
-                },
-                config: {
-                    grid: {
-                        size: 10,
-                        type: 'dot',
-                    },
-                    keyboard: {
-                        enabled: true,
-                    },
-                    snapline: true,
-                    background: {
-                        backgroundImage: 'var(--color-bg-1)'
-                    }
+                            "id": "3992994d-0ce9-456a-8bd0-e2ae3db4c0ac",
+                            "type": "pro-polyline",
+                            "properties": {},
+                            "sourceNodeId": "387d7ca1-a582-4e2e-bf51-a056dbd70783",
+                            "targetNodeId": "3f32b304-4e84-4fe4-9375-48e3ada0c80b",
+                            "startPoint": {
+                                "x": 86,
+                                "y": 89
+                            },
+                            "endPoint": {
+                                "x": 246,
+                                "y": 89
+                            },
+                            "pointsList": [
+                                {
+                                    "x": 86,
+                                    "y": 89
+                                },
+                                {
+                                    "x": 246,
+                                    "y": 89
+                                }
+                            ]
+                        }
+                    ]
                 },
                 option: {
-                    miniMap: true
+                    miniMap: true,
+                    grid: 'empty',
+                    gridSize: 0,
+                    gridVisible: false,
+                    gridConfigColor: '#000000',
+                    gridConfigThickness: 1
                 },
                 editConfig: {
                     stopZoomGraph: false,

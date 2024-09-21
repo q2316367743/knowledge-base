@@ -25,7 +25,7 @@
             <!-- 右侧配置面板 -->
             <div class="config">
                 <a-dropdown>
-                    <a-button type="text">更多</a-button>
+                    <a-button type="text" :disabled="readOnly">更多</a-button>
                     <template #content>
                         <a-doption @click="onOpenOption">功能配置</a-doption>
                         <a-doption @click="onOpenEditConfig">编辑配置</a-doption>
@@ -47,10 +47,10 @@ import LogicFlowSidebar from "@/editor/LogicFlow/components/LogicFlowSidebar.vue
 import LogicFlowToolbar from "@/editor/LogicFlow/components/LogicFlowToolbar.vue";
 import LogicFlowSave from "@/editor/LogicFlow/components/LogicFlowSave.vue";
 import LogicFlowPanel from "@/editor/LogicFlow/components/LogicFlowPanel.vue";
-import {onLogicFlowExport} from "@/editor/LogicFlow/func";
+import {buildLogicFlowConfigFromOptions, onLogicFlowExport} from "@/editor/LogicFlow/func";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {assign} from "radash";
-import {updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
+import {LogicFlowOption, updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
 import {updateLogicFlowEditConfig} from "@/editor/LogicFlow/components/LogicFlowEditConfig";
 
 const content = defineModel({
@@ -84,8 +84,13 @@ const properties = ref<any>()
 
 // 配置数据
 const config = ref({});
-const option = ref({
-    mindMap: false
+const option = ref<LogicFlowOption>({
+    miniMap: true,
+    grid: 'empty',
+    gridSize: 10,
+    gridVisible: true,
+    gridConfigColor: '#000000',
+    gridConfigThickness: 1
 });
 const editConfig = ref<any>({});
 
@@ -111,18 +116,24 @@ onMounted(() => {
     if (!containerRef.value) {
         return;
     }
-    console.log(content.value)
     const data = content.value['data'] || {};
     config.value = content.value['config'] || {}
     option.value = assign(option.value, content.value['option'])
     editConfig.value = content.value['editConfig'] || {}
     instance.value = new LogicFlow({
-        ...config.value,
         container: containerRef.value,
         plugins: [BpmnElement, BpmnXmlAdapter, Snapshot, SelectionSelect, MiniMap, Menu],
         width: elementSize.width.value,
         height: elementSize.height.value,
         isSilentMode: props.readOnly,
+        keyboard: {
+            enabled: true,
+        },
+        snapline: true,
+        background: {
+            backgroundImage: 'var(--color-bg-1)'
+        },
+        ...buildLogicFlowConfigFromOptions(option.value)
     });
     // 初始化赋值
     registerCustomElement(instance.value).then(nodes => diagramNodes.value = nodes);
@@ -187,19 +198,19 @@ function onSave() {
 
 function setStyle(item: any) {
     activeNodes.value.forEach(({id}) => {
-        instance.value?.setProperties(id, item)
+        instance.value && instance.value.setProperties(id, item)
     })
     activeEdges.value.forEach(({id}) => {
-        instance.value?.setProperties(id, item)
+        instance.value && instance.value.setProperties(id, item)
     })
 }
 
 function setZIndex(type: any) {
     activeNodes.value.forEach(({id}) => {
-        instance.value?.setElementZIndex(id, type)
+        instance.value && instance.value.setElementZIndex(id, type)
     })
     activeEdges.value.forEach(({id}) => {
-        instance.value?.setElementZIndex(id, type)
+        instance.value && instance.value.setElementZIndex(id, type)
     })
 }
 
@@ -218,25 +229,27 @@ function initOption() {
     if (!instance.value) {
         return;
     }
-    if (option.value.mindMap) {
+    if (option.value.miniMap) {
         // @ts-ignore
         instance.value.extension.miniMap.show();
-    }else {
+    } else {
         // @ts-ignore
         instance.value.extension.miniMap.hide();
     }
 }
 
 function onOpenOption() {
-    updateLogicFlowOption(option,() => {
+    updateLogicFlowOption(option, () => {
         onSave();
         initOption();
     });
 }
 
 function onOpenEditConfig() {
-    updateLogicFlowEditConfig(editConfig,() => {
-        instance.value?.updateEditConfig(editConfig.value);
+    updateLogicFlowEditConfig(editConfig, () => {
+        if (instance.value) {
+            instance.value.updateEditConfig(editConfig.value);
+        }
         onSave();
     });
 }
@@ -328,6 +341,9 @@ function onOpenEditConfig() {
 
     .lf-menu-item:hover {
         background-color: var(--color-neutral-4) !important;
+    }
+    .lf-mini-map {
+        background: var(--color-fill-2) !important;
     }
 }
 </style>

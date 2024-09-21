@@ -6,6 +6,7 @@ import {Drawer, Form, FormItem, Switch} from "@arco-design/web-vue";
 export function updateLogicFlowEditConfig(editConfig: Ref<IEditConfigType>, onSave: () => void) {
     Drawer.open({
         title: '编辑配置',
+        width: 400,
         content: () => <Form model={editConfig.value}
                              layout="vertical">
             <FormItem label="禁止缩放画布">

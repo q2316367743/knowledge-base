@@ -1,6 +1,8 @@
 import {LogicFlow} from "@logicflow/core";
 import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {LogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
+import {Options as LFOptions} from "@logicflow/core/src/options";
 
 /**
  * 导出流程图
@@ -26,4 +28,23 @@ export function onLogicFlowExport(id: number, articleId: number, lf?: LogicFlow)
             lf.getSnapshot()
         }
     })
+}
+
+export function buildLogicFlowConfigFromOptions(options: LogicFlowOption): Omit<LFOptions.Common, 'container'> {
+    if (options.grid === 'dot' || options.grid === 'mesh') {
+        return {
+            grid: {
+                type: options.grid,
+                size: options.gridSize,
+                visible: options.gridVisible,
+                config: {
+                    color: options.gridConfigColor,
+                    thickness: options.gridConfigThickness,
+                }
+            },
+        }
+    }
+    return  {
+        grid: false
+    }
 }
