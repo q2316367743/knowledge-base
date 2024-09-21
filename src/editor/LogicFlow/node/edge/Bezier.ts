@@ -1,9 +1,10 @@
-import { BezierEdge, BezierEdgeModel, EdgeConfig, GraphModel } from '@logicflow/core'
+import {BezierEdge, BezierEdgeModel, GraphModel}  from '@logicflow/core'
+import LogicFlow from '@logicflow/core'
 import { getShapeStyleFunction, getTextStyleFunction } from '../getShapeStyleUtil'
 
 // 贝塞尔曲线
 class Model extends BezierEdgeModel {
-  constructor(data: EdgeConfig, graphModel: GraphModel) {
+  constructor(data: LogicFlow.EdgeConfig, graphModel: GraphModel) {
     super(data, graphModel)
     this.strokeWidth = 4
   }

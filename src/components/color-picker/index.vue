@@ -1,6 +1,6 @@
 <template>
     <a-trigger placement="bottom" trigger="click">
-        <span class="block" :style="{ backgroundColor: sourceColor }"></span>
+        <span class="block" :style="{ backgroundColor: color }"></span>
         <template #content>
             <div class="simple-mind-map-base-color">
                 <div class="baseColor">
@@ -10,7 +10,7 @@
                 <div class="moreColor">
                     <div>
                         <span>更多颜色</span>
-                        <input type="color" v-model="sourceColor"/>
+                        <input type="color" v-model="color"/>
                     </div>
                     <div style="text-align: right">
                         <a-tooltip content="动态背景颜色">
@@ -27,77 +27,62 @@
         </template>
     </a-trigger>
 </template>
-<script lang="ts">
-import {defineComponent} from "vue";
+<script lang="ts" setup>
+import {ref, watch} from "vue";
 
-export default defineComponent({
-    name: 'color-picker',
-    emits: ['update:modelValue', 'change'],
-    props: {
-        modelValue: {
-            type: String,
-            default: ''
-        }
-    },
-    watch: {
-        modelValue(newValue) {
-            this.sourceColor = newValue;
-        },
-        sourceColor(newValue) {
-            this.$emit('update:modelValue', newValue);
-            this.$emit('change', newValue);
-        }
-    },
-    created() {
-        this.sourceColor = this.modelValue;
-    },
-    data: () => ({
-        sourceColor: '#ffffff',
-        colorList: [
-            'var(--color-bg-1)',
-            '#999999',
-            '#FFFFFF',
-            '#F44E3B',
-            '#FE9200',
-            '#FCDC00',
-            '#DBDF00',
-            '#A4DD00',
-            '#68CCCA',
-            '#73D8FF',
-            '#AEA1FF',
-            '#FDA1FF',
-            '#333333',
-            '#808080',
-            '#cccccc',
-            '#D33115',
-            '#E27300',
-            '#FCC400',
-            '#B0BC00',
-            '#68BC00',
-            '#16A5A5',
-            '#009CE0',
-            '#7B64FF',
-            '#FA28FF',
-            '#000000',
-            '#666666',
-            '#B3B3B3',
-            '#9F0500',
-            '#C45100',
-            '#FB9E00',
-            '#808900',
-            '#194D33',
-            '#0C797D',
-            '#0062B1',
-            '#653294',
-            '#AB149E'
-        ]
-    }),
-    methods: {
-        updateColor(color: string) {
-            this.sourceColor = color;
-        }
-    }
+const color = defineModel({
+    type: String,
+    default: '#ffffff'
 });
+const emit = defineEmits(['change']);
+
+watch(color, (val) => {
+    console.log(val);
+    emit("change")
+});
+
+const colorList = ref([
+    'var(--color-bg-1)',
+    '#999999',
+    '#FFFFFF',
+    '#F44E3B',
+    '#FE9200',
+    '#FCDC00',
+    '#DBDF00',
+    '#A4DD00',
+    '#68CCCA',
+    '#73D8FF',
+    '#AEA1FF',
+    '#FDA1FF',
+    '#333333',
+    '#808080',
+    '#cccccc',
+    '#D33115',
+    '#E27300',
+    '#FCC400',
+    '#B0BC00',
+    '#68BC00',
+    '#16A5A5',
+    '#009CE0',
+    '#7B64FF',
+    '#FA28FF',
+    '#000000',
+    '#666666',
+    '#B3B3B3',
+    '#9F0500',
+    '#C45100',
+    '#FB9E00',
+    '#808900',
+    '#194D33',
+    '#0C797D',
+    '#0062B1',
+    '#653294',
+    '#AB149E'
+]);
+
+function updateColor(res: string) {
+    color.value = res;
+}
 </script>
 <style scoped lang="less">
 .block {

@@ -25,13 +25,5 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-.svg-node {
-  left: 1px;
-  top: 1px;
-  width: 32px;
-  height: 30px;
-  display: block;
-  position: relative;
-  overflow: hidden;
-}
+
 </style>

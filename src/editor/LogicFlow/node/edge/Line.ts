@@ -1,9 +1,10 @@
-import { LineEdge, LineEdgeModel, EdgeConfig, GraphModel } from '@logicflow/core'
+import { LineEdge, LineEdgeModel, GraphModel } from '@logicflow/core'
+import LogicFlow from '@logicflow/core'
 import { getShapeStyleFunction, getTextStyleFunction } from '../getShapeStyleUtil'
 
 // 直线
 class Model extends LineEdgeModel {
-  constructor(data: EdgeConfig, graphModel: GraphModel) {
+  constructor(data: LogicFlow.EdgeConfig, graphModel: GraphModel) {
     super(data, graphModel)
     this.strokeWidth = 1
   }

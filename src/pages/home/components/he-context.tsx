@@ -147,7 +147,32 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
             return '';
         case ArticleTypeEnum.LOGIC_FLOW:
             return {
-                data: {},
+                data: {
+                    // 节点
+                    nodes: [
+                        {
+                            id: 50,
+                            type: 'rect',
+                            x: 100,
+                            y: 150,
+                            text: '你好',
+                        },
+                        {
+                            id: 21,
+                            type: 'circle',
+                            x: 300,
+                            y: 150,
+                        },
+                    ],
+                    // 边
+                    edges: [
+                        {
+                            type: 'polyline',
+                            sourceNodeId: 50,
+                            targetNodeId: 21,
+                        },
+                    ],
+                },
                 config: {
                     grid: {
                         size: 10,
@@ -156,15 +181,11 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
                     keyboard: {
                         enabled: true,
                     },
-                    snapline: true,
+                    snapline: false,
                     background: {
                         backgroundImage: 'var(--color-bg-1)'
                     }
                 },
-                option: {
-                    nodeKeys: ['basic-node', 'graph-node', 'polygon-node', 'lct'],
-                    activeNodeKeys: ['basic-node', 'lct']
-                }
             }
         default:
             return "";

@@ -1,5 +1,5 @@
 <template>
-    <div class="diagram-panel">
+    <div class="logic-flow-panel">
         <div class="setting-block">
             <div>快捷样式</div>
             <div class="short-styles">
@@ -12,15 +12,15 @@
         <div class="setting-block">
             <div class="setting-item">
                 <span>背景色</span>
-                <color-picker v-model:color="style.backgroundColor" @change="sync" />
+                <a-color-picker v-model="style.backgroundColor" show-text/>
             </div>
             <div class="setting-item">
                 <span>线条颜色</span>
-                <color-picker v-model:color="style.borderColor" @change="sync" />
+                <a-color-picker v-model="style.borderColor" show-text default-value="#187DFF"/>
             </div>
             <div class="setting-item">
                 <span>线条样式</span>
-                <a-select v-model="style.borderStyle" size="small" @change="sync">
+                <a-select v-model="style.borderStyle" size="small">
                     <a-option value="hidden" label="不显示"></a-option>
                     <a-option value="solid">
                         <div class="border-style" :style="{ borderBottomStyle: 'solid' }">实线</div>
@@ -35,18 +35,21 @@
             </div>
             <div class="setting-item">
                 <span>线条宽度</span>
-                <a-select v-model="style.borderWidth" @change="sync">
-                    <a-option v-for="item in borderWidthOptions" :key="item" :label="`${item}px`" :value="item"></a-option>
-                </a-select>
+                <a-input-number v-model="style.borderWidth" size="mini" :min="1" :max="100" style="width: 80px;"
+                               >
+                    <template #suffix>
+                        px
+                    </template>
+                </a-input-number>
             </div>
             <div class="setting-item">
                 <span>文本颜色</span>
-                <color-picker v-model:color="style.fontColor" @change="sync" />
+                <a-color-picker v-model="style.fontColor" show-text/>
             </div>
             <div class="setting-item">
                 <span>文本大小</span>
                 <a-input-number v-model="style.fontSize" size="mini" :min="12" :max="100" style="width: 80px;"
-                    @change="sync">
+                   >
                     <template #suffix>
                         px
                     </template>
@@ -54,7 +57,7 @@
             </div>
             <div class="setting-item">
                 <span>文本字体</span>
-                <a-select v-model="style.fontFamily" size="small" allow-clear @change="sync">
+                <a-select v-model="style.fontFamily" size="small" allow-clear>
                     <a-option v-for="(fontFamily, index) in fontFamilies" :value="fontFamily" :key="index">
                         {{ fontFamily }}
                     </a-option>
@@ -62,7 +65,7 @@
             </div>
             <div class="setting-item">
                 <span>行高</span>
-                <a-select v-model="style.lineHeight" size="small" @change="sync">
+                <a-select v-model="style.lineHeight" size="small">
                     <a-option v-for="(item, index) in lineHeightOptions" :key="index" :value="`${item}`">{{ item
                     }}</a-option>
                 </a-select>
@@ -87,11 +90,9 @@
 <script lang="ts">
 import {borderStyles, fontFamilies, shortStyles} from '../constants'
 import {defineComponent} from 'vue';
-import ColorPicker from "@/components/color-picker/index.vue";
 
 export default defineComponent({
-    name: 'diagram-panel',
-    components: {ColorPicker},
+    name: 'logic-flow-panel',
     props: {
         elementsStyle: Object,
         onlyEdge: Boolean // 是否是只设置边的属性，当只设置边的属性时，隐藏快捷样式和背景色设置
@@ -125,44 +126,46 @@ export default defineComponent({
         }
     },
     watch: {
-        elementsStyle: {
-            handler(newValue) {
-                this.fontStyle = new Array<string>();
-                this.style = Object.assign({
-                    backgroundColor: '#ffffff', // 填充色
-                    borderType: 0, // 线条类型
-                    borderColor: '', // 填充颜色
-                    borderWidth: 2, // 线条宽度
-                    borderStyle: 'solid', // 线条类型
-                    fontSize: 12, // 文本大小
-                    fontColor: '#000000', // 文本颜色
-                    fontWeight: '', // 文本加粗
-                    fontFamily: '', // 文本样式
-                    lineHeight: '1', // 行高
-                    textAlign: 'center', // 对齐
-                    fontStyle: '',
-                    textDecoration: ''
-                }, newValue);
-                if (this.style.textDecoration === 'underline') {
-                    this.fontStyle.push('underline')
-                }
-                if (this.style.fontWeight === 'bold') {
-                    this.fontStyle.push('bold')
-                }
-                if (this.style.fontStyle === 'italic') {
-                    this.fontStyle.push('italic')
-                }
+        style: {
+            handler() {
+                this.sync()
             },
-            immediate: true
-        },
+            deep: true
+        }
+    },
+    created() {
+        this.fontStyle = new Array<string>();
+        this.style = Object.assign({
+            backgroundColor: '#ffffff', // 填充色
+            borderType: 0, // 线条类型
+            borderColor: '', // 填充颜色
+            borderWidth: 2, // 线条宽度
+            borderStyle: 'solid', // 线条类型
+            fontSize: 12, // 文本大小
+            fontColor: '#000000', // 文本颜色
+            fontWeight: '', // 文本加粗
+            fontFamily: '', // 文本样式
+            lineHeight: '1', // 行高
+            textAlign: 'center', // 对齐
+            fontStyle: '',
+            textDecoration: ''
+        }, this.elementsStyle || {});
+        if (this.style.textDecoration === 'underline') {
+            this.fontStyle.push('underline')
+        }
+        if (this.style.fontWeight === 'bold') {
+            this.fontStyle.push('bold')
+        }
+        if (this.style.fontStyle === 'italic') {
+            this.fontStyle.push('italic')
+        }
     },
     methods: {
         sync() {
-            this.setStyle(this.style);
+            this.$emit('set-style', this.style)
         },
         setStyle(item: any) {
-            this.style = item;
-            this.$emit('set-style', item)
+            this.style = Object.assign(this.style, item);
         },
         syncFontStyle() {
             if (this.fontStyle.indexOf('underline') > -1) {
@@ -180,21 +183,19 @@ export default defineComponent({
             } else {
                 this.style.fontWeight = 'normal'
             }
-            this.sync();
         },
-
-        changeTextAlign(val: any) {
-            this.$emit('set-style', {
-                textAlign: val
-            })
-        }
     },
 })
 </script>
 
 <style scoped lang="less">
-.diagram-panel {
+.logic-flow-panel {
     width: 236px;
+    background-color: var(--color-bg-1);
+    padding: 8px;
+    border: 1px solid var(--color-border-2);
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
 }
 
 .short-styles {
@@ -215,7 +216,7 @@ export default defineComponent({
 
 .border-style {
     width: 150px;
-    height: 0px;
+    height: 0;
     margin-top: 18px;
     border-bottom-width: 1px;
     border-bottom-color: black;
