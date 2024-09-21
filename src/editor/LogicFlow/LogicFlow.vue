@@ -22,6 +22,11 @@
                                   :elements-style="properties"
                                   @set-style="setStyle" @@set-level="setZIndex"/>
             </div>
+            <!-- 右侧配置面板 -->
+            <div class="config">
+                <a-button type="text" @click="onOpenOption">配置</a-button>
+                <a-button type="text">帮助</a-button>
+            </div>
         </div>
     </div>
 </template>
@@ -39,6 +44,8 @@ import LogicFlowSave from "@/editor/LogicFlow/components/LogicFlowSave.vue";
 import LogicFlowPanel from "@/editor/LogicFlow/components/LogicFlowPanel.vue";
 import {onLogicFlowExport} from "@/editor/LogicFlow/func";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {assign} from "radash";
+import {updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
 
 const content = defineModel({
     type: Object,
@@ -71,6 +78,9 @@ const properties = ref<any>()
 
 // 配置数据
 const config = ref({});
+const option = ref({
+    mindMap: false
+});
 
 const showPanel = computed(() => {
     // 选中元素、不是只读、有属性，显示属性面板
@@ -85,7 +95,7 @@ watch(() => props.readOnly, value => {
     onSave();
     instance.value && instance.value.updateEditConfig({
         isSilentMode: value
-    })
+    });
 }, {immediate: true})
 
 const toolbarTop = computed(() => (elementSize.height.value - 146) / 2 + 'px');
@@ -96,6 +106,7 @@ onMounted(() => {
     }
     const data = content.value['data'] || {};
     config.value = content.value['config'] || {}
+    option.value = assign(option.value, content.value['option'])
     instance.value = new LogicFlow({
         ...config.value,
         container: containerRef.value,
@@ -109,6 +120,9 @@ onMounted(() => {
     instance.value.renderRawData(data);
     instance.value.setTheme(DefaultTheme);
     instance.value.resize(elementSize.width.value, elementSize.height.value);
+    // 初始化配置
+    initOption();
+    // 画布事件监听
     instance.value.on('selection:selected,node:click,blank:click,edge:click', () => {
         if (!instance.value) {
             return;
@@ -154,7 +168,8 @@ function onSave() {
     saved.value = true;
     content.value = {
         data: instance.value.getGraphRawData(),
-        config: config.value
+        config: config.value,
+        option: option.value
     }
 }
 
@@ -187,6 +202,26 @@ function onExport(id: number) {
     onLogicFlowExport(id, props.articleId || 0, instance.value);
 }
 
+function initOption() {
+    console.log(instance.value, option.value);
+    if (!instance.value) {
+        return;
+    }
+    if (option.value.mindMap) {
+        // @ts-ignore
+        instance.value.extension.miniMap.show();
+    }else {
+        // @ts-ignore
+        instance.value.extension.miniMap.hide();
+    }
+}
+
+function onOpenOption() {
+    updateLogicFlowOption(option,() => {
+        onSave();
+        initOption();
+    });
+}
 
 // TODO: 首次使用，打开帮助说明
 </script>
@@ -222,6 +257,16 @@ function onExport(id: number) {
             position: absolute;
             top: 42px;
             right: 8px;
+        }
+
+        .config {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            background-color: var(--color-bg-1);
+            border-radius: var(--border-radius-medium);
+            border: 1px solid var(--color-border-2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);;
         }
 
 

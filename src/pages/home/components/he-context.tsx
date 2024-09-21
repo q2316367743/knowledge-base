@@ -181,11 +181,14 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
                     keyboard: {
                         enabled: true,
                     },
-                    snapline: false,
+                    snapline: true,
                     background: {
                         backgroundImage: 'var(--color-bg-1)'
                     }
                 },
+                option: {
+                    miniMap: true
+                }
             }
         default:
             return "";
