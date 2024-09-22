@@ -23,9 +23,9 @@
                                   @set-style="setStyle" @@set-level="setZIndex"/>
             </div>
             <!-- 右侧配置面板 -->
-            <div class="config">
+            <div class="config" v-if="!readOnly">
                 <a-dropdown>
-                    <a-button type="text" :disabled="readOnly">更多</a-button>
+                    <a-button type="text">更多</a-button>
                     <template #content>
                         <a-doption @click="onOpenOption">功能配置</a-doption>
                         <a-doption @click="onOpenEditConfig">编辑配置</a-doption>
@@ -101,17 +101,6 @@ const showPanel = computed(() => {
     return (activeNodes.value.length > 0 || activeEdges.value.length > 0) && !props.readOnly && properties.value;
 })
 
-watch([elementSize.width, elementSize.height], () => {
-    instance.value && instance.value.resize(elementSize.width.value, elementSize.height.value);
-});
-watch(() => props.readOnly, value => {
-    // 切换只读，自动保存
-    onSave();
-    instance.value && instance.value.updateEditConfig({
-        isSilentMode: value
-    });
-}, {immediate: true})
-
 const toolbarTop = computed(() => (elementSize.height.value - 146) / 2 + 'px');
 
 onMounted(() => {
@@ -127,7 +116,6 @@ onMounted(() => {
         plugins: [BpmnElement, BpmnXmlAdapter, Snapshot, SelectionSelect, MiniMap, Menu],
         width: elementSize.width.value,
         height: elementSize.height.value,
-        isSilentMode: props.readOnly,
         keyboard: {
             enabled: true,
         },
@@ -143,7 +131,12 @@ onMounted(() => {
     instance.value.renderRawData(data);
     instance.value.setTheme(DefaultTheme);
     instance.value.resize(elementSize.width.value, elementSize.height.value);
+    // 更新编辑配置
     instance.value.updateEditConfig(editConfig.value);
+    // 更新只读状态
+    instance.value.updateEditConfig({
+        isSilentMode: props.readOnly
+    });
     // 初始化配置
     initOption();
     // 画布事件监听
@@ -163,6 +156,17 @@ onMounted(() => {
     document.addEventListener('keydown', onKeyboardEvent);
     useArticleExportEvent.off(onExport);
     useArticleExportEvent.on(onExport);
+    // 观察属性变化
+    watch([elementSize.width, elementSize.height], () => {
+        instance.value && instance.value.resize(elementSize.width.value, elementSize.height.value);
+    });
+    watch(() => props.readOnly, value => {
+        // 切换只读，自动保存
+        onSave();
+        instance.value && instance.value.updateEditConfig({
+            isSilentMode: value
+        });
+    });
 });
 onBeforeUnmount(() => {
     document.removeEventListener('keydown', onKeyboardEvent);
@@ -256,7 +260,10 @@ function onOpenOption() {
 function onOpenEditConfig() {
     updateLogicFlowEditConfig(editConfig, () => {
         if (instance.value) {
-            instance.value.updateEditConfig(editConfig.value);
+            instance.value.updateEditConfig({
+                ...editConfig.value,
+                isSilentMode: props.readOnly
+            });
         }
         onSave();
     });

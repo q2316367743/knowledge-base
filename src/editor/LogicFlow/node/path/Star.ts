@@ -11,7 +11,7 @@ class StarModel extends ResizableRectModel {
 }
 
 class StarView extends ResizableRectView {
-    getResizeShape() {
+    getResizeShape(): h.JSX.Element {
         const { x, y, width, height } = this.props.model
         const style = this.props.model.getNodeStyle()
         const svgAttr = {
