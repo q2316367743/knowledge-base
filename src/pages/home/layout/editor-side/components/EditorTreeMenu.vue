@@ -113,12 +113,13 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/home/components/he-context";
-import {exportToMd, exportToUTools} from "@/pages/home/components/EditorExport";
+import {exportToMd} from "@/pages/home/components/EditorExport";
 import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
+import {exportToUTools} from "@/components/ArticleExport/exportForUtools";
 
 export default defineComponent({
     name: 'EditorTreeMenu',

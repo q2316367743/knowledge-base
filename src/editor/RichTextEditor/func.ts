@@ -5,7 +5,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
 import JSZip from "jszip";
 import {getAttachmentByAsync} from "@/utils/utools/DbStorageUtil";
-import {renderAttachmentBaseUrl} from "@/plugin/server";
+import {parseRichTextForAttachment} from "@/components/ArticleExport/exportForCommon";
 
 export function onRichTextExport(id: number, articleId?: number, editorRef?: IDomEditor) {
     if (articleId === id) {
@@ -39,40 +39,22 @@ export function onRichTextExport(id: number, articleId?: number, editorRef?: IDo
                 const html = editorRef.getHtml();
                 if (html) {
                     // 此处需要将html中图片、视频的src中的链接替换为绝对路径
-                    const attachments = new Array<string>();
-                    const document = new DOMParser().parseFromString(html, 'text/html');
-                    const baseUrl = renderAttachmentBaseUrl();
-                    document.body.querySelectorAll('img, video, source').forEach(item => {
-                        const src = item.getAttribute('src');
-                        if (src) {
-                            if (src.startsWith(baseUrl)) {
-                                // 获取key
-                                let key = new URL(src).searchParams.get('key');
-                                if (key) {
-                                    // 获取key，
-                                    attachments.push(key);
-                                    // 替换src
-                                    item.setAttribute('src', key.substring(1))
-                                }
-                            }
-                        }
-                    });
+                    const {attachments, content} = parseRichTextForAttachment(html)
                     if (attachments.length > 0) {
                         // zip压缩
-                        let htmlStr = document.body.innerHTML;
                         const zip = new JSZip();
-                        zip.file('index.html', htmlStr);
+                        zip.file('index.html', content);
                         for (let attachment of attachments) {
                             const blob = await getAttachmentByAsync(attachment);
                             if (blob) {
                                 zip.file(attachment, blob);
                             }
                         }
-                        const content = await zip.generateAsync({type: 'blob'});
-                        download(content, `${article?.index.name || 'article'}.zip`, 'application/zip')
+                        const zipBlob = await zip.generateAsync({type: 'blob'});
+                        download(zipBlob, `${article?.index.name || 'article'}.zip`, 'application/zip')
                     } else {
                         // 直接下载
-                        download(html, `${article?.index.name || 'article'}.html`, 'text/html')
+                        download(content, `${article?.index.name || 'article'}.html`, 'text/html')
                     }
                 }
             } else if (res.type === 3) {
