@@ -1,8 +1,9 @@
-const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync, readFile} = require('node:fs');
-const {join, basename} = require('node:path');
+const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync} = require('node:fs');
+const {join} = require('node:path');
 const {get} = require('node:https');
 const {ipcRenderer} = require('electron');
 const {createServer} = require('./src/server');
+const {openFile} = require('./src/file');
 
 
 /**
@@ -35,35 +36,6 @@ function receiveMessage(event, callback) {
     })
 }
 
-/**
- * 获取一个文件
- * @param options {options: {
- *     title?: string,
- *     defaultPath?: string,
- *     buttonLabel?: string,
- *     filters?: { name: string, extensions: string[] }[],
- *     properties?: Array<'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles' | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent'>,
- *     message?: string,
- *     securityScopedBookmarks?: boolean
- *   }} 参数
- * @return {Promise<File>} 返回blob对象
- */
-function openFile(options) {
-    return new Promise((resolve, reject) => {
-        const paths = utools.showOpenDialog(options);
-        const path = paths[0];
-        if (path) {
-            readFile(path, (err, data) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                const blob = new Blob([data], {type: 'application/octet-stream'});
-                resolve(new File([blob], basename(path)));
-            })
-        }
-    })
-}
 
 window.preload = {
     /**

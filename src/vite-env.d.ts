@@ -176,7 +176,7 @@ declare interface Window {
              * @param options 参数
              * @return 返回blob对象
              */
-            openFile(options: OpenFileOption): Promise<File>
+            openFile(options: OpenFileOption): Promise<Array<File>>
         },
 
         path: {

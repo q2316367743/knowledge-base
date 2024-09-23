@@ -1,10 +1,11 @@
-import {Form, FormItem, Modal, Input, Row, Col, Button, InputGroup} from "@arco-design/web-vue";
+import {Form, FormItem, Modal, Input,Button, InputGroup} from "@arco-design/web-vue";
 import {ref} from "vue";
 import {MindMapNode} from "@/editor/MindMapEditor/domain";
 import {getImageSize} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import {useImageUploadByUtools} from "@/plugin/image";
 import {renderAttachmentUrl} from "@/plugin/server";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 export function openInsertImage(activeNodes: MindMapNode[]) {
     if (activeNodes.length === 0) {
@@ -25,7 +26,12 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
                 name: 'Images',
                 extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp']
             }]
-        }).then(file => {
+        }).then(files => {
+            const file = files[0];
+            if (!file) {
+                MessageUtil.error("未选择图片")
+                return;
+            }
             useImageUploadByUtools(file)
                 .then(key => {
                     data.value = {

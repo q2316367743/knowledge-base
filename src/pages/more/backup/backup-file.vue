@@ -75,7 +75,14 @@ async function _restoreByFile() {
         properties: ["openFile"],
         buttonLabel: "选择文件"
     })
-        .then(file => file.arrayBuffer())
+        .then(files => {
+            const file = files[0];
+            if (!file) {
+                MessageUtil.error("未选择图片")
+                return Promise.reject("未选择图片");
+            }
+            return file.arrayBuffer()
+        })
         .then(restoreBackup)
 }
 
