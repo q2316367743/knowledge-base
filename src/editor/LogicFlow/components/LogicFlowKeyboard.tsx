@@ -1,0 +1,19 @@
+import {Descriptions, DescriptionsItem, Drawer} from "@arco-design/web-vue";
+
+export function openLogicFlowKeyboard() {
+    Drawer.open({
+        title: '快捷键',
+        footer: false,
+        width: 400,
+        content: () => <Descriptions align="right" title="节点操作" column={1}>
+            <DescriptionsItem label="保存">Ctrl + s</DescriptionsItem>
+            <DescriptionsItem label="复制">Ctrl + c</DescriptionsItem>
+            <DescriptionsItem label="粘贴">Ctrl + v</DescriptionsItem>
+            <DescriptionsItem label="回退">Ctrl + Z</DescriptionsItem>
+            <DescriptionsItem label="删除">backspace</DescriptionsItem>
+            <DescriptionsItem label="小地图">Ctrl + m</DescriptionsItem>
+            <DescriptionsItem label="选中">按住Ctrl + 鼠标左键拖动</DescriptionsItem>
+            <DescriptionsItem label="放大/缩小">按住Ctrl + 滚轮</DescriptionsItem>
+        </Descriptions>
+    })
+}

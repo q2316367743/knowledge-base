@@ -1,7 +1,32 @@
 import { Log, LogItemEnum } from "@/components/update-check/domain";
 
-
 export default [
+    {
+        version: '2.3.0',
+        sign: 230,
+        time: '2024-09-22',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: '新增流程图笔记，以替代被删除的画板笔记，但是流程图笔记与其他笔记有区别，亲注意查看'
+        }, {
+            label: LogItemEnum.MAJOR,
+            content: '备份优化，支持附件备份和备份恢复，之前备份无法备份附件，现在可以备份附件'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '富文本导出增强，可以导出图片、视频和附件'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '附件管理优化，复制的链接更加正常'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '支持链接打开'
+        }, {
+            label: LogItemEnum.OPTIMIZATION,
+            content: '优化了一些细节，提升了用户体验'
+        }],
+        remark: '此版本主要更新了流程图笔记，但是流程图笔记与其他笔记有区别，请注意查看。下个版本会尝试使用leafer做一个白板笔记',
+        url: 'https://txc.qq.com/products/612648/post/172697624517098057'
+    },
     {
         version: '2.2.7',
         sign: 227,

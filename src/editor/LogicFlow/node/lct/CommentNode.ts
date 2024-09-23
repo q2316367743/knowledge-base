@@ -14,7 +14,7 @@ class LctCommentModel extends ResizableRectModel {
 
 class LctCommentView extends ResizableRectView {
 
-    getResizeShape() {
+    getResizeShape(): h.JSX.Element {
         const {model} = this.props;
         const {x, y, width, height} = model;
         const style = model.getNodeStyle();

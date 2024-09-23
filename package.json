@@ -1,12 +1,13 @@
 {
     "name": "knowledge-base",
     "private": true,
-    "version": "2.2.7",
+    "version": "2.3.0",
     "type": "module",
     "description": "知识库",
     "scripts": {
         "dev": "vite -c config/vite.utools.ts",
-        "build": "vue-tsc && vite build -c config/vite.utools.ts",
+        "build": "vite build -c config/vite.utools.ts",
+        "check": "vue-tsc --noEmit",
         "preview": "vite preview"
     },
     "dependencies": {
