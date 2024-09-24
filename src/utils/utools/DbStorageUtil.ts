@@ -283,7 +283,8 @@ export async function getAttachmentByAsync(docId: string): Promise<Blob | null> 
     if (!data) {
         return null;
     }
-    return  new Blob([data]);
+    const mimeType = await utools.db.promises.getAttachmentType(docId);
+    return new Blob([data], {type: mimeType || 'application/octet-stream'});
 }
 
 /**

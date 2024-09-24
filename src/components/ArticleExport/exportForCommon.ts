@@ -3,13 +3,16 @@ import JSZip from "jszip";
 import UtoolsStyle from '@/assets/style/utools-export.css?raw'
 import style from "cherry-markdown/dist/cherry-markdown.min.css?raw";
 import JetBrainsMono from "@/assets/fonts/JetBrainsMono-Regular.woff2";
+import CherryEngine from "cherry-markdown/dist/cherry-markdown.engine.core";
+import {isUtools} from "@/global/BeanFactory";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 interface ParserRichTextForAttachmentResult {
     content: string;
     attachments: Array<string>;
 }
 
-export function parseRichTextForAttachment(content: string): ParserRichTextForAttachmentResult {
+export function parseRichTextForAttachment(content: string, prefix = ''): ParserRichTextForAttachmentResult {
     const attachments = new Array<string>();
     const document = new DOMParser().parseFromString(content, 'text/html');
     const baseUrl = renderAttachmentBaseUrl();
@@ -21,7 +24,7 @@ export function parseRichTextForAttachment(content: string): ParserRichTextForAt
                 let key = new URL(src).searchParams.get('key');
                 if (key) {
                     // 获取key，
-                    attachments.push(key);
+                    attachments.push(`${prefix}${key}`);
                     // 替换src
                     item.setAttribute('src', key.substring(1))
                 }
@@ -59,4 +62,27 @@ if (isDark){
     // 字体
     let font = await fetch(JetBrainsMono).then((res) => res.blob());
     zip.file(`${assetUrl}/JetBrainsMono-Regular.woff2`, font);
+}
+
+export function buildMdEngine(images: Array<string>) {
+    return  new CherryEngine({
+        engine: {
+            global: {
+                urlProcessor: (url: string) => {
+                    if (url.startsWith("attachment:")) {
+                        if (isUtools) {
+                            let id = url.replace("attachment:", "");
+                            if (!id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
+                                id = LocalNameEnum.ARTICLE_ATTACHMENT + id;
+                                // 记录下来
+                            }
+                            images.push(id);
+                            return `..${id}`;
+                        }
+                    }
+                    return url;
+                }
+            }
+        }
+    });
 }

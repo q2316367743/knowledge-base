@@ -40,6 +40,22 @@ export function listToTree(list: Array<ListTree>, topName: string): Array<TreeNo
     }];
 }
 
+/**
+ * 将列表转为树
+ * @param list 列表
+ * @param pid 基础目录ID
+ */
+export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<TreeNodeData> {
+    const base: Array<TreeNodeData> = list.filter(c => c.pid === pid)
+        .map(c => ({
+            key: c.id,
+            title: c.name,
+            children: []
+        }));
+    base.forEach(item => _listToTree(item, item.key as number, list));
+    return base;
+}
+
 function _listToTree(tree: TreeNodeData, pid: number, categories: Array<ListTree>) {
     tree.children = categories.filter(c => c.pid === pid)
         .map(c => ({

@@ -14,9 +14,7 @@ import {
 } from "@/editor/HandsontableEditor/hooks/ExportHook";
 import {isEmptyObj} from "openai/core";
 import {keys} from "radash";
-import CherryEngine from 'cherry-markdown/dist/cherry-markdown.engine.core';
-import {isUtools} from "@/global/BeanFactory";
-import {commonAsset, parseRichTextForAttachment} from "@/components/ArticleExport/exportForCommon";
+import {buildMdEngine, commonAsset, parseRichTextForAttachment} from "@/components/ArticleExport/exportForCommon";
 
 interface Index {
     t: string;
@@ -34,26 +32,7 @@ export async function exportToUTools(folder: number) {
     const zip = new JSZip();
     // 查询全部目录结构
     const map = listToList(useFolderStore().folders, useArticleStore().folderMap, folder);
-    const engine = new CherryEngine({
-        engine: {
-            global: {
-                urlProcessor: (url: string) => {
-                    if (url.startsWith("attachment:")) {
-                        if (isUtools) {
-                            let id = url.replace("attachment:", "");
-                            if (!id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
-                                id = LocalNameEnum.ARTICLE_ATTACHMENT + id;
-                                // 记录下来
-                            }
-                            images.push(id);
-                            return `..${id}`;
-                        }
-                    }
-                    return url;
-                }
-            }
-        }
-    });
+    const engine = buildMdEngine(images);
     // 获取markdown内容
     for (let path of map.keys()) {
         const articleId = map.get(path);

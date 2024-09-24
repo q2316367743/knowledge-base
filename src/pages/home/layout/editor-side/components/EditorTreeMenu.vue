@@ -104,7 +104,7 @@
                 <template #content>
                     <a-doption @click="exportToMd(id)">ZIP</a-doption>
                     <a-doption @click="exportToUTools(id)">uTools文档插件</a-doption>
-                    <a-doption disabled>epub</a-doption>
+                    <a-doption @click="exportForEpub(id)">Epub</a-doption>
                 </template>
             </a-dsubmenu>
         </template>
@@ -120,6 +120,7 @@ import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {exportToUTools} from "@/components/ArticleExport/exportForUtools";
+import {exportForEpub} from "@/components/ArticleExport/exportForEpub";
 
 export default defineComponent({
     name: 'EditorTreeMenu',
@@ -146,6 +147,7 @@ export default defineComponent({
         articleTypes
     }),
     methods: {
+        exportForEpub,
         exportToMd, exportToUTools,
         showArticleImportModal, remove, rename, addFolder, addArticle,
         moveTo(id: number, name: string, article: boolean) {
