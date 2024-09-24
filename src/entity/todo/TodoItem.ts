@@ -61,6 +61,11 @@ export interface TodoItemAttr {
      */
     end: string;
 
+    /**
+     * 完成时间
+     */
+    completeTime?: Date | string;
+
 }
 
 export interface TodoItemContent {
