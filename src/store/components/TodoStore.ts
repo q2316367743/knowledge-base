@@ -248,14 +248,7 @@ export const useTodoStore = defineStore('todo', {
         async getMultiTodoItemAttr(ids: Array<number>): Promise<Array<DbRecord<TodoItemAttr>>> {
             return listRecordByAsync(ids.map(id => LocalNameEnum.TODO_ATTR + id))
         },
-        /**
-         * 根据ID更新待办项
-         * @param id 待办项ID
-         * @param record 更新内容
-         * @param attr 待办属性
-         * @return 更新后的数据
-         */
-        async updateById(id: number, record: Partial<TodoItemIndex>, attr?: Partial<TodoItemAttr>): Promise<TodoItemIndex> {
+        async updateSelf(id: number, record: Partial<TodoItemIndex>) {
             const index = this.todoItems.findIndex(e => e.id === id);
             if (index === -1) {
                 return Promise.reject("待办项不存在");
@@ -265,8 +258,20 @@ export const useTodoStore = defineStore('todo', {
                 ...record,
                 updateTime: new Date(),
             };
+            // TODO: 如果更新了状态为完成，需要记录完成时间
             // 同步
             await this._sync();
+            return index;
+        },
+        /**
+         * 根据ID更新待办项
+         * @param id 待办项ID
+         * @param record 更新内容
+         * @param attr 待办属性
+         * @return 更新后的数据
+         */
+        async updateById(id: number, record: Partial<TodoItemIndex>, attr?: Partial<TodoItemAttr>): Promise<TodoItemIndex> {
+            const index = await this.updateSelf(id, record);
             if (attr) {
                 // 由于数据量不大，就直接查询
                 let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
@@ -286,17 +291,7 @@ export const useTodoStore = defineStore('todo', {
          * @return 更新后的数据
          */
         async updateContent(id: number, record: Partial<TodoItemIndex>, content?: Partial<TodoItemContent>): Promise<TodoItemIndex> {
-            const index = this.todoItems.findIndex(e => e.id === id);
-            if (index === -1) {
-                return Promise.reject("待办项不存在");
-            }
-            this.todoItems[index] = {
-                ...this.todoItems[index],
-                ...record,
-                updateTime: new Date(),
-            };
-            // 同步
-            await this._sync();
+            const index = await this.updateSelf(id, record);
             if (content) {
                 // 由于数据量不大，就直接查询
                 let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemAttr(id));
