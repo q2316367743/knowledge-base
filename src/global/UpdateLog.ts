@@ -12,7 +12,8 @@ export default [
             label: LogItemEnum.UPDATE,
             content: '待办新增了记录完成时间字段'
         }],
-        url: 'https://txc.qq.com/products/612648/post/172723292176749057'
+        remark: '待办搜索可能不是很稳定，出现问题可以在兔小巢反馈问题。',
+        url: 'https://txc.qq.com/products/612648/post/172724675734385015'
     },
     {
         version: '2.3.0',

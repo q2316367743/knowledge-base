@@ -106,8 +106,5 @@ export function deepClone<T>(obj: T): T {
 }
 
 export function clone<T = any>(obj: T, deep = false): T {
-    if (deep) {
-        return deepClone(obj);
-    }
-    return structuredClone(obj);
+    return deepClone(obj);
 }

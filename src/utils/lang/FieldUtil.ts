@@ -73,7 +73,7 @@ export function versionCompare(version1: string, version2: string): number {
     return 0;
 }
 
-export function isVersionUpdate(oldVersion: string, newVersion: string, minVersion: string): boolean {
+export function isVersionUpdate(newVersion: string, oldVersion: string, minVersion: string): boolean {
     // 新版本必须大于等于最小版本，旧版本必须小于最小版本
-    return versionCompare(newVersion, minVersion) >= 0 && versionCompare(oldVersion, newVersion) < 0;
+    return versionCompare(newVersion, minVersion) >= 0 && versionCompare(oldVersion, minVersion) < 0;
 }
