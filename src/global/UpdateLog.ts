@@ -2,6 +2,19 @@ import { Log, LogItemEnum } from "@/components/update-check/domain";
 
 export default [
     {
+        version: '2.3.1',
+        sign: 231,
+        time: '2024-09-25',
+        items: [{
+            label: LogItemEnum.MAJOR,
+            content: '待办搜索增加，支持更多的查询条件，包括：标题、内容、标签、状态、创建时间、完成时间。'
+        }, {
+            label: LogItemEnum.UPDATE,
+            content: '待办新增了记录完成时间字段'
+        }],
+        url: 'https://txc.qq.com/products/612648/post/172723292176749057'
+    },
+    {
         version: '2.3.0',
         sign: 230,
         time: '2024-09-22',
