@@ -1,10 +1,10 @@
 import {defineStore} from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import {Alert, Button, Col, Drawer, Input, Row, Space} from "@arco-design/web-vue";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 
 export const useAiAskPromptStore = defineStore(LocalNameEnum.KEY_AI_PROMPT, () => {
     const prompts = ref<Array<string>>(getItemByDefault(LocalNameEnum.KEY_AI_PROMPT, new Array<string>()));

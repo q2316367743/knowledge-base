@@ -9,7 +9,7 @@ import {
 } from "@/entity/todo/TodoCategory";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {access} from "@/plugin/Statistics";
 

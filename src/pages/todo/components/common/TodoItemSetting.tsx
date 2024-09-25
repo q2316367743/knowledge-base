@@ -14,7 +14,7 @@ import {ref, watch} from "vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useTodoStore} from "@/store/components/TodoStore";
 import {IconEdit} from "@arco-design/web-vue/es/icon";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
 import {access} from "@/plugin/Statistics";

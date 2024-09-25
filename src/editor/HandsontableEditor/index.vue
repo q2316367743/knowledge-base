@@ -48,7 +48,7 @@
 </template>
 <script lang="ts" setup>
 import {onMounted, ref, shallowRef, watch} from "vue";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import Handsontable from 'handsontable';
 import {HyperFormula} from "hyperformula";
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
