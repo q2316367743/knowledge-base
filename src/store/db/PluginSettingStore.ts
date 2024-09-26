@@ -36,8 +36,6 @@ export const pluginTypes = [{
     title: 'markdown模板'
 }];
 
-export const pluginTypeMap = map(pluginTypes, 'key')
-
 export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, () => {
     const items = ref(new Array<PluginSettingIndex>())
     let rev: string | undefined = undefined;

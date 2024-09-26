@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import BackupSetting from "@/entity/setting/BackupSetting";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {ref} from "vue";
 
 
 export function getDefaultBackupSetting(): BackupSetting {
@@ -12,21 +13,25 @@ export function getDefaultBackupSetting(): BackupSetting {
     }
 }
 
+export const useBackupSettingStore = defineStore('backup-setting', () => {
+    const backupSetting = ref(getDefaultBackupSetting());
+    let rev = undefined as string | undefined;
 
-export const useBackupSettingStore = defineStore('backup-setting', {
-    state: () => ({
-        backupSetting: getDefaultBackupSetting(),
-        rev: undefined as string | undefined
-    }),
-    actions: {
-        async init() {
-            const res = await getFromOneWithDefaultByAsync(LocalNameEnum.SETTING_BACKUP, getDefaultBackupSetting());
-            this.backupSetting = Object.assign(this.backupSetting, res.record);
-            this.rev = res.rev;
-        },
-        async save(backupSetting: BackupSetting) {
-            this.backupSetting = backupSetting;
-            this.rev = await saveOneByAsync( LocalNameEnum.SETTING_BACKUP, this.backupSetting, this.rev);
-        }
+    async function  init() {
+        const res = await getFromOneWithDefaultByAsync(LocalNameEnum.SETTING_BACKUP, getDefaultBackupSetting());
+        backupSetting.value = Object.assign(backupSetting.value, res.record);
+        rev = res.rev;
+    }
+    init()
+        .then(() => console.log('BackupSettingStore init success'))
+        .catch(() => console.error('BackupSettingStore init failed'));
+
+    async function save(res: BackupSetting) {
+        backupSetting.value = res;
+        rev = await saveOneByAsync( LocalNameEnum.SETTING_BACKUP, backupSetting.value, rev);
+    }
+
+    return {
+        backupSetting, save
     }
 })

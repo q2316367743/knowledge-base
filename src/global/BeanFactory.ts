@@ -4,7 +4,6 @@ import { useEventBus } from "@vueuse/core";
 import { useFolderStore } from "@/store/db/FolderStore";
 import { useCategoryStore } from "@/store/db/CategoryStore";
 import { useTodoCategoryStore } from "@/store/db/TodoCategoryStore";
-import { useBackupSettingStore } from "@/store/db/BackupSettingStore";
 import { useBaseSettingStore } from "@/store/setting/BaseSettingStore";
 import { useThemeSettingStore } from "@/store/setting/ThemeSettingStore";
 import { useLskyProSettingStore } from "@/store/setting/LskyProSettingStore";
@@ -39,7 +38,6 @@ export async function initData(): Promise<void> {
         // 编辑器初始化，初始化时会同步初始化文章
         useHomeEditorStore().init(),
         useCategoryStore().init(),
-        useBackupSettingStore().init(),
         useFolderStore().init(),
         useTodoCategoryStore().init()
     ])
