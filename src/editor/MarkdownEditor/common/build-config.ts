@@ -3,7 +3,7 @@ import Cherry from "cherry-markdown";
 import {CherryOptions} from "cherry-markdown/types/cherry";
 import {isUtools} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useImageUpload, useLoadImageBySync} from "@/plugin/image";
+import {useImageUpload} from "@/plugin/image";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useScreenShotMenu} from "@/editor/MarkdownEditor/menu/ScreenShotMenu";
 import {usePanGu} from "@/editor/MarkdownEditor/menu/PanGuMenu";
@@ -21,6 +21,7 @@ import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
 import {useMoreItemMenu, useMoreMenu} from "@/editor/MarkdownEditor/menu/MoreMenu";
+import {renderAttachmentUrl} from "@/plugin/server";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -148,9 +149,10 @@ export async function buildConfig(
                             if (isUtools) {
                                 const id = url.replace("attachment:", "");
                                 if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
-                                    return useLoadImageBySync(id)
+                                    // 直接就是ID
+                                    return renderAttachmentUrl(id)
                                 } else {
-                                    return useLoadImageBySync(LocalNameEnum.ARTICLE_ATTACHMENT + id)
+                                    return renderAttachmentUrl(LocalNameEnum.ARTICLE_ATTACHMENT + id)
                                 }
                             }
                         }
