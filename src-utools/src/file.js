@@ -3,7 +3,7 @@ const {basename} = require('node:path');
 
 function readFileAsync(path) {
     return new Promise((resolve, reject) => {
-        readFile(path, 'utf8', (err, data) => {
+        readFile(path, (err, data) => {
             if (err) {
                 reject(err);
                 return;
@@ -33,8 +33,8 @@ async function openFile(options) {
         const data = await readFileAsync(path);
         const name = basename(path);
         const type = 'application/octet-stream';
-        const blob = new Blob([data], { type: type });
-        const file = new File([blob], name, { type: type });
+        const blob = new Blob([data], {type: type});
+        const file = new File([blob], name, {type: type});
         // 给文件对象添加path属性
         file.path = path;
         files.push(file);

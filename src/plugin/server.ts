@@ -3,7 +3,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 const port = utools.isDev() ? 11010 : 11000;
 
 export function renderAttachmentBaseUrl() {
-    return `http://localhost:${port}/attachment}`;
+    return `http://localhost:${port}/attachment`;
 }
 
 export function createServer() {
