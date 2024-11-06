@@ -11,7 +11,7 @@ import {
     Table, TypographyParagraph
 } from "@arco-design/web-vue";
 import {Ref, ref} from "vue";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TableColumnData} from "@arco-design/web-vue/es/table/interface";
 import Handsontable from "handsontable";

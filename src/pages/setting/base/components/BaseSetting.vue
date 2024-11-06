@@ -131,7 +131,7 @@ import {computed, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import {useLskyProSettingStore} from "@/store/setting/LskyProSettingStore";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import Constant from "@/global/Constant";

@@ -74,7 +74,7 @@ import {computed, onMounted, ref} from "vue";
 import Sortable, {SortableEvent} from 'sortablejs';
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
-import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
+import {ifObjectIsNull} from "@/utils/lang/FieldUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";

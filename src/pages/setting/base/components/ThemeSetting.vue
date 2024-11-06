@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";

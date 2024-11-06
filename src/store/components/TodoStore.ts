@@ -21,7 +21,7 @@ import {
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {ArticleIndex} from "@/entity/article";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -253,15 +253,24 @@ export const useTodoStore = defineStore('todo', {
             if (index === -1) {
                 return Promise.reject("待办项不存在");
             }
+            if (record.status === TodoItemStatus.COMPLETE) {
+                // 将状态改为完成，则需要记录完成时间
+                // 获取旧的属性
+                let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+                // 记录完成时间
+                await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ATTR + id, {
+                    ...old.record,
+                    completeTime: new Date()
+                }, old.rev);
+            }
             this.todoItems[index] = {
                 ...this.todoItems[index],
                 ...record,
                 updateTime: new Date(),
             };
-            // TODO: 如果更新了状态为完成，需要记录完成时间
             // 同步
             await this._sync();
-            return index;
+            return this.todoItems[index];
         },
         /**
          * 根据ID更新待办项
@@ -271,7 +280,7 @@ export const useTodoStore = defineStore('todo', {
          * @return 更新后的数据
          */
         async updateById(id: number, record: Partial<TodoItemIndex>, attr?: Partial<TodoItemAttr>): Promise<TodoItemIndex> {
-            const index = await this.updateSelf(id, record);
+            const item = await this.updateSelf(id, record);
             if (attr) {
                 // 由于数据量不大，就直接查询
                 let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
@@ -281,7 +290,7 @@ export const useTodoStore = defineStore('todo', {
                     ...attr
                 }, old.rev);
             }
-            return Promise.resolve(this.todoItems[index]);
+            return item;
         },
         /**
          * 根据ID更新待办项
@@ -291,7 +300,7 @@ export const useTodoStore = defineStore('todo', {
          * @return 更新后的数据
          */
         async updateContent(id: number, record: Partial<TodoItemIndex>, content?: Partial<TodoItemContent>): Promise<TodoItemIndex> {
-            const index = await this.updateSelf(id, record);
+            const item = await this.updateSelf(id, record);
             if (content) {
                 // 由于数据量不大，就直接查询
                 let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemAttr(id));
@@ -301,7 +310,7 @@ export const useTodoStore = defineStore('todo', {
                     ...content
                 }, old.rev);
             }
-            return Promise.resolve(this.todoItems[index]);
+            return item;
         },
         async saveContent(id: number, content: TodoItemContent, rev?: string): Promise<string | undefined> {
             return saveOneByAsync(LocalNameEnum.TODO_ITEM + id, content, rev)

@@ -1,23 +1,29 @@
 // @ts-nocheck
 import {useTodoStore} from "@/store/components/TodoStore";
 import {
-    Col,
-    Input,
-    Drawer,
-    Row,
-    Select,
-    Option,
     Button,
+    Col,
     DatePicker,
+    Divider,
+    Drawer,
+    Input,
+    InputTag,
     List,
     ListItem,
+    Option,
+    Row,
+    Select,
     Space,
-    Tag, InputTag
+    Tag
 } from "@arco-design/web-vue";
 import {ref} from "vue";
 import dayjs from "dayjs";
 import {
-    handlePriorityText, handleSimplePriorityColor, handleStatusText, TodoItemAttr, TodoItemContent,
+    handlePriorityText,
+    handleSimplePriorityColor,
+    handleStatusText,
+    TodoItemAttr,
+    TodoItemContent,
     TodoItemIndex,
     TodoItemPriority,
     TodoItemStatus
@@ -34,8 +40,8 @@ interface FormInterface {
     updateTimeEnd: string,
     completeTimeStart: string,
     completeTimeEnd: string,
-    status?: TodoItemStatus,
-    priority?: TodoItemPriority,
+    status: TodoItemStatus | 0,
+    priority: TodoItemPriority | 0,
     tags: Array<string>
 }
 
@@ -70,8 +76,8 @@ export function todoSearch() {
         completeTimeStart: '',
         completeTimeEnd: '',
         tags: [],
-        status: undefined,
-        priority: undefined
+        status: 0,
+        priority: 0
     });
 
     async function handleSearch() {
@@ -99,37 +105,82 @@ export function todoSearch() {
                     priority: formPriority,
                     tags
                 } = form.value;
-                const contentDb = await getTodoItemContent(item.id);
-                const content = contentDb.record;
-                const attr = await getTodoItemAttr(item.id);
-                const {completeTime} = attr;
-                if (
-                    (formTitle !== '' && title.includes(formTitle)) ||
-                    (createTimeStart !== '' && dayjs(createTime).isAfter(createTimeStart, 'day')) ||
-                    (createTimeEnd !== '' && dayjs(createTime).isBefore(createTimeEnd, 'day')) ||
-                    (updateTimeStart !== '' && dayjs(updateTime).isAfter(updateTimeStart, 'day')) ||
-                    (updateTimeEnd !== '' && dayjs(updateTime).isBefore(updateTimeEnd, 'day')) ||
-                    (completeTimeStart !== '' && dayjs(completeTime).isAfter(completeTimeStart, 'day')) ||
-                    (completeTimeEnd !== '' && dayjs(completeTime).isBefore(completeTimeEnd, 'day')) ||
-                    (formStatus !== undefined && status === formStatus) ||
-                    (formPriority !== undefined && priority === formPriority)
-                ) {
-                    todoList.value.push({
-                        index: item,
-                        content: content,
-                        attr: attr
-                    });
-                }
-                if (tags.length > 0) {
-                    // 标签过滤
-                    if (tagSearch(content.tags, tags)) {
-                        todoList.value.push({
-                            index: item,
-                            content: content,
-                            attr: attr
-                        });
+                let hasCondition = false;
+                if (formTitle !== '') {
+                    hasCondition = true;
+                    if (!title.includes(formTitle)) {
+                        continue;
                     }
                 }
+                if (createTimeStart && createTimeStart !== '') {
+                    hasCondition = true;
+                    if (!dayjs(createTime).isAfter(createTimeStart, 'day')) {
+                        continue;
+                    }
+                }
+                if (createTimeEnd && createTimeEnd !== '') {
+                    hasCondition = true;
+                    if (!dayjs(createTime).isBefore(createTimeEnd, 'day')) {
+                        continue;
+                    }
+                }
+                if (updateTimeStart && updateTimeStart !== '') {
+                    hasCondition = true;
+                    if (!dayjs(updateTime).isAfter(updateTimeStart, 'day')) {
+                        continue;
+                    }
+                }
+                if (updateTimeEnd && updateTimeEnd !== '') {
+                    hasCondition = true;
+                    if (!dayjs(updateTime).isBefore(updateTimeEnd, 'day')) {
+                        continue;
+                    }
+                }
+                const attr = await getTodoItemAttr(item.id);
+                const {completeTime} = attr;
+                console.log(completeTime, completeTimeStart, completeTimeEnd);
+                if (completeTimeStart && completeTimeStart !== '' && completeTime) {
+                    hasCondition = true;
+                    console.log(dayjs(completeTime).isAfter(completeTimeStart, 'day'))
+                    if (!dayjs(completeTime).isAfter(completeTimeStart, 'day')) {
+                        continue;
+                    }
+                }
+                if (completeTimeEnd && completeTimeEnd !== '' && completeTime) {
+                    hasCondition = true;
+                    if (!dayjs(completeTime).isBefore(completeTimeEnd, 'day')) {
+                        continue;
+                    }
+                }
+                if (formStatus > 0) {
+                    hasCondition = true;
+                    if (status !== formStatus) {
+                        continue;
+                    }
+                }
+                if (formPriority > 0) {
+                    hasCondition = true;
+                    if (priority !== formPriority) {
+                        continue;
+                    }
+                }
+                const contentDb = await getTodoItemContent(item.id);
+                const content = contentDb.record;
+                if (tags.length > 0) {
+                    hasCondition = true;
+                    // 标签过滤
+                    if (!tagSearch(content.tags, tags)) {
+                        continue;
+                    }
+                }
+                if (!hasCondition) {
+                    continue;
+                }
+                todoList.value.push({
+                    index: item,
+                    content: content,
+                    attr: attr
+                });
             }
         } finally {
             loading.value = false;
@@ -146,8 +197,8 @@ export function todoSearch() {
                     <Input placeholder="搜索待办事项" v-model={form.value.title} allowClear></Input>
                 </Col>
                 <Col span={4}>
-                    <Select v-model={form.value.status} placeholder="状态" allowClear>
-                        <Option value={undefined}>全部状态</Option>
+                    <Select v-model={form.value.status} placeholder="状态">
+                        <Option value={0}>全部状态</Option>
                         <Option value={TodoItemStatus.TODO}>待办</Option>
                         <Option value={TodoItemStatus.DOING}>进行中</Option>
                         <Option value={TodoItemStatus.COMPLETE}>已完成</Option>
@@ -155,8 +206,8 @@ export function todoSearch() {
                     </Select>
                 </Col>
                 <Col span={4}>
-                    <Select v-model={form.value.priority} placeholder="优先级" allowClear>
-                        <Option value={undefined}>全部优先级</Option>
+                    <Select v-model={form.value.priority} placeholder="优先级">
+                        <Option value={0}>全部优先级</Option>
                         <Option value={TodoItemPriority.NONE}>无</Option>
                         <Option value={TodoItemPriority.FLOOR}>低</Option>
                         <Option value={TodoItemPriority.MIDDLE}>中</Option>
@@ -227,22 +278,34 @@ export function todoSearch() {
                     </Col>
                 </Row>
             </div>}
-            <List loading={loading.value} style="margin-top: 16px" paginationProps={{pageSize: 10, total: todoList.value.length}}>
+            <List loading={loading.value} style="margin-top: 16px"
+                  paginationProps={{pageSize: 10, total: todoList.value.length}}>
                 {todoList.value.map(item => (
                     <ListItem key={item.index.id}>{{
                         default: () => <>
-                            <div>{item.title}</div>
+                            <div>{item.index.title}</div>
                             <Space class={'mt-8'}>
                                 <Tag
                                     color={handleSimplePriorityColor(item.index.priority)}>优先级：{handlePriorityText(item.index.priority)}</Tag>
                                 <Tag color={'arcoblue'}>状态：{handleStatusText(item.index.status)}</Tag>
-                                <Tag color={'orange'}>创建时间：{toDateString(item.index.createTime)}</Tag>
                             </Space>
                             <Space class={'mt-8'}>
+                                <Tag
+                                    color={'orange'}>创建：{toDateString(item.index.createTime, 'YYYY-MM-DD HH:mm')}</Tag>
+                                <Tag
+                                    color={'purple'}>更新：{toDateString(item.index.updateTime, 'YYYY-MM-DD HH:mm')}</Tag>
+                                {item.index.status === TodoItemStatus.COMPLETE &&
+                                    item.attr.completeTime &&
+                                    <Tag
+                                        color={'green'}>完成：{toDateString(item.attr.completeTime, 'YYYY-MM-DD HH:mm')}</Tag>}
+                            </Space>
+                            <Divider/>
+                            <Space wrap>
                                 {item.content.tags.map(tag => <Tag key={tag} color={randomColor(tag)}>{tag}</Tag>)}
                             </Space>
                         </>,
-                        actions: () => <Button type="text" onClick={() => openTodoItemInfo(item.index)}>查看详情</Button>
+                        actions: () => <Button type="text"
+                                               onClick={() => openTodoItemInfo(item.index)}>查看详情</Button>
                     }}</ListItem>))
                 }
             </List>

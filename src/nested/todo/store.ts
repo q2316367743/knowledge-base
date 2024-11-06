@@ -3,7 +3,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {computed, ref} from "vue";
 import {buildCardTodoSetting, CardTodoSetting} from "@/nested/todo/types/CardTodoSetting";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
-import {clone} from "@/utils/lang/ObjUtil";
+import {clone} from "@/utils/lang/ObjectUtil";
 
 // TODO 此处应该为useUtoolsDbStorage
 export const useSettingStore = defineStore(LocalNameEnum.CARD_TODO_SETTING, () => {

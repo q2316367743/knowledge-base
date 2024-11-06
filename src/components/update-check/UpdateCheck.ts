@@ -3,12 +3,13 @@ import Constant from "@/global/Constant";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import {getFromOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {init} from "@/components/update-check/record/init";
-import {parseVersion} from "@/components/update-check/domain";
 import {updateTo130FromUnder} from "@/components/update-check/record/updateTo130";
 import {updateTo140FromUnder} from "@/components/update-check/record/updateTo140";
 import {updateTo150FromUnder} from "@/components/update-check/record/updateTo150";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {login, register, access} from "@/plugin/Statistics";
+import {isVersionUpdate} from "@/utils/lang/FieldUtil";
+import {updateTo231} from "@/components/update-check/record/updateTo231";
 
 export default async function updateCheck(toUpdate?: () => void) {
     const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)
@@ -20,29 +21,24 @@ export default async function updateCheck(toUpdate?: () => void) {
             access('版本更新', `[${res.record}] => [${Constant.version}]`);
             login();
 
-            const oldVersion = parseVersion(res.record);
-            const newVersion = parseVersion(Constant.version);
-
-            if (oldVersion.main <= 1 && oldVersion.sub < 3) {
-                if (newVersion.main > 1 || (newVersion.main == 1 && newVersion.sub >= 3)) {
-                    // 执行
-                    await updateTo130FromUnder();
-                    MessageUtil.success("数据迁移成功");
-                }
+            if (isVersionUpdate(Constant.version, res.record, '1.3.0')) {
+                // 执行
+                await updateTo130FromUnder();
+                MessageUtil.success("数据迁移成功");
             }
-            if (oldVersion.main <= 1 && oldVersion.sub < 4) {
-                if (newVersion.main > 1 || (newVersion.main == 1 && newVersion.sub >= 4 && newVersion.dot > 0)) {
-                    // 执行
-                    await updateTo140FromUnder();
-                    MessageUtil.success("数据迁移成功");
-                }
+            if (isVersionUpdate(Constant.version, res.record, '1.4.0')) {
+                // 执行
+                await updateTo140FromUnder();
+                MessageUtil.success("数据迁移成功");
             }
-            if (oldVersion.main <= 1 && oldVersion.sub < 5) {
-                if (newVersion.main > 1 || (newVersion.main == 1 && newVersion.sub >= 5 && newVersion.dot >= 0)) {
-                    // 执行
-                    await updateTo150FromUnder();
-                    MessageUtil.success("数据迁移成功");
-                }
+            if (isVersionUpdate(Constant.version, res.record, '1.5.0')) {
+                // 执行
+                await updateTo150FromUnder();
+                MessageUtil.success("数据迁移成功");
+            }
+            if (isVersionUpdate(Constant.version, res.record, '2.3.1')) {
+                await updateTo231();
+                MessageUtil.success("数据迁移成功");
             }
 
         }

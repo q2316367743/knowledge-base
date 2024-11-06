@@ -71,7 +71,7 @@
 import {computed} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {sortTodoIndex, useTodoStore} from "@/store/components/TodoStore";
-import {ifObjectIsNull} from "@/utils/lang/ObjUtil";
+import {ifObjectIsNull} from "@/utils/lang/FieldUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useGlobalStore} from "@/store/GlobalStore";
