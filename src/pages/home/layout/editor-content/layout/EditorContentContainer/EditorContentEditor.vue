@@ -21,7 +21,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 // 编辑器
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
 import MonacoEditor from "@/editor/MonacoEditor/index.vue";

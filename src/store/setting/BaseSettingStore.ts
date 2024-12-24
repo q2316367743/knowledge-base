@@ -3,7 +3,7 @@ import {BaseSetting, getDefaultBaseSetting} from "@/entity/setting/BaseSetting";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getFromOneWithDefaultByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import Constant from "@/global/Constant";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import dayjs from "dayjs";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {isUtools} from "@/global/BeanFactory";

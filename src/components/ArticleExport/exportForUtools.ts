@@ -1,4 +1,4 @@
-import {access} from "@/plugin/Statistics";
+import {useUmami} from "@/plugin/umami";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import JSZip from "jszip";
 import {listToList} from "@/entity/ListTree";
@@ -6,7 +6,7 @@ import {useFolderStore} from "@/store/db/FolderStore";
 import {getAttachmentByAsync, getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
 import {toDateString} from "@/utils/lang/FormatUtil";
 import {
@@ -23,7 +23,7 @@ interface Index {
 }
 
 export async function exportToUTools(folder: number) {
-    access("导出数据为uTools文档插件")
+    useUmami.track("导出数据为uTools文档插件")
 
     const indexes = new Array<Index>();
     const images = new Array<string>();

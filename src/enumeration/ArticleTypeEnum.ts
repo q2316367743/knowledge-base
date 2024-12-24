@@ -1,4 +1,4 @@
-enum ArticleTypeEnum {
+export enum ArticleTypeEnum {
 
     /**
      * Markdown
@@ -51,4 +51,10 @@ enum ArticleTypeEnum {
 
 }
 
-export default ArticleTypeEnum;
+// 文本类型
+export const TEXT_TYPE_LIST = [
+    ArticleTypeEnum.MARKDOWN,
+    ArticleTypeEnum.CODE,
+    ArticleTypeEnum.RICH_TEXT,
+    ArticleTypeEnum.MIND_MAP,
+]

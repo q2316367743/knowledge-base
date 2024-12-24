@@ -1,3 +1,4 @@
+import {useUmami} from "@/plugin/umami";
 import {createApp} from 'vue'
 import {createPinia} from 'pinia';
 import App from './App.vue'
@@ -28,102 +29,101 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {isUtools, useDeleteEvent, useSearchContentEvent} from '@/global/BeanFactory';
-import {access} from "@/plugin/Statistics";
 import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {addArticleModal} from "@/pages/home/components/he-context";
 
 self.MonacoEnvironment = {
-    getWorker(_: string, label: string) {
-        if (label === 'json') {
-            return new jsonWorker()
-        }
-        if (['css', 'scss', 'less'].includes(label)) {
-            return new cssWorker()
-        }
-        if (['html', 'handlebars', 'razor'].includes(label)) {
-            return new htmlWorker()
-        }
-        if (['typescript', 'javascript'].includes(label)) {
-            return new tsWorker()
-        }
-        return new EditorWorker()
-    },
+  getWorker(_: string, label: string) {
+    if (label === 'json') {
+      return new jsonWorker()
+    }
+    if (['css', 'scss', 'less'].includes(label)) {
+      return new cssWorker()
+    }
+    if (['html', 'handlebars', 'razor'].includes(label)) {
+      return new htmlWorker()
+    }
+    if (['typescript', 'javascript'].includes(label)) {
+      return new tsWorker()
+    }
+    return new EditorWorker()
+  },
 }
 
 createApp(App)
-    .use(ArcoVue)
-    .use(ArcoVueIcon)
-    .use(createPinia())
-    .use(router)
-    .use(setupCalendar, {})
-    .mount('#app');
+  .use(ArcoVue)
+  .use(ArcoVueIcon)
+  .use(createPinia())
+  .use(router)
+  .use(setupCalendar, {})
+  .mount('#app');
 
 function getKey(e: KeyboardEvent) {
-    const keys = new Array<string>();
-    e.ctrlKey && keys.push('ctrl');
-    e.altKey && keys.push('alt');
-    e.shiftKey && keys.push('shift');
-    keys.push(e.code);
-    return keys.join(" | ");
+  const keys = new Array<string>();
+  e.ctrlKey && keys.push('ctrl');
+  e.altKey && keys.push('alt');
+  e.shiftKey && keys.push('shift');
+  keys.push(e.code);
+  return keys.join(" | ");
 }
 
 window.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.ctrlKey || e.altKey) {
-        if (e.code === 'KeyN') {
-            e.preventDefault();
-            addArticleModal();
-            access("使用快捷键", getKey(e));
-        } else if (e.code === 'Delete') {
-            e.preventDefault();
-            e.stopPropagation();
-            useDeleteEvent.emit();
-            access("使用快捷键", getKey(e));
-        } else if (e.code == 'KeyQ') {
-            e.preventDefault();
-            e.stopPropagation();
-            useArticlePreviewEvent.emit(useHomeEditorStore().id);
-            access("使用快捷键", getKey(e));
-        } else if (e.code === 'KeyP') {
-            e.preventDefault();
-            e.stopPropagation();
-            useArticleExportEvent.emit(useHomeEditorStore().id);
-            access("使用快捷键", getKey(e));
-        }
-        if (e.shiftKey) {
-            if (e.code === 'KeyF') {
-                // 全局搜索
-                e.preventDefault();
-                useSearchContentEvent.emit();
-                access("使用快捷键", getKey(e));
-            }
-        }
+  if (e.ctrlKey || e.altKey) {
+    if (e.code === 'KeyN') {
+      e.preventDefault();
+      addArticleModal();
+      useUmami.track("使用快捷键", getKey(e));
+    } else if (e.code === 'Delete') {
+      e.preventDefault();
+      e.stopPropagation();
+      useDeleteEvent.emit();
+      useUmami.track("使用快捷键", getKey(e));
+    } else if (e.code == 'KeyQ') {
+      e.preventDefault();
+      e.stopPropagation();
+      useArticlePreviewEvent.emit(useHomeEditorStore().id);
+      useUmami.track("使用快捷键", getKey(e));
+    } else if (e.code === 'KeyP') {
+      e.preventDefault();
+      e.stopPropagation();
+      useArticleExportEvent.emit(useHomeEditorStore().id);
+      useUmami.track("使用快捷键", getKey(e));
     }
+    if (e.shiftKey) {
+      if (e.code === 'KeyF') {
+        // 全局搜索
+        e.preventDefault();
+        useSearchContentEvent.emit();
+        useUmami.track("使用快捷键", getKey(e));
+      }
+    }
+  }
 });
 
 window.open = (url?: string | URL): WindowProxy | null => {
-    if (!url) {
-        return null;
-    }
-    utools.shellOpenExternal(typeof url === 'string' ? url : url?.toString());
+  if (!url) {
     return null;
+  }
+  utools.shellOpenExternal(typeof url === 'string' ? url : url?.toString());
+  return null;
 
 }
 window.addEventListener('click', e => {
-    if (!isUtools) {
+  if (!isUtools) {
+    return;
+  }
+  // @ts-ignore
+  const elements: Array<HTMLElement> = e.path;
+  for (let element of elements) {
+    if (element.tagName && element.tagName.toLowerCase() === 'a') {
+      const href = (element as HTMLLinkElement).href;
+      if (href.startsWith("http://localhost:5173")) {
         return;
+      }
+      utools.shellOpenExternal(href);
+      e.preventDefault();
+      e.stopPropagation();
+      return;
     }
-    // @ts-ignore
-    const elements: Array<HTMLElement> = e.path;
-    for (let element of elements) {
-        if (element.tagName && element.tagName.toLowerCase() === 'a') {
-            const href = (element as HTMLLinkElement).href;
-            if (href.startsWith("http://localhost:5173")) {
-                return;
-            }
-            utools.shellOpenExternal(href);
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-        }
-    }
+  }
 });

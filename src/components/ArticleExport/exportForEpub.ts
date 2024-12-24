@@ -8,7 +8,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {getAttachmentByAsync, getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {_createDataByColumns, _createDataNotColumns} from "@/editor/HandsontableEditor/hooks/ExportHook";
 import {isEmptyObj} from "openai/core";
 import {keys} from "radash";

@@ -7,7 +7,7 @@ import { ArticleIndex } from "@/entity/article";
 import { TocItem } from "@/editor/types/TocItem";
 import { map } from "@/utils/lang/ArrayUtil";
 import { useEventBus } from "@vueuse/core";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import { useUtoolsDbStorage } from "@/hooks/UtoolsDbStorage";
 

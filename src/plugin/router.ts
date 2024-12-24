@@ -1,3 +1,4 @@
+import {useUmami} from "@/plugin/umami";
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 // 引入路由
 
@@ -72,5 +73,10 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes: routers
 });
+
+
+router.beforeEach(to => {
+  useUmami.page(to.path, to.name as string)
+})
 
 export default router;

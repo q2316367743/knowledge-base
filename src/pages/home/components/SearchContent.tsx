@@ -1,3 +1,4 @@
+import {useUmami} from "@/plugin/umami";
 import {
     Alert,
     Button, Col,
@@ -12,7 +13,7 @@ import {Ref, ref} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum, TEXT_TYPE_LIST} from "@/enumeration/ArticleTypeEnum";
 import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
@@ -20,7 +21,6 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {IconClose, IconEdit, IconSearch} from "@arco-design/web-vue/es/icon";
 import {findKeyword, MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
-import {access} from "@/plugin/Statistics";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
 
@@ -38,11 +38,14 @@ export async function _searchContent(
     text: Ref<string>,
     type: ArticleTypeEnum | 0
 ): Promise<void> {
-    const articles = useArticleStore().articles.filter(a =>
-        type === 0 ? (a.type === ArticleTypeEnum.RICH_TEXT
-            || a.type === ArticleTypeEnum.MARKDOWN
-            || a.type === ArticleTypeEnum.CODE
-            || a.type === ArticleTypeEnum.MIND_MAP) : (a.type === type));
+    const articles = useArticleStore().articles
+      .filter(a => {
+        if (a.isDelete) {
+          // 排除已删除的
+          return false;
+        }
+        return type === 0 ? TEXT_TYPE_LIST.includes(a.type) : (a.type === type)
+      });
     for (let i = 0; i < articles.length; i++) {
         if (close.value) {
             return Promise.resolve();
@@ -109,7 +112,7 @@ export const SearchContentPlaceholder: string = "请输入文章内容，支持m
 
 export function openSearchContent() {
 
-    access("使用全局搜索");
+    useUmami.track("使用全局搜索");
 
     const size = useWindowSize();
 

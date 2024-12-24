@@ -23,7 +23,7 @@ import {useFolderStore} from "@/store/db/FolderStore";
 import {computed, nextTick, ref} from "vue";
 import DrauuEditor from "@/editor/DrauuEditor/index.vue";
 import {_addArticle} from "@/pages/home/components/he-context";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";

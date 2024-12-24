@@ -1,9 +1,9 @@
+import {useUmami} from "@/plugin/umami";
 import {InputSearch, Modal, Tree} from "@arco-design/web-vue";
 import {ref} from "vue";
 import {useTodoStore} from "@/store/components/TodoStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
-import {access} from "@/plugin/Statistics";
 import {useNoteTree} from "@/hooks/NoteTree";
 
 export function openAddRelationArticle() {
@@ -28,7 +28,7 @@ export function openAddRelationArticle() {
             useTodoStore().associationArticle(checkedKeys.value)
                 .then(() => {
                     MessageUtil.success("关联成功");
-                    access("待办关联文章");
+                    useUmami.track("/待办/操作/关联文章");
                 })
                 .catch(e => MessageUtil.error("关联失败", e));
         }

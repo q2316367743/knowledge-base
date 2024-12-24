@@ -22,7 +22,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {_addArticle} from "@/pages/home/components/he-context";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";

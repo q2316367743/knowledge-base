@@ -24,7 +24,11 @@ const Constant=  {
     goodsId: 'nrniJTkDF7bjDosiki1vjXxAxGNbUsG6',
     help: {
         plugin: 'https://blog.esion.xyz/index.php/2024/04/06/知识库-主题与插件/'
-    }
+    },
+  umami: {
+      id: 'de82e31d-1399-4aca-a90a-21db9e2b87f4',
+    url: 'https://umami.esion.xyz'
+  }
 }
 
 export default Constant;

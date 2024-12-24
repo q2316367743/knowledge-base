@@ -1,3 +1,4 @@
+import {useUmami} from "@/plugin/umami";
 import {
     Alert,
     Button,
@@ -19,10 +20,9 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useWindowSize} from "@vueuse/core";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {readAsText} from "@/utils/file/FileUtil";
-import {access} from "@/plugin/Statistics";
 import {group} from '@/utils/lang/ArrayUtil';
 
 interface FileItem {
@@ -116,7 +116,7 @@ function getDefaultOption(name: string): OptionItemType {
 }
 
 async function onImport(files: Array<FileItem>, folderId: number) {
-    access("导入数据")
+    useUmami.track("导入数据")
     const loadingReturn = MessageBoxUtil.loading("正在导入...");
     const count = files.length + '';
     try {

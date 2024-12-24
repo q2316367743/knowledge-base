@@ -65,7 +65,7 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useRouter} from "vue-router";
 import {_searchContent, SearchContentItem, SearchContentPlaceholder} from "@/pages/home/components/SearchContent";
 import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
 

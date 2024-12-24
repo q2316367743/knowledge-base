@@ -1,12 +1,11 @@
 import JSZip from "jszip";
-import {basename} from "@/utils/file/FileUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {listToList} from "@/entity/ListTree";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {getFromOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
 import {toDateString} from "@/utils/lang/FormatUtil";
 import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
@@ -109,7 +108,6 @@ export function stringToBlob(str: string) {
 }
 
 export function mindMapToMarkdown(data: any): string {
-    const root = data.root as MindMapTreeNode;
     // TODO：使用广度遍历
     throw new Error("暂不支持思维导图问答");
 }

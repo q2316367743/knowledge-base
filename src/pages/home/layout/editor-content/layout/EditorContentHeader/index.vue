@@ -96,7 +96,7 @@ import {
     editorType, useUpdateRobotEvent, preview, useArticleExportEvent, useArticleImportEvent,
     useArticlePreviewEvent,useHomeEditorStore
 } from "@/store/components/HomeEditorStore";
-import ArticleTypeEnum from "@/enumeration/ArticleTypeEnum";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {remove, rename} from "@/pages/home/components/he-context";
 
