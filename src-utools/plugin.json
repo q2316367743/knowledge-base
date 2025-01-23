@@ -43,24 +43,6 @@
             ]
         },
         {
-            "code": "function:import",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                {
-                    "type": "regex",
-                    "label": "听雨文章导入",
-                    "match": "/^\\s*(\\{[\\s\\S]*\\}|\\[[\\s\\S]*\\])\\s*$/",
-                    "minLength": 2
-                }
-            ]
-        },
-        {
             "code": "function:search",
             "explain": "知识库",
             "icon": "public/logo.png",
@@ -78,62 +60,6 @@
                     "minLength": 1,
                     "maxLength": 500
                 }
-            ]
-        },
-        {
-            "code": "window:canvas",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "mainPush": true,
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                "画布"
-            ]
-        },
-        {
-            "code": "window:note",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "mainPush": true,
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                "笔记"
-            ]
-        },
-        {
-            "code": "window:preview",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "mainPush": true,
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                "笔记浏览"
-            ]
-        },
-        {
-            "code": "window:todo",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "mainPush": true,
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                "桌面待办"
             ]
         }
     ]

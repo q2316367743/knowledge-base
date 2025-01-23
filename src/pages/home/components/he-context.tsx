@@ -422,3 +422,7 @@ export function rename(id: number, name: string, article: boolean) {
     }
   })
 }
+
+export function setColor(id: number) {
+  // TODO:  设置颜色
+}
