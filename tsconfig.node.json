@@ -7,6 +7,6 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-      "config/vite.utools.ts"
+    "vite.config.ts"
   ]
 }

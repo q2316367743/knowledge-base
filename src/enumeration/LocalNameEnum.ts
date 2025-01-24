@@ -57,6 +57,11 @@ enum LocalNameEnum {
     TODO_ARTICLE = '/todo/article/',
 
     /**
+     * 待办清单中待办分组索引，内部保存了全部的待办分组
+     */
+    TODO_GROUP = '/todo/group/',
+
+    /**
      * 待办项的详细内容
      */
     TODO_ITEM = '/todo/item/',

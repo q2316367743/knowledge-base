@@ -18,19 +18,21 @@
     "baseUrl": "./",
     "paths": {
       "@/*": [
-        "./src/*"
+        "src/*"
       ]
     },
     "noEmit": true,
     "types": [
-      "utools-api-types"
+      "utools-api-types",
     ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "auto-imports.d.ts",
+    "components.d.ts"
   ],
   "references": [
     {

@@ -9,6 +9,10 @@ import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
+import '@arco-design/web-vue/es/message/style/css.js'
+import '@arco-design/web-vue/es/drawer/style/css.js'
+import '@arco-design/web-vue/es/modal/style/css.js'
+import '@arco-design/web-vue/es/notification/style/css.js'
 import '@/assets/style/global.less';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';
