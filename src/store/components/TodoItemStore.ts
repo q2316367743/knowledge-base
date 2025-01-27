@@ -1,9 +1,41 @@
 import {defineStore} from "pinia";
-import {TodoItemIndex} from "@/entity/todo/TodoItem";
+import {TodoItemIndex, TodoItemPriority, TodoItemPriorityOptions} from "@/entity/todo/TodoItem";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {TodoGroup, TodoGroupView} from "@/entity/todo/TodoGroup";
-import {map} from "@/utils/lang/ArrayUtil";
+import {group, map} from "@/utils/lang/ArrayUtil";
 import {useCurdStorage} from "@/hooks/CurdStorage";
+
+function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemIndex>): TodoGroupView {
+  const view: TodoGroupView = {
+    ...todoGroup,
+    children: []
+  }
+  let filter = todoGroup.items.map(itemId => {
+    let target = itemMap.get(itemId);
+    itemMap.delete(itemId);
+    return target;
+  }).filter(e => !!e);
+  const priorityMap = group(filter, 'priority');
+  for (let option of TodoItemPriorityOptions) {
+    const items = priorityMap.get(option.value);
+    priorityMap.delete(option.value);
+    if (items) {
+      view.children.push({
+        label: option.label,
+        value: option.value,
+        children: items
+      })
+    }
+  }
+  if (priorityMap.size > 0) {
+    view.children.push({
+      label: '无优先级',
+      value: TodoItemPriority.NONE,
+      children: Array.from(priorityMap.values()).flatMap(e => e)
+    })
+  }
+  return view;
+}
 
 // 此store只负责展示，不负责增删改
 export const useTodoItemStore = defineStore('todo-item', () => {
@@ -29,30 +61,21 @@ export const useTodoItemStore = defineStore('todo-item', () => {
   // 待办
   const todoGroupView = computed<Array<TodoGroupView>>(() => {
     const views = new Array<TodoGroupView>();
+
+
     const itemMap = map(todoItems.value, 'id');
-    for (const group of todoGroups.value) {
-      const view: TodoGroupView = {
-        ...group,
-        children: []
-      }
-      group.items.forEach(itemId => {
-        const item = itemMap.get(itemId);
-        if (item) {
-          view.children.push(item);
-          itemMap.delete(itemId);
-        }
-      });
-      views.push(view);
+    for (const todoGroup of todoGroups.value) {
+      views.push(renderGroupView(todoGroup, itemMap));
     }
     if (itemMap.size > 0) {
-      views.push({
+      const empty: TodoGroup = {
         id: 0,
         name: '未分组',
         categoryId: categoryId.value,
         sort: 0,
-        children: Array.from(itemMap.values()),
         items: Array.from(itemMap.keys())
-      })
+      };
+      views.push(renderGroupView(empty, itemMap))
     }
     return views;
   })

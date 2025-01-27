@@ -61,8 +61,8 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
     // 先更新索引
     await useTodoStore().updateById(index.id, base.value, {
       ...attr.value,
-      start: range.value[0],
-      end: range.value[1]
+      start: range.value ? range.value[0] : undefined,
+      end: range.value ? range.value[1] : undefined
     });
     // 再更新属性
     // 再更新内容

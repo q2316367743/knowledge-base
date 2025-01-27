@@ -1,4 +1,4 @@
-import {TodoItemIndex} from "@/entity/todo/TodoItem";
+import {TodoItemIndex, TodoItemPriority} from "@/entity/todo/TodoItem";
 
 /**
  * 待办分组
@@ -29,11 +29,17 @@ export interface TodoGroup {
 
 }
 
+export interface TodoGroupPriorityView {
+  value: TodoItemPriority;
+  label: string;
+  children: Array<TodoItemIndex>;
+}
+
 /**
  * 分组视图
  */
 export interface TodoGroupView extends TodoGroup{
 
-  children: Array<TodoItemIndex>;
+  children: Array<TodoGroupPriorityView>;
 
 }

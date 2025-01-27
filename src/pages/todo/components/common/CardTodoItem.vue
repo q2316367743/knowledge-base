@@ -1,8 +1,8 @@
 <template>
   <div class="card-todo-item"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
-       @click="_openTodoItemInfo()" @contextmenu="_openTodoItemSetting($event)">
-    <div class="todo-item__main">
+       @click="_openTodoItemSetting($event)">
+    <div class="todo-item__main" :class="[`priority_${index.priority}`]">
       <a-checkbox @click.stop/>
       <a-typography-paragraph class="todo-ite__title" :ellipsis="ellipsis">
         {{ index.title }}
@@ -149,6 +149,7 @@ function onCheck(item: TodoItemIndex) {
   border-radius: var(--border-radius-large);
   background-color: var(--color-bg-1);
   transition: background-color 0.3s;
+  border: 1px solid var(--color-border-1);
 
   &:hover {
     background-color: var(--color-fill-2);
@@ -161,6 +162,23 @@ function onCheck(item: TodoItemIndex) {
       margin: 0 0 0 8px;
     }
 
+    &.priority_1 {
+      :deep(.arco-checkbox-icon) {
+        border-color: rgb(var(--red-6));
+      }
+    }
+
+    &.priority_2 {
+      :deep(.arco-checkbox-icon) {
+        border-color: rgb(var(--orange-6));
+      }
+    }
+
+    &.priority_3 {
+      :deep(.arco-checkbox-icon) {
+        border-color: rgb(var(--arcoblue-6));
+      }
+    }
   }
 
   .todo-item__sub {
