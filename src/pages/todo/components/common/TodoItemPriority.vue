@@ -36,7 +36,6 @@ const toggleVisible = useToggle(visible);
 </script>
 <style scoped lang="less">
 .todo-item-priority {
-  overflow: hidden;
 
   &__header {
     display: flex;
@@ -50,6 +49,8 @@ const toggleVisible = useToggle(visible);
 
     .todo-item-priority__header-left {
       display: flex;
+      height: 24px;
+      align-items: center;
 
 
       .todo-item-priority__header-handle {
@@ -62,6 +63,8 @@ const toggleVisible = useToggle(visible);
 
       .todo-item-priority__header-title {
         margin: 0 8px;
+        font-size: 0.9rem;
+        font-weight: bold;
       }
 
       .todo-item-priority__header-count {
