@@ -66,7 +66,7 @@ import {TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
 import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/components/TodoSide/AddTodoCategory";
-import {useTodoItemStore} from "@/store/components/TodoItemStore";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const size = useWindowSize();
 
@@ -86,14 +86,14 @@ watch(() => selectKeys.value, value => {
   if (category && category.type === TodoCategoryTypeEnum.TODO) {
     if (categoryId !== useTodoStore().id) {
       useTodoStore().setId(categoryId);
-      useTodoItemStore().init(categoryId);
+      useTodoWrapStore().init(categoryId);
     }
     if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
       useTodoStore().switchCollapsed();
     }
   } else {
     useTodoStore().setId(0);
-    useTodoItemStore().init(0);
+    useTodoWrapStore().init(0);
   }
 });
 

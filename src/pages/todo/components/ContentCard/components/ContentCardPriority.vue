@@ -3,7 +3,7 @@
     <header class="card-item__header">
       <div class="title">
         {{ group.name }}
-        <a-tag class="length">{{ group.children.length }}</a-tag>
+        <a-tag class="length">{{ group.items.length }}</a-tag>
       </div>
       <div class="extra">
         <a-button type="text" @click="openAddTodoItem()">

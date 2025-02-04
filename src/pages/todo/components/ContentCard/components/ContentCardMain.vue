@@ -6,10 +6,10 @@
   </main>
 </template>
 <script lang="ts" setup>
-import {useTodoItemStore} from "@/store/components/TodoItemStore";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import ContentCardPriority from "@/pages/todo/components/ContentCard/components/ContentCardPriority.vue";
 
-const groups = computed(() => useTodoItemStore().todoGroupView);
+const groups = computed(() => useTodoWrapStore().todoGroupView);
 </script>
 <style scoped>
 .content-card-main {

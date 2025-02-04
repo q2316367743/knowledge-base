@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-item-priority" v-if="priorityView">
+  <div class="todo-item-priority" v-if="priorityView && priorityView.children.length > 0">
     <div class="todo-item-priority__header" @click="toggleVisible()">
       <div class="todo-item-priority__header-left">
         <div class="todo-item-priority__header-handle">

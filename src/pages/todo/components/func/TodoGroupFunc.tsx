@@ -1,7 +1,8 @@
-import {Input, Modal, Typography, TypographyParagraph} from "@arco-design/web-vue";
+import {Input, Modal, Radio, RadioGroup, Select, Typography, TypographyParagraph} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useTodoItemStore} from "@/store/components/TodoItemStore";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {TodoGroupPriorityView} from "@/entity/todo/TodoGroup";
+import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 
 /**
  * 打开添加分组功能
@@ -25,12 +26,12 @@ export function openEditTodoGroupFunc(oldId: string, oldName: string, items: Arr
         return;
       }
       try {
-        await useTodoItemStore().postGroup(oldId, name.value,
+        await useTodoWrapStore().postGroup(oldId, name.value,
           items.flatMap(e => e.children).map(e => e.id))
-        MessageUtil.success(op + '分组');
+        MessageUtil.success(op + '分组成功');
         done(true);
       } catch (e) {
-        MessageUtil.error(op + '失败', e);
+        MessageUtil.error(op + '分组失败', e);
         done(false);
       }
     }
@@ -38,15 +39,35 @@ export function openEditTodoGroupFunc(oldId: string, oldName: string, items: Arr
 }
 
 export function openDeleteTodoGroupFunc(id: string, name: string) {
+  const targetType = ref('0');
+  const targetGroupId = ref('');
+  const options = computed(() => {
+    const i = useTodoGroupStore().items.map(e => ({
+      label: e.name,
+      value: e.id
+    })).filter(e => e.value !== id);
+    targetGroupId.value = i['0']?.value || ''
+    return i;
+  })
   Modal.open({
     title: '删除分组',
     width: 400,
     content: () => <Typography>
       <TypographyParagraph>确定要删除分组：{name} 吗？</TypographyParagraph>
+      <TypographyParagraph>
+        <RadioGroup v-model={targetType.value} direction={'vertical'}>
+          <Radio value={'-1'}>同时删除分组下的所有待办</Radio>
+          <Radio value={'0'}>仅删除分组</Radio>
+          <Radio value={'1'} disabled={options.value.length === 0}>删除分组，将任务移动到...</Radio>
+        </RadioGroup>
+      </TypographyParagraph>
+      {targetType.value === '1' && <TypographyParagraph>
+        <Select v-model={targetGroupId.value} options={options.value}/>
+      </TypographyParagraph>}
     </Typography>,
     async onBeforeOk(done) {
       try {
-        await useTodoItemStore().deleteGroup(id);
+        await useTodoGroupStore().deleteById(id, targetType.value === '1' ? targetGroupId.value : targetType.value);
         MessageUtil.success('删除分组');
         done(true);
       } catch (e) {

@@ -4,7 +4,7 @@
        @click="_openTodoItemSetting($event)">
     <div class="todo-item__main" :class="[`priority_${index.priority}`]">
       <a-checkbox @click.stop/>
-      <a-typography-paragraph class="todo-ite__title" :ellipsis="ellipsis">
+      <a-typography-paragraph class="todo-item__title" :ellipsis="ellipsis">
         {{ index.title }}
       </a-typography-paragraph>
     </div>
@@ -158,7 +158,7 @@ function onCheck(item: TodoItemIndex) {
   .todo-item__main {
     display: flex;
 
-    .todo-ite__title {
+    .todo-item__title {
       margin: 0 0 0 8px;
     }
 
