@@ -36,6 +36,8 @@ const toggleVisible = useToggle(visible);
 </script>
 <style scoped lang="less">
 .todo-item-priority {
+  overflow: hidden;
+  transition: height 0.3s;
 
   &__header {
     display: flex;
@@ -86,6 +88,7 @@ const toggleVisible = useToggle(visible);
 
   &__content {
     transition: height 0.3s;
+    overflow: hidden;
   }
 }
 </style>
