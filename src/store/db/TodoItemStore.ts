@@ -1,7 +1,7 @@
-import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {getFromOneWithDefaultByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {defineStore} from "pinia";
-import {TodoItemIndex} from "@/entity/todo/TodoItem";
+import {getDefaultTodoItemAttr, TodoItemAttr, TodoItemIndex, TodoItemStatus} from "@/entity/todo/TodoItem";
 
 export const useTodoItemStore = defineStore('todoItem', () => {
   const items: Ref<Array<TodoItemIndex>> = ref(new Array<any>());
@@ -10,7 +10,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
 
 
   async function init(id: number) {
-    const key = LocalNameEnum.TODO_CATEGORY + id;
+    key = LocalNameEnum.TODO_CATEGORY + id;
     // 清空
     items.value = [];
     rev.value = undefined;
@@ -35,18 +35,29 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     await _sync()
   }
 
-  async function updateById(id: number, item: Partial<TodoItemIndex>) {
-    // 更新
+  async function updateById(id: number, record: Partial<TodoItemIndex>) {
     const index = items.value.findIndex(e => e.id === id);
     if (index === -1) {
-      return;
+      return Promise.reject("待办项不存在");
     }
+    if (record.status === TodoItemStatus.COMPLETE) {
+      // 将状态改为完成，则需要记录完成时间
+      // 获取旧的属性
+      let old = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+      // 记录完成时间
+      await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ATTR + id, {
+        ...old.record,
+        completeTime: new Date()
+      }, old.rev);
+    }
+
     items.value[index] = {
       ...items.value[index],
-      ...item,
+      ...record,
+      updateTime: new Date(),
     };
     // 同步
-    await _sync()
+    await _sync();
   }
 
   async function deleteById(id: number) {
@@ -65,11 +76,27 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     await _sync();
   }
 
+  // ------------------------------- 查询相关 -------------------------------
+
+
+  async function getTodoItemAttr(id: number): Promise<TodoItemAttr> {
+    if (id === 0) {
+      return Promise.reject("待办项不存在");
+    }
+    const index = items.value.findIndex(e => e.id === id);
+    if (index === -1) {
+      return Promise.reject("待办项不存在");
+    }
+    let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+    return Promise.resolve(attrDbRecord.record);
+  }
+
   return {
     items,
     init,
     add,
     updateById,
-    deleteById,deleteByBatchId
+    deleteById, deleteByBatchId,
+    getTodoItemAttr
   }
 })

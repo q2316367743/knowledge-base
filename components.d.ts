@@ -46,7 +46,6 @@ declare module 'vue' {
     ASpin: typeof import('@arco-design/web-vue')['Spin']
     ASplit: typeof import('@arco-design/web-vue')['Split']
     ASubMenu: typeof import('@arco-design/web-vue')['SubMenu']
-    ASwitch: typeof import('@arco-design/web-vue')['Switch']
     ATabPane: typeof import('@arco-design/web-vue')['TabPane']
     ATabs: typeof import('@arco-design/web-vue')['Tabs']
     ATag: typeof import('@arco-design/web-vue')['Tag']
@@ -67,6 +66,9 @@ declare module 'vue' {
     Privacy: typeof import('./src/components/update-check/privacy.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TodoItemCheckbox: typeof import('./src/components/TodoItemCheckbox/TodoItemCheckbox.vue')['default']
+    TodoItemCheckout: typeof import('./src/components/TodoItemCheckbox/TodoItemCheckout.vue')['default']
+    TodoItemStatus: typeof import('./src/components/TodoItemCheckbox/TodoItemStatus.vue')['default']
     UpdateCheck: typeof import('./src/components/update-check/index.vue')['default']
   }
 }

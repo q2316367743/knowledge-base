@@ -42,4 +42,7 @@ export interface TodoGroupView extends TodoGroup {
 
   children: Array<TodoGroupPriorityView>;
 
+  // 已完成 & 已放弃
+  complete: Array<TodoItemIndex>;
+
 }

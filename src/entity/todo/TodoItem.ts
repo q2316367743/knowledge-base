@@ -157,6 +157,20 @@ export enum TodoItemStatus {
 
 }
 
+export function getNextTodoItemStatus(status: TodoItemStatus): TodoItemStatus {
+  switch (status) {
+    case TodoItemStatus.TODO:
+      return TodoItemStatus.DOING;
+    case TodoItemStatus.DOING:
+      return TodoItemStatus.COMPLETE;
+    case TodoItemStatus.COMPLETE:
+    case TodoItemStatus.ABANDON:
+      return TodoItemStatus.TODO;
+    default:
+      return TodoItemStatus.TODO;
+  }
+}
+
 /**
  * 获取默认数据索引
  */

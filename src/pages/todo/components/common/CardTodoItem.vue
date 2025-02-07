@@ -2,8 +2,8 @@
   <div class="card-todo-item"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
        @click="_openTodoItemSetting($event)">
-    <div class="todo-item__main" :class="[`priority_${index.priority}`]">
-      <a-checkbox @click.stop/>
+    <div class="todo-item__main">
+      <todo-item-checkbox :priority="index.priority" :status="index.status" @click.stop="onCheck(index)"/>
       <a-typography-paragraph class="todo-item__title" :ellipsis="ellipsis">
         {{ index.title }}
       </a-typography-paragraph>
@@ -24,19 +24,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, PropType, ref} from "vue";
 import {
   getDefaultTodoItemAttr,
-  getDefaultTodoItemIndex,
-  handlePriorityColor,
+  getDefaultTodoItemIndex, getNextTodoItemStatus,
   TodoItemIndex,
   TodoItemStatus
 } from "@/entity/todo/TodoItem";
 import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {handleDate, toDateString} from "@/utils/lang/FormatUtil";
-import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {useTodoItemStore} from "@/store/db/TodoItemStore";
 
 const props = defineProps({
   item: Object as PropType<TodoItemIndex>,
@@ -67,16 +64,6 @@ const start = ref('');
 const end = ref('');
 const index = ref(props.item || getDefaultTodoItemIndex())
 
-const style = computed(() => {
-  if (!index.value) {
-    return {};
-  }
-  return {
-    borderLeft: '4px solid ' + handlePriorityColor(index.value.priority)
-  }
-});
-
-
 function _openTodoItemSetting(e: Event) {
   e.preventDefault();
   e.stopPropagation()
@@ -92,18 +79,9 @@ function _openTodoItemSetting(e: Event) {
   })
 }
 
-function _openTodoItemInfo() {
-  if (!index.value) {
-    return;
-  }
-  openTodoItemInfo(index.value)
-}
-
-
 function initAttr(id: number) {
   hasAttr.value = false;
-
-  useTodoStore().getTodoItemAttr(id)
+  useTodoItemStore().getTodoItemAttr(id)
     .then(res => {
       attr.value = res;
       if (res.start !== '') {
@@ -125,13 +103,8 @@ if (props.attr && index.value) {
 }
 
 function onCheck(item: TodoItemIndex) {
-  let newStatus = item.status
-  if (item.status == TodoItemStatus.TODO) {
-    newStatus = TodoItemStatus.DOING;
-  } else if (item.status == TodoItemStatus.DOING) {
-    newStatus = TodoItemStatus.COMPLETE;
-  }
-  useTodoStore().updateById(index.value.id, {status: newStatus})
+  const newStatus = getNextTodoItemStatus(item.status);
+  useTodoItemStore().updateById(item.id, {status: newStatus})
     .then(() => {
       item.status = newStatus
       MessageUtil.success("操作成功！")
@@ -160,24 +133,6 @@ function onCheck(item: TodoItemIndex) {
 
     .todo-item__title {
       margin: 0 0 0 8px;
-    }
-
-    &.priority_1 {
-      :deep(.arco-checkbox-icon) {
-        border-color: rgb(var(--red-6));
-      }
-    }
-
-    &.priority_2 {
-      :deep(.arco-checkbox-icon) {
-        border-color: rgb(var(--orange-6));
-      }
-    }
-
-    &.priority_3 {
-      :deep(.arco-checkbox-icon) {
-        border-color: rgb(var(--arcoblue-6));
-      }
     }
   }
 

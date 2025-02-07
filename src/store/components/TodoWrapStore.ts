@@ -1,20 +1,33 @@
 import {defineStore} from "pinia";
-import {TodoItemIndex, TodoItemPriority, TodoItemPriorityOptions} from "@/entity/todo/TodoItem";
+import {TodoItemIndex, TodoItemPriority, TodoItemPriorityOptions, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {TodoGroup, TodoGroupView} from "@/entity/todo/TodoGroup";
-import {group, map} from "@/utils/lang/ArrayUtil";
+import {group, map, toSorted} from "@/utils/lang/ArrayUtil";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 
 function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemIndex>): TodoGroupView {
   const view: TodoGroupView = {
     ...todoGroup,
-    children: []
+    children: [],
+    complete: []
   }
-  let filter = todoGroup.items.map(itemId => {
-    let target = itemMap.get(itemId);
-    itemMap.delete(itemId);
-    return target;
-  }).filter(e => !!e);
+  const filter = todoGroup.items
+    .map(itemId => {
+      let target = itemMap.get(itemId);
+      itemMap.delete(itemId);
+      return target;
+    })
+    .filter(target => {
+      // 已完成、已放弃
+      if (target) {
+        if (target.status === TodoItemStatus.COMPLETE || target.status === TodoItemStatus.ABANDON) {
+          view.complete.push(target);
+          return false;
+        }
+        return true;
+      }
+      return false;
+    }) as Array<TodoItemIndex>;
   const priorityMap = group(filter, 'priority');
   for (let option of TodoItemPriorityOptions) {
     const items = priorityMap.get(option.value);
@@ -38,7 +51,9 @@ function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemInde
 function renderGroupViews(todoItems: Array<TodoItemIndex>, todoGroups: Array<TodoGroup>, categoryId: number) {
   const views = new Array<TodoGroupView>();
   const itemMap = map(todoItems, 'id');
-  for (const todoGroup of todoGroups) {
+  // 分组排序
+  const todoGroups1 = toSorted(todoGroups, (a, b) => a.sort - b.sort);
+  for (const todoGroup of todoGroups1) {
     views.push(renderGroupView(todoGroup, itemMap));
   }
   if (itemMap.size > 0) {

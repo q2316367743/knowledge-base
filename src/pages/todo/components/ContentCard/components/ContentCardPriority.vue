@@ -54,6 +54,7 @@
     </header>
     <div class="content">
       <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"/>
+      <todo-item-complete :completes="group.complete"/>
     </div>
   </div>
 </template>
@@ -62,6 +63,7 @@ import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 import {openDeleteTodoGroupFunc, openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
 import TodoItemPriority from "@/pages/todo/components/common/TodoItemPriority.vue";
+import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
 
 defineProps({
   group: Object as PropType<TodoGroupView>
