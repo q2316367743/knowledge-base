@@ -1,12 +1,12 @@
 <template>
-  <div class="card-item" v-if="group">
-    <header class="card-item__header">
+  <div class="content-card-priority" v-if="group">
+    <header class="content-card-priority__header">
       <div class="title">
         {{ group.name }}
         <a-tag class="length">{{ group.items.length }}</a-tag>
       </div>
       <div class="extra">
-        <a-button type="text" @click="openAddTodoItem()">
+        <a-button type="text" @click="openAddTodoItem(group)">
           <template #icon>
             <icon-plus/>
           </template>
@@ -52,10 +52,10 @@
         </a-dropdown>
       </div>
     </header>
-    <div class="content">
+    <div class="content-card-priority__content">
       <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"/>
-      <todo-item-complete :completes="group.complete"/>
     </div>
+    <todo-item-complete :completes="group.complete"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -66,19 +66,20 @@ import TodoItemPriority from "@/pages/todo/components/common/TodoItemPriority.vu
 import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
 
 defineProps({
-  group: Object as PropType<TodoGroupView>
+  group: {
+    type: Object as PropType<TodoGroupView>
+  }
 });
-
 </script>
 <style scoped lang="less">
-.card-item {
-  width: 286px;
+.content-card-priority {
+  width: 260px;
   height: calc(100% - 28px);
   margin: 7px 8px 14px;
   border-radius: 2px;
   position: relative;
 
-  .card-item__header {
+  .content-card-priority__header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -95,7 +96,7 @@ defineProps({
     }
   }
 
-  .content {
+  .content-card-priority__content {
     margin-top: 8px;
     // TODO: 此处要滚动
   }

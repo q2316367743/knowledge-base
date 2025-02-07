@@ -8,13 +8,6 @@
         <div class="todo-item-complete__header-title">已完成 & 已放弃</div>
         <div class="todo-item-complete__header-count">{{ completes.length }}</div>
       </div>
-      <div class="todo-item-complete__header-plus">
-        <a-button type="text" size="mini" @click.stop>
-          <template #icon>
-            <icon-plus/>
-          </template>
-        </a-button>
-      </div>
     </div>
     <div class="todo-content-priority__content" v-if="visible">
       <card-todo-item v-for="item in completes" :key="item.id" :item="item" :data-id="item.id" attr/>

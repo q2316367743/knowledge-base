@@ -1,5 +1,11 @@
 import {defineStore} from "pinia";
-import {TodoItemIndex, TodoItemPriority, TodoItemPriorityOptions, TodoItemStatus} from "@/entity/todo/TodoItem";
+import {
+  TodoItemAttr,
+  TodoItemIndex,
+  TodoItemPriority,
+  TodoItemPriorityOptions,
+  TodoItemStatus
+} from "@/entity/todo/TodoItem";
 import {TodoGroup, TodoGroupView} from "@/entity/todo/TodoGroup";
 import {group, map, toSorted} from "@/utils/lang/ArrayUtil";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
@@ -115,12 +121,21 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     await useTodoGroupStore().deleteById(id, targetGroupId);
   };
 
+  async function addItem(record: Partial<TodoItemIndex>, attr: Partial<TodoItemAttr>, group?: TodoGroup) {
+    // 添加到待办
+    const target = await useTodoItemStore().addSimple(categoryId.value, record, attr);
+    // 添加到分组
+    if (group) {
+      await useTodoGroupStore().pushTo(group, target.id)
+    }
+  }
+
   return {
     categoryId,
     todoGroupView,
     init,
-    postGroup,
-    deleteGroup,
+    postGroup, deleteGroup,
+    addItem
   }
 
 })

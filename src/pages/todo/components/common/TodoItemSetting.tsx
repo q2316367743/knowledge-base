@@ -18,6 +18,7 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
 import {clone} from "@/utils/lang/ObjectUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
+import {useTodoItemStore} from "@/store/db/TodoItemStore";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
   if (attr.start === '' && attr.end === '') {
@@ -31,11 +32,10 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
   useUmami.track("/待办/操作/编辑卡片信息")
 
   const base = ref(clone(index, true));
-  const todoItem = await useTodoStore().getTodoItem(index.id);
+  const todoItem = await useTodoItemStore().getTodoItem(index.id);
   const content = ref(todoItem.content);
-  const attr = ref<TodoItemAttr>(await useTodoStore().getTodoItemAttr(index.id));
-  const isRange = ref(renderIsRange(attr.value));
-  const range = ref([attr.value.start, attr.value.end]);
+  const isRange = ref(renderIsRange(todoItem.attr));
+  const range = ref([todoItem.attr.start, todoItem.attr.end]);
 
   watch(() => range.value[0], (newValue) => {
     if (!isRange.value) {
@@ -60,7 +60,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
   async function onBeforeOk() {
     // 先更新索引
     await useTodoStore().updateById(index.id, base.value, {
-      ...attr.value,
+      ...todoItem.attr,
       start: range.value ? range.value[0] : undefined,
       end: range.value ? range.value[1] : undefined
     });
