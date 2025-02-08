@@ -6,7 +6,7 @@
 </template>
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
-import {createEditor, createToolbar, IDomEditor, Toolbar} from '@wangeditor/editor'
+import {createEditor, createToolbar, IDomEditor, Toolbar, IToolbarConfig} from '@wangeditor/editor'
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {useImageUploadByUtools} from "@/plugin/image";
 import {renderAttachmentUrl} from "@/plugin/server";
@@ -24,7 +24,8 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  articleId: Number
+  articleId: Number,
+  simple: Boolean
 });
 
 const editorHeaderDom = ref<HTMLDivElement>();
@@ -75,7 +76,22 @@ function init() {
 
     }
   });
-  const toolbarConfig = {}
+  const toolbarConfig: Partial<IToolbarConfig> = {}
+
+  if (props.simple) {
+    toolbarConfig.toolbarKeys = [
+      {
+        key: 'insert',
+        title: '插入',
+        menuKeys: ['insertLink', 'insertTable', 'insertImage', 'insertVideo']
+      }, {
+        key: 'upload',
+        title: '上传',
+        menuKeys: ['uploadImage', 'uploadVideo']
+      },
+      'fullScreen']
+  }
+
 
   const toolbar = createToolbar({
     editor,
@@ -86,6 +102,7 @@ function init() {
 
   editorRef.value = editor;
   toolbarRef.value = toolbar;
+
 }
 
 

@@ -1,0 +1,35 @@
+.todo-item-setting {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+
+  .todo-item-setting__header {
+    display: grid;
+    grid-template-columns: 32px 1fr 32px;
+    align-items: center;
+  }
+
+  .todo-item-setting__input {
+    margin-top: 8px;
+  }
+
+  .todo-item-setting__content {
+    margin-top: 8px;
+    height: 50vh;
+    position: relative;
+    border: 1px solid var(--color-border);
+  }
+
+  .todo-item-setting__tag {
+    margin-top: 8px;
+  }
+}
+
+.todo-item-setting__date {
+  background-color: var(--color-bg-1);
+  padding: 16px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+}

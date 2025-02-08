@@ -31,7 +31,7 @@ import {
   TodoItemIndex,
   TodoItemStatus
 } from "@/entity/todo/TodoItem";
-import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting";
+import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting/model";
 import {handleDate, toDateString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";

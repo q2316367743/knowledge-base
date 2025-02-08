@@ -5,31 +5,7 @@
              :disabled="id === 0">
       <template #suffix>
         <!-- 优先级 -->
-        <a-dropdown position="br" @select="updatePriority($event)" :disabled="disabled">
-          <a-button type="text" :style="{color: color}" class="priority">
-            <template #icon>
-              <icon-thunderbolt/>
-            </template>
-          </a-button>
-          <template #content>
-            <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
-                       :value="TodoItemPriority.HIGH">
-              高优先级
-            </a-doption>
-            <a-doption :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
-                       :value="TodoItemPriority.MIDDLE">
-              中优先级
-            </a-doption>
-            <a-doption :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
-                       :value="TodoItemPriority.FLOOR">
-              低优先级
-            </a-doption>
-            <a-doption :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
-                       :value="TodoItemPriority.NONE">
-              无优先级
-            </a-doption>
-          </template>
-        </a-dropdown>
+        <priority-dropdown v-model="priority"/>
       </template>
     </a-input>
   </div>
