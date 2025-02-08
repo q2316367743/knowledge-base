@@ -2,7 +2,7 @@
   <div class="header-wrap">
     <todo-header side/>
     <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
-             :disabled="id === 0">
+             :disabled>
       <template #suffix>
         <!-- 优先级 -->
         <priority-dropdown v-model="priority"/>
@@ -15,34 +15,33 @@ import {computed, ref, watch} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 // 存储
-import {useTodoStore} from "@/store/components/TodoStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 // 实体类
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
-import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
+import {TodoItemPriority} from "@/entity/todo/TodoItem";
 // 组件
 import TodoHeader from "@/pages/todo/components/common/TodoHeader.vue";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
-const id = computed(() => useTodoStore().id);
+const id = computed(() => useTodoWrapStore().categoryId);
 const placeholder = computed(() => {
   if (id.value === 0) {
     return '';
   }
-  if (useTodoStore().title.length > 0) {
-    return `添加任务到“${useTodoStore().title}”，回车即可创建`;
+  const {currentCategory} = useTodoWrapStore();
+  if (currentCategory) {
+    return `添加任务到“${currentCategory.name}”，回车即可创建`;
   } else {
     return '';
   }
 });
-const disabled = computed(() => useTodoStore().id === 0);
+const disabled = computed(() => useTodoWrapStore().categoryId === 0);
 
 const titleWrap = ref("");
 const priority = ref<TodoItemPriority>(TodoItemPriority.NONE);
 const todoListSort = ref<TodoListSortEnum>(TodoListSortEnum.PRIORITY);
 
-const color = computed(() => handlePriorityColor(priority.value));
-
-watch(() => useTodoStore().id, value => getTodoListSort(value), {immediate: true});
+watch(() => useTodoWrapStore().categoryId, value => getTodoListSort(value), {immediate: true});
 
 function getTodoListSort(id: number) {
   if (id === 0) {
@@ -56,18 +55,14 @@ function getTodoListSort(id: number) {
 }
 
 function submit() {
-  useTodoStore().addSimple({
+  useTodoWrapStore().addItem({
     title: titleWrap.value,
     priority: priority.value
-  }).then(() => {
+  }, {}).then(() => {
     MessageUtil.success("新增成功");
     titleWrap.value = '';
     priority.value = TodoItemPriority.NONE;
   }).catch(e => MessageUtil.error("新增失败", e))
-}
-
-function updatePriority(value: any) {
-  priority.value = value;
 }
 
 </script>

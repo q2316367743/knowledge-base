@@ -17,18 +17,17 @@
   </a-split>
 </template>
 <script lang="ts" setup>
-import {computed, nextTick, ref, watch} from "vue";
 import {useWindowSize} from "@vueuse/core";
-import ContentDefaultMain from "@/pages/todo/components/ContentDefault/layout/ContentDefaultMain/index.vue";
-import ContentDefaultSide from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/index.vue";
-import {useTodoStore} from "@/store/components/TodoStore";
 import './index.less';
+import ContentDefaultMain from "@/pages/todo/components/ContentDefault/layout/ContentDefaultMain/index.vue";
+import ContentDefaultSide from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultSide.vue";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const size = useWindowSize();
 const show = ref(true);
 
 const max = computed(() => (size.width.value - 200) + 'px');
-const itemId = computed(() => useTodoStore().itemId);
+const itemId = computed(() => useTodoWrapStore().itemId);
 
 watch(() => itemId.value, value => {
   if (value > 0) {

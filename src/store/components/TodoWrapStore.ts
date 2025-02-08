@@ -10,6 +10,8 @@ import {TodoGroup, TodoGroupView} from "@/entity/todo/TodoGroup";
 import {group, map, toSorted} from "@/utils/lang/ArrayUtil";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
+import {TodoCategory} from "@/entity/todo/TodoCategory";
+import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 
 function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemIndex>): TodoGroupView {
   const view: TodoGroupView = {
@@ -79,7 +81,8 @@ function renderGroupViews(todoItems: Array<TodoItemIndex>, todoGroups: Array<Tod
 export const useTodoWrapStore = defineStore('todo-item', () => {
   // 当前打开的清单ID
   const categoryId = ref(0);
-  // 清单列表
+  // 当前打开的待办项
+  const itemId = ref(0);
 
   // 待办
   const todoGroupView = computed<Array<TodoGroupView>>(
@@ -89,6 +92,18 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
       }
       return renderGroupViews(useTodoItemStore().items, useTodoGroupStore().items, categoryId.value)
     });
+  const currentCategory = computed<TodoCategory | undefined>(() => {
+    if (categoryId.value === 0) {
+      return undefined;
+    }
+    const {value} = useTodoCategoryStore();
+    for (const item of value) {
+      if (item.id === categoryId.value) {
+        return item;
+      }
+    }
+    return undefined;
+  });
 
   async function init(id: number) {
     // 清空
@@ -113,6 +128,10 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
 
   }
 
+  function setItemId(id: number) {
+    itemId.value = id;
+  }
+
   const postGroup = async (id: string, name: string, items: Array<number>) => {
     // 处理分组
     return useTodoGroupStore().saveOrUpdate(id, name, items, categoryId.value);
@@ -131,9 +150,9 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   }
 
   return {
-    categoryId,
+    categoryId, itemId,currentCategory,
     todoGroupView,
-    init,
+    init, setItemId,
     postGroup, deleteGroup,
     addItem
   }

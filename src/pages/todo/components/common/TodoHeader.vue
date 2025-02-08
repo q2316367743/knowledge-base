@@ -119,6 +119,9 @@ import {openTodoSetting} from "@/pages/todo/components/common/TodoSetting";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 import {todoSearch} from "@/pages/todo/components/common/TodoSearch";
 import {openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
+import {useTodoItemStore} from "@/store/db/TodoItemStore";
+import {TodoItemStatus} from "@/entity/todo/TodoItem";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 defineProps({
   side: {
@@ -127,28 +130,30 @@ defineProps({
   }
 });
 
-const disabled = computed(() => useTodoStore().id === 0);
+const disabled = computed(() => useTodoWrapStore().categoryId === 0);
 const title = computed(() => useTodoStore().title);
 const todoListSort = computed<TodoListSortEnum>(() => useTodoStore().sort);
 
 const percent = computed(() => {
-  if (useTodoStore().todoItems.length === 0) {
+  const {items} = useTodoItemStore();
+  if (items.length === 0) {
     return 0;
   }
-  const all = useTodoStore().todoList.length + useTodoStore().completeList.length;
-  const value = useTodoStore().completeList.length / all;
-  return parseFloat(value.toFixed(4))
+  const all = items.length;
+  const value = items.filter(e => e.status === TodoItemStatus.ABANDON || e.status === TodoItemStatus.COMPLETE).length;
+  return parseFloat((value / all).toFixed(4))
 });
 
 const switchCollapsed = () => useTodoStore().switchCollapsed();
 const setTodoListSort = (value: any) => {
-  if (useTodoStore().id === 0) {
+  const {categoryId} = useTodoWrapStore();
+  if (categoryId === 0) {
     return;
   }
   useTodoCategoryStore()
-    .update(useTodoStore().id, {todoListSort: value})
+    .update(categoryId, {todoListSort: value})
     // 更新成功，刷新数据
-    .then(() => useTodoStore().setId(useTodoStore().id))
+    .then(() => useTodoStore().setId(categoryId))
     .catch(e => MessageUtil.error("更新待办列表排序异常", e));
 }
 </script>
