@@ -1,15 +1,15 @@
 <template>
-    <a-layout class="todo">
-        <a-layout-sider :width="270" :collapsed-width="0" :collapsed="collapsed">
-            <todo-side v-show="!collapsed"/>
-        </a-layout-sider>
-        <a-layout-content>
-            <a-result title="请在左侧选择清单" status="404" style="margin-top: 20vh" v-if="empty"/>
-            <content-default v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
-            <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD"/>
-            <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
-        </a-layout-content>
-    </a-layout>
+  <a-layout class="todo">
+    <a-layout-sider :width="270" :collapsed-width="0" :collapsed="collapsed">
+      <todo-side v-show="!collapsed"/>
+    </a-layout-sider>
+    <a-layout-content>
+      <a-result title="请在左侧选择清单" status="404" style="margin-top: 20vh" v-if="empty"/>
+      <content-default v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
+      <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD"/>
+      <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
+    </a-layout-content>
+  </a-layout>
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
@@ -28,10 +28,10 @@ const empty = computed(() => useTodoStore().id === 0);
 </script>
 <style scoped>
 .todo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>
