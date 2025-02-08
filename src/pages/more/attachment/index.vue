@@ -1,28 +1,29 @@
 <template>
-  <div class="more-attachment">
-    <a-image-preview-group infinite>
-      <a-space wrap>
-        <a-card :style="{ width: '351px' }" v-for="attachment in attachments" :key="attachment">
-          <template #actions>
-            <a-button size="mini" type="text" @click="copyMarkdown(attachment)">复制markdown链接</a-button>
-            <a-button size="mini" type="text" @click="copyHtml(attachment)">复制html链接</a-button>
-            <a-button size="mini" type="text" status="danger" @click="remove(attachment)">删除</a-button>
-          </template>
-          <template #cover>
-            <div style="display: flex;justify-content: center;align-items: center">
-              <a-image :src="renderAttachmentUrl(attachment)" height="120px"/>
-            </div>
-          </template>
-          <a-card-meta>
-            <template #title>
-              <a-typography-text>{{ attachment }}</a-typography-text>
+  <page-layout title="附件">
+    <div style="padding: 8px">
+      <a-image-preview-group infinite >
+        <a-space wrap>
+          <a-card :style="{ width: '351px' }" v-for="attachment in attachments" :key="attachment">
+            <template #actions>
+              <a-button size="mini" type="text" @click="copyMarkdown(attachment)">复制markdown链接</a-button>
+              <a-button size="mini" type="text" @click="copyHtml(attachment)">复制html链接</a-button>
+              <a-button size="mini" type="text" status="danger" @click="remove(attachment)">删除</a-button>
             </template>
-          </a-card-meta>
-        </a-card>
-      </a-space>
-    </a-image-preview-group>
-    <a-back-top target-container=".more-attachment" />
-  </div>
+            <template #cover>
+              <div style="display: flex;justify-content: center;align-items: center">
+                <a-image :src="renderAttachmentUrl(attachment)" height="120px"/>
+              </div>
+            </template>
+            <a-card-meta>
+              <template #title>
+                <a-typography-text>{{ attachment }}</a-typography-text>
+              </template>
+            </a-card-meta>
+          </a-card>
+        </a-space>
+      </a-image-preview-group>
+    </div>
+  </page-layout>
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
@@ -70,9 +71,4 @@ function remove(item: string) {
 
 </script>
 <style scoped lang="less">
-.more-attachment {
-  padding: 8px 8px 0;
-  height: calc(100vh - 16px);
-  overflow: auto;
-}
 </style>
