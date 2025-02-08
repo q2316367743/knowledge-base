@@ -3,7 +3,7 @@
     <header class="content-card-priority__header">
       <div class="title">
         {{ group.name }}
-        <a-tag class="length">{{ group.items.length }}</a-tag>
+        <a-tag class="length">{{ count }}</a-tag>
       </div>
       <div class="extra">
         <a-button type="text" @click="openAddTodoItem(group)">
@@ -53,9 +53,10 @@
       </div>
     </header>
     <div class="content-card-priority__content">
-      <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"/>
+      <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority" :group-id="group.id"/>
     </div>
     <todo-item-complete :completes="group.complete"/>
+    <content-card-empty :group-id="group.id" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -64,12 +65,23 @@ import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 import {openDeleteTodoGroupFunc, openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
 import TodoItemPriority from "@/pages/todo/components/common/TodoItemPriority.vue";
 import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
+import ContentCardEmpty from "@/pages/todo/components/ContentCard/components/ContentCardEmpty.vue";
 
-defineProps({
+const props = defineProps({
   group: {
     type: Object as PropType<TodoGroupView>
   }
 });
+const count = computed(() => {
+  const {group} = props;
+  let c = 0;
+  if (group) {
+    group.children.forEach(item => {
+      c += item.children.length;
+    });
+  }
+  return c;
+})
 </script>
 <style scoped lang="less">
 .content-card-priority {

@@ -1,5 +1,6 @@
 <template>
   <div class="card-todo-item"
+       :data-id="index.id"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
        @click="_openTodoItemSetting($event)">
     <div class="todo-item__main">

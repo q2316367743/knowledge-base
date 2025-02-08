@@ -100,10 +100,11 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
     await _sync();
   }
 
-  async function pushTo(group: TodoGroup, ...itemIds: Array<number>) {
+  async function pushTo(group: TodoGroup | string, ...itemIds: Array<number>) {
+    const groupId = typeof group === 'string' ? group : group.id;
     if (isEmptyArray(itemIds)) return Promise.resolve();
     for (let i = 0; i < items.value.length; i++) {
-      if (items.value[i].id === group.id) {
+      if (items.value[i].id === groupId) {
         items.value[i].items.push(...itemIds);
         break;
       }
@@ -111,12 +112,34 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
     await _sync();
   }
 
-  // TODO: 删除一个
-  async function popFrom(group: TodoGroup, ...itemIds: Array<number>) {
+  // 删除一个
+  async function popFrom(group: TodoGroup | string, ...itemIds: Array<number>) {
+    const groupId = typeof group === 'string' ? group : group.id;
+    if (isEmptyArray(itemIds)) return Promise.resolve();
+    for (let i = 0; i < items.value.length; i++) {
+      if (items.value[i].id === groupId) {
+        items.value[i].items = items.value[i].items.filter(e => !itemIds.includes(e));
+        break;
+      }
+    }
+    await _sync();
   }
 
   // 转移一个
-  async function moveTo(source: TodoGroup, target: TodoGroup, ...itemIds: Array<number>) {
+  async function moveTo(source: TodoGroup | string, target: TodoGroup | string, ...itemIds: Array<number>) {
+    if (isEmptyArray(itemIds)) return Promise.resolve();
+    const sourceId = typeof source === 'string' ? source : source.id;
+    const targetId = typeof target === 'string' ? target : target.id;
+    for (let i = 0; i < items.value.length; i++) {
+      if (items.value[i].id === sourceId) {
+        items.value[i].items.push(...itemIds);
+      }
+      if (items.value[i].id === targetId) {
+        items.value[i].items = items.value[i].items.filter(e => !itemIds.includes(e));
+      }
+    }
+    await _sync();
+
   }
 
   return {
