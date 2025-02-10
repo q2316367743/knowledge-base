@@ -18,9 +18,9 @@
         {{ start }}{{ end ? ' · ' + end : '' }}
       </a-tag>
     </div>
-    <div class="todo-item__tag" v-if="info.content.record.tags.length > 0">
+    <div class="todo-item__tag" v-if="attr.tags.length > 0">
       <a-space wrap>
-        <a-tag v-for="t in info.content.record.tags" :key="t" :color="randomColor(t)" bordered>{{ t }}</a-tag>
+        <a-tag v-for="t in attr.tags" :key="t" :color="randomColor(t)" bordered>{{ t }}</a-tag>
       </a-space>
     </div>
     <a-tooltip content="置顶" v-if="index.top && index.status === TodoItemStatus.TODO">
@@ -32,7 +32,7 @@
 </template>
 <script lang="ts" setup>
 import {
-  getDefaultTodoItem,
+  getDefaultTodoItemAttr,
   getDefaultTodoItemIndex, getNextTodoItemStatus,
   TodoItemIndex,
   TodoItemStatus
@@ -59,7 +59,7 @@ const ellipsis = {
 };
 
 const index = shallowRef(props.item || getDefaultTodoItemIndex());
-const info = ref(getDefaultTodoItem());
+const attr = ref(getDefaultTodoItemAttr());
 const hasAttr = ref(false);
 const start = ref('');
 const end = ref('');
@@ -80,17 +80,16 @@ function _openTodoItemSetting(e: Event) {
 
 function initAttr(id: number) {
   hasAttr.value = false;
-  useTodoItemStore().getTodoItem(id)
+  useTodoItemStore().getTodoItemAttr(id)
     .then(res => {
-      info.value = res;
-      const {attr} = res;
-      if (attr.start !== '') {
-        start.value = handleDate(attr.start);
+      attr.value = res;
+      if (attr.value.start !== '') {
+        start.value = handleDate(attr.value.start);
         hasAttr.value = true;
       }
-      if (attr.end !== '' && attr.start !== attr.end && attr.start !== '') {
-        start.value = toDateString(attr.start, "YYYY-MM-DD");
-        end.value = toDateString(attr.end, "YYYY-MM-DD");
+      if (attr.value.end !== '' && attr.value.start !== attr.value.end && attr.value.start !== '') {
+        start.value = toDateString(attr.value.start, "YYYY-MM-DD");
+        end.value = toDateString(attr.value.end, "YYYY-MM-DD");
         hasAttr.value = true;
       }
 

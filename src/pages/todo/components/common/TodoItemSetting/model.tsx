@@ -32,6 +32,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
 
   const base = ref(clone(index, true));
   const todoItem = await useTodoItemStore().getTodoItem(index.id);
+  const attr = ref(todoItem.attr);
   const content = ref(todoItem.content);
   const isRange = ref(renderIsRange(todoItem.attr));
   const range = ref([todoItem.attr.start, todoItem.attr.end]);
@@ -51,7 +52,8 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
     await useTodoItemStore().updateById(index.id, base.value, {
       ...todoItem.attr,
       start: range.value ? range.value[0] : undefined,
-      end: range.value ? range.value[1] : undefined
+      end: range.value ? range.value[1] : undefined,
+      tags: attr.value.tags
     });
     // 再更新属性
     // 再更新内容
@@ -107,7 +109,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
         <RichTextEditor v-model={content.value.record.content} simple={true}/>
       </div>
       <div class={'todo-item-setting__tag'}>
-        <TagGroup v-model={content.value.record.tags}/>
+        <TagGroup v-model={attr.value.tags}/>
       </div>
     </div>,
     footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>

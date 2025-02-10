@@ -66,6 +66,11 @@ export interface TodoItemAttr {
    */
   completeTime?: Date | string;
 
+  /**
+   * 标签
+   */
+  tags: Array<string>;
+
 }
 
 export interface TodoItemContent {
@@ -74,6 +79,8 @@ export interface TodoItemContent {
 
   /**
    * 标签
+   *
+   * @deprecated todo: 不再使用
    */
   tags: Array<string>;
 
@@ -193,7 +200,7 @@ export function getDefaultTodoItemContent(id?: number): TodoItemContent {
   return {
     id: id || 0,
     content: '',
-    tags: [],
+    tags: []
   };
 }
 
@@ -202,7 +209,8 @@ export function getDefaultTodoItemAttr(id?: number): TodoItemAttr {
     id: id || 0,
     reason: '',
     start: '',
-    end: ''
+    end: '',
+    tags: [],
   }
 }
 
