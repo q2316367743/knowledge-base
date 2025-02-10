@@ -1,7 +1,7 @@
 import {
   DbRecord,
   getFromOneWithDefaultByAsync,
-  listByAsync,
+  listByAsync, listRecordByAsync,
   saveListByAsync,
   saveOneByAsync
 } from "@/utils/utools/DbStorageUtil";
@@ -145,6 +145,11 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     return Promise.resolve(attrDbRecord.record);
   }
 
+
+  async function getMultiTodoItemAttr(ids: Array<number>): Promise<Array<DbRecord<TodoItemAttr>>> {
+    return listRecordByAsync(ids.map(id => LocalNameEnum.TODO_ATTR + id))
+  }
+
   async function getTodoItem(id: number): Promise<TodoItem> {
     if (id === 0) {
       return Promise.reject("待办项不存在");
@@ -183,6 +188,6 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     addSimple,
     updateById, saveContent,
     deleteById, deleteByBatchId,
-    getTodoItem, getTodoItemAttr, getTodoItemContent
+    getTodoItem, getTodoItemAttr, getMultiTodoItemAttr, getTodoItemContent
   }
 })

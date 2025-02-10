@@ -1,3 +1,5 @@
+import {isEmptyArray} from "@/utils/lang/FieldUtil";
+
 /**
  * 判断一个数组中，是否存在关键字
  * @param arr 数组
@@ -159,6 +161,7 @@ export function traverseNumber(num: number) {
  * @param compareFn
  */
 export function toSorted<T>(arr: Array<T>, compareFn: ((a: T, b: T) => number)) {
+  if (isEmptyArray(arr)) return [];
   // 复制原数组以避免修改原数组
   const copy = arr.slice();
   // 使用提供的比较函数对复制的数组进行排序

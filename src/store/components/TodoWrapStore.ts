@@ -2,80 +2,19 @@ import {defineStore} from "pinia";
 import {
   TodoItemAttr,
   TodoItemIndex,
-  TodoItemPriority,
-  TodoItemPriorityOptions,
-  TodoItemStatus
 } from "@/entity/todo/TodoItem";
 import {TodoGroup, TodoGroupView} from "@/entity/todo/TodoGroup";
-import {group, map, toSorted} from "@/utils/lang/ArrayUtil";
+import {map} from "@/utils/lang/ArrayUtil";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
-import {TodoCategory} from "@/entity/todo/TodoCategory";
+import {renderTodoListLayout, TodoCategory, TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {useUmami} from "@/plugin/umami";
+import {renderGroupViews} from "@/utils/component/TodoUtil";
+import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 
-function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemIndex>): TodoGroupView {
-  const view: TodoGroupView = {
-    ...todoGroup,
-    children: [],
-    complete: []
-  }
-  const filter = todoGroup.items
-    .map(itemId => {
-      let target = itemMap.get(itemId);
-      itemMap.delete(itemId);
-      return target;
-    })
-    .filter(target => {
-      // 已完成、已放弃
-      if (target) {
-        if (target.status === TodoItemStatus.COMPLETE || target.status === TodoItemStatus.ABANDON) {
-          view.complete.push(target);
-          return false;
-        }
-        return true;
-      }
-      return false;
-    }) as Array<TodoItemIndex>;
-  const priorityMap = group(filter, 'priority');
-  for (let option of TodoItemPriorityOptions) {
-    const items = priorityMap.get(option.value);
-    priorityMap.delete(option.value);
-    view.children.push({
-      label: option.label,
-      value: option.value,
-      children: items || []
-    });
-  }
-  if (priorityMap.size > 0) {
-    view.children.push({
-      label: '无优先级',
-      value: TodoItemPriority.NONE,
-      children: Array.from(priorityMap.values()).flatMap(e => e)
-    })
-  }
-  return view;
-}
-
-function renderGroupViews(todoItems: Array<TodoItemIndex>, todoGroups: Array<TodoGroup>, categoryId: number) {
-  const views = new Array<TodoGroupView>();
-  const itemMap = map(todoItems, 'id');
-  // 分组排序
-  const todoGroups1 = toSorted(todoGroups, (a, b) => a.sort - b.sort);
-  for (const todoGroup of todoGroups1) {
-    views.push(renderGroupView(todoGroup, itemMap));
-  }
-  if (itemMap.size > 0) {
-    const empty: TodoGroup = {
-      id: '-1',
-      name: '未分组',
-      categoryId: categoryId,
-      sort: -1,
-      items: Array.from(itemMap.keys())
-    };
-    views.push(renderGroupView(empty, itemMap))
-  }
-  return views;
-}
 
 // 此store只负责展示，不负责增删改
 export const useTodoWrapStore = defineStore('todo-item', () => {
@@ -83,6 +22,10 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   const categoryId = ref(0);
   // 当前打开的待办项
   const itemId = ref(0);
+  const collapsed = ref(false);
+
+  const sort = ref(TodoListSortEnum.PRIORITY);
+  const layout = ref(TodoListLayoutEnum.DEFAULT);
 
   // 待办
   const todoGroupView = computed<Array<TodoGroupView>>(
@@ -90,7 +33,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
       if (categoryId.value === 0) {
         return [];
       }
-      return renderGroupViews(useTodoItemStore().items, useTodoGroupStore().items, categoryId.value)
+      return renderGroupViews(useTodoItemStore().items, useTodoGroupStore().items, categoryId.value, sort.value)
     });
   const currentCategory = computed<TodoCategory | undefined>(() => {
     if (categoryId.value === 0) {
@@ -108,9 +51,29 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   async function init(id: number) {
     // 清空
     categoryId.value = id;
+    itemId.value = 0;
+    sort.value = TodoListSortEnum.PRIORITY;
+    layout.value = TodoListLayoutEnum.DEFAULT;
     if (id === 0) {
       return;
     }
+
+    // 获取当前分组信息
+    const todoCategory = map(useTodoCategoryStore().value, 'id').get(id);
+    if (!todoCategory) {
+      MessageUtil.error("待办分类不存在，请刷新页面重试");
+      categoryId.value = 0;
+      return;
+    }
+    if (todoCategory.type !== TodoCategoryTypeEnum.TODO) {
+      categoryId.value = 0;
+      return;
+    }
+    // 只要ID大于0，这几项就要刷新
+    sort.value = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
+    layout.value = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;
+    // 事件
+    useUmami.track(`/待办/布局/${renderTodoListLayout(layout.value)}`)
 
     try {
       // 获取分组
@@ -125,12 +88,21 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     } catch (e) {
       console.error("获取待办项失败", e);
     }
+    try {
+      // 获取待办关联文章
+      await useTodoArticleStore().init(id);
+    }catch (e) {
+      console.error("获取待办项失败", e);
+    }
 
   }
 
   function setItemId(id: number) {
     itemId.value = id;
   }
+  const collapsedToggle = useToggle(collapsed);
+
+  const switchCollapsed = () => collapsedToggle();
 
   const postGroup = async (id: string, name: string, items: Array<number>) => {
     // 处理分组
@@ -150,9 +122,9 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   }
 
   return {
-    categoryId, itemId,currentCategory,
+    categoryId, itemId, currentCategory, sort, layout,collapsed,
     todoGroupView,
-    init, setItemId,
+    init, setItemId,switchCollapsed,
     postGroup, deleteGroup,
     addItem
   }

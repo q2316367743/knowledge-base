@@ -50,7 +50,7 @@ function init() {
       onChange: (editor: IDomEditor) => {
         content.value = editor.getHtml();
       },
-      placeholder: '请输入内容...',
+      placeholder: '请输入内容...(支持部分markdown语法)',
       readOnly: props.readOnly,
       MENU_CONF: {
         uploadImage: {

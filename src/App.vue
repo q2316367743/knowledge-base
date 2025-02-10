@@ -27,11 +27,11 @@ import {ArticleIndex} from "@/entity/article";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {windowConfig} from "@/global/WindowConfig";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import {createServer} from "@/plugin/server";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -128,8 +128,8 @@ function toArticle(id?: string) {
 // 前往待办
 function toTodo(id?: string) {
   const categoryId = parseInt(id || '0');
-  useTodoStore().setCategoryId(categoryId);
-  useTodoStore().setId(categoryId);
+  useTodoWrapStore().setCategoryId(categoryId);
+  useTodoWrapStore().setItemId(categoryId);
   router.push('/todo');
 }
 

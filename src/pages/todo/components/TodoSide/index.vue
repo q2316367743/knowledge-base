@@ -58,7 +58,6 @@ import {computed, ref, watch} from "vue";
 import {useWindowSize} from "@vueuse/core";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
@@ -70,7 +69,7 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const size = useWindowSize();
 
-const selectKeys = ref([useTodoStore().categoryId]);
+const selectKeys = ref([useTodoWrapStore().categoryId]);
 const keyword = ref('')
 
 const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree);
@@ -81,18 +80,15 @@ const treeNodeData = computed(() => searchData(keyword.value, todoCategoryTree.v
 
 watch(() => selectKeys.value, value => {
   const categoryId = value[0];
-  useTodoStore().setCategoryId(categoryId);
   let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
   if (category && category.type === TodoCategoryTypeEnum.TODO) {
-    if (categoryId !== useTodoStore().id) {
-      useTodoStore().setId(categoryId);
+    if (categoryId !== useTodoWrapStore().categoryId) {
       useTodoWrapStore().init(categoryId);
     }
     if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
-      useTodoStore().switchCollapsed();
+      useTodoWrapStore().switchCollapsed();
     }
   } else {
-    useTodoStore().setId(0);
     useTodoWrapStore().init(0);
   }
 });

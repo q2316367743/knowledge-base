@@ -21,21 +21,21 @@ import 'handsontable/dist/handsontable.full.min.css';
 import '@wangeditor/editor/dist/css/style.css';
 import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
-// 编辑器
-// @ts-ignore
+// 代码编辑器
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
-// @ts-ignore
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
-// @ts-ignore
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
-// @ts-ignore
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
-// @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+// 富文本编辑器
+import { Boot } from '@wangeditor/editor'
+import markdownModule from '@wangeditor/plugin-md'
+// 其他
 import {isUtools, useDeleteEvent, useSearchContentEvent} from '@/global/BeanFactory';
 import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {addArticleModal} from "@/pages/home/components/he-context";
 
+// 代码编辑器环境注册
 self.MonacoEnvironment = {
   getWorker(_: string, label: string) {
     if (label === 'json') {
@@ -53,6 +53,8 @@ self.MonacoEnvironment = {
     return new EditorWorker()
   },
 }
+// 富文本编辑器注册插件
+Boot.registerModule(markdownModule);
 
 createApp(App)
   .use(ArcoVue)

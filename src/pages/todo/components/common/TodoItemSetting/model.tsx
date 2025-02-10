@@ -9,11 +9,10 @@ import {
   Space,
   Trigger
 } from "@arco-design/web-vue";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {clone} from "@/utils/lang/ObjectUtil";
+import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
-import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
 import PriorityDropdown from "@/components/PriorityDropdown/PriorityDropdown.vue";
 import TagGroup from "@/components/TagGroup/TagGroup.vue";
@@ -49,21 +48,21 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
 
   async function onBeforeOk() {
     // 先更新索引
-    await useTodoStore().updateById(index.id, base.value, {
+    await useTodoItemStore().updateById(index.id, base.value, {
       ...todoItem.attr,
       start: range.value ? range.value[0] : undefined,
       end: range.value ? range.value[1] : undefined
     });
     // 再更新属性
     // 再更新内容
-    await useTodoStore().saveContent(index.id, content.value.record, content.value.rev);
+    await useTodoItemStore().saveContent(index.id, content.value.record, content.value.rev);
     MessageUtil.success("保存成功");
     onClose();
     toUpdate && toUpdate(base.value);
   }
 
   function onRemove() {
-    useTodoStore().removeById(index.id)
+    useTodoItemStore().deleteById(index.id)
       .then(() => {
         MessageUtil.success("删除成功");
         onClose();

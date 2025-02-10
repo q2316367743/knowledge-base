@@ -1,13 +1,12 @@
 import {Checkbox, CheckboxGroup, Drawer, Form, FormItem, Radio, RadioGroup} from "@arco-design/web-vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {ref} from "vue";
 import {contains} from "@/utils/lang/ArrayUtil";
-import {TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
-import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 export function openTodoSetting() {
-    const todoCategory = useTodoCategoryStore().todoCategoryMap.get(useTodoStore().categoryId);
+    const todoCategory = useTodoCategoryStore().todoCategoryMap.get(useTodoWrapStore().categoryId);
     if (!todoCategory) {
         return;
     }
@@ -49,7 +48,7 @@ export function openTodoSetting() {
                 hideOfAbandon: contains(hides.value, '3'),
                 hideOfArticle: contains(hides.value, '4'),
                 todoListLayout: config.value.todoListLayout
-            }).then(() => useTodoStore().setId(todoCategory.id))
+            }).then(() => useTodoWrapStore().init(todoCategory.id))
         }
     })
 }

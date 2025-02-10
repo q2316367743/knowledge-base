@@ -13,17 +13,17 @@
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 
 import TodoSide from "@/pages/todo/components/TodoSide/index.vue";
 import ContentDefault from "@/pages/todo/components/ContentDefault/index.vue";
 import ContentCard from "@/pages/todo/components/ContentCard/index.vue";
 import ContentCalendar from "@/pages/todo/components/ContentCalendar/index.vue";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
-const collapsed = computed(() => useTodoStore().collapsed);
-const layout = computed(() => useTodoStore().layout);
-const empty = computed(() => useTodoStore().id === 0);
+const collapsed = computed(() => useTodoWrapStore().collapsed);
+const layout = computed(() => useTodoWrapStore().layout);
+const empty = computed(() => useTodoWrapStore().categoryId === 0);
 
 </script>
 <style scoped>

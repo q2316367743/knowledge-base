@@ -110,7 +110,6 @@
 </template>
 <script lang="ts" setup>
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {computed} from "vue";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -131,8 +130,8 @@ defineProps({
 });
 
 const disabled = computed(() => useTodoWrapStore().categoryId === 0);
-const title = computed(() => useTodoStore().title);
-const todoListSort = computed<TodoListSortEnum>(() => useTodoStore().sort);
+const title = computed(() => useTodoWrapStore().currentCategory?.name);
+const todoListSort = computed<TodoListSortEnum>(() => useTodoWrapStore().sort);
 
 const percent = computed(() => {
   const {items} = useTodoItemStore();
@@ -144,7 +143,7 @@ const percent = computed(() => {
   return parseFloat((value / all).toFixed(4))
 });
 
-const switchCollapsed = () => useTodoStore().switchCollapsed();
+const switchCollapsed = () => useTodoWrapStore().switchCollapsed();
 const setTodoListSort = (value: any) => {
   const {categoryId} = useTodoWrapStore();
   if (categoryId === 0) {
@@ -153,7 +152,7 @@ const setTodoListSort = (value: any) => {
   useTodoCategoryStore()
     .update(categoryId, {todoListSort: value})
     // 更新成功，刷新数据
-    .then(() => useTodoStore().setId(categoryId))
+    .then(() => useTodoWrapStore().init(categoryId))
     .catch(e => MessageUtil.error("更新待办列表排序异常", e));
 }
 </script>

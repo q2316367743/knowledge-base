@@ -141,6 +141,7 @@ function removeById(id: number) {
 </script>
 <style scoped lang="less">
 .content-default-item {
+  position: relative;
   padding: 4px 7px;
   border-bottom: 1px solid var(--color-neutral-3);
   display: grid;

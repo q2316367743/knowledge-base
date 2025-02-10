@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <main class="container kb-wang-editor">
-      <rich-text-editor v-model="item.content" v-if="isInit"/>
+      <rich-text-editor v-model="item.content" v-if="isInit" simple/>
       <a-result v-else title="正在加载中">
         <template #icon>
           <icon-loading :size="32"/>

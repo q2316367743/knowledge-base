@@ -13,13 +13,14 @@ import {
 import {ref, watch} from "vue";
 import dayjs from "dayjs";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useTodoStore} from "@/store/components/TodoStore";
 import {download} from "@/utils/BrowserUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {toDateString} from "@/utils/lang/FormatUtil";
 import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {useTodoItemStore} from "@/store/db/TodoItemStore";
 
 enum ExportFileTypeEnum {
   TEXT = 1,
@@ -62,8 +63,9 @@ function exportTodo(config: Config, close: () => void) {
     return;
   }
   exportTo(config).then(text => {
-    const title = useTodoStore().title;
-    download(text, `${title}.${ext}`, 'text/plain');
+    const {currentCategory} = useTodoWrapStore();
+    const {name = '未知待办清单'} = currentCategory || {};
+    download(text, `${name}.${ext}`, 'text/plain');
     close();
   }).catch(e => MessageUtil.error("导出失败", e));
 }
@@ -80,7 +82,10 @@ function exportTo(config: Config): Promise<string> {
   useUmami.track("导出待办")
   const start = dayjs(config.rangeValue[0]).valueOf();
   const end = dayjs(config.rangeValue[1]).valueOf();
-  const items = useTodoStore().todoItems.filter(e => e.id >= start && e.id <= end)
+  const items: Array<TodoItemIndex> = useTodoWrapStore().todoGroupView
+    .flatMap(e => e.children)
+    .flatMap(e => e.children)
+    .filter(e => e.id >= start && e.id <= end)
     .sort((a, b) => a.id - b.id);
   if (items.length === 0) {
     return Promise.reject("所选时间范围之内没有待办");
@@ -127,7 +132,7 @@ async function exportToMarkdown(items: Array<TodoItemIndex>, config: Config): Pr
       // 获取内容
       let content = '';
       try {
-        const todoItem = await useTodoStore().getTodoItem(item.id);
+        const todoItem = await useTodoItemStore().getTodoItem(item.id);
         content = todoItem.content.record.content;
       } catch (e) {
         MessageUtil.warning(`导出待办【${item.title}】时错误`, e)
@@ -155,7 +160,7 @@ async function exportToHtml(items: Array<TodoItemIndex>, config: Config): Promis
       // 获取内容
       let content = '';
       try {
-        const todoItem = await useTodoStore().getTodoItem(item.id);
+        const todoItem = await useTodoItemStore().getTodoItem(item.id);
         content = todoItem.content.record.content;
       } catch (e) {
         MessageUtil.warning(`导出待办【${item.title}】时错误`, e)
@@ -165,6 +170,8 @@ async function exportToHtml(items: Array<TodoItemIndex>, config: Config): Promis
     }
     lines.push('<br />', '')
   }
+  const {currentCategory} = useTodoWrapStore();
+  const {name = '未知待办清单'} = currentCategory || {};
   return Promise.resolve(`
 <!DOCTYPE html>
 <html lang="zh">
@@ -173,7 +180,7 @@ async function exportToHtml(items: Array<TodoItemIndex>, config: Config): Promis
     <link rel="icon" type="image/png" href="/logo.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="referrer" content="never">
-    <title>${useTodoStore().title}</title>
+    <title>${name}</title>
 </head>
 <body>
 ${lines.join("\n")}
@@ -186,7 +193,7 @@ async function exportToCustomer(items: Array<TodoItemIndex>, config: Config): Pr
   const lines = new Array<string>();
   const run = new Function('item', 'func', config.script)
   for (let item of items) {
-    const todoItem = await useTodoStore().getTodoItem(item.id);
+    const todoItem = await useTodoItemStore().getTodoItem(item.id);
     lines.push(run(todoItem, {
       toDateString
     }))
@@ -254,12 +261,12 @@ export function openTodoExport() {
         </RadioGroup>
       </FormItem>
       {config.value.type !== ExportFileTypeEnum.CUSTOMER && <FormItem label="是否包含日期">
-          <Switch v-model={config.value.includeTime} type="round"/>
+        <Switch v-model={config.value.includeTime} type="round"/>
       </FormItem>}
       {(config.value.type !== ExportFileTypeEnum.TEXT && config.value.type !== ExportFileTypeEnum.CUSTOMER) &&
-          <FormItem label="是否包含内容">
-              <Switch v-model={config.value.includeContent} type="round"/>
-          </FormItem>}
+        <FormItem label="是否包含内容">
+          <Switch v-model={config.value.includeContent} type="round"/>
+        </FormItem>}
       {config.value.type === ExportFileTypeEnum.CUSTOMER && <FormItem label={"自定义脚本"}>
         {{
           default: () => <Textarea v-model={config.value.script} autoSize={{minRows: 3, maxRows: 8}}
