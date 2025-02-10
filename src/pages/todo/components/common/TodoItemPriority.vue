@@ -16,16 +16,15 @@
         </a-button>
       </div>
     </div>
-    <div class="todo-content-priority__content" v-show="visible" ref="el">
-      <card-todo-item v-for="item in todoItems" :key="item.id" :item="item" :data-id="item.id" attr/>
+    <div class="todo-content-priority__content" v-show="visible">
+      <card-todo-item v-for="item in todoItems" :key="item.id" :item="item" :group-id="groupId" :data-id="item.id"
+                      :data-group-id="groupId"/>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import {TodoGroupPriorityView} from "@/entity/todo/TodoGroup";
 import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
-import {moveArrayElement, useSortable} from "@vueuse/integrations/useSortable";
-import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 
 const props = defineProps({
   priorityView: {
@@ -42,37 +41,6 @@ const toggleVisible = useToggle(visible);
 const label = computed(() => props.priorityView?.label || '');
 const todoItems = computed(() => props.priorityView?.children || []);
 
-const el = ref()
-
-
-useSortable(el, todoItems, {
-  animation: 150,
-  handle: '.card-todo-item',
-  group: `todo-priority`,
-  sort: false,
-  onUpdate: (e) => {
-    // do something
-    const {oldIndex = 0, newIndex = 0} = e;
-    moveArrayElement(todoItems.value, oldIndex, newIndex);
-    // nextTick required here as moveArrayElement is executed in a microtask
-    // so we need to wait until the next tick until that is finished.
-  },
-  onAdd: (e) => {
-    const {item} = e;
-    // useTodoGroupStore().pushTo(props.groupId, e.item.dataset.id)
-    let dataIdAttr = item.attributes.getNamedItem("data-id");
-    if (dataIdAttr) {
-      useTodoGroupStore().pushTo(props.groupId, Number(dataIdAttr.value))
-    }
-  },
-  onRemove: (e) => {
-    const {item} = e;
-    let dataIdAttr = item.attributes.getNamedItem("data-id");
-    if (dataIdAttr) {
-      useTodoGroupStore().popFrom(props.groupId, Number(dataIdAttr.value))
-    }
-  }
-});
 </script>
 <style scoped lang="less">
 .todo-item-priority {

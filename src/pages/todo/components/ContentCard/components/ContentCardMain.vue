@@ -45,6 +45,5 @@ useSortable(el, groups, {
   gap: 16px; /* 可选间隙 */
   overflow-x: auto; /* 横向滚动 */
   overflow-y: hidden; /* 隐藏垂直滚动 */
-  padding: 20px 16px 20px 0;
 }
 </style>

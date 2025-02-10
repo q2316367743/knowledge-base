@@ -131,10 +131,10 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
     const sourceId = typeof source === 'string' ? source : source.id;
     const targetId = typeof target === 'string' ? target : target.id;
     for (let i = 0; i < items.value.length; i++) {
-      if (items.value[i].id === sourceId) {
+      if (items.value[i].id === targetId) {
         items.value[i].items.push(...itemIds);
       }
-      if (items.value[i].id === targetId) {
+      if (items.value[i].id === sourceId) {
         items.value[i].items = items.value[i].items.filter(e => !itemIds.includes(e));
       }
     }

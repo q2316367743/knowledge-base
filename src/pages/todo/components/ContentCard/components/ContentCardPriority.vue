@@ -1,5 +1,6 @@
 <template>
-  <div class="content-card-priority" v-if="group">
+  <div class="content-card-priority" v-if="group" :class="{drag: isDrag}" @dragend="toggleDrag(false)" @drop="handleDrop"
+       @dragenter="toggleDrag(true)" @dragover.stop="handleDragover" @dragleave="toggleDrag(false)">
     <header class="content-card-priority__header">
       <div class="title">
         {{ group.name }}
@@ -53,10 +54,10 @@
       </div>
     </header>
     <div class="content-card-priority__content">
-      <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority" :group-id="group.id"/>
+      <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
+                          :group-id="group.id"/>
     </div>
     <todo-item-complete :completes="group.complete"/>
-    <content-card-empty :group-id="group.id" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -65,7 +66,7 @@ import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 import {openDeleteTodoGroupFunc, openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
 import TodoItemPriority from "@/pages/todo/components/common/TodoItemPriority.vue";
 import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
-import ContentCardEmpty from "@/pages/todo/components/ContentCard/components/ContentCardEmpty.vue";
+import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 
 const props = defineProps({
   group: {
@@ -81,15 +82,39 @@ const count = computed(() => {
     });
   }
   return c;
-})
+});
+const isDrag = ref(false);
+
+const toggleDrag = useToggle(isDrag);
+
+function handleDragover(e: DragEvent) {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleDrag(true)
+}
+
+function handleDrop(e: DragEvent) {
+  const {dataTransfer} = e;
+  if (dataTransfer) {
+    const todoItemId = dataTransfer.getData('todo-item-id');
+    const todoGroupId = dataTransfer.getData('todo-group-id');
+    useTodoGroupStore().moveTo(todoGroupId, props.group?.id, Number(todoItemId))
+  }
+  toggleDrag(false)
+}
 </script>
 <style scoped lang="less">
 .content-card-priority {
-  width: 260px;
-  height: calc(100% - 28px);
-  margin: 7px 8px 14px;
-  border-radius: 2px;
+  width: 256px;
+  height: calc(100% - 14px);
+  margin: 7px 8px;
+  border-radius: var(--border-radius-medium);
   position: relative;
+  border: 2px solid transparent;
+
+  &.drag {
+    border-color: rgb(var(--arcoblue-4));
+  }
 
   .content-card-priority__header {
     width: 100%;

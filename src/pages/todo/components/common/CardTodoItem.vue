@@ -1,10 +1,11 @@
 <template>
-  <div class="card-todo-item"
-       :data-id="index.id"
+  <div class="card-todo-item" :data-id="index.id" draggable="true" @dragstart="handleDragstart"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
        @click="_openTodoItemSetting($event)">
     <div class="todo-item__main">
-      <todo-item-checkbox :priority="index.priority" :status="index.status" @click.stop="onCheck(index)"/>
+      <div class="todo-item__checkbox">
+        <todo-item-checkbox :priority="index.priority" :status="index.status" @click.stop="onCheck(index)"/>
+      </div>
       <a-typography-paragraph class="todo-item__title" :ellipsis="ellipsis">
         {{ index.title }}
       </a-typography-paragraph>
@@ -17,7 +18,12 @@
         {{ start }}{{ end ? ' · ' + end : '' }}
       </a-tag>
     </div>
-    <a-tooltip content="置顶" v-if="(index.top && index.status === TodoItemStatus.TODO) || props.showTop">
+    <div class="todo-item__tag" v-if="info.content.record.tags.length > 0">
+      <a-space wrap>
+        <a-tag v-for="t in info.content.record.tags" :key="t" :color="randomColor(t)" bordered>{{ t }}</a-tag>
+      </a-space>
+    </div>
+    <a-tooltip content="置顶" v-if="index.top && index.status === TodoItemStatus.TODO">
       <div class="top">
         <icon-arrow-up class="color-#fff"/>
       </div>
@@ -26,7 +32,7 @@
 </template>
 <script lang="ts" setup>
 import {
-  getDefaultTodoItemAttr,
+  getDefaultTodoItem,
   getDefaultTodoItemIndex, getNextTodoItemStatus,
   TodoItemIndex,
   TodoItemStatus
@@ -35,35 +41,28 @@ import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSettin
 import {handleDate, toDateString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
+import {randomColor} from "@/utils/BrowserUtil";
 
 const props = defineProps({
-  item: Object as PropType<TodoItemIndex>,
-  attr: {
-    type: Boolean,
-    default: false
+  item: {
+    type: Object as PropType<TodoItemIndex>
   },
-  showTop: {
-    type: Boolean,
-    default: false
-  },
-  only: {
-    type: Boolean,
-    default: false
+  groupId: {
+    type: String,
+    default: ''
   }
 });
-
-const emits = defineEmits(['update']);
 
 const ellipsis = {
   rows: 3,
   expandable: true,
 };
 
-const attr = ref(getDefaultTodoItemAttr());
+const index = shallowRef(props.item || getDefaultTodoItemIndex());
+const info = ref(getDefaultTodoItem());
 const hasAttr = ref(false);
 const start = ref('');
 const end = ref('');
-const index = ref(props.item || getDefaultTodoItemIndex())
 
 function _openTodoItemSetting(e: Event) {
   e.preventDefault();
@@ -75,23 +74,23 @@ function _openTodoItemSetting(e: Event) {
     index.value = res
     if (index.value) {
       initAttr(index.value.id);
-      emits('update', index.value.id);
     }
   })
 }
 
 function initAttr(id: number) {
   hasAttr.value = false;
-  useTodoItemStore().getTodoItemAttr(id)
+  useTodoItemStore().getTodoItem(id)
     .then(res => {
-      attr.value = res;
-      if (res.start !== '') {
-        start.value = handleDate(res.start);
+      info.value = res;
+      const {attr} = res;
+      if (attr.start !== '') {
+        start.value = handleDate(attr.start);
         hasAttr.value = true;
       }
-      if (res.end !== '' && res.start !== res.end && res.start !== '') {
-        start.value = toDateString(res.start, "YYYY-MM-DD");
-        end.value = toDateString(res.end, "YYYY-MM-DD");
+      if (attr.end !== '' && attr.start !== attr.end && attr.start !== '') {
+        start.value = toDateString(attr.start, "YYYY-MM-DD");
+        end.value = toDateString(attr.end, "YYYY-MM-DD");
         hasAttr.value = true;
       }
 
@@ -99,7 +98,7 @@ function initAttr(id: number) {
 
 }
 
-if (props.attr && index.value) {
+if (index.value) {
   initAttr(index.value.id);
 }
 
@@ -112,25 +111,37 @@ function onCheck(item: TodoItemIndex) {
     });
 }
 
+function handleDragstart(e: DragEvent) {
+  e.dataTransfer?.setData('todo-item-id', props.item?.id + '');
+  e.dataTransfer?.setData('todo-group-id', props.groupId);
+}
 </script>
 <style scoped lang="less">
 .card-todo-item {
   padding: 12px 16px;
   margin: 4px 0;
-  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   position: relative;
-  border-radius: var(--border-radius-large);
+  border-radius: var(--border-radius-medium);
   background-color: var(--color-bg-1);
   transition: background-color 0.3s;
-  border: 1px solid var(--color-border-1);
+  border: 1px solid var(--color-border-2);
 
   &:hover {
+    background-color: var(--color-fill-1);
+  }
+
+  &:active {
     background-color: var(--color-fill-2);
   }
 
   .todo-item__main {
     display: flex;
+    align-items: flex-start;
+
+    .todo-item__checkbox {
+      margin-top: 4px;
+    }
 
     .todo-item__title {
       margin: 0 0 0 8px;
@@ -139,6 +150,11 @@ function onCheck(item: TodoItemIndex) {
 
   .todo-item__sub {
     margin-top: 4px;
+  }
+
+  .todo-item__tag {
+    margin-top: 8px;
+    margin-bottom: -8px;
   }
 
   &.deleted {

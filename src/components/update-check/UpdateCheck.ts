@@ -12,42 +12,43 @@ import {isVersionUpdate} from "@/utils/lang/FieldUtil";
 import {updateTo231} from "@/components/update-check/record/updateTo231";
 
 export default async function updateCheck(toUpdate?: () => void) {
-    const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)
-    if (res.record) {
-        if (res.record !== Constant.version) {
-            saveOneByAsync(LocalNameEnum.VERSION, Constant.version, res.rev).then(() => console.log("版本更新"));
-            // 更新
-            toUpdate && toUpdate();
-            useUmami.track('版本更新', `[${res.record}] => [${Constant.version}]`);
+  const res = await getFromOneByAsync<string>(LocalNameEnum.VERSION)
+  if (res.record) {
+    if (res.record !== Constant.version) {
+      saveOneByAsync(LocalNameEnum.VERSION, Constant.version, res.rev).then(() => console.log("版本更新"));
+      // 更新
+      toUpdate && toUpdate();
+      useUmami.track('版本更新', `[${res.record}] => [${Constant.version}]`);
 
-            if (isVersionUpdate(Constant.version, res.record, '1.3.0')) {
-                // 执行
-                await updateTo130FromUnder();
-                MessageUtil.success("数据迁移成功");
-            }
-            if (isVersionUpdate(Constant.version, res.record, '1.4.0')) {
-                // 执行
-                await updateTo140FromUnder();
-                MessageUtil.success("数据迁移成功");
-            }
-            if (isVersionUpdate(Constant.version, res.record, '1.5.0')) {
-                // 执行
-                await updateTo150FromUnder();
-                MessageUtil.success("数据迁移成功");
-            }
-            if (isVersionUpdate(Constant.version, res.record, '2.3.1')) {
-                await updateTo231();
-                MessageUtil.success("数据迁移成功");
-            }
+      if (isVersionUpdate(Constant.version, res.record, '1.3.0')) {
+        // 执行
+        await updateTo130FromUnder();
+        MessageUtil.success("数据迁移成功");
+      }
+      if (isVersionUpdate(Constant.version, res.record, '1.4.0')) {
+        // 执行
+        await updateTo140FromUnder();
+        MessageUtil.success("数据迁移成功");
+      }
+      if (isVersionUpdate(Constant.version, res.record, '1.5.0')) {
+        // 执行
+        await updateTo150FromUnder();
+        MessageUtil.success("数据迁移成功");
+      }
+      if (isVersionUpdate(Constant.version, res.record, '2.3.1')) {
+        await updateTo231();
+        MessageUtil.success("数据迁移成功");
+      }
+      // TODO: 2.4.0更新：1. 将待办内容上的标签转移到待办属性上
 
-        }
-    } else {
-        // 第一次
-        NotificationUtil.success("欢迎您使用知识库");
-        saveOneByAsync(LocalNameEnum.VERSION, Constant.version).then(() => console.log("版本更新"));
-        init();
-        useUmami.track('新用户', `[0.0.0] => [${Constant.version}]`);
     }
+  } else {
+    // 第一次
+    NotificationUtil.success("欢迎您使用知识库");
+    saveOneByAsync(LocalNameEnum.VERSION, Constant.version).then(() => console.log("版本更新"));
+    init();
+    useUmami.track('新用户', `[0.0.0] => [${Constant.version}]`);
+  }
 }
 
 
