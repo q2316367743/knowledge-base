@@ -44,8 +44,9 @@ const tags = defineModel({
   type: Array as PropType<string[]>,
   default: () => []
 });
+const emit = defineEmits(['change']);
 
-const inputRef = ref<InstanceType<typeof Input>>();
+const inputRef = ref<InstanceType<typeof AInput>>();
 const showInput = ref(false);
 const inputVal = ref('');
 
@@ -63,12 +64,14 @@ const handleAdd = () => {
   if (inputVal.value) {
     tags.value.push(inputVal.value);
     inputVal.value = '';
+    emit('change', tags.value);
   }
   showInput.value = false;
 };
 
 const handleRemove = (key: string) => {
   tags.value = tags.value.filter((tag) => tag !== key);
+  emit('change', tags.value);
 };
 
 </script>

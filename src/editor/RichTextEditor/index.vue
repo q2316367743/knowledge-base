@@ -27,6 +27,7 @@ const props = defineProps({
   articleId: Number,
   simple: Boolean
 });
+const emit = defineEmits(['change']);
 
 const editorHeaderDom = ref<HTMLDivElement>();
 const editorContainerDom = ref<HTMLDivElement>();
@@ -49,6 +50,7 @@ function init() {
     config: {
       onChange: (editor: IDomEditor) => {
         content.value = editor.getHtml();
+        emit('change');
       },
       placeholder: '请输入内容...(支持部分markdown语法)',
       readOnly: props.readOnly,

@@ -1,7 +1,7 @@
 <template>
   <!-- 优先级 -->
   <a-dropdown position="br" @select="updatePriority($event)">
-    <a-button type="text" :style="{color: color}" class="priority">
+    <a-button :style="{color: color}" class="priority" :type>
       <template #icon>
         <icon-thunderbolt/>
       </template>
@@ -25,6 +25,7 @@
       </a-doption>
     </template>
   </a-dropdown>
+
 </template>
 <script lang="ts" setup>
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
@@ -36,11 +37,19 @@ const priority = defineModel({
   type: Number as PropType<TodoItemPriority>,
   default: TodoItemPriority.NONE
 });
+defineProps({
+  type: {
+    type: String as PropType< "dashed" | "text" | "outline" | "primary" | "secondary">,
+    default: 'text'
+  }
+});
+const emit = defineEmits(['change']);
 
 const color = computed(() => handlePriorityColor(priority.value));
 
 function updatePriority(value: any) {
   priority.value = value;
+  emit('change');
 }
 </script>
 <style scoped lang="less">
