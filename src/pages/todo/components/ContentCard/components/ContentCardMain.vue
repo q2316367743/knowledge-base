@@ -38,11 +38,12 @@ useSortable(el, groups, {
   left: 0;
   right: 0;
   bottom: 0;
+  margin-right: 8px;
 
   display: grid;
   grid-auto-flow: column; /* 横向排列 */
-  grid-auto-columns: 260px; /* 每个子项宽度 */
-  gap: 16px; /* 可选间隙 */
+  grid-auto-columns: 268px; /* 每个子项宽度 */
+  gap: 8px; /* 可选间隙 */
   overflow-x: auto; /* 横向滚动 */
   overflow-y: hidden; /* 隐藏垂直滚动 */
 }

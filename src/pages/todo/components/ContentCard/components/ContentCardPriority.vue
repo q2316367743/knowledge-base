@@ -98,7 +98,7 @@ function handleDrop(e: DragEvent) {
   if (dataTransfer) {
     const todoItemId = dataTransfer.getData('todo-item-id');
     const todoGroupId = dataTransfer.getData('todo-group-id');
-    useTodoGroupStore().moveTo(todoGroupId, props.group?.id, Number(todoItemId))
+    useTodoGroupStore().moveTo(todoGroupId, props.group!.id, Number(todoItemId))
   }
   toggleDrag(false)
 }
@@ -111,6 +111,7 @@ function handleDrop(e: DragEvent) {
   border-radius: var(--border-radius-medium);
   position: relative;
   border: 2px solid transparent;
+  padding: 0 4px;
 
   &.drag {
     border-color: rgb(var(--arcoblue-4));

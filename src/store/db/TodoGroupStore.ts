@@ -130,6 +130,7 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
     if (isEmptyArray(itemIds)) return Promise.resolve();
     const sourceId = typeof source === 'string' ? source : source.id;
     const targetId = typeof target === 'string' ? target : target.id;
+    if (targetId === sourceId) return Promise.resolve();
     for (let i = 0; i < items.value.length; i++) {
       if (items.value[i].id === targetId) {
         items.value[i].items.push(...itemIds);
@@ -139,7 +140,6 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
       }
     }
     await _sync();
-
   }
 
   return {
