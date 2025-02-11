@@ -31,13 +31,13 @@
               <template #icon>
                 <icon-rotate-left/>
               </template>
-              在左侧添加分组
+              在上侧添加分组
             </a-doption>
             <a-doption>
               <template #icon>
                 <icon-rotate-right/>
               </template>
-              在右侧添加分组
+              在下侧添加分组
             </a-doption>
             <a-doption>
               <template #icon>
@@ -55,9 +55,7 @@
         </a-dropdown>
       </div>
     </div>
-    <div class="content-default-group__content" v-show="visible" ref="el">
-      <content-default-item v-for="item in todoItems" :key="item.id" :item="item" :data-id="item.id"/>
-    </div>
+    <content-default-group-list v-if="visible" :group-id="group.id" :items="todoItems"/>
     <todo-item-complete :completes="group.complete"/>
   </div>
 </template>
@@ -67,9 +65,8 @@ import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 import {openDeleteTodoGroupFunc, openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
 import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
-import ContentDefaultItem from "@/pages/todo/components/ContentDefault/components/ContentDefaultItem.vue";
-import {moveArrayElement, useSortable} from "@vueuse/integrations/useSortable";
-import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import ContentDefaultGroupList
+  from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultGroupList.vue";
 
 const props = defineProps({
   group: {
@@ -96,39 +93,8 @@ const todoItems = computed<Array<TodoItemIndex>>(() => {
 })
 
 const visible = ref(true);
-const el = ref()
 
 const toggleVisible = useToggle(visible);
-
-
-useSortable(el, todoItems, {
-  animation: 150,
-  handle: '.content-default-item',
-  group: `todo-group`,
-  sort: false,
-  onUpdate: (e) => {
-    // do something
-    const {oldIndex = 0, newIndex = 0} = e;
-    moveArrayElement(todoItems.value, oldIndex, newIndex);
-    // nextTick required here as moveArrayElement is executed in a microtask
-    // so we need to wait until the next tick until that is finished.
-  },
-  onAdd: (e) => {
-    const {item} = e;
-    // useTodoGroupStore().pushTo(props.groupId, e.item.dataset.id)
-    let dataIdAttr = item.attributes.getNamedItem("data-id");
-    if (dataIdAttr) {
-      useTodoGroupStore().pushTo(props.group!.id, Number(dataIdAttr.value))
-    }
-  },
-  onRemove: (e) => {
-    const {item} = e;
-    let dataIdAttr = item.attributes.getNamedItem("data-id");
-    if (dataIdAttr) {
-      useTodoGroupStore().popFrom(props.group!.id, Number(dataIdAttr.value))
-    }
-  }
-});
 </script>
 <style scoped lang="less">
 .content-default-group {

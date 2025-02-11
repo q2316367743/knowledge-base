@@ -29,7 +29,7 @@ useSortable(el, groups, {
       useTodoGroupStore().sort(groups.value.map(e => e.id));
     })
   }
-})
+});
 </script>
 <style scoped>
 .content-card-main {

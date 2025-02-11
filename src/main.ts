@@ -4,9 +4,10 @@ import {createPinia} from 'pinia';
 import App from './App.vue'
 import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
+import VueAnimXyz from '@animxyz/vue3'
+import '@animxyz/core' // Import css here if you haven't elsewhere
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
-import ArcoVue from '@arco-design/web-vue';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@arco-design/web-vue/es/message/style/css.js'
@@ -57,11 +58,11 @@ self.MonacoEnvironment = {
 Boot.registerModule(markdownModule);
 
 createApp(App)
-  .use(ArcoVue)
-  .use(ArcoVueIcon)
   .use(createPinia())
   .use(router)
+  .use(ArcoVueIcon)
   .use(setupCalendar, {})
+  .use(VueAnimXyz)
   .mount('#app');
 
 function getKey(e: KeyboardEvent) {

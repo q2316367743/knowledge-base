@@ -10,6 +10,19 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
+"@animxyz/core@^0.6.6":
+  version "0.6.6"
+  resolved "https://mirrors.cloud.tencent.com/npm/@animxyz/core/-/core-0.6.6.tgz#2c5eae54c7a6b98c3be79ae16fc1ec68991f67cc"
+  integrity sha512-NtAA/G0Gq3hzAiL6yuE/4U8IgHMPUl3MxbWUbhO443T9UCsf9rBY94P5aK79Zd+/529FeoNdDphIOcOZLsI2sA==
+
+"@animxyz/vue3@^0.6.7":
+  version "0.6.7"
+  resolved "https://mirrors.cloud.tencent.com/npm/@animxyz/vue3/-/vue3-0.6.7.tgz#ca51516a3aa35d50170322411d4635a87a756908"
+  integrity sha512-tLx4HfFcoxR5wgIMFDrmjS2mZifFRNMiwn7skPT3as9ViuCW3QdCsBIDYY2tR37GSvSUC1NhNwkkCZ1pt0C+Hg==
+  dependencies:
+    "@animxyz/core" "^0.6.6"
+    clsx "^1.1.1"
+
 "@antfu/install-pkg@^1.0.0":
   version "1.0.0"
   resolved "https://mirrors.cloud.tencent.com/npm/@antfu/install-pkg/-/install-pkg-1.0.0.tgz#2912a150fc8b35ec912f583f90074ee98f64d66a"
@@ -1618,6 +1631,11 @@ clone@^2.1.1:
   version "2.1.2"
   resolved "https://mirrors.cloud.tencent.com/npm/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
   integrity sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==
+
+clsx@^1.1.1:
+  version "1.2.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
 
 color-convert@^1.9.3:
   version "1.9.3"

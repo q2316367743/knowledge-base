@@ -11,9 +11,9 @@
       <template #content>
         <a-dsubmenu>
           <template #icon>
-            <icon-thunderbolt :style="{color:handlePriorityColor(item.priority)}"/>
+            <icon-thunderbolt/>
           </template>
-          <span :style="{color:handlePriorityColor(item.priority)}">优先级</span>
+          <span>优先级</span>
           <template #content>
             <content-default-item-doption
               :priority="TodoItemPriority.HIGH"

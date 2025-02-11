@@ -15,7 +15,7 @@
       </main>
     </div>
     <footer class="footer">
-      <tag-group v-model="item.attr.tags" @change="updateTags()"/>
+      <tag-group v-model="item.attr.tags" @change="updateContent()"/>
       <main-content-attr/>
     </footer>
   </div>
@@ -36,19 +36,27 @@ onMounted(async () => {
 
 // 只更新标题
 function updateTitle() {
-  // TODO: 更新标题
+  // 更新标题
+  useTodoItemStore().updateById(
+    useTodoWrapStore().itemId,
+    {title: item.value.index.title}
+  )
 }
 
 function updatePriority() {
-  // TODO: 更新优先级
+  //  更新优先级
+  useTodoItemStore().updateById(
+    useTodoWrapStore().itemId,
+    {priority: item.value.index.priority}
+  )
 }
 
-function updateTags() {
-  // TODO: 更新标签
-}
 
 function updateContent() {
-  // TODO: 更新内容
+  // 更新内容
+  useTodoItemStore().saveContent(
+    useTodoWrapStore().itemId,
+    item.value.content.record,item.value.content.rev)
 }
 
 </script>
