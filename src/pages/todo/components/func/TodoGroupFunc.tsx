@@ -3,6 +3,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {TodoGroupPriorityView} from "@/entity/todo/TodoGroup";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
 /**
  * 打开添加分组功能
@@ -74,6 +75,24 @@ export function openDeleteTodoGroupFunc(id: string, name: string) {
         MessageUtil.error('删除分组失败', e);
         done(false);
       }
+    }
+  })
+}
+
+
+export function openAddTodoGroupFunc(id: string, offset: 1 | 0) {
+  MessageBoxUtil.prompt("请输入分组名称", '添加分组', {
+    confirmButtonText: '添加',
+  }).then(async name => {
+    if (name.trim() === '') {
+      MessageUtil.warning('分组名称不能为空');
+      return;
+    }
+    try {
+      await useTodoWrapStore().addGroupTo(name, id, offset);
+      MessageUtil.success('添加分组成功');
+    } catch (e) {
+      MessageUtil.error('添加分组失败', e);
     }
   })
 }

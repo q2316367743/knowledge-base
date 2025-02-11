@@ -27,23 +27,17 @@
               </template>
               重命名
             </a-doption>
-            <a-doption>
+            <a-doption @click="openAddTodoGroupFunc(group.id, 0)">
               <template #icon>
                 <icon-rotate-left/>
               </template>
               在上侧添加分组
             </a-doption>
-            <a-doption>
+            <a-doption @click="openAddTodoGroupFunc(group.id, 1)">
               <template #icon>
                 <icon-rotate-right/>
               </template>
               在下侧添加分组
-            </a-doption>
-            <a-doption>
-              <template #icon>
-                <icon-translate/>
-              </template>
-              移动到
             </a-doption>
             <a-doption @click="openDeleteTodoGroupFunc(group.id, group.name)">
               <template #icon>
@@ -56,15 +50,17 @@
       </div>
     </div>
     <content-default-group-list v-if="visible" :group-id="group.id" :items="todoItems"/>
-    <todo-item-complete :completes="group.complete"/>
   </div>
 </template>
 <script lang="ts" setup>
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
-import {openDeleteTodoGroupFunc, openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
-import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
+import {
+  openAddTodoGroupFunc,
+  openDeleteTodoGroupFunc,
+  openEditTodoGroupFunc
+} from "@/pages/todo/components/func/TodoGroupFunc";
 import ContentDefaultGroupList
   from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultGroupList.vue";
 

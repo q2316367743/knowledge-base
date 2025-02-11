@@ -4,8 +4,6 @@ import {createPinia} from 'pinia';
 import App from './App.vue'
 import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
-import VueAnimXyz from '@animxyz/vue3'
-import '@animxyz/core' // Import css here if you haven't elsewhere
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 // 样式
@@ -62,7 +60,6 @@ createApp(App)
   .use(router)
   .use(ArcoVueIcon)
   .use(setupCalendar, {})
-  .use(VueAnimXyz)
   .mount('#app');
 
 function getKey(e: KeyboardEvent) {

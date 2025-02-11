@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-item-checkbox">
+  <div class="todo-item-checkbox" :title>
     <div class="todo-item-checkbox-hover">
       <div class="todo-item-checkbox-icon" :style>
         <svg aria-hidden="true" focusable="false" v-if="status === TodoItemStatus.COMPLETE"
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
+import {handlePriorityText, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {StyleValue} from "vue";
 
 const props = defineProps({
@@ -58,7 +58,8 @@ const style = computed<StyleValue>(() => {
     }
   }
   return s;
-})
+});
+const title = computed(() => handlePriorityText(props.priority));
 
 </script>
 <style scoped lang="less">

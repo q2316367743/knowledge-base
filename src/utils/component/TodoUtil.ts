@@ -83,7 +83,11 @@ export function renderGroupViews(todoItems: Array<TodoItemIndex>, todoGroups: Ar
       sort: -1,
       items: Array.from(itemMap.keys())
     };
-    views.push(renderGroupView(empty, itemMap, sort))
+    const emptyView = renderGroupView(empty, itemMap, sort);
+    const todoCount = emptyView.children.map(e => e.children.length).reduce((a, b) => a + b, 0);
+    if (todoCount > 0) {
+      views.push(emptyView);
+    }
   }
   return views;
 }

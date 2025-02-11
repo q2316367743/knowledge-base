@@ -6,6 +6,7 @@ import {isEmptyString} from "@/utils/lang/StringUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {isEmptyArray} from "@/utils/lang/FieldUtil";
+import {toSorted} from "@/utils/lang/ArrayUtil";
 
 export const useTodoGroupStore = defineStore('todoGroup', () => {
   const items: Ref<Array<TodoGroup>> = ref(new Array<any>());
@@ -86,6 +87,27 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
     return target;
   };
 
+
+  async function addOneTo(name: string, id: string, categoryId: number, offset: 1 | 0) {
+    const arr = toSorted(items.value, (a, b) => a.sort - b.sort);
+    const index = arr.findIndex(e => e.id === id);
+    const target: TodoGroup = {
+      id: useSnowflake().nextId(),
+      name,
+      categoryId: categoryId,
+      sort: 0,
+      items: []
+    };
+    arr.splice(index + offset, 0, target);
+    // 重排索引
+    for (let i = 0; i < arr.length; i++) {
+      arr[i].sort = i;
+    }
+    items.value = arr;
+    await _sync();
+  }
+
+
   async function sort(order: Array<string>) {
     const itemMap = new Map<string, number>();
     order.forEach((e, i) => itemMap.set(e, i));
@@ -145,7 +167,7 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
   return {
     items,
     init,
-    saveOrUpdate,
+    saveOrUpdate, addOneTo,
     deleteById, sort,
     pushTo, popFrom, moveTo
   }

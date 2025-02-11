@@ -91,7 +91,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     try {
       // 获取待办关联文章
       await useTodoArticleStore().init(id);
-    }catch (e) {
+    } catch (e) {
       console.error("获取待办项失败", e);
     }
 
@@ -100,6 +100,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   function setItemId(id: number) {
     itemId.value = id;
   }
+
   const collapsedToggle = useToggle(collapsed);
 
   const switchCollapsed = () => collapsedToggle();
@@ -111,6 +112,9 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   const deleteGroup = async (id: string, targetGroupId: string) => {
     await useTodoGroupStore().deleteById(id, targetGroupId);
   };
+  const addGroupTo = async (name: string, id: string, offset: 1 | 0) => {
+    return useTodoGroupStore().addOneTo(name, id, categoryId.value, offset);
+  }
 
   async function addItem(record: Partial<TodoItemIndex>, attr: Partial<TodoItemAttr>, group?: TodoGroup) {
     // 添加到待办
@@ -122,10 +126,10 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   }
 
   return {
-    categoryId, itemId, currentCategory, sort, layout,collapsed,
+    categoryId, itemId, currentCategory, sort, layout, collapsed,
     todoGroupView,
-    init, setItemId,switchCollapsed,
-    postGroup, deleteGroup,
+    init, setItemId, switchCollapsed,
+    postGroup, deleteGroup, addGroupTo,
     addItem
   }
 

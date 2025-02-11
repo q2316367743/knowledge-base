@@ -3,24 +3,27 @@
     <content-default-header/>
     <div class="list-container" @click="setItemId(0)" ref="el">
       <content-default-group v-for="group in groups" :key="group.id" :group="group"/>
-      <!-- TODO: 关联的文章 -->
+      <content-default-complete :groups="groups" />
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import ContentDefaultHeader from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultHeader.vue"
+import ContentDefaultHeader
+  from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultHeader.vue"
 import ContentDefaultGroup
   from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultGroup.vue";
 import {moveArrayElement, useSortable} from "@vueuse/integrations/useSortable";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import ContentDefaultComplete
+  from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultComplete.vue";
 
 const groups = computed(() => useTodoWrapStore().todoGroupView);
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
 
 const el = ref();
 
-useSortable(el, groups, {
+useSortable(el, groups.value, {
   animation: 150,
   handle: '.content-default-group__header',
   group: 'default-todo-side',

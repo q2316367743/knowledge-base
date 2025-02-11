@@ -4,18 +4,18 @@
       <!-- 标题 -->
       <div class="title">
         <a-input v-model="item.index.title" allow-clear placeholder="待办标题，回车修改"
-                 @change="updateTitle()"/>
+                 @change="updateSelf()"/>
       </div>
       <!-- 优先级 -->
-      <priority-dropdown v-model="item.index.priority" type="secondary" @change="updatePriority()"/>
+      <priority-dropdown v-model="item.index.priority" type="secondary" @change="updateSelf()"/>
     </header>
     <div class="content">
       <main class="container kb-wang-editor">
-        <rich-text-editor v-model="item.content.record.content" simple @change="updateContent()"/>
+        <rich-text-editor v-model="item.content.record.content" simple @change="updateContent()" v-if="isInit"/>
       </main>
     </div>
     <footer class="footer">
-      <tag-group v-model="item.attr.tags" @change="updateContent()"/>
+      <tag-group v-model="item.attr.tags" @change="updateSelf()"/>
       <main-content-attr/>
     </footer>
   </div>
@@ -24,39 +24,39 @@
 import {getDefaultTodoItem, TodoItem} from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
-import MainContentAttr
-  from "@/pages/todo/components/ContentDefault/layout/ContentDefaultMain/components/MainContent/MainContentAttr.vue";
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
+import MainContentAttr
+  from "@/pages/todo/components/ContentDefault/layout/ContentDefaultMain/components/MainContentAttr.vue";
 
 const item = ref<TodoItem>(getDefaultTodoItem());
+const isInit = ref(false);
 
 onMounted(async () => {
   item.value = await useTodoItemStore().getTodoItem(useTodoWrapStore().itemId);
+  isInit.value = true;
 });
 
 // 只更新标题
-function updateTitle() {
+function updateSelf() {
   // 更新标题
   useTodoItemStore().updateById(
     useTodoWrapStore().itemId,
-    {title: item.value.index.title}
+    {
+      title: item.value.index.title,
+      priority: item.value.index.priority
+    },
+    {
+      tags: item.value.attr.tags
+    }
   )
 }
 
-function updatePriority() {
-  //  更新优先级
-  useTodoItemStore().updateById(
-    useTodoWrapStore().itemId,
-    {priority: item.value.index.priority}
-  )
-}
-
-
-function updateContent() {
+async function updateContent() {
+  if (!isInit.value) return;
   // 更新内容
-  useTodoItemStore().saveContent(
+  item.value.content.rev = await useTodoItemStore().saveContent(
     useTodoWrapStore().itemId,
-    item.value.content.record,item.value.content.rev)
+    item.value.content.record, item.value.content.rev)
 }
 
 </script>

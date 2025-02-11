@@ -3,7 +3,7 @@
        :class="itemId === item.id ? 'active' : ''"
        :key="item.id" @click.stop>
     <todo-item-checkbox :priority="item.priority" :status="item.status"
-                        @click.stop="updateStatus(item.id, TodoItemStatus.DOING)"/>
+                        @click.stop="updateStatus(item.id, item.status)"/>
     <a-dropdown align-point trigger="contextMenu">
       <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
         {{ item.title }}
@@ -54,7 +54,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {handlePriorityColor, TodoItemIndex, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
+import {
+  getNextTodoItemStatus,
+  handlePriorityColor,
+  TodoItemIndex,
+  TodoItemPriority,
+  TodoItemStatus
+} from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -71,15 +77,19 @@ defineProps({
 
 const itemId = computed(() => useTodoWrapStore().itemId);
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
-const handleColor = (item: TodoItemIndex): string => handlePriorityColor(item.priority);
+const handleColor = (item: TodoItemIndex): string => {
+  if (item.status === TodoItemStatus.COMPLETE || item.status === TodoItemStatus.ABANDON) {
+    return 'var(--color-text-1)';
+  }
+  return handlePriorityColor(item.priority);
+};
 
 const updateTop = (id: number, top: boolean) => useTodoItemStore().updateById(id, {top})
   .then(() => MessageUtil.success(top ? "已置顶" : "取消置顶"))
   .catch(e => MessageUtil.error((top ? "置顶" : "取消置顶") + "失败", e));
 
 function updateStatus(itemId: number, status: TodoItemStatus) {
-  useGlobalStore().startLoading("开始更新待办项");
-  useTodoItemStore().updateById(itemId, {status: status})
+  useTodoItemStore().updateById(itemId, {status: getNextTodoItemStatus(status)})
     .then(record => {
       if (record.status === TodoItemStatus.COMPLETE) {
         MessageUtil.success(`【${record.title}】已完成`);
@@ -88,8 +98,7 @@ function updateStatus(itemId: number, status: TodoItemStatus) {
         useUmami.track('待办/状态/放弃');
       }
     })
-    .catch(e => MessageUtil.error("更新失败", e))
-    .finally(() => useGlobalStore().closeLoading());
+    .catch(e => MessageUtil.error("更新失败", e));
 }
 
 function updatePriority(id: number, priority: TodoItemPriority) {

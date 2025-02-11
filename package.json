@@ -11,7 +11,6 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@animxyz/vue3": "^0.6.7",
         "@arco-design/web-vue": "^2.56.3",
         "@logicflow/core": "^2.0.10",
         "@logicflow/extension": "^2.0.14",
