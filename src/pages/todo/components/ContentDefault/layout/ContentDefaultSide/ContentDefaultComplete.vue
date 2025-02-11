@@ -1,12 +1,12 @@
 <template>
-  <div class="content-default-group" v-if="count > 0">
-    <div class="content-default-group__header" @click.stop="toggleVisible()">
-      <div class="content-default-group__header-left">
-        <div class="content-default-group__header-handle">
+  <div class="content-default-complete" v-if="count > 0">
+    <div class="content-default-complete__header" @click.stop="toggleVisible()">
+      <div class="content-default-complete__header-left">
+        <div class="content-default-complete__header-handle">
           <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
-        <div class="content-default-group__header-title">已完成 & 已放弃</div>
-        <div class="content-default-group__header-count">{{ count }}</div>
+        <div class="content-default-complete__header-title">已完成 & 已放弃</div>
+        <div class="content-default-complete__header-count">{{ count }}</div>
       </div>
     </div>
     <div v-if="visible">
@@ -32,18 +32,18 @@ const visible = ref(true);
 const toggleVisible = useToggle(visible);
 </script>
 <style scoped lang="less">
-.content-default-group {
+.content-default-complete {
   margin: 7px 8px 14px;
   border-radius: 2px;
   position: relative;
 
-  .content-default-group__header {
+  .content-default-complete__header {
     width: 100%;
     display: flex;
     justify-content: space-between;
     user-select: none;
 
-    .content-default-group__header-left {
+    .content-default-complete__header-left {
       display: flex;
       height: 24px;
       align-items: center;
@@ -51,7 +51,7 @@ const toggleVisible = useToggle(visible);
       cursor: pointer;
 
 
-      .content-default-group__header-handle {
+      .content-default-complete__header-handle {
         color: var(--color-text-2);
 
         :deep(.arco-icon) {
@@ -59,13 +59,13 @@ const toggleVisible = useToggle(visible);
         }
       }
 
-      .content-default-group__header-title {
+      .content-default-complete__header-title {
         margin: 0 8px;
         font-size: 0.9rem;
         font-weight: bold;
       }
 
-      .content-default-group__header-count {
+      .content-default-complete__header-count {
         color: var(--color-text-2);
       }
     }

@@ -4,6 +4,7 @@
     <div class="list-container" @click="setItemId(0)" ref="el">
       <content-default-group v-for="group in groups" :key="group.id" :group="group"/>
       <content-default-complete :groups="groups" />
+      <content-default-article />
     </div>
   </div>
 </template>
@@ -17,6 +18,8 @@ import {moveArrayElement, useSortable} from "@vueuse/integrations/useSortable";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import ContentDefaultComplete
   from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultComplete.vue";
+import ContentDefaultArticle
+  from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultArticle.vue";
 
 const groups = computed(() => useTodoWrapStore().todoGroupView);
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
