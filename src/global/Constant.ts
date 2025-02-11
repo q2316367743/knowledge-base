@@ -35,3 +35,6 @@ export default Constant;
 
 export const toTxc = () => utools.shellOpenExternal(Constant.feedback);
 export const toDoc = () => utools.shellOpenExternal(Constant.doc);
+
+
+export const BASE64_PREFIX: string = 'data:image/png;base64,';

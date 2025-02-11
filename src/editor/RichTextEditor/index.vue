@@ -11,6 +11,7 @@ import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {useImageUploadByUtools} from "@/plugin/image";
 import {renderAttachmentUrl} from "@/plugin/server";
 import {onRichTextExport} from "@/editor/RichTextEditor/func";
+import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 
 type InsertFnType = (url: string, alt: string, href: string) => void
 
@@ -59,9 +60,9 @@ function init() {
           server: '/api/upload',
           // 自定义上传
           customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
-            useImageUploadByUtools(file)
+            useAttachmentUpload.upload(file)
               .then(key => {
-                insertFn(renderAttachmentUrl(key), key, '')
+                insertFn(key, key, '')
               })
           }
         },

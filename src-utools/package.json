@@ -7,5 +7,6 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
+    "@xiaou66/interconnect-client": "^0.0.5"
   }
 }
