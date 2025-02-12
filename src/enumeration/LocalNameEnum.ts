@@ -44,6 +44,8 @@ enum LocalNameEnum {
 
   SETTING_CODE_EDITOR = '/local/setting/code-editor',
 
+  SETTING_CODE_RUN = '/local/setting/code-run',
+
   SETTING_CUSTOMER_FILE_NAME = '/local/setting/customer-file-name',
 
   LIST_PLUGIN_CONTENT = '/list/plugin/content',

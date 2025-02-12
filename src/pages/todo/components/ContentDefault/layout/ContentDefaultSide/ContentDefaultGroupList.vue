@@ -44,5 +44,7 @@ useSortable(el, props.items, {
 });
 </script>
 <style scoped lang="less">
-
+.content-default-group__content {
+  margin-top: 7px;
+}
 </style>

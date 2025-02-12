@@ -36,6 +36,7 @@ declare interface Window {
     customer: {
       // 写入文件
       writeToFile: (dir: string, name: string, content: Blob, root?: string) => Promise<string>;
+      writeStrToFile: (dir: string, name: string, content: string, root?: string) => Promise<string>;
       checkFileExist(root: string, dir: string, file: string): boolean;
       downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
       /**
@@ -61,6 +62,16 @@ declare interface Window {
     },
     util: {
       uploadToImagePlus(filePath: string, pluginName: string): Promise<string>;
+      /**
+       * 运行命令
+       * @param command 命令
+       * @param options 参数
+       */
+      runCommand(command: string, options: {
+        onProgress: (e: string) => void,
+        onSuccess: () => void,
+        onError: (e: string) => void
+      }): void
     }
   }
 }

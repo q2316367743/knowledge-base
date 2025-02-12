@@ -16,9 +16,10 @@
         </a-button>
       </div>
     </div>
-    <div v-if="visible">
+    <div v-if="visible" class="content-default-article__content">
       <div class="content-default-article-item" v-for="article in articles" :key="article.id" @click="openArticle(article.id)">
-        {{ article.name }}
+        <component :is="buildArticleIcon(article.type, true)" />
+        <div class="title">{{ article.name }}</div>
       </div>
     </div>
   </div>
@@ -28,6 +29,7 @@ import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
+import {buildArticleIcon} from "@/pages/home/components/he-context";
 
 const items = computed(() => useTodoArticleStore().items);
 const articles = computed(() => {
@@ -81,9 +83,13 @@ const toggleVisible = useToggle(visible);
 
   }
 
+  .content-default-article__content {
+    margin-top: 7px;
+  }
+
   .content-default-article-item {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
     padding: 6px 8px;
     border-bottom: 1px solid var(--color-border-1);
@@ -92,6 +98,10 @@ const toggleVisible = useToggle(visible);
 
     &:hover {
       color: rgb(var(--arcoblue-6));
+    }
+
+    .title {
+      margin-left: 4px;
     }
   }
 

@@ -1,12 +1,13 @@
-const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync} = require('node:fs');
+const {existsSync, createWriteStream, writeFileSync, unlink, mkdirSync, writeFile} = require('node:fs');
 const {join} = require('node:path');
 const http = require('node:http');
 const https = require('node:https');
 const {ipcRenderer} = require('electron');
 const {createServer} = require('./src/server');
 const {openFile} = require('./src/file');
-const { ServiceClient } = require('@xiaou66/interconnect-client');
+const {ServiceClient} = require('@xiaou66/interconnect-client');
 const path = require('path');
+const {spawn} = require('node:child_process');
 
 
 /**
@@ -58,7 +59,7 @@ window.preload = {
       let folder;
       if (root) {
         folder = join(root, dir);
-      }else {
+      } else {
         folder = dir;
       }
       // 判断文件夹是否存在
@@ -71,6 +72,37 @@ window.preload = {
         writeFileSync(filePath, buffer);
         return filePath;
       });
+    },
+    /**
+     * 写入字符串文件
+     * @param dir {string} 文件夹路径
+     * @param name {string} 文件名
+     * @param content {string} 文件内容
+     * @param root {string}  根目录
+     *
+     * @return {Promise<string>} 文件路径
+     */
+    async writeStrToFile(dir, name, content, root) {
+      let folder;
+      if (root) {
+        folder = join(root, dir);
+      } else {
+        folder = dir;
+      }
+      // 判断文件夹是否存在
+      if (!existsSync(folder)) {
+        mkdirSync(folder, {recursive: true});
+      }
+      const filePath = join(dir, name);
+      return new Promise((resolve, reject) => {
+        writeFile(filePath, content, (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(filePath);
+          }
+        });
+      })
     },
     // 检查文件是否存在
     checkFileExist(root, dir, file) {
@@ -112,7 +144,7 @@ window.preload = {
     receiveMessage
   },
   util: {
-     async uploadToImagePlus(filePath, pluginName) {
+    async uploadToImagePlus(filePath, pluginName) {
       try {
         if (!client) {
           client = new ServiceClient(require('net'),
@@ -123,12 +155,36 @@ window.preload = {
           .callServiceMethod('service.upload.file.async', {
             filePath: filePath
           });
-        return res
-      }catch (e) {
+        return res.url
+      } catch (e) {
         // 链接失败, 可以做出提醒或者使用跳转「图床 Plus」插件上传
         return Promise.reject(e);
       }
 
+    },
+    /**
+     * 运行命令
+     * @param command {string} 命令
+     * @param options {{onProgress: (e: string) => void, onSuccess: () => void, onError: (e: string) => void}} 参数
+     */
+    runCommand(command, options) {
+      const {onProgress, onSuccess, onError} = options;
+      const child = spawn(command, {
+        shell: true,
+      });
+      child.stdout.on('data', (data) => {
+        onProgress(data.toString());
+      });
+      child.stderr.on('data', (data) => {
+        onError(data.toString());
+      });
+      child.on('close', (code) => {
+        if (code === 0) {
+          onSuccess();
+        } else {
+          onError(`命令执行失败，错误码：${code}`);
+        }
+      });
     }
   }
 };
