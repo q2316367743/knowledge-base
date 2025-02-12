@@ -2,7 +2,12 @@
   <div class="list">
     <content-default-header/>
     <div class="list-container" @click="setItemId(0)" ref="el">
-      <content-default-group v-for="group in groups" :key="group.id" :group="group"/>
+      <template v-if="groups.length > 0" >
+        <content-default-one v-if="groups.length === 1 && groups[0].id === '-1'" :group="groups[0]"/>
+        <template v-else>
+          <content-default-group v-for="group in groups" :key="group.id" :group="group"/>
+        </template>
+      </template>
       <content-default-complete :groups="groups" />
       <content-default-article />
     </div>
@@ -20,6 +25,7 @@ import ContentDefaultComplete
   from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultComplete.vue";
 import ContentDefaultArticle
   from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultArticle.vue";
+import ContentDefaultOne from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultOne.vue";
 
 const groups = computed(() => useTodoWrapStore().todoGroupView);
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);

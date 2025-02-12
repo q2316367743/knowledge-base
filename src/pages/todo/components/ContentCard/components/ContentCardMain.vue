@@ -3,6 +3,8 @@
     <!-- 现在已有的待办分组：-->
     <content-card-priority v-for="group in groups" :key="group.id" :group="group"/>
     <!-- 添加待办分组按钮：-->
+    <!-- 关联的文章：-->
+    <content-card-article />
   </main>
 </template>
 <script lang="ts" setup>
@@ -10,6 +12,7 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import ContentCardPriority from "@/pages/todo/components/ContentCard/components/ContentCardPriority.vue";
 import {useSortable, moveArrayElement} from "@vueuse/integrations/useSortable";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import ContentCardArticle from "@/pages/todo/components/ContentCard/components/ContentCardArticle.vue";
 
 const el = useTemplateRef<HTMLDivElement>('content-card-main');
 const groups = computed(() => useTodoWrapStore().todoGroupView);

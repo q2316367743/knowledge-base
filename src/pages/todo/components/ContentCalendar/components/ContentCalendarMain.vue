@@ -45,6 +45,8 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
+import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
+import {useArticleStore} from "@/store/db/ArticleStore";
 
 interface Attribute {
   key: string | number;
@@ -57,7 +59,11 @@ const attributes = ref<Array<any>>([]);
 const indexes = ref<Array<TodoItemIndex>>([]);
 const title = ref("请选择日期");
 
-const articleList = ref<Array<ArticleIndex>>([]);
+const articleList = computed<Array<ArticleIndex>>(() => {
+  const {items} = useTodoArticleStore();
+  const {articleMap} = useArticleStore();
+  return items.map(item => articleMap.get(item)).filter(item => !!item);
+});
 
 const todoCategory = computed(() => useTodoCategoryStore().todoCategoryMap.get(useTodoWrapStore().categoryId));
 
