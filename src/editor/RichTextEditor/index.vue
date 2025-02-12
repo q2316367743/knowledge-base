@@ -8,7 +8,6 @@
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
 import {createEditor, createToolbar, IDomEditor, Toolbar, IToolbarConfig} from '@wangeditor/editor'
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
-import {useImageUploadByUtools} from "@/plugin/image";
 import {renderAttachmentUrl} from "@/plugin/server";
 import {onRichTextExport} from "@/editor/RichTextEditor/func";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
@@ -69,7 +68,7 @@ function init() {
         uploadVideo: {
           server: '/api/upload',
           customUpload(file: File, insertFn: InsertFnType) {
-            useImageUploadByUtools(file)
+            useAttachmentUpload.upload(file)
               .then(key => {
                 insertFn(renderAttachmentUrl(key), key, '')
               })

@@ -1,9 +1,10 @@
-import {Ref} from "vue";
 import Cherry from "cherry-markdown";
-import {CherryOptions} from "cherry-markdown/types/cherry";
+import {
+  CherryOptions,
+  CherryToolbarsOptions
+} from "cherry-markdown/types/cherry";
 import {isUtools} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useImageUpload} from "@/plugin/image";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useScreenShotMenu} from "@/editor/MarkdownEditor/menu/ScreenShotMenu";
 import {usePanGu} from "@/editor/MarkdownEditor/menu/PanGuMenu";
@@ -41,7 +42,7 @@ export async function buildConfig(
   const model = preview ?
     'previewOnly' : defaultModel;
 
-  const toolbar = [];
+  const toolbar: CherryToolbarsOptions['toolbar'] = [];
   const bubble: Array<string> = [];
 
   if (useChatSettingStore().enable) {
@@ -49,7 +50,7 @@ export async function buildConfig(
     bubble.push('AI', '|');
   }
 
-  toolbar.push(...[
+  toolbar.push(
     'quote',
     'header',
     {
@@ -77,8 +78,8 @@ export async function buildConfig(
       WenAn: ['YiYan', 'AnWei', 'Pyq', 'TianGouRiJi', 'QingGan', 'MingRenMingYan']
     },
     'graph',
-    'Relation',
-  ]);
+    'Relation'
+  );
   bubble.push(...['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'])
 
   if (isUtools) {
@@ -140,7 +141,8 @@ export async function buildConfig(
         },
         toc: {
           allowMultiToc: false
-        }
+        },
+        table: {},
       },
       global: {
         urlProcessor: (url: string, srcType: string) => {
@@ -247,7 +249,7 @@ export async function buildConfig(
     },
     fileUpload(file: File, callback: (url: string) => void) {
       if (instance) {
-        useAttachmentUpload.upload(file)
+        useAttachmentUpload.upload(file, true)
           .then(url => {
             if (instance.value) {
               instance.value.insertValue(`![图片#100%](${url})`);
@@ -259,6 +261,6 @@ export async function buildConfig(
       }
 
     },
-  } as any;
+  };
 
 }

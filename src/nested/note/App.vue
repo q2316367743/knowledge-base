@@ -20,11 +20,11 @@ import {computed, ref} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
+import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {_addArticle} from "@/pages/home/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import RichTextEditor from '@/editor/RichTextEditor/index.vue';
-import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const editorRef = ref();
@@ -33,7 +33,7 @@ useGlobalStore().initDarkColors();
 useArticleStore().init();
 useFolderStore().init();
 
-const folder = useUtoolsDbStorage(LocalNameEnum.WINDOW_NOTE_FOLDER, 0);
+const folder = useUtoolsKvStorage(LocalNameEnum.WINDOW_NOTE_FOLDER, 0);
 const loading = ref(false);
 const content = ref('');
 

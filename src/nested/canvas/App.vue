@@ -25,14 +25,14 @@ import DrauuEditor from "@/editor/DrauuEditor/index.vue";
 import {_addArticle} from "@/pages/home/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 useGlobalStore().initDarkColors();
 useArticleStore().init();
 useFolderStore().init();
 
-const folder = useUtoolsDbStorage(LocalNameEnum.WINDOW_CANVAS_FOLDER, 0);
+const folder = useUtoolsKvStorage(LocalNameEnum.WINDOW_CANVAS_FOLDER, 0);
 const init = ref(true);
 const loading = ref(false);
 const id = ref(0)

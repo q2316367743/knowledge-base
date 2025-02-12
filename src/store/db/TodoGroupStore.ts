@@ -2,10 +2,9 @@ import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import {TodoGroup} from "@/entity/todo/TodoGroup";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {defineStore} from "pinia";
-import {isEmptyString} from "@/utils/lang/StringUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
-import {isEmptyArray} from "@/utils/lang/FieldUtil";
+import {isEmptyArray, isEmptyString} from "@/utils/lang/FieldUtil";
 import {toSorted} from "@/utils/lang/ArrayUtil";
 
 export const useTodoGroupStore = defineStore('todoGroup', () => {

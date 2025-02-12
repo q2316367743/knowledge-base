@@ -7,7 +7,6 @@ import { useTodoCategoryStore } from "@/store/db/TodoCategoryStore";
 import { useBaseSettingStore } from "@/store/setting/BaseSettingStore";
 import { useThemeSettingStore } from "@/store/setting/ThemeSettingStore";
 import { useLskyProSettingStore } from "@/store/setting/LskyProSettingStore";
-import { useImageSettingStore } from "@/store/setting/ImageSettingStore";
 import { usePluginSettingStore } from "@/store/db/PluginSettingStore";
 import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
 import { useChatSettingStore } from "@/store/setting/ChatSettingStore";
@@ -29,7 +28,6 @@ export async function initData(): Promise<void> {
     await Promise.all([
         useBaseSettingStore().init(),
         useLskyProSettingStore().init(),
-        useImageSettingStore().init(),
         useChatSettingStore().init(),
         Promise.all([
             useThemeSettingStore().init(),

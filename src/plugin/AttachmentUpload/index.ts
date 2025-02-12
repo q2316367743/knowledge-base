@@ -11,10 +11,14 @@ import {useAttachmentUploadByUtools} from "@/plugin/AttachmentUpload/impl/UTools
 import {renderAttachmentUrl} from "@/plugin/server";
 
 export const useAttachmentUpload = {
-  upload: async (data: Blob | File | string): Promise<string> => {
+  upload: async (data: Blob | File | string, native = false): Promise<string> => {
     const {imageStrategy, baseSetting} = useBaseSettingStore();
     if (imageStrategy === ImageStrategyEnum.INNER) {
-      return useAttachmentUploadByUtools(data);
+      const result = await useAttachmentUploadByUtools(data);
+      if (native) {
+        return result;
+      }
+      return renderAttachmentUrl(result);
     } else if (imageStrategy === ImageStrategyEnum.IMAGE) {
       return useAttachmentUploadByImage(data);
     } else if (imageStrategy === ImageStrategyEnum.PIC_GO) {

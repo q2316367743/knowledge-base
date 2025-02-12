@@ -1,11 +1,11 @@
 <template>
-    <div class="mind-map-editor-wrap">
-        <div class="mind-map-editor" ref="mindMapEditor"></div>
-        <mind-map-count v-if="available" :mind-map="mindMap"/>
-        <mind-map-tool v-if="available && !props.readOnly" :mind-map="mindMap" :width="size.width.value"/>
-        <mind-map-setting v-if="available && !props.readOnly" :mind-map="mindMap"/>
-        <mind-map-context v-if="available && !props.readOnly" :mind-map="mindMap"/>
-    </div>
+  <div class="mind-map-editor-wrap">
+    <div class="mind-map-editor" ref="mindMapEditor"></div>
+    <mind-map-count v-if="available" :mind-map="mindMap"/>
+    <mind-map-tool v-if="available && !props.readOnly" :mind-map="mindMap" :width="size.width.value"/>
+    <mind-map-setting v-if="available && !props.readOnly" :mind-map="mindMap"/>
+    <mind-map-context v-if="available && !props.readOnly" :mind-map="mindMap"/>
+  </div>
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, onBeforeUnmount, ref, shallowRef, watch} from "vue";
@@ -16,7 +16,7 @@ import {useElementSize} from "@vueuse/core";
 import MindMapCount from "@/editor/MindMapEditor/components/MindMapCount.vue";
 import MindMapTool from "@/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
-    from "@/editor/MindMapEditor/components/MindMapSetting/index.vue";
+  from "@/editor/MindMapEditor/components/MindMapSetting/index.vue";
 import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
 import {useArticleExportEvent, useArticleImportEvent} from "@/store/components/HomeEditorStore";
 import {openMindMapExport} from "@/editor/MindMapEditor/components/MindMapExport";
@@ -34,13 +34,13 @@ import Select from 'simple-mind-map/src/plugins/Select.js'
 import Drag from 'simple-mind-map/src/plugins/Drag.js'
 
 const props = defineProps({
-    modelValue: {
-        type: Object,
-        default: {},
-        required: false
-    },
-    readOnly: Boolean,
-    articleId: Number
+  modelValue: {
+    type: Object,
+    default: {},
+    required: false
+  },
+  readOnly: Boolean,
+  articleId: Number
 });
 const emits = defineEmits(['update:modelValue']);
 
@@ -52,101 +52,101 @@ const mindMap = shallowRef<MindMap>();
 const available = computed(() => !!mindMap.value);
 
 onMounted(() => {
-    if (!mindMapEditor.value) {
-        return;
+  if (!mindMapEditor.value) {
+    return;
+  }
+  mindMap.value = new MindMap({
+    // @ts-ignore
+    el: mindMapEditor.value
+  });
+  mindMap.value.setFullData(props.modelValue);
+  mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');
+  mindMap.value.reRender(() => console.log("reRender"));
+
+  mindMap.value.on('data_change', () => {
+    // data数据是不带节点对象的纯数据
+    // 如果你需要操作节点对象，可以使用mindMap.renderer.renderTree
+    if (mindMap.value) {
+      emits("update:modelValue", mindMap.value.getData(true));
     }
-    mindMap.value = new MindMap({
-        // @ts-ignore
-        el: mindMapEditor.value
-    });
-    mindMap.value.setFullData(props.modelValue);
-    mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');
-    mindMap.value.reRender(() => console.log("reRender"));
+  });
 
-    mindMap.value.on('data_change', () => {
-        // data数据是不带节点对象的纯数据
-        // 如果你需要操作节点对象，可以使用mindMap.renderer.renderTree
-        if (mindMap.value) {
-            emits("update:modelValue", mindMap.value.getData(true));
-        }
-    });
+  mindMap.value.addPlugin(MiniMap, undefined);
+  mindMap.value.addPlugin(Export, undefined);
+  mindMap.value.addPlugin(ExportPDF, undefined);
+  mindMap.value.addPlugin(ExportXMind, undefined);
+  mindMap.value.addPlugin(AssociativeLine, undefined);
+  mindMap.value.addPlugin(Select, undefined);
+  mindMap.value.addPlugin(Drag, undefined);
 
-    mindMap.value.addPlugin(MiniMap, undefined);
-    mindMap.value.addPlugin(Export, undefined);
-    mindMap.value.addPlugin(ExportPDF, undefined);
-    mindMap.value.addPlugin(ExportXMind, undefined);
-    mindMap.value.addPlugin(AssociativeLine, undefined);
-    mindMap.value.addPlugin(Select, undefined);
-    mindMap.value.addPlugin(Drag, undefined);
-
-    useArticleExportEvent.off(onExport);
-    useArticleExportEvent.on(onExport);
-    useArticleImportEvent.off(onImport);
-    useArticleImportEvent.on(onImport);
+  useArticleExportEvent.off(onExport);
+  useArticleExportEvent.on(onExport);
+  useArticleImportEvent.off(onImport);
+  useArticleImportEvent.on(onImport);
 
 });
 
 watch(() => size.width.value, () => {
-    try {
-        mindMap.value && mindMap.value.resize()
-    }catch (e) {
-        console.error(e)
-    }
+  try {
+    mindMap.value && mindMap.value.resize()
+  } catch (e) {
+    console.error(e)
+  }
 });
 watch(() => size.height.value, () => mindMap.value && mindMap.value.resize());
 watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(value ? 'readonly' : 'edit'))
 
 onBeforeUnmount(() => {
-    useArticleExportEvent.off(onExport);
-    useArticleImportEvent.off(onImport);
-    if (mindMap.value) {
-        mindMap.value.destroy();
-    }
+  useArticleExportEvent.off(onExport);
+  useArticleImportEvent.off(onImport);
+  if (mindMap.value) {
+    mindMap.value.destroy();
+  }
 });
 
 function onExport(id: number) {
-    if (props.articleId === id && mindMap.value) {
-        openMindMapExport(mindMap.value, id);
-    }
+  if (props.articleId === id && mindMap.value) {
+    openMindMapExport(mindMap.value, id);
+  }
 }
 
 function onImport(id: number) {
-    if (props.articleId === id && mindMap.value) {
-        openArticleImport(['.xmind', '.md', '.markdown']).then(file => {
-            if (file.name.endsWith('.xmind')) {
-                xmind.parseXmindFile(file).then((data: any) => {
-                    if (mindMap.value) {
-                        mindMap.value.setData(data);
-                    }
-                });
-            } else if (file.name.endsWith('.md') || file.name.endsWith('.markdown')) {
-                const fileReader = new FileReader()
-                fileReader.readAsText(file)
-                fileReader.onload = async evt => {
-                    if (evt.target) {
-                        const data = await markdown.transformMarkdownTo(evt.target.result);
-                        if (mindMap.value) {
-                            mindMap.value.setData(data);
-                        }
-                    }
-                }
+  if (props.articleId === id && mindMap.value) {
+    openArticleImport(['.xmind', '.md', '.markdown']).then(file => {
+      if (file.name.endsWith('.xmind')) {
+        xmind.parseXmindFile(file).then((data: any) => {
+          if (mindMap.value) {
+            mindMap.value.setData(data);
+          }
+        });
+      } else if (file.name.endsWith('.md') || file.name.endsWith('.markdown')) {
+        const fileReader = new FileReader()
+        fileReader.readAsText(file)
+        fileReader.onload = async evt => {
+          if (evt.target) {
+            const data = await markdown.transformMarkdownTo(evt.target.result);
+            if (mindMap.value) {
+              mindMap.value.setData(data);
             }
-        })
-    }
+          }
+        }
+      }
+    })
+  }
 }
 
 
 </script>
 <style lang="less">
 .mind-map-editor-wrap {
-    position: relative;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .mind-map-editor {
     width: 100%;
     height: 100%;
-
-    .mind-map-editor {
-        width: 100%;
-        height: 100%;
-        background-color: transparent !important;
-    }
+    background-color: transparent !important;
+  }
 }
 </style>

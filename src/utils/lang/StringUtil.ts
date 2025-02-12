@@ -1,3 +1,5 @@
+import {isEmptyString, isNotEmptyString} from "@/utils/lang/FieldUtil";
+
 /**
  * 执行异步替换
  * @param text 要替换的文本
@@ -18,18 +20,6 @@ export async function asyncReplaceAll(
     return text.replace(regex, () => replacedTextArray[index++]);
 }
 
-export function isEmptyString(str: any): boolean {
-    if (typeof str === 'undefined') {
-        return true
-    } else if (typeof str !== 'string') {
-        str = `${str}`;
-    }
-    return str.length === 0;
-}
-
-export function isNotEmptyString(str: any): boolean {
-    return !isEmptyString(str);
-}
 
 export function ellipsis(str: string, max = 20, footer = '...'): string {
     if (isNotEmptyString(str)) {

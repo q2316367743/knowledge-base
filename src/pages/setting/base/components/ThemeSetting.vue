@@ -1,36 +1,36 @@
 <template>
-    <div class="more-setting-theme">
-        <a-form :model="instance" layout="vertical">
-            <a-form-item label="主题">
-                <a-select v-model="instance.theme" placeholder="请选择主题" allow-clear allow-search>
-                    <a-option :key="0" :value="0">不设置</a-option>
-                    <a-option v-for="theme in themes" :key="theme.id" :value="theme.id">{{ theme.name }}</a-option>
-                </a-select>
-            </a-form-item>
-            <a-form-item label="markdown菜单">
-                <a-checkbox-group v-model="instance.markdownMenus">
-                    <a-checkbox v-for="menu in markdownMenus" :key="menu.id" :value="menu.id">{{
-                            menu.name
-                        }}
-                    </a-checkbox>
-                </a-checkbox-group>
-            </a-form-item>
-            <a-form-item label="markdown语法">
-                <a-checkbox-group v-model="instance.markdownSyntaxes">
-                    <a-checkbox v-for="menu in markdownSyntaxes" :key="menu.id" :value="menu.id">{{
-                            menu.name
-                        }}
-                    </a-checkbox>
-                </a-checkbox-group>
-            </a-form-item>
-            <a-form-item>
-                <a-space>
-                    <a-button type="primary" @click="save()">保存</a-button>
-                    <a-button type="text" @click="reference()">刷新主题</a-button>
-                </a-space>
-            </a-form-item>
-        </a-form>
-    </div>
+  <div class="more-setting-theme">
+    <a-form :model="instance" layout="vertical">
+      <a-form-item label="主题">
+        <a-select v-model="instance.theme" placeholder="请选择主题" allow-clear allow-search>
+          <a-option :key="0" :value="0">不设置</a-option>
+          <a-option v-for="theme in themes" :key="theme.id" :value="theme.id">{{ theme.name }}</a-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="markdown菜单">
+        <a-checkbox-group v-model="instance.markdownMenus">
+          <a-checkbox v-for="menu in markdownMenus" :key="menu.id" :value="menu.id">{{
+              menu.name
+            }}
+          </a-checkbox>
+        </a-checkbox-group>
+      </a-form-item>
+      <a-form-item label="markdown语法">
+        <a-checkbox-group v-model="instance.markdownSyntaxes">
+          <a-checkbox v-for="menu in markdownSyntaxes" :key="menu.id" :value="menu.id">{{
+              menu.name
+            }}
+          </a-checkbox>
+        </a-checkbox-group>
+      </a-form-item>
+      <a-form-item>
+        <a-space>
+          <a-button type="primary" @click="save()">保存</a-button>
+          <a-button type="text" @click="reference()">刷新主题</a-button>
+        </a-space>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 <script lang="ts" setup>
 import {computed, ref} from "vue";
@@ -50,31 +50,22 @@ const markdownMenus = computed(() => plugins.value.filter(p => p.type === Plugin
 const markdownSyntaxes = computed(() => plugins.value.filter(p => p.type === PluginSettingTypeEnum.MARKDOWN_SYNTAX));
 
 function save() {
-    useThemeSettingStore().save(instance.value)
-        .then(() => MessageUtil.success("保存成功"))
-        .catch(e => MessageUtil.error("保存失败", e))
-        .finally(() => emits('save'));
+  useThemeSettingStore().save(instance.value)
+    .then(() => MessageUtil.success("保存成功"))
+    .catch(e => MessageUtil.error("保存失败", e))
+    .finally(() => emits('save'));
 }
 
 function reference() {
-    try {
-        useThemeSettingStore().buildThemeStyle();
-        MessageUtil.success("刷新成功");
-    } catch (e) {
-        MessageUtil.error("刷新失败", e)
-    }
+  try {
+    useThemeSettingStore().buildThemeStyle();
+    MessageUtil.success("刷新成功");
+  } catch (e) {
+    MessageUtil.error("刷新失败", e)
+  }
 }
 
 
 </script>
 <style scoped>
-.more-setting-theme {
-    position: absolute;
-    top: 7px;
-    left: 7px;
-    right: 7px;
-    bottom: 7px;
-    overflow: auto;
-}
-
 </style>
