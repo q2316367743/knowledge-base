@@ -25,7 +25,7 @@ export function openTodoSetting() {
         width: 400,
         content: () => <Form model={config.value} layout={'vertical'}>
             <FormItem label={'模块开关'}>
-                <CheckboxGroup v-model={hides.value} defaultValue={[]}>
+                <CheckboxGroup v-model={hides.value} defaultValue={[]} disabled={true}>
                     <Checkbox value={'1'}>隐藏待办</Checkbox>
                     <Checkbox value={'5'}>隐藏进行</Checkbox>
                     <Checkbox value={'2'}>隐藏完成</Checkbox>
