@@ -1,6 +1,6 @@
 <template>
-  <a-tooltip content="代码运行" position="bottom" v-if="show">
-    <a-button status="success" type="text" :disabled @click="run">
+  <a-tooltip :content="disabled?'请先配置运行命令':'代码运行'" position="br" v-if="show">
+    <a-button status="success" type="text" @click="run">
       <template #icon>
         <icon-play-arrow/>
       </template>
@@ -14,6 +14,9 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {codeRun, disabledCodeRun} from "@/plugin/CodeRun";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
+
+const router = useRouter();
 
 const currentIndex = computed<ArticleIndex | undefined>(() => {
   const {id} = useHomeEditorStore();
@@ -37,11 +40,8 @@ const disabled = computed(() => {
 });
 
 async function runWrap() {
-  if (!currentIndex.value){
+  if (!currentIndex.value) {
     return Promise.reject("未知笔记，无法运行")
-  }
-  if (disabled.value) {
-    return Promise.reject("当前笔记不支持运行")
   }
   const {id, name} = currentIndex.value;
   const {getContent} = useArticleStore();
@@ -54,6 +54,14 @@ async function runWrap() {
 }
 
 function run() {
+  if (disabled.value) {
+    NotificationUtil.alert('请先配置运行命令', "代码运行", {
+      confirmButtonText: '立即前往'
+    }).then(() => {
+      router.push("/setting/code-run")
+    });
+    return;
+  }
   runWrap().then(() => {
     MessageUtil.info("运行成功")
   }).catch((e) => {

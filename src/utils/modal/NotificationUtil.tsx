@@ -71,6 +71,30 @@ export default {
     })
   },
 
+  alert(content: string, title: string, config: {
+    confirmButtonText: string,
+    duration?: number
+  }): Promise<void> {
+    const {confirmButtonText, duration} = config;
+    return new Promise<void>(resolve => {
+      function onConfirm() {
+        resolve();
+        notificationReturn.close();
+      }
+      const notificationReturn = Notification.info({
+        content,
+        title,
+        closable: true,
+        duration: duration,
+        footer: () => <div style={{textAlign: 'right'}}>
+          <Button type={'primary'} onClick={onConfirm}>
+            {confirmButtonText}
+          </Button>
+        </div>,
+      });
+    })
+  },
+
   warningClose(content: string, title: string, onRemove: () => void): void {
     Notification.warning({
       content,
