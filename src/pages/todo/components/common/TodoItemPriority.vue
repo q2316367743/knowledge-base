@@ -9,7 +9,7 @@
         <div class="todo-item-priority__header-count">{{ todoItems.length }}</div>
       </div>
       <div class="todo-item-priority__header-plus">
-        <a-button type="text" size="mini" @click.stop>
+        <a-button type="text" size="mini" @click.stop="openAddTodoItem(group!, priorityView?.value)">
           <template #icon>
             <icon-plus/>
           </template>
@@ -23,12 +23,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TodoGroupPriorityView} from "@/entity/todo/TodoGroup";
+import {TodoGroupPriorityView, TodoGroupView} from "@/entity/todo/TodoGroup";
 import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
+import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 
 const props = defineProps({
   priorityView: {
     type: Object as PropType<TodoGroupPriorityView>,
+  },
+  group: {
+    type: Object as PropType<TodoGroupView>,
   },
   groupId: {
     type: String,

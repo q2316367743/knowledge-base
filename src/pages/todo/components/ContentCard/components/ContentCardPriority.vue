@@ -55,7 +55,7 @@
     </header>
     <div class="content-card-priority__content">
       <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
-                          :group-id="group.id"/>
+                          :group="group" :group-id="group.id"/>
     </div>
     <todo-item-complete :completes="group.complete"/>
   </div>

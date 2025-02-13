@@ -44,9 +44,9 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
 import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
 
 interface Attribute {
   key: string | number;
