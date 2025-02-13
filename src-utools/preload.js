@@ -99,7 +99,7 @@ window.preload = {
           if (err) {
             reject(err);
           } else {
-            resolve(filePath);
+            resolve({filePath, folder});
           }
         });
       })

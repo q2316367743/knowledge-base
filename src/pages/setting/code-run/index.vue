@@ -1,7 +1,18 @@
 <template>
   <page-layout title="代码运行设置">
     <template #extra>
-      <a-button type="text" @click="addCodeRunCommand">添加</a-button>
+      <a-space>
+        <a-button type="text" @click="addCodeRunCommand">
+          <template #icon>
+            <icon-plus/>
+          </template>
+        </a-button>
+        <a-button type="text" status="success" @click="openCodeRunInfo">
+          <template #icon>
+            <icon-question-circle/>
+          </template>
+        </a-button>
+      </a-space>
     </template>
     <a-list :bordered="false">
       <a-list-item v-for="item in list" :key="item.key">
@@ -26,6 +37,7 @@
 import {listify} from "radash";
 import {codeRunSetting} from "@/plugin/CodeRun";
 import {addCodeRunCommand, deleteCodeRunCommand, updateCodeRunCommand} from "@/pages/setting/code-run/modal";
+import {openCodeRunInfo} from "@/pages/setting/code-run/info";
 
 interface CodeRunItem {
   key: string;

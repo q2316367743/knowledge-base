@@ -35,10 +35,9 @@ export async function codeRun(fileName: string, content: string) {
   const ext = extname(fileName);
   const name = `${useSnowflake().nextId()}${ext ? '.' + ext : ''}`;
   // 保存到临时目录
-  const path = await window.preload.customer.writeStrToFile(Constant.id, name, content, utools.getPath('temp'));
-  let command = template(commandTemplate as string, {
-    filePath: path
-  });
+  const {filePath, folder} = await window.preload.customer.writeStrToFile(
+    Constant.id, name, content, utools.getPath('temp'));
+  let command = template(commandTemplate as string, {filePath, fileDir: folder, fileName: name});
   const result = ref('');
   const loading = ref(true);
   const {abort} = window.preload.util.runCommand(command, {
@@ -54,13 +53,15 @@ export async function codeRun(fileName: string, content: string) {
       result.value = result.value + e;
     }
   });
+
   function onAbort() {
     try {
       abort()
-    }catch (e) {
+    } catch (e) {
       console.error('onAbort', e)
     }
   }
+
   Drawer.open({
     title: () => <Space>
       <Button type={'outline'} status={'danger'} onClick={onAbort} disabled={!loading.value}>{{

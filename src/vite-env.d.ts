@@ -36,7 +36,7 @@ declare interface Window {
     customer: {
       // 写入文件
       writeToFile: (dir: string, name: string, content: Blob, root?: string) => Promise<string>;
-      writeStrToFile: (dir: string, name: string, content: string, root?: string) => Promise<string>;
+      writeStrToFile: (dir: string, name: string, content: string, root?: string) => Promise<{ folder: string, filePath: string }>;
       checkFileExist(root: string, dir: string, file: string): boolean;
       downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
       /**
