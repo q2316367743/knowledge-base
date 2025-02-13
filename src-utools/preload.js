@@ -93,7 +93,7 @@ window.preload = {
       if (!existsSync(folder)) {
         mkdirSync(folder, {recursive: true});
       }
-      const filePath = join(dir, name);
+      const filePath = join(folder, name);
       return new Promise((resolve, reject) => {
         writeFile(filePath, content, (err) => {
           if (err) {
@@ -169,8 +169,13 @@ window.preload = {
      */
     runCommand(command, options) {
       const {onProgress, onSuccess, onError} = options;
+
+      const controller = new AbortController();
+      const { signal } = controller;
+
       const child = spawn(command, {
         shell: true,
+        signal
       });
       child.stdout.on('data', (data) => {
         onProgress(data.toString());
@@ -179,12 +184,15 @@ window.preload = {
         onError(data.toString());
       });
       child.on('close', (code) => {
-        if (code === 0) {
+        if (!code) {
           onSuccess();
         } else {
           onError(`命令执行失败，错误码：${code}`);
         }
       });
+      return {
+        abort: () => controller.abort(),
+      }
     }
   }
 };

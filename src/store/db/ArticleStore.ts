@@ -104,10 +104,7 @@ export const useArticleStore = defineStore('article', {
       await this._sync();
       return Promise.resolve(target);
     },
-    async updateIndex(
-      id: number,
-      article: Partial<ArticleIndex>
-    ): Promise<ArticleIndex> {
+    async updateIndex(id: number, article: Partial<ArticleIndex>): Promise<ArticleIndex> {
       const index = this.value.findIndex(e => e.id === id);
       if (index === -1) {
         await MessageBoxUtil.confirm("文章未找到，是否新增文章", "更新失败", {
@@ -127,9 +124,7 @@ export const useArticleStore = defineStore('article', {
 
       return this.value[index];
     },
-    async updateMultiIndex(
-      articles: Array<Pick<ArticleIndex, 'id'> & Partial<ArticleIndex>>
-    ) {
+    async updateMultiIndex(articles: Array<Pick<ArticleIndex, 'id'> & Partial<ArticleIndex>>) {
       for (let article of articles) {
         const index = this.value.findIndex(e => e.id === article.id);
         if (index === -1) {
@@ -144,6 +139,9 @@ export const useArticleStore = defineStore('article', {
       }
 
       await this._sync();
+    },
+    getContent<T = any>(id: number) {
+      return getFromOneByAsync<ArticleContent<T>>(LocalNameEnum.ARTICLE_CONTENT + id)
     },
     async updateContent(
       id: number,
@@ -255,6 +253,6 @@ export const useArticleStore = defineStore('article', {
         content: content.record,
         base: getDefaultArticleBase(base.record || {})
       }
-    }
+    },
   }
 });

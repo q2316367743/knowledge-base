@@ -71,7 +71,7 @@ declare interface Window {
         onProgress: (e: string) => void,
         onSuccess: () => void,
         onError: (e: string) => void
-      }): void
+      }): {abort: () => void}
     }
   }
 }

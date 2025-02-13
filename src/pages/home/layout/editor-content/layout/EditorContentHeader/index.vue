@@ -10,48 +10,7 @@
     <div class="tab" v-if="indexes.length > 0">
       <a-tabs v-model:active-key="activeKey" hide-content editable @delete="close">
         <template #extra>
-          <a-button-group type="text" :disabled="disabled">
-            <a-tooltip content="AI助理" position="bottom" v-if="useChatSettingStore().enable">
-              <a-button @click="switchRobot()">
-                <template #icon>
-                  <icon-robot/>
-                </template>
-              </a-button>
-            </a-tooltip>
-            <a-dropdown position="br">
-              <a-button>
-                <template #icon>
-                  <icon-more/>
-                </template>
-              </a-button>
-              <template #content>
-                <a-doption @click="switchPreview()" :disabled="editorType === ArticleTypeEnum.EXCEL">
-                  <template #icon>
-                    <icon-lock/>
-                  </template>
-                  编辑/预览
-                </a-doption>
-                <a-doption @click="openHeExtra(useHomeEditorStore().id)" :disabled="preview">
-                  <template #icon>
-                    <icon-settings/>
-                  </template>
-                  设置
-                </a-doption>
-                <a-doption @click="onImport()">
-                  <template #icon>
-                    <icon-import/>
-                  </template>
-                  导入
-                </a-doption>
-                <a-doption @click="onExport()">
-                  <template #icon>
-                    <icon-export/>
-                  </template>
-                  导出
-                </a-doption>
-              </template>
-            </a-dropdown>
-          </a-button-group>
+          <editor-content-extra />
         </template>
         <a-tab-pane v-for="article in indexes" :key="article.id" style="height: auto">
           <template #title>
@@ -99,33 +58,20 @@ import {
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {remove, rename} from "@/pages/home/components/he-context";
+import {ArticleIndex} from "@/entity/article";
+import EditorContentExtra from "@/pages/home/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
 
 const activeKey = ref(useHomeEditorStore().id);
 
 const switchCollapsed = useHomeEditorStore().switchCollapsed;
 
-const indexes = computed(() => useHomeEditorStore().indexes);
-const disabled = computed(() => useHomeEditorStore().indexes.length === 0);
+const indexes = computed<Array<ArticleIndex>>(() => useHomeEditorStore().indexes);
 
 watch(() => activeKey.value, value => useHomeEditorStore().setId(value));
 watch(() => useHomeEditorStore().id, value => activeKey.value = value);
 
 function close(e: any) {
   useHomeEditorStore().closeArticle(e);
-}
-
-
-function onExport() {
-  // 触发保存
-  useArticleExportEvent.emit(useHomeEditorStore().id);
-}
-
-function onImport() {
-  useArticleImportEvent.emit(useHomeEditorStore().id);
-}
-
-function switchRobot() {
-  useUpdateRobotEvent.emit(useHomeEditorStore().id);
 }
 
 function switchPreview(id?: number) {
