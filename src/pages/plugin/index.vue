@@ -1,46 +1,41 @@
 <template>
-    <a-layout class="setting-plugin">
-        <a-layout-sider :width="300">
-            <setting-plugin-side @select="onSelect"/>
-        </a-layout-sider>
-        <a-layout-content>
-            <setting-plugin-content :plugin="plugin" v-if="load"/>
-            <a-result v-else title="主题、插件和模板" status="warning" style="margin-top: 15vh;">
-                <template #icon>
-                    <icon-question />
-                </template>
-                <template #subtitle>
-                    <p>选择左侧的插件进行编辑</p>
-                    <p>通过主题与插件，可以自定义您的知识库插件</p>
-                    <p>主题、markdown菜单、markdown语法需要设置才可以启用。</p>
-                    <p>markdown模板命名请以<b style="color: rgb(var(--danger-6))">正则表达式</b>的方式进行命名，创建markdown时回去匹配第一个匹配到的。</p>
-                    <p style="color: rgb(var(--warning-6))">请注意，如果修改的主题是正在使用的，修改后需要前往主题设置中刷新主题</p>
-                </template>
-                <template #extra>
-                    <a-space>
-                        <a-button type="primary" @click="toHelp">
-                            <template #icon>
-                                <icon-question />
-                            </template>
-                            查看帮助
-                        </a-button>
-                        <a-button type="primary" @click="toSetting">
-                            <template #icon>
-                                <icon-settings />
-                            </template>
-                            前往设置
-                        </a-button>
-                        <a-button type="primary" @click="toShare">
-                            <template #icon>
-                                <icon-share-alt />
-                            </template>
-                            前往分享中心
-                        </a-button>
-                    </a-space>
-                </template>
-            </a-result>
-        </a-layout-content>
-    </a-layout>
+  <a-layout class="setting-plugin">
+    <a-layout-sider :width="300">
+      <setting-plugin-side @select="onSelect"/>
+    </a-layout-sider>
+    <a-layout-content>
+      <setting-plugin-content :plugin="plugin" v-if="load"/>
+      <a-result v-else title="主题、插件和模板" status="warning" style="margin-top: 15vh;">
+        <template #icon>
+          <icon-question/>
+        </template>
+        <template #subtitle>
+          <p>选择左侧的插件进行编辑</p>
+          <p>通过主题与插件，可以自定义您的知识库插件</p>
+          <p>主题、markdown菜单、markdown语法需要设置才可以启用。</p>
+          <p>markdown模板命名请以<b style="color: rgb(var(--danger-6))">正则表达式</b>的方式进行命名，创建markdown时回去匹配第一个匹配到的。
+          </p>
+          <p style="color: rgb(var(--warning-6))">请注意，如果修改的主题是正在使用的，修改后需要前往主题设置中刷新主题</p>
+        </template>
+        <template #extra>
+          <a-space>
+            <a-button type="primary" @click="toHelp">
+              <template #icon>
+                <icon-question/>
+              </template>
+              查看帮助
+            </a-button>
+            <a-button type="primary" @click="toSetting">
+              <template #icon>
+                <icon-settings/>
+              </template>
+              前往设置
+            </a-button>
+          </a-space>
+        </template>
+      </a-result>
+    </a-layout-content>
+  </a-layout>
 </template>
 <script lang="ts" setup>
 import {nextTick, ref} from "vue";
@@ -58,31 +53,30 @@ const load = ref(false);
 
 const toHelp = () => utools.shellOpenExternal(Constant.help.plugin);
 const toSetting = () => router.push({
-    path: '/setting/base',
-    query: {
-        tab: 'theme'
-    }
+  path: '/setting/base',
+  query: {
+    tab: 'theme'
+  }
 });
-const toShare = () => router.push('/tool/share');
 
 function onSelect(selectKey: string | number) {
-    // 文件
-    load.value = false;
-    plugin.value = undefined;
-    nextTick(() => {
-        plugin.value = usePluginSettingStore().pluginMap.get(selectKey as number);
-        load.value = !!plugin.value;
-    })
+  // 文件
+  load.value = false;
+  plugin.value = undefined;
+  nextTick(() => {
+    plugin.value = usePluginSettingStore().pluginMap.get(selectKey as number);
+    load.value = !!plugin.value;
+  })
 }
 
 
 </script>
 <style scoped>
 .setting-plugin {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>

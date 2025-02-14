@@ -31,10 +31,6 @@ const routers: Array<RouteRecordRaw> = [{
     path: "/tool/category",
     component: () => import("@/pages/tool/category/index.vue")
 }, {
-    name: "工具-分享中心",
-    path: "/tool/share",
-    component: () => import("@/pages/tool/share/index.vue")
-}, {
     name: "设置-基础",
     path: "/setting/base",
     component: () => import("@/pages/setting/base/index.vue")

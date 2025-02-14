@@ -32,9 +32,6 @@
       <a-menu-item key="/plugin">
         主题|插件|模板
       </a-menu-item>
-      <a-menu-item key="/tool/share">
-        分享中心
-      </a-menu-item>
     </a-sub-menu>
     <a-sub-menu key="/setting">
       <template #icon>
