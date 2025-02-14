@@ -1,6 +1,5 @@
 // PicGo: https://picgo.github.io/PicGo-Doc/zh/guide/advance.html
 // 图床工具plus: https://docs.on-u.cn/picture-bed-plus/Service.html
-
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
@@ -16,9 +15,9 @@ export const useAttachmentUpload = {
     if (imageStrategy === ImageStrategyEnum.INNER) {
       const result = await useAttachmentUploadByUtools(data);
       if (native) {
-        return result;
+        return "attachment:" + result;
       }
-      return renderAttachmentUrl(result.replace(/^attachment:/, ""));
+      return renderAttachmentUrl(result);
     } else if (imageStrategy === ImageStrategyEnum.IMAGE) {
       return useAttachmentUploadByImage(data);
     } else if (imageStrategy === ImageStrategyEnum.PIC_GO) {
