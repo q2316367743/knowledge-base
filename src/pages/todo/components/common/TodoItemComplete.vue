@@ -9,17 +9,20 @@
         <div class="todo-item-complete__header-count">{{ completes.length }}</div>
       </div>
     </div>
-    <div class="todo-content-priority__content" v-if="visible">
-      <card-todo-item v-for="item in completes" :key="item.id" :item="item" :data-id="item.id" attr/>
-      <!-- TODO: 此处需要有个最小长度 -->
+    <div class="todo-item-complete__content" v-if="visible">
+      <card-todo-item v-for="item in items" :key="item.id" :item="item" :data-id="item.id" attr/>
+      <div class="todo-item-complete__content-footer">
+        <span class="text" @click="toggleAll()">{{ all ? '折叠' : '展开' }}</span>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import CardTodoItem from "@/pages/todo/components/common/CardTodoItem.vue";
+import {toSorted} from "@/utils/lang/ArrayUtil";
 
-defineProps({
+const props = defineProps({
   completes: {
     type: Object as PropType<Array<TodoItemIndex>>,
     default: []
@@ -27,8 +30,18 @@ defineProps({
 });
 
 const visible = ref(true);
-
 const toggleVisible = useToggle(visible);
+const all = ref(false);
+const toggleAll = useToggle(all);
+
+const source = computed(() => toSorted(props.completes, (a, b) => b.id - a.id));
+
+const items = computed(() => {
+  if (all.value) {
+    return source.value;
+  }
+  return source.value.slice(0, 5);
+})
 </script>
 <style scoped lang="less">
 .todo-item-complete {
@@ -79,6 +92,22 @@ const toggleVisible = useToggle(visible);
       }
     }
 
+  }
+
+  &__content {
+    &-footer {
+      text-align: center;
+      padding: 8px;
+      .text {
+        cursor: pointer;
+        color: rgb(var(--arcoblue-6));
+        transition: color 0.3s;
+
+        &:hover {
+          color: rgb(var(--arcoblue-3));
+        }
+      }
+    }
   }
 
 }

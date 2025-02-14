@@ -9,37 +9,37 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {IconEdit, IconLeft} from "@arco-design/web-vue/es/icon";
 import {usePageJumpEvent} from "@/global/BeanFactory";
 import EditorContentContainer
-    from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
+  from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
 
 
 function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
-    const size = useWindowSize();
+  const size = useWindowSize();
 
-    function openToArticle() {
-        useHomeEditorStore().openArticle(articleIndex.id);
-        usePageJumpEvent.emit('/home');
-        open.close();
-    }
+  function openToArticle() {
+    useHomeEditorStore().openArticle(articleIndex.id);
+    usePageJumpEvent.emit('/home');
+    open.close();
+  }
 
-    const open = Drawer.open({
-        title: () => <div>
-            <Button type={'text'} onClick={openToArticle}>
-                {{
-                    icon: () => <IconEdit/>
-                }}
-            </Button>
-            <span style={{marginLeft: '7px'}}>{articleIndex.name}</span>
-        </div>,
-        width: width,
-        footer: false,
-        closable: false,
-        content: () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
-            <EditorContentContainer articleIndex={{
-                ...articleIndex,
-                preview: true
-            }}/>
-        </div>
-    });
+  const open = Drawer.open({
+    title: () => <div>
+      <Button type={'text'} onClick={openToArticle}>
+        {{
+          icon: () => <IconEdit/>
+        }}
+      </Button>
+      <span style={{marginLeft: '7px'}}>{articleIndex.name}</span>
+    </div>,
+    width: width,
+    footer: false,
+    closable: false,
+    content: () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
+      <EditorContentContainer articleIndex={{
+        ...articleIndex,
+        preview: true
+      }}/>
+    </div>
+  });
 }
 
 /**
@@ -48,69 +48,69 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
  * @param articleAction
  */
 function toArticle(id: number, articleAction: ArticleActionEnum) {
-    if (articleAction === ArticleActionEnum.TO_ARTICLE) {
-        useHomeEditorStore().openArticle(id);
-        usePageJumpEvent.emit('/home');
-    } else if (articleAction === ArticleActionEnum.DRAWER) {
-        const article = useArticleStore().articleMap.get(id);
-        if (!article) {
-            MessageUtil.error("文章不存在");
-            return;
-        }
-        _openArticle(article);
+  if (articleAction === ArticleActionEnum.TO_ARTICLE) {
+    useHomeEditorStore().openArticle(id);
+    usePageJumpEvent.emit('/home');
+  } else if (articleAction === ArticleActionEnum.DRAWER) {
+    const article = useArticleStore().articleMap.get(id);
+    if (!article) {
+      MessageUtil.error("文章不存在");
+      return;
     }
+    _openArticle(article);
+  }
 }
 
 
 export function toArticleByTodo(id: number) {
-    toArticle(id, useBaseSettingStore().todoArticleAction);
+  toArticle(id, useBaseSettingStore().todoArticleAction);
 }
 
 export function toArticleByRelation(title: string) {
-    let id: number | null = null;
-    for (let article of useArticleStore().articles) {
-        if (article.name === title) {
-            id = article.id;
-            break;
-        }
+  let id: number | null = null;
+  for (let article of useArticleStore().articles) {
+    if (article.name === title) {
+      id = article.id;
+      break;
     }
-    if (!id) {
-        MessageUtil.warning(`文章【${title}】不存在`)
-        return;
-    }
-    // 查询文章
-    toArticle(id, useBaseSettingStore().relationArticleAction);
+  }
+  if (!id) {
+    MessageUtil.warning(`文章【${title}】不存在`)
+    return;
+  }
+  // 查询文章
+  toArticle(id, useBaseSettingStore().relationArticleAction);
 }
 
 
 export function openArticle(id: number) {
-    const article = useArticleStore().articleMap.get(id);
-    if (!article) {
-        MessageUtil.error("文章不存在");
-        return;
-    }
-    const size = useWindowSize();
+  const article = useArticleStore().articleMap.get(id);
+  if (!article) {
+    MessageUtil.error("文章不存在");
+    return;
+  }
+  const size = useWindowSize();
 
 
-    const open = Drawer.open({
-            title: () => <Space>
-                <Button shape={'circle'} type={'text'} onClick={open.close}>{{
-                    icon: () => <IconLeft/>
-                }}</Button>
-                <span class="arco-page-header-title">{article.name}</span>
-            </Space>,
-            width: '100%',
-            footer:
-                false,
-            closable:
-                false,
-            content:
-                () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
-                    <EditorContentContainer articleIndex={{
-                        ...article,
-                        preview: true
-                    }}/>
-                </div>
-        })
-    ;
+  const open = Drawer.open({
+      title: () => <Space>
+        <Button shape={'circle'} type={'text'} onClick={open.close}>{{
+          icon: () => <IconLeft/>
+        }}</Button>
+        <span class="arco-page-header-title">{article.name}</span>
+      </Space>,
+      width: '100%',
+      footer:
+        false,
+      closable:
+        false,
+      content:
+        () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
+          <EditorContentContainer articleIndex={{
+            ...article,
+            preview: true
+          }}/>
+        </div>
+    })
+  ;
 }

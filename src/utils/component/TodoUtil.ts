@@ -85,7 +85,8 @@ export function renderGroupViews(todoItems: Array<TodoItemIndex>, todoGroups: Ar
     };
     const emptyView = renderGroupView(empty, itemMap, sort);
     const todoCount = emptyView.children.map(e => e.children.length).reduce((a, b) => a + b, 0);
-    if (todoCount > 0) {
+    const completeCount = emptyView.complete.length;
+    if (todoCount + completeCount > 0) {
       views.push(emptyView);
     }
   }

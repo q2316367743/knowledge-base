@@ -30,11 +30,19 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 import {buildArticleIcon} from "@/pages/home/components/he-context";
+import {ArticleIndex} from "@/entity/article";
 
-const items = computed(() => useTodoArticleStore().items);
-const articles = computed(() => {
+const items = computed<Array<number>>(() => useTodoArticleStore().items);
+const articles = computed<Array<ArticleIndex>>(() => {
   const {articleMap} = useArticleStore();
-  return items.value.map(item => articleMap.get(item)).filter(item => !!item);
+  const list = new Array<ArticleIndex>();
+  for (const item of items.value) {
+    const one = articleMap.get(item);
+    if (one) {
+      list.push(one);
+    }
+  }
+  return list;
 })
 const count = computed(() => articles.value.length);
 

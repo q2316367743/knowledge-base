@@ -21,7 +21,7 @@
             </template>
           </a-button>
           <template #content>
-            <a-doption @click="openEditTodoGroupFunc(group.id, group.name, group.children)">
+            <a-doption @click="openEditTodoGroupFunc(group)">
               <template #icon>
                 <icon-edit/>
               </template>
@@ -91,6 +91,7 @@ const todoItems = computed<Array<TodoItemIndex>>(() => {
 const visible = ref(true);
 
 const toggleVisible = useToggle(visible);
+
 </script>
 <style scoped lang="less">
 .content-default-group {

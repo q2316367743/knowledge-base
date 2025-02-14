@@ -92,7 +92,7 @@
                 设置
               </a-doption>
               <a-divider :margin="2"/>
-              <a-doption :disabled="disabled" @click="openEditTodoGroupFunc('0', '', [])">
+              <a-doption :disabled="disabled" @click="openEditTodoGroupFunc()">
                 <template #icon>
                   <icon-plus/>
                 </template>

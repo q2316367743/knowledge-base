@@ -1,14 +1,15 @@
 import {Input, Modal, Radio, RadioGroup, Select, Typography, TypographyParagraph} from "@arco-design/web-vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import {TodoGroupPriorityView} from "@/entity/todo/TodoGroup";
+import {TodoGroupPriorityView, TodoGroupView} from "@/entity/todo/TodoGroup";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {TodoItemIndex} from "@/entity/todo/TodoItem";
 
 /**
  * 打开添加分组功能
  */
-export function openEditTodoGroupFunc(oldId: string, oldName: string, items: Array<TodoGroupPriorityView>) {
+function openEditTodoGroupFuncWrap(oldId: string, oldName: string, items: Array<TodoItemIndex>) {
   const name = ref(oldName);
   const op = oldId === '0' ? '添加' : '修改';
   Modal.open({
@@ -28,7 +29,7 @@ export function openEditTodoGroupFunc(oldId: string, oldName: string, items: Arr
       }
       try {
         await useTodoWrapStore().postGroup(oldId, name.value,
-          items.flatMap(e => e.children).map(e => e.id))
+          items.map(e => e.id))
         MessageUtil.success(op + '分组成功');
         done(true);
       } catch (e) {
@@ -37,6 +38,12 @@ export function openEditTodoGroupFunc(oldId: string, oldName: string, items: Arr
       }
     }
   })
+}
+
+
+export function openEditTodoGroupFunc(group?: TodoGroupView) {
+  if (group) openEditTodoGroupFuncWrap(group.id, group.name, [...group.children.flatMap(e => e.children), ...group.complete])
+  else openEditTodoGroupFuncWrap('0', '', [])
 }
 
 export function openDeleteTodoGroupFunc(id: string, name: string) {

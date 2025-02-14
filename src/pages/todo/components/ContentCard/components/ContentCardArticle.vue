@@ -32,7 +32,14 @@ import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelation
 const articles = computed<Array<ArticleIndex>>(() => {
   const {items} = useTodoArticleStore();
   const {articleMap} = useArticleStore();
-  return items.map(item => articleMap.get(item)).filter(item => !!item);
+  const list = new Array<ArticleIndex>();
+  for (const item of items) {
+    const one = articleMap.get(item);
+    if (one) {
+      list.push(one);
+    }
+  }
+  return list;
 });
 const count = computed(() => articles.value.length);
 </script>

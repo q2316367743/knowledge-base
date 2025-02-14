@@ -6,7 +6,7 @@
   "description": "知识库",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "check": "vue-tsc --noEmit",
     "preview": "vite preview"
   },

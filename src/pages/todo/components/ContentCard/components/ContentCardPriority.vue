@@ -1,5 +1,6 @@
 <template>
-  <div class="content-card-priority" v-if="group" :class="{drag: isDrag}" @dragend="toggleDrag(false)" @drop="handleDrop"
+  <div class="content-card-priority" v-if="group" :class="{drag: isDrag}" @dragend="toggleDrag(false)"
+       @drop="handleDrop"
        @dragenter="toggleDrag(true)" @dragover.stop="handleDragover" @dragleave="toggleDrag(false)">
     <header class="content-card-priority__header">
       <div class="title">
@@ -19,7 +20,7 @@
             </template>
           </a-button>
           <template #content>
-            <a-doption @click="openEditTodoGroupFunc(group.id, group.name, group.children)">
+            <a-doption @click="openEditTodoGroupFunc(group)">
               <template #icon>
                 <icon-edit/>
               </template>
@@ -56,8 +57,8 @@
     <div class="content-card-priority__content">
       <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
                           :group="group" :group-id="group.id"/>
+      <todo-item-complete :completes="group.complete"/>
     </div>
-    <todo-item-complete :completes="group.complete"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -106,7 +107,7 @@ function handleDrop(e: DragEvent) {
 <style scoped lang="less">
 .content-card-priority {
   width: 256px;
-  height: calc(100% - 14px);
+  height: calc(100vh - 40px);
   margin: 7px 8px;
   border-radius: var(--border-radius-medium);
   position: relative;
@@ -136,7 +137,8 @@ function handleDrop(e: DragEvent) {
 
   .content-card-priority__content {
     margin-top: 8px;
-    // TODO: 此处要滚动
+    height: calc(100% - 54px);
+    overflow: auto;
   }
 }
 </style>

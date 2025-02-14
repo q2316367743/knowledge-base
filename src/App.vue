@@ -128,7 +128,7 @@ function toArticle(id?: string) {
 // 前往待办
 function toTodo(id?: string) {
   const categoryId = parseInt(id || '0');
-  useTodoWrapStore().setCategoryId(categoryId);
+  useTodoWrapStore().init(categoryId);
   useTodoWrapStore().setItemId(categoryId);
   router.push('/todo');
 }
