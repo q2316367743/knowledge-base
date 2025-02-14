@@ -38,12 +38,6 @@
               </template>
               在右侧添加分组
             </a-doption>
-            <a-doption>
-              <template #icon>
-                <icon-translate/>
-              </template>
-              移动到
-            </a-doption>
             <a-doption @click="openDeleteTodoGroupFunc(group.id, group.name)">
               <template #icon>
                 <icon-delete/>

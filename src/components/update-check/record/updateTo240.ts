@@ -26,5 +26,4 @@ export async function updateTo240() {
   if (error) {
     MessageUtil.warning("数据同步存在异常，可能存在待办标签丢失问题");
   }
-  // TODO：更新说明
 }

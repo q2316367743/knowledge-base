@@ -1,5 +1,7 @@
 <template>
-  <div class="markdown-editor" :id="id"></div>
+  <div class="markdown-editor">
+    <div class="markdown-editor-wrap" :id="id"></div>
+  </div>
 </template>
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
@@ -137,6 +139,11 @@ function onInsert(str: string) {
   position: relative;
   height: 100%;
   width: 100%;
+  overflow: hidden;
+
+  .markdown-editor-wrap {
+    position: relative;
+  }
 }
 
 .cherry {

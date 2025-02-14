@@ -15,7 +15,7 @@
           </template>
           编辑/预览
         </a-doption>
-        <a-doption @click="openHeExtra(useHomeEditorStore().id)" :disabled="preview">
+        <a-doption @click="openHeExtra(homeEditorId)" :disabled="preview">
           <template #icon>
             <icon-settings/>
           </template>
@@ -39,11 +39,10 @@
 </template>
 <script lang="ts" setup>
 import {
-  editorType,
+  editorType, homeEditorId,
   preview,
   useArticleExportEvent,
   useArticleImportEvent, useArticlePreviewEvent,
-  useHomeEditorStore
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
@@ -51,9 +50,9 @@ import EditorContentExtraAi from "@/pages/home/layout/editor-content/layout/Edit
 import EditorContentExtraRun
   from "@/pages/home/layout/editor-content/layout/EditorContentHeader/EditorContentExtraRun.vue";
 
-const onExport = () => useArticleExportEvent.emit(useHomeEditorStore().id);
-const onImport = () => useArticleImportEvent.emit(useHomeEditorStore().id);
-const switchPreview = (id?: number) => useArticlePreviewEvent.emit(id || useHomeEditorStore().id);
+const onExport = () => useArticleExportEvent.emit(homeEditorId.value);
+const onImport = () => useArticleImportEvent.emit(homeEditorId.value);
+const switchPreview = (id?: number) => useArticlePreviewEvent.emit(id || homeEditorId.value);
 
 
 </script>

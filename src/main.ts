@@ -31,7 +31,11 @@ import { Boot } from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 // 其他
 import {isUtools, useDeleteEvent, useSearchContentEvent} from '@/global/BeanFactory';
-import {useArticleExportEvent, useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {
+  homeEditorId,
+  useArticleExportEvent,
+  useArticlePreviewEvent,
+} from "@/store/components/HomeEditorStore";
 import {addArticleModal} from "@/pages/home/components/he-context";
 
 // 代码编辑器环境注册
@@ -85,12 +89,12 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
     } else if (e.code == 'KeyQ') {
       e.preventDefault();
       e.stopPropagation();
-      useArticlePreviewEvent.emit(useHomeEditorStore().id);
+      useArticlePreviewEvent.emit(homeEditorId.value);
       useUmami.track("使用快捷键", getKey(e));
     } else if (e.code === 'KeyP') {
       e.preventDefault();
       e.stopPropagation();
-      useArticleExportEvent.emit(useHomeEditorStore().id);
+      useArticleExportEvent.emit(homeEditorId.value);
       useUmami.track("使用快捷键", getKey(e));
     }
     if (e.shiftKey) {

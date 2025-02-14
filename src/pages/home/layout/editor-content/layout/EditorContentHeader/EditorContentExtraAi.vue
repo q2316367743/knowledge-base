@@ -9,9 +9,9 @@
 </template>
 <script lang="ts" setup>
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {useHomeEditorStore, useUpdateRobotEvent} from "@/store/components/HomeEditorStore";
+import {homeEditorId, useUpdateRobotEvent} from "@/store/components/HomeEditorStore";
 
-const switchRobot = () =>  useUpdateRobotEvent.emit(useHomeEditorStore().id);
+const switchRobot = () =>  useUpdateRobotEvent.emit(homeEditorId.value);
 </script>
 <style scoped lang="less">
 

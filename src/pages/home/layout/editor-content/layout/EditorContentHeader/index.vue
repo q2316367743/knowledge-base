@@ -7,12 +7,12 @@
         </template>
       </a-button>
     </div>
-    <div class="tab" v-if="indexes.length > 0">
-      <a-tabs v-model:active-key="activeKey" hide-content editable @delete="close">
+    <div class="tab" v-if="homeEditorArticles.length > 0">
+      <a-tabs v-model:active-key="homeEditorId" hide-content editable @delete="close">
         <template #extra>
-          <editor-content-extra />
+          <editor-content-extra/>
         </template>
-        <a-tab-pane v-for="article in indexes" :key="article.id" style="height: auto">
+        <a-tab-pane v-for="article in homeEditorArticles" :key="article.id" style="height: auto">
           <template #title>
             <a-dropdown position="bottom" trigger="contextMenu" :popup-max-height="false">
               <div>
@@ -49,33 +49,23 @@
   </header>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
-import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
 import {
-  editorType, useUpdateRobotEvent, preview, useArticleExportEvent, useArticleImportEvent,
-  useArticlePreviewEvent, useHomeEditorStore
+  editorType,useArticlePreviewEvent, useHomeEditorStore, homeEditorId, homeEditorArticles
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {remove, rename} from "@/pages/home/components/he-context";
-import {ArticleIndex} from "@/entity/article";
 import EditorContentExtra from "@/pages/home/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
 
-const activeKey = ref(useHomeEditorStore().id);
 
 const switchCollapsed = useHomeEditorStore().switchCollapsed;
 
-const indexes = computed<Array<ArticleIndex>>(() => useHomeEditorStore().indexes);
-
-watch(() => activeKey.value, value => useHomeEditorStore().setId(value));
-watch(() => useHomeEditorStore().id, value => activeKey.value = value);
 
 function close(e: any) {
   useHomeEditorStore().closeArticle(e);
 }
 
-function switchPreview(id?: number) {
-  useArticlePreviewEvent.emit(id || useHomeEditorStore().id);
+function switchPreview(id: number) {
+  useArticlePreviewEvent.emit(id);
 }
 
 </script>

@@ -3,7 +3,6 @@ import {
   Button,
   Col,
   DatePicker,
-  Divider,
   Drawer,
   Input,
   InputTag,
@@ -15,7 +14,6 @@ import {
   Space,
   Tag
 } from "@arco-design/web-vue";
-import {ref} from "vue";
 import dayjs from "dayjs";
 import {
   handlePriorityText,
@@ -28,10 +26,10 @@ import {
   TodoItemStatus
 } from "@/entity/todo/TodoItem";
 import {toDateString} from "@/utils/lang/FormatUtil";
-import {openTodoItemInfo} from "@/pages/todo/components/common/TodoItemInfo";
 import {randomColor} from "@/utils/BrowserUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {openTodoItemSetting} from "@/pages/todo/components/common/TodoItemSetting/model";
 
 interface FormInterface {
   title: string,
@@ -141,7 +139,6 @@ export function todoSearch() {
         }
         const attr = await getTodoItemAttr(item.id);
         const {completeTime} = attr;
-        console.log(completeTime, completeTimeStart, completeTimeEnd);
         if (completeTimeStart && completeTimeStart !== '' && completeTime) {
           hasCondition = true;
           console.log(dayjs(completeTime).isAfter(completeTimeStart, 'day'))
@@ -286,7 +283,8 @@ export function todoSearch() {
         {todoList.value.map(item => (
           <ListItem key={item.index.id}>{{
             default: () => <>
-              <div>{item.index.title}</div>
+              <div onClick={() => openTodoItemSetting(item.index)}
+                   style={{color: 'rgb(var(--arcoblue-6))', cursor: 'pointer'}}>{item.index.title}</div>
               <Space class={'mt-8'}>
                 <Tag
                   color={handleSimplePriorityColor(item.index.priority)}>优先级：{handlePriorityText(item.index.priority)}</Tag>
@@ -302,13 +300,12 @@ export function todoSearch() {
                   <Tag
                     color={'green'}>完成：{toDateString(item.attr.completeTime, 'YYYY-MM-DD HH:mm')}</Tag>}
               </Space>
-              <Divider/>
-              <Space wrap>
-                {item.content.tags.map(tag => <Tag key={tag} color={randomColor(tag)}>{tag}</Tag>)}
-              </Space>
+              {item.attr.tags.length > 0 && <>
+                <Space wrap style={{marginTop: '8px'}}>
+                  {item.attr.tags.map(tag => <Tag key={tag} color={randomColor(tag)}>{tag}</Tag>)}
+                </Space>
+              </>}
             </>,
-            actions: () => <Button type="text"
-                                   onClick={() => openTodoItemInfo(item.index)}>查看详情</Button>
           }}</ListItem>))
         }
       </List>

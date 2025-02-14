@@ -110,21 +110,16 @@ async function initArticle(articleId: number) {
     return;
   }
 
-  await useArticleStore().init();
 
-  const {articleMap, getContent} = useArticleStore();
-
-  const articleIndexWrap = articleMap.get(articleId);
-  if (!articleIndexWrap) {
+  const {getContent} = useArticleStore();
+  // 内容
+  const contentWrap = await getContent(articleId);
+  if (!contentWrap.record) {
     MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
     return;
   }
-  // 内容
-  const contentWrap = await getContent(articleId);
-  if (contentWrap.record) {
-    content.value = contentWrap.record.content;
-    load.value = true;
-  }
+  content.value = contentWrap.record.content;
+  load.value = true;
   contentRev = contentWrap.rev;
 
 }
@@ -172,9 +167,11 @@ function sendToChat(str: string) {
 </script>
 <style scoped>
 .ec-container-item {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 </style>

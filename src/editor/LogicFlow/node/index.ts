@@ -30,7 +30,6 @@ export async function registerCustomElement(lf: LogicFlow): Promise<DiagramGroup
     // diagramGroups.push(registerNodes(lf, iconNodes, "icon-node", "图标节点"));
     // 注册边
     edges.forEach(edge => lf.register(edge));
-    // TODO: 判断是否需要将drauu注入
     return Promise.resolve(diagramGroups);
 }
 

@@ -5,17 +5,35 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
 import {TocItem} from "@/editor/types/TocItem";
-import {map} from "@/utils/lang/ArrayUtil";
 import {useEventBus} from "@vueuse/core";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 
+
+// 当前打开的编辑器
+export const homeEditorId = useUtoolsKvStorage<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, 0);
+// 编辑器列表
+export const homeEditorIds = useUtoolsDbStorage<Array<number>>(LocalNameEnum.KEY_HOME_EDITOR_IDS, []);
+export const homeEditorArticles = computed<Array<ArticleIndex>>(() => {
+  const {articleMap} = useArticleStore();
+  if (homeEditorIds.value.length === 0) {
+    return [];
+  }
+  const list = new Array<ArticleIndex>();
+  for (let editorId of homeEditorIds.value) {
+    const one = articleMap.get(editorId);
+    if (one) list.push(one);
+  }
+  return list;
+})
+
+
 // 当前是否预览
 export const preview = computed(() => {
-  if (useHomeEditorStore().id) {
-    const articleIndex = useArticleStore().articleMap.get(useHomeEditorStore().id);
+  if (homeEditorId.value) {
+    const articleIndex = useArticleStore().articleMap.get(homeEditorId.value);
     if (articleIndex) {
       return articleIndex.preview;
     }
@@ -24,8 +42,8 @@ export const preview = computed(() => {
 });
 // 当前编辑器类型
 export const editorType = computed(() => {
-  if (useHomeEditorStore().id) {
-    const articleIndex = useArticleStore().articleMap.get(useHomeEditorStore().id);
+  if (homeEditorId.value) {
+    const articleIndex = useArticleStore().articleMap.get(homeEditorId.value);
     if (articleIndex) {
       return articleIndex.type || ArticleTypeEnum.MARKDOWN;
     }
@@ -46,15 +64,11 @@ export const getTextCount = ref<() => number>(() => 0);
 export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
 
-
 export const useHomeEditorStore = defineStore('home-editor', () => {
 
   // 打开的文章
-  const indexes = ref(new Array<ArticleIndex>());
   const articleSort = useUtoolsKvStorage<ArticleSortEnum>(LocalNameEnum.KEY_HOME_SORT, ArticleSortEnum.CREATE_TIME_ASC)
 
-  const id = useUtoolsKvStorage<number>(LocalNameEnum.KEY_HOME_EDITOR_ID, 0);
-  const ids = useUtoolsDbStorage<Array<number>>(LocalNameEnum.KEY_HOME_EDITOR_IDS, []);
   const collapsed = ref<boolean>(false);
   const widthWrap = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_WIDTH, '264px');
 
@@ -69,16 +83,7 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
   async function init() {
     collapsed.value = widthWrap.value === '0px';
 
-    useArticleStore().init().then(items => {
-      const tempMap = map(items.filter(e => !e.isDelete), 'id');
-      ids.value.map(e => openArticle(tempMap.get(e)))
-      if (id.value > 0 && !ids.value.includes(id.value)) {
-        openArticle(tempMap.get(id.value))
-      }
-      //  增加观察器
-      watch(indexes, value => ids.value = value.map(e => e.id));
-    });
-
+   await useArticleStore().init();
 
   }
 
@@ -86,9 +91,6 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
     collapsed.value = typeof res === 'undefined' ? !collapsed.value : res;
   }
 
-  function setId(res: number) {
-    id.value = res;
-  }
 
   function setWidth(width: string) {
     if (width === '0px' && collapsed.value) {
@@ -102,10 +104,10 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
   }
 
   function update(id: number, article: ArticleIndex) {
-    for (let i = 0; i < indexes.value.length; i++) {
-      const value = indexes.value[i];
+    for (let i = 0; i < homeEditorArticles.value.length; i++) {
+      const value = homeEditorArticles.value[i];
       if (value.id === id) {
-        indexes.value[i] = article;
+        homeEditorArticles.value[i] = article;
         return
       }
     }
@@ -128,33 +130,31 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
       index = res;
     }
 
-    if (indexes.value.findIndex(e => e.id === index.id) === -1) {
+    if (homeEditorIds.value.findIndex(e => e === index.id) === -1) {
       // 没有打开
-      indexes.value.push(index);
+      homeEditorIds.value.push(index.id);
     }
-
-    setId(index.id);
-
+    homeEditorId.value = index.id;
   }
 
   function closeArticle(...items: Array<number>) {
     for (let res of items) {
 
-      const idx = indexes.value.findIndex(e => e.id === res);
+      const idx = homeEditorIds.value.findIndex(e => e === res);
       if (idx === -1) {
         return;
       }
-      const target = indexes.value[idx].id;
-      indexes.value.splice(idx, 1);
-      if (target === id.value) {
+      const target = homeEditorIds.value[idx];
+      homeEditorIds.value.splice(idx, 1);
+      if (target === homeEditorId.value) {
         // 关闭自己
-        if (indexes.value.length > 0) {
-          setId(indexes.value[indexes.value.length - 1].id);
+        if (homeEditorIds.value.length > 0) {
+          homeEditorId.value = homeEditorIds.value[homeEditorIds.value.length - 1];
         } else {
-          setId(0);
+          homeEditorId.value = 0;
         }
       }
-      if (indexes.value.length === 0) {
+      if (homeEditorIds.value.length === 0) {
         if (collapsed.value) {
           collapsed.value = false;
         }
@@ -163,28 +163,25 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
   }
 
   function closeAll() {
-    indexes.value = [];
-    setId(0);
+    homeEditorIds.value = [];
+    homeEditorId.value = 0;
     if (collapsed.value) {
       collapsed.value = false;
     }
   }
 
   function closeOther(id: number) {
-    indexes.value = indexes.value.filter(e => e.id === id);
-    setId(id);
+    homeEditorIds.value = homeEditorIds.value.filter(e => e === id);
+    homeEditorId.value = id;
   }
 
   return {
-    id,
     collapsed,
     width,
     widthWrap,
     articleSort,
-    indexes,
 
     init,
-    setId,
     switchCollapsed,
     setWidth,
     setSort,
