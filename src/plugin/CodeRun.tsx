@@ -73,7 +73,7 @@ export async function codeRun(fileName: string, content: string) {
         icon: () => <IconStop/>,
         default: () => "停止"
       }}</Button>
-      <div>「`{fileName}」</div>
+      <div>「{fileName}」</div>
       <div>{loading.value ? '正在运行中...' : '运行完成'}</div>
     </Space>,
     maskClosable: false,
