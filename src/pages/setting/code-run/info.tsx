@@ -1,10 +1,11 @@
-import {Drawer, Typography, TypographyParagraph} from "@arco-design/web-vue";
+import {Drawer, Link, Typography, TypographyParagraph} from "@arco-design/web-vue";
 
 export function openCodeRunInfo() {
   const lines = [
     '{{filePath}}：文件实际路径',
     '{{fileName}}：文件名',
-    '{{fileDir}}：文件所在目录'
+    '{{fileDir}}：文件所在目录',
+    '{{fileContent}}：文件内容'
   ]
   Drawer.open({
     title: '代码运行帮助',
@@ -25,6 +26,10 @@ export function openCodeRunInfo() {
         <ul>
           {lines.map((line) => <li key={line}>{line}</li>)}
         </ul>
+      </TypographyParagraph>
+      <TypographyParagraph>
+        <span>更多信息请查看：</span>
+        <Link href={'https://blog.esion.xyz/archives/zhi-shi-ku-dai-ma-yun-xing'}>代码运行帮助</Link>
       </TypographyParagraph>
     </Typography>
   })

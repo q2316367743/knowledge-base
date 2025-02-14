@@ -31,6 +31,8 @@ import FileCode from '@/components/KbIcon/FileCode.vue';
 import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
 import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 import FileLct from "@/components/KbIcon/FileLct.vue";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -268,6 +270,19 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum, content?: 
   } else {
     name = await MessageBoxUtil.prompt("请输入文章名称", "新建文章");
   }
+  NotificationUtil.warningClose(
+    "检测到您创建代码笔记未设置文件后缀，设置文件后缀后可以实现代码高亮。",
+    "新建笔记",
+    LocalNameEnum.TIP_ARTICLE_ADD,
+    () => {
+      if (type !== ArticleTypeEnum.CODE) {
+        // 不是代码笔记跳过
+        return false;
+      }
+      // 没有后缀
+      return name.indexOf('.') === -1
+    }
+  )
   if (!content) {
     content = await buildDefaultContent(name, type);
   }

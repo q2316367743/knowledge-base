@@ -1,5 +1,7 @@
 import {Button, Notification} from "@arco-design/web-vue";
 import {h} from "vue";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {getItem, setItem} from "@/utils/utools/DbStorageUtil";
 
 export default {
   success(content: string, title?: string): void {
@@ -95,7 +97,19 @@ export default {
     })
   },
 
-  warningClose(content: string, title: string, onRemove: () => void): void {
+  warningClose(content: string, title: string, key: LocalNameEnum, condition?: () => boolean): void {
+    if (condition) {
+      if (!condition()) {
+        return;
+      }
+    }
+    if (getItem(key)) {
+      return;
+    }
+    function onRemove() {
+      Notification.remove(key);
+      setItem(key, true);
+    }
     Notification.warning({
       content,
       title,

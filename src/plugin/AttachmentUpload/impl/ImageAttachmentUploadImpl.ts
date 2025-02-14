@@ -1,20 +1,15 @@
 import {isUtools} from "@/global/BeanFactory";
 import {blobToBase64} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
-import {getItem, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 export async function useAttachmentUploadByImage(data: Blob | File | string): Promise<string> {
   if (!isUtools) {
     return Promise.reject("web版不支持调用图床");
   }
-
-  if (!getItem(LocalNameEnum.TIP_IMAGE_TO_IMAGE_PLUGIN)) {
-    NotificationUtil.warningClose("建议使用xiaou同学的新作：图床 Plus，更加强大好用", "附件上传",
-      () => {
-        setItem(LocalNameEnum.TIP_IMAGE_TO_IMAGE_PLUGIN, true);
-      })
-  }
+  NotificationUtil.warningClose(
+    "建议使用xiaou同学的新作：「图床 Plus」，更加强大好用", "附件上传",
+    LocalNameEnum.TIP_IMAGE_TO_IMAGE_PLUGIN)
 
   if (typeof data !== 'string') {
     data = await blobToBase64(data);

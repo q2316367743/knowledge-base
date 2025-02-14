@@ -161,7 +161,9 @@ enum LocalNameEnum {
   FIRST_USE_LOGIC_FLOW = '/first/use/logic-flow',
 
   // 使用「图床」插件
-  TIP_IMAGE_TO_IMAGE_PLUGIN = '/tip/image/to-image'
+  TIP_IMAGE_TO_IMAGE_PLUGIN = '/tip/image/to-image',
+
+  TIP_ARTICLE_ADD = '/tip/article/add'
 }
 
 export default LocalNameEnum;

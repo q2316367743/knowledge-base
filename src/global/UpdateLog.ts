@@ -2,6 +2,33 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.4.0',
+    sign: 240,
+    time: '2025-02-14',
+    items: [{
+      label: LogItemEnum.MAJOR,
+      content: "新增代码笔记运行功能，可以将脚本保存到笔记中，随时随地运行"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: '待办权限改版，新增待办分组功能'
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "移除了分享中心功能"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "移除了兰空图床"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "移除了分享中心功能"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "图床能力增强，加入更多图床选择"
+    }],
+    remark: "这个版本主要将待办进行了优化，尤其是卡片布局，之前仅仅以优先级进行分组是极其不合理的，" +
+      "现在加入分组功能，使用上更加便捷。卡片布局结合分组模式，就实现了kanban功能。" +
+      "子待办可能还要推迟，目前还没想好怎么去实现。"
+  },
+  {
     version: '2.3.2',
     sign: 232,
     time: '2024-11-06',

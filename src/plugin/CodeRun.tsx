@@ -10,8 +10,8 @@ import {useSnowflake} from "@/hooks/Snowflake";
 import {IconStop} from "@arco-design/web-vue/es/icon";
 
 export const codeRunSetting = useUtoolsDbStorage<Record<string, string>>(LocalNameEnum.SETTING_CODE_RUN, {
-  'js': "node {{filePath}}",
-  'py': "python {{filePath}}"
+  '\.js$': "node {{filePath}}",
+  '\.py$': "python {{filePath}}"
 });
 
 function getCodeRunCommand(fileName: string): string | null {
@@ -37,7 +37,12 @@ export async function codeRun(fileName: string, content: string) {
   // 保存到临时目录
   const {filePath, folder} = await window.preload.customer.writeStrToFile(
     Constant.id, name, content, utools.getPath('temp'));
-  let command = template(commandTemplate as string, {filePath, fileDir: folder, fileName: name});
+  let command = template(commandTemplate as string, {
+    filePath,
+    fileDir: folder,
+    fileName: name,
+    fileContent: content
+  });
   const result = ref('');
   const loading = ref(true);
   const {abort} = window.preload.util.runCommand(command, {

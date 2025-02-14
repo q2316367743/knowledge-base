@@ -1,66 +1,66 @@
 {
-    "main": "dist/index.html",
-    "preload": "preload.js",
-    "logo": "public/logo.png",
-    "platform": [
+  "main": "dist/index.html",
+  "preload": "preload.js",
+  "logo": "public/logo.png",
+  "platform": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "development": {
+    "main": "http://localhost:5173/"
+  },
+  "pluginSetting": {
+    "single": true,
+    "height": 0
+  },
+  "features": [
+    {
+      "code": "function:editor",
+      "explain": "知识库",
+      "icon": "public/logo.png",
+      "platform": [
         "win32",
         "darwin",
         "linux"
-    ],
-    "development": {
-        "main": "http://localhost:5173/"
+      ],
+      "cmds": [
+        "知识库"
+      ]
     },
-    "pluginSetting": {
-        "single": true,
-        "height": 0
+    {
+      "code": "function:todo",
+      "explain": "知识库",
+      "icon": "public/logo.png",
+      "platform": [
+        "win32",
+        "darwin",
+        "linux"
+      ],
+      "cmds": [
+        "待办",
+        "todo"
+      ]
     },
-    "features": [
+    {
+      "code": "function:search",
+      "explain": "知识库",
+      "icon": "public/logo.png",
+      "mainPush": true,
+      "platform": [
+        "win32",
+        "darwin",
+        "linux"
+      ],
+      "cmds": [
         {
-            "code": "function:editor",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                "知识库"
-            ]
-        },
-        {
-            "code": "function:todo",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                "待办",
-                "todo"
-            ]
-        },
-        {
-            "code": "function:search",
-            "explain": "知识库",
-            "icon": "public/logo.png",
-            "mainPush": true,
-            "platform": [
-                "win32",
-                "darwin",
-                "linux"
-            ],
-            "cmds": [
-                {
-                    "type": "over",
-                    "label": "文章搜索",
-                    "exclude": "\n/[\\\/\t\n]/",
-                    "minLength": 1,
-                    "maxLength": 500
-                }
-            ]
+          "type": "over",
+          "label": "文章搜索",
+          "exclude": "\n/[\\\/\t\n]/",
+          "minLength": 1,
+          "maxLength": 500
         }
-    ]
+      ]
+    }
+  ]
 }

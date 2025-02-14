@@ -2,7 +2,7 @@
   <div class="kb-todo-home">
     <card-todo-input/>
     <card-todo-container v-if="categoryId"/>
-    <a-result v-else title="请先前往设置中选择代办清单"/>
+    <a-result v-else title="请先前往设置中选择待办清单"/>
     <div class="setting">
       <a-button type="text" @click="openSettingModal()">
         <template #icon>

@@ -18,7 +18,7 @@ export const useAttachmentUpload = {
       if (native) {
         return result;
       }
-      return renderAttachmentUrl(result);
+      return renderAttachmentUrl(result.replace(/^attachment:/, ""));
     } else if (imageStrategy === ImageStrategyEnum.IMAGE) {
       return useAttachmentUploadByImage(data);
     } else if (imageStrategy === ImageStrategyEnum.PIC_GO) {
@@ -34,7 +34,7 @@ export const useAttachmentUpload = {
   },
   render: (url: string) => {
     if (/"$attachment:"/.test(url)) {
-      return renderAttachmentUrl(url.replace(/$attachment:/, ""))
+      return renderAttachmentUrl(url.replace(/^attachment:/, ""))
     }
     return url;
   }
