@@ -1,3 +1,33 @@
 @import "./customer.less";
 @import "./layout.less";
 @import "./scroll.css";
+
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+.ellipsis-line(@line-number; @line-height: 1.5) {
+  display: -webkit-box; /* 必须设置为 flexbox */
+  -webkit-box-orient: vertical; /* 垂直排列 */
+  -webkit-line-clamp: @line-number; /* 限制显示三行 */
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  line-height: @line-height; /* 行高 */
+  max-height: @line-number * @line-height * 1em; /* 最大高度，3行 * 行高 */
+}
+
+.ellipsis-2 {
+  .ellipsis-line(@line-number: 2);
+}
+
+.ellipsis-3 {
+  .ellipsis-line(3);
+}
+
+.ellipsis-4 {
+  .ellipsis-line(4);
+}

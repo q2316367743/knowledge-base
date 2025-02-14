@@ -1,5 +1,5 @@
 <template>
-  <a-tooltip :content="disabled?'请先配置运行命令':'代码运行'" position="br" v-if="show">
+  <a-tooltip :content="disabled ? '请先配置运行命令' : '代码运行'" position="br" v-if="show">
     <a-button status="success" type="text" @click="run">
       <template #icon>
         <icon-play-arrow/>
@@ -9,7 +9,7 @@
 </template>
 <script lang="ts" setup>
 import {ArticleIndex} from "@/entity/article";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {homeEditorId} from "@/store/components/HomeEditorStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {codeRun, disabledCodeRun} from "@/plugin/CodeRun";
@@ -19,10 +19,9 @@ import NotificationUtil from "@/utils/modal/NotificationUtil";
 const router = useRouter();
 
 const currentIndex = computed<ArticleIndex | undefined>(() => {
-  const {id} = useHomeEditorStore();
   const {articleMap} = useArticleStore();
-  if (id > 0) {
-    return articleMap.get(id);
+  if (homeEditorId.value > 0) {
+    return articleMap.get(homeEditorId.value);
   }
   return undefined
 });

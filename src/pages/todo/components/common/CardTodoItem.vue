@@ -6,9 +6,9 @@
       <div class="todo-item__checkbox">
         <todo-item-checkbox :priority="index.priority" :status="index.status" @click.stop="onCheck(index)"/>
       </div>
-      <a-typography-paragraph class="todo-item__title" :ellipsis="ellipsis">
+      <div class="todo-item__title ellipsis-4">
         {{ index.title }}
-      </a-typography-paragraph>
+      </div>
     </div>
     <div v-if="hasAttr" class="todo-item__sub">
       <a-tag color="arcoblue" size="small" bordered>
@@ -52,11 +52,6 @@ const props = defineProps({
     default: ''
   }
 });
-
-const ellipsis = {
-  rows: 3,
-  expandable: true,
-};
 
 const index = shallowRef(props.item || getDefaultTodoItemIndex());
 const attr = ref(getDefaultTodoItemAttr());
