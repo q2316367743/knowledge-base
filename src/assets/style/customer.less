@@ -162,3 +162,50 @@ body[arco-theme=dark] {
 a {
   color: rgb(var(--arcoblue-6));
 }
+
+.codex-editor {
+  .ce-toolbar__plus, .ce-toolbar__settings-btn {
+    &:hover {
+      background-color: var(--color-fill-3);
+    }
+
+    svg {
+      color: var(--color-text-1);
+    }
+  }
+
+  .ce-block.ce-block--selected {
+    .ce-block__content {
+      background-color: var(--color-fill-1);
+    }
+  }
+
+  .ce-popover__container {
+    background-color: var(--color-bg-2);
+
+    .cdx-search-field {
+      background-color: var(--color-fill-2);
+    }
+
+
+    .ce-popover-item {
+      &:hover {
+        background-color: var(--color-fill-3);
+      }
+
+      &.ce-popover-item--no-focus {
+        &:hover {
+          background-color: rgb(var(--danger-6));
+        }
+      }
+
+      .ce-popover-item__title {
+        color: var(--color-text-2);
+      }
+
+      svg {
+        color: var(--color-text-2);
+      }
+    }
+  }
+}

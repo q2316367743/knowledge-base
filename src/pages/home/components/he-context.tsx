@@ -39,6 +39,12 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // ------------------------------------------------------------------------------------------------------
 
 export const articleTextTypes = [{
+  key: ArticleTypeEnum.SUPER_EDITOR,
+  name: '超级笔记',
+  // TODO: 图标
+  icon: shallowRef(IconCode),
+  lock: FileLct
+}, {
   key: ArticleTypeEnum.RICH_TEXT,
   name: '富文本',
   icon: shallowRef(IconBook),
@@ -242,6 +248,11 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
           autoExpand: true
         }
       }
+    case ArticleTypeEnum.SUPER_EDITOR:
+      return {
+        time: Date.now(),
+        blocks: []
+      };
     default:
       return "";
   }

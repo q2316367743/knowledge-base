@@ -23,3 +23,5 @@ export function renderAttachmentUrl(key: string) {
   }
   return getAttachmentBySync(key);
 }
+
+export const fetchUrl = `http://localhost:${port}/fetchUrl`

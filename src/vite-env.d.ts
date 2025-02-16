@@ -8,6 +8,7 @@ declare module 'simple-mind-map/src/parse/markdown.js';
 declare module 'simple-mind-map/src/plugins/AssociativeLine.js';
 declare module 'simple-mind-map/src/plugins/Select.js';
 declare module 'simple-mind-map/src/plugins/Drag.js';
+// editor.js
 
 declare interface OpenFileOption {
   title?: string,

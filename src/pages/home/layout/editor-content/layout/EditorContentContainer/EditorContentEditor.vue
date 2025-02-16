@@ -17,6 +17,8 @@
                          v-else-if="editorType === ArticleTypeEnum.HANDSONTABLE && load"/>
     <logic-flow v-else-if="editorType === ArticleTypeEnum.LOGIC_FLOW && load"
                 v-model="content" :read-only="preview" :article-id="articleIndex.id"/>
+    <super-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                 v-else-if="editorType === ArticleTypeEnum.SUPER_EDITOR && load"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -39,6 +41,7 @@ import {useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/Hom
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
+import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>
