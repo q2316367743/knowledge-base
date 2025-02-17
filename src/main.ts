@@ -6,7 +6,6 @@ import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
-import TDesignChat from '@tdesign-vue-next/chat'; // 引入chat组件
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@arco-design/web-vue/es/message/style/css.js'
@@ -64,7 +63,6 @@ createApp(App)
   .use(createPinia())
   .use(router)
   .use(ArcoVueIcon)
-  .use(TDesignChat)
   .use(setupCalendar, {})
   .mount('#app');
 

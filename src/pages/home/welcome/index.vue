@@ -22,7 +22,7 @@
           <div class="input">
             <input v-model="question" type="text" placeholder="提出你的问题，回车提问" @keydown.enter="ask()"/>
             <div class="module-select">
-              <ai-module v-model="module" />
+              <ai-module v-model="model" />
             </div>
             <a-divider direction="vertical" :margin="8"/>
             <a-dropdown>
@@ -90,7 +90,7 @@ import {useSnowflake} from "@/hooks/Snowflake";
 const router = useRouter();
 // 问题
 const question = ref('');
-const module = ref('');
+const model = ref('');
 const attachments = ref(new Array<HomeAttachment>())
 
 const error = ref(false);
@@ -128,7 +128,7 @@ function ask() {
     path: '/home/chat',
     query: {
       question: question.value,
-      module: module.value,
+      model: model.value,
     }
   })
 }
@@ -215,6 +215,8 @@ function ask() {
           border: none;
           outline: none;
           width: 397px;
+          background-color: var(--color-bg-1);
+          color: var(--color-text-1);
         }
 
         .module-select {
