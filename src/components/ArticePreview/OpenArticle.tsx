@@ -9,7 +9,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {IconEdit, IconLeft} from "@arco-design/web-vue/es/icon";
 import {usePageJumpEvent} from "@/global/BeanFactory";
 import EditorContentContainer
-  from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
+  from "@/pages/note/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
 
 
 function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
@@ -17,7 +17,7 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
 
   function openToArticle() {
     useHomeEditorStore().openArticle(articleIndex.id);
-    usePageJumpEvent.emit('/home');
+    usePageJumpEvent.emit('/note');
     open.close();
   }
 
@@ -50,7 +50,7 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
 function toArticle(id: number, articleAction: ArticleActionEnum) {
   if (articleAction === ArticleActionEnum.TO_ARTICLE) {
     useHomeEditorStore().openArticle(id);
-    usePageJumpEvent.emit('/home');
+    usePageJumpEvent.emit('/note');
   } else if (articleAction === ArticleActionEnum.DRAWER) {
     const article = useArticleStore().articleMap.get(id);
     if (!article) {

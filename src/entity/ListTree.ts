@@ -4,7 +4,7 @@ import {IconFolder} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
 import {pathJoin} from "@/utils/file/FileUtil";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
-import {buildArticleIcon} from "@/pages/home/components/he-context";
+import {buildArticleIcon} from "@/pages/note/components/he-context";
 
 /**
  * 基础列表树

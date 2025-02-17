@@ -7,7 +7,7 @@ import {computed, ref} from "vue";
 import {Button, Drawer, Form, FormItem, Input, Select, Textarea, TreeSelect} from "@arco-design/web-vue";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {openCategoryManageDrawer} from "@/pages/home/components/CategoryManageDrawer";
+import {openCategoryManageDrawer} from "@/pages/note/components/CategoryManageDrawer";
 
 export async function openHeExtra(id: number) {
   const categoryTree = computed(() => useCategoryStore().categoryTree);

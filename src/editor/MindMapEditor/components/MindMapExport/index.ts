@@ -1,5 +1,5 @@
 import MindMap from "simple-mind-map";
-import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
 
 const items = [{
     key: 1,

@@ -75,7 +75,7 @@ import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useNoteTree} from "@/hooks/NoteTree";
-import EditorTreeMenu from "@/pages/home/layout/editor-side/components/EditorTreeMenu.vue";
+import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
 
 const homeEditorSideRef = ref();
 const size = useElementSize(homeEditorSideRef);

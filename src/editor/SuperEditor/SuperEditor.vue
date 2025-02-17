@@ -52,7 +52,10 @@ onMounted(() => {
       }
     }
   });
-})
+  watch(() => props.readOnly, val => {
+    editor.value?.readOnly.toggle(val);
+  })
+});
 
 </script>
 <style scoped lang="less">

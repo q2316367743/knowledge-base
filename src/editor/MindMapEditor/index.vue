@@ -17,7 +17,7 @@ import MindMapCount from "@/editor/MindMapEditor/components/MindMapCount.vue";
 import MindMapTool from "@/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
   from "@/editor/MindMapEditor/components/MindMapSetting/index.vue";
-import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
+import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
 import {useArticleExportEvent, useArticleImportEvent} from "@/store/components/HomeEditorStore";
 import {openMindMapExport} from "@/editor/MindMapEditor/components/MindMapExport";
 import MindMapContext from "@/editor/MindMapEditor/components/MindMapContext.vue";

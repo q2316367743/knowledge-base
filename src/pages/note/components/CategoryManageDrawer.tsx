@@ -1,6 +1,6 @@
 import ArcoVue, {Drawer} from "@arco-design/web-vue";
 import {createApp, ref, watch} from "vue";
-import CategoryManage from "@/pages/home/components/CategoryManage.vue";
+import CategoryManage from "@/pages/note/components/CategoryManage.vue";
 import ArcoVueIcon from "@arco-design/web-vue/es/icon";
 
 export function openCategoryManageDrawer() {

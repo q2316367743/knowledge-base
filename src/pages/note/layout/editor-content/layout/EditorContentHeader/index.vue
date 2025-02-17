@@ -53,8 +53,8 @@ import {
   editorType,useArticlePreviewEvent, useHomeEditorStore, homeEditorId, homeEditorArticles
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import {remove, rename} from "@/pages/home/components/he-context";
-import EditorContentExtra from "@/pages/home/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
+import {remove, rename} from "@/pages/note/components/he-context";
+import EditorContentExtra from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
 
 
 const switchCollapsed = useHomeEditorStore().switchCollapsed;

@@ -63,8 +63,8 @@ import {computed, onBeforeUnmount, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useRouter} from "vue-router";
-import {_searchContent, SearchContentItem, SearchContentPlaceholder} from "@/pages/home/components/SearchContent";
-import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
+import {_searchContent, SearchContentItem, SearchContentPlaceholder} from "@/pages/note/components/SearchContent";
+import {articleTextTypes, renderArticleType} from "@/pages/note/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
@@ -111,7 +111,7 @@ function stop() {
 
 function jumpToArticle(id: number) {
     useHomeEditorStore().openArticle(id);
-    router.push('/home')
+    router.push('/note')
 }
 
 </script>

@@ -62,7 +62,7 @@ function onSave() {
 }
 
 function onClose() {
-  router.push('/home')
+  router.push('/note')
 }
 </script>
 <style scoped lang="less">

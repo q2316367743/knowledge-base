@@ -26,7 +26,7 @@ import {ArticleIndex} from "@/entity/article";
 import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
-import {buildArticleIcon} from "@/pages/home/components/he-context";
+import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 
 const articles = computed<Array<ArticleIndex>>(() => {

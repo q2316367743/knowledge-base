@@ -123,9 +123,9 @@
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/home/components/he-context";
-import {exportToMd} from "@/pages/home/components/EditorExport";
-import {showArticleImportModal} from "@/pages/home/components/ArticleImportModal";
+import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
+import {exportToMd} from "@/pages/note/components/EditorExport";
+import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import MessageUtil from "@/utils/modal/MessageUtil";

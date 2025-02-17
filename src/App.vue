@@ -122,7 +122,7 @@ function toArticle(id?: string) {
     return;
   }
   useHomeEditorStore().openArticle(parseInt(id || '0'));
-  router.push('/home');
+  router.push('/note');
 }
 
 // 前往待办
@@ -151,7 +151,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
         .finally(() => useGlobalStore().closeLoading());
     } else if (preload === 'editor') {
       useUmami.track("feature", "前往编辑器");
-      router.push('/home');
+      router.push('/note');
     } else if (preload === 'todo') {
       useUmami.track("feature", "前往待办");
       router.push('/todo');

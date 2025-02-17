@@ -13,8 +13,8 @@
 </template>
 <script lang="ts" setup>
 import {homeEditorArticles, homeEditorId} from "@/store/components/HomeEditorStore";
-import EditorContentHeader from "@/pages/home/layout/editor-content/layout/EditorContentHeader/index.vue";
-import EditorContentContainer from "@/pages/home/layout/editor-content/layout/EditorContentContainer/index.vue";
+import EditorContentHeader from "@/pages/note/layout/editor-content/layout/EditorContentHeader/index.vue";
+import EditorContentContainer from "@/pages/note/layout/editor-content/layout/EditorContentContainer/index.vue";
 
 
 </script>

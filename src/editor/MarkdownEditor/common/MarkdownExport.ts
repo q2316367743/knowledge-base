@@ -1,5 +1,5 @@
 import Cherry from "cherry-markdown";
-import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
 import JSZip from "jszip";
 import {download} from "@/utils/BrowserUtil";
 

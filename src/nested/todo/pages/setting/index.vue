@@ -42,7 +42,7 @@ const loading = ref(false);
 const {todoCategoryTree, todoCategoryMap} = useTodoCategoryStore();
 
 function onClose() {
-    router.push('/home')
+    router.push('/note')
 }
 
 function onSave() {

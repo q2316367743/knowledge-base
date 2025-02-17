@@ -16,6 +16,7 @@
     "@editorjs/header": "^2.8.8",
     "@logicflow/core": "^2.0.10",
     "@logicflow/extension": "^2.0.14",
+    "@tdesign-vue-next/chat": "^0.1.4",
     "@vueuse/core": "^9.13.0",
     "@vueuse/integrations": "^10.11.1",
     "@wangeditor/editor": "^5.1.23",

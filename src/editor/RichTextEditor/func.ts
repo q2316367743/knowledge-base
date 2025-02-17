@@ -1,5 +1,5 @@
 import {IDomEditor} from "@wangeditor/editor";
-import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";

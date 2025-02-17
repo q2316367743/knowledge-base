@@ -45,10 +45,10 @@ import {
   useArticleImportEvent, useArticlePreviewEvent,
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import {openHeExtra} from "@/pages/home/layout/editor-content/components/HecExtra";
-import EditorContentExtraAi from "@/pages/home/layout/editor-content/layout/EditorContentHeader/EditorContentExtraAi.vue";
+import {openHeExtra} from "@/pages/note/layout/editor-content/components/HecExtra";
+import EditorContentExtraAi from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtraAi.vue";
 import EditorContentExtraRun
-  from "@/pages/home/layout/editor-content/layout/EditorContentHeader/EditorContentExtraRun.vue";
+  from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtraRun.vue";
 
 const onExport = () => useArticleExportEvent.emit(homeEditorId.value);
 const onImport = () => useArticleImportEvent.emit(homeEditorId.value);

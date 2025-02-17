@@ -1,10 +1,16 @@
 <template>
   <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys">
-    <a-menu-item key="/home">
+    <a-menu-item key="/home/welcome">
       <template #icon>
         <icon-home/>
       </template>
       主页
+    </a-menu-item>
+    <a-menu-item key="/note">
+      <template #icon>
+        <icon-edit/>
+      </template>
+      笔记
     </a-menu-item>
     <a-menu-item key="/todo">
       <template #icon>
@@ -12,16 +18,16 @@
       </template>
       待办
     </a-menu-item>
-    <a-menu-item key="/tool/search">
-      <template #icon>
-        <icon-search/>
-      </template>
-      搜索内容
-    </a-menu-item>
-    <a-sub-menu key="/graph">
+    <a-sub-menu key="/tool">
       <template #icon>
         <icon-tool/>
       </template>
+      <a-menu-item key="/tool/search">
+        <template #icon>
+          <icon-search/>
+        </template>
+        搜索内容
+      </a-menu-item>
       <template #title>工具</template>
       <a-menu-item key="/tool/recycle">
         回收站
@@ -164,7 +170,7 @@ import {toDoc, toTxc} from "@/global/Constant";
 const route = useRoute();
 const router = useRouter();
 
-const selectedKeys = ref(['/dashboard']);
+const selectedKeys = ref(['/home']);
 
 const themeType = computed(() => useGlobalStore().globalType)
 

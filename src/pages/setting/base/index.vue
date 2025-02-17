@@ -15,13 +15,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
-
 import BaseSetting from "@/pages/setting/base/components/BaseSetting.vue";
 import CodeEditorSetting from "@/pages/setting/base/components/CodeEditorSetting.vue";
 import ThemeSetting from "@/pages/setting/base/components/ThemeSetting.vue";
 import ChatSetting from "@/pages/setting/base/components/ChatSetting.vue";
-import {useRoute} from "vue-router";
 
 const route = useRoute();
 

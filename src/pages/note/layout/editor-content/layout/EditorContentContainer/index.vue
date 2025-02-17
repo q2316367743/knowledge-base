@@ -15,9 +15,9 @@ import {ArticleIndex} from "@/entity/article";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {useUpdateRobotEvent} from "@/store/components/HomeEditorStore";
 import EditorContentEditor
-  from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
+  from "@/pages/note/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
 import EditorContentAi
-  from "@/pages/home/layout/editor-content/layout/EditorContentContainer/EditorContentAi/index.vue";
+  from "@/pages/note/layout/editor-content/layout/EditorContentContainer/EditorContentAi/index.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>

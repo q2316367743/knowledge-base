@@ -29,7 +29,7 @@ import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openAddRelationArticle} from "@/pages/todo/components/common/AddRelationArticle";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
-import {buildArticleIcon} from "@/pages/home/components/he-context";
+import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {ArticleIndex} from "@/entity/article";
 
 const items = computed<Array<number>>(() => useTodoArticleStore().items);

@@ -20,7 +20,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {IconClose, IconEdit, IconSearch} from "@arco-design/web-vue/es/icon";
 import {findKeyword, MindMapTreeNode} from "@/editor/MindMapEditor/domain";
-import {articleTextTypes, renderArticleType} from "@/pages/home/components/he-context";
+import {articleTextTypes, renderArticleType} from "@/pages/note/components/he-context";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
 

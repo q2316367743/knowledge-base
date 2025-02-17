@@ -28,7 +28,7 @@ import Constant from "@/global/Constant";
 
 import {openMarkdownExport} from "./common/MarkdownExport";
 
-import {openArticleImport} from "@/pages/home/layout/editor-content/components/ArticleImport";
+import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
 
 import {buildConfig} from "@/editor/MarkdownEditor/common/build-config";
 

@@ -1,5 +1,5 @@
 import {LogicFlow} from "@logicflow/core";
-import {createArticleExport} from "@/pages/home/layout/editor-content/components/ArticleExport";
+import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {LogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
 import {Options as LFOptions} from "@logicflow/core/src/options";
