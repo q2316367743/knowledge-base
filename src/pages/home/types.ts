@@ -13,3 +13,9 @@ export interface HomeAttachment {
   name: string;
   file: string;
 }
+
+export interface AiInputProps {
+  question: string;
+  model: string;
+  attachments: Array<HomeAttachment>
+}

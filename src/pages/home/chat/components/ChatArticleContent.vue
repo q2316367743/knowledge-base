@@ -62,5 +62,14 @@ watch(() => props.value, (newValue) => {
 
 </script>
 <style scoped lang="less">
+.chat-article-content {
+  :deep(.cherry) {
+    box-shadow: none;
 
+    .cherry-previewer {
+      border: none;
+      padding: 0;
+    }
+  }
+}
 </style>
