@@ -72,6 +72,7 @@ onUnmounted(() => {
     .cherry-previewer {
       border: none;
       padding: 0;
+      background-color: var(--color-bg-1);
     }
   }
 }

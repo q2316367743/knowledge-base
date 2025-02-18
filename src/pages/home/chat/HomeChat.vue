@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="home-chat__close">
-      <a-button type="text" @click="goBack">
+      <a-button type="text" @click="goBack" shape="circle">
         <template #icon>
           <icon-arrow-left/>
         </template>
@@ -73,8 +73,8 @@ chatToBottomEvent.on(() => {
 
   .home-chat__close {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 8px;
+    left: 8px;
   }
 }
 </style>

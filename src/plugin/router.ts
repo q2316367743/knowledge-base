@@ -5,7 +5,7 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 const routers: Array<RouteRecordRaw> = [{
   name: "主页",
   path: '/',
-  redirect: '/home/welcome'
+  redirect: '/home'
 }, {
   name: "首页",
   path: '/home',

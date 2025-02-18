@@ -151,6 +151,12 @@ function onInsert(str: string) {
   color: var(--color-text-1);
 
   .cherry-previewer {
+    background-color: var(--color-bg-1) !important;
+
+    &.cherry-preview--full {
+      border: none;
+    }
+
     a {
       color: rgb(var(--arcoblue-6));
     }
