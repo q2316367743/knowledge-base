@@ -16,7 +16,7 @@
   },
   "features": [
     {
-      "code": "function:editor",
+      "code": "function:home",
       "explain": "知识库",
       "icon": "public/logo.png",
       "platform": [
@@ -26,6 +26,19 @@
       ],
       "cmds": [
         "知识库"
+      ]
+    },
+    {
+      "code": "function:editor",
+      "explain": "知识库",
+      "icon": "public/logo.png",
+      "platform": [
+        "win32",
+        "darwin",
+        "linux"
+      ],
+      "cmds": [
+        "笔记"
       ]
     },
     {
