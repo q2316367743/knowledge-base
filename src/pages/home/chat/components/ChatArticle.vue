@@ -3,7 +3,7 @@
     <div class="chat-article__title">{{ message.q }}</div>
     <div class="chat-article__time">
       <a-space>
-        <div>{{ now }}</div>
+        <div>{{ toDateString(message.id) }}</div>
         <div>{{ message.m }}</div>
         <template #split>
           <a-divider direction="vertical"/>
@@ -11,76 +11,75 @@
       </a-space>
     </div>
     <div class="chat-article__content">
-      <chat-article-content :value="answer"/>
+      <chat-article-content :value="message.a"/>
+      <a-divider v-if="message.id === lastId">
+        <icon-loading spin/>
+      </a-divider>
+      <template v-else>
+        <div style="display: flex;justify-content: flex-end;margin-bottom: 8px">
+          <a-space>
+            <a-tooltip content="记笔记">
+              <a-button type="text" @click="add">
+                <template #icon>
+                  <icon-edit/>
+                </template>
+              </a-button>
+            </a-tooltip>
+            <a-tooltip content="复制">
+              <a-button type="text" @click="copy()">
+                <template #icon>
+                  <icon-copy/>
+                </template>
+              </a-button>
+            </a-tooltip>
+          </a-space>
+        </div>
+        <a-divider :margin="0">
+
+        </a-divider>
+      </template>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import dayjs from "dayjs";
+import {ChatMessage} from "@/types/Chat";
+import {useChatStore} from "@/store/components/ChatStore";
+import {toDateString} from "@/utils/lang/FormatUtil";
+import {copyText} from "@/utils/utools/NativeUtil";
+import {addNoteFromAi} from "@/pages/home/modal/addNote";
 import ChatArticleContent from "@/pages/home/chat/components/ChatArticleContent.vue";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {buildChatMessage, ChatArticleItem, ChatMessageInjection} from "@/pages/home/chat/types";
 
-const answer = defineModel({
-  type: String,
-  default: ""
-});
+const router = useRouter();
 
 const props = defineProps({
   message: {
-    type: Object as PropType<ChatArticleItem>,
+    type: Object as PropType<ChatMessage>,
     default: () => ({
+      id: Date.now(),
       q: '',
       a: '',
-      m: ''
+      m: '',
+      f: []
     })
   },
 });
-const now = dayjs().format("YYYY-MM-DD HH:mm:ss");
+const lastId = computed(() => useChatStore().lastId);
 
-const cm = inject(ChatMessageInjection, ref(buildChatMessage()));
-
-
-async function init() {
-  const {q, m} = props.message;
-  if (!q) {
-    MessageUtil.error("问题不存在")
-    return;
-  }
-  const {openAi, model} = useChatSettingStore();
-  if (openAi) {
-    console.log("init", q, m, cm.value);
-    // 上下文
-    const response = await openAi.chat?.completions.create({
-      model: (m || model) as string,
-      messages: [{
-        role: 'user',
-        content: q as string,
-      }],
-      stream: true,
-    });
-    // 流式处理结果
-    for await (const chunk of response) {
-      const content = chunk.choices[0]?.delta?.content || '';
-      answer.value += content;
-      // TODO: 滚动到底部
-    }
-  }
+function copy() {
+  copyText(props.message.a);
 }
 
-onMounted(() => {
-  cm.value.loading = true;
-  init()
-    .catch(e => MessageUtil.error("提问失败", e))
-    .finally(() => cm.value.loading = false);
-})
+function add() {
+  addNoteFromAi(props.message, () => {
+    router.push('/note')
+  });
+}
 </script>
 <style scoped lang="less">
 .chat-article {
   max-width: 700px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 32px auto 0;
+  padding: 20px 20px 12px;
 
   &__title {
     font-size: 2rem;

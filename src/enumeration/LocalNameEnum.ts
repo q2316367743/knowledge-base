@@ -147,6 +147,9 @@ enum LocalNameEnum {
    */
   KEY_PRIVACY = '/key/privacy',
 
+  // 首页模型
+  KEY_HOME_MODEL = '/key/home/model',
+
   // ========================== 窗口 ==========================
 
   WINDOW_CANVAS_FOLDER = '/window/canvas/folder',

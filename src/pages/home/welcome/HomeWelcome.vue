@@ -8,7 +8,7 @@
         构建属于你自己的知识库
       </div>
       <div class="line3">
-        <ai-input @ask="ask"/>
+        <ai-input/>
       </div>
       <div class="line4">
         <div class="module-item" @click="article">
@@ -33,11 +33,7 @@
 </template>
 <script lang="ts" setup>
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {AiInputProps} from "@/pages/home/types";
 import AiInput from "@/pages/home/components/AiInput.vue";
-
-const router = useRouter();
-// 问题
 
 
 // 文档解读
@@ -45,14 +41,6 @@ const article = () => MessageUtil.warning("暂未实现");
 const write = () => MessageUtil.warning("暂未实现");
 
 
-function ask(p: AiInputProps) {
-  const {question, model} = p;
-  // 跳转
-  router.push({
-    path: '/home/chat',
-    query: {question, model}
-  })
-}
 </script>
 <style scoped lang="less">
 .home-welcome {

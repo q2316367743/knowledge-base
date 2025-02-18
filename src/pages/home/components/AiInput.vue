@@ -2,7 +2,7 @@
   <div class="ai-input">
     <div class="attachment" v-if="attachmentVisible">
       <div class="attachment-item" v-for="item in attachments" :key="item.id">
-        <a-image class="attachment-item__image" v-if="item.type === HomeAttachmentType.IMAGE" :src="item.file"
+        <a-image class="attachment-item__image" v-if="item.type === ChatAttachmentType.IMAGE" :src="item.file"
                  :alt="item.name" width="100px" height="50px"/>
         <div class="close" @click="deleteAttachment(item.id)">
           <icon-delete style="color: rgb(var(--danger-6))"/>
@@ -11,7 +11,8 @@
     </div>
     <a-divider :margin="8" v-if="attachmentVisible"/>
     <div class="input">
-      <input v-model="question" type="text" placeholder="提出你的问题，回车提问" @keydown.enter="ask()"/>
+      <input v-model="question" type="text" placeholder="提出你的问题，回车提问" :disabled="loading"
+             @keydown.enter="ask()"/>
       <div class="module-select">
         <ai-module v-model="model"/>
       </div>
@@ -50,28 +51,32 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {HomeAttachment, HomeAttachmentType} from "@/pages/home/types";
 import IconScreenshot from "@/icon/IconScreenshot.vue";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {getScreenShot} from "@/utils/utools/NativeUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
+import {useChatStore} from "@/store/components/ChatStore";
+import {ChatAttachment, ChatAttachmentType} from "@/types/Chat";
+import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const emit = defineEmits(['ask']);
 
 const question = ref('');
-const model = ref('');
-const attachments = ref(new Array<HomeAttachment>())
+const model = useUtoolsKvStorage(LocalNameEnum.KEY_HOME_MODEL, '');
+const attachments = ref(new Array<ChatAttachment>())
 
 const error = ref(false);
 
 const attachmentVisible = computed(() => attachments.value.length > 0);
+const loading = computed(() => useChatStore().loading);
 
 function screenShot() {
   getScreenShot().then(res => {
     // TODO: 临时存储附件
     attachments.value.push({
       id: useSnowflake().nextId(),
-      type: HomeAttachmentType.IMAGE,
+      type: ChatAttachmentType.IMAGE,
       file: res,
       name: '截图'
     })
@@ -88,16 +93,15 @@ function ask() {
     setTimeout(() => error.value = false, 2000);
     return;
   }
-  // 跳转
-  emit('ask', {
+  useChatStore().ask({
     question: question.value,
     model: model.value,
     attachments: attachments.value
-  });
-  question.value = '';
-  attachments.value = [];
-  error.value = false;
-  model.value = '';
+  }).then(() => {
+    question.value = '';
+    attachments.value = [];
+    error.value = false;
+  })
 }
 </script>
 <style scoped lang="less">

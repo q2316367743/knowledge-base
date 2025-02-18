@@ -1,6 +1,6 @@
 <template>
   <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys">
-    <a-menu-item key="/home/welcome">
+    <a-menu-item key="/home">
       <template #icon>
         <icon-home/>
       </template>

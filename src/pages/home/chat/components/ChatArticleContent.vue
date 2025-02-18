@@ -60,6 +60,9 @@ watch(() => props.value, (newValue) => {
   }
 })
 
+onUnmounted(() => {
+  current.value?.destroy();
+})
 </script>
 <style scoped lang="less">
 .chat-article-content {
