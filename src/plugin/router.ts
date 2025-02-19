@@ -35,17 +35,26 @@ const routers: Array<RouteRecordRaw> = [{
   path: "/tool/category",
   component: () => import("@/pages/tool/category/index.vue")
 }, {
-  name: "设置-基础",
-  path: "/setting/base",
-  component: () => import("@/pages/setting/base/index.vue")
-}, {
-  name: "设置-代码运行",
-  path: "/setting/code-run",
-  component: () => import("@/pages/setting/code-run/index.vue")
-}, {
-  name: "设置-关键字",
-  path: "/setting/feature",
-  component: () => import("@/pages/setting/feature/index.vue")
+  name: "设置",
+  path: "/setting",
+  component: () => import("@/pages/setting/index.vue"),
+  children: [{
+    name: "设置-基础",
+    path: "base",
+    component: () => import("@/pages/setting/base/index.vue")
+  }, {
+    name: "设置-代码运行",
+    path: "code-run",
+    component: () => import("@/pages/setting/code-run/index.vue")
+  }, {
+    name: "设置-ai服务",
+    path: "ai-service",
+    component: () => import("@/pages/setting/ai-service/index.vue")
+  }, {
+    name: "设置-关键字",
+    path: "feature",
+    component: () => import("@/pages/setting/feature/index.vue")
+  }]
 }, {
   name: "更多-备份",
   path: "/more/backup",

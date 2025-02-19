@@ -50,6 +50,9 @@
       <a-menu-item key="/setting/code-run">
         代码运行设置
       </a-menu-item>
+      <a-menu-item key="/setting/ai-service">
+        AI服务设置
+      </a-menu-item>
       <a-menu-item key="/setting/feature" v-if="isUtools">
         关键字设置
       </a-menu-item>

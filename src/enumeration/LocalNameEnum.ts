@@ -75,6 +75,14 @@ enum LocalNameEnum {
    */
   TODO_ATTR = '/todo/attr/',
 
+  // ========================== ai相关 ==========================
+
+  AI_SERVICE = '/ai/service',
+
+  AI_ASSISTANT = '/ai/assistant',
+
+  // ========================== 键值存储 ==========================
+
   /**
    * 版本
    */
