@@ -3,6 +3,7 @@
     <!-- 现在已有的待办分组：-->
     <content-card-priority v-for="group in groups" :key="group.id" :group="group"/>
     <!-- 添加待办分组按钮：-->
+    <content-card-empty v-if="groups.length === 0" />
     <!-- 关联的文章：-->
     <content-card-article />
   </main>
@@ -13,6 +14,7 @@ import ContentCardPriority from "@/pages/todo/components/ContentCard/components/
 import {useSortable, moveArrayElement} from "@vueuse/integrations/useSortable";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import ContentCardArticle from "@/pages/todo/components/ContentCard/components/ContentCardArticle.vue";
+import ContentCardEmpty from "@/pages/todo/components/ContentCard/components/ContentCardEmpty.vue";
 
 const el = useTemplateRef<HTMLDivElement>('content-card-main');
 const groups = computed(() => useTodoWrapStore().todoGroupView);

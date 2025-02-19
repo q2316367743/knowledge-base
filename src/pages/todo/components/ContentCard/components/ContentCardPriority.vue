@@ -26,13 +26,13 @@
               </template>
               重命名
             </a-doption>
-            <a-doption>
+            <a-doption @click="openAddTodoGroupFunc(group.id, 0)">
               <template #icon>
                 <icon-rotate-left/>
               </template>
               在左侧添加分组
             </a-doption>
-            <a-doption>
+            <a-doption @click="openAddTodoGroupFunc(group.id, 1)">
               <template #icon>
                 <icon-rotate-right/>
               </template>
@@ -58,7 +58,11 @@
 <script lang="ts" setup>
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
-import {openDeleteTodoGroupFunc, openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc";
+import {
+  openAddTodoGroupFunc,
+  openDeleteTodoGroupFunc,
+  openEditTodoGroupFunc
+} from "@/pages/todo/components/func/TodoGroupFunc";
 import TodoItemPriority from "@/pages/todo/components/common/TodoItemPriority.vue";
 import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
