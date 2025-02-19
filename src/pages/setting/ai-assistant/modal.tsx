@@ -5,7 +5,7 @@ import {
   Input,
   Modal,
   Select,
-  Slider,
+  Slider, Space,
   TabPane,
   Tabs,
   Textarea
@@ -13,8 +13,8 @@ import {
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
-import {SelectOptionGroup} from '@arco-design/web-vue'
 import {isEmptyString} from "@/utils/lang/FieldUtil";
+import {clone} from "radash";
 
 const RULES: FormInstance['rules'] = {
   'aiServiceId': [{
@@ -29,14 +29,22 @@ const RULES: FormInstance['rules'] = {
 }
 
 function buildForm(form: Ref<AiAssistant>) {
-  const options: Array<SelectOptionGroup> = useAiServiceStore().aiServices.map(e => ({
-    isGroup: true,
+  const options = computed(() => useAiServiceStore().aiServices.map(e => ({
     label: e.name,
+    value: e.id,
     options: e.models.map(m => ({
       label: m,
-      value: `${e.id}|${m}`
+      value: m
     }))
-  }))
+  })));
+  const models = computed(() => {
+    for (let option of options.value) {
+      if (option.value === form.value.aiServiceId) {
+        return option.options;
+      }
+    }
+    return [];
+  })
   return () =>
     <Form model={form.value} layout={'vertical'} rules={RULES}>
       <Tabs defaultActiveKey={'base'}>
@@ -50,7 +58,10 @@ function buildForm(form: Ref<AiAssistant>) {
         </TabPane>
         <TabPane key={'model'} title={'模型设置'}>
           <FormItem label={'AI 服务'} field={'aiServiceId'} validateTrigger={['blur', 'change']}>
-            <Select v-model={form.value.aiServiceId} options={options} allowSearch/>
+            <Space>
+              <Select v-model={form.value.aiServiceId} options={options.value} allowSearch/>
+              <Select v-model={form.value.model} options={models.value} allowSearch/>
+            </Space>
           </FormItem>
           <FormItem field={'temperature'}>{{
             label: () => '模型温度',
@@ -95,6 +106,35 @@ export function addAiAssistant() {
         return true;
       } catch (e) {
         MessageUtil.error("新增失败", e);
+        return false;
+      }
+    }
+  })
+}
+
+
+export function editAiAssistant(old: AiAssistant) {
+  const form = ref(clone(old));
+  Modal.open({
+    title: '修改助手',
+    draggable: true,
+    content: buildForm(form),
+    width: 500,
+    async onBeforeOk() {
+      if (isEmptyString(form.value.name)) {
+        MessageUtil.warning("请输入助手名")
+        return false;
+      }
+      if (isEmptyString(form.value.aiServiceId)) {
+        MessageUtil.warning("请选择 AI 服务")
+        return false;
+      }
+      try {
+        await useAiAssistantStore().saveOrUpdate(form.value);
+        MessageUtil.success("修改成功");
+        return true;
+      } catch (e) {
+        MessageUtil.error("修改失败", e);
         return false;
       }
     }

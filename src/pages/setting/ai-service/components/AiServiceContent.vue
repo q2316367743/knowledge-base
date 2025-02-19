@@ -28,9 +28,9 @@
             <a-space>
               <a-button type="primary" :loading @click="getAllModules">
                 <template #icon>
-                  <icon-edit/>
+                  <icon-refresh/>
                 </template>
-                管理
+                刷新
               </a-button>
               <a-button type="secondary" :loading>
                 <template #icon>
@@ -115,7 +115,10 @@ function getAllModules() {
 
 function save() {
   useAiServiceStore().saveOrUpdate(form.value)
-    .then(() => emit('save', form.value.id))
+    .then(() => {
+      emit('save', form.value.id);
+      MessageUtil.success("保存成功")
+    })
     .catch(e => MessageUtil.error("保存失败", e));
 }
 </script>

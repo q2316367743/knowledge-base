@@ -14,7 +14,7 @@
       <input v-model="question" type="text" placeholder="提出你的问题，回车提问" :disabled="loading"
              @keydown.enter="ask()"/>
       <div class="module-select">
-        <ai-module v-model="model"/>
+        <home-assistant-select v-model="model"/>
       </div>
       <a-divider direction="vertical" :margin="8"/>
       <a-dropdown>
@@ -59,6 +59,8 @@ import {useChatStore} from "@/store/components/ChatStore";
 import {ChatAttachment, ChatAttachmentType} from "@/types/Chat";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 const emit = defineEmits(['ask']);
 
@@ -95,13 +97,16 @@ function ask() {
   }
   useChatStore().ask({
     question: question.value,
-    model: model.value,
+    assistantId: model.value,
     attachments: attachments.value
   }).then(() => {
     question.value = '';
     attachments.value = [];
     error.value = false;
   })
+    .catch(e => {
+      MessageUtil.error("提问失败", e)
+    })
 }
 </script>
 <style scoped lang="less">

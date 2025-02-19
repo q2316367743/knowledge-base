@@ -4,7 +4,7 @@
     <div class="chat-article__time">
       <a-space>
         <div>{{ toDateString(message.id) }}</div>
-        <div>{{ message.m }}</div>
+        <div>{{ assistant }}</div>
         <template #split>
           <a-divider direction="vertical"/>
         </template>
@@ -48,6 +48,7 @@ import {toDateString} from "@/utils/lang/FormatUtil";
 import {copyText} from "@/utils/utools/NativeUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
 import ChatArticleContent from "@/pages/home/chat/components/ChatArticleContent.vue";
+import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 
 const router = useRouter();
 
@@ -59,11 +60,16 @@ const props = defineProps({
       q: '',
       a: '',
       m: '',
+      assistantId: '',
       f: []
     })
   },
 });
 const lastId = computed(() => useChatStore().lastId);
+const assistant = computed(() => {
+  const {aiAssistantMap} = useAiAssistantStore();
+  return aiAssistantMap.get(props.message.assistantId)?.name || ''
+})
 
 function copy() {
   copyText(props.message.a);

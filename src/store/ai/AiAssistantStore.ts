@@ -2,10 +2,13 @@ import {defineStore} from "pinia";
 import {AiAssistant} from "@/entity/ai/AiAssistant";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {map} from "@/utils/lang/ArrayUtil";
 
-export const useAiAssistantStore =  defineStore('ai-assistant', () => {
+export const useAiAssistantStore = defineStore('ai-assistant', () => {
   const aiAssistants = ref<Array<AiAssistant>>([])
   const rev = ref<string>();
+
+  const aiAssistantMap = computed(() => map(aiAssistants.value, 'id'));
 
   async function init() {
     const res = await listByAsync<AiAssistant>(LocalNameEnum.AI_ASSISTANT);
@@ -13,8 +16,6 @@ export const useAiAssistantStore =  defineStore('ai-assistant', () => {
     rev.value = res.rev;
   }
 
-
-  init().then(() => console.debug("ai服务初始化成功"));
 
   async function saveOrUpdate(aiService: AiAssistant) {
     const index = aiAssistants.value.findIndex(e => e.id === aiService.id);
@@ -30,14 +31,13 @@ export const useAiAssistantStore =  defineStore('ai-assistant', () => {
     const index = aiAssistants.value.findIndex(e => e.id === id);
     if (index !== -1) {
       aiAssistants.value.splice(index, 1);
-      rev.value = await saveListByAsync(LocalNameEnum.AI_SERVICE, aiAssistants.value, rev.value);
+      rev.value = await saveListByAsync(LocalNameEnum.AI_ASSISTANT, aiAssistants.value, rev.value);
     }
   }
 
   return {
-    aiAssistants,
-    saveOrUpdate,
-    remove
+    aiAssistants, aiAssistantMap,
+    init, saveOrUpdate, remove
   }
 
 });

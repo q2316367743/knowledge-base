@@ -16,7 +16,7 @@ export interface ChatAttachment {
 
 export interface ChatInputProps {
   question: string;
-  model: string;
+  assistantId: string;
   attachments: Array<ChatAttachment>
 }
 
@@ -27,10 +27,10 @@ export interface ChatMessage {
   q: string;
   // 答案
   a: string;
-  // 使用的模型
-  m: string;
   // 使用的附件
   f: Array<ChatAttachment>;
+  // 使用的模型
+  assistantId: string;
 }
 
 export interface ChatMessageParam {

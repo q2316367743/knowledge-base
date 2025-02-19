@@ -68,6 +68,7 @@ onUnmounted(() => {
 .chat-article-content {
   :deep(.cherry) {
     box-shadow: none;
+    background-color: transparent;
 
     .cherry-previewer {
       border: none;
