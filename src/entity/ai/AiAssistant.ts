@@ -1,3 +1,5 @@
+import {useSnowflake} from "@/hooks/Snowflake";
+
 /**
  * AI助手
  */
@@ -20,4 +22,18 @@ export interface AiAssistant {
   topP: number;
   // 上下文数
   maxChats: number;
+}
+
+export function buildAiAssistant(): AiAssistant {
+  return {
+    id: useSnowflake().nextId(),
+    createBy: Date.now(),
+    name: '',
+    system: '',
+    aiServiceId: '',
+    model: '',
+    temperature: 1,
+    topP: 1,
+    maxChats: 5
+  }
 }

@@ -29,17 +29,32 @@
         </div>
       </div>
     </div>
+    <div class="home-welcome-setting">
+      <a-dropdown position="br">
+        <a-button type="text">
+          <template #icon>
+            <icon-settings />
+          </template>
+        </a-button>
+        <template #content>
+          <a-doption @click="aiService">AI 服务</a-doption>
+          <a-doption @click="aiAssistant">AI 助手</a-doption>
+        </template>
+      </a-dropdown>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
 import MessageUtil from "@/utils/modal/MessageUtil";
 import AiInput from "@/pages/home/components/AiInput.vue";
 
+const router = useRouter();
 
 // 文档解读
 const article = () => MessageUtil.warning("暂未实现");
 const write = () => MessageUtil.warning("暂未实现");
-
+const aiService = () => router.push("/setting/ai-service");
+const aiAssistant = () => router.push("/setting/ai-assistant");
 
 </script>
 <style scoped lang="less">
@@ -97,6 +112,12 @@ const write = () => MessageUtil.warning("暂未实现");
         }
       }
     }
+  }
+
+  .home-welcome-setting {
+    position: absolute;
+    top: 8px;
+    right: 8px;
   }
 }
 

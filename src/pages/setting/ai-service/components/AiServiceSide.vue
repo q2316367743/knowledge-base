@@ -28,6 +28,12 @@ function handleAdd() {
 function handleSelect(res: string) {
   currentId.value = res || '';
 }
+
+onMounted(() => {
+  if (aiServices.value.length > 0) {
+    currentId.value = aiServices.value[0].id;
+  }
+})
 </script>
 <style scoped lang="less">
 

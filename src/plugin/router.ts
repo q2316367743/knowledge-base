@@ -51,6 +51,10 @@ const routers: Array<RouteRecordRaw> = [{
     path: "ai-service",
     component: () => import("@/pages/setting/ai-service/index.vue")
   }, {
+    name: "设置-ai助手",
+    path: "ai-assistant",
+    component: () => import("@/pages/setting/ai-assistant/index.vue")
+  }, {
     name: "设置-关键字",
     path: "feature",
     component: () => import("@/pages/setting/feature/index.vue")
