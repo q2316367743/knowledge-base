@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-article-content">
+  <div class="chat-content">
     <div ref="el"/>
   </div>
 </template>
@@ -65,7 +65,7 @@ onUnmounted(() => {
 })
 </script>
 <style scoped lang="less">
-.chat-article-content {
+.chat-content {
   :deep(.cherry) {
     box-shadow: none;
     background-color: transparent;

@@ -66,6 +66,7 @@ declare module 'vue' {
     ATrigger: typeof import('@arco-design/web-vue')['Trigger']
     ATypography: typeof import('@arco-design/web-vue')['Typography']
     ATypographyParagraph: typeof import('@arco-design/web-vue')['TypographyParagraph']
+    ChatContent: typeof import('./src/components/ChatContent/ChatContent.vue')['default']
     ColorPicker: typeof import('./src/components/color-picker/index.vue')['default']
     DateRange: typeof import('./src/components/DateRange/DateRange.vue')['default']
     EmptyResult: typeof import('./src/components/Result/EmptyResult.vue')['default']

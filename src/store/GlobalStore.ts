@@ -29,13 +29,15 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
   function initDarkColors() {
-    isDark.value = renderTheme()
+    isDark.value = renderTheme();
     if (isDark.value) {
       // 设置为暗黑主题
       document.body.setAttribute('arco-theme', 'dark');
+      document.documentElement.setAttribute('theme-mode', 'dark');
     } else {
       // 恢复亮色主题
       document.body.removeAttribute('arco-theme');
+      document.documentElement.removeAttribute('theme-mode');
     }
   }
 

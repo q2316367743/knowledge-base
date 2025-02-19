@@ -3,14 +3,12 @@
     <a-layout-content>
       <editor-content-editor :article-index="articleIndex" ref="editorRef" @send-to-chat="sendToChat"/>
     </a-layout-content>
-    <a-layout-sider :collapsed="collapsed" :collapsed-width="0" :width="width">
+    <a-layout-sider :collapsed="collapsed" :collapsed-width="0" :width="416">
       <editor-content-ai :article-index="articleIndex" ref="aiRef" @insert-to-article="insertToArticle"/>
     </a-layout-sider>
   </a-layout>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, PropType, ref} from "vue";
-import {useWindowSize} from "@vueuse/core";
 import {ArticleIndex} from "@/entity/article";
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {useUpdateRobotEvent} from "@/store/components/HomeEditorStore";
@@ -23,8 +21,6 @@ const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>
 });
 
-const size = useWindowSize();
-
 const robot = ref(false);
 const aiRef = ref();
 const editorRef = ref();
@@ -35,7 +31,6 @@ const collapsed = computed(() => {
   }
   return !robot.value;
 });
-const width = computed(() => Math.max(Math.min(Math.floor(size.width.value / 8 * 3), 400), 200));
 
 function updateRobot(id: number) {
   if (props.articleIndex && props.articleIndex.id === id) {

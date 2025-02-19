@@ -11,7 +11,7 @@
       </a-space>
     </div>
     <div class="chat-article__content">
-      <chat-article-content :value="message.a"/>
+      <chat-content :value="message.a" />
       <a-divider v-if="message.id === lastId">
         <icon-loading spin/>
       </a-divider>
@@ -47,8 +47,8 @@ import {useChatStore} from "@/store/components/ChatStore";
 import {toDateString} from "@/utils/lang/FormatUtil";
 import {copyText} from "@/utils/utools/NativeUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
-import ChatArticleContent from "@/pages/home/chat/components/ChatArticleContent.vue";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
+import ChatContent from "@/components/ChatContent/ChatContent.vue";
 
 const router = useRouter();
 
