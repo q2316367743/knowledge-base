@@ -92,14 +92,6 @@ export function addAiAssistant() {
     content: buildForm(form),
     width: 500,
     async onBeforeOk() {
-      if (isEmptyString(form.value.name)) {
-        MessageUtil.warning("请输入助手名")
-        return false;
-      }
-      if (isEmptyString(form.value.aiServiceId)) {
-        MessageUtil.warning("请选择 AI 服务")
-        return false;
-      }
       try {
         await useAiAssistantStore().saveOrUpdate(form.value);
         MessageUtil.success("新增成功");
@@ -121,14 +113,6 @@ export function editAiAssistant(old: AiAssistant) {
     content: buildForm(form),
     width: 500,
     async onBeforeOk() {
-      if (isEmptyString(form.value.name)) {
-        MessageUtil.warning("请输入助手名")
-        return false;
-      }
-      if (isEmptyString(form.value.aiServiceId)) {
-        MessageUtil.warning("请选择 AI 服务")
-        return false;
-      }
       try {
         await useAiAssistantStore().saveOrUpdate(form.value);
         MessageUtil.success("修改成功");
