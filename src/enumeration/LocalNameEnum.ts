@@ -158,6 +158,9 @@ enum LocalNameEnum {
   // 首页模型
   KEY_HOME_MODEL = '/key/home/model',
 
+  // 编辑器使用的助手
+  KEY_EDITOR_ASSISTANT = '/key/editor/assistant',
+
   // ========================== 窗口 ==========================
 
   WINDOW_CANVAS_FOLDER = '/window/canvas/folder',

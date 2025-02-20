@@ -50,7 +50,7 @@
 </template>
 <script lang="ts" setup>
 import {
-  editorType,useArticlePreviewEvent, useHomeEditorStore, homeEditorId, homeEditorArticles
+  editorType, useArticlePreviewEvent, useHomeEditorStore, homeEditorId, homeEditorArticles
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {remove, rename} from "@/pages/note/components/he-context";

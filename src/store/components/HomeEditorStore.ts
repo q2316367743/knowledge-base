@@ -51,7 +51,6 @@ export const editorType = computed(() => {
 });
 
 // 一些事件
-export const useUpdateRobotEvent = useEventBus<number>('update-robot');
 export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
 // 切换预览

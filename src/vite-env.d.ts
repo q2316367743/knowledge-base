@@ -8,6 +8,7 @@ declare module 'simple-mind-map/src/parse/markdown.js';
 declare module 'simple-mind-map/src/plugins/AssociativeLine.js';
 declare module 'simple-mind-map/src/plugins/Select.js';
 declare module 'simple-mind-map/src/plugins/Drag.js';
+
 // editor.js
 
 declare interface OpenFileOption {
@@ -18,6 +19,12 @@ declare interface OpenFileOption {
   properties?: Array<'openFile' | 'openDirectory' | 'multiSelections' | 'showHiddenFiles' | 'createDirectory' | 'promptToCreate' | 'noResolveAliases' | 'treatPackageAsDirectory' | 'dontAddToRecent'>,
   message?: string,
   securityScopedBookmarks?: boolean
+}
+
+class SubWindow {
+  constructor(channel: string);
+  receiveMsg<T = any>(callback: (msg: T) => void): void;
+  sendMsg<T = any>(msg: T): void
 }
 
 declare interface Window {
@@ -37,7 +44,10 @@ declare interface Window {
     customer: {
       // 写入文件
       writeToFile: (dir: string, name: string, content: Blob, root?: string) => Promise<string>;
-      writeStrToFile: (dir: string, name: string, content: string, root?: string) => Promise<{ folder: string, filePath: string }>;
+      writeStrToFile: (dir: string, name: string, content: string, root?: string) => Promise<{
+        folder: string,
+        filePath: string
+      }>;
       checkFileExist(root: string, dir: string, file: string): boolean;
       downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
       /**
@@ -59,7 +69,9 @@ declare interface Window {
       join(...paths: string[]): string;
     },
     ipcRenderer: {
+      buildSubWindow(channel): SubWindow;
       receiveMessage(event: string, callback: (msg: string) => void): void;
+      sendMessage<T = any>(id: number, channel: 'chat', message: T): void;
     },
     util: {
       uploadToImagePlus(filePath: string, pluginName: string): Promise<string>;
@@ -72,7 +84,7 @@ declare interface Window {
         onProgress: (e: string) => void,
         onSuccess: () => void,
         onError: (e: string) => void
-      }): {abort: () => void}
+      }): { abort: () => void }
     }
   }
 }

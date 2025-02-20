@@ -1,6 +1,6 @@
 <template>
   <div class="home-assistant-select">
-    <a-dropdown position="bottom" v-model:popup-visible="popupVisible" style="max-width: 160px">
+    <a-dropdown v-model:popup-visible="popupVisible" style="max-width: 160px">
       <div class="home-assistant-select__wrap flex items-center ">
         <div class="mr-6px relative name">
           <div v-if="assistant" class=" ellipsis" :title="assistant.name">{{ assistant.name }}</div>

@@ -1,6 +1,6 @@
 <template>
   <a-tooltip content="AI助理" position="bottom" v-if="useChatSettingStore().enable">
-    <a-button @click="switchRobot()" type="text">
+    <a-button @click="openAiChatWidget()" type="text">
       <template #icon>
         <icon-robot/>
       </template>
@@ -9,9 +9,8 @@
 </template>
 <script lang="ts" setup>
 import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
-import {homeEditorId, useUpdateRobotEvent} from "@/store/components/HomeEditorStore";
+import {openAiChatWidget} from "@/widget/AiChat";
 
-const switchRobot = () =>  useUpdateRobotEvent.emit(homeEditorId.value);
 </script>
 <style scoped lang="less">
 

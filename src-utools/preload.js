@@ -141,7 +141,10 @@ window.preload = {
     join: join
   },
   ipcRenderer: {
-    receiveMessage
+    receiveMessage,
+    sendMessage(id, channel, message) {
+      ipcRenderer.sendTo(id, channel, message);
+    }
   },
   util: {
     async uploadToImagePlus(filePath, pluginName) {
