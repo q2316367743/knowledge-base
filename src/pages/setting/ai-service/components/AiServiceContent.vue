@@ -1,51 +1,61 @@
 <template>
   <div class="ai-service-content  relative overflow-auto">
     <empty-result v-if="!currentId" title="未选择服务" tip="请在左侧选择服务"/>
-    <a-form v-else :model="form" layout="vertical">
-      <a-form-item label="服务名称">
-        <a-input allow-clear v-model="form.name"/>
-      </a-form-item>
-      <a-form-item label="服务类型">
-        <a-radio-group v-model="form.type">
-          <a-radio :value="AiServiceType.OPENAI">OpenAI</a-radio>
-        </a-radio-group>
-      </a-form-item>
-      <a-form-item label="API 地址">
-        <a-input allow-clear v-model="form.url"/>
-      </a-form-item>
-      <a-form-item label="API 密钥">
-        <a-input-password allow-clear v-model="form.key"/>
-      </a-form-item>
-      <!--      <a-form-item label="模型版本">-->
-      <!--        <a-input allow-clear v-model="form.modelVersion" />-->
-      <!--      </a-form-item>-->
-      <a-form-item label="模型">
-        <a-list class="w-full" max-height="500px">
-          <a-list-item v-for="(item, index) in form.models" :key="index">
-            {{ item }}
-          </a-list-item>
-          <template #footer>
-            <a-space>
-              <a-button type="primary" :loading @click="getAllModules">
-                <template #icon>
-                  <icon-refresh/>
-                </template>
-                刷新
-              </a-button>
-              <a-button type="secondary" :loading>
-                <template #icon>
-                  <icon-plus/>
-                </template>
-                添加
-              </a-button>
-            </a-space>
-          </template>
-        </a-list>
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" @click="save">保存</a-button>
-      </a-form-item>
-    </a-form>
+    <a-layout v-else style="height: calc(100vh - 52px);">
+      <a-layout-content class="overflow-auto" style="height: calc(100% - 18px);padding: 0 8px;">
+        <a-form :model="form" layout="vertical">
+          <a-form-item label="服务名称">
+            <a-input allow-clear v-model="form.name"/>
+          </a-form-item>
+          <a-form-item label="服务类型">
+            <a-radio-group v-model="form.type">
+              <a-radio :value="AiServiceType.OPENAI">OpenAI</a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item label="API 地址">
+            <a-input allow-clear v-model="form.url"/>
+          </a-form-item>
+          <a-form-item label="API 密钥">
+            <a-input-password allow-clear v-model="form.key"/>
+          </a-form-item>
+          <!--      <a-form-item label="模型版本">-->
+          <!--        <a-input allow-clear v-model="form.modelVersion" />-->
+          <!--      </a-form-item>-->
+          <a-form-item label="模型">
+            <a-list class="w-full" max-height="500px">
+              <a-list-item v-for="(item, index) in form.models" :key="index">
+                {{ item }}
+              </a-list-item>
+              <template #header>
+                <a-space>
+                  <a-button type="primary" :loading @click="getAllModules">
+                    <template #icon>
+                      <icon-refresh/>
+                    </template>
+                    刷新
+                  </a-button>
+                  <a-button type="secondary" :loading>
+                    <template #icon>
+                      <icon-plus/>
+                    </template>
+                    添加
+                  </a-button>
+                </a-space>
+              </template>
+            </a-list>
+          </a-form-item>
+        </a-form>
+      </a-layout-content>
+      <a-layout-footer style="padding: 8px 0;border-top: 1px solid var(--color-border-2)">
+        <a-space>
+          <a-button type="primary" @click="save">保存</a-button>
+          <a-popconfirm content="是否立即删除此服务，删除后，此服务创建的 AI 助手将无法使用" @ok="onDelete()">
+            <a-button type="primary" status="danger" v-if="currentId && currentId !== '0'">删除</a-button>
+          </a-popconfirm>
+        </a-space>
+      </a-layout-footer>
+    </a-layout>
+
   </div>
 </template>
 <script lang="ts" setup>
@@ -121,9 +131,14 @@ function save() {
     })
     .catch(e => MessageUtil.error("保存失败", e));
 }
+
+function onDelete() {
+  useAiServiceStore().remove(props.currentId).then(() => {
+    MessageUtil.success("删除成功");
+    emit('save', '');
+  })
+    .catch(e => MessageUtil.error("删除失败", e));
+}
 </script>
 <style scoped lang="less">
-.ai-service-content {
-  padding: 8px;
-}
 </style>
