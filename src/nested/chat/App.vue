@@ -165,7 +165,7 @@ function inputEnter(value: string) {
         const content = await useArticleStore().getContent(editorId.value);
         messages.push({
           role: 'system',
-          content: typeof content.record === 'object' ? JSON.stringify(content.record) : content.record
+          content: `根据以下文件内容回答问题：\n${typeof content.record === 'object' ? JSON.stringify(content.record) : content.record}`
         })
       }
     }

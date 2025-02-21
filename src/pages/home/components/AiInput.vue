@@ -17,6 +17,7 @@
     </div>
     <a-divider :margin="8" v-if="attachmentVisible" />
     <div class="input">
+      <!-- TODO: 此处应该换成文本域 -->
       <input
         v-model="question"
         type="text"
@@ -28,36 +29,38 @@
         <home-assistant-select v-model="model" width="120px" />
       </div>
       <a-divider direction="vertical" :margin="8" />
-      <a-dropdown>
-        <a-tooltip content="文件数量：最多支持10个">
-          <a-button type="text">
+      <div class="attachment-btn w-64px flex">
+        <a-dropdown>
+          <a-tooltip content="文件数量：最多支持10个">
+            <a-button type="text">
+              <template #icon>
+                <icon-attachment />
+              </template>
+            </a-button>
+          </a-tooltip>
+          <template #content>
+            <a-doption>
+              <template #icon>
+                <icon-file />
+              </template>
+              本地文件
+            </a-doption>
+            <a-doption>
+              <template #icon>
+                <icon-edit />
+              </template>
+              笔记文件
+            </a-doption>
+          </template>
+        </a-dropdown>
+        <a-tooltip content="截图回答，支持图片识别等">
+          <a-button type="text" @click="screenShot">
             <template #icon>
-              <icon-attachment />
+              <icon-screenshot style="fill: rgb(var(--arcoblue-6))" />
             </template>
           </a-button>
         </a-tooltip>
-        <template #content>
-          <a-doption>
-            <template #icon>
-              <icon-file />
-            </template>
-            本地文件
-          </a-doption>
-          <a-doption>
-            <template #icon>
-              <icon-edit />
-            </template>
-            笔记文件
-          </a-doption>
-        </template>
-      </a-dropdown>
-      <a-tooltip content="截图回答，支持图片识别等">
-        <a-button type="text" @click="screenShot">
-          <template #icon>
-            <icon-screenshot style="fill: rgb(var(--arcoblue-6))" />
-          </template>
-        </a-button>
-      </a-tooltip>
+      </div>
     </div>
   </div>
 </template>
