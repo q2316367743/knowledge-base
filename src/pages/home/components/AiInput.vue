@@ -25,7 +25,7 @@
         @keydown.enter="ask()"
       />
       <div class="module-select">
-        <home-assistant-select v-model="model" />
+        <home-assistant-select v-model="model" width="120px" />
       </div>
       <a-divider direction="vertical" :margin="8" />
       <a-dropdown>

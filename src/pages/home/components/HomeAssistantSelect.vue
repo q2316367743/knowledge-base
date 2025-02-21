@@ -9,7 +9,10 @@
         <icon-down class="down" :class="{reverse: popupVisible}"/>
       </div>
       <template #content>
-        <a-doption v-for="a in aiAssistants" :key="a.id" @click="handleChange(a.id)" :title="a.name">{{ a.name }}</a-doption>
+        <a-doption v-for="a in aiAssistants" :key="a.id" @click="handleChange(a.id)" :title="a.name">{{
+            a.name
+          }}
+        </a-doption>
       </template>
     </a-dropdown>
   </div>
@@ -21,6 +24,12 @@ import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 const value = defineModel({
   type: String,
   default: ''
+});
+defineProps({
+  width: {
+    type: String,
+    default: '120px'
+  }
 });
 
 const popupVisible = ref(false);
@@ -37,7 +46,7 @@ function handleChange(id: string) {
 </script>
 <style scoped lang="less">
 .home-assistant-select {
-  width: 120px;
+  max-width: v-bind(width);
   height: 32px;
   text-align: right;
   line-height: 32px;
@@ -48,7 +57,7 @@ function handleChange(id: string) {
   .home-assistant-select__wrap {
     padding: 0 8px;
     width: fit-content;
-    max-width: 104px;
+    max-width: calc(100% - 16px);
     cursor: pointer;
     transition: background-color 0.3s;
     border-radius: var(--border-radius-medium);
@@ -61,7 +70,7 @@ function handleChange(id: string) {
     }
 
     .name {
-      max-width: 84px;
+      max-width: calc(100% - 20px);
     }
 
     .down {

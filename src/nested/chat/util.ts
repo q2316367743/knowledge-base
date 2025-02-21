@@ -8,7 +8,7 @@ export function buildMessages(list: Array<AiChatMessage>): Array<ChatCompletionM
   return messages.reverse().filter(e => allowRoles.includes(e.role)).map(e => ({
     role: e.role,
     content: e.content
-  }));
+  } as ChatCompletionMessageParam));
 }
 
 export function getCurrentTime() {

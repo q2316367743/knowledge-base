@@ -1,8 +1,8 @@
 <template>
   <div class="chat">
     <header class="chat-header items-center justify-between pl-8px  pr-8px">
-      <a-checkbox v-model="embedArticle">是否将文章作为上下文</a-checkbox>
-      <home-assistant-select v-model="assistantId"/>
+      <a-checkbox v-model="embedArticle" :disabled="editorId === 0">是否将文章作为上下文</a-checkbox>
+      <home-assistant-select v-model="assistantId" width="50vw"/>
     </header>
     <main class="chat-main">
       <t-chat
@@ -19,16 +19,19 @@
             :datetime="item.datetime"
             :text-loading="index === 0 && loading"
           >
+            <template #content>
+              <chat-content v-if="item.role === 'assistant'" :value="item.content" style="padding: 12px 15px;"/>
+              <t-chat-content v-else :content="item.content" :role="item.role"/>
+            </template>
             <template v-if="!isStreamLoad" #actions>
-              <t-chat-action
-                :content="item.content"
-                @operation="(type, { e }) => handleOperation(type, { e, index })"
+              <t-chat-action :operation-btn="['replay', 'copy']"
+                             @operation="(type, { e }) => handleOperation(type, { e, index })"
               />
             </template>
           </t-chat-item>
         </template>
         <template #footer>
-          <t-chat-input @send="inputEnter" @stop="onStop" :stop-disabled="isStreamLoad" />
+          <t-chat-input @send="inputEnter" @stop="onStop" :stop-disabled="isStreamLoad"/>
         </template>
       </t-chat>
     </main>
@@ -36,10 +39,12 @@
 </template>
 <script lang="ts" setup>
 import OpenAI from "openai";
+import {ChatCompletionMessageParam} from "openai/src/resources/chat/completions";
 import {
   Chat as TChat,
   ChatAction as TChatAction,
   ChatItem as TChatItem,
+  ChatContent as TChatContent,
   ChatInput as TChatInput,
 } from '@tdesign-vue-next/chat';
 import {AiChatMessage} from "./type";
@@ -47,11 +52,12 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {copyText} from "@/utils/utools/NativeUtil";
 import {buildMessages, getCurrentTime} from "@/nested/chat/util";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {copyText} from "@/utils/utools/NativeUtil";
+import {useArticleStore} from "@/store/db/ArticleStore";
 
 useGlobalStore().initDarkColors();
 useAiServiceStore().init();
@@ -74,6 +80,7 @@ const chatList = ref<Array<AiChatMessage>>([{
 }]);
 const editorId = ref(0);
 const assistantId = useUtoolsKvStorage(LocalNameEnum.KEY_EDITOR_ASSISTANT, "");
+const fetchCancel = shallowRef<AbortController>();
 
 let subWindow = window.preload.ipcRenderer.buildSubWindow('chat');
 subWindow.receiveMsg(msg => {
@@ -137,29 +144,40 @@ function inputEnter(value: string) {
   });
   isStreamLoad.value = true;
   loading.value = true;
+  chatList.value.unshift({
+    role: 'assistant',
+    // 模型
+    name: aiAssistantMap.get(assistantId.value)?.name || 'AI 助理',
+    content: '',
+    datetime: getCurrentTime(),
+    assistantId: assistantId.value
+  });
   // 异步处理
   (async () => {
-    chatList.value.unshift({
-      role: 'assistant',
-      // 模型
-      name: aiAssistantMap.get(assistantId.value)?.name || 'AI 助理',
-      content: '',
-      datetime: getCurrentTime(),
-      assistantId: assistantId.value
-    })
+    const messages: Array<ChatCompletionMessageParam> = [{
+      role: 'system',
+      content: assistant.system
+    }];
+    if (embedArticle.value) {
+      // 嵌入文章
+      if (!editorId.value) {
+        MessageUtil.warning("系统异常，文章ID不存在，无法嵌入");
+        const content = await useArticleStore().getContent(editorId.value);
+        messages.push({
+          role: 'system',
+          content: typeof content.record === 'object' ? JSON.stringify(content.record) : content.record
+        })
+      }
+    }
+    messages.push(...buildMessages(chatList.value))
     const response = await openAi.chat?.completions.create({
       model: assistant.model,
-      messages: [
-        {
-          role: 'system',
-          content: assistant.system
-        },
-        ...buildMessages(chatList.value)
-      ],
+      messages,
       stream: true,
       temperature: assistant.temperature,
       top_p: assistant.topP,
     });
+    fetchCancel.value = response.controller;
     // 流式处理结果
     for await (const chunk of response) {
       const content = chunk.choices[0]?.delta?.content || '';
@@ -167,28 +185,43 @@ function inputEnter(value: string) {
       loading.value = false;
     }
   })()
-    .catch(e => {
-      MessageUtil.error("获取结果失败", e);
-      chatList.value.unshift({
-        role: 'error',
-        name: '系统',
-        content: `${e}`,
-        datetime: getCurrentTime(),
-        assistantId: assistantId.value
-      })
+    .catch(e => { // 注意错误类型是否为中断
+      if (e.name === "AbortError") {
+        chatList.value[0].content += "\n\n求被手动终止！";
+      } else {
+        MessageUtil.error("获取结果失败", e);
+        chatList.value.unshift({
+          role: 'error',
+          name: '系统',
+          content: `${e}`,
+          datetime: getCurrentTime(),
+          assistantId: assistantId.value
+        })
+      }
     }).finally(() => {
     isStreamLoad.value = false;
     loading.value = false;
+    fetchCancel.value = undefined;
   })
 }
 
 function onStop() {
+  if (fetchCancel.value) {
+    fetchCancel.value.abort();
+  }
 
 }
 
-function handleOperation(type: string, e:{e: Error, index: number}) {
+function handleOperation(type: string, e: { e: Error, index: number }) {
   if (type === 'copy') {
     copyText(chatList.value[e.index].content);
+  } else if (type === 'replay') {
+    if (isStreamLoad.value) return MessageUtil.error("正在回答中，请稍候");
+    chatList.value.shift();
+    const q = chatList.value.shift();
+    if (q && q.role === 'user') {
+      inputEnter(q.content);
+    }
   }
 }
 </script>
@@ -213,8 +246,13 @@ function handleOperation(type: string, e:{e: Error, index: number}) {
       margin-left: 8px;
       margin-right: 8px;
     }
+
     :deep(.t-chat__footer) {
       padding: 0 8px;
+    }
+
+    :deep(.t-chat__detail) {
+      max-width: 100% !important;
     }
   }
 }

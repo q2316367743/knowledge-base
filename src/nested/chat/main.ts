@@ -10,7 +10,8 @@ import '@arco-design/web-vue/es/drawer/style/css.js'
 import '@arco-design/web-vue/es/modal/style/css.js'
 import '@arco-design/web-vue/es/notification/style/css.js'
 import '@/assets/style/global.less';
-import 'virtual:uno.css'
+import 'virtual:uno.css';
+import 'cherry-markdown/dist/cherry-markdown.min.css';
 
 
 createApp(App)
