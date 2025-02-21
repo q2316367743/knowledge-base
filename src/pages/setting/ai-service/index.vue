@@ -1,5 +1,12 @@
 <template>
   <page-layout title="ai服务">
+    <template #extra>
+      <a-alert>
+        <span>推荐使用</span>
+        <a-link @click="toApi()">V3 API</a-link>
+        <span>，无需科学上网，即可使用。</span>
+      </a-alert>
+    </template>
     <a-layout class="h-full">
       <a-layout-sider>
         <ai-service-side v-model="currentId"/>
@@ -19,6 +26,7 @@ const currentId = ref('');
 function handleSave(id: string) {
   currentId.value = id;
 }
+const toApi = () => utools.shellOpenExternal("https://api.v3.cm/register?aff=6A4f");
 </script>
 <style scoped lang="less">
 
