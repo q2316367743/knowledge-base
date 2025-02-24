@@ -3,7 +3,7 @@
     <div class="calendar">
       <calendar expanded :is-dark="isDark" :attributes="attributes" title-position="left" @dayclick="onDayClick"
                 transparent/>
-      <div class="article" v-if="todoCategory && !todoCategory.hideOfArticle">
+      <div class="article" v-if="!hideOfArticle">
         <div class="title">关联文章</div>
         <div class="list">
           <a-list :bordered="false">
@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import {Calendar} from 'v-calendar';
 import {ArticleIndex} from "@/entity/article";
-import {handleSimplePriorityColor, TodoItemIndex} from "@/entity/todo/TodoItem";
+import {handleSimplePriorityColor, TodoItemIndex, TodoItemStatus} from "@/entity/todo/TodoItem";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {openAddTodoItem} from "@/pages/todo/components/common/AddTodoItem";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
@@ -72,22 +72,22 @@ const articleList = computed<Array<ArticleIndex>>(() => {
   return list;
 });
 
-const todoCategory = computed(() => useTodoCategoryStore().todoCategoryMap.get(useTodoWrapStore().categoryId));
-
 const items = computed<Array<TodoItemIndex>>(() => {
-
   const {todoGroupView} = useTodoWrapStore();
-
-  return todoGroupView.flatMap(e => e.children).flatMap(e => e.children);
+  console.log(todoGroupView)
+  return todoGroupView.flatMap(e => ([...e.children.flatMap(e => e.children), ...e.complete]));
 })
-
 const isDark = computed(() => useGlobalStore().isDark);
-
 const todoMap = computed(() => map(items.value, 'id'));
+const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
+const hideOfCompleteOrAbandon = computed(() => useTodoWrapStore().hideOfCompleteOrAbandon);
 
-watch(() => items.value, value => buildAttributes(value).then(res => attributes.value = res), {
+watch(items, value => buildAttributes(value).then(res => attributes.value = res), {
   deep: true,
   immediate: true
+});
+watch(hideOfCompleteOrAbandon, () => {
+  buildAttributes(items.value).then(res => attributes.value = res)
 })
 
 async function buildAttributes(indexes: Array<TodoItemIndex>): Promise<Array<Attribute>> {
@@ -130,7 +130,15 @@ function onDayClick(a: any) {
       temp.push(todoItemIndex);
     }
   }
-  indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoWrapStore().sort));
+  indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoWrapStore().sort))
+    .filter(e => {
+      if (hideOfCompleteOrAbandon.value) {
+        if (e.status === TodoItemStatus.COMPLETE || e.status === TodoItemStatus.ABANDON) {
+          return false;
+        }
+      }
+      return true;
+    });
   title.value = a.id;
 }
 
@@ -142,7 +150,15 @@ function onUpdate() {
       temp.push(todoItemIndex);
     }
   }
-  indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoWrapStore().sort));
+  indexes.value = temp.sort((a, b) => sortTodoIndex(a, b, useTodoWrapStore().sort))
+    .filter(e => {
+      if (hideOfCompleteOrAbandon.value) {
+        if (e.status === TodoItemStatus.COMPLETE || e.status === TodoItemStatus.ABANDON) {
+          return false;
+        }
+      }
+      return true;
+    });
 }
 
 </script>

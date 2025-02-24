@@ -3,9 +3,9 @@
     <!-- 现在已有的待办分组：-->
     <content-card-priority v-for="group in groups" :key="group.id" :group="group"/>
     <!-- 添加待办分组按钮：-->
-    <content-card-empty v-if="groups.length === 0" />
+    <content-card-empty v-if="groups.length === 0 || showAddGroupBtn"/>
     <!-- 关联的文章：-->
-    <content-card-article />
+    <content-card-article v-if="!hideOfArticle"/>
   </main>
 </template>
 <script lang="ts" setup>
@@ -18,6 +18,8 @@ import ContentCardEmpty from "@/pages/todo/components/ContentCard/components/Con
 
 const el = useTemplateRef<HTMLDivElement>('content-card-main');
 const groups = computed(() => useTodoWrapStore().todoGroupView);
+const showAddGroupBtn = computed(() => useTodoWrapStore().showAddGroupBtn);
+const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
 
 useSortable(el, groups, {
   animation: 150,

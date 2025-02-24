@@ -52,6 +52,7 @@ const props = defineProps({
     default: ''
   }
 });
+const emit = defineEmits(['update']);
 
 const index = shallowRef(props.item || getDefaultTodoItemIndex());
 const attr = ref(getDefaultTodoItemAttr());
@@ -102,6 +103,7 @@ function onCheck(item: TodoItemIndex) {
     .then(() => {
       item.status = newStatus
       MessageUtil.success("操作成功！")
+      emit('update')
     });
 }
 

@@ -15,7 +15,6 @@ import {useUmami} from "@/plugin/umami";
 import {renderGroupViews} from "@/utils/component/TodoUtil";
 import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 
-
 // 此store只负责展示，不负责增删改
 export const useTodoWrapStore = defineStore('todo-item', () => {
   // 当前打开的清单ID
@@ -26,6 +25,9 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
 
   const sort = ref(TodoListSortEnum.PRIORITY);
   const layout = ref(TodoListLayoutEnum.DEFAULT);
+  const hideOfCompleteOrAbandon = ref(false);
+  const hideOfArticle = ref(false);
+  const showAddGroupBtn = ref(false);
 
   // 待办
   const todoGroupView = computed<Array<TodoGroupView>>(
@@ -54,6 +56,9 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     itemId.value = 0;
     sort.value = TodoListSortEnum.PRIORITY;
     layout.value = TodoListLayoutEnum.DEFAULT;
+    hideOfCompleteOrAbandon.value = false;
+    hideOfArticle.value = false;
+    showAddGroupBtn.value = false;
     if (id === 0) {
       return;
     }
@@ -72,6 +77,9 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     // 只要ID大于0，这几项就要刷新
     sort.value = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
     layout.value = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;
+    hideOfCompleteOrAbandon.value = todoCategory.hideOfCompleteOrAbandon || false;
+    hideOfArticle.value = todoCategory.hideOfArticle || false;
+    showAddGroupBtn.value = todoCategory.showAddGroupBtn || false;
     // 事件
     useUmami.track(`/待办/布局/${renderTodoListLayout(layout.value)}`)
 
@@ -127,7 +135,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
 
   return {
     categoryId, itemId, currentCategory, sort, layout, collapsed,
-    todoGroupView,
+    todoGroupView, hideOfCompleteOrAbandon, hideOfArticle, showAddGroupBtn,
     init, setItemId, switchCollapsed,
     postGroup, deleteGroup, addGroupTo,
     addItem
