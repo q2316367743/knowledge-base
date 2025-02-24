@@ -51,7 +51,7 @@
     <div class="content-card-priority__content">
       <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
                           :group="group" :group-id="group.id"/>
-      <todo-item-complete :completes="group.complete"/>
+      <todo-item-complete :completes="group.complete" v-if="!hideOfCompleteOrAbandon"/>
     </div>
   </div>
 </template>
@@ -63,9 +63,10 @@ import {
   openDeleteTodoGroupFunc,
   openEditTodoGroupFunc
 } from "@/pages/todo/components/func/TodoGroupFunc";
+import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import TodoItemPriority from "@/pages/todo/components/common/TodoItemPriority.vue";
 import TodoItemComplete from "@/pages/todo/components/common/TodoItemComplete.vue";
-import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 
 const props = defineProps({
   group: {
@@ -82,6 +83,8 @@ const count = computed(() => {
   }
   return c;
 });
+const hideOfCompleteOrAbandon = computed(() => useTodoWrapStore().hideOfCompleteOrAbandon);
+
 const isDrag = ref(false);
 
 const toggleDrag = useToggle(isDrag);

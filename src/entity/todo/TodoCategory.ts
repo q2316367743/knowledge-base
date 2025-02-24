@@ -35,29 +35,16 @@ export interface TodoCategory extends ListTree {
   todoListLayout: TodoListLayoutEnum;
 
   /**
-   * 隐藏待办
+   * 隐藏文章
    */
-  hideOfTodo: boolean;
-
-  /**
-   * 隐藏进行中
-   */
-  hideOfDoing: boolean;
+  hideOfArticle: boolean;
 
   /**
    * 隐藏已完成
    */
-  hideOfComplete: boolean;
+  hideOfCompleteOrAbandon: boolean;
 
-  /**
-   * 隐藏已放弃
-   */
-  hideOfAbandon: boolean;
-
-  /**
-   * 隐藏文章
-   */
-  hideOfArticle: boolean;
+  showAddGroupBtn: boolean;
 
 }
 
@@ -119,12 +106,9 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
     type: TodoCategoryTypeEnum.FOLDER,
     todoListSort: TodoListSortEnum.PRIORITY,
     todoListLayout: TodoListLayoutEnum.DEFAULT,
-
-    hideOfTodo: false,
-    hideOfAbandon: false,
-    hideOfComplete: false,
-    hideOfDoing: false,
+    hideOfCompleteOrAbandon: false,
     hideOfArticle: false,
+    showAddGroupBtn: false
   }, source);
 }
 

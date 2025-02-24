@@ -17,11 +17,10 @@
   </a-split>
 </template>
 <script lang="ts" setup>
-import {useWindowSize} from "@vueuse/core";
 import './index.less';
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import ContentDefaultMain from "@/pages/todo/components/ContentDefault/layout/ContentDefaultMain/index.vue";
 import ContentDefaultSide from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultSide.vue";
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const size = useWindowSize();
 const show = ref(true);

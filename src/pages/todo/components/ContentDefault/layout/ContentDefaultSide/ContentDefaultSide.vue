@@ -2,14 +2,14 @@
   <div class="list">
     <content-default-header/>
     <div class="list-container" @click="setItemId(0)" ref="el">
-      <template v-if="groups.length > 0" >
+      <template v-if="groups.length > 0">
         <content-default-one v-if="groups.length === 1 && groups[0].id === '-1'" :group="groups[0]"/>
         <template v-else>
           <content-default-group v-for="group in groups" :key="group.id" :group="group"/>
         </template>
       </template>
-      <content-default-complete :groups="groups" />
-      <content-default-article />
+      <content-default-complete :groups="groups" v-if="!hideOfCompleteOrAbandon"/>
+      <content-default-article v-if="!hideOfArticle"/>
     </div>
   </div>
 </template>
@@ -28,6 +28,10 @@ import ContentDefaultArticle
 import ContentDefaultOne from "@/pages/todo/components/ContentDefault/layout/ContentDefaultSide/ContentDefaultOne.vue";
 
 const groups = computed(() => useTodoWrapStore().todoGroupView);
+const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
+const hideOfCompleteOrAbandon = computed(() => useTodoWrapStore().hideOfCompleteOrAbandon);
+
+
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
 
 const el = ref();
