@@ -16,15 +16,7 @@ const {spawn} = require('node:child_process');
  * @return {Promise<Buffer>}
  */
 const blobToBuffer = async (blob) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const buffer = Buffer.from(reader.result);
-      resolve(buffer);
-    };
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(blob);
-  });
+  return  blob.arrayBuffer().then(buffer => Buffer.from(buffer));
 };
 
 /**

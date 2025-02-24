@@ -30,23 +30,27 @@
       </div>
     </div>
     <div class="home-welcome-setting">
-      <a-dropdown position="br">
-        <a-button type="text">
-          <template #icon>
-            <icon-settings />
+      <a-space>
+        <home-assistant-select width="360px" />
+        <a-dropdown position="br">
+          <a-button type="outline">
+            <template #icon>
+              <icon-settings />
+            </template>
+          </a-button>
+          <template #content>
+            <a-doption @click="aiService">AI 服务</a-doption>
+            <a-doption @click="aiAssistant">AI 助手</a-doption>
           </template>
-        </a-button>
-        <template #content>
-          <a-doption @click="aiService">AI 服务</a-doption>
-          <a-doption @click="aiAssistant">AI 助手</a-doption>
-        </template>
-      </a-dropdown>
+        </a-dropdown>
+      </a-space>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import MessageUtil from "@/utils/modal/MessageUtil";
 import AiInput from "@/pages/home/components/AiInput.vue";
+import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 
 const router = useRouter();
 

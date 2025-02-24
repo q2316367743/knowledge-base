@@ -156,7 +156,7 @@ enum LocalNameEnum {
   KEY_PRIVACY = '/key/privacy',
 
   // 首页模型
-  KEY_HOME_MODEL = '/key/home/model',
+  KEY_HOME_ASSISTANT = '/key/home/assistant',
 
   // 编辑器使用的助手
   KEY_EDITOR_ASSISTANT = '/key/editor/assistant',

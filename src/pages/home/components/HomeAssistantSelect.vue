@@ -20,11 +20,8 @@
 <script lang="ts" setup>
 import {AiAssistant} from "@/entity/ai/AiAssistant";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
+import {useChatStore} from "@/store/components/ChatStore";
 
-const value = defineModel({
-  type: String,
-  default: ''
-});
 defineProps({
   width: {
     type: String,
@@ -34,14 +31,15 @@ defineProps({
 
 const popupVisible = ref(false);
 
+const assistantId = computed(() => useChatStore().assistantId);
 const aiAssistants = computed(() => useAiAssistantStore().aiAssistants);
 const assistant = computed<AiAssistant | undefined>(() => {
   const {aiAssistantMap} = useAiAssistantStore();
-  return aiAssistantMap.get(value.value)
+  return aiAssistantMap.get(assistantId.value)
 });
 
 function handleChange(id: string) {
-  value.value = id;
+  useChatStore().changeAssistantId(id);
 }
 </script>
 <style scoped lang="less">
