@@ -178,9 +178,6 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
 // 启动http
 createServer();
 
-window.preload && window.preload.ipcRenderer.receiveMessage('db', message => {
-  useDbKeyRefreshEvent.emit(message);
-})
 
 </script>
 <style lang="less"></style>

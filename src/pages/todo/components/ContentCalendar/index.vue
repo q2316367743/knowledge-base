@@ -6,7 +6,7 @@
 </template>
 <script lang="ts" setup>
 import ContentCalendarMain from "@/pages/todo/components/ContentCalendar/components/ContentCalendarMain.vue";
-import TodoHeader from "@/pages/todo/components/common/TodoHeader.vue";
+import TodoHeader from "@/pages/todo/components/common/TodoHeader/TodoHeader.vue";
 </script>
 <style lang="less">
 @import "./index.less";

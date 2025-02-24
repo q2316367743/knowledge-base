@@ -46,6 +46,11 @@ export interface TodoCategory extends ListTree {
 
   showAddGroupBtn: boolean;
 
+  /**
+   * 分组类型
+   */
+  groupType: TodoCategoryGroupEnum
+
 }
 
 export enum TodoCategoryTypeEnum {
@@ -95,6 +100,13 @@ export function renderTodoListLayout(layout: TodoListLayoutEnum): string {
   }
 }
 
+export enum TodoCategoryGroupEnum {
+  // 默认分组
+  DEFAULT = 1,
+  // 优先级分组
+  PRIORITY = 2
+}
+
 export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCategory {
   const now = new Date();
   return Object.assign<TodoCategory, Partial<TodoCategory>>({
@@ -108,7 +120,8 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
     todoListLayout: TodoListLayoutEnum.DEFAULT,
     hideOfCompleteOrAbandon: false,
     hideOfArticle: false,
-    showAddGroupBtn: false
+    showAddGroupBtn: false,
+    groupType: TodoCategoryGroupEnum.DEFAULT
   }, source);
 }
 

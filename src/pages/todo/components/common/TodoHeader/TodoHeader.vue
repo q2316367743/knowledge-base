@@ -15,50 +15,7 @@
         </div>
         <a-button-group type="text">
           <!-- 排序 -->
-          <a-dropdown position="br" @select="setTodoListSort($event)" :disabled="disabled">
-            <a-button>
-              <template #icon>
-                <icon-sort/>
-              </template>
-            </a-button>
-            <template #content>
-              <a-doption :value="TodoListSortEnum.PRIORITY">
-                <template #icon>
-                  <icon-check v-if="todoListSort === TodoListSortEnum.PRIORITY"/>
-                  <a-icon v-else/>
-                </template>
-                优先级
-              </a-doption>
-              <a-doption :value="TodoListSortEnum.NAME_ASC">
-                <template #icon>
-                  <icon-check v-if="todoListSort === TodoListSortEnum.NAME_ASC"/>
-                  <a-icon v-else/>
-                </template>
-                名称正序
-              </a-doption>
-              <a-doption :value="TodoListSortEnum.NAME_DESC">
-                <template #icon>
-                  <icon-check v-if="todoListSort === TodoListSortEnum.NAME_DESC"/>
-                  <a-icon v-else/>
-                </template>
-                名称倒序
-              </a-doption>
-              <a-doption :value="TodoListSortEnum.CREATE_TIME_ASC">
-                <template #icon>
-                  <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_ASC"/>
-                  <a-icon v-else/>
-                </template>
-                创建时间正序
-              </a-doption>
-              <a-doption :value="TodoListSortEnum.CREATE_TIME_DESC">
-                <template #icon>
-                  <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_DESC"/>
-                  <a-icon v-else/>
-                </template>
-                创建时间倒序
-              </a-doption>
-            </template>
-          </a-dropdown>
+          <todo-header-order />
           <!-- 更多 -->
           <a-dropdown position="br">
             <a-button>
@@ -121,6 +78,7 @@ import {openEditTodoGroupFunc} from "@/pages/todo/components/func/TodoGroupFunc"
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import TodoHeaderOrder from "@/pages/todo/components/common/TodoHeader/TodoHeaderOrder.vue";
 
 defineProps({
   side: {
@@ -131,7 +89,6 @@ defineProps({
 
 const disabled = computed(() => useTodoWrapStore().categoryId === 0);
 const title = computed(() => useTodoWrapStore().currentCategory?.name);
-const todoListSort = computed<TodoListSortEnum>(() => useTodoWrapStore().sort);
 
 const percent = computed(() => {
   const {items} = useTodoItemStore();
@@ -144,17 +101,7 @@ const percent = computed(() => {
 });
 
 const switchCollapsed = () => useTodoWrapStore().switchCollapsed();
-const setTodoListSort = (value: any) => {
-  const {categoryId} = useTodoWrapStore();
-  if (categoryId === 0) {
-    return;
-  }
-  useTodoCategoryStore()
-    .update(categoryId, {todoListSort: value})
-    // 更新成功，刷新数据
-    .then(() => useTodoWrapStore().init(categoryId))
-    .catch(e => MessageUtil.error("更新待办列表排序异常", e));
-}
+
 </script>
 <style scoped lang="less">
 .todo-header {

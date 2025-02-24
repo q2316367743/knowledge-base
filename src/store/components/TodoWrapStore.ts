@@ -7,7 +7,13 @@ import {TodoGroup, TodoGroupView} from "@/entity/todo/TodoGroup";
 import {map} from "@/utils/lang/ArrayUtil";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
-import {renderTodoListLayout, TodoCategory, TodoCategoryTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {
+  renderTodoListLayout,
+  TodoCategory,
+  TodoCategoryGroupEnum,
+  TodoCategoryTypeEnum,
+  TodoListLayoutEnum
+} from "@/entity/todo/TodoCategory";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -28,6 +34,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   const hideOfCompleteOrAbandon = ref(false);
   const hideOfArticle = ref(false);
   const showAddGroupBtn = ref(false);
+  const groupType = ref(TodoCategoryGroupEnum.DEFAULT);
 
   // 待办
   const todoGroupView = computed<Array<TodoGroupView>>(
@@ -59,6 +66,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     hideOfCompleteOrAbandon.value = false;
     hideOfArticle.value = false;
     showAddGroupBtn.value = false;
+    groupType.value = TodoCategoryGroupEnum.DEFAULT;
     if (id === 0) {
       return;
     }
@@ -80,6 +88,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     hideOfCompleteOrAbandon.value = todoCategory.hideOfCompleteOrAbandon || false;
     hideOfArticle.value = todoCategory.hideOfArticle || false;
     showAddGroupBtn.value = todoCategory.showAddGroupBtn || false;
+    groupType.value = todoCategory.groupType || TodoCategoryGroupEnum.DEFAULT;
     // 事件
     useUmami.track(`/待办/布局/${renderTodoListLayout(layout.value)}`)
 
@@ -134,7 +143,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   }
 
   return {
-    categoryId, itemId, currentCategory, sort, layout, collapsed,
+    categoryId, itemId, currentCategory, sort, layout, collapsed,groupType,
     todoGroupView, hideOfCompleteOrAbandon, hideOfArticle, showAddGroupBtn,
     init, setItemId, switchCollapsed,
     postGroup, deleteGroup, addGroupTo,

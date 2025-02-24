@@ -1,12 +1,18 @@
 <template>
   <div class="todo-content-card">
     <todo-header/>
-    <content-card-main/>
+    <content-card-priority v-if="groupType === TodoCategoryGroupEnum.PRIORITY" />
+    <content-card-default v-else/>
   </div>
 </template>
 <script lang="ts" setup>
-import TodoHeader from "@/pages/todo/components/common/TodoHeader.vue";
-import ContentCardMain from "@/pages/todo/components/ContentCard/components/ContentCardMain.vue";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {TodoCategoryGroupEnum} from "@/entity/todo/TodoCategory";
+import TodoHeader from "@/pages/todo/components/common/TodoHeader/TodoHeader.vue";
+import ContentCardDefault from "@/pages/todo/components/ContentCard/ContentCardDefault/ContentCardDefault.vue";
+import ContentCardPriority from "@/pages/todo/components/ContentCard/ContentCardPriority/ContentCardPriority.vue";
+
+const groupType = computed(() => useTodoWrapStore().groupType);
 </script>
 <style scoped lang="less">
 .todo-content-card {

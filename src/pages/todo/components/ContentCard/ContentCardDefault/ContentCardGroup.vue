@@ -1,8 +1,8 @@
 <template>
-  <div class="content-card-priority" v-if="group" :class="{drag: isDrag}" @dragend="toggleDrag(false)"
+  <div class="content-card-group" v-if="group" :class="{drag: isDrag}" @dragend="toggleDrag(false)"
        @drop="handleDrop"
        @dragenter="toggleDrag(true)" @dragover.stop="handleDragover" @dragleave="toggleDrag(false)">
-    <header class="content-card-priority__header">
+    <header class="content-card-group__header">
       <div class="title">
         {{ group.name }}
         <a-tag class="length">{{ count }}</a-tag>
@@ -48,7 +48,7 @@
         </a-dropdown>
       </div>
     </header>
-    <div class="content-card-priority__content">
+    <div class="content-card-group__content">
       <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
                           :group="group" :group-id="group.id"/>
       <todo-item-complete :completes="group.complete" v-if="!hideOfCompleteOrAbandon"/>
@@ -106,7 +106,7 @@ function handleDrop(e: DragEvent) {
 }
 </script>
 <style scoped lang="less">
-.content-card-priority {
+.content-card-group {
   width: 256px;
   height: calc(100vh - 40px);
   margin: 7px 8px;
@@ -119,7 +119,7 @@ function handleDrop(e: DragEvent) {
     border-color: rgb(var(--arcoblue-4));
   }
 
-  .content-card-priority__header {
+  .content-card-group__header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -136,7 +136,7 @@ function handleDrop(e: DragEvent) {
     }
   }
 
-  .content-card-priority__content {
+  .content-card-group__content {
     margin-top: 8px;
     height: calc(100% - 54px);
     overflow: auto;

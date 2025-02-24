@@ -20,7 +20,7 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 import {TodoItemPriority} from "@/entity/todo/TodoItem";
 // 组件
-import TodoHeader from "@/pages/todo/components/common/TodoHeader.vue";
+import TodoHeader from "@/pages/todo/components/common/TodoHeader/TodoHeader.vue";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const id = computed(() => useTodoWrapStore().categoryId);

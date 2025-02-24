@@ -74,7 +74,6 @@ const articleList = computed<Array<ArticleIndex>>(() => {
 
 const items = computed<Array<TodoItemIndex>>(() => {
   const {todoGroupView} = useTodoWrapStore();
-  console.log(todoGroupView)
   return todoGroupView.flatMap(e => ([...e.children.flatMap(e => e.children), ...e.complete]));
 })
 const isDark = computed(() => useGlobalStore().isDark);

@@ -3,14 +3,13 @@ import {
   Button, Descriptions, DescriptionsItem, Drawer,
   Form,
   FormItem, Link,
-  Modal,
+  Modal, Option,
   Radio,
   RadioGroup,
-  RangePicker,
+  RangePicker, Select,
   ShortcutType,
   Switch, Textarea
 } from "@arco-design/web-vue";
-import {ref, watch} from "vue";
 import dayjs from "dayjs";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
@@ -21,12 +20,15 @@ import {toDateString} from "@/utils/lang/FormatUtil";
 import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
+import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
+import {AiAssistant} from "@/entity/ai/AiAssistant";
 
 enum ExportFileTypeEnum {
   TEXT = 1,
   MARKDOWN = 2,
   HTML = 3,
-  CUSTOMER = 4
+  CUSTOMER = 4,
+  AI = 5
 }
 
 interface Config {
@@ -35,6 +37,8 @@ interface Config {
   includeTime: boolean;
   includeContent: boolean;
   script: string;
+  aiAssistantId?: string;
+  question?: string
 }
 
 const shortcuts: ShortcutType[] = [
@@ -235,8 +239,9 @@ export function openTodoExport() {
     type: ExportFileTypeEnum.TEXT,
     includeTime: false,
     includeContent: false,
-    script: getItemByDefault(LocalNameEnum.KEY_TODO_SCRIPT, "")
+    script: getItemByDefault(LocalNameEnum.KEY_TODO_SCRIPT, ""),
   });
+  const aiAssistants = computed<Array<AiAssistant>>(() => useAiAssistantStore().aiAssistants);
 
   watch(() => config.value.script, value => setItem(LocalNameEnum.KEY_TODO_SCRIPT, value));
 
@@ -258,6 +263,7 @@ export function openTodoExport() {
           <Radio value={ExportFileTypeEnum.MARKDOWN}>Markdown</Radio>
           <Radio value={ExportFileTypeEnum.HTML}>网页</Radio>
           <Radio value={ExportFileTypeEnum.CUSTOMER}>自定义</Radio>
+          <Radio value={ExportFileTypeEnum.AI} disabled={true}>AI总结</Radio>
         </RadioGroup>
       </FormItem>
       {config.value.type !== ExportFileTypeEnum.CUSTOMER && <FormItem label="是否包含日期">
@@ -274,6 +280,21 @@ export function openTodoExport() {
           help: () => <div><Link onClick={openArgs}>点此</Link>查看变量</div>
         }}
       </FormItem>}
+      {config.value.type === ExportFileTypeEnum.AI && <>
+        <FormItem label={'AI 助手'}>
+          <Select v-model={config.value.aiAssistantId} placeholder={'请选择 AI 助手'}>
+            {{
+              default: () => <>
+                {aiAssistants.value.map(assistant => <Option key={assistant.id} value={assistant.id}>{assistant.name}</Option>)}
+              </>
+            }}
+          </Select>
+        </FormItem>
+        <FormItem label={'AI 助手问题'}>
+          <Textarea v-model={config.value.question} autoSize={{minRows: 3, maxRows: 8}}
+                    allowClear placeholder={'比如：请帮我写一篇周报'}/>
+        </FormItem>
+      </>}
     </Form>,
     footer: () => <>
       <Button onClick={close}>取消</Button>

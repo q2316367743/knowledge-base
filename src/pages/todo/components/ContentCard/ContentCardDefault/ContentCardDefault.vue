@@ -1,25 +1,31 @@
 <template>
   <main class="content-card-main" ref="content-card-main">
     <!-- 现在已有的待办分组：-->
-    <content-card-priority v-for="group in groups" :key="group.id" :group="group"/>
+    <content-card-group v-for="group in groups" :key="group.id" :group="group"/>
     <!-- 添加待办分组按钮：-->
-    <content-card-empty v-if="groups.length === 0 || showAddGroupBtn"/>
+    <content-card-empty v-if="showEmpty"/>
     <!-- 关联的文章：-->
     <content-card-article v-if="!hideOfArticle"/>
   </main>
 </template>
 <script lang="ts" setup>
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import ContentCardPriority from "@/pages/todo/components/ContentCard/components/ContentCardPriority.vue";
 import {useSortable, moveArrayElement} from "@vueuse/integrations/useSortable";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {TodoCategoryGroupEnum} from "@/entity/todo/TodoCategory";
 import ContentCardArticle from "@/pages/todo/components/ContentCard/components/ContentCardArticle.vue";
-import ContentCardEmpty from "@/pages/todo/components/ContentCard/components/ContentCardEmpty.vue";
+import ContentCardGroup from "@/pages/todo/components/ContentCard/ContentCardDefault/ContentCardGroup.vue";
+import ContentCardEmpty from "@/pages/todo/components/ContentCard/ContentCardDefault/ContentCardEmpty.vue";
 
 const el = useTemplateRef<HTMLDivElement>('content-card-main');
 const groups = computed(() => useTodoWrapStore().todoGroupView);
 const showAddGroupBtn = computed(() => useTodoWrapStore().showAddGroupBtn);
 const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
+const groupType = computed(() => useTodoWrapStore().groupType);
+
+const showEmpty = computed(()  => {
+  return (groups.value.length === 0 || showAddGroupBtn.value) && groupType.value === TodoCategoryGroupEnum.DEFAULT
+})
 
 useSortable(el, groups, {
   animation: 150,
