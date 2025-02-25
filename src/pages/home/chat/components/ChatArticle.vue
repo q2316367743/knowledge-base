@@ -11,7 +11,12 @@
       </a-space>
     </div>
     <div class="chat-article__content">
-      <chat-content :value="message.a" />
+      <a-skeleton :animation="true" v-if="loading">
+        <a-skeleton-line :rows="3"/>
+        <a-space direction="vertical" :style="{width:'100%'}" size="large">
+        </a-space>
+      </a-skeleton>
+      <chat-content :value="message.a" v-else/>
       <a-divider v-if="message.id === lastId">
         <icon-loading spin/>
       </a-divider>
@@ -65,6 +70,7 @@ const props = defineProps({
     })
   },
 });
+const loading = computed(() => useChatStore().loading);
 const lastId = computed(() => useChatStore().lastId);
 const assistant = computed(() => {
   const {aiAssistantMap} = useAiAssistantStore();

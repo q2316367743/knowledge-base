@@ -6,7 +6,7 @@ import {resolve} from "path";
 import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite';
-import {ArcoResolver} from 'unplugin-vue-components/resolvers';
+import {ArcoResolver, TDesignResolver} from 'unplugin-vue-components/resolvers';
 
 function _resolve(dir: string) {
   return resolve(__dirname, dir);
@@ -21,13 +21,18 @@ export default defineConfig({
   plugins: [
     vue(), vueJsx(), UnoCSS(),
     AutoImport({
-      resolvers: [ArcoResolver()],
+      resolvers: [ArcoResolver(), TDesignResolver({
+        library: 'vue-next'
+      })],
       imports: ['vue', '@vueuse/core', 'vue-router'],
     }),
     Components({
       resolvers: [
         ArcoResolver({
           sideEffect: true
+        }),
+        TDesignResolver({
+          library: 'vue-next'
         })
       ]
     })

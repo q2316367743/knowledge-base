@@ -12,6 +12,7 @@ import '@arco-design/web-vue/es/message/style/css.js'
 import '@arco-design/web-vue/es/drawer/style/css.js'
 import '@arco-design/web-vue/es/modal/style/css.js'
 import '@arco-design/web-vue/es/notification/style/css.js'
+import 'tdesign-vue-next/es/style/index.css';
 import '@/assets/style/global.less';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'v-calendar/style.css';

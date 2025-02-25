@@ -2,13 +2,14 @@
   <div class="ai-input flex">
     <a-textarea
       :auto-size="{minRows: 1, maxRows: 5}"
+      class="ai-input-textarea"
       v-model="question"
       placeholder="提出你的问题，回车提问"
       :disabled="loading"
       @keydown.enter="send()"
     />
     <div class="flex flex-items-end" style="flex-direction: row" :class="{'w-72px': loading}">
-      <a-button :type="disabled ? 'text' : 'primary'" shape="circle" :disabled @click="ask">
+      <a-button class="ai-input-send" :type="disabled ? 'text' : 'primary'" shape="circle" :disabled @click="ask">
         <template #icon>
           <icon-send/>
         </template>

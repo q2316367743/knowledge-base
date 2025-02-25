@@ -4281,7 +4281,7 @@ tdesign-icons-vue-next@^0.3.4:
   dependencies:
     "@babel/runtime" "^7.16.3"
 
-tdesign-vue-next@^1.9.0:
+tdesign-vue-next@^1.10.7, tdesign-vue-next@^1.9.0:
   version "1.10.7"
   resolved "https://mirrors.cloud.tencent.com/npm/tdesign-vue-next/-/tdesign-vue-next-1.10.7.tgz#56a110368e27a81c8f221ab5df5266f0a2272bbc"
   integrity sha512-cbKd42Few8RXO2GMfZ/oJd8SaxzYWZQagpkHtSwTb6xh+E0vHyPOo/dr7h0u51zcVY/U9RhPRHsP01mvQrt2tQ==

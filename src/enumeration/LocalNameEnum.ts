@@ -177,7 +177,12 @@ enum LocalNameEnum {
   // 使用「图床」插件
   TIP_IMAGE_TO_IMAGE_PLUGIN = '/tip/image/to-image',
 
-  TIP_ARTICLE_ADD = '/tip/article/add'
+  TIP_ARTICLE_ADD = '/tip/article/add',
+
+  // ========================== 一次性变量 ==========================
+
+  // 首页欢迎的提示
+  GUIDE_HOME_WELCOME = '/guide/home/welcome'
 }
 
 export default LocalNameEnum;

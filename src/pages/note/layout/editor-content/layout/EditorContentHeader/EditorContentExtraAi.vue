@@ -1,5 +1,5 @@
 <template>
-  <a-tooltip content="AI助理" position="bottom" v-if="useChatSettingStore().enable">
+  <a-tooltip content="AI助理" position="bottom">
     <a-button @click="openAiChatWidget()" type="text">
       <template #icon>
         <icon-robot/>
@@ -8,9 +8,7 @@
   </a-tooltip>
 </template>
 <script lang="ts" setup>
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {openAiChatWidget} from "@/widget/AiChat";
-
 </script>
 <style scoped lang="less">
 

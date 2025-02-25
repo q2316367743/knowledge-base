@@ -29,11 +29,11 @@
         </div>
       </div>
     </div>
-    <div class="home-welcome-setting">
+    <div class="home-welcome-extra">
       <a-space>
         <home-assistant-select width="360px" />
         <a-dropdown position="br">
-          <a-button type="outline">
+          <a-button type="outline" class="home-welcome-setting">
             <template #icon>
               <icon-settings />
             </template>
@@ -45,12 +45,14 @@
         </a-dropdown>
       </a-space>
     </div>
+    <welcome-guide />
   </div>
 </template>
 <script lang="ts" setup>
 import MessageUtil from "@/utils/modal/MessageUtil";
 import AiInput from "@/pages/home/components/AiInput.vue";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
+import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
 
 const router = useRouter();
 
@@ -118,7 +120,7 @@ const aiAssistant = () => router.push("/setting/ai-assistant");
     }
   }
 
-  .home-welcome-setting {
+  .home-welcome-extra {
     position: absolute;
     top: 8px;
     right: 8px;
