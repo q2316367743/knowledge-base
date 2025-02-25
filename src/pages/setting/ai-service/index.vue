@@ -1,11 +1,11 @@
 <template>
   <page-layout title="ai服务">
     <template #extra>
-      <a-alert>
+      <a-tag color="orange" bordered>
         <span>推荐使用</span>
         <a-link @click="toApi()">V3 API</a-link>
         <span>，无需科学上网，即可使用。</span>
-      </a-alert>
+      </a-tag>
     </template>
     <a-layout class="h-full">
       <a-layout-sider>

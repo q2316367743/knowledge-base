@@ -62,9 +62,10 @@ function handleRemove(id: string) {
   border: 1px solid var(--color-border-1);
   border-radius: var(--border-radius-medium);
   transition: background-color, color 0.3s;
+  width: calc(100% - 24px);
 
   &.checked {
-    background-color: var(--color-fill-1);
+    border: 1px solid var(--color-border-3);
     color: rgb(var(--primary-6));
   }
 }
