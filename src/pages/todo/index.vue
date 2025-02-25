@@ -15,10 +15,10 @@
 import {computed} from "vue";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 
-import TodoSide from "@/pages/todo/components/TodoSide/index.vue";
-import ContentDefault from "@/pages/todo/components/ContentDefault/index.vue";
-import ContentCard from "@/pages/todo/components/ContentCard/index.vue";
-import ContentCalendar from "@/pages/todo/components/ContentCalendar/index.vue";
+import TodoSide from "@/pages/todo/TodoSide/index.vue";
+import ContentDefault from "@/pages/todo/ContentDefault/index.vue";
+import ContentCard from "@/pages/todo/ContentCard/index.vue";
+import ContentCalendar from "@/pages/todo/ContentCalendar/index.vue";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const collapsed = computed(() => useTodoWrapStore().collapsed);

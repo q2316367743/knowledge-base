@@ -1,4 +1,5 @@
 import {TodoItemIndex, TodoItemPriority} from "@/entity/todo/TodoItem";
+import {group} from "@/utils/lang/ArrayUtil";
 
 /**
  * 待办分组
@@ -53,4 +54,20 @@ export interface TodoPriorityView {
   children: Array<TodoItemIndex>;
   // 已完成 & 已放弃
   complete: Array<TodoItemIndex>;
+}
+
+export function todoGroupToPriorityView(todoGroupViews: Array<TodoGroupView>): Array<TodoPriorityView> {
+  const list = todoGroupViews.flatMap(e => e.children);
+  const completes = todoGroupViews.flatMap(e => e.complete);
+  const completeMap = group(completes, 'priority');
+  const res = new Array<TodoPriorityView>();
+  group(list, "value").forEach((v, k) => {
+    res.push({
+      value: k,
+      label: v[0].label,
+      children: v.flatMap(e => e.children),
+      complete: completeMap.getOrDefault(k, [])
+    })
+  });
+  return res;
 }

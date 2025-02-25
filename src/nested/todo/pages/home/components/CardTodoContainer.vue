@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import ContentDefault from "@/pages/todo/components/ContentDefault/index.vue";
+import ContentDefault from "@/pages/todo/ContentDefault/index.vue";
 </script>
 <style scoped lang="less">
 .list-container {

@@ -1,0 +1,60 @@
+<template>
+  <div class="list-side-default" @click="setItemId(0)" ref="el">
+    <template v-if="groups.length > 0">
+      <list-side-one v-if="groups.length === 1 && groups[0].id === '-1'" :group="groups[0]"/>
+      <template v-else>
+        <list-side-group v-for="group in groups" :key="group.id" :group="group"/>
+      </template>
+    </template>
+    <list-side-complete :groups="groups" v-if="!hideOfCompleteOrAbandon"/>
+    <list-side-article v-if="!hideOfArticle"/>
+  </div>
+</template>
+<script lang="ts" setup>
+import {moveArrayElement, useSortable} from "@vueuse/integrations/useSortable";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
+import ListSideGroup
+  from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideGroup.vue";
+import ListSideComplete
+  from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideComplete.vue";
+import ListSideArticle
+  from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideArticle.vue";
+import ListSideOne from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideOne.vue";
+
+const groups = computed(() => useTodoWrapStore().todoGroupView);
+const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
+const hideOfCompleteOrAbandon = computed(() => useTodoWrapStore().hideOfCompleteOrAbandon);
+
+
+const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
+
+const el = ref();
+
+useSortable(el, groups.value, {
+  animation: 150,
+  handle: '.content-default-group__header',
+  group: 'default-todo-side',
+  onUpdate: (e) => {
+    // do something
+    const {oldIndex = 0, newIndex = 0} = e;
+    moveArrayElement(groups.value, oldIndex, newIndex);
+    // nextTick required here as moveArrayElement is executed in a microtask
+    // so we need to wait until the next tick until that is finished.
+    nextTick(() => {
+      /* do something */
+      useTodoGroupStore().sort(groups.value.map(e => e.id));
+    })
+  }
+});
+</script>
+<style scoped lang="less">
+.list-side-default {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+</style>
