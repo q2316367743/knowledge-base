@@ -46,3 +46,11 @@ export interface TodoGroupView extends TodoGroup {
   complete: Array<TodoItemIndex>;
 
 }
+
+export interface TodoPriorityView {
+  value: TodoItemPriority;
+  label: string;
+  children: Array<TodoItemIndex>;
+  // 已完成 & 已放弃
+  complete: Array<TodoItemIndex>;
+}

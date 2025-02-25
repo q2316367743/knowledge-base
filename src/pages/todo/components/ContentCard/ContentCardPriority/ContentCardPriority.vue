@@ -1,21 +1,26 @@
 <template>
   <main class="content-card-priority">
+    <card-priority-item v-for="priority in priorities" :key="priority.value" :priority="priority"/>
   </main>
 </template>
 <script lang="ts" setup>
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {group} from "@/utils/lang/ArrayUtil";
-import {TodoGroupPriorityView} from "@/entity/todo/TodoGroup";
+import {TodoPriorityView} from "@/entity/todo/TodoGroup";
+import CardPriorityItem from "@/pages/todo/components/ContentCard/ContentCardPriority/CardPriorityItem.vue";
 
-const groups = computed(() => {
+const priorities = computed<Array<TodoPriorityView>>(() => {
   const {todoGroupView} = useTodoWrapStore();
-  const priorities = todoGroupView.flatMap(e => e.children);
-  const res = new Array<TodoGroupPriorityView>();
-  group(priorities, "value").forEach((v, k) => {
+  const list = todoGroupView.flatMap(e => e.children);
+  const completes = todoGroupView.flatMap(e => e.complete);
+  const completeMap = group(completes, 'priority');
+  const res = new Array<TodoPriorityView>();
+  group(list, "value").forEach((v, k) => {
     res.push({
       value: k,
       label: v[0].label,
-      children: v.flatMap(e => e.children)
+      children: v.flatMap(e => e.children),
+      complete: completeMap.getOrDefault(k, [])
     })
   });
   return res;

@@ -51,6 +51,7 @@ function handleChange(id: string) {
   border-radius: var(--border-radius-medium);
   display: flex;
   flex-direction: row-reverse;
+  background-color: var(--color-bg-1);
 
   .home-assistant-select__wrap {
     padding: 0 8px;
@@ -63,7 +64,7 @@ function handleChange(id: string) {
     user-select: none;
 
     &:hover {
-      background-color: var(--color-fill-1);
+      background-color: var(--color-fill-3);
       border: 1px solid var(--color-border-2);
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="card-todo-item" :data-id="index.id" draggable="true" @dragstart="handleDragstart"
+  <div class="card-todo-item" :data-id="index.id" :draggable="!!groupId" @dragstart="handleDragstart"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
        @click="_openTodoItemSetting($event)">
     <div class="todo-item__main">
@@ -108,6 +108,9 @@ function onCheck(item: TodoItemIndex) {
 }
 
 function handleDragstart(e: DragEvent) {
+  if (!props.groupId) {
+    return;
+  }
   e.dataTransfer?.setData('todo-item-id', props.item?.id + '');
   e.dataTransfer?.setData('todo-group-id', props.groupId);
 }
