@@ -31,11 +31,11 @@
     </div>
     <div class="home-welcome-extra">
       <a-space>
-        <home-assistant-select width="360px" />
+        <home-assistant-select width="360px"/>
         <a-dropdown position="br">
           <a-button type="outline" class="home-welcome-setting">
             <template #icon>
-              <icon-settings />
+              <icon-settings/>
             </template>
           </a-button>
           <template #content>
@@ -45,20 +45,26 @@
         </a-dropdown>
       </a-space>
     </div>
-    <welcome-guide />
+    <welcome-guide/>
+    <article-interpretation v-model="aiVisible"/>
+    <intelligent-writing v-model="iwVisible" />
   </div>
 </template>
 <script lang="ts" setup>
-import MessageUtil from "@/utils/modal/MessageUtil";
 import AiInput from "@/pages/home/components/AiInput.vue";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
+import ArticleInterpretation from "@/pages/home/modal/ArticleInterpretation.vue";
+import IntelligentWriting from "@/pages/home/modal/IntelligentWriting.vue";
 
 const router = useRouter();
 
+const aiVisible = ref(false);
+const iwVisible = ref(false);
+
 // 文档解读
-const article = () => MessageUtil.warning("暂未实现");
-const write = () => MessageUtil.warning("暂未实现");
+const article = () => aiVisible.value = true;
+const write = () => iwVisible.value = true;
 const aiService = () => router.push("/setting/ai-service");
 const aiAssistant = () => router.push("/setting/ai-assistant");
 

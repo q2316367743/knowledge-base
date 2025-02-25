@@ -4,7 +4,7 @@
       :auto-size="{minRows: 1, maxRows: 5}"
       class="ai-input-textarea"
       v-model="question"
-      placeholder="提出你的问题，回车提问"
+      :placeholder
       :disabled="loading"
       @keydown.enter="send()"
     />
@@ -27,6 +27,12 @@ import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {useChatStore} from "@/store/components/ChatStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
+defineProps({
+  placeholder: {
+    type: String,
+    default: "提出你的问题，回车提问"
+  }
+});
 
 const shift = useKeyModifier('Shift')
 

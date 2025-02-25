@@ -1,6 +1,6 @@
 <template>
   <div class="more-setting-chat">
-    <a-alert type="error">此处设置已废弃，请千万 AI 服务中设置，当前仅作备份，下个版本删除。</a-alert>
+    <a-alert type="error">此处设置已废弃，请前往 AI 服务中设置，当前仅作备份，下个版本删除。</a-alert>
     <a-form :model="instance" layout="vertical" style="margin-top: 7px;">
       <a-form-item label="是否启用">
         <a-switch v-model="instance.enable" type="round" disabled/>

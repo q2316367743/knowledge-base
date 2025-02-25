@@ -10,7 +10,7 @@ interface UseNoteTree {
     treeNodeData: ComputedRef<Array<TreeNodeData>>
 }
 
-export function useNoteTree(keyword: Ref<string>, map?: (data: TreeNodeData) => TreeNodeData): UseNoteTree {
+export function useNoteTree(keyword?: Ref<string>, map?: (data: TreeNodeData) => TreeNodeData): UseNoteTree {
     const treeData = computed<Array<TreeNodeData>>(() => {
         const {folderTree} = useFolderStore();
         const {folderMap} = useArticleStore();
@@ -35,7 +35,7 @@ export function useNoteTree(keyword: Ref<string>, map?: (data: TreeNodeData) => 
         })
         return treeData;
     });
-    const treeNodeData = computed(() => searchData(keyword.value, treeData.value));
+    const treeNodeData = computed(() => searchData(keyword?.value || '', treeData.value));
 
     return {treeData, treeNodeData};
 }

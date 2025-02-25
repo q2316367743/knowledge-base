@@ -6,6 +6,8 @@ import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
+import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
+import {useArticleStore} from "@/store/db/ArticleStore";
 
 export const chatToBottomEvent = useEventBus('chat-to-bottom');
 
@@ -89,6 +91,31 @@ export const useChatStore = defineStore('chat', () => {
     });
     // 异步处理
     (async () => {
+
+      // 获取文章
+      // {
+      //   role: 'system',
+      //     content: `根据以下文件内容回答问题：\n${typeof content.record === 'object' ? JSON.stringify(content.record) : content.record}`
+      // }
+      const articles = new Array<ChatMessageParam>();
+      if (isNotEmptyArray(articleIds.value)) {
+        const {getContent} = useArticleStore()
+        const contents = new Array<string>()
+        for (const articleId of articleIds.value) {
+          const c = await getContent(articleId);
+          if (c.record) {
+            contents.push(typeof c.record === 'object' ? JSON.stringify(c.record) : c.record)
+          }
+        }
+        if (isNotEmptyArray(contents)) {
+          articles.push({
+            role: 'system',
+            content: `根据以下文件内容回答问题：\n${contents.join('\n\n')}`
+          })
+        }
+      }
+
+
       const response = await openAi.chat?.completions.create({
         model: assistant.model,
         messages: [
@@ -98,6 +125,7 @@ export const useChatStore = defineStore('chat', () => {
             content: assistant.system
           },
           // TODO: 附带的文章
+          ...articles,
           // 历史消息
           ...oldMessages,
           // 当前的问题
@@ -150,8 +178,12 @@ export const useChatStore = defineStore('chat', () => {
     assistantId.value = id;
   }
 
+  function changeArticleIds(ids: Array<number>) {
+    articleIds.value = ids;
+  }
+
   return {
-    messages, steamLoading, empty, lastId, assistantId, loading,
-    ask, stop, clear, changeAssistantId
+    messages, steamLoading, empty, lastId, assistantId, loading, articleIds,
+    ask, stop, clear, changeAssistantId, changeArticleIds
   }
 })
