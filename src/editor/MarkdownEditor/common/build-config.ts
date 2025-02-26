@@ -9,16 +9,9 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {useScreenShotMenu} from "@/editor/MarkdownEditor/menu/ScreenShotMenu";
 import {usePanGu} from "@/editor/MarkdownEditor/menu/PanGuMenu";
 import {useFanYi} from "@/editor/MarkdownEditor/menu/FanYiMenu";
-import {useRelationMenu} from "@/editor/MarkdownEditor/menu/RelationMenu";
-import {
-  useAnWeiMenu, useMingRenMingYanMenu,
-  usePyqMenu, useQingGanMenu, useTianGouRiJiMenu,
-  useYiYanMenu
-} from "@/editor/MarkdownEditor/menu/XiaRouMenu";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {useChatSettingStore} from "@/store/setting/ChatSettingStore";
 import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
 import {useMoreItemMenu, useMoreMenu} from "@/editor/MarkdownEditor/menu/MoreMenu";
@@ -45,11 +38,6 @@ export async function buildConfig(
   const toolbar: CherryToolbarsOptions['toolbar'] = [];
   const bubble: Array<string> = [];
 
-  if (useChatSettingStore().enable) {
-    toolbar.push('AI')
-    bubble.push('AI', '|');
-  }
-
   toolbar.push(
     'quote',
     'header',
@@ -71,21 +59,16 @@ export async function buildConfig(
     'justify',
     'detail',
     '|',
+    'search',
+    'shortcutKey',
+    '|',
     {
       insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
     },
-    {
-      WenAn: ['YiYan', 'AnWei', 'Pyq', 'TianGouRiJi', 'QingGan', 'MingRenMingYan']
-    },
     'graph',
-    'Relation'
+    'ScreenShotMenu'
   );
   bubble.push(...['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'])
-
-  if (isUtools) {
-    // 只有是utools才需要截图
-    toolbar.push('ScreenShotMenu')
-  }
 
   let customMenu: Record<string, any> = {};
   if (instance && sendToChat) {
@@ -96,14 +79,6 @@ export async function buildConfig(
       ScreenShotMenu: useScreenShotMenu(instance),
       PanGu: usePanGu(),
       FanYi: useFanYi(),
-      Relation: useRelationMenu(instance),
-      // 夏柔API
-      YiYan: useYiYanMenu(instance),
-      AnWei: useAnWeiMenu(instance),
-      Pyq: usePyqMenu(instance),
-      TianGouRiJi: useTianGouRiJiMenu(instance),
-      QingGan: useQingGanMenu(instance),
-      MingRenMingYan: useMingRenMingYanMenu(instance),
       // 分组
       YangShi: Cherry.createMenuHook("样式", {}),
       ZiTi: Cherry.createMenuHook("字体", {}),
@@ -120,6 +95,8 @@ export async function buildConfig(
     }
   }
 
+  const {isDark} = useGlobalStore();
+
   return {
     id: id,
     value: value,
@@ -131,6 +108,13 @@ export async function buildConfig(
     autoScrollByCursor: true,
     forceAppend: true,
     locale: 'zh_CN',
+    themeSettings: {
+      toolbarTheme: isDark ? 'dark' : 'light',
+      codeBlockTheme: isDark ? 'material-ocean' : 'default',
+      mainTheme:  isDark ? 'dark' : 'light',
+      inlineCodeTheme: isDark ? 'black' : 'red',
+      themeList: []
+    },
     engine: {
       syntax: {
         codeBlock: {
@@ -180,12 +164,11 @@ export async function buildConfig(
       keyMap: mdEditorKeyMap
     },
     toolbars: {
-      theme: useGlobalStore().isDark ? 'dark' : 'light',
       showToolbar: true,
       toolbar: toolbar,
       toolbarRight: ['fullScreen', '|'],
       bubble: bubble, // array or false
-      sidebar: ['theme', 'settings'],
+      sidebar: ['settings'],
       toc: {
         updateLocationHash: false, // 要不要更新URL的hash
         defaultModel: 'pure', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题,
