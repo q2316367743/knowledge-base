@@ -4,7 +4,7 @@
       <t-space direction="vertical" size="small" style="width: 100%">
         <t-row :gutter="[16, 16]">
           <t-col flex="120px">
-            <t-select v-model="type" style="width: 120px" @change="searchContent">
+            <t-select v-model="type" style="width: 120px" :disabled="loading">
               <t-option :value="0" label="全部"/>
               <t-option
                 v-for="articleType in articleTextTypes"
@@ -18,7 +18,7 @@
             <t-input
               v-model="keyword"
               :placeholder="SearchContentPlaceholder"
-              :loading="loading"
+              :disabled="loading"
               :clearable="true"
               @enter="searchContent"
             />
@@ -34,9 +34,9 @@
         <t-row>
           <t-col>
             <t-space>
-              <t-checkbox v-model="ignoreCase">忽略大小写</t-checkbox>
-              <t-checkbox v-model="wholeWord">全词匹配</t-checkbox>
-              <t-checkbox v-model="useRegex">正则匹配</t-checkbox>
+              <t-checkbox v-model="ignoreCase" :disabled="loading">忽略大小写</t-checkbox>
+              <t-checkbox v-model="wholeWord" :disabled="loading">全词匹配</t-checkbox>
+              <t-checkbox v-model="useRegex" :disabled="loading">正则匹配</t-checkbox>
             </t-space>
           </t-col>
         </t-row>
@@ -69,7 +69,7 @@
             <t-tooltip content="跳转到编辑器">
               <t-button variant="text" shape="square" @click="jumpToArticle(item.value)">
                 <template #icon>
-                  <icon-edit />
+                  <icon-edit/>
                 </template>
               </t-button>
             </t-tooltip>
