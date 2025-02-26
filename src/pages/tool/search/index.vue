@@ -1,125 +1,167 @@
 <template>
-    <div class="graph-search">
-        <header class="header">
-            <a-row :gutter="8" class="search">
-                <a-col flex="120px">
-                    <a-select v-model="type" style="width: 120px">
-                        <a-option :value="0">全部</a-option>
-                        <a-option v-for="articleType in articleTextTypes" :key="articleType.key"
-                                  :value="articleType.key">
-                            {{ articleType.name }}
-                        </a-option>
-                    </a-select>
-                </a-col>
-                <a-col flex="auto">
-                    <a-input-search v-model="keyword" :placeholder="SearchContentPlaceholder" allow-clear
-                                    :loading="loading"
-                                    search-button @search="searchContent()" @clear="searchContent()"
-                                    @keydown.enter="searchContent"/>
-                </a-col>
-                <a-col flex="32px">
-                    <a-button type="primary" status="danger" :disabled="!loading" @click="stop()">
-                        <template #icon>
-                            <icon-close/>
-                        </template>
-                    </a-button>
-                </a-col>
-            </a-row>
-        </header>
-        <main class="container">
-            <a-alert v-if="loading">{{ text }}</a-alert>
-            <a-list :bordered="false" :virtual-list-props="{height: maxHeight}" :data="items">
-                <template #item="{item}">
-                    <a-list-item>
-                        <a-list-item-meta>
-                            <template #title>
-                                <a-tag color="blue">{{ renderArticleType(item.type) }}</a-tag>
-                                <a-tooltip content="打开预览">
-                                    <a-link @click="openArticle(item.value)">{{ item.title }}</a-link>
-                                </a-tooltip>
-                            </template>
-                            <template #description>
-                                <span v-html="item.html"></span>
-                            </template>
-                        </a-list-item-meta>
-                        <template #actions>
-                            <a-tooltip content="跳转到编辑器">
-                                <a-button type="text" @click="jumpToArticle(item.value)">
-                                    <template #icon>
-                                        <icon-edit />
-                                    </template>
-                                </a-button>
-                            </a-tooltip>
-                        </template>
-                    </a-list-item>
+  <div class="tool-search">
+    <t-card class="header" :bordered="false" size="small">
+      <t-space direction="vertical" size="small" style="width: 100%">
+        <t-row :gutter="[16, 16]">
+          <t-col flex="120px">
+            <t-select v-model="type" style="width: 120px" @change="searchContent">
+              <t-option :value="0" label="全部"/>
+              <t-option
+                v-for="articleType in articleTextTypes"
+                :key="articleType.key"
+                :value="articleType.key"
+                :label="articleType.name"
+              />
+            </t-select>
+          </t-col>
+          <t-col flex="auto">
+            <t-input
+              v-model="keyword"
+              :placeholder="SearchContentPlaceholder"
+              :loading="loading"
+              :clearable="true"
+              @enter="searchContent"
+            />
+          </t-col>
+          <t-col flex="32px">
+            <t-button theme="danger" :disabled="!loading" @click="stop">
+              <template #icon>
+                <t-icon name="close"/>
+              </template>
+            </t-button>
+          </t-col>
+        </t-row>
+        <t-row>
+          <t-col>
+            <t-space>
+              <t-checkbox v-model="ignoreCase">忽略大小写</t-checkbox>
+              <t-checkbox v-model="wholeWord">全词匹配</t-checkbox>
+              <t-checkbox v-model="useRegex">正则匹配</t-checkbox>
+            </t-space>
+          </t-col>
+        </t-row>
+      </t-space>
+    </t-card>
+    <t-layout class="container w-full">
+      <t-alert v-if="loading" :message="text"/>
+      <t-list :split="false" :max-height="maxHeight" class="w-full">
+        <t-list-item v-for="item in items" :key="item.value">
+          <t-list-item-meta>
+            <template #title>
+              <t-tag theme="primary">{{ renderArticleType(item.type) }}</t-tag>
+              <t-link
+                hover="underline"
+                theme="primary"
+                @click="openArticle(item.value)"
+                style="margin-left: 8px"
+              >
+                {{ item.title }}
+                <t-tooltip content="打开预览">
+                  <t-icon name="preview"/>
+                </t-tooltip>
+              </t-link>
+            </template>
+            <template #description>
+              <span v-html="item.html"></span>
+            </template>
+          </t-list-item-meta>
+          <template #action>
+            <t-tooltip content="跳转到编辑器">
+              <t-button variant="text" shape="square" @click="jumpToArticle(item.value)">
+                <template #icon>
+                  <icon-edit />
                 </template>
-            </a-list>
-        </main>
-    </div>
+              </t-button>
+            </t-tooltip>
+          </template>
+        </t-list-item>
+      </t-list>
+    </t-layout>
+    <t-back-top container=".t-list"/>
+  </div>
 </template>
+
 <script lang="ts" setup>
 import {useWindowSize} from "@vueuse/core";
 import {computed, onBeforeUnmount, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useRouter} from "vue-router";
-import {_searchContent, SearchContentItem, SearchContentPlaceholder} from "@/pages/note/components/SearchContent";
-import {articleTextTypes, renderArticleType} from "@/pages/note/components/he-context";
+import {
+  _searchContent,
+  SearchContentItem,
+  SearchContentPlaceholder,
+} from "@/pages/note/components/SearchContent";
+import {
+  articleTextTypes,
+  renderArticleType,
+} from "@/pages/note/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
-
 
 const size = useWindowSize();
 const router = useRouter();
 
-const keyword = ref('');
+const keyword = ref("");
 const loading = ref(false);
 const close = ref(false);
-const text = ref('');
-const items = ref(new Array<SearchContentItem>())
-const type = ref<ArticleTypeEnum | 0>(0)
+const text = ref("");
+const items = ref(new Array<SearchContentItem>());
+const type = ref<ArticleTypeEnum | 0>(0);
 
-const maxHeight = computed(() => size.height.value - 56);
+// 新增搜索选项
+const ignoreCase = ref(false);
+const wholeWord = ref(false);
+const useRegex = ref(false);
+
+const maxHeight = computed(() => size.height.value - 120);
 
 function searchContent() {
-    loading.value = true;
-    close.value = false;
-    text.value = '';
-    items.value = [];
-    if (keyword.value.trim() === '') {
-        loading.value = false;
-        close.value = true;
-        return;
-    }
-    _searchContent(keyword.value, close, items, text, type.value)
-        .then(() => MessageUtil.success("搜索完成"))
-        .catch(e => MessageUtil.error("搜索失败", e))
-        .finally(() => loading.value = false);
-
+  loading.value = true;
+  close.value = false;
+  text.value = "";
+  items.value = [];
+  if (keyword.value.trim() === "") {
+    loading.value = false;
+    close.value = true;
+    return;
+  }
+  _searchContent(keyword.value, close, items, text, type.value, {
+    ignoreCase: ignoreCase.value,
+    wholeWord: wholeWord.value,
+    useRegex: useRegex.value,
+  })
+    .then(() => MessageUtil.success("搜索完成"))
+    .catch((e) => MessageUtil.error("搜索失败", e))
+    .finally(() => (loading.value = false));
 }
 
-
-onBeforeUnmount(() => close.value = true);
+onBeforeUnmount(() => (close.value = true));
 
 function stop() {
-    if (close.value) {
-        MessageUtil.warning("正在停止中，请勿重复操作");
-        return;
-    }
-    close.value = true;
+  if (close.value) {
+    MessageUtil.warning("正在停止中，请勿重复操作");
+    return;
+  }
+  close.value = true;
 }
 
 function jumpToArticle(id: number) {
-    useHomeEditorStore().openArticle(id);
-    router.push('/note')
+  useHomeEditorStore().openArticle(id);
+  router.push("/note");
 }
-
 </script>
-<style scoped lang="less">
-.graph-search {
-    .header {
-        padding: 8px 16px;
-    }
 
+<style scoped lang="less">
+.tool-search {
+  margin: 0;
+  padding: 0;
+
+  .container {
+    margin: 0 auto;
+    height: calc(100vh - 81px);
+    overflow: auto;
+    background-color: var(--td-bg-color-container);
+  }
 }
 </style>
