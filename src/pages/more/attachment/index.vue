@@ -1,32 +1,23 @@
 <template>
-  <page-layout title="附件">
-    <div style="padding: 8px">
-      <a-image-preview-group infinite >
-        <a-space wrap>
-          <a-card :style="{ width: '351px' }" v-for="attachment in attachments" :key="attachment">
-            <template #actions>
-              <a-button size="mini" type="text" @click="copyMarkdown(attachment)">复制markdown链接</a-button>
-              <a-button size="mini" type="text" @click="copyHtml(attachment)">复制html链接</a-button>
-              <a-button size="mini" type="text" status="danger" @click="remove(attachment)">删除</a-button>
-            </template>
-            <template #cover>
-              <div style="display: flex;justify-content: center;align-items: center">
-                <a-image :src="renderAttachmentUrl(attachment)" height="120px"/>
-              </div>
-            </template>
-            <a-card-meta>
-              <template #title>
-                <a-typography-text>{{ attachment }}</a-typography-text>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-space>
-      </a-image-preview-group>
-    </div>
-  </page-layout>
+  <div style="padding: 8px">
+    <t-space direction="horizontal" size="medium" :break-line="true">
+      <t-card
+        v-for="attachment in attachments" :key="attachment" theme="poster2"
+        :cover="renderAttachmentUrl(attachment)" :bordered="true" :style="{ width: '350px' }">
+        <template #footer>
+          <t-space>
+            <t-button size="small" theme="primary" @click="copyMarkdown(attachment)">复制markdown链接</t-button>
+            <t-button size="small" theme="primary" @click="copyHtml(attachment)">复制html链接</t-button>
+          </t-space>
+        </template>
+        <template #actions>
+          <t-button size="small" theme="danger" @click="remove(attachment)">删除</t-button>
+        </template>
+      </t-card>
+    </t-space>
+  </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -51,7 +42,7 @@ function copyMarkdown(item: string) {
 }
 
 function copyHtml(item: string) {
-  utools.copyText(`![](${renderAttachmentUrl(item)})`);
+  utools.copyText(renderAttachmentUrl(item));
   MessageUtil.success("成功复制到剪切板");
 }
 
