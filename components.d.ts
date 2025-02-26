@@ -30,7 +30,6 @@ declare module 'vue' {
     AImage: typeof import('@arco-design/web-vue')['Image']
     AImagePreview: typeof import('@arco-design/web-vue')['ImagePreview']
     AImagePreviewGroup: typeof import('@arco-design/web-vue')['ImagePreviewGroup']
-    AiModule: typeof import('./src/components/AiModule/AiModule.vue')['default']
     AInput: typeof import('@arco-design/web-vue')['Input']
     AInputGroup: typeof import('@arco-design/web-vue')['InputGroup']
     AInputNumber: typeof import('@arco-design/web-vue')['InputNumber']

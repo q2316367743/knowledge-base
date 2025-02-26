@@ -2,6 +2,25 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.4.1',
+    sign: 241,
+    time: '2025-02-26',
+    items: [{
+      label: LogItemEnum.MAJOR,
+      content: "新增 AI 首页，目前仅支持自己配置 API 密钥，下个版本将内置 AI 服务"
+    }, {
+      label: LogItemEnum.MAJOR,
+      content: "待办新增分组功能，不仅可以自定义分组，也可以按照优先级分组"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "重构了 AI 问答功能，使用额外的弹框，更加方便快捷"
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: "修复了markdown笔记的笔记内搜索功能，新增markdown笔记的快捷键显示"
+    }],
+    remark: "AI 知识库的功目前来说还是太薄弱了，下个版本会参考更多的知识库软件去实现"
+  },
+  {
     version: '2.4.0',
     sign: 240,
     time: '2025-02-14',
