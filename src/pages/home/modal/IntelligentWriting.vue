@@ -1,5 +1,5 @@
 <template>
-  <t-dialog placement="center" v-model:visible="visible" width="700px">
+  <t-dialog placement="center" v-model:visible="visible" width="700px" :footer="false">
     <template #header>
       <a-space>
         <icon-edit/>
@@ -10,22 +10,44 @@
       <t-check-tag-group v-model="value" :options="options"/>
     </t-paragraph>
     <t-textarea v-model="text" :autosize="{minRows: 5, maxRows: 100}" :autofocus="true"/>
-    <template #footer>
+    <t-paragraph v-if="articles.length > 0">
+      <a-space wrap>
+        <div class="article-item" v-for="article in articles" :key="article.id">
+          <div class="article-item-title ellipsis" :title="article.name">
+            {{ article.name }}
+          </div>
+          <div class="article-item-type">
+            <t-tag theme="primary" variant="outline">
+              {{ renderArticleType(article.type) }}
+            </t-tag>
+          </div>
+          <div class="article-item-close" @click="onRemove(article.id)">
+            <icon-close/>
+          </div>
+        </div>
+      </a-space>
+    </t-paragraph>
+    <t-paragraph>
       <div class="w-full flex justify-between">
-        <t-button theme="default" >参考文档</t-button>
+        <t-button theme="default" @click="association = true">参考笔记</t-button>
         <t-button theme="primary" shape="circle" @click="send">
           <template #icon>
-            <icon-send />
+            <icon-send/>
           </template>
         </t-button>
       </div>
-    </template>
+    </t-paragraph>
+    <association-article v-model="association" :article-ids="articleIds" @confirm="onConfirm"/>
   </t-dialog>
 </template>
 <script lang="ts" setup>
 import {CheckTagGroupOption} from "tdesign-vue-next/es/tag/type";
 import {useChatStore} from "@/store/components/ChatStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import {ArticleIndex} from "@/entity/article";
+import {renderArticleType} from "@/pages/note/components/he-context";
+import AssociationArticle from "@/pages/home/components/AssociationArticle.vue";
 
 const visible = defineModel({
   type: Boolean,
@@ -38,6 +60,18 @@ const options: Array<CheckTagGroupOption> = ['朋友圈', '文章', '作文', '�
 }))
 const value = ref([0]);
 const text = ref('');
+const association = ref(false);
+
+const articleIds = computed(() => useChatStore().articleIds);
+const articles = computed(() => {
+  const {articleMap} = useArticleStore();
+  const list = new Array<ArticleIndex>()
+  for (const articleId of articleIds.value) {
+    const item = articleMap.get(articleId);
+    if (item) list.push(item);
+  }
+  return list;
+})
 
 function onChange(v: number) {
   switch (v) {
@@ -66,7 +100,15 @@ function onChange(v: number) {
 
 watch(value, val => onChange(val[0]), {immediate: true});
 watch(visible, val => val && onChange(value.value[0]));
-// TODO: 参考文档
+
+function onConfirm(ids: Array<number>) {
+  useChatStore().changeArticleIds(ids);
+}
+
+function onRemove(id: number) {
+  useChatStore().changeArticleIds(articleIds.value.filter(e => e !== id));
+}
+
 const send = () => useChatStore()
   .ask(text.value)
   .catch((e) => {
@@ -74,5 +116,49 @@ const send = () => useChatStore()
   });
 </script>
 <style scoped lang="less">
+.article-item {
+  position: relative;
+  padding: 6px 8px;
+  background-color: var(--td-bg-color-component);
+  border: 1px solid var(--td-border-level-1-color);
+  border-radius: var(--td-radius-medium);
+  transition: background-color 0.3s ease-in-out;
+  max-width: 120px;
 
+
+  &:hover {
+    background-color: var(--td-bg-color-component-hover);
+    border: 1px solid var(--td-border-level-2-color);
+    .article-item-close {
+      opacity: 1;
+    }
+  }
+
+  .article-item-type {
+    margin-top: 6px;
+  }
+
+  .article-item-close {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--td-error-color);
+    border-radius: var(--td-radius-circle);
+    color: #fff;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-size: 10px;
+    opacity: 0;
+
+    &:hover {
+      background-color: var(--td-error-color-hover);
+    }
+  }
+}
 </style>

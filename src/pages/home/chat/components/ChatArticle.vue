@@ -11,7 +11,7 @@
       </a-space>
     </div>
     <div class="chat-article__content">
-      <a-skeleton :animation="true" v-if="loading">
+      <a-skeleton :animation="true" v-if="loading && message.id === lastId">
         <a-skeleton-line :rows="3"/>
         <a-space direction="vertical" :style="{width:'100%'}" size="large">
         </a-space>
@@ -70,8 +70,8 @@ const props = defineProps({
     })
   },
 });
-const loading = computed(() => useChatStore().loading);
 const lastId = computed(() => useChatStore().lastId);
+const loading = computed(() => useChatStore().loading);
 const assistant = computed(() => {
   const {aiAssistantMap} = useAiAssistantStore();
   return aiAssistantMap.get(props.message.assistantId)?.name || ''
