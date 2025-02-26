@@ -1,8 +1,10 @@
 <template>
   <div class="chat">
     <header class="chat-header items-center justify-between pl-8px  pr-8px">
-      <a-checkbox v-model="embedArticle" :disabled="editorId === 0">是否将文章作为上下文</a-checkbox>
-      <home-assistant-select v-model="assistantId" width="50vw"/>
+      <t-checkbox v-model="embedArticle" :disabled="editorId === 0">是否包含文章</t-checkbox>
+      <div style="overflow: hidden;">
+        <home-assistant-select v-model="assistantId" width="calc(100vw - 118px)"/>
+      </div>
     </header>
     <main class="chat-main">
       <t-chat
@@ -227,12 +229,17 @@ function handleOperation(type: string, e: { e: Error, index: number }) {
 </script>
 <style scoped lang="less">
 .chat {
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
   color: var(--color-text-1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
   .chat-header {
     height: 40px;
-    border-bottom: 1px solid var(--color-border-1);
+    border-bottom: 1px solid var(--td-border-level-1-color);
     display: flex;
     align-items: center;
   }

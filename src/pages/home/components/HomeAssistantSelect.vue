@@ -1,6 +1,6 @@
 <template>
   <div class="home-assistant-select">
-    <a-dropdown v-model:popup-visible="popupVisible" style="max-width: 160px">
+    <t-dropdown v-model:popup-visible="popupVisible" :options="options" style="max-width: 160px" trigger="click">
       <div class="home-assistant-select__wrap flex items-center ">
         <div class="mr-6px relative name">
           <div v-if="assistant" class=" ellipsis" :title="assistant.name">{{ assistant.name }}</div>
@@ -8,19 +8,14 @@
         </div>
         <icon-down class="down" :class="{reverse: popupVisible}"/>
       </div>
-      <template #content>
-        <a-doption v-for="a in aiAssistants" :key="a.id" @click="handleChange(a.id)" :title="a.name">{{
-            a.name
-          }}
-        </a-doption>
-      </template>
-    </a-dropdown>
+    </t-dropdown>
   </div>
 </template>
 <script lang="ts" setup>
 import {AiAssistant} from "@/entity/ai/AiAssistant";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import {useChatStore} from "@/store/components/ChatStore";
+import {DropdownProps} from "tdesign-vue-next";
 
 defineProps({
   width: {
@@ -37,6 +32,14 @@ const assistant = computed<AiAssistant | undefined>(() => {
   const {aiAssistantMap} = useAiAssistantStore();
   return aiAssistantMap.get(assistantId.value)
 });
+const options = computed<DropdownProps['options']>(() => {
+  const {aiAssistants} = useAiAssistantStore();
+  return aiAssistants.map(a => ({
+    content: a.name,
+    value: a.id,
+    onClick: () => handleChange(a.id)
+  }))
+})
 
 function handleChange(id: string) {
   useChatStore().changeAssistantId(id);
@@ -51,7 +54,7 @@ function handleChange(id: string) {
   border-radius: var(--border-radius-medium);
   display: flex;
   flex-direction: row-reverse;
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
 
   .home-assistant-select__wrap {
     padding: 0 8px;
@@ -60,12 +63,12 @@ function handleChange(id: string) {
     cursor: pointer;
     transition: background-color 0.3s;
     border-radius: var(--border-radius-medium);
-    border: 1px solid var(--color-border-1);
+    border: 1px solid var(--td-border-level-1-color);
     user-select: none;
 
     &:hover {
-      background-color: var(--color-fill-3);
-      border: 1px solid var(--color-border-2);
+      background-color: var(--td-bg-color-container-hover);
+      border: 1px solid var(--td-border-level-2-color);
     }
 
     .name {
