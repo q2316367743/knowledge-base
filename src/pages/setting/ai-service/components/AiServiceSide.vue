@@ -1,6 +1,6 @@
 <template>
-  <a-layout class="h-full">
-    <a-layout-content style="overflow: auto" @click="close">
+  <t-layout class="h-full" style="background-color: var(--td-bg-color-container);">
+    <t-content style="overflow: auto;" @click="close">
       <a-radio-group v-model="currentId" direction="vertical" class="w-full">
         <a-radio v-for="s in aiServices" :key="s.id" :value="s.id">
           <template #radio="{ checked }">
@@ -17,11 +17,11 @@
           </template>
         </a-radio>
       </a-radio-group>
-    </a-layout-content>
-    <a-layout-footer style="padding: 8px;">
-      <a-button type="outline" long @click="handleAdd" :disabled="currentId === '0'">新增</a-button>
-    </a-layout-footer>
-  </a-layout>
+    </t-content>
+    <t-footer style="padding: 8px;">
+      <t-button theme="primary" variant="outline" :block="true" @click="handleAdd" :disabled="currentId === '0'">新增</t-button>
+    </t-footer>
+  </t-layout>
 </template>
 <script lang="ts" setup>
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
@@ -59,12 +59,17 @@ function handleRemove(id: string) {
 .ai-service-item {
   padding: 4px 8px;
   margin-top: 4px;
-  border: 1px solid var(--color-border-1);
-  border-radius: var(--border-radius-medium);
-  transition: background-color, color 0.3s;
+  border: 1px solid var(--td-border-level-1-color);
+  border-radius: var(--td-radius-medium);
+  transition: all 0.3s;
   width: calc(100% - 24px);
 
+  &:hover {
+    background-color: var(--td-bg-color-component-hover);
+  }
+
   &.checked {
+    background-color: var(--td-bg-color-component-hover);
     border: 1px solid var(--color-border-3);
     color: rgb(var(--primary-6));
   }

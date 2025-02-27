@@ -1,20 +1,20 @@
 <template>
   <page-layout title="ai服务">
     <template #extra>
-      <a-tag color="orange" bordered>
+      <t-tag color="orange" variant="outline">
         <span>推荐使用</span>
-        <a-link @click="toApi()">V3 API</a-link>
+        <t-link @click="toApi()" hover="color">V3 API</t-link>
         <span>，无需科学上网，即可使用。</span>
-      </a-tag>
+      </t-tag>
     </template>
-    <a-layout class="h-full">
-      <a-layout-sider>
+    <t-layout class="h-full">
+      <t-aside style="border-right: 1px solid var(--td-border-level-1-color)">
         <ai-service-side v-model="currentId"/>
-      </a-layout-sider>
-      <a-layout-content>
+      </t-aside>
+      <t-content style="background-color: var(--td-bg-color-container)">
         <ai-service-content :current-id="currentId" @save="handleSave"/>
-      </a-layout-content>
-    </a-layout>
+      </t-content>
+    </t-layout>
   </page-layout>
 </template>
 <script lang="ts" setup>

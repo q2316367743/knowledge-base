@@ -1,60 +1,62 @@
 <template>
   <div class="ai-service-content  relative overflow-auto">
     <empty-result v-if="!currentId" title="未选择服务" tip="请在左侧选择服务"/>
-    <a-layout v-else style="height: calc(100vh - 52px);">
-      <a-layout-content class="overflow-auto" style="height: calc(100% - 18px);padding: 0 8px;">
-        <a-form :model="form" layout="vertical">
-          <a-form-item label="服务名称">
-            <a-input allow-clear v-model="form.name"/>
-          </a-form-item>
-          <a-form-item label="服务类型">
-            <a-radio-group v-model="form.type">
-              <a-radio :value="AiServiceType.OPENAI">OpenAI</a-radio>
-            </a-radio-group>
-          </a-form-item>
-          <a-form-item label="API 地址">
-            <a-input allow-clear v-model="form.url"/>
-          </a-form-item>
-          <a-form-item label="API 密钥">
-            <a-input-password allow-clear v-model="form.key"/>
-          </a-form-item>
-          <!--      <a-form-item label="模型版本">-->
-          <!--        <a-input allow-clear v-model="form.modelVersion" />-->
-          <!--      </a-form-item>-->
-          <a-form-item label="模型">
-            <a-list class="w-full" max-height="500px">
-              <a-list-item v-for="(item, index) in form.models" :key="index">
-                {{ item }}
-              </a-list-item>
-              <template #header>
-                <a-space>
-                  <a-button type="primary" :loading @click="getAllModules">
+    <t-layout v-else style="height: calc(100vh - 52px);background-color: var(--td-bg-color-container);">
+      <t-content class="overflow-auto" style="height: calc(100% - 18px);padding: 8px;">
+        <t-form :model="form">
+          <t-form-item label="服务名称" label-align="top">
+            <t-input allow-clear v-model="form.name"/>
+          </t-form-item>
+          <t-form-item label="服务类型" label-align="top">
+            <t-radio-group v-model="form.type">
+              <t-radio :value="AiServiceType.OPENAI">OpenAI</t-radio>
+            </t-radio-group>
+          </t-form-item>
+          <t-form-item label="API 地址" label-align="top">
+            <t-input allow-clear v-model="form.url"/>
+          </t-form-item>
+          <t-form-item label="API 密钥" label-align="top">
+            <t-input type="password" allow-clear v-model="form.key"/>
+          </t-form-item>
+          <!--      <t-form-item label="模型版本">-->
+          <!--        <t-input allow-clear v-model="form.modelVersion" />-->
+          <!--      </t-form-item>-->
+          <t-form-item label="模型" label-align="top">
+            <a-card class="w-full">
+              <template #title>
+                <t-space>
+                  <t-button theme="primary" :loading @click="getAllModules">
                     <template #icon>
                       <icon-refresh/>
                     </template>
                     刷新
-                  </a-button>
-                  <a-button type="secondary" :loading>
+                  </t-button>
+                  <t-button theme="default" :loading>
                     <template #icon>
                       <icon-plus/>
                     </template>
                     添加
-                  </a-button>
-                </a-space>
+                  </t-button>
+                </t-space>
               </template>
-            </a-list>
-          </a-form-item>
-        </a-form>
-      </a-layout-content>
-      <a-layout-footer style="padding: 8px 0;border-top: 1px solid var(--color-border-2)">
-        <a-space>
-          <a-button type="primary" @click="save">保存</a-button>
-          <a-popconfirm content="是否立即删除此服务，删除后，此服务创建的 AI 助手将无法使用" @ok="onDelete()">
-            <a-button type="primary" status="danger" v-if="currentId && currentId !== '0'">删除</a-button>
-          </a-popconfirm>
-        </a-space>
-      </a-layout-footer>
-    </a-layout>
+              <t-list :split="true" class="max-h-500px">
+                <t-list-item v-for="(item, index) in form.models" :key="index">
+                  {{ item }}
+                </t-list-item>
+              </t-list>
+            </a-card>
+          </t-form-item>
+        </t-form>
+      </t-content>
+      <t-footer style="padding: 8px 0;border-top: 1px solid var(--color-border-2)">
+        <t-space>
+          <t-button theme="primary" @click="save">保存</t-button>
+          <t-popconfirm content="是否立即删除此服务，删除后，此服务创建的 AI 助手将无法使用" @ok="onDelete()">
+            <t-button theme="danger" v-if="currentId && currentId !== '0'">删除</t-button>
+          </t-popconfirm>
+        </t-space>
+      </t-footer>
+    </t-layout>
 
   </div>
 </template>

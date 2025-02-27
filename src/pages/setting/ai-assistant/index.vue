@@ -1,33 +1,33 @@
 <template>
   <page-layout title="AI 助手">
     <template #extra>
-      <a-button type="primary" @click="addAiAssistant">
+      <t-button theme="primary" @click="addAiAssistant">
         新增
-      </a-button>
+      </t-button>
     </template>
-    <a-list :bordered="false" hoverable>
-      <a-list-item v-for="a in assistants" :key="a.id">
-        <a-list-item-meta :title="a.name">
+    <t-list :split="true">
+      <t-list-item v-for="a in assistants" :key="a.id">
+        <t-list-item-meta :title="a.name">
           <template #description>
             <div class="ellipsis-3">{{ a.system }}</div>
           </template>
-        </a-list-item-meta>
-        <template #actions>
-          <a-button type="text" @click="editAiAssistant(a)">
+        </t-list-item-meta>
+        <template #action>
+          <t-button variant="text" theme="primary" shape="square" @click="editAiAssistant(a)" >
             <template #icon>
               <icon-edit/>
             </template>
-          </a-button>
-          <a-popconfirm content="确定要删除此助手？" ok-text="删除" @ok="handleRemove(a.id)">
-            <a-button type="text" status="danger">
+          </t-button>
+          <t-popconfirm content="确定要删除此助手？" ok-text="删除" @ok="handleRemove(a.id)">
+            <t-button variant="text" theme="danger" shape="square">
               <template #icon>
                 <icon-delete/>
               </template>
-            </a-button>
-          </a-popconfirm>
+            </t-button>
+          </t-popconfirm>
         </template>
-      </a-list-item>
-    </a-list>
+      </t-list-item>
+    </t-list>
   </page-layout>
 </template>
 <script lang="ts" setup>

@@ -1,30 +1,31 @@
 import {AiAssistant, buildAiAssistant} from "@/entity/ai/AiAssistant";
 import {
-  Form, FormInstance,
-  FormItem,
+  Form,
+  FormItem, FormRules,
   Input,
-  Modal,
+  DialogPlugin,
   Select,
   Slider, Space,
-  TabPane,
+  TabPanel,
   Tabs,
   Textarea
-} from "@arco-design/web-vue";
+} from "tdesign-vue-next";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
-import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {clone} from "radash";
 
-const RULES: FormInstance['rules'] = {
+const RULES: FormRules = {
   'aiServiceId': [{
     required: true,
     message: '请选择 AI 服务',
+    trigger: 'blur'
 
   }],
   'name': [{
     required: true,
-    message: '请输入助手名'
+    message: '请输入助手名',
+    trigger: 'blur'
   }]
 }
 
@@ -45,53 +46,53 @@ function buildForm(form: Ref<AiAssistant>) {
     }
     return [];
   })
-  return () =>
-    <Form model={form.value} layout={'vertical'} rules={RULES}>
-      <Tabs defaultActiveKey={'base'}>
-        <TabPane key={'base'} title={'提示词设置'}>
-          <FormItem label={'助手名'} field={'name'} validateTrigger={['blur', 'change']}>
-            <Input v-model={form.value.name} allowClear/>
-          </FormItem>
-          <FormItem label={'提示词'} field={'system'}>
-            <Textarea v-model={form.value.system} maxLength={1000} autoSize={{minRows: 2, maxRows: 8}} showWordLimit/>
-          </FormItem>
-        </TabPane>
-        <TabPane key={'model'} title={'模型设置'}>
-          <FormItem label={'AI 服务'} field={'aiServiceId'} validateTrigger={['blur', 'change']}>
-            <Space>
-              <Select v-model={form.value.aiServiceId} options={options.value} allowSearch/>
-              <Select v-model={form.value.model} options={models.value} allowSearch/>
-            </Space>
-          </FormItem>
-          <FormItem field={'temperature'}>{{
-            label: () => '模型温度',
-            default: () => <Slider v-model={form.value.temperature} max={2} min={0} step={0.1}
-                                   marks={{0: '0', 0.7: '0.7', 2: '2'}} style={{margin: '0', padding: '8px 4px'}}/>
-          }}</FormItem>
-          <FormItem field={'topP'}>{{
-            label: () => 'Top-P',
-            default: () => <Slider v-model={form.value.topP} max={1} min={0} step={0.01}
-                                   marks={{0: '0', 1: '1'}} style={{margin: '0', padding: '8px 4px'}}/>
-          }}</FormItem>
-          <FormItem field={'maxChats'}>{{
-            label: () => '上下文数',
-            default: () => <Slider v-model={form.value.maxChats} max={20} min={0}
-                                   marks={{0: '0', 5: '5', 10: '10', 15: '15', 20: '不限'}}
-                                   style={{margin: '0', padding: '8px 4px'}}/>
-          }}</FormItem>
-        </TabPane>
-      </Tabs>
-    </Form>
+  return () => <Form data={form.value} layout={'vertical'} rules={RULES}>
+    <Tabs defaultValue={'base'}>
+      <TabPanel value={'base'} label={'提示词设置'} style={{marginTop: '8px'}}>
+        <FormItem label={'助手名'} name={'name'}>
+          <Input v-model={form.value.name} clearable/>
+        </FormItem>
+        <FormItem label={'提示词'} name={'system'}>
+          <Textarea v-model={form.value.system} maxcharacter={1000} autosize={{minRows: 2, maxRows: 8}}/>
+        </FormItem>
+      </TabPanel>
+      <TabPanel value={'model'} label={'模型设置'} style={{padding: '8px 16px 16px'}}>
+        <FormItem label={'AI 服务'} name={'aiServiceId'}>
+          <Space>
+            <Select v-model={form.value.aiServiceId} options={options.value}/>
+            <Select v-model={form.value.model} options={models.value}/>
+          </Space>
+        </FormItem>
+        <FormItem name={'temperature'}>{{
+          label: () => '模型温度',
+          default: () => <Slider v-model={form.value.temperature} max={2} min={0} step={0.1}
+                                 marks={{0: '0', 0.7: '0.7', 2: '2'}} style={{margin: '0', padding: '8px 4px'}}/>
+        }}</FormItem>
+        <FormItem name={'topP'}>{{
+          label: () => 'Top-P',
+          default: () => <Slider v-model={form.value.topP} max={1} min={0} step={0.01}
+                                 marks={{0: '0', 1: '1'}} style={{margin: '0', padding: '8px 4px'}}/>
+        }}</FormItem>
+        <FormItem name={'maxChats'}>{{
+          label: () => '上下文数',
+          default: () => <Slider v-model={form.value.maxChats} max={20} min={0}
+                                 marks={{0: '0', 5: '5', 10: '10', 15: '15', 20: '不限'}}
+                                 style={{margin: '0', padding: '8px 4px'}}/>
+        }}</FormItem>
+      </TabPanel>
+    </Tabs>
+  </Form>
 }
 
 export function addAiAssistant() {
   const form = ref(buildAiAssistant());
-  Modal.open({
-    title: '新增助手',
+  DialogPlugin({
+    header: '新增助手',
+    placement: 'center',
     draggable: true,
-    content: buildForm(form),
-    width: 500,
-    async onBeforeOk() {
+    default: buildForm(form),
+    width: '600px',
+    async onConfirm() {
       try {
         await useAiAssistantStore().saveOrUpdate(form.value);
         MessageUtil.success("新增成功");
@@ -107,12 +108,16 @@ export function addAiAssistant() {
 
 export function editAiAssistant(old: AiAssistant) {
   const form = ref(clone(old));
-  Modal.open({
-    title: '修改助手',
+  DialogPlugin({
+    header: '修改助手',
+    placement: 'center',
     draggable: true,
-    content: buildForm(form),
-    width: 500,
-    async onBeforeOk() {
+    default: buildForm(form),
+    width: '600px',
+    confirmBtn: {
+      default: '保存'
+    },
+    async onConfirm() {
       try {
         await useAiAssistantStore().saveOrUpdate(form.value);
         MessageUtil.success("修改成功");
