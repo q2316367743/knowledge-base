@@ -41,7 +41,7 @@
 </template>
 <script lang="ts" setup>
 import OpenAI from "openai";
-import {ChatCompletionMessageParam} from "openai/src/resources/chat/completions";
+import {ChatCompletionMessageParam} from "openai";
 import {
   Chat as TChat,
   ChatAction as TChatAction,

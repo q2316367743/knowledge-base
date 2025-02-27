@@ -1,35 +1,35 @@
 <template>
   <div class="more-setting-theme">
-    <a-form :model="instance" layout="vertical">
-      <a-form-item label="主题">
-        <a-select v-model="instance.theme" placeholder="请选择主题" allow-clear allow-search>
-          <a-option :key="0" :value="0">不设置</a-option>
-          <a-option v-for="theme in themes" :key="theme.id" :value="theme.id">{{ theme.name }}</a-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="markdown菜单">
-        <a-checkbox-group v-model="instance.markdownMenus">
-          <a-checkbox v-for="menu in markdownMenus" :key="menu.id" :value="menu.id">{{
+    <t-form :model="instance">
+      <t-form-item label="主题" label-align="top">
+        <t-select v-model="instance.theme" placeholder="请选择主题" allow-clear allow-search>
+          <t-option :key="0" :value="0">不设置</t-option>
+          <t-option v-for="theme in themes" :key="theme.id" :value="theme.id">{{ theme.name }}</t-option>
+        </t-select>
+      </t-form-item>
+      <t-form-item label="markdown菜单" label-align="top">
+        <t-checkbox-group v-model="instance.markdownMenus">
+          <t-checkbox v-for="menu in markdownMenus" :key="menu.id" :value="menu.id">{{
               menu.name
             }}
-          </a-checkbox>
-        </a-checkbox-group>
-      </a-form-item>
-      <a-form-item label="markdown语法">
-        <a-checkbox-group v-model="instance.markdownSyntaxes">
-          <a-checkbox v-for="menu in markdownSyntaxes" :key="menu.id" :value="menu.id">{{
+          </t-checkbox>
+        </t-checkbox-group>
+      </t-form-item>
+      <t-form-item label="markdown语法" label-align="top">
+        <t-checkbox-group v-model="instance.markdownSyntaxes">
+          <t-checkbox v-for="menu in markdownSyntaxes" :key="menu.id" :value="menu.id">{{
               menu.name
             }}
-          </a-checkbox>
-        </a-checkbox-group>
-      </a-form-item>
-      <a-form-item>
-        <a-space>
-          <a-button type="primary" @click="save()">保存</a-button>
-          <a-button type="text" @click="reference()">刷新主题</a-button>
-        </a-space>
-      </a-form-item>
-    </a-form>
+          </t-checkbox>
+        </t-checkbox-group>
+      </t-form-item>
+      <t-form-item label-align="top">
+        <t-space>
+          <t-button theme="primary" @click="save()">保存</t-button>
+          <t-button variant="text" @click="reference()">刷新主题</t-button>
+        </t-space>
+      </t-form-item>
+    </t-form>
   </div>
 </template>
 <script lang="ts" setup>
@@ -64,8 +64,6 @@ function reference() {
     MessageUtil.error("刷新失败", e)
   }
 }
-
-
 </script>
 <style scoped>
 </style>

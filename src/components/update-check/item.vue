@@ -1,13 +1,6 @@
 <template>
-  <a-typography v-if="log" class="log-item">
-    <a-typography-paragraph>
-      <a-alert style="margin-bottom: 7px;" v-if="log.url">
-        点击
-        <a-link @click="open(log ? log.url : undefined)">此处</a-link>
-        查看更加详细的更新说明
-      </a-alert>
-    </a-typography-paragraph>
-    <a-typography-paragraph>
+  <div v-if="log" class="log-item">
+    <t-paragraph>
       <ol>
         <template v-for="item in log.items">
           <li v-if="typeof item === 'string'">{{ item }}</li>
@@ -17,21 +10,21 @@
             </li>
           </ol>
           <li v-else>
-            <a-tag :color="renderTag(item.label).color" style="margin-left:5px;">
+            <t-tag :color="renderTag(item.label).color" style="margin-left:5px;">
               {{ renderTag(item.label).name }}
-            </a-tag>
+            </t-tag>
             <span style="margin-left:5px;">{{ item.content }}</span>
           </li>
         </template>
       </ol>
-    </a-typography-paragraph>
-    <a-typography-paragraph v-if="log.remark">{{ log.remark }}</a-typography-paragraph>
-    <a-typography-paragraph v-if="log.doc">
+    </t-paragraph>
+    <t-alert v-if="log.remark">{{ log.remark }}</t-alert>
+    <t-paragraph v-if="log.doc">
       更多详细的更新信息与功能变化，请在
-      <a-link target="_blank" @click="open(log?.doc)">此处</a-link>
+      <t-link target="_blank" @click="open(log?.doc)">此处</t-link>
       中查看
-    </a-typography-paragraph>
-  </a-typography>
+    </t-paragraph>
+  </div>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";

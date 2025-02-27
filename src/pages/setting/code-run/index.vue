@@ -1,48 +1,51 @@
 <template>
   <page-layout title="代码运行设置">
     <template #extra>
-      <a-space>
-        <a-button type="text" @click="addCodeRunCommand">
+      <t-space>
+        <t-button variant="text" theme="primary" shape="square" @click="addCodeRunCommand">
           <template #icon>
             <icon-plus/>
           </template>
-        </a-button>
-        <a-button type="text" status="success" @click="openCodeRunInfo">
+        </t-button>
+        <t-button variant="text" theme="success" shape="square" @click="infoVisible = true">
           <template #icon>
             <icon-question-circle/>
           </template>
-        </a-button>
-      </a-space>
+        </t-button>
+      </t-space>
     </template>
-    <a-list :bordered="false">
-      <a-list-item v-for="item in list" :key="item.key">
-        <a-list-item-meta :title="item.key" :description="item.value"/>
-        <template #actions>
-          <a-button type="text" @click="updateCodeRunCommand(item.key, item.value)">
+    <t-list :bordered="false">
+      <t-list-item v-for="item in list" :key="item.key">
+        <t-list-item-meta :title="item.key" :description="item.value"/>
+        <template #action>
+          <t-button variant="text" theme="primary" shape="square" @click="updateCodeRunCommand(item.key, item.value)">
             <template #icon>
               <icon-edit/>
             </template>
-          </a-button>
-          <a-button type="text" status="danger" @click="deleteCodeRunCommand(item.key)">
+          </t-button>
+          <t-button variant="text" theme="danger" shape="square" @click="deleteCodeRunCommand(item.key)">
             <template #icon>
               <icon-delete/>
             </template>
-          </a-button>
+          </t-button>
         </template>
-      </a-list-item>
-    </a-list>
+      </t-list-item>
+    </t-list>
+    <code-run-info v-model="infoVisible"/>
   </page-layout>
 </template>
 <script lang="ts" setup>
 import {listify} from "radash";
 import {codeRunSetting} from "@/plugin/CodeRun";
 import {addCodeRunCommand, deleteCodeRunCommand, updateCodeRunCommand} from "@/pages/setting/code-run/modal";
-import {openCodeRunInfo} from "@/pages/setting/code-run/info";
+import CodeRunInfo from "@/pages/setting/code-run/CodeRunInfo.vue";
 
 interface CodeRunItem {
   key: string;
   value: string;
 }
+
+const infoVisible = ref(false);
 
 const list = computed<Array<CodeRunItem>>(() => {
   return listify(codeRunSetting.value, (key, value) => ({key, value}));

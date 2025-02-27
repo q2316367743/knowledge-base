@@ -1,19 +1,19 @@
 <template>
-    <a-alert style="margin-bottom: 7px">
-        当选中文字呼出超级面板或复制文字呼出搜索面板时，新增关键字：【新增文章】
-    </a-alert>
-    <a-form :model="instance" layout="vertical">
-        <a-form-item label="最小文字长度">
-            <a-input-number :disabled="instance.enable" v-model="instance.minLength" :min="1"/>
-        </a-form-item>
-        <a-form-item label="最大文字长度">
-            <a-input-number :disabled="instance.enable" v-model="instance.maxLength" :min="instance.minLength"/>
-        </a-form-item>
-        <a-form-item>
-            <a-button type="primary" v-if="instance.enable" status="danger" @click="close()">关闭</a-button>
-            <a-button type="primary" v-else @click="open()">开启</a-button>
-        </a-form-item>
-    </a-form>
+  <t-alert style="margin-bottom: 7px">
+    当选中文字呼出超级面板或复制文字呼出搜索面板时，新增关键字：【新增文章】
+  </t-alert>
+  <t-form :model="instance" >
+    <t-form-item label="最小文字长度" label-align="top">
+      <t-input-number :disabled="instance.enable" v-model="instance.minLength" :min="1"/>
+    </t-form-item>
+    <t-form-item label="最大文字长度" label-align="top">
+      <t-input-number :disabled="instance.enable" v-model="instance.maxLength" :min="instance.minLength"/>
+    </t-form-item>
+    <t-form-item label-align="top">
+      <t-button theme="primary" v-if="instance.enable" status="danger" @click="close()">关闭</t-button>
+      <t-button theme="primary" v-else @click="open()">开启</t-button>
+    </t-form-item>
+  </t-form>
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
@@ -23,41 +23,41 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 
 
 const instance = ref({
-    minLength: 20,
-    maxLength: 999999,
-    enable: false
+  minLength: 20,
+  maxLength: 999999,
+  enable: false
 });
 
 const feature = getFeatureOne(Constant.feature.ADD);
 if (feature) {
-    const cmd = feature.cmds[0];
-    instance.value = {
-        maxLength: typeof cmd !== 'string' ? cmd.maxLength || 999999 : 999999,
-        minLength: typeof cmd !== 'string' ? cmd.minLength || 999999 : 999999,
-        enable: true
-    }
+  const cmd = feature.cmds[0];
+  instance.value = {
+    maxLength: typeof cmd !== 'string' ? cmd.maxLength || 999999 : 999999,
+    minLength: typeof cmd !== 'string' ? cmd.minLength || 999999 : 999999,
+    enable: true
+  }
 }
 
 function open() {
-    const res = setFeatureOneSimple(Constant.feature.ADD, {
-        type: "over",
-        label: "新增文章",
-        minLength: instance.value.minLength,
-        maxLength: instance.value.maxLength
-    });
-    if (res) {
-        // 设置成功
-        MessageUtil.success("设置关键字成功");
-        instance.value.enable = true;
-    }
+  const res = setFeatureOneSimple(Constant.feature.ADD, {
+    type: "over",
+    label: "新增文章",
+    minLength: instance.value.minLength,
+    maxLength: instance.value.maxLength
+  });
+  if (res) {
+    // 设置成功
+    MessageUtil.success("设置关键字成功");
+    instance.value.enable = true;
+  }
 }
 
 function close() {
-    const res = removeFeatureOne(Constant.feature.ADD);
-    if (res) {
-        MessageUtil.success("移除关键字成功");
-        instance.value.enable = false;
-    }
+  const res = removeFeatureOne(Constant.feature.ADD);
+  if (res) {
+    MessageUtil.success("移除关键字成功");
+    instance.value.enable = false;
+  }
 }
 </script>
 <style scoped>

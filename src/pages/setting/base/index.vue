@@ -1,11 +1,11 @@
 <template>
   <div class="setting">
-    <a-tabs v-model:active-key="activeKey" hide-content>
-      <a-tab-pane key="base" title="基础设置"/>
-      <a-tab-pane key="code-editor" title="代码笔记设置"/>
-      <a-tab-pane key="theme" title="主题设置"/>
-      <a-tab-pane key="chat" title="AI设置"/>
-    </a-tabs>
+    <t-tabs v-model="activeKey">
+      <t-tab-panel value="base" label="基础设置"/>
+      <t-tab-panel value="code-editor" label="代码笔记设置"/>
+      <t-tab-panel value="theme" label="主题设置"/>
+      <t-tab-panel value="chat" label="AI设置"/>
+    </t-tabs>
     <main class="main">
       <base-setting v-if="activeKey === 'base'"/>
       <code-editor-setting v-else-if="activeKey === 'code-editor'"/>
