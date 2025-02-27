@@ -13,11 +13,11 @@
       </div>
     </div>
     <div class="home-chat__close">
-      <a-button type="text" @click="goBack" shape="circle">
+      <t-button variant="text" theme="primary" @click="goBack" shape="circle">
         <template #icon>
-          <icon-arrow-left/>
+          <arrow-left-icon />
         </template>
-      </a-button>
+      </t-button>
     </div>
   </div>
 </template>
@@ -26,6 +26,7 @@ import {ScrollbarInstance} from "@arco-design/web-vue";
 import {chatToBottomEvent, useChatStore} from "@/store/components/ChatStore";
 import ChatArticle from "@/pages/home/chat/components/ChatArticle.vue";
 import AiInput from "@/pages/home/components/AiInput.vue";
+import {ArrowLeftIcon} from "tdesign-icons-vue-next";
 
 const el = ref<HTMLDivElement>();
 const scrollbar = ref<ScrollbarInstance>();

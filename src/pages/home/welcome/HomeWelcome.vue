@@ -30,20 +30,16 @@
       </div>
     </div>
     <div class="home-welcome-extra">
-      <a-space>
+      <t-space>
         <home-assistant-select width="360px"/>
-        <a-dropdown position="br">
-          <a-button type="outline" class="home-welcome-setting">
+        <t-dropdown position="br" :options="options">
+          <t-button variant="outline" theme="primary" shape="square" class="home-welcome-setting">
             <template #icon>
-              <icon-settings/>
+              <setting-icon />
             </template>
-          </a-button>
-          <template #content>
-            <a-doption @click="aiService">AI 服务</a-doption>
-            <a-doption @click="aiAssistant">AI 助手</a-doption>
-          </template>
-        </a-dropdown>
-      </a-space>
+          </t-button>
+        </t-dropdown>
+      </t-space>
     </div>
     <welcome-guide/>
     <article-interpretation v-model="aiVisible"/>
@@ -51,6 +47,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {SettingIcon} from "tdesign-icons-vue-next";
 import AiInput from "@/pages/home/components/AiInput.vue";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
@@ -65,8 +62,15 @@ const iwVisible = ref(false);
 // 文档解读
 const article = () => aiVisible.value = true;
 const write = () => iwVisible.value = true;
-const aiService = () => router.push("/setting/ai-service");
-const aiAssistant = () => router.push("/setting/ai-assistant");
+
+const options = [{
+  content: 'AI 服务',
+  onClick: () => router.push("/setting/ai-service")
+}, {
+  content: 'AI 助手',
+  onClick: () => router.push("/setting/ai-assistant")
+}]
+
 
 </script>
 <style scoped lang="less">
