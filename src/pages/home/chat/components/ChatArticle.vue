@@ -2,7 +2,7 @@
   <div class="chat-article">
     <div class="chat-article__title">{{ message.q }}</div>
     <div class="chat-article__time">
-      <t-space>
+      <t-space size="4px">
         <div>{{ toDateString(message.id) }}</div>
         <div>{{ assistant }}</div>
         <template #separator>

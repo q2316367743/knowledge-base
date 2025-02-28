@@ -9,9 +9,6 @@ import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 
-export const chatToBottomEvent = useEventBus('chat-to-bottom');
-
-
 export const useChatStore = defineStore('chat', () => {
   // 引用的文章
   const articleIds = ref(new Array<number>());
@@ -48,7 +45,6 @@ export const useChatStore = defineStore('chat', () => {
     for (let m of messages.value) {
       if (m.id === id) {
         m.a += content;
-        chatToBottomEvent.emit();
         return;
       }
     }
