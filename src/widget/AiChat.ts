@@ -1,6 +1,7 @@
 import {homeEditorId} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {useErrorStore} from "@/store/components/ErrorStore";
 
 /**
  * 打开AI聊天小部件
@@ -32,6 +33,8 @@ export function openAiChatWidget() {
           ubWindow.webContents.executeJavaScript(`location.href = 'http://localhost:5173/chat.html'`)
             .then(() => console.log("代码执行成功"))
             .catch((e: any) => console.error("代码执行失败", e));
+          ubWindow.webContents.openDevTools();
+        } else if (useErrorStore().consoleShow) {
           ubWindow.webContents.openDevTools();
         }
         window.preload.ipcRenderer.sendMessage(ubWindow.webContents.id, 'chat', {

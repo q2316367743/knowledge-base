@@ -1,14 +1,14 @@
 import {AiChatMessage} from "@/nested/chat/type";
-import {ChatCompletionMessageParam} from "openai/src/resources/chat/completions";
+import {ChatMessageParam} from "@/types/Chat";
 
-const allowRoles = ['user','assistant','system'];
+const allowRoles = ['user','assistant'];
 
-export function buildMessages(list: Array<AiChatMessage>): Array<ChatCompletionMessageParam> {
+export function buildMessages(list: Array<AiChatMessage>): Array<ChatMessageParam> {
   let messages = Array.from(list);
   return messages.reverse().filter(e => allowRoles.includes(e.role)).map(e => ({
     role: e.role,
     content: e.content
-  } as ChatCompletionMessageParam));
+  } as ChatMessageParam));
 }
 
 export function getCurrentTime() {

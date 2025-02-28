@@ -1,12 +1,12 @@
 <template>
   <div class="home-assistant-select">
-    <t-dropdown v-model:popup-visible="popupVisible" :options="options" style="max-width: 160px" trigger="click">
+    <t-dropdown :options="options" style="max-width: 160px" trigger="click">
       <div class="home-assistant-select__wrap flex items-center ">
         <div class="mr-6px relative name">
           <div v-if="assistant" class=" ellipsis" :title="assistant.name">{{ assistant.name }}</div>
-          <div v-else style="color: var(--color-text-3)" title="AI 助手">请选择</div>
+          <div v-else style="color: var(--color-text-3)" title="AI 助手">请选择AI助手</div>
         </div>
-        <icon-down class="down" :class="{reverse: popupVisible}"/>
+        <caret-down-icon class="down"/>
       </div>
     </t-dropdown>
   </div>
@@ -14,8 +14,13 @@
 <script lang="ts" setup>
 import {AiAssistant} from "@/entity/ai/AiAssistant";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
-import {useChatStore} from "@/store/components/ChatStore";
 import {DropdownProps} from "tdesign-vue-next";
+import {CaretDownIcon} from "tdesign-icons-vue-next";
+
+const assistantId = defineModel({
+  type: String,
+  default: ''
+})
 
 defineProps({
   width: {
@@ -24,9 +29,6 @@ defineProps({
   }
 });
 
-const popupVisible = ref(false);
-
-const assistantId = computed(() => useChatStore().assistantId);
 const assistant = computed<AiAssistant | undefined>(() => {
   const {aiAssistantMap} = useAiAssistantStore();
   return aiAssistantMap.get(assistantId.value)
@@ -41,7 +43,7 @@ const options = computed<DropdownProps['options']>(() => {
 })
 
 function handleChange(id: string) {
-  useChatStore().changeAssistantId(id);
+  assistantId.value = id;
 }
 </script>
 <style scoped lang="less">

@@ -3,7 +3,7 @@
     <header class="chat-header items-center justify-between pl-8px  pr-8px">
       <t-checkbox v-model="embedArticle" :disabled="editorId === 0">是否包含文章</t-checkbox>
       <div style="overflow: hidden;">
-        <home-assistant-select v-model="assistantId" width="calc(100vw - 118px)"/>
+        <chat-assistant-select v-model="assistantId" width="calc(100vw - 118px)"/>
       </div>
     </header>
     <main class="chat-main">
@@ -41,7 +41,6 @@
 </template>
 <script lang="ts" setup>
 import OpenAI from "openai";
-import {ChatCompletionMessageParam} from "openai";
 import {
   Chat as TChat,
   ChatAction as TChatAction,
@@ -56,10 +55,11 @@ import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {copyText} from "@/utils/utools/NativeUtil";
 import {buildMessages, getCurrentTime} from "@/nested/chat/util";
-import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {ChatMessageParam} from "@/types/Chat";
+import ChatAssistantSelect from "@/nested/chat/components/ChatAssistantSelect.vue";
 
 useGlobalStore().initDarkColors();
 useAiServiceStore().init();
@@ -81,7 +81,7 @@ const chatList = ref<Array<AiChatMessage>>([{
   datetime: getCurrentTime(),
 }]);
 const editorId = ref(0);
-const assistantId = useUtoolsKvStorage(LocalNameEnum.KEY_EDITOR_ASSISTANT, "");
+const assistantId = useUtoolsKvStorage(LocalNameEnum.KEY_WIDGET_CHAT_ASSISTANT, "");
 const fetchCancel = shallowRef<AbortController>();
 
 let subWindow = window.preload.ipcRenderer.buildSubWindow('chat');
@@ -103,17 +103,17 @@ const clearConfirm = () => chatList.value = [{
 
 function inputEnter(value: string) {
   if (isStreamLoad.value) {
-    return Promise.reject(new Error("请等待上一次请求结束"));
+    return MessageUtil.error("请等待上一次请求结束");
   }
   const {aiAssistantMap} = useAiAssistantStore();
   const {aiServiceMap} = useAiServiceStore();
   const assistant = aiAssistantMap.get(assistantId.value);
   if (!assistant) {
-    return Promise.reject(new Error("AI 助手未找到"));
+    return MessageUtil.error("AI 助手未找到");
   }
   const service = aiServiceMap.get(assistant.aiServiceId);
   if (!service) {
-    return Promise.reject(new Error("AI 服务未找到"));
+    return MessageUtil.error("AI 服务未找到");
   }
 
   const openAi = new OpenAI({
@@ -156,19 +156,20 @@ function inputEnter(value: string) {
   });
   // 异步处理
   (async () => {
-    const messages: Array<ChatCompletionMessageParam> = [{
+    const messages: Array<ChatMessageParam> = [{
       role: 'system',
       content: assistant.system
     }];
     if (embedArticle.value) {
       // 嵌入文章
-      if (!editorId.value) {
-        MessageUtil.warning("系统异常，文章ID不存在，无法嵌入");
+      if (editorId.value) {
         const content = await useArticleStore().getContent(editorId.value);
         messages.push({
           role: 'system',
           content: `根据以下文件内容回答问题：\n${typeof content.record === 'object' ? JSON.stringify(content.record) : content.record}`
         })
+      } else {
+        MessageUtil.warning("系统异常，文章ID不存在，无法嵌入");
       }
     }
     messages.push(...buildMessages(chatList.value))

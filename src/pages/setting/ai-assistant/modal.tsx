@@ -86,7 +86,7 @@ function buildForm(form: Ref<AiAssistant>) {
 
 export function addAiAssistant() {
   const form = ref(buildAiAssistant());
-  DialogPlugin({
+  const plugin = DialogPlugin({
     header: '新增助手',
     placement: 'center',
     draggable: true,
@@ -96,19 +96,20 @@ export function addAiAssistant() {
       try {
         await useAiAssistantStore().saveOrUpdate(form.value);
         MessageUtil.success("新增成功");
+        plugin.destroy();
         return true;
       } catch (e) {
         MessageUtil.error("新增失败", e);
         return false;
       }
     }
-  })
+  });
 }
 
 
 export function editAiAssistant(old: AiAssistant) {
   const form = ref(clone(old));
-  DialogPlugin({
+  const plugin = DialogPlugin({
     header: '修改助手',
     placement: 'center',
     draggable: true,
@@ -121,6 +122,7 @@ export function editAiAssistant(old: AiAssistant) {
       try {
         await useAiAssistantStore().saveOrUpdate(form.value);
         MessageUtil.success("修改成功");
+        plugin.destroy();
         return true;
       } catch (e) {
         MessageUtil.error("修改失败", e);

@@ -31,6 +31,6 @@ export interface ChatMessage {
 }
 
 export interface ChatMessageParam {
-  role: 'user' |  'assistant';
+  role: 'user' |  'assistant' | 'system';
   content: string;
 }

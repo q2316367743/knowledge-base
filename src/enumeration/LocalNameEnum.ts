@@ -161,6 +161,9 @@ enum LocalNameEnum {
   // 编辑器使用的助手
   KEY_EDITOR_ASSISTANT = '/key/editor/assistant',
 
+  // 小部件-聊天使用的助手
+  KEY_WIDGET_CHAT_ASSISTANT = '/key/widget/chat/assistant',
+
   // ========================== 窗口 ==========================
 
   WINDOW_CANVAS_FOLDER = '/window/canvas/folder',

@@ -43,9 +43,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: _resolve('index.html'),
+        chat: _resolve('chat.html'),
         note: _resolve('note.html'),
         todo: _resolve('todo.html'),
-        chat: _resolve('chat.html'),
         preview: _resolve('preview.html'),
       },
     },
