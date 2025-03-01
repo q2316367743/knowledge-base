@@ -37,15 +37,15 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
-// {
-//   key: ArticleTypeEnum.SUPER_EDITOR,
-//     name: '超级笔记',
-//   // TODO: 图标
-//   icon: shallowRef(IconCode),
-//   lock: FileLct
-// },
+
 
 export const articleTextTypes = [{
+  key: ArticleTypeEnum.SUPER_EDITOR,
+  name: '超级笔记',
+  // TODO: 图标
+  icon: shallowRef(IconCode),
+  lock: FileLct
+}, {
   key: ArticleTypeEnum.RICH_TEXT,
   name: '富文本',
   icon: shallowRef(IconBook),

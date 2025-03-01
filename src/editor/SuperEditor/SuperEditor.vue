@@ -9,6 +9,8 @@ import {debounce} from "radash";
 import EditorJS, {OutputData} from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import LinkTool from "@/editor/SuperEditor/tools/LinkTool";
+import List from './tools/List';
+import Image from './tools/Image';
 
 const content = defineModel({
   type: Object as PropType<OutputData>,
@@ -49,7 +51,15 @@ onMounted(() => {
         config: {
           endpoint: fetchUrl, // Your backend endpoint for url data fetching,
         }
-      }
+      },
+      list: {
+        class: List,
+        inlineToolbar: true,
+        config: {
+          defaultStyle: 'unordered'
+        },
+      },
+      Image,
     }
   });
   watch(() => props.readOnly, val => {
@@ -61,5 +71,9 @@ onMounted(() => {
 <style scoped lang="less">
 .super-editor {
   padding: 0 8px;
+  overflow: auto;
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 </style>

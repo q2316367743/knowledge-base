@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.56.3",
+    "@codexteam/icons": "^0.3.3",
     "@editorjs/editorjs": "^2.30.8",
     "@editorjs/header": "^2.8.8",
+    "@editorjs/list": "^2.0.6",
     "@logicflow/core": "^2.0.10",
     "@logicflow/extension": "^2.0.14",
     "@tdesign-vue-next/chat": "^0.1.4",

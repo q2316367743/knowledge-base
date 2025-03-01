@@ -1,5 +1,7 @@
-import './index.less';
+import './LinkTool.less';
+import {IconLink} from '@codexteam/icons';
 import {BlockToolConstructorOptions, BlockTool, API} from "@editorjs/editorjs";
+import {make} from '@/utils/lang/DocumentUtil';
 
 interface LinkToolNode {
   wrapper: HTMLDivElement | null,
@@ -50,8 +52,8 @@ export default class LinkTool implements BlockTool {
    */
   static get toolbox(): { icon: string, title: string } {
     return {
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M7.69998 12.6L7.67896 12.62C6.53993 13.7048 6.52012 15.5155 7.63516 16.625V16.625C8.72293 17.7073 10.4799 17.7102 11.5712 16.6314L13.0263 15.193C14.0703 14.1609 14.2141 12.525 13.3662 11.3266L13.22 11.12"/><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16.22 11.12L16.3564 10.9805C17.2895 10.0265 17.3478 8.5207 16.4914 7.49733V7.49733C15.5691 6.39509 13.9269 6.25143 12.8271 7.17675L11.3901 8.38588C10.0935 9.47674 9.95706 11.4241 11.0888 12.6852L11.12 12.72"/></svg>',
-      title: 'Link',
+      icon: IconLink,
+      title: '链接',
     };
   }
 
@@ -101,8 +103,8 @@ export default class LinkTool implements BlockTool {
    *
    */
   render(): HTMLDivElement {
-    this.nodes.wrapper = this.make('div', this.CSS.baseClass);
-    this.nodes.container = this.make('div', this.CSS.container);
+    this.nodes.wrapper = make('div', this.CSS.baseClass);
+    this.nodes.container = make('div', this.CSS.container);
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
@@ -191,10 +193,10 @@ export default class LinkTool implements BlockTool {
    * Prepare input holder
    */
   makeInputHolder(): HTMLElement {
-    const inputHolder = this.make('div', this.CSS.inputHolder);
+    const inputHolder = make('div', this.CSS.inputHolder);
 
-    this.nodes.progress = this.make('label', this.CSS.progress);
-    this.nodes.input = this.make('div', [this.CSS.input, this.CSS.inputEl], {
+    this.nodes.progress = make('label', this.CSS.progress);
+    this.nodes.input = make('div', [this.CSS.input, this.CSS.inputEl], {
       contentEditable: `${!this.readOnly}`,
     });
 
@@ -290,15 +292,15 @@ export default class LinkTool implements BlockTool {
    *
    */
   prepareLinkPreview(): HTMLElement {
-    const holder = this.make('a', this.CSS.linkContent, {
+    const holder = make('a', this.CSS.linkContent, {
       target: '_blank',
       rel: 'nofollow noindex noreferrer',
     });
 
-    this.nodes.linkImage = this.make('div', this.CSS.linkImage);
-    this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
-    this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
-    this.nodes.linkText = this.make('span', this.CSS.linkText);
+    this.nodes.linkImage = make('div', this.CSS.linkImage);
+    this.nodes.linkTitle = make('div', this.CSS.linkTitle);
+    this.nodes.linkDescription = make('p', this.CSS.linkDescription);
+    this.nodes.linkText = make('span', this.CSS.linkText);
 
     return holder;
   }
@@ -451,27 +453,4 @@ export default class LinkTool implements BlockTool {
     this.applyErrorStyle();
   }
 
-  /**
-   * 辅助方法用于元素创建
-   *
-   * @param tagName - name of creating element
-   * @param classNames - list of CSS classes to add
-   * @param attributes - object with attributes to add
-   */
-  make<T extends keyof HTMLElementTagNameMap, K extends keyof HTMLElementTagNameMap[T]>(tagName: T, classNames?: string | string[], attributes?: Record<K, string>): HTMLElementTagNameMap[T] {
-    const el = document.createElement(tagName);
-
-    if (Array.isArray(classNames)) {
-      el.classList.add(...classNames);
-    } else if (classNames) {
-      el.classList.add(classNames);
-    }
-
-    for (const attrName in attributes) {
-      // @ts-ignore
-      el[attrName] = attributes[attrName];
-    }
-
-    return el;
-  }
 }
