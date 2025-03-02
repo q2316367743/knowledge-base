@@ -6,6 +6,7 @@ import './index.css';
 import {IconAddBorder, IconStretch, IconAddBackground} from '@codexteam/icons';
 import {API, BlockTool, BlockToolConstructorOptions, PasteEvent} from "@editorjs/editorjs";
 import {make} from '@/utils/lang/DocumentUtil';
+import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 
 interface SimpleImageNode {
   wrapper: HTMLDivElement | null,
@@ -27,7 +28,7 @@ interface SimpleImageSetting {
 }
 
 interface SimpleImageData extends SimpleImageSetting {
-  url: string;
+  key: string;
   caption?: string;
   withBorder?: boolean;
   withBackground?: boolean;
@@ -113,7 +114,7 @@ export default class SimpleImage implements BlockTool {
      * Tool's initial data
      */
     this.data = {
-      url: data.url || '',
+      key: data.key || '',
       caption: data.caption || '',
       withBorder: data.withBorder !== undefined ? data.withBorder : false,
       withBackground: data.withBackground !== undefined ? data.withBackground : false,
@@ -161,12 +162,12 @@ export default class SimpleImage implements BlockTool {
         innerHTML: this.data.caption || '',
       });
 
-    caption.dataset.placeholder = 'Enter a caption';
+    caption.dataset.placeholder = '输入标题';
 
     wrapper.appendChild(loader);
 
-    if (this.data.url) {
-      image.src = this.data.url;
+    if (this.data.key) {
+      image.src = useAttachmentUpload.render(this.data.key);
     }
 
     image.onload = () => {
@@ -237,19 +238,15 @@ export default class SimpleImage implements BlockTool {
    * @static
    * @param  file
    */
-  onDropHandler(file: File): Promise<SimpleImageData> {
+  async onDropHandler(file: File): Promise<SimpleImageData> {
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
-
-    return new Promise(resolve => {
-      reader.onload = (event) => {
-        resolve({
-          url: (event.target?.result as string) || '',
-          caption: file.name,
-        });
-      };
-    });
+    const upload = await useAttachmentUpload.upload(file, true);
+    return {
+      key: upload,
+      caption: file.name,
+    }
   }
 
   /**
@@ -258,38 +255,25 @@ export default class SimpleImage implements BlockTool {
    * @param  event - event with pasted config
    */
   onPaste(event: PasteEvent) {
-    switch (event.type) {
-      case 'tag': {
-        // @ts-ignore
-        const img = event.detail.data;
-
+    const {detail} = event;
+    if ("data" in detail && detail.data) {
+      if (typeof detail.data === 'string') {
         this.data = {
-          url: img.src,
+          key: detail.data,
         };
-        break;
+      } else {
+        const src = detail.data.getAttribute('src');
+        if (src) {
+          this.data = {
+            key: src,
+          };
+        }
       }
-
-      case 'pattern': {
-        // @ts-ignore
-        const {data: text} = event.detail;
-
-        this.data = {
-          url: text,
-        };
-        break;
-      }
-
-      case 'file': {
-        // @ts-ignore
-        const {file} = event.detail;
-
-        this.onDropHandler(file)
-          .then(data => {
-            this.data = data;
-          });
-
-        break;
-      }
+    } else if ('file' in detail && detail.file) {
+      this.onDropHandler(detail.file)
+        .then(data => {
+          this.data = data;
+        });
     }
   }
 
@@ -308,8 +292,8 @@ export default class SimpleImage implements BlockTool {
   set data(data: SimpleImageData) {
     this._data = Object.assign({}, this.data, data);
 
-    if (this.nodes.image) {
-      this.nodes.image.src = this.data.url;
+    if (this.nodes.image && this.data.key) {
+      this.nodes.image.src = useAttachmentUpload.render(this.data.key);
     }
 
     if (this.nodes.caption) {

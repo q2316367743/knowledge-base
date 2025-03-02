@@ -6,11 +6,12 @@
 <script lang="ts" setup>
 import {fetchUrl} from "@/plugin/server";
 import {debounce} from "radash";
-import EditorJS, {BlockToolConstructable, OutputData} from "@editorjs/editorjs";
+import EditorJS, {OutputData} from "@editorjs/editorjs";
 import Header from '@editorjs/header';
 import LinkTool from "@/editor/SuperEditor/tools/LinkTool";
 import List from './tools/List';
-import Image from './tools/Image';
+import SimpleImage from './tools/SimpleImage';
+import CodeTool from "@/editor/SuperEditor/tools/Code";
 
 const content = defineModel({
   type: Object as PropType<OutputData>,
@@ -53,13 +54,14 @@ onMounted(() => {
         }
       },
       list: {
-        class: List as BlockToolConstructable,
+        // @ts-ignore
+        class: List,
         inlineToolbar: true,
         config: {
           defaultStyle: 'unordered'
         },
       },
-      Image,
+      SimpleImage, CodeTool
     }
   });
   watch(() => props.readOnly, val => {
