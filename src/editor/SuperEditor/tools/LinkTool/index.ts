@@ -1,7 +1,9 @@
 import './LinkTool.less';
-import {IconLink} from '@codexteam/icons';
+import {IconCross, IconLink} from '@codexteam/icons';
 import {BlockToolConstructorOptions, BlockTool, API} from "@editorjs/editorjs";
 import {make} from '@/utils/lang/DocumentUtil';
+import {MenuConfig, MenuConfigItem} from "@editorjs/editorjs/types/tools/menu-config";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 interface LinkToolNode {
   wrapper: HTMLDivElement | null,
@@ -200,7 +202,7 @@ export default class LinkTool implements BlockTool {
       contentEditable: `${!this.readOnly}`,
     });
 
-    this.nodes.input.dataset.placeholder = this.api.i18n.t('Link');
+    this.nodes.input.dataset.placeholder = `请输入链接，粘贴或回车完成`;
 
     if (!this.readOnly) {
       this.nodes.input.addEventListener('paste', (event) => {
@@ -392,9 +394,12 @@ export default class LinkTool implements BlockTool {
         link: url,
         meta: {
           title: dom.title,
-          description: dom.querySelector('meta[name="description"]')?.textContent || dom.body.textContent?.slice(0, 100),
+          description: dom.querySelector('meta[name="description"]')?.getAttribute('content')
+            || dom.body.textContent?.slice(0, 100),
           image: {
-            url: dom.querySelector('meta[property="og:image"]')?.textContent,
+            url: dom.querySelector('meta[property="og:image"]')?.getAttribute('content') ||
+              dom.querySelector('img:first-child')?.getAttribute('src') ||
+              dom.querySelector('image:first-child')?.getAttribute('src'),
           },
         },
         success: 1
@@ -451,6 +456,48 @@ export default class LinkTool implements BlockTool {
     });
 
     this.applyErrorStyle();
+  }
+
+  renderSettings?(): HTMLElement | MenuConfig {
+    const menus = new Array<MenuConfigItem>();
+
+    if (Object.keys(this.data.meta).length) {
+      // 有链接，可以刷新
+      menus.push({
+        icon: '<svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M576 1024l64-256h156.48A379.328 379.328 0 0 0 896 512c0-174.72-116.992-326.72-276.736-374.016C593.152 130.304 576 105.344 576 78.08c0-41.408 39.488-73.28 79.232-61.632C868.224 79.168 1024 278.976 1024 512c0 258.368-199.296 476.992-448 512zM0 512C0 253.696 199.296 35.008 448 0L384 256H227.52A379.328 379.328 0 0 0 128 512c0 174.72 116.992 326.72 276.736 373.952A62.08 62.08 0 0 1 448 945.92c0 41.408-39.488 73.28-79.232 61.632C155.776 944.832 0 745.024 0 512z"></path></svg>',
+        title: '刷新',
+        name: 'refresh',
+        toggle: true,
+        onActivate: () => {
+          this.fetchLinkData(this.data.link)
+            .then(() => MessageUtil.success("刷新成功"))
+            .catch(e => MessageUtil.error("刷新失败", e));
+        },
+        isActive: true
+      }, {
+        icon: IconCross,
+        title: '清空',
+        name: 'remove',
+        toggle: true,
+        onActivate: () => {
+          this.data = {
+            link: '',
+            meta: {}
+          }
+          if (this.nodes.container) {
+            // 清空容器
+            while (this.nodes.container.firstChild) {
+              this.nodes.container.removeChild(this.nodes.container.firstChild);
+            }
+            // 添加输入框
+            this.nodes.inputHolder = this.makeInputHolder();
+            this.nodes.container.appendChild(this.nodes.inputHolder);
+          }
+        }
+      });
+    }
+
+    return menus;
   }
 
 }

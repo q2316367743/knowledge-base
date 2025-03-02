@@ -47,6 +47,8 @@ interface SimpleImageData extends SimpleImageSetting {
  */
 export default class SimpleImage implements BlockTool {
 
+  public isTune = true;
+
   private readonly api: API;
   private readonly readOnly: boolean;
   private readonly blockIndex: number;
@@ -65,7 +67,7 @@ export default class SimpleImage implements BlockTool {
    *   readOnly - read-only mode flag
    */
   constructor(p: BlockToolConstructorOptions<SimpleImageData>) {
-    const {data, config, api, readOnly} = p;
+    const {data, api, readOnly} = p;
     /**
      * Editor.js API
      */

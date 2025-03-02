@@ -6,7 +6,7 @@
 <script lang="ts" setup>
 import {fetchUrl} from "@/plugin/server";
 import {debounce} from "radash";
-import EditorJS, {OutputData} from '@editorjs/editorjs';
+import EditorJS, {BlockToolConstructable, OutputData} from "@editorjs/editorjs";
 import Header from '@editorjs/header';
 import LinkTool from "@/editor/SuperEditor/tools/LinkTool";
 import List from './tools/List';
@@ -53,7 +53,7 @@ onMounted(() => {
         }
       },
       list: {
-        class: List,
+        class: List as BlockToolConstructable,
         inlineToolbar: true,
         config: {
           defaultStyle: 'unordered'
