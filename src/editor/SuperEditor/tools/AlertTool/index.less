@@ -12,6 +12,7 @@
       fill: @background-color;
       stroke: @border-color;
     }
+
     #content {
       fill: @content-color;
     }
@@ -25,46 +26,36 @@
   margin-bottom: 10px;
 }
 
+.cdx-alert-default {
+  .alert-variant(var(--td-bg-color-container), var(--td-border-level-1-color), var(--td-text-color-primary));
+}
+
 .cdx-alert-primary {
-  .alert-variant(#ebf8ff, #4299e1, #2b6cb0);
+  .alert-variant(var(--td-brand-color-light), var(--td-brand-color-active), var(--td-brand-color));
 }
 
-.cdx-alert-secondary {
-  .alert-variant(#f7fafc, #cbd5e0, #222731);
-}
-
-.cdx-alert-info {
-  .alert-variant(#e6fdff, #4cd4ce, #00727c);
-}
 
 .cdx-alert-success {
-  .alert-variant(#f0fff4, #68d391, #2f855a);
+  .alert-variant(var(--td-success-color-light), var(--td-success-color-active), var(--td-success-color));
 }
 
 .cdx-alert-warning {
-  .alert-variant(#fffaf0, #ed8936, #c05621);
+  .alert-variant(var(--td-warning-color-light), var(--td-warning-color-active), var(--td-warning-color));
 }
 
 .cdx-alert-danger {
-  .alert-variant(#fff5f5, #fc8181, #c53030);
+  .alert-variant(var(--td-error-color-light), var(--td-error-color-active), var(--td-error-color));
 }
 
-.cdx-alert-light {
-  .alert-variant(#fff, #edf2f7, #1a202c);
-}
-
-.cdx-alert-dark {
-  .alert-variant(#2d3748, #1a202c, #d3d3d3);
-}
-
-
-.cdx-alert-align-left{
+.cdx-alert-align-left {
   text-align: left;
 }
-.cdx-alert-align-center{
+
+.cdx-alert-align-center {
   text-align: center;
 }
-.cdx-alert-align-right{
+
+.cdx-alert-align-right {
   text-align: right;
 }
 

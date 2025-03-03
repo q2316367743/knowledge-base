@@ -53,6 +53,8 @@ onMounted(() => {
     i18n: {
       messages: {
         toolNames: {
+          'Text': '段落',
+          'Heading': '标题',
           'Table': '表格',
           'Convert to': '转换为',
           'Bold': '加粗',
@@ -60,7 +62,8 @@ onMounted(() => {
           'Italic': '斜体',
           'Underline': '下划线',
           'Marker': '标记',
-          'Inline Code': '内联代码'
+          'Inline Code': '内联代码',
+          'Delimiter': '分割线'
         },
         tools: {
           'Table': {
@@ -75,6 +78,16 @@ onMounted(() => {
             'Add row below': '添加下方行',
             'Delete row': '删除行',
             'Heading': '表头'
+          },
+          'alert': {
+            'Default': '默认',
+            'Primary': '主要',
+            'Success': '成功',
+            'Warning': '警告',
+            'Danger': '危险',
+            'Left': '左对齐',
+            'Center': '居中对齐',
+            'Right': '右对齐'
           }
         }
       }
@@ -93,7 +106,6 @@ onMounted(() => {
         }
       },
       list: {
-        // @ts-ignore
         class: List,
         inlineToolbar: true,
         config: {
@@ -104,11 +116,6 @@ onMounted(() => {
         class: AlertTool,
         inlineToolbar: true,
         shortcut: 'CMD+SHIFT+A',
-        config: {
-          alertTypes: ['primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark'],
-          defaultType: 'primary',
-          messagePlaceholder: 'Enter something',
-        },
       },
       // 内联工具
       Underline: {

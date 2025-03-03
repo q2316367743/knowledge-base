@@ -1,9 +1,3 @@
-/**
- * Alert block for the Editor.js.
- *
- * @author Vishal Telangre
- * @license MIT
- */
 import './index.less';
 import {API, BlockTool, BlockToolConstructorOptions, PasteEvent} from "@editorjs/editorjs";
 import {makeElement} from '@/utils/lang/DocumentUtil';
@@ -43,7 +37,7 @@ export default class AlertTool implements BlockTool {
 
   public static readonly toolbox = {
     icon: ToolboxIcon,
-    title: 'Alert',
+    title: '警告',
   }
   /**
    * Allow to press Enter inside the Alert block
@@ -52,7 +46,7 @@ export default class AlertTool implements BlockTool {
   /**
    * Default Alert type
    */
-  public static readonly DEFAULT_TYPE = 'info'
+  public static readonly DEFAULT_TYPE = 'primary'
   /**
    * Default Alert align type
    *
@@ -71,14 +65,11 @@ export default class AlertTool implements BlockTool {
    * Supported Alert types
    */
   public static readonly ALERT_TYPES = [
+    'default',
     'primary',
-    'secondary',
-    'info',
     'success',
     'warning',
     'danger',
-    'light',
-    'dark',
   ]
   /**
    * Supported Align types
@@ -166,15 +157,13 @@ export default class AlertTool implements BlockTool {
 
   /**
    * Create Block's settings block
-   *
-   * @returns {array}
    */
   renderSettings() {
     const alertTypes = this.alertTypes.map((type) => ({
       icon: SettingsIcon,
       name: `alert-${type}`,
       label: this._getFormattedName(type),
-      toggle: 'alert',
+      toggle: 'settings-icon-variant',
       isActive: this.data.type === type,
       onActivate: () => {
         this._changeAlertType(type);
