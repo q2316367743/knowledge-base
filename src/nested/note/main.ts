@@ -1,4 +1,3 @@
-import {createApp} from 'vue'
 import {createPinia} from 'pinia';
 import App from './App.vue'
 // 额外引入图标库

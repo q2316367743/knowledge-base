@@ -1,7 +1,7 @@
 import './LinkTool.less';
 import {IconCross, IconLink} from '@codexteam/icons';
 import {BlockToolConstructorOptions, BlockTool, API} from "@editorjs/editorjs";
-import {make} from '@/utils/lang/DocumentUtil';
+import {makeElement} from '@/utils/lang/DocumentUtil';
 import {MenuConfig, MenuConfigItem} from "@editorjs/editorjs/types/tools/menu-config";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
@@ -105,8 +105,8 @@ export default class LinkTool implements BlockTool {
    *
    */
   render(): HTMLDivElement {
-    this.nodes.wrapper = make('div', this.CSS.baseClass);
-    this.nodes.container = make('div', this.CSS.container);
+    this.nodes.wrapper = makeElement('div', this.CSS.baseClass);
+    this.nodes.container = makeElement('div', this.CSS.container);
 
     this.nodes.inputHolder = this.makeInputHolder();
     this.nodes.linkContent = this.prepareLinkPreview();
@@ -195,10 +195,10 @@ export default class LinkTool implements BlockTool {
    * Prepare input holder
    */
   makeInputHolder(): HTMLElement {
-    const inputHolder = make('div', this.CSS.inputHolder);
+    const inputHolder = makeElement('div', this.CSS.inputHolder);
 
-    this.nodes.progress = make('label', this.CSS.progress);
-    this.nodes.input = make('div', [this.CSS.input, this.CSS.inputEl], {
+    this.nodes.progress = makeElement('label', this.CSS.progress);
+    this.nodes.input = makeElement('div', [this.CSS.input, this.CSS.inputEl], {
       contentEditable: `${!this.readOnly}`,
     });
 
@@ -294,15 +294,15 @@ export default class LinkTool implements BlockTool {
    *
    */
   prepareLinkPreview(): HTMLElement {
-    const holder = make('a', this.CSS.linkContent, {
+    const holder = makeElement('a', this.CSS.linkContent, {
       target: '_blank',
       rel: 'nofollow noindex noreferrer',
     });
 
-    this.nodes.linkImage = make('div', this.CSS.linkImage);
-    this.nodes.linkTitle = make('div', this.CSS.linkTitle);
-    this.nodes.linkDescription = make('p', this.CSS.linkDescription);
-    this.nodes.linkText = make('span', this.CSS.linkText);
+    this.nodes.linkImage = makeElement('div', this.CSS.linkImage);
+    this.nodes.linkTitle = makeElement('div', this.CSS.linkTitle);
+    this.nodes.linkDescription = makeElement('p', this.CSS.linkDescription);
+    this.nodes.linkText = makeElement('span', this.CSS.linkText);
 
     return holder;
   }

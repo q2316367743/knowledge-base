@@ -1,5 +1,4 @@
 import {useUmami} from "@/plugin/umami";
-import {createApp} from 'vue'
 import {createPinia} from 'pinia';
 import App from './App.vue'
 import {setupCalendar} from 'v-calendar';

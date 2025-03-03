@@ -5,7 +5,7 @@ import './index.css';
 
 import {IconAddBorder, IconStretch, IconAddBackground} from '@codexteam/icons';
 import {API, BlockTool, BlockToolConstructorOptions, PasteEvent} from "@editorjs/editorjs";
-import {make} from '@/utils/lang/DocumentUtil';
+import {makeElement} from '@/utils/lang/DocumentUtil';
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 
 interface SimpleImageNode {
@@ -153,11 +153,11 @@ export default class SimpleImage implements BlockTool {
    * @public
    */
   render() {
-    const wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper]),
-      loader = make('div', this.CSS.loading),
-      imageHolder = make('div', this.CSS.imageHolder),
-      image = make('img'),
-      caption = make('div', [this.CSS.input, this.CSS.caption], {
+    const wrapper = makeElement('div', [this.CSS.baseClass, this.CSS.wrapper]),
+      loader = makeElement('div', this.CSS.loading),
+      imageHolder = makeElement('div', this.CSS.imageHolder),
+      image = makeElement('img'),
+      caption = makeElement('div', [this.CSS.input, this.CSS.caption], {
         contentEditable: `${!this.readOnly}`,
         innerHTML: this.data.caption || '',
       });

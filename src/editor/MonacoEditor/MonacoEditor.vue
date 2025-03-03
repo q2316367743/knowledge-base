@@ -21,7 +21,11 @@ defineProps({
     default: false,
   },
   articleId: Number,
-  fileName: String
+  fileName: String,
+  height: {
+    type: String,
+    default: '100%'
+  }
 });
 const emit = defineEmits(['change', 'editor-mounted']);
 </script>
@@ -29,6 +33,6 @@ const emit = defineEmits(['change', 'editor-mounted']);
 .monaco-editor {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: v-bind(height);
 }
 </style>

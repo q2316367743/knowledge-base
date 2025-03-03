@@ -86,3 +86,10 @@ export function isVersionUpdate(newVersion: string, oldVersion: string, minVersi
   // 新版本必须大于等于最小版本，旧版本必须小于最小版本
   return versionCompare(newVersion, minVersion) >= 0 && versionCompare(oldVersion, minVersion) < 0;
 }
+
+/**
+ * 获取一个值小于最大值，大于最小值
+ */
+export function getValueBetween(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
