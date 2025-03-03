@@ -1,18 +1,31 @@
 .ce-rawtool {
   min-height: 200px;
-}
+  margin-top: 8px;
 
-.ce-code-resize-handle {
-  width: 100%;
-  height: 5px;
-  cursor: ns-resize;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background: transparent;
-  transition: background-color 0.1s ease-in-out;
+  .ce-code-header {
+    border-bottom: 1px solid var(--td-border-level-1-color);
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+    .ce-code-filename {
+      cursor: pointer;
+      &:empty {
+        color: var(--td-text-color-placeholder);
+      }
+    }
+  }
+  .ce-code-resize-handle {
+    width: 100%;
+    height: 5px;
+    cursor: ns-resize;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: transparent;
+    transition: background-color 0.1s ease-in-out;
+    text-align: center;
+    line-height: 5px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1) !important;
+    }
   }
 }

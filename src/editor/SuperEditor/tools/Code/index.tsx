@@ -2,12 +2,23 @@ import './index.less';
 
 import {IconHtml} from '@codexteam/icons';
 import {API, BlockTool, BlockToolConstructorOptions} from "@editorjs/editorjs";
-import {makeElement} from "@/utils/lang/DocumentUtil";
+import {Button, Input, Tooltip} from 'tdesign-vue-next';
+import {EditIcon} from 'tdesign-icons-vue-next';
 import MonacoEditor from "@/editor/MonacoEditor/MonacoEditor.vue";
+import {codeRun, disabledCodeRun} from "@/plugin/CodeRun";
+import router from '@/plugin/router';
+import {makeElement} from "@/utils/lang/DocumentUtil";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {isEmptyString} from "@/utils/lang/FieldUtil";
+import {computed} from "vue";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
+import {parseFileExtra} from "@/utils/file/FileUtil";
 
 interface CodeData {
   html?: string;
   height?: string;
+  filename?: string;
 }
 
 interface CodeCss {
@@ -21,8 +32,11 @@ export default class CodeTool implements BlockTool {
   private readonly readOnly: boolean;
   private api: API;
   private readonly CSS: CodeCss;
+
   private content: Ref<string>;
   private height: Ref<string>;
+  private filename: Ref<string>;
+
   private wrapper?: HTMLDivElement;
 
   /**
@@ -44,7 +58,7 @@ export default class CodeTool implements BlockTool {
   /**
    * 自动消毒配置
    */
-  public static readonly sanitize =  {
+  public static readonly sanitize = {
     html: true, // Allow HTML tags
   };
 
@@ -55,12 +69,6 @@ export default class CodeTool implements BlockTool {
     return {
       icon: IconHtml,
       title: '代码块',
-    };
-  }
-
-  get data() {
-    return {
-      html: this.content.value,
     };
   }
 
@@ -78,6 +86,7 @@ export default class CodeTool implements BlockTool {
 
     this.content = ref(data.html || '');
     this.height = ref(data.height || '200px');
+    this.filename = ref(data.filename || '');
 
   }
 
@@ -90,12 +99,17 @@ export default class CodeTool implements BlockTool {
     this.wrapper = makeElement('div', [this.CSS.baseClass, this.CSS.input, 'ce-rawtool']);
     this.wrapper.style.position = 'relative';
 
-    const {readOnly, wrapper, content, height} = this;
+    const {readOnly, filename, content, height} = this;
 
     const app = createApp({
       setup() {
         let startY = 0;
         let startHeight = 0;
+
+        const edit = ref(false);
+
+        const disabled = computed(() => disabledCodeRun(filename.value));
+        const language = computed(() => parseFileExtra(filename.value));
 
         const onMouseDown = (e: MouseEvent) => {
           startY = e.clientY;
@@ -116,21 +130,51 @@ export default class CodeTool implements BlockTool {
           document.removeEventListener('mousemove', onMouseMove);
           document.removeEventListener('mouseup', onMouseUp);
         };
+        const onBlur = () => edit.value = false;
 
-        // onMounted(() => {
-        //   if (!readOnly) {
-        //     const resizeHandle = makeElement('div', ['ce-code-resize-handle']);
-        //     resizeHandle.style.cssText = 'width: 100%; height: 5px; cursor: ns-resize; position: absolute; bottom: 0; left: 0; background: transparent;';
-        //     resizeHandle.addEventListener('mousedown', onMouseDown);
-        //     wrapper?.appendChild(resizeHandle);
-        //   }
-        // });
+        function onRun() {
+          if (disabled.value) {
+            NotificationUtil.alert('请先配置运行命令', "代码运行", {
+              confirmButtonText: '立即前往'
+            }).then(() => {
+              router.push("/setting/code-run")
+            });
+            return;
+          }
+          codeRun(filename.value, content.value).then(() => {
+            MessageUtil.info("运行成功")
+          }).catch((e) => {
+            MessageUtil.error(e)
+          })
+
+        }
 
         return () => (
-          <div style={{height: height.value}}>
-            <MonacoEditor v-model={content.value} readOnly={readOnly}/>
-            {!readOnly && <div class="ce-code-resize-handle" onMousedown={onMouseDown}></div>}
-          </div>
+          <>
+            <div class="ce-code-header flex justify-between p-8px items-center">
+              <div class={'flex items-center'}>
+                {edit.value ?
+                  <Input v-model={filename.value} class={'w-full'} placeholder={'请输入文件名'} autofocus size={'small'}
+                         onBlur={onBlur} onEnter={onBlur}></Input> :
+                  <div class={{
+                    'ce-code-filename': true,
+                    'empty': isEmptyString(filename.value)
+                  }}>{filename.value || '请输入文件名'}</div>}
+                {!readOnly && <Button theme={'primary'} size={'small'} variant={'text'} shape={'square'}
+                                      class={'ml-4'}
+                                      onClick={() => edit.value = !edit.value}>{{
+                  icon: () => <EditIcon/>
+                }}</Button>}
+              </div>
+              <Tooltip content={disabled.value ? '请先配置运行命令' : '代码运行'}>
+                <Button theme={'primary'} size={'small'} onClick={onRun}>运行</Button>
+              </Tooltip>
+            </div>
+            <div style={{height: height.value}}>
+              <MonacoEditor v-model={content.value} readOnly={readOnly} language={language.value}/>
+              {!readOnly && <div class="ce-code-resize-handle" onMousedown={onMouseDown}>···</div>}
+            </div>
+          </>
         );
       }
     });
@@ -151,6 +195,7 @@ export default class CodeTool implements BlockTool {
     return {
       html: this.content.value,
       height: this.height.value,
+      filename: this.filename.value,
     };
   }
 
