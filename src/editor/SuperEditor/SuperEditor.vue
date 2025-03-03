@@ -69,6 +69,8 @@ onMounted(() => {
   })
 });
 
+onBeforeUnmount(() => editor.value?.destroy());
+
 </script>
 <style scoped lang="less">
 .super-editor {
