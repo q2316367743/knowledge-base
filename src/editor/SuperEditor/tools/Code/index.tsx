@@ -158,10 +158,11 @@ export default class CodeTool implements BlockTool {
                          onBlur={onBlur} onEnter={onBlur}></Input> :
                   <div class={{
                     'ce-code-filename': true,
-                    'empty': isEmptyString(filename.value)
-                  }}>{filename.value || '请输入文件名'}</div>}
+                    'empty': isEmptyString(filename.value),
+                    'ellipsis': true
+                  }} style={{maxWidth: '500px'}}>{filename.value || '请输入文件名'}</div>}
                 {!readOnly && <Button theme={'primary'} size={'small'} variant={'text'} shape={'square'}
-                                      class={'ml-4'}
+                                      class={'ml-2'}
                                       onClick={() => edit.value = !edit.value}>{{
                   icon: () => <EditIcon/>
                 }}</Button>}

@@ -321,10 +321,22 @@
   resolved "https://registry.npmmirror.com/@codexteam/icons/-/icons-0.0.5.tgz#d17f39b6a0497c6439f57dd42711817a3dd3679c"
   integrity sha512-s6H2KXhLz2rgbMZSkRm8dsMJvyUNZsEjxobBEg9ztdrb1B2H3pEzY6iTwI4XUPJWJ3c3qRKwV4TrO3J5jUdoQA==
 
+"@codexteam/icons@^0.0.6":
+  version "0.0.6"
+  resolved "https://mirrors.cloud.tencent.com/npm/@codexteam/icons/-/icons-0.0.6.tgz#5553ada48dddf5940851ccc142cfe17835c36ad3"
+  integrity sha512-L7Q5PET8PjKcBT5wp7VR+FCjwCi5PUp7rd/XjsgQ0CI5FJz0DphyHGRILMuDUdCW2MQT9NHbVr4QP31vwAkS/A==
+
 "@codexteam/icons@^0.3.2", "@codexteam/icons@^0.3.3":
   version "0.3.3"
   resolved "https://registry.npmmirror.com/@codexteam/icons/-/icons-0.3.3.tgz#89d53af1d2bfc106e4e44be5fd824a059e94c098"
   integrity sha512-cp7mkZPgmBuSxigTm3Vb+DtVHYeX7qXfQd7o05vcLD8Ag5WvRlol2QSn5P10k0CDAJwmkH9nQGQLBycErS9lsQ==
+
+"@editorjs/delimiter@^1.4.2":
+  version "1.4.2"
+  resolved "https://mirrors.cloud.tencent.com/npm/@editorjs/delimiter/-/delimiter-1.4.2.tgz#3034ff16470bda5de88087fd5f92f5a2889528db"
+  integrity sha512-S8q2LpeYdYkVShLp7K8c4HLthDHBevLw+sT+iO0+SH0oMvFmld9SUon3DFzMQ2gG07EOdZGRZ958+sVxyvFjZw==
+  dependencies:
+    "@codexteam/icons" "^0.3.2"
 
 "@editorjs/editorjs@^2.29.1", "@editorjs/editorjs@^2.30.8":
   version "2.30.8"
@@ -339,10 +351,38 @@
     "@codexteam/icons" "^0.0.5"
     "@editorjs/editorjs" "^2.29.1"
 
+"@editorjs/inline-code@^1.5.1":
+  version "1.5.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/@editorjs/inline-code/-/inline-code-1.5.1.tgz#482709fb75c1a92161ef001d65f468cbda67aa5d"
+  integrity sha512-XvKpqw9y1bOYgyuVUHGDuu7KlNWCYIXD5uU1Lpc4s4LJ8VN4TjWFGKJ3sS+LR7zzasWe8hu2ffR1JC6MHIS0EQ==
+  dependencies:
+    "@codexteam/icons" "^0.3.2"
+
 "@editorjs/list@^2.0.6":
   version "2.0.6"
   resolved "https://registry.npmmirror.com/@editorjs/list/-/list-2.0.6.tgz#2f9004ca3499044988af43f0aa9b81d2db7b054e"
   integrity sha512-QmmRAMtIBlO9k8LxfiqhWM+CjrA9r1F5th3cI9UFhDMC78YqFdFNg+dWrH57bAW4063HJfS1ygbGoH/LfHBkww==
+  dependencies:
+    "@codexteam/icons" "^0.3.2"
+
+"@editorjs/marker@^1.4.0":
+  version "1.4.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/@editorjs/marker/-/marker-1.4.0.tgz#c5553c54ced70d28502fb47f2dbc7d50c53fc88e"
+  integrity sha512-5ipEXfL44jTTRzgNp/p/YjMO7jT08S5z4V8qA3FFJTfdhKgQyM3mvP1zpdYKw47ZZpVWMCncvk5Nto3BxihEtg==
+  dependencies:
+    "@codexteam/icons" "^0.0.5"
+
+"@editorjs/table@^2.4.3":
+  version "2.4.3"
+  resolved "https://mirrors.cloud.tencent.com/npm/@editorjs/table/-/table-2.4.3.tgz#3bf7d2185297138864ece0ff04bc8ec699e2596f"
+  integrity sha512-TBLVFA1T6PIZRSWz0gXZUtNrFu4a59FeABM/wS0/Coc/bhOfWBRrf5/Ic5tVHaTazXEo1dYWWrVgg/jRaRnYbw==
+  dependencies:
+    "@codexteam/icons" "^0.0.6"
+
+"@editorjs/underline@^1.2.1":
+  version "1.2.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/@editorjs/underline/-/underline-1.2.1.tgz#72ad63e9821b2ebca17f25536682b53b7a2c90df"
+  integrity sha512-LjJ01ia6Pj0Z/elifycp9+T1bQs0eXNnIcEYKOlk0sGHLy88DPcBOh9oz1i+uWarZ4AjGsvSMaptpWe+yQNsjQ==
   dependencies:
     "@codexteam/icons" "^0.3.2"
 

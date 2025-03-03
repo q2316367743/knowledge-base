@@ -468,17 +468,18 @@ export default class LinkTool implements BlockTool {
         title: '刷新',
         name: 'refresh',
         toggle: true,
+        isActive: false,
         onActivate: () => {
           this.fetchLinkData(this.data.link)
             .then(() => MessageUtil.success("刷新成功"))
             .catch(e => MessageUtil.error("刷新失败", e));
-        },
-        isActive: true
+        }
       }, {
         icon: IconCross,
         title: '清空',
         name: 'remove',
         toggle: true,
+        isActive: false,
         onActivate: () => {
           this.data = {
             link: '',

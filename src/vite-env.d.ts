@@ -10,6 +10,8 @@ declare module 'simple-mind-map/src/plugins/Select.js';
 declare module 'simple-mind-map/src/plugins/Drag.js';
 
 // editor.js
+declare module '@editorjs/marker';
+declare module 'editorjs-tooltip';
 
 declare interface OpenFileOption {
   title?: string,

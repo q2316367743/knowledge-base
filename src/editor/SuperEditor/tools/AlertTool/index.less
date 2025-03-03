@@ -1,0 +1,123 @@
+// prettier-ignore
+
+.alert-variant(@background-color, @border-color, @content-color) {
+  background-color: @background-color;
+  border: 1px solid @border-color;
+  color: @content-color;
+}
+
+.settings-icon-variant(@background-color, @border-color, @content-color) {
+  svg {
+    #background {
+      fill: @background-color;
+      stroke: @border-color;
+    }
+    #content {
+      fill: @content-color;
+    }
+  }
+}
+
+.cdx-alert {
+  position: relative;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.cdx-alert-primary {
+  .alert-variant(#ebf8ff, #4299e1, #2b6cb0);
+}
+
+.cdx-alert-secondary {
+  .alert-variant(#f7fafc, #cbd5e0, #222731);
+}
+
+.cdx-alert-info {
+  .alert-variant(#e6fdff, #4cd4ce, #00727c);
+}
+
+.cdx-alert-success {
+  .alert-variant(#f0fff4, #68d391, #2f855a);
+}
+
+.cdx-alert-warning {
+  .alert-variant(#fffaf0, #ed8936, #c05621);
+}
+
+.cdx-alert-danger {
+  .alert-variant(#fff5f5, #fc8181, #c53030);
+}
+
+.cdx-alert-light {
+  .alert-variant(#fff, #edf2f7, #1a202c);
+}
+
+.cdx-alert-dark {
+  .alert-variant(#2d3748, #1a202c, #d3d3d3);
+}
+
+
+.cdx-alert-align-left{
+  text-align: left;
+}
+.cdx-alert-align-center{
+  text-align: center;
+}
+.cdx-alert-align-right{
+  text-align: right;
+}
+
+.cdx-alert__message {
+  outline: none;
+}
+
+.cdx-alert [contentEditable='true'][data-placeholder] {
+  &::before {
+    position: absolute;
+    content: attr(data-placeholder);
+    color: #707684;
+    font-weight: normal;
+    opacity: 0;
+  }
+
+  &:empty::before {
+    opacity: 1;
+  }
+
+  &:empty:focus::before {
+    opacity: 0;
+  }
+}
+
+.ce-popover__item[data-item-name='alert-primary'] .ce-popover__item-icon {
+  .settings-icon-variant(#ebf8ff, #4299e1, #2b6cb0);
+}
+
+.ce-popover__item[data-item-name='alert-secondary'] .ce-popover__item-icon {
+  .settings-icon-variant(#f7fafc, #cbd5e0, #222731);
+}
+
+.ce-popover__item[data-item-name='alert-info'] .ce-popover__item-icon {
+  .settings-icon-variant(#e6fdff, #4cd4ce, #00727c);
+}
+
+.ce-popover__item[data-item-name='alert-success'] .ce-popover__item-icon {
+  .settings-icon-variant(#f0fff4, #68d391, #2f855a);
+}
+
+.ce-popover__item[data-item-name='alert-warning'] .ce-popover__item-icon {
+  .settings-icon-variant(#fffaf0, #ed8936, #c05621);
+}
+
+.ce-popover__item[data-item-name='alert-danger'] .ce-popover__item-icon {
+  .settings-icon-variant(#fff5f5, #fc8181, #c53030);
+}
+
+.ce-popover__item[data-item-name='alert-light'] .ce-popover__item-icon {
+  .settings-icon-variant(#fff, #edf2f7, #1a202c);
+}
+
+.ce-popover__item[data-item-name='alert-dark'] .ce-popover__item-icon {
+  .settings-icon-variant(#2d3748, #1a202c, #d3d3d3);
+}
