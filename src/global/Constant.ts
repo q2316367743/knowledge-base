@@ -31,8 +31,15 @@ const Constant = {
 
 export default Constant;
 
-export const toTxc = () => utools.shellOpenExternal(Constant.feedback);
 export const toDoc = () => utools.shellOpenExternal(Constant.doc);
-
+export function toFeedback() {
+  utools.fetchUserServerTemporaryToken().then((ret) => {
+    utools.ubrowser.goto('https://feedback.esion.xyz/#/auth?type=utools&pluginId=1894929764697055232&accessToken=' + ret.token)
+      .run({ width: 1200, height: 800 })
+  }).catch(e => {
+    utools.showNotification('请先登录');
+    console.error(e);
+  });
+}
 
 export const BASE64_PREFIX: string = 'data:image/png;base64,';

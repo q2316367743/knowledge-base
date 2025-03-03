@@ -2,6 +2,15 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.4.2',
+    sign: 242,
+    time: '2025-03-03',
+    items: [{
+      label: LogItemEnum.REPAIR,
+      content: '修复了问题反馈点击错误问题'
+    }]
+  },
+  {
     version: '2.4.1',
     sign: 241,
     time: '2025-02-26',

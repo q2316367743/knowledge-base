@@ -2,7 +2,7 @@
   <page-layout title="更新日志">
     <template #extra>
       <span>反馈建议前往</span>
-      <t-link @click="toTxc()" theme="primary">反馈中心</t-link>
+      <t-link @click="toFeedback()" theme="primary">反馈中心</t-link>
       <span>，支持图片反馈。</span>
     </template>
     <div class="p-8px">
@@ -23,9 +23,8 @@
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";
 import UpdateLog from "@/global/UpdateLog";
-import Constant from "@/global/Constant";
+import {toFeedback} from "@/global/Constant";
 
-const toTxc = () => utools.shellOpenExternal(Constant.feedback);
 </script>
 <style scoped>
 </style>

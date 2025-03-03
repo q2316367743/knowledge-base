@@ -17,7 +17,7 @@
       <div class="action">
         <t-space>
           <t-button @click="openUrl(Constant.repo)">开源地址</t-button>
-          <t-button @click="openUrl(Constant.feedback)">反馈中心</t-button>
+          <t-button @click="toFeedback()">反馈中心</t-button>
           <t-button @click="openUrl(Constant.updateLog)">更新日志</t-button>
         </t-space>
         <br/>
@@ -32,7 +32,7 @@
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
-import Constant from "@/global/Constant";
+import Constant, {toFeedback} from "@/global/Constant";
 import {useErrorStore} from "@/store/components/ErrorStore";
 
 const consoleShow = computed(() => useErrorStore().consoleShow);

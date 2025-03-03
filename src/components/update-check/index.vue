@@ -5,7 +5,7 @@
       <span>更加详细的更新说明，可以关注</span>
       <a-link @click="toBlog()">作者博客</a-link>
       <span>，反馈请前往</span>
-      <a-link @click="toTxc()">兔小巢</a-link>
+      <a-link @click="toFeedback()">兔小巢</a-link>
       <span>。</span>
     </a-alert>
     <div class="entry">
@@ -22,7 +22,7 @@
 import UpdateItem from "@/components/update-check/item.vue";
 import UpdateLog from "@/global/UpdateLog";
 import {ref} from "vue";
-import Constant from "@/global/Constant";
+import Constant, {toFeedback} from "@/global/Constant";
 import updateCheck from "@/components/update-check/UpdateCheck";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -47,7 +47,6 @@ import('@/global/BeanFactory').then(data => {
 
 const toBlog = () => utools.shellOpenExternal(Constant.website)
 const toUpdateLog = () => router.push('/more/update');
-const toTxc = () => utools.shellOpenExternal(Constant.feedback)
 
 </script>
 <style scoped>

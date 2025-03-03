@@ -143,7 +143,7 @@
           </template>
           帮助中心
         </a-doption>
-        <a-doption @click="toTxc()">
+        <a-doption @click="toFeedback()">
           <template #icon>
             <icon-message/>
           </template>
@@ -171,7 +171,7 @@ import {useRoute, useRouter} from "vue-router";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
-import {toDoc, toTxc} from "@/global/Constant";
+import {toDoc, toFeedback} from "@/global/Constant";
 
 const route = useRoute();
 const router = useRouter();
