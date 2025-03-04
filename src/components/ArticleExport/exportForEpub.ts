@@ -54,8 +54,8 @@ const initEpubItems: EpubItem[] = [{
 }];
 
 /**
- * 导出文章为epub文件
- * @param folder 文章文件夹ID
+ * 导出笔记为epub文件
+ * @param folder 笔记文件夹ID
  */
 export async function exportForEpub(folder: number) {
     const epub = new JSZip();
@@ -74,7 +74,7 @@ export async function exportForEpub(folder: number) {
     // 查询全部目录结构
     const map = listToList(folders, folderMap, folder);
     if (map.size === 0) {
-        return Promise.reject('没有找到任何文章');
+        return Promise.reject('没有找到任何笔记');
     }
     const images = new Array<string>();
     // 文件索引

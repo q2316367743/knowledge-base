@@ -71,7 +71,7 @@ export function showArticleImportModal(id: number) {
     }
 
     const modalReturn = Drawer.open({
-        title: () => <div>文章导入<span style={{fontSize: '0.8rem'}}>（仅支持markdown、富文本和代码笔记）</span></div>,
+        title: () => <div>笔记导入<span style={{fontSize: '0.8rem'}}>（仅支持markdown、富文本和代码笔记）</span></div>,
         width: 600,
         content: () => <div>
             <Upload draggable multiple showFileList={false} customRequest={customRequest} disabled={zipLoading.value}/>

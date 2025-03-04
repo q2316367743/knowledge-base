@@ -1,5 +1,5 @@
 /**
- * 文章内容
+ * 笔记内容
  */
 export interface ZoneContent {
 

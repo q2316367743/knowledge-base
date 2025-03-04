@@ -65,7 +65,7 @@ export const useArticleStore = defineStore('article', {
     },
     addSimple(content: string, title?: string): Promise<ArticleIndex> {
       return this.add(getDefaultArticleIndex({
-        name: title || ('导入文章' + new Date().getTime()),
+        name: title || ('导入笔记' + new Date().getTime()),
       }), getDefaultArticleBase({source: "快捷导入"}), content);
     },
     async add(
@@ -74,7 +74,7 @@ export const useArticleStore = defineStore('article', {
       content: any): Promise<ArticleIndex> {
       // 校验
       if (article.name.trim() === '') {
-        return Promise.reject("文章标题不能为空");
+        return Promise.reject("笔记标题不能为空");
       }
       const now = new Date();
       const id = now.getTime();
@@ -107,7 +107,7 @@ export const useArticleStore = defineStore('article', {
     async updateIndex(id: number, article: Partial<ArticleIndex>): Promise<ArticleIndex> {
       const index = this.value.findIndex(e => e.id === id);
       if (index === -1) {
-        await MessageBoxUtil.confirm("文章未找到，是否新增文章", "更新失败", {
+        await MessageBoxUtil.confirm("笔记未找到，是否新增笔记", "更新失败", {
           confirmButtonText: "新增",
           cancelButtonText: "取消"
         });
@@ -178,7 +178,7 @@ export const useArticleStore = defineStore('article', {
       await removeOneByAsync(LocalNameEnum.ARTICLE_CONTENT + id, true);
       // 删除评论
       await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
-      // 如果当前就是这个文章，则清除
+      // 如果当前就是这个笔记，则清除
       useHomeEditorStore().closeArticle(id);
     },
     async removeRealByIds(ids: Array<number>) {
@@ -193,7 +193,7 @@ export const useArticleStore = defineStore('article', {
         // 删除评论
         await removeOneByAsync(LocalNameEnum.ARTICLE_COMMENT + id, true);
       }
-      // 如果当前就是这个文章，则清除
+      // 如果当前就是这个笔记，则清除
       useHomeEditorStore().closeArticle(...ids);
     },
     async drop(id: number, pid: number) {
@@ -221,7 +221,7 @@ export const useArticleStore = defineStore('article', {
         id: id,
         isDelete: true
       })));
-      // 如果当前就是这个文章，则清除
+      // 如果当前就是这个笔记，则清除
       useHomeEditorStore().closeArticle(...ids);
       return Promise.resolve();
     },

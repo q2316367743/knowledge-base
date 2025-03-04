@@ -6,11 +6,11 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 export async function htmlToArticle(content: string) {
     const article = JSON.parse(content);
     if (typeof article.title === 'undefined' || article.title.trim() === '') {
-        MessageUtil.error("文章标题为必填！");
+        MessageUtil.error("笔记标题为必填！");
         return;
     }
     if (typeof article.content === 'undefined' || article.content.trim() === '') {
-        MessageUtil.error("文章内容为必填！");
+        MessageUtil.error("笔记内容为必填！");
         return;
     }
     const {id} = await useArticleStore().add(getDefaultArticleIndex({

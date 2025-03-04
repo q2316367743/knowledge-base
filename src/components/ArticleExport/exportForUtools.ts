@@ -40,7 +40,7 @@ export async function exportToUTools(folder: number) {
             const content = await getFromOneByAsync<ArticleContent<any>>(
                 LocalNameEnum.ARTICLE_CONTENT + articleId);
             if (content.record) {
-                // TODO: 此处应获取文章全部信息，包括描述
+                // TODO: 此处应获取笔记全部信息，包括描述
                 const article = await getArticleById(articleId);
                 if (article) {
                     const articleIndex = article.index;
@@ -170,11 +170,11 @@ window.exports = {
         "\n" +
         "## 注意\n" +
         "\n" +
-        "1. 导出的文件会包含所有文章的markdown内容，但不会包含富文本、代码笔记、表格笔记等其他格式的内容。\n" +
-        "2. 导出的文件会包含所有文章的标题、创建时间、修改时间等信息，但不会包含目录结构。\n" +
+        "1. 导出的文件会包含所有笔记的markdown内容，但不会包含富文本、代码笔记、表格笔记等其他格式的内容。\n" +
+        "2. 导出的文件会包含所有笔记的标题、创建时间、修改时间等信息，但不会包含目录结构。\n" +
         "3. 导出的文件会包含一个preload.js文件，该文件是uTools文档插件的启动文件，请不要修改。\n" +
         "4. 导出的文件会包含一个indexes.json文件，该文件是uTools文档插件的索引文件，请不要修改。\n" +
-        "5. 导出的文件会包含一个doc目录，该目录下包含所有文章的html文件，请不要修改。\n" +
+        "5. 导出的文件会包含一个doc目录，该目录下包含所有笔记的html文件，请不要修改。\n" +
         "\n" +
         "## 修改\n" +
         "\n" +

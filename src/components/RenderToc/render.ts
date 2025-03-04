@@ -7,7 +7,7 @@ function htmlDecode(text: string): string {
 
 /**
  * 创建博客目录
- * @param id 文章ID
+ * @param id 笔记ID
  * @param interval 间隔
  * @param toc 目录容器
  */

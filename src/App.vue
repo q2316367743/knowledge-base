@@ -116,7 +116,7 @@ utools.onMainPush(action => {
   }
 });
 
-//前往文章
+//前往笔记
 function toArticle(id?: string) {
   if (!id) {
     return;
@@ -136,14 +136,14 @@ function toTodo(id?: string) {
 // 插件进入
 function onPluginEnter(operate: string, preload: string, extra: string) {
   if (operate === 'article') {
-    useUmami.track("feature", "查看文章");
+    useUmami.track("feature", "查看笔记");
     toArticle(preload);
   } else if (operate === 'todo') {
     useUmami.track("feature", "查看待办");
     toTodo(preload);
   } else if (operate === 'function') {
     if (preload === 'import') {
-      useUmami.track("feature", "导入文章");
+      useUmami.track("feature", "导入笔记");
       useGlobalStore().startLoading("开始导入")
       htmlToArticle(extra)
         .then(() => MessageUtil.success("导入成功"))
@@ -156,7 +156,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
       useUmami.track("feature", "前往待办");
       router.push('/todo');
     } else if (preload === 'add') {
-      useUmami.track("feature", "新增文章");
+      useUmami.track("feature", "新增笔记");
       useArticleStore().addSimple(extra)
         .then(({id}) => useHomeEditorStore().openArticle(id));
     }

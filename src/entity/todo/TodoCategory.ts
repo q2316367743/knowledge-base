@@ -35,7 +35,7 @@ export interface TodoCategory extends ListTree {
   todoListLayout: TodoListLayoutEnum;
 
   /**
-   * 隐藏文章
+   * 隐藏笔记
    */
   hideOfArticle: boolean;
 

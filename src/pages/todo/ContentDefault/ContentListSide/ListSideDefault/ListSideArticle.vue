@@ -5,7 +5,7 @@
         <div class="content-default-article__header-handle">
           <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
-        <div class="content-default-article__header-title">关联的文章</div>
+        <div class="content-default-article__header-title">关联的笔记</div>
         <div class="content-default-article__header-count">{{ count }}</div>
       </div>
       <div class="extra">

@@ -1,0 +1,60 @@
+<template>
+  <div class="not-note w-full h-full">
+    <div class="not-note-container flex items-center justify-center">
+      <div class="module-item mr-16" @click="addArticleModal">
+        <div class="module-item-icon">
+          <sticky-note-icon size="36px"/>
+        </div>
+        <div class="module-item-name">
+          新建笔记
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-item-icon">
+          <file-import-icon size="36px" />
+        </div>
+        <div class="module-item-name">
+          笔记导入
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import {FileImportIcon, StickyNoteIcon} from "tdesign-icons-vue-next";
+import {addArticleModal} from "@/pages/note/components/he-context";
+</script>
+<style scoped lang="less">
+.not-note {
+  display: grid;
+  place-items: center;
+  background-color: var(--td-bg-color-container);
+
+  .not-note-container {
+    max-width: 600px;
+    width: 100%;
+
+    .module-item {
+      padding: 16px;
+      cursor: pointer;
+      margin-right: 16px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .module-item-icon {
+        padding: 16px;
+        border-radius: 50%;
+        background-color: var(--td-bg-color-component);
+      }
+
+      .module-item-name {
+        text-align: center;
+        margin-top: 16px;
+        font-size: var(--td-font-title-large);
+      }
+    }
+  }
+}
+</style>

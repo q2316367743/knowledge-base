@@ -68,7 +68,7 @@
       "cmds": [
         {
           "type": "over",
-          "label": "文章搜索",
+          "label": "笔记搜索",
           "exclude": "\n/[\\\/\t\n]/",
           "minLength": 1,
           "maxLength": 500

@@ -6,7 +6,7 @@ export * from './ArticleIndex';
 export * from './ArticleBase';
 
 /**
- * 文章
+ * 笔记
  */
 export interface Article {
     index: ArticleIndex;

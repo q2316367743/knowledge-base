@@ -48,7 +48,7 @@ function copyHtml(item: string) {
 
 
 function remove(item: string) {
-  MessageBoxUtil.confirm("删除此附件后，使用的文章将无法展示附件", "删除确认", {
+  MessageBoxUtil.confirm("删除此附件后，使用的笔记将无法展示附件", "删除确认", {
     confirmButtonText: "删除",
     cancelButtonText: "取消"
   }).then(() => {

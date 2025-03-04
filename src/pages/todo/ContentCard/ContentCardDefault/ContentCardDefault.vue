@@ -4,7 +4,7 @@
     <content-card-group v-for="group in groups" :key="group.id" :group="group"/>
     <!-- 添加待办分组按钮：-->
     <content-card-empty v-if="showEmpty"/>
-    <!-- 关联的文章：-->
+    <!-- 关联的笔记：-->
     <content-card-article v-if="!hideOfArticle"/>
   </main>
 </template>

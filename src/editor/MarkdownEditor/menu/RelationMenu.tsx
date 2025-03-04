@@ -9,7 +9,7 @@ export const useRelationMenu = (editor: ShallowRef<Cherry | undefined>) => {
             const articleIndexes = useArticleStore().articles;
             const articleId = ref<number>();
             const modalReturn = Modal.open({
-                title: '请选择文章',
+                title: '请选择笔记',
                 content: () => <Select v-model={articleId.value} allowSearch allowClear>
                     {articleIndexes.map(index => <Option value={index.id}>{index.name}</Option>)}
                 </Select>,

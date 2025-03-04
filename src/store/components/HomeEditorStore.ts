@@ -64,7 +64,7 @@ export const getToc = ref<() => TocItem[]>(() => []);
 
 export const useHomeEditorStore = defineStore('home-editor', () => {
 
-  // 打开的文章
+  // 打开的笔记
   const articleSort = useUtoolsKvStorage<ArticleSortEnum>(LocalNameEnum.KEY_HOME_SORT, ArticleSortEnum.CREATE_TIME_ASC)
 
   const collapsed = ref<boolean>(false);
@@ -120,7 +120,7 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
       const temp = useArticleStore().articleMap.get(res);
       if (!temp) {
-        MessageUtil.error(`文章[${res}]不存在`);
+        MessageUtil.error(`笔记[${res}]不存在`);
         return;
       }
       index = temp;

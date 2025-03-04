@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <header class="chat-header items-center justify-between pl-8px  pr-8px">
-      <t-checkbox v-model="embedArticle" :disabled="editorId === 0">是否包含文章</t-checkbox>
+      <t-checkbox v-model="embedArticle" :disabled="editorId === 0">是否包含笔记</t-checkbox>
       <div style="overflow: hidden;">
         <chat-assistant-select v-model="assistantId" width="calc(100vw - 118px)"/>
       </div>
@@ -71,7 +71,7 @@ const title = useTitle();
 const loading = ref(false);
 // 回答中
 const isStreamLoad = ref(false);
-// 是否嵌入文章
+// 是否嵌入笔记
 const embedArticle = ref(false);
 // 倒序渲染
 const chatList = ref<Array<AiChatMessage>>([{
@@ -161,7 +161,7 @@ function inputEnter(value: string) {
       content: assistant.system
     }];
     if (embedArticle.value) {
-      // 嵌入文章
+      // 嵌入笔记
       if (editorId.value) {
         const content = await useArticleStore().getContent(editorId.value);
         messages.push({
@@ -169,7 +169,7 @@ function inputEnter(value: string) {
           content: `根据以下文件内容回答问题：\n${typeof content.record === 'object' ? JSON.stringify(content.record) : content.record}`
         })
       } else {
-        MessageUtil.warning("系统异常，文章ID不存在，无法嵌入");
+        MessageUtil.warning("系统异常，笔记ID不存在，无法嵌入");
       }
     }
     messages.push(...buildMessages(chatList.value))

@@ -6,8 +6,7 @@
     <a-layout-content>
       <editor-content-container v-for="article in homeEditorArticles" :key="article.id" :article-index="article"
                                 v-show="article.id === homeEditorId"/>
-      <a-result title="请在左侧选择文章" subtitle="点击加号创建文章" status="404" v-if="homeEditorArticles.length === 0"
-                style="margin-top: 20vh"/>
+      <not-note status="404" v-if="homeEditorArticles.length === 0"/>
     </a-layout-content>
   </a-layout>
 </template>
@@ -15,6 +14,7 @@
 import {homeEditorArticles, homeEditorId} from "@/store/components/HomeEditorStore";
 import EditorContentHeader from "@/pages/note/layout/editor-content/layout/EditorContentHeader/index.vue";
 import EditorContentContainer from "@/pages/note/layout/editor-content/layout/EditorContentContainer/index.vue";
+import NotNote from "@/pages/note/components/NotNote.vue";
 
 
 </script>

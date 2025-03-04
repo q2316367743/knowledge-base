@@ -1,4 +1,5 @@
 import UpdateLog from "@/global/UpdateLog";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 const Constant = {
   uid: 'zdllh16g',
@@ -11,8 +12,6 @@ const Constant = {
   website: 'https://blog.esion.xyz',
   feedback: 'https://feedback.esion.xyz/#/plugin/1894929764697055232/home',
   repo: 'https://gitee.com/qiaoshengda/knowledge-base',
-  doc: "https://feedback.esion.xyz/#/plugin/1894929764697055232/faqs-more",
-  updateLog: 'https://feedback.esion.xyz/#/plugin/1894929764697055232/change-log',
   feature: {
     ADD: 'function:add-article',
     IMPORT: 'function:md-import',
@@ -30,14 +29,43 @@ const Constant = {
 }
 
 export default Constant;
-
-export const toDoc = () => utools.shellOpenExternal(Constant.doc);
-export function toFeedback() {
+const toFeedbackWebsite = (redirect: string) => {
+  const url = `https://feedback.esion.xyz/#/auth?redirect=${encodeURIComponent(redirect)}&type=utools&pluginId=1894929764697055232`;
+  // 获取uTools的服务token
   utools.fetchUserServerTemporaryToken().then((ret) => {
-    utools.ubrowser.goto('https://feedback.esion.xyz/#/auth?type=utools&pluginId=1894929764697055232&accessToken=' + ret.token)
-      .run({ width: 1200, height: 800 })
+    // 使用uTools自带的uBrowser打开登录链接
+    utools.ubrowser
+      .goto(`${url}&accessToken=` + ret.token)
+      .run({width: 1200, height: 800})
   }).catch(e => {
-    utools.showNotification('请先登录');
+    utools.ubrowser
+      .goto(url)
+      .run({width: 1200, height: 800})
+    console.error(e);
+  });
+};
+
+export const toDoc = () => {
+  toFeedbackWebsite('/plugin/1894929764697055232/faqs-more');
+};
+export const toUpdateLog = () => {
+  toFeedbackWebsite('/plugin/1894929764697055232/change-log');
+};
+
+
+export function toFeedback() {
+  // 设置「版本」
+  const f1896795064271175680 = Constant.version;
+  // 构造参数
+  const params = encodeURIComponent(JSON.stringify({f1896795064271175680}));
+  // 获取uTools的服务token
+  utools.fetchUserServerTemporaryToken().then((ret) => {
+    // 使用uTools自带的uBrowser打开登录链接
+    utools.ubrowser
+      .goto(`https://feedback.esion.xyz/#/auth?params=${params}&type=utools&pluginId=1894929764697055232&accessToken=` + ret.token)
+      .run({width: 1200, height: 800})
+  }).catch(e => {
+    MessageUtil.error('请先登录');
     console.error(e);
   });
 }

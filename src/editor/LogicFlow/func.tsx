@@ -9,7 +9,7 @@ import {Button, Modal, Space, Typography, TypographyParagraph, TypographyTitle} 
 /**
  * 导出流程图
  * @param id 触发的ID
- * @param articleId 文章ID
+ * @param articleId 笔记ID
  * @param lf 流程图实例
  */
 export function onLogicFlowExport(id: number, articleId: number, lf?: LogicFlow) {

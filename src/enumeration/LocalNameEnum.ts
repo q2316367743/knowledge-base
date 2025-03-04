@@ -56,7 +56,7 @@ enum LocalNameEnum {
   TODO_CATEGORY = '/todo/category/',
 
   /**
-   * 待办分组关联文章，这个待办清单所关联的全部文章ID
+   * 待办分组关联笔记，这个待办清单所关联的全部笔记ID
    */
   TODO_ARTICLE = '/todo/article/',
 
@@ -104,12 +104,12 @@ enum LocalNameEnum {
   KEY_HOME_SORT = '/key/home/sort',
 
   /**
-   * 上一次的文章ID
+   * 上一次的笔记ID
    */
   KEY_HOME_EDITOR_ID = '/key/home/editor/id',
 
   /**
-   * 打开的文章ID
+   * 打开的笔记ID
    */
   KEY_HOME_EDITOR_IDS = '/key/home/editor/ids',
 
@@ -134,7 +134,7 @@ enum LocalNameEnum {
   KEY_CHAT_MODELS = '/key/chat/models',
 
   /**
-   * 文章——AI警告
+   * 笔记——AI警告
    */
   KEY_ARTICLE_AI_FILE_WARN = '/key/article/ai/warning',
 

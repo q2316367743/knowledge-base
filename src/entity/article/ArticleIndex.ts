@@ -15,7 +15,7 @@ export interface ArticleIndex {
   updateTime: Date | string;
 
   /**
-   * 文章名称
+   * 笔记名称
    */
   name: string;
 
@@ -35,7 +35,7 @@ export interface ArticleIndex {
   preview: boolean;
 
   /**
-   * 文章类型
+   * 笔记类型
    *
    * @default ArticleTypeEnum.MARKDOWN
    */

@@ -1,7 +1,7 @@
 <template>
     <div class="recycle">
         <header class="header">
-            <a-input v-model="keyword" placeholder="请输入文章标题" style="width: 50%" allow-clear>
+            <a-input v-model="keyword" placeholder="请输入笔记标题" style="width: 50%" allow-clear>
                 <template #prefix>
                     <icon-search/>
                 </template>

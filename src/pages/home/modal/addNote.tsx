@@ -14,7 +14,7 @@ export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
   const name = ref(message.q);
 
   Modal.open({
-    title: '新增文章',
+    title: '新增笔记',
     titleAlign: 'start',
     draggable: true,
     okText: '新增',
@@ -22,13 +22,13 @@ export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
       <FormItem label={'所在文件夹'} required>
         <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
       </FormItem>
-      <FormItem label={'文章名称'} required>
-        <Input v-model={name.value} class={'arco-input'} placeholder={'请输入文章名称'} allowClear/>
+      <FormItem label={'笔记名称'} required>
+        <Input v-model={name.value} class={'arco-input'} placeholder={'请输入笔记名称'} allowClear/>
       </FormItem>
     </Form>,
     async onBeforeOk() {
       if (name.value.trim() === '') {
-        MessageUtil.warning("请输入文章名称")
+        MessageUtil.warning("请输入笔记名称")
         return false;
       }
       try {
@@ -44,7 +44,7 @@ export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
         onSuccess();
         return true;
       } catch (e) {
-        MessageUtil.warning("新增文章出错", e);
+        MessageUtil.warning("新增笔记出错", e);
         return false;
       }
     }

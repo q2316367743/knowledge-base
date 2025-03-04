@@ -15,13 +15,13 @@ import {toRaw} from "vue";
 import {ArticleContent} from "@/entity/article/ArticleContent";
 
 /**
- * 本次更新主要是将临时文章增加到一篇文章里
+ * 本次更新主要是将临时笔记增加到一篇笔记里
  */
 export async function updateTo150FromUnder() {
     // 获取内容
     const contentWrap = await getFromOneByAsync<string>(LocalNameEnum.KEY_EDITOR_CONTENT);
     if (contentWrap.record) {
-        // 新增文章
+        // 新增笔记
         await add(getDefaultArticleIndex({
             name: "草稿箱",
         }), getDefaultArticleBase({}), contentWrap.record);

@@ -27,16 +27,16 @@
       <t-divider>菜单设置</t-divider>
       <t-alert style="margin-bottom: 8px">当插件宽度小于1080px时生效</t-alert>
       <t-paragraph>
-        <t-checkbox v-model="instance.autoCollapsedByEditor">编辑文章自动收起菜单</t-checkbox>
+        <t-checkbox v-model="instance.autoCollapsedByEditor">编辑笔记自动收起菜单</t-checkbox>
       </t-paragraph>
       <t-paragraph>
         <t-checkbox v-model="instance.autoCollapsedByTodo">点击待办自动收起菜单</t-checkbox>
       </t-paragraph>
-      <t-divider>新建文章</t-divider>
+      <t-divider>新建笔记</t-divider>
       <t-paragraph>
-        <t-checkbox v-model="instance.newArticleAutoName">新建文章是否自动命名</t-checkbox>
+        <t-checkbox v-model="instance.newArticleAutoName">新建笔记是否自动命名</t-checkbox>
       </t-paragraph>
-      <t-form-item label="新建文章名模板" label-align="top" v-if="instance.newArticleAutoName">
+      <t-form-item label="新建笔记名模板" label-align="top" v-if="instance.newArticleAutoName">
         <t-space>
           <t-input v-model="instance.newArticleTemplateByName" allow-clear style="width: 400px;"/>
           <t-button theme="primary" @click="openCustomerFileNameDrawer()">
@@ -84,15 +84,15 @@
         </t-radio-group>
       </t-form-item>
       <t-divider>动作设置</t-divider>
-      <t-form-item label="待办文章动作" label-align="top">
+      <t-form-item label="待办笔记动作" label-align="top">
         <t-radio-group v-model="instance.todoArticleAction">
-          <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往文章</t-radio>
+          <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往笔记</t-radio>
           <t-radio :value="ArticleActionEnum.DRAWER">侧边预览</t-radio>
         </t-radio-group>
       </t-form-item>
-      <t-form-item label="关联文章动作" label-align="top">
+      <t-form-item label="关联笔记动作" label-align="top">
         <t-radio-group v-model="instance.relationArticleAction">
-          <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往文章</t-radio>
+          <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往笔记</t-radio>
           <t-radio :value="ArticleActionEnum.DRAWER">侧边预览</t-radio>
         </t-radio-group>
       </t-form-item>

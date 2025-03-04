@@ -6,7 +6,7 @@
         <div>笔记解读</div>
       </a-space>
     </template>
-    <t-input v-model="keyword" @change="inputChange" placeholder="请输入文章标题进行搜索"/>
+    <t-input v-model="keyword" @change="inputChange" placeholder="请输入笔记标题进行搜索"/>
     <t-tree v-model="checkedKeys" :data="treeData" :expand-all="false" :checkable="true" max-height="70vh"
             :allow-fold-node-on-filter="true" :keys="keys" style="margin-top: 8px" :filter="filterFunc"/>
     <template #footer>

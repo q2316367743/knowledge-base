@@ -28,7 +28,7 @@ const treeData = computed<Array<TreeNodeData>>(() => {
     if (articles && articles.length > 0) {
         treeData.push({
             key: -1,
-            title: '未分类文章',
+            title: '未分类笔记',
             isLeaf: false,
             icon: () => h(IconFolder, {}),
             children: articles.map(article => ({
@@ -59,7 +59,7 @@ function onNodeClick(nodeObject: TreeNodeData) {
         useHomeEditorStore().openArticle(nodeObject.key as number)
         router.push('/home');
     } else {
-        if (nodeObject.title === '未分类文章') {
+        if (nodeObject.title === '未分类笔记') {
             MessageUtil.warning("无法搜索未分类")
             return false;
         }

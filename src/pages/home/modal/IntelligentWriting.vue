@@ -54,7 +54,7 @@ const visible = defineModel({
   default: false
 });
 
-const options: Array<CheckTagGroupOption> = ['朋友圈', '文章', '作文', '小说', '故事', '小红书'].map((e, i) => ({
+const options: Array<CheckTagGroupOption> = ['朋友圈', '笔记', '作文', '小说', '故事', '小红书'].map((e, i) => ({
   label: e,
   value: i
 }))
@@ -79,7 +79,7 @@ function onChange(v: number) {
       text.value = '帮我写一个幽默风趣的 [朋友圈] 文案，100~200字，主题是：';
       break;
     case 1:
-      text.value = '帮我写一篇正式的[文章]，要求内容充实、有逻辑性，篇幅在 800字左右，主题是：';
+      text.value = '帮我写一篇正式的[笔记]，要求内容充实、有逻辑性，篇幅在 800字左右，主题是：';
       break;
     case 2:
       text.value = '帮我写一篇[作文]，500字左右，要求文字表达流畅，有清晰的开头正文和结尾。主题是：';
@@ -91,7 +91,7 @@ function onChange(v: number) {
       text.value = '帮我编写一个有趣的短篇[故事]，确保故事内容引人入胜，主题是：';
       break;
     case 5:
-      text.value = '帮我写一个[小红书]风格的文案，采用二极管标题法，内容：在每段话的开头和结尾都使用emoji。文章结尾需要提取 5-8 个#标签，主题是：';
+      text.value = '帮我写一个[小红书]风格的文案，采用二极管标题法，内容：在每段话的开头和结尾都使用emoji。笔记结尾需要提取 5-8 个#标签，主题是：';
       break;
     default:
       text.value = '';

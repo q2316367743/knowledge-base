@@ -1,10 +1,10 @@
 /**
- * 文章基础信息
+ * 笔记基础信息
  */
 export interface ArticleBase {
 
     /**
-     * 文章标签
+     * 笔记标签
      */
     tags: string[];
 

@@ -12,7 +12,7 @@
           </t-space>
         </template>
         <t-list-item-meta title="网页剪报" :image="RainHtmlToMarkdown"
-                          description="快速将Html转Markdown，可以实现网页文章转存知识库">
+                          description="快速将Html转Markdown，可以实现网页笔记转存知识库">
         </t-list-item-meta>
       </t-list-item>
       <!-- 卡片笔记 -->

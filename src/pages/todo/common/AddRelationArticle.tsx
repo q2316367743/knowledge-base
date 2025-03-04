@@ -28,7 +28,7 @@ export function openAddRelationArticle() {
       useTodoArticleStore().associationArticle(checkedKeys.value)
         .then(() => {
           MessageUtil.success("关联成功");
-          useUmami.track("/待办/操作/关联文章");
+          useUmami.track("/待办/操作/关联笔记");
         })
         .catch(e => MessageUtil.error("关联失败", e));
     }

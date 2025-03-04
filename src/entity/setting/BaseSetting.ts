@@ -24,12 +24,12 @@ export interface BaseSetting {
   autoCollapsedByTodo: boolean;
 
   /**
-   * 新建文章时是否自动命名
+   * 新建笔记时是否自动命名
    */
   newArticleAutoName: boolean;
 
   /**
-   * 新建文章的文件名模板
+   * 新建笔记的文件名模板
    */
   newArticleTemplateByName: string;
 
@@ -49,12 +49,12 @@ export interface BaseSetting {
   mdEditorKeyMap: 'sublime' | 'vim';
 
   /**
-   * 待办文章动作
+   * 待办笔记动作
    */
   todoArticleAction: ArticleActionEnum;
 
   /**
-   * 关联文章动作
+   * 关联笔记动作
    */
   relationArticleAction: ArticleActionEnum;
 
@@ -76,7 +76,7 @@ export interface BaseSetting {
 }
 
 export enum ArticleActionEnum {
-  // 前往文章
+  // 前往笔记
   TO_ARTICLE = 1,
   // 侧边预览
   DRAWER = 2
@@ -88,7 +88,7 @@ export function getDefaultBaseSetting(): BaseSetting {
     autoCollapsedByEditor: true,
     autoCollapsedByTodo: true,
     newArticleAutoName: false,
-    newArticleTemplateByName: "[新建文章] (YYYY/MM/DD HH:mm)",
+    newArticleTemplateByName: "[新建笔记] (YYYY/MM/DD HH:mm)",
     codeExtraName: 'ts',
     mdEditorEditMode: MdEditorEditModeEnum.AUTO,
     todoArticleAction: ArticleActionEnum.DRAWER,

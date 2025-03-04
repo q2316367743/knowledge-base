@@ -4,7 +4,7 @@
       <calendar expanded :is-dark="isDark" :attributes="attributes" title-position="left" @dayclick="onDayClick"
                 transparent/>
       <div class="article" v-if="!hideOfArticle">
-        <div class="title">关联文章</div>
+        <div class="title">关联笔记</div>
         <div class="list">
           <a-list :bordered="false">
             <a-list-item v-for="article in articleList">

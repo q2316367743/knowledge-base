@@ -31,7 +31,7 @@ export async function initData(): Promise<void> {
       useThemeSettingStore().init(),
       usePluginSettingStore().init()])
       .then(useThemeSettingStore().buildThemeStyle),
-    // 编辑器初始化，初始化时会同步初始化文章
+    // 编辑器初始化，初始化时会同步初始化笔记
     useHomeEditorStore().init(),
     useCategoryStore().init(),
     useFolderStore().init(),

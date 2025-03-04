@@ -134,7 +134,7 @@ export async function _searchContent(
 }
 
 export const SearchContentPlaceholder: string =
-  "请输入文章内容，支持markdown、富文本、代码笔记和思维导图搜索";
+  "请输入笔记内容，支持markdown、富文本、代码笔记和思维导图搜索";
 
 export function openSearchContent() {
   useUmami.track("使用全局搜索");

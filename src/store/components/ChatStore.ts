@@ -10,7 +10,7 @@ import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 
 export const useChatStore = defineStore('chat', () => {
-  // 引用的文章
+  // 引用的笔记
   const articleIds = ref(new Array<number>());
   // 消息
   const messages = ref(new Array<ChatMessage>());
@@ -88,7 +88,7 @@ export const useChatStore = defineStore('chat', () => {
     // 异步处理
     (async () => {
 
-      // 获取文章
+      // 获取笔记
       // {
       //   role: 'system',
       //     content: `根据以下文件内容回答问题：\n${typeof content.record === 'object' ? JSON.stringify(content.record) : content.record}`
@@ -120,7 +120,7 @@ export const useChatStore = defineStore('chat', () => {
             role: 'system',
             content: assistant.system
           },
-          // TODO: 附带的文章
+          // 附带的笔记
           ...articles,
           // 历史消息
           ...oldMessages,

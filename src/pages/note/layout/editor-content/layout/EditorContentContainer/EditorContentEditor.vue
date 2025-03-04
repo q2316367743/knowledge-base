@@ -50,7 +50,7 @@ const emits = defineEmits(['sendToChat']);
 defineExpose({insertToArticle});
 
 const load = ref(false);
-// 文章内容，不一定是文本
+// 笔记内容，不一定是文本
 const content = ref<any>('');
 let contentRev: string | undefined = undefined;
 
@@ -99,11 +99,11 @@ watch(() => content.value, value => {
     return;
   }
   if (!load.value) {
-    console.debug("自动保存文章，但未加载完成")
+    console.debug("自动保存笔记，但未加载完成")
     return;
   }
-  saveContent(value).then(() => console.debug("自动保存文章成功"))
-    .catch(e => MessageUtil.error("自动保存文章失败", e));
+  saveContent(value).then(() => console.debug("自动保存笔记成功"))
+    .catch(e => MessageUtil.error("自动保存笔记失败", e));
 }, {deep: true});
 
 
@@ -118,7 +118,7 @@ async function initArticle(articleId: number) {
   // 内容
   const contentWrap = await getContent(articleId);
   if (!contentWrap.record) {
-    MessageUtil.error(`文章【${articleId}】未找到，请刷新后重试！`);
+    MessageUtil.error(`笔记【${articleId}】未找到，请刷新后重试！`);
     return;
   }
   content.value = contentWrap.record.content;
@@ -149,9 +149,9 @@ function onPreview(id: number) {
       useArticleStore().updateIndex(id, {preview: preview.value})
         .then(res => {
           useHomeEditorStore().update(id, res);
-          console.debug("自动更新文章预览状态");
+          console.debug("自动更新笔记预览状态");
         })
-        .catch(e => MessageUtil.error("自动更新文章预览状态失败", e));
+        .catch(e => MessageUtil.error("自动更新笔记预览状态失败", e));
     }
   }
 }

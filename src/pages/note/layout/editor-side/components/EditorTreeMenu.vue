@@ -100,7 +100,7 @@
         <template #icon>
           <icon-import/>
         </template>
-        文章导入
+        笔记导入
         <template #content>
           <a-doption @click="showArticleImportModal(id)">常规导入</a-doption>
           <a-doption disabled>Gitee</a-doption>
@@ -111,7 +111,7 @@
         <template #icon>
           <icon-export/>
         </template>
-        文章导出
+        笔记导出
         <template #content>
           <a-doption @click="exportToMd(id)">ZIP</a-doption>
           <a-doption @click="exportToUTools(id)">uTools文档插件</a-doption>
@@ -164,7 +164,7 @@ export default defineComponent({
     moveTo(id: number, name: string, article: boolean) {
       let folderId: number | undefined = undefined;
       if (article) {
-        // 文章，则需要找父文件夹
+        // 笔记，则需要找父文件夹
         const articleIndex = useArticleStore().articleMap.get(id);
         if (articleIndex) {
           folderId = articleIndex.folder;
@@ -174,7 +174,7 @@ export default defineComponent({
       }
       openFolderChoose(folderId).then(folder => {
         if (article) {
-          // 更新文章文件夹
+          // 更新笔记文件夹
           useArticleStore().updateIndex(id, {folder: folder.id})
             .then(() => MessageUtil.success("移动成功"))
         } else {

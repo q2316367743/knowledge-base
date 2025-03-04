@@ -1,8 +1,8 @@
 <template>
   <div class="feature">
-    <t-divider>新增文章</t-divider>
+    <t-divider>新增笔记</t-divider>
     <feature-add-article/>
-    <t-divider>markdown文章导入</t-divider>
+    <t-divider>markdown笔记导入</t-divider>
     <feature-markdown-import/>
   </div>
 </template>

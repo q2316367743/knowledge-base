@@ -62,7 +62,7 @@ onMounted(() => {
           'Italic': '斜体',
           'Underline': '下划线',
           'Marker': '标记',
-          'Inline Code': '内联代码',
+          'InlineCode': '内联代码',
           'Delimiter': '分割线'
         },
         tools: {

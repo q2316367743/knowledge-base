@@ -1,6 +1,6 @@
 <template>
   <t-alert style="margin-bottom: 7px">
-    当选中md文件时，新增关键字：【从md导入文章】
+    当选中md文件时，新增关键字：【从md导入笔记】
   </t-alert>
   <t-alert style="margin-bottom: 7px" type="warning">
     暂未实现
@@ -24,7 +24,7 @@ if (feature) {
 function open() {
   const res = setFeatureOneSimple(Constant.feature.IMPORT, {
     type: "files",
-    label: "从md导入文章",
+    label: "从md导入笔记",
     fileType: "file",
     match: '/.*(md|markdown)$/i',
     minLength: 1,

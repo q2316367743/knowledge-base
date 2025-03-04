@@ -106,7 +106,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
       console.error("获取待办项失败", e);
     }
     try {
-      // 获取待办关联文章
+      // 获取待办关联笔记
       await useTodoArticleStore().init(id);
     } catch (e) {
       console.error("获取待办项失败", e);

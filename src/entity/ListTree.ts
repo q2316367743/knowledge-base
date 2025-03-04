@@ -68,10 +68,10 @@ function _listToTree(tree: TreeNodeData, pid: number, categories: Array<ListTree
 
 
 /**
- * 遍历整个树，将文章挂载
+ * 遍历整个树，将笔记挂载
  * @param list 树节点
  * @param treeData 树节点
- * @param articleListMap 文章列表
+ * @param articleListMap 笔记列表
  * @param map 映射函数
  */
 export function treeEach(
@@ -96,7 +96,7 @@ export function treeEach(
 
         // 分类
         treeEach(item.children || [], temp.children || [], articleListMap, map);
-        // 文章
+        // 笔记
         const articles = articleListMap.get(item.key as number);
         if (articles) {
             articles.map(article => ({
@@ -164,7 +164,7 @@ function _listToMap(
     pid: number) {
 
 
-    // 此目录下可能存在的文章
+    // 此目录下可能存在的笔记
     const articles = articleListMap.get(pid);
     if (articles) {
         for (let article of articles) {

@@ -43,7 +43,7 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
 }
 
 /**
- * 前往文章
+ * 前往笔记
  * @param id
  * @param articleAction
  */
@@ -54,7 +54,7 @@ function toArticle(id: number, articleAction: ArticleActionEnum) {
   } else if (articleAction === ArticleActionEnum.DRAWER) {
     const article = useArticleStore().articleMap.get(id);
     if (!article) {
-      MessageUtil.error("文章不存在");
+      MessageUtil.error("笔记不存在");
       return;
     }
     _openArticle(article);
@@ -75,10 +75,10 @@ export function toArticleByRelation(title: string) {
     }
   }
   if (!id) {
-    MessageUtil.warning(`文章【${title}】不存在`)
+    MessageUtil.warning(`笔记【${title}】不存在`)
     return;
   }
-  // 查询文章
+  // 查询笔记
   toArticle(id, useBaseSettingStore().relationArticleAction);
 }
 
@@ -86,7 +86,7 @@ export function toArticleByRelation(title: string) {
 export function openArticle(id: number) {
   const article = useArticleStore().articleMap.get(id);
   if (!article) {
-    MessageUtil.error("文章不存在");
+    MessageUtil.error("笔记不存在");
     return;
   }
   const size = useWindowSize();

@@ -2,7 +2,7 @@
   <div class="content-card-article">
     <header class="content-card-article__header">
       <div class="title">
-        关联的文章
+        关联的笔记
         <a-tag class="length">{{ count }}</a-tag>
       </div>
       <div class="extra">

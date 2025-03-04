@@ -36,8 +36,8 @@ declare interface Window {
    */
   onImagePreview: (src: string) => void;
   /**
-   * 跳转到文章
-   * @param title 文章标题
+   * 跳转到笔记
+   * @param title 笔记标题
    */
   jumpToArticle: (title: string) => void;
 

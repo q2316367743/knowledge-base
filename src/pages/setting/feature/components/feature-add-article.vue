@@ -1,6 +1,6 @@
 <template>
   <t-alert style="margin-bottom: 7px">
-    当选中文字呼出超级面板或复制文字呼出搜索面板时，新增关键字：【新增文章】
+    当选中文字呼出超级面板或复制文字呼出搜索面板时，新增关键字：【新增笔记】
   </t-alert>
   <t-form :model="instance" >
     <t-form-item label="最小文字长度" label-align="top">
@@ -41,7 +41,7 @@ if (feature) {
 function open() {
   const res = setFeatureOneSimple(Constant.feature.ADD, {
     type: "over",
-    label: "新增文章",
+    label: "新增笔记",
     minLength: instance.value.minLength,
     maxLength: instance.value.maxLength
   });

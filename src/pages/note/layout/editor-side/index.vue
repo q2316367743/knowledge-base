@@ -29,7 +29,7 @@
     </a-tree>
     <div class="option" v-if="checkKeys.length > 0">
       <a-space class="btn">
-        <a-popconfirm content="确认删除这些文章，注意：不会删除目录" @ok="multiCheckDelete()">
+        <a-popconfirm content="确认删除这些笔记，注意：不会删除目录" @ok="multiCheckDelete()">
           <a-button status="danger" type="text">
             <template #icon>
               <icon-delete/>
@@ -145,7 +145,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
     typeof data.dropNode.key !== 'undefined') {
     if (data.dropPosition === 0) {
       if (data.dragNode.isLeaf) {
-        // 文章
+        // 笔记
         useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
           .then(() => MessageUtil.success("移动成功"))
           .catch(e => MessageUtil.error("移动失败", e));
@@ -161,7 +161,7 @@ function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosi
         return;
       }
       if (data.dragNode.isLeaf) {
-        // 文章
+        // 笔记
         useArticleStore().drop(data.dragNode.key as number, target.pid)
           .then(() => MessageUtil.success("移动成功"))
           .catch(e => MessageUtil.error("移动失败", e));
@@ -205,7 +205,7 @@ function moveMultiTo() {
     useGlobalStore().startLoading("开始移动");
     try {
       const articleMap = useArticleStore().articleMap;
-      // 文章
+      // 笔记
       const articleIds = checkKeys.value.filter(id => articleMap.has(id));
       if (articleIds.length > 0) {
         useArticleStore().updateMultiIndex(articleIds.map(id => ({

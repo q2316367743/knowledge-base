@@ -3,7 +3,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {JSX} from "vue/jsx-runtime";
 
 /**
- * 打开文章导入
+ * 打开笔记导入
  */
 export function openArticleImport(types: Array<string>, extra?: () => JSX.Element): Promise<File> {
     return new Promise((resolve, reject) => {

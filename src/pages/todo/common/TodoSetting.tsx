@@ -22,7 +22,7 @@ export function openTodoSetting() {
       </TypographyParagraph>
       <TypographyParagraph>
         <Checkbox v-model={config.value.hideOfArticle}>
-          隐藏关联文章
+          隐藏关联笔记
         </Checkbox>
       </TypographyParagraph>
       <TypographyParagraph>

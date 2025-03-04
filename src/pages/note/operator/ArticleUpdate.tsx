@@ -2,10 +2,10 @@ import {Checkbox, ColorPicker, Modal, Typography, TypographyParagraph} from "@ar
 import {ref} from "vue";
 
 /**
- * 更新文章或文件夹标题颜色
- * @param id 文章或文件夹id
+ * 更新笔记或文件夹标题颜色
+ * @param id 笔记或文件夹id
  * @param color 当前的颜色
- * @param article 是否是文章
+ * @param article 是否是笔记
  */
 export function updateFontColor(id: number, color: string, article: boolean) {
   const system = ref(false);

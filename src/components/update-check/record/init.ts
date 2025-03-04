@@ -9,5 +9,5 @@ export function init() {
         responseType: 'text',
     }).then(rsp => {
         setItem<string>(LocalNameEnum.KEY_EDITOR_CONTENT, rsp.data)
-    }).catch(e => MessageUtil.error("获取默认文章失败", e))
+    }).catch(e => MessageUtil.error("获取默认笔记失败", e))
 }

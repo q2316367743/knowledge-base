@@ -34,7 +34,7 @@
                 <template #icon>
                   <icon-relation/>
                 </template>
-                关联文章
+                关联笔记
               </a-doption>
               <a-doption :disabled="disabled" @click="todoSearch()">
                 <template #icon>

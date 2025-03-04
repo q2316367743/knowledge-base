@@ -37,15 +37,14 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
-// {
-//   key: ArticleTypeEnum.SUPER_EDITOR,
-//     name: '超级笔记',
-//   // TODO: 图标
-//   icon: shallowRef(IconCode),
-//   lock: FileLct
-// },
 
 export const articleTextTypes = [{
+  key: ArticleTypeEnum.SUPER_EDITOR,
+  name: '超级笔记',
+  // TODO: 图标
+  icon: shallowRef(IconCode),
+  lock: FileLct
+},{
   key: ArticleTypeEnum.RICH_TEXT,
   name: '富文本',
   icon: shallowRef(IconBook),
@@ -260,16 +259,16 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
 }
 
 /**
- * 新增一篇文章
+ * 新增一篇笔记
  * @param pid 父ID
- * @param type 文章类型
+ * @param type 笔记类型
  */
 export function addArticle(pid: number, type: ArticleTypeEnum) {
   _addArticle(pid, type).then(article => {
     MessageUtil.success("新增成功");
     useHomeEditorStore().openArticle(article);
-    // 新建文章
-    useUmami.track(`/新建/文章/${renderArticleType(type)}`);
+    // 新建笔记
+    useUmami.track(`/新建/笔记/${renderArticleType(type)}`);
   })
     .catch(e => MessageUtil.error("新增失败", e));
 }
@@ -280,7 +279,7 @@ export async function _addArticle(pid: number, type: ArticleTypeEnum, content?: 
   if (newArticleAutoName) {
     name = buildArticleName(type, newArticleTemplateByName, codeExtraName, pid);
   } else {
-    name = await MessageBoxUtil.prompt("请输入文章名称", "新建文章");
+    name = await MessageBoxUtil.prompt("请输入笔记名称", "新建笔记");
   }
   NotificationUtil.warningClose(
     "检测到您创建代码笔记未设置文件后缀，设置文件后缀后可以实现代码高亮。",
@@ -323,12 +322,12 @@ export function addArticleModal() {
   }
 
   Modal.open({
-    title: '新增文章',
+    title: '新增笔记',
     titleAlign: 'start',
     draggable: true,
     okText: '新增',
     content: () => <Form model={{}} layout={'vertical'}>
-      <FormItem label={'文章类型'} required>
+      <FormItem label={'笔记类型'} required>
         <RadioGroup v-model={type.value}>
           {articleTypes.map(item => <Radio key={item.key} value={item.key}>{item.name}</Radio>)}
         </RadioGroup>
@@ -336,8 +335,8 @@ export function addArticleModal() {
       <FormItem label={'所在文件夹'} required>
         <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
       </FormItem>
-      <FormItem label={'文章名称'} required>
-        <Input v-model={name.value} class={'arco-input'} placeholder={'请输入文章名称'} allowClear>
+      <FormItem label={'笔记名称'} required>
+        <Input v-model={name.value} class={'arco-input'} placeholder={'请输入笔记名称'} allowClear>
           {{
             suffix: () => newArticleAutoName && <Button type={'text'} onClick={refreshFileName}>
               {{
@@ -350,7 +349,7 @@ export function addArticleModal() {
     </Form>,
     async onBeforeOk() {
       if (name.value.trim() === '') {
-        MessageUtil.warning("请输入文章名称")
+        MessageUtil.warning("请输入笔记名称")
         return Promise.resolve(false);
       }
       const content = buildDefaultContent(name.value, type.value);
@@ -382,14 +381,14 @@ export function addFolder(pid: number) {
 }
 
 /**
- * 删除一个文章或文件夹
- * @param id 文章或文件夹ID
- * @param name 文章或文件夹名
- * @param article 是否是文章
+ * 删除一个笔记或文件夹
+ * @param id 笔记或文件夹ID
+ * @param name 笔记或文件夹名
+ * @param article 是否是笔记
  */
 export function remove(id: number, name: string, article: boolean) {
   if (article) {
-    MessageBoxUtil.confirm(`确认删除文章【${name}】？`, "删除提示", {
+    MessageBoxUtil.confirm(`确认删除笔记【${name}】？`, "删除提示", {
       confirmButtonText: "删除",
     }).then(() => _remove(id, article)
       .then(() => MessageUtil.success("删除成功"))
@@ -424,10 +423,10 @@ async function _remove(id: number, article: boolean) {
 }
 
 /**
- * 重命名一个文章或文件夹
- * @param id 文章或文件夹ID
- * @param name 文章或文件夹名
- * @param article 是否是文章
+ * 重命名一个笔记或文件夹
+ * @param id 笔记或文件夹ID
+ * @param name 笔记或文件夹名
+ * @param article 是否是笔记
  */
 export function rename(id: number, name: string, article: boolean) {
   MessageBoxUtil.prompt(`请输入新的文件${article ? '' : '夹'}名称`, "重命名", {

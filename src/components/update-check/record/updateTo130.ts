@@ -6,7 +6,7 @@ import {init} from "@/components/update-check/record/init";
 
 
 export async function updateTo130FromUnder() {
-    // 获取全部的文章
+    // 获取全部的笔记
     const res = await listByAsync<ArticleIndex>(LocalNameEnum.ARTICLE);
     let records = res.list;
     let results = new Array<ArticleIndex>();

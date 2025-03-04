@@ -7,13 +7,13 @@ export function openKeyDrawer() {
         width: 350,
         footer: false,
         content: () => <Descriptions column={1} bordered title={'首页有效'}>
-            <DescriptionsItem label={'新建文章'}>
+            <DescriptionsItem label={'新建笔记'}>
                 Ctrl / Alt + N
             </DescriptionsItem>
-            <DescriptionsItem label={'删除文章'}>
+            <DescriptionsItem label={'删除笔记'}>
                 Ctrl / Alt + Delete
             </DescriptionsItem>
-            <DescriptionsItem label={'搜索文章内容'}>
+            <DescriptionsItem label={'搜索笔记内容'}>
                 Ctrl / Alt + Shift + F
             </DescriptionsItem>
             <DescriptionsItem label={'切换编辑/预览'}>
