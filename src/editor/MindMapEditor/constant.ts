@@ -1,4 +1,6 @@
 //  主题列表
+import {MindMapTreeData, MindMapTreeNode} from "@/editor/MindMapEditor/domain";
+
 export const themeList = [
     {
         name: '默认',
@@ -279,4 +281,39 @@ export const layoutList = [
         name: '鱼骨图',
         value: CONSTANTS.LAYOUT.FISHBONE
     }
-]
+];
+
+export function buildMindMapData(): MindMapTreeData {
+  return {
+    "layout": "logicalStructure",
+    "root": {
+      "data": {
+        "text": "根节点",
+        "expand": true,
+        "isActive": false,
+        "uid": "47fe79a5-2690-4343-8fbf-74c350d4b92f",
+        richText: false,
+      }, "children": []
+    } as MindMapTreeNode,
+    "theme": {"template": 'default', "config": {}},
+    "view": {
+      "transform": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "shear": 0,
+        "rotate": 0,
+        "translateX": 0,
+        "translateY": 0,
+        "originX": 0,
+        "originY": 0,
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "e": 0,
+        "f": 0
+      },
+      "state": {"scale": 1, "x": 0, "y": 0, "sx": 0, "sy": 0}
+    }
+  };
+}

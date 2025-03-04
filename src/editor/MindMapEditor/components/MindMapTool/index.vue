@@ -2,63 +2,63 @@
   <div class="mind-map-tool" :style="{left: left}" :data-left="left">
     <div class="tool-btn" @click="back()" :class="!isStart ? 'active' : ''">
       <div class="tool-btn-icon">
-        <icon-backward :size="18"/>
+        <backward-icon size="18px"/>
       </div>
       <div class="tool-btn-text">后退</div>
     </div>
     <div class="tool-btn" @click="forward()" :class="!isEnd ? 'active' : ''">
       <div class="tool-btn-icon">
-        <icon-forward :size="18"/>
+        <forward-icon size="18px"/>
       </div>
       <div class="tool-btn-text">前进</div>
     </div>
     <a-divider direction="vertical"/>
     <div class="tool-btn" @click="insertNode()" :class="available && !isRoot && !isGeneralization ? 'active' : ''">
       <div class="tool-btn-icon">
-        <icon-mind-mapping :size="18"/>
+        <git-commit-icon size="18px"/>
       </div>
       <div class="tool-btn-text">同级节点</div>
     </div>
     <div class="tool-btn" @click="insertChildNode()" :class="available && !isGeneralization ? 'active' : ''">
       <div class="tool-btn-icon">
-        <icon-mind-mapping :size="18"/>
+        <git-merge-icon size="18px"/>
       </div>
       <div class="tool-btn-text">子节点</div>
     </div>
     <div class="tool-btn" @click="deleteNode()" :class="available ? 'active' : ''">
       <div class="tool-btn-icon">
-        <icon-delete :size="18"/>
+        <delete-icon size="18px"/>
       </div>
       <div class="tool-btn-text">删除节点</div>
     </div>
     <a-divider direction="vertical"/>
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setImage()">
       <div class="tool-btn-icon">
-        <icon-image :size="18"/>
+        <image-icon size="18px"/>
       </div>
       <div class="tool-btn-text">图片</div>
     </div>
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setHyperlink()">
       <div class="tool-btn-icon">
-        <icon-link :size="18"/>
+        <link-icon size="18px"/>
       </div>
       <div class="tool-btn-text">超链接</div>
     </div>
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setNote()">
       <div class="tool-btn-icon">
-        <icon-notification :size="18"/>
+        <notification-icon size="18px"/>
       </div>
       <div class="tool-btn-text">备注</div>
     </div>
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setTag()">
       <div class="tool-btn-icon">
-        <icon-tags :size="18"/>
+        <tag-icon size="18px"/>
       </div>
       <div class="tool-btn-text">标签</div>
     </div>
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setIcon()">
       <div class="tool-btn-icon">
-        <icon-face-smile-fill :size="18"/>
+        <face-retouching-icon size="18px"/>
       </div>
       <div class="tool-btn-text">图标</div>
     </div>
@@ -66,14 +66,14 @@
     <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
          @click="insertGeneralization()">
       <div class="tool-btn-icon">
-        <icon-apps :size="18"/>
+        <app-icon size="18px"/>
       </div>
       <div class="tool-btn-text">概要</div>
     </div>
     <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
          @click="insertAssociativeLine()">
       <div class="tool-btn-icon">
-        <icon-branch :size="18"/>
+        <git-branch-icon size="18px"/>
       </div>
       <div class="tool-btn-text">关联线</div>
     </div>
@@ -98,6 +98,16 @@ import {
 import {
   openInsertIcon
 } from "@/editor/MindMapEditor/components/MindMapTool/func/InsertIcon";
+import {
+  AppIcon,
+  BackwardIcon,
+  DeleteIcon, FaceRetouchingIcon,
+  ForwardIcon, GitBranchIcon, GitCommitIcon, GitMergeIcon,
+  ImageIcon,
+  LinkIcon,
+  NotificationIcon,
+  TagIcon
+} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   mindMap: Object as PropType<MindMap>,

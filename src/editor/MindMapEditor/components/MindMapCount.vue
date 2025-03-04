@@ -38,7 +38,7 @@ function onDataChange(data: any) {
 
 function walk(data: any) {
     num.value++
-    if (data.children && data.children.length > 0) {
+    if (data && data.children && data.children.length > 0) {
         data.children.forEach((item: any) => {
             walk(item)
         })

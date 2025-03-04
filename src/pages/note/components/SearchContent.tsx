@@ -78,12 +78,9 @@ export async function _searchContent(
     }
     const article = articles[i];
     text.value = `正在搜索 ${i + 1} / ${articles.length}：${article.name}`;
-    const contentWrap = await getFromOneWithDefaultByAsync<ArticleContent<any>>(
-      LocalNameEnum.ARTICLE_CONTENT + article.id,
-      { content: "" }
-    );
+    const contentWrap = await useArticleStore().getContent<any>(article.id);
 
-    let content = contentWrap.record.content;
+    let content = contentWrap.record?.content || {};
     if (article.type === ArticleTypeEnum.MIND_MAP) {
       if (typeof content === "string") {
         continue;

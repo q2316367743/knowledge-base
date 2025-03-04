@@ -33,6 +33,7 @@ import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 import FileLct from "@/components/KbIcon/FileLct.vue";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {buildMindMapData} from "@/editor/MindMapEditor/constant";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -97,38 +98,7 @@ export function renderArticleType(type: ArticleTypeEnum): string {
 async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<any> {
   switch (type) {
     case ArticleTypeEnum.MIND_MAP:
-      return {
-        "layout": "logicalStructure",
-        "root": {
-          "data": {
-            "text": "根节点",
-            "expand": true,
-            "isActive": false,
-            "uid": "47fe79a5-2690-4343-8fbf-74c350d4b92f",
-            richText: false,
-          }, "children": []
-        } as MindMapTreeNode,
-        "theme": {"template": 'default', "config": {}},
-        "view": {
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shear": 0,
-            "rotate": 0,
-            "translateX": 0,
-            "translateY": 0,
-            "originX": 0,
-            "originY": 0,
-            "a": 1,
-            "b": 0,
-            "c": 0,
-            "d": 1,
-            "e": 0,
-            "f": 0
-          },
-          "state": {"scale": 1, "x": 0, "y": 0, "sx": 0, "sy": 0}
-        }
-      }
+      return buildMindMapData()
     case ArticleTypeEnum.EXCEL:
       return {};
     case ArticleTypeEnum.HANDSONTABLE:

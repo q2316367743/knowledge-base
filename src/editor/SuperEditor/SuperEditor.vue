@@ -20,6 +20,7 @@ import CodeTool from "./tools/Code";
 import List from './tools/List';
 import SimpleImage from './tools/SimpleImage';
 import AlertTool from './tools/AlertTool';
+import MindMapTool from './tools/MindMapTool';
 
 
 const content = defineModel({
@@ -89,7 +90,18 @@ onMounted(() => {
             'Center': '居中对齐',
             'Right': '右对齐'
           }
-        }
+        },
+        blockTunes: {
+          "delete": {
+            "Delete": "删除"
+          },
+          "moveUp": {
+            "Move up": "上移"
+          },
+          "moveDown": {
+            "Move down": "下移"
+          }
+        },
       }
     },
     onChange: (api) => {
@@ -98,7 +110,7 @@ onMounted(() => {
       })
     },
     tools: {
-      Header, SimpleImage, CodeTool, Table, Delimiter,
+      Header, SimpleImage, CodeTool, Table, Delimiter, MindMapTool,
       linkTool: {
         class: LinkTool,
         config: {
@@ -115,7 +127,6 @@ onMounted(() => {
       alert: {
         class: AlertTool,
         inlineToolbar: true,
-        shortcut: 'CMD+SHIFT+A',
       },
       // 内联工具
       Underline: {

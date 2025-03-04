@@ -2,7 +2,7 @@
   <div class="home-editor-side" ref="homeEditorSideRef">
     <header class="m-2">
       <a-input-group style="width: 100%">
-        <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear/>
+        <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear placeholder="请输入文件名"/>
         <editor-tree-menu :id="0" :more="false" @multi="multiCheckStart">
           <a-button type="primary">
             <template #icon>

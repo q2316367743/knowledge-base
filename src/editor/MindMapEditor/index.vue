@@ -51,7 +51,7 @@ const mindMap = shallowRef<MindMap>();
 
 const available = computed(() => !!mindMap.value);
 
-onMounted(() => {
+const init = () => {
   if (!mindMapEditor.value) {
     return;
   }
@@ -84,11 +84,15 @@ onMounted(() => {
   useArticleImportEvent.off(onImport);
   useArticleImportEvent.on(onImport);
 
-});
+};
 
-watch(() => size.width.value, () => {
+watch([size.width, size.height], value => {
+  const [w, h] = value;
+  if (w && h && !mindMap.value) {
+    init();
+  }
   try {
-    mindMap.value && mindMap.value.resize()
+    mindMap.value?.resize()
   } catch (e) {
     console.error(e)
   }

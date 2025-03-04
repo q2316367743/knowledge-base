@@ -74,6 +74,21 @@
           "maxLength": 500
         }
       ]
+    },{
+      "code": "function:add",
+      "explain": "知识库",
+      "icon": "public/logo.png",
+      "platform": [
+        "win32",
+        "darwin",
+        "linux"
+      ],
+      "cmds": [{
+        "type": "regex",
+        "label": "听雨文章导入",
+        "match": "/^__FROM_PLUGIN__$/",
+        "minLength": 2
+      }]
     }
   ]
 }

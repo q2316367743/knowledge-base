@@ -2,8 +2,8 @@ import './index.less';
 
 import {IconHtml} from '@codexteam/icons';
 import {API, BlockTool, BlockToolConstructorOptions} from "@editorjs/editorjs";
-import {Button, Input, Tooltip} from 'tdesign-vue-next';
-import {EditIcon} from 'tdesign-icons-vue-next';
+import {Button, Input, Space, Tooltip} from 'tdesign-vue-next';
+import {EditIcon, FullscreenExitIcon, FullscreenIcon} from 'tdesign-icons-vue-next';
 import MonacoEditor from "@/editor/MonacoEditor/MonacoEditor.vue";
 import {codeRun, disabledCodeRun} from "@/plugin/CodeRun";
 import router from '@/plugin/router';
@@ -11,8 +11,6 @@ import {makeElement} from "@/utils/lang/DocumentUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
-import {computed} from "vue";
-import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {parseFileExtra} from "@/utils/file/FileUtil";
 
 interface CodeData {
@@ -36,6 +34,7 @@ export default class CodeTool implements BlockTool {
   private content: Ref<string>;
   private height: Ref<string>;
   private filename: Ref<string>;
+  public fs: Ref<boolean> = ref(false);
 
   private wrapper?: HTMLDivElement;
 
@@ -43,18 +42,6 @@ export default class CodeTool implements BlockTool {
    * Notify core that read-only mode is supported
    */
   public static readonly isReadOnlySupported = true
-  /**
-   * Should this tool be displayed at the Editor's Toolbox
-   */
-  public static readonly displayInToolbox = true;
-  /**
-   * Allow to press Enter inside the RawTool textarea
-   */
-  public static readonly enableLineBreaks = true;
-  /**
-   * Default placeholder for RawTool's textarea
-   */
-  public static readonly DEFAULT_PLACEHOLDER = '请输入HTML代码';
   /**
    * 自动消毒配置
    */
@@ -96,10 +83,18 @@ export default class CodeTool implements BlockTool {
    * @public
    */
   render(): HTMLDivElement {
-    this.wrapper = makeElement('div', [this.CSS.baseClass, this.CSS.input, 'ce-rawtool']);
+    if (!this.wrapper) this.wrapper = makeElement('div', ['ce-code']);
     this.wrapper.style.position = 'relative';
 
-    const {readOnly, filename, content, height} = this;
+    const {readOnly, filename, content, height, fs} = this;
+
+    watch(fs, val => {
+      if (val) {
+        this.wrapper?.classList.add('ce-code-fullscreen-active');
+      } else {
+        this.wrapper?.classList.remove('ce-code-fullscreen-active');
+      }
+    })
 
     const app = createApp({
       setup() {
@@ -167,11 +162,17 @@ export default class CodeTool implements BlockTool {
                   icon: () => <EditIcon/>
                 }}</Button>}
               </div>
-              <Tooltip content={disabled.value ? '请先配置运行命令' : '代码运行'}>
-                <Button theme={'primary'} size={'small'} onClick={onRun}>运行</Button>
-              </Tooltip>
+              <Space size={'small'}>
+                <Button theme={'primary'} variant={'text'} shape={'square'} size={'small'}
+                        onClick={() => fs.value = !fs.value}>{{
+                  icon: () => fs.value ? <FullscreenExitIcon/> : <FullscreenIcon/>
+                }}</Button>
+                <Tooltip content={disabled.value ? '请先配置运行命令' : '代码运行'}>
+                  <Button theme={'primary'} size={'small'} onClick={onRun}>运行</Button>
+                </Tooltip>
+              </Space>
             </div>
-            <div style={{height: height.value}}>
+            <div style={{height: fs.value ? 'calc(100% - 41px)' : height.value}}>
               <MonacoEditor v-model={content.value} readOnly={readOnly} language={language.value}/>
               {!readOnly && <div class="ce-code-resize-handle" onMousedown={onMouseDown}>···</div>}
             </div>
@@ -179,7 +180,6 @@ export default class CodeTool implements BlockTool {
         );
       }
     });
-
 
     app.mount(this.wrapper);
 

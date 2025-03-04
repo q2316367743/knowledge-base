@@ -12,7 +12,7 @@
               <t-radio :value="AiServiceType.OPENAI">OpenAI</t-radio>
             </t-radio-group>
           </t-form-item>
-          <t-form-item label="API 地址" label-align="top">
+          <t-form-item label="API 地址" label-align="top" help="注意，OpenAI的地址，结尾要加上/v1/">
             <t-input allow-clear v-model="form.url"/>
           </t-form-item>
           <t-form-item label="API 密钥" label-align="top">
@@ -21,7 +21,7 @@
           <!--      <t-form-item label="模型版本">-->
           <!--        <t-input allow-clear v-model="form.modelVersion" />-->
           <!--      </t-form-item>-->
-          <t-form-item label="模型" label-align="top">
+          <t-form-item label="模型" label-align="top" help="上面填写完成后注意刷新模型">
             <a-card class="w-full">
               <template #title>
                 <t-space>

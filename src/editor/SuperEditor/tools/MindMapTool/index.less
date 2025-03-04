@@ -1,0 +1,23 @@
+.ce-mind-map {
+  height: 400px;
+  position: relative;
+  background-color: var(--td-bg-color-container);
+  margin: 8px 0;
+
+  &.ce-mind-map-fullscreen-active {
+    position: fixed;
+    top: 0;
+    left: 50px;
+    width: calc(100vw - 50px);
+    height: 100vh;
+    z-index: 99;
+    margin: 0;
+  }
+
+  .ce-mind-map-fullscreen {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 99;
+  }
+}

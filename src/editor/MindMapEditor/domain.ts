@@ -1,4 +1,4 @@
-import { SearchContentOption } from "@/pages/note/components/SearchContent";
+import {SearchContentOption} from "@/pages/note/components/SearchContent";
 
 export interface MindMapNode {
   // 是否是根节点
@@ -43,6 +43,17 @@ export interface MindMapTreeNode {
   data: MindMapNodeData;
   children: Array<MindMapTreeNode>;
 }
+
+export interface MindMapTreeData {
+  layout: "logicalStructure",
+  root: MindMapTreeNode;
+  theme: {
+    template: "default",
+    config: Record<string, any>
+  },
+  view: Record<string, any>
+}
+
 
 function _findKeyword(
   keyword: string,

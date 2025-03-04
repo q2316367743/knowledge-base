@@ -1,9 +1,24 @@
-.ce-rawtool {
+.ce-code {
   min-height: 200px;
   margin: 8px 0;
+  border: 1px solid var(--td-border-level-1-color);
+  border-radius: var(--td-radius-default);
+  background-color: var(--td-bg-color-container) !important;
+
+  &.ce-code-fullscreen-active {
+    position: fixed !important;
+    top: 0;
+    left: 50px;
+    width: calc(100vw - 50px);
+    height: 100vh;
+    margin: 0;
+    border: none;
+    z-index: 100;
+  }
 
   .ce-code-header {
     border-bottom: 1px solid var(--td-border-level-1-color);
+    padding-left: 16px;
 
     .ce-code-filename {
       cursor: pointer;
