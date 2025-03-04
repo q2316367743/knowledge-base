@@ -42,7 +42,7 @@ export default class Index implements BlockTool {
 
   render(): Promise<HTMLElement> | HTMLElement {
     if (!this.wrapper) {
-      this.wrapper = makeElement('div', [this.api.styles.block, this.api.styles.input, 'ce-mind-map']);
+      this.wrapper = makeElement('div', ['ce-mind-map']);
     }
 
     const {data, readOnly, fs} = this;

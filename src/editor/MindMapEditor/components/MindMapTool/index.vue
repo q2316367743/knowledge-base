@@ -1,76 +1,78 @@
 <template>
-  <div class="mind-map-tool" :style="{left: left}" :data-left="left">
-    <div class="tool-btn" @click="back()" :class="!isStart ? 'active' : ''">
+  <div :class="{'hide-title': hideTitle, 'mind-map-tool': true}" :style="{left: left}" :data-left="left">
+    <div class="tool-btn" @click="back()" :class="!isStart ? 'active' : ''" title="后退">
       <div class="tool-btn-icon">
         <backward-icon size="18px"/>
       </div>
       <div class="tool-btn-text">后退</div>
     </div>
-    <div class="tool-btn" @click="forward()" :class="!isEnd ? 'active' : ''">
+    <div class="tool-btn" @click="forward()" :class="!isEnd ? 'active' : ''" title="前进">
       <div class="tool-btn-icon">
         <forward-icon size="18px"/>
       </div>
       <div class="tool-btn-text">前进</div>
     </div>
     <a-divider direction="vertical"/>
-    <div class="tool-btn" @click="insertNode()" :class="available && !isRoot && !isGeneralization ? 'active' : ''">
+    <div class="tool-btn" @click="insertNode()" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
+         title="同级节点">
       <div class="tool-btn-icon">
         <git-commit-icon size="18px"/>
       </div>
       <div class="tool-btn-text">同级节点</div>
     </div>
-    <div class="tool-btn" @click="insertChildNode()" :class="available && !isGeneralization ? 'active' : ''">
+    <div class="tool-btn" @click="insertChildNode()" :class="available && !isGeneralization ? 'active' : ''"
+         title="子节点">
       <div class="tool-btn-icon">
         <git-merge-icon size="18px"/>
       </div>
       <div class="tool-btn-text">子节点</div>
     </div>
-    <div class="tool-btn" @click="deleteNode()" :class="available ? 'active' : ''">
+    <div class="tool-btn" @click="deleteNode()" :class="available ? 'active' : ''" title="删除节点">
       <div class="tool-btn-icon">
         <delete-icon size="18px"/>
       </div>
       <div class="tool-btn-text">删除节点</div>
     </div>
     <a-divider direction="vertical"/>
-    <div class="tool-btn" :class="available ? 'active' : ''" @click="setImage()">
+    <div class="tool-btn" :class="available ? 'active' : ''" @click="setImage()" title="图片">
       <div class="tool-btn-icon">
         <image-icon size="18px"/>
       </div>
       <div class="tool-btn-text">图片</div>
     </div>
-    <div class="tool-btn" :class="available ? 'active' : ''" @click="setHyperlink()">
+    <div class="tool-btn" :class="available ? 'active' : ''" @click="setHyperlink()" title="超链接">
       <div class="tool-btn-icon">
         <link-icon size="18px"/>
       </div>
       <div class="tool-btn-text">超链接</div>
     </div>
-    <div class="tool-btn" :class="available ? 'active' : ''" @click="setNote()">
+    <div class="tool-btn" :class="available ? 'active' : ''" @click="setNote()" title="备注">
       <div class="tool-btn-icon">
-        <notification-icon size="18px"/>
+        <chat-message-icon size="18px"/>
       </div>
       <div class="tool-btn-text">备注</div>
     </div>
-    <div class="tool-btn" :class="available ? 'active' : ''" @click="setTag()">
+    <div class="tool-btn" :class="available ? 'active' : ''" @click="setTag()" title="标签">
       <div class="tool-btn-icon">
         <tag-icon size="18px"/>
       </div>
       <div class="tool-btn-text">标签</div>
     </div>
-    <div class="tool-btn" :class="available ? 'active' : ''" @click="setIcon()">
+    <div class="tool-btn" :class="available ? 'active' : ''" @click="setIcon()" title="图标">
       <div class="tool-btn-icon">
         <face-retouching-icon size="18px"/>
       </div>
       <div class="tool-btn-text">图标</div>
     </div>
     <a-divider direction="vertical"/>
-    <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
+    <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''" title="概要"
          @click="insertGeneralization()">
       <div class="tool-btn-icon">
-        <app-icon size="18px"/>
+        <braces-icon size="18px"/>
       </div>
       <div class="tool-btn-text">概要</div>
     </div>
-    <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
+    <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''" title="关联线"
          @click="insertAssociativeLine()">
       <div class="tool-btn-icon">
         <git-branch-icon size="18px"/>
@@ -99,19 +101,20 @@ import {
   openInsertIcon
 } from "@/editor/MindMapEditor/components/MindMapTool/func/InsertIcon";
 import {
-  AppIcon,
-  BackwardIcon,
+  BackwardIcon, BracesIcon, ChatMessageIcon,
   DeleteIcon, FaceRetouchingIcon,
   ForwardIcon, GitBranchIcon, GitCommitIcon, GitMergeIcon,
   ImageIcon,
   LinkIcon,
-  NotificationIcon,
   TagIcon
 } from "tdesign-icons-vue-next";
 
 const props = defineProps({
   mindMap: Object as PropType<MindMap>,
-  width: Number
+  width: {
+    type: Number,
+    default: 0
+  }
 });
 // 记录前进回退
 const isStart = ref(true);
@@ -120,14 +123,20 @@ const isEnd = ref(true);
 const activeNodes = shallowRef<Array<MindMapNode>>([]);
 
 
-const left = computed(() => ((Math.max(props.width || 0, 686) - 686) / 2) + 'px');
+const left = computed(() => {
+  let w = 686;
+  if (hideTitle.value) {
+    w = 556;
+  }
+  return ((Math.max(props.width || 0, w) - w) / 2) + 'px'
+});
 const available = computed(() => activeNodes.value.length > 0);
 const isRoot = computed(() => activeNodes.value.length > 0 && activeNodes.value.every(e => e.isRoot));
 const isGeneralization = computed(() =>
   activeNodes.value.length > 0 && activeNodes.value.every((e: { isGeneralization: boolean }) => e.isGeneralization));
+const hideTitle = computed(() => props.width < 700);
 
-
-const nodeActive = (node: any, nodeList: Array<MindMapNode>) => {
+const nodeActive = (_node: any, nodeList: Array<MindMapNode>) => {
   activeNodes.value = nodeList;
 };
 const backForward = (index: number, len: number) => {
@@ -234,8 +243,18 @@ const insertAssociativeLine = () => {
   border: 1px solid var(--color-border-2);
   flex-shrink: 0;
 
+  &.hide-title {
+    .tool-btn {
+      height: 20px;
+    }
+
+    .tool-btn-text {
+      display: none;
+    }
+  }
+
   .tool-btn {
-    height: 45px;
+    height: 40px;
     margin-right: 20px;
     cursor: no-drop;
     color: var(--color-neutral-4);
