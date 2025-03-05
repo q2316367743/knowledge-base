@@ -21,6 +21,7 @@ import List from './tools/List';
 import SimpleImage from './tools/SimpleImage';
 import AlertTool from './tools/AlertTool';
 import MindMapTool from './tools/MindMapTool';
+import LogicFlowTool from './tools/LogicFlowTool';
 
 
 const content = defineModel({
@@ -93,7 +94,8 @@ onMounted(() => {
         },
         blockTunes: {
           "delete": {
-            "Delete": "删除"
+            "Delete": "删除",
+            "Click to delete": '再次点击删除'
           },
           "moveUp": {
             "Move up": "上移"
@@ -110,12 +112,16 @@ onMounted(() => {
       })
     },
     tools: {
-      Header, SimpleImage, CodeTool, Table, Delimiter, MindMapTool,
+      Header, SimpleImage,
       linkTool: {
         class: LinkTool,
         config: {
           endpoint: fetchUrl, // Your backend endpoint for url data fetching,
         }
+      },
+      alert: {
+        class: AlertTool,
+        inlineToolbar: true,
       },
       list: {
         class: List,
@@ -123,11 +129,8 @@ onMounted(() => {
         config: {
           defaultStyle: 'unordered'
         },
-      },
-      alert: {
-        class: AlertTool,
-        inlineToolbar: true,
-      },
+      }, Delimiter, Table, CodeTool, MindMapTool, LogicFlowTool,
+
       // 内联工具
       Underline: {
         class: Underline,

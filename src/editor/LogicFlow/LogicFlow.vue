@@ -24,14 +24,9 @@
       </div>
       <!-- 右侧配置面板 -->
       <div class="config" v-if="!readOnly">
-        <a-dropdown>
-          <a-button type="text">更多</a-button>
-          <template #content>
-            <a-doption @click="onOpenOption">功能配置</a-doption>
-            <a-doption @click="onOpenEditConfig">编辑配置</a-doption>
-            <a-doption @click="openLogicFlowKeyboard">快捷键</a-doption>
-          </template>
-        </a-dropdown>
+        <t-dropdown :options="moreOptions" trigger="click">
+          <t-button variant="text" theme="primary">更多</t-button>
+        </t-dropdown>
       </div>
     </div>
   </div>
@@ -102,6 +97,16 @@ const showPanel = computed(() => {
 })
 
 const toolbarTop = computed(() => (elementSize.height.value - 146) / 2 + 'px');
+const moreOptions = [{
+  content: '功能配置',
+  onClick: () => onOpenOption()
+}, {
+  content: '编辑配置',
+  onClick: () => onOpenEditConfig()
+}, {
+  content: '快捷键',
+  onClick: () => openLogicFlowKeyboard()
+}]
 
 onMounted(() => {
   if (!containerRef.value) {
@@ -113,7 +118,7 @@ onMounted(() => {
   editConfig.value = content.value['editConfig'] || {}
   instance.value = new LogicFlow({
     container: containerRef.value,
-    plugins: [BpmnElement, BpmnXmlAdapter, Snapshot, SelectionSelect, MiniMap, Menu],
+    plugins: [BpmnElement, BpmnXmlAdapter, Snapshot, SelectionSelect, MiniMap],
     width: elementSize.width.value,
     height: elementSize.height.value,
     keyboard: {
@@ -319,8 +324,8 @@ firstUseLogicFlow();
 
     .save {
       position: absolute;
-      right: 8px;
-      top: 8px;
+      right: 24px;
+      top: 16px;
     }
 
   }
