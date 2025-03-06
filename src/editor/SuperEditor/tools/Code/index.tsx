@@ -41,7 +41,8 @@ export default class CodeTool implements BlockTool {
   /**
    * Notify core that read-only mode is supported
    */
-  public static readonly isReadOnlySupported = true
+  public static readonly isReadOnlySupported = true;
+  public static readonly isLineBreaksEnabled = true;
   /**
    * 自动消毒配置
    */
@@ -72,7 +73,7 @@ export default class CodeTool implements BlockTool {
     };
 
     this.content = ref(data.html || '');
-    this.height = ref(data.height || '200px');
+    this.height = ref(data.height || '200');
     this.filename = ref(data.filename || '');
 
   }

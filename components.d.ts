@@ -72,6 +72,7 @@ declare module 'vue' {
     TColorPicker: typeof import('tdesign-vue-next')['ColorPicker']
     TDoption: typeof import('tdesign-vue-next')['Doption']
     TDropdown: typeof import('tdesign-vue-next')['Dropdown']
+    TInput: typeof import('tdesign-vue-next')['Input']
     TInputNumber: typeof import('tdesign-vue-next')['InputNumber']
     TLink: typeof import('tdesign-vue-next')['Link']
     TodoItemCheckbox: typeof import('./src/components/TodoItemCheckbox/TodoItemCheckbox.vue')['default']

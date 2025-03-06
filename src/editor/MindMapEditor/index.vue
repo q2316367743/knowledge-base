@@ -61,7 +61,7 @@ const init = () => {
   });
   mindMap.value.setFullData(props.modelValue);
   mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');
-  mindMap.value.reRender(() => console.log("reRender"));
+  mindMap.value.reRender(() => console.debug("reRender"));
 
   mindMap.value.on('data_change', () => {
     // data数据是不带节点对象的纯数据

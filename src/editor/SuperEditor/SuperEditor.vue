@@ -22,6 +22,7 @@ import SimpleImage from './tools/SimpleImage';
 import AlertTool from './tools/AlertTool';
 import MindMapTool from './tools/MindMapTool';
 import LogicFlowTool from './tools/LogicFlowTool';
+import KanbanTool from './tools/KanbanTool';
 
 
 const content = defineModel({
@@ -129,7 +130,7 @@ onMounted(() => {
         config: {
           defaultStyle: 'unordered'
         },
-      }, Delimiter, Table, CodeTool, MindMapTool, LogicFlowTool,
+      }, Delimiter, Table, CodeTool, MindMapTool, LogicFlowTool, KanbanTool,
 
       // 内联工具
       Underline: {
