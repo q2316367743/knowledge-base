@@ -1,5 +1,5 @@
 <template>
-  <div class="ce-kanban" :class="{'ce-kanban-fullscreen-active': fs}" :style="{height: content.height + 'px'}">
+  <div class="ce-kanban" :class="{'ce-kanban-fullscreen-active': fs}" :style="{height: height}">
     <div class="ce-kanban-header flex justify-between items-center">
       <div class="kanban-header-left">
         <kanban-tool-title v-model="content.title"/>
@@ -43,6 +43,13 @@ let startY = 0;
 let startHeight = 0;
 
 const fs = ref(false);
+
+const height = computed(() => {
+  if (fs.value) {
+    return '100%';
+  }
+  return content.height + 'px';
+})
 
 provide(KanbanInstance, {
   api: props.api,
