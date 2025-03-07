@@ -270,11 +270,12 @@ export function setStrBySession(key: string, value: string) {
  * 存储附件到新文档
  * @param docId 文档ID
  * @param attachment 附件 buffer
+ * @param mineType 文件类型
  * @return url
  */
-export async function postAttachment(docId: string, attachment: Blob | File): Promise<string> {
+export async function postAttachment(docId: string, attachment: Blob | File, mineType = "application/octet-stream"): Promise<string> {
     const buffer = await attachment.arrayBuffer();
-    const res = await utools.db.promises.postAttachment(docId, new Uint8Array(buffer), "application/octet-stream");
+    const res = await utools.db.promises.postAttachment(docId, new Uint8Array(buffer), mineType);
     if (res.error) {
         return Promise.reject(res.message);
     }

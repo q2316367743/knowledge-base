@@ -37,7 +37,7 @@ function fetchAttachment() {
 fetchAttachment();
 
 function copyMarkdown(item: string) {
-  utools.copyText(`![](${item})`);
+  utools.copyText(`![image.png#100%](attachment:${item})`);
   MessageUtil.success("成功复制到剪切板");
 }
 

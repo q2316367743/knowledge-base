@@ -232,7 +232,7 @@ export async function buildConfig(
     },
     fileUpload(file: File, callback: (url: string) => void) {
       if (instance) {
-        useAttachmentUpload.upload(file, true)
+        useAttachmentUpload.upload(file, true, file.type)
           .then(url => {
             if (instance.value) {
               instance.value.insertValue(`![图片#100%](${url})`);

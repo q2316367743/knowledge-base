@@ -59,7 +59,7 @@ function init() {
           server: '/api/upload',
           // 自定义上传
           customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
-            useAttachmentUpload.upload(file)
+            useAttachmentUpload.upload(file, false, 'image/png')
               .then(key => {
                 insertFn(key, key, '')
               })
@@ -68,7 +68,8 @@ function init() {
         uploadVideo: {
           server: '/api/upload',
           customUpload(file: File, insertFn: InsertFnType) {
-            useAttachmentUpload.upload(file)
+            //
+            useAttachmentUpload.upload(file, false, file.type)
               .then(key => {
                 insertFn(renderAttachmentUrl(key), key, '')
               })

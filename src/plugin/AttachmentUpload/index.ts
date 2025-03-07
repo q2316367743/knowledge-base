@@ -10,10 +10,10 @@ import {useAttachmentUploadByUtools} from "@/plugin/AttachmentUpload/impl/UTools
 import {renderAttachmentUrl} from "@/plugin/server";
 
 export const useAttachmentUpload = {
-  upload: async (data: Blob | File | string, native = false): Promise<string> => {
+  upload: async (data: Blob | File | string, native = false, mineType?: string): Promise<string> => {
     const {imageStrategy, baseSetting} = useBaseSettingStore();
     if (imageStrategy === ImageStrategyEnum.INNER) {
-      const result = await useAttachmentUploadByUtools(data);
+      const result = await useAttachmentUploadByUtools(data, mineType);
       if (native) {
         return "attachment:" + result;
       }

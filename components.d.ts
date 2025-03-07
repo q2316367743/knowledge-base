@@ -71,6 +71,7 @@ declare module 'vue' {
     TBreadcrumbItem: typeof import('tdesign-vue-next')['BreadcrumbItem']
     TButton: typeof import('tdesign-vue-next')['Button']
     TButtonGroup: typeof import('tdesign-vue-next')['ButtonGroup']
+    TCard: typeof import('tdesign-vue-next')['Card']
     TCheckbox: typeof import('tdesign-vue-next')['Checkbox']
     TCheckboxGroup: typeof import('tdesign-vue-next')['CheckboxGroup']
     TCheckTagGroup: typeof import('tdesign-vue-next')['CheckTagGroup']
