@@ -1,4 +1,5 @@
 import {API} from "@editorjs/editorjs";
+import {useSnowflake} from "@/hooks/Snowflake";
 
 export interface KanbanDataNode {
   id: string;
@@ -18,6 +19,7 @@ export interface KanbanData {
   groups: Array<KanbanDataGroup>;
   height: number;
   title: string;
+  showRemark: boolean;
 }
 
 export function buildKanbanData(): KanbanData {
@@ -25,46 +27,62 @@ export function buildKanbanData(): KanbanData {
   return {
     groups: [
       {
-      id: '1',
-      name: '待开始',
-      color: '#70000D',
-      nodes: [{
         id: '1',
-        created: now + 1,
-        name: '任务1',
-        content: ''
+        name: '待开始',
+        color: '#70000d',
+        nodes: [{
+          id: '1',
+          created: now + 1,
+          name: '任务1',
+          content: ''
+        }, {
+          id: '2',
+          created: now + 2,
+          name: '任务2',
+          content: ''
+        }, {
+          id: '3',
+          created: now + 3,
+          name: '任务3',
+          content: ''
+        }]
       }, {
         id: '2',
-        created: now + 2,
-        name: '任务2',
-        content: ''
+        name: '进行中',
+        color: '#664900',
+        nodes: []
       }, {
-        id: '3',
-        created: now + 3,
-        name: '任务3',
-        content: ''
-      }]
-    }, {
-      id: '2',
-      name: '进行中',
-      color: '#664900',
-      nodes: []
-    }, {
-      id: '2',
-      name: '已完成',
-      color: '#00346B',
-      nodes: []
-    }
+        id: '2',
+        name: '已完成',
+        color: '#00346b',
+        nodes: []
+      }
     ],
     height: 450,
-    title: '看板'
+    title: '看板',
+    showRemark: false
   }
 }
 
-interface IKanbanInstance {
+export function buildKanbanNode(): KanbanDataNode {
+  return {
+    id: useSnowflake().nextId(),
+    created: Date.now(),
+    name: '',
+    content: ''
+  }
+}
+
+export interface IKanbanInstance {
+  api: API;
   data: Ref<KanbanData>;
-  move: (oldGroupId: string, oldNodeId: string, newGroupId: string, newIndex: number) => void;
-  api: API
+
+  // 设置相关
+  changeShowRemark: (value: boolean) => void;
+
+  moveNode: (oldGroupId: string, oldNodeId: string, newGroupId: string, newIndex: number) => void;
+  postNode: (groupId: string, node: KanbanDataNode, index?: number) => void;
+  deleteNode: (groupId: string, nodeId: string) => void
 }
 
 

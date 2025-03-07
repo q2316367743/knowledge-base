@@ -1,255 +1,210 @@
 import {
-    Button, ButtonGroup,
-    Input,
-    InputPassword,
-    Modal,
-    ModalReturn,
-    Result,
-    Space,
-    Typography,
-    TypographyParagraph
+  Modal,
+  ModalReturn,
 } from "@arco-design/web-vue";
-import {h, ref, VNode} from "vue";
-import Optional from "@/utils/Optional";
-import {IconSync} from "@arco-design/web-vue/es/icon";
+import {
+  Button, DialogPlugin, Empty, Input, Paragraph, Space, Typography
+} from "tdesign-vue-next";
+import {LoadingIcon} from "tdesign-icons-vue-next";
 
 export default {
 
-    confirm(content: string, title: string, config?: Partial<{
-        confirmButtonText: string,
-        cancelButtonText: string
-    }>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            Modal.confirm({
-                content,
-                title,
-                draggable: true,
-                okText: config ? config.confirmButtonText : '',
-                cancelText: config ? config.cancelButtonText : '',
-                onOk: () => {
-                    resolve();
-                },
-                onCancel: () => {
-                    reject('cancel');
-                },
-                onClose: () => {
-                    reject('close');
-                }
-            })
-        })
-    },
-
-    confirmMulti(content: string, title: string, buttons: Array<{ name: string, action: () => void }>): Promise<void> {
-        return new Promise<void>(resolve => {
-            const modalReturn = Modal.confirm({
-                content,
-                title,
-                draggable: true,
-                footer: () => <ButtonGroup type={'primary'}>
-                    <Space>
-                        <Button type={'secondary'} onClick={modalReturn.close}>取消</Button>
-                        {buttons.map(btn => <Button onClick={() => {
-                            btn.action();
-                            resolve();
-                            modalReturn.close();
-                        }}>{btn.name}</Button>)}
-                    </Space>
-                </ButtonGroup>
-            });
-        })
-    },
-
-    alert(content: string | VNode, title: string | null, config?: {
-        confirmButtonText?: string,
-        cancelButtonText?: string,
-        width?: number
-    }): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            Modal.confirm({
-                content: typeof content === 'string' ? content : () => content,
-                title: Optional.ofNullable(title).orElse("警告"),
-                draggable: true,
-                okText: Optional.ofNullable(config).map(e => e?.confirmButtonText).orElse('确定'),
-                cancelText: Optional.ofNullable(config).map(e => e?.cancelButtonText).orElse('取消'),
-                width: Optional.ofNullable(config).attr('width').orElse(undefined),
-                onOk: () => {
-                    resolve();
-                },
-                onCancel: () => {
-                    reject('cancel');
-                },
-                onClose: () => {
-                    reject('close');
-                }
-            })
-        })
-    },
-
-    prompt(content: string, title?: string, config?: {
-        confirmButtonText?: string,
-        cancelButtonText?: string,
-        inputPattern?: RegExp,
-        inputErrorMessage?: string,
-        inputValue?: string
-    }): Promise<string> {
-        const _config = config || {};
-        return new Promise<string>(resolve => {
-            let value = Optional.ofNullable(_config.inputValue).orElse("") as string;
-            const onInput = (e: string) => {
-                value = e;
-            }
-            const res = Modal.confirm({
-                content: () => h('div', {class: 'es-prompt'}, [
-                    h('div', {}, content),
-                    // @ts-ignore
-                    h(Input, {
-                        type: 'text',
-                        onInput,
-                        "default-value": _config.inputValue,
-                        style: 'margin-top: 8px;',
-                        onVnodeMounted: (e: VNode) => {
-                            (e.el as HTMLInputElement)
-                                .getElementsByTagName("input")
-                                .item(0)!
-                                .focus();
-                        },
-                        onPressEnter: () => {
-                            resolve(value);
-                            res.close();
-                        }
-                    })
-                ]),
-                title: title,
-                draggable: true,
-                okText: _config.confirmButtonText,
-                cancelText: _config.cancelButtonText,
-                onOk: () => {
-                    resolve(value);
-                }
-            })
-        })
-    },
-
-    password(content: string, title: string, config: {
-        confirmButtonText?: string,
-        cancelButtonText?: string
-    }): Promise<{
-        username: string;
-        password: string;
-    }> {
-        return new Promise<{
-            username: string;
-            password: string;
-        }>((resolve, reject) => {
-            let value = {
-                username: '',
-                password: ''
-            };
-            const onUsernameInput = (e: string) => {
-                value.username = e;
-            }
-            const onPasswordInput = (e: string) => {
-                value.username = e;
-            }
-            Modal.confirm({
-                content: () => h('div', {class: 'es-prompt'}, [
-                    h('div', {}, content),
-                    // @ts-ignore
-                    h(Input, {
-                        type: 'text',
-                        onInput: onUsernameInput,
-                        style: 'margin-top: 8px;',
-                        onVnodeMounted: (e: VNode) => {
-                            (e.el as HTMLInputElement)
-                                .getElementsByTagName("input")
-                                .item(0)!
-                                .focus();
-                        }
-                    }),
-                    h(InputPassword, {
-                        type: 'text',
-                        onInput: onPasswordInput,
-                        style: 'margin-top: 8px;'
-                    })
-                ]),
-                title: title,
-                draggable: true,
-                okText: config.confirmButtonText,
-                cancelText: config.cancelButtonText,
-                onOk: () => {
-                    resolve(value);
-                },
-                onCancel: () => {
-                    reject('cancel');
-                },
-                onClose: () => {
-                    reject('close');
-                }
-            })
-        })
-    },
-
-    loading(content: string, title?: string): MessageBoxLoadingReturn {
-        const body = ref(content);
-        const lines = ref(new Array<LineContent>());
-        const res = Modal.open({
-            title: title || '加载中',
-            content: () => <Result title={content} status="info">
-                {{
-                    icon: () => <IconSync spin={true}/>,
-                    subtitle: () => {
-                        if (lines.value.length > 0) {
-                            return <Typography style={{maxHeight: "30vh", overflow: "auto"}}>
-                                {lines.value.map((line, index) =>
-                                    <TypographyParagraph key={index} style={{color: renderColor(line.status)}}>
-                                        {line.content}
-                                    </TypographyParagraph>)}
-                            </Typography>
-                        }
-                    }
-                }}
-            </Result>,
-            draggable: true,
-            closable: false,
-            footer: false,
-            escToClose: false,
-            maskClosable: false
-        });
-        return {
-            ...res,
-            setContent(content: string) {
-                body.value = content;
-            },
-            append(line: string, status: LineContentStatus = 'info') {
-                lines.value.unshift({content: line, status: status});
-            }
+  confirm(content: string, title: string, config?: Partial<{
+    confirmButtonText: string,
+    cancelButtonText: string
+  }>): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const p = DialogPlugin({
+        default: content,
+        header: title,
+        draggable: true,
+        confirmBtn: {
+          default: config?.confirmButtonText || ''
+        },
+        cancelBtn: {
+          default: config?.cancelButtonText || ''
+        },
+        onConfirm: () => {
+          p.destroy();
+          resolve();
+        },
+        onCancel: () => {
+          p.destroy();
+          reject('cancel');
+        },
+        onClose: () => {
+          p.destroy();
+          reject('close');
         }
+      })
+    })
+  },
+
+  confirmMulti(content: string, title: string, buttons: Array<{ name: string, action: () => void }>): Promise<void> {
+    return new Promise<void>(resolve => {
+      const modalReturn = Modal.confirm({
+        content,
+        title,
+        draggable: true,
+        footer: () => <Space>
+          <Button theme={'default'} onClick={modalReturn.close}>取消</Button>
+          {buttons.map(btn => <Button theme={'primary'} onClick={() => {
+            btn.action();
+            resolve();
+            modalReturn.close();
+          }}>{btn.name}</Button>)}
+        </Space>
+      });
+    })
+  },
+
+  alert(content: string, title?: string, config?: {
+    confirmButtonText?: string,
+    cancelButtonText?: string,
+  }) {
+    const {
+      confirmButtonText = '确认',
+      cancelButtonText = '取消',
+    } = config || {};
+    return new Promise<void>(resolve => {
+
+      const res = DialogPlugin({
+        default: () => <Paragraph>{content}</Paragraph>,
+        top: 'auto',
+        header: title,
+        draggable: true,
+        confirmBtn: {
+          default: confirmButtonText,
+        },
+        cancelBtn: {
+          default: cancelButtonText
+        },
+        onConfirm: () => {
+          resolve();
+          res.destroy();
+        },
+        onCancel() {
+          res.destroy();
+        },
+        onClose() {
+          res.destroy();
+        }
+      })
+    })
+  },
+
+  prompt(content: string, title?: string, config?: {
+    confirmButtonText?: string,
+    cancelButtonText?: string,
+    inputPattern?: RegExp,
+    inputErrorMessage?: string,
+    inputValue?: string,
+    onClose?: () => void
+  }): Promise<string> {
+    const {
+      inputValue = '',
+      confirmButtonText = '确认',
+      cancelButtonText = '取消',
+      onClose
+    } = config || {};
+    return new Promise<string>(resolve => {
+      let value = ref(inputValue);
+
+      function onKeydown(value: string | number) {
+        resolve(`${value}`);
+        res.destroy();
+      }
+
+      const res = DialogPlugin({
+        default: () => <div>
+          <Paragraph>{content}</Paragraph>
+          <Input autofocus={true} v-model={value.value} clearable onEnter={onKeydown}></Input>
+        </div>,
+        top: 'auto',
+        header: title,
+        draggable: true,
+        confirmBtn: {
+          default: confirmButtonText,
+        },
+        cancelBtn: {
+          default: cancelButtonText
+        },
+        onConfirm: () => {
+          resolve(value.value);
+          res.destroy();
+        },
+        onCancel() {
+          res.destroy();
+        },
+        onClose() {
+          res.destroy();
+          onClose && onClose()
+        }
+      })
+    })
+  },
+
+  loading(content: string, title?: string): MessageBoxLoadingReturn {
+    const body = ref(content);
+    const lines = ref(new Array<LineContent>());
+    const res = Modal.open({
+      title: title || '加载中',
+      content: () => <Empty title={content} type={'empty'}>
+        {{
+          icon: () => <LoadingIcon/>,
+          subtitle: () => {
+            if (lines.value.length > 0) {
+              return <Typography style={{maxHeight: "30vh", overflow: "auto"}}>
+                {lines.value.map((line, index) =>
+                  <Paragraph key={index} style={{color: renderColor(line.status)}}>
+                    {line.content}
+                  </Paragraph>)}
+              </Typography>
+            }
+          }
+        }}
+      </Empty>,
+      draggable: true,
+      closable: false,
+      footer: false,
+      escToClose: false,
+      maskClosable: false
+    });
+    return {
+      ...res,
+      setContent(content: string) {
+        body.value = content;
+      },
+      append(line: string, status: LineContentStatus = 'info') {
+        lines.value.unshift({content: line, status: status});
+      }
     }
+  }
 
 }
 
 export interface MessageBoxLoadingReturn extends ModalReturn {
-    setContent(content: string): void;
+  setContent(content: string): void;
 
-    append(line: string, status?: LineContentStatus): void;
+  append(line: string, status?: LineContentStatus): void;
 }
 
 export interface LineContent {
-    content: string;
-    status: LineContentStatus;
+  content: string;
+  status: LineContentStatus;
 }
 
 export type LineContentStatus = 'success' | 'warning' | 'error' | 'info';
 
 export function renderColor(status: LineContentStatus): string {
-    switch (status) {
-        case "success":
-            return 'rgb(var(--green-6))';
-        case 'warning':
-            return 'rgb(var(--orange-6))';
-        case "error":
-            return 'rgb(var(--red-6))';
-        default:
-            return 'var(--color-neutral-10)';
-    }
+  switch (status) {
+    case "success":
+      return 'rgb(var(--green-6))';
+    case 'warning':
+      return 'rgb(var(--orange-6))';
+    case "error":
+      return 'rgb(var(--red-6))';
+    default:
+      return 'var(--color-neutral-10)';
+  }
 }

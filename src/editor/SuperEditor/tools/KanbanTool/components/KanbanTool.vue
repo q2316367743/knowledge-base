@@ -4,9 +4,10 @@
       <div class="kanban-header-left">
         <kanban-tool-title v-model="content.title"/>
       </div>
-      <div class="kanban-header-right">
+      <t-space size="small" class="kanban-header-right">
+        <kanban-tool-setting v-if="!readOnly"/>
         <kanban-tool-fs v-model="fs"/>
-      </div>
+      </t-space>
     </div>
     <div class="ce-kanban-container">
       <kanban-core v-model="content.groups" :read-only="readOnly"/>
@@ -16,10 +17,11 @@
 </template>
 <script lang="ts" setup>
 import {API} from '@editorjs/editorjs';
-import {buildKanbanData, KanbanData, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {buildKanbanData, KanbanData, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
 import KanbanCore from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanCore.vue";
 import KanbanToolFs from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanToolFs.vue";
 import KanbanToolTitle from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanToolTitle.vue";
+import KanbanToolSetting from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanToolSetting.vue";
 
 const content = defineModel({
   type: Object as PropType<KanbanData>,
@@ -43,20 +45,26 @@ let startHeight = 0;
 const fs = ref(false);
 
 provide(KanbanInstance, {
+  api: props.api,
   data: content,
-  move(oldGroupId: string, oldNodeId: string, newGroupId: string, newIndex: number): void {
+
+  changeShowRemark(value: boolean) {
+    content.value.showRemark = value;
+  },
+
+  moveNode(oldGroupId: string, oldNodeId: string, newGroupId: string, newIndex: number): void {
     // 从原分组中删除节点
-    for(const group of content.value.groups) {
-      if(group.id === oldGroupId) {
+    for (const group of content.value.groups) {
+      if (group.id === oldGroupId) {
         const index = group.nodes.findIndex(node => node.id === oldNodeId);
-        if(index !== -1) {
+        if (index !== -1) {
           const old = group.nodes.splice(index, 1);
           // 在新分组的指定位置中加入节点
-          if(newGroupId === group.id) {
+          if (newGroupId === group.id) {
             group.nodes.splice(newIndex, 0, old[0]);
           } else {
-            for(const group of content.value.groups) {
-              if(group.id === newGroupId) {
+            for (const group of content.value.groups) {
+              if (group.id === newGroupId) {
                 group.nodes.splice(newIndex, 0, old[0]);
                 break;
               }
@@ -67,8 +75,40 @@ provide(KanbanInstance, {
       }
     }
   },
-  api: props.api
-})
+  postNode(groupId: string, node: KanbanDataNode, index?: number) {
+    const {groups} = content.value;
+    for (const group of groups) {
+      if (group.id === groupId) {
+        const idx = group.nodes.findIndex(e => e.id === node.id);
+        if (idx === -1) {
+          console.log('index: ', index)
+          if (index) {
+            group.nodes.splice(index, 0, node);
+          } else {
+            group.nodes.push(node);
+          }
+        } else {
+          group.nodes[idx] = {
+            ...group.nodes[idx],
+            name: node.name,
+            content: node.content
+          };
+        }
+        return;
+      }
+    }
+  },
+  deleteNode(groupId: string, nodeId: string) {
+    const {groups} = content.value;
+    for (const group of groups) {
+      if (group.id === groupId) {
+        group.nodes = group.nodes.filter(node => node.id !== nodeId);
+        return;
+      }
+    }
+
+  }
+});
 
 const onMouseDown = (e: MouseEvent) => {
   startY = e.clientY;

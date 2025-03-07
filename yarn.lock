@@ -525,6 +525,11 @@
     local-pkg "^1.0.0"
     mlly "^1.7.4"
 
+"@imengyu/vue3-context-menu@^1.4.4":
+  version "1.4.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/@imengyu/vue3-context-menu/-/vue3-context-menu-1.4.4.tgz#c354c2a261bfc3a115ef906fd61786b810581fd0"
+  integrity sha512-Zjh1BbrvcNbZvsWr9IJl9KQUomf50EeP2GT+mWk63sqatDZxG7ZFX1eltrwRyfSBr+SuFpMvdYv/yRxpBsyw6w==
+
 "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.8"
   resolved "https://mirrors.cloud.tencent.com/npm/@jridgewell/gen-mapping/-/gen-mapping-0.3.8.tgz#4f0e06362e01362f823d348f1872b08f666d8142"

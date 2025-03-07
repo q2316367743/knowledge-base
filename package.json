@@ -21,6 +21,7 @@
     "@editorjs/marker": "^1.4.0",
     "@editorjs/table": "^2.4.3",
     "@editorjs/underline": "^1.2.1",
+    "@imengyu/vue3-context-menu": "^1.4.4",
     "@logicflow/core": "^2.0.10",
     "@logicflow/extension": "^2.0.14",
     "@tdesign-vue-next/chat": "^0.1.4",

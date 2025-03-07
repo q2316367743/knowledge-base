@@ -14,7 +14,7 @@ const groups = defineModel({
   default: () => ([])
 });
 
-defineProps({
+const props = defineProps({
   readOnly: {
     type: Boolean,
     default: false
@@ -23,10 +23,16 @@ defineProps({
 
 const el = ref();
 
-useSortable(el, groups, {
+const sortable = useSortable(el, groups, {
   animation: 150,
   handle: '.kanban-group-header',
-})
+});
+
+onMounted(() => {
+  if (props.readOnly) {
+    sortable.stop();
+  }
+});
 </script>
 <style scoped lang="less">
 .kanban-core {

@@ -6,7 +6,7 @@
         <div class="kanban-group-header-count">{{ group.nodes.length }}</div>
       </t-space>
       <div class="kanban-group-header-option flex items-center" v-if="!readOnly">
-        <t-button theme="primary" variant="text" size="small" shape="square">
+        <t-button theme="primary" variant="text" size="small" shape="square" @click="openKanbanNodePost(group.id, undefined, instance)">
           <template #icon>
             <plus-icon/>
           </template>
@@ -22,9 +22,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {KanbanDataGroup} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {IKanbanInstance, KanbanDataGroup, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
 import {MoreIcon, PlusIcon} from "tdesign-icons-vue-next";
 import KanbanGroupContainer from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroupContainer.vue";
+import {openKanbanNodePost} from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanNodePost";
 
 const group = defineModel({
   type: Object as PropType<KanbanDataGroup>,
@@ -35,10 +36,14 @@ defineProps({
     default: false
   }
 });
+
+const instance = inject<IKanbanInstance>(KanbanInstance);
 </script>
 <style scoped lang="less">
 .kanban-group {
   width: 280px;
+  height: 100%;
+  overflow: auto;
 
   .kanban-group-header {
     height: 40px;
