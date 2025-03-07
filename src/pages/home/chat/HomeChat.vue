@@ -12,28 +12,18 @@
         </div>
       </div>
     </div>
-    <div class="home-chat__close">
-      <t-button variant="text" theme="primary" @click="goBack" shape="circle">
-        <template #icon>
-          <arrow-left-icon />
-        </template>
-      </t-button>
-    </div>
   </div>
 </template>
 <script lang="ts" setup>
 import {useChatStore} from "@/store/components/ChatStore";
 import ChatArticle from "@/pages/home/chat/components/ChatArticle.vue";
 import AiInput from "@/pages/home/components/AiInput.vue";
-import {ArrowLeftIcon} from "tdesign-icons-vue-next";
 
 const messages = computed(() => useChatStore().messages);
-
-const goBack = () => useChatStore().clear();
 </script>
 <style scoped lang="less">
 .home-chat {
-  height: 100vh;
+  height: calc(100vh - 48px);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -69,11 +59,5 @@ const goBack = () => useChatStore().clear();
     }
   }
 
-  &__close {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 1;
-  }
 }
 </style>

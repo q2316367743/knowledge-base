@@ -1,59 +1,64 @@
 <template>
-  <div class="home-assistant-select">
-    <t-dropdown v-model:popup-visible="popupVisible" :options="options" style="max-width: 160px" trigger="click">
-      <div class="home-assistant-select__wrap flex items-center ">
-        <div class="mr-6px relative name">
-          <div v-if="assistant" class=" ellipsis" :title="assistant.name">{{ assistant.name }}</div>
-          <div v-else style="color: var(--color-text-3)" title="AI 助手">请选择</div>
+  <t-space class="home-assistant-select items-center" size="small">
+    <t-button theme="primary" variant="text" shape="square" @click="goBack">
+      <template #icon>
+        <home-icon/>
+      </template>
+    </t-button>
+    <chevron-right-icon/>
+    <t-select v-model="serviceId" :options="serviceOptions" :auto-width="true" placeholder="请选择 AI 服务"
+              class="home-assistant-select-service">
+      <template #panel-bottom-content>
+        <div class="w-full flex justify-center mt-4 mb-4">
+          <t-button size="small" @click="toAiService">管理</t-button>
         </div>
-        <icon-down class="down" :class="{reverse: popupVisible}"/>
-      </div>
-    </t-dropdown>
-  </div>
+      </template>
+    </t-select>
+    <chevron-right-icon/>
+    <t-select v-model="assistantId" :options="assistantOptions" :auto-width="true" placeholder="请选择 AI 助手"
+              class="home-assistant-select-assistant">
+      <template #panel-bottom-content>
+        <div class="w-full flex justify-center mt-4 mb-4">
+          <t-button size="small" @click="toAiAssistant">管理</t-button>
+        </div>
+      </template>
+    </t-select>
+  </t-space>
 </template>
 <script lang="ts" setup>
-import {AiAssistant} from "@/entity/ai/AiAssistant";
+import {SelectOption} from "tdesign-vue-next";
+import {ChevronRightIcon, HomeIcon} from "tdesign-icons-vue-next";
+import {assistantId, serviceId, useChatStore} from "@/store/components/ChatStore";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
-import {useChatStore} from "@/store/components/ChatStore";
-import {DropdownProps} from "tdesign-vue-next";
+import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 
-defineProps({
-  width: {
-    type: String,
-    default: '120px'
-  }
-});
+const router = useRouter();
 
-const popupVisible = ref(false);
+const toAiService = () => router.push("/setting/ai-service");
+const toAiAssistant = () => router.push("/setting/ai-assistant");
 
-const assistantId = computed(() => useChatStore().assistantId);
-const assistant = computed<AiAssistant | undefined>(() => {
-  const {aiAssistantMap} = useAiAssistantStore();
-  return aiAssistantMap.get(assistantId.value)
-});
-const options = computed<DropdownProps['options']>(() => {
+const assistantOptions = computed<Array<SelectOption>>(() => {
   const {aiAssistants} = useAiAssistantStore();
-  return aiAssistants.map(a => ({
+  return aiAssistants.filter(a => a.aiServiceId === serviceId.value).map(a => ({
     content: a.name,
-    value: a.id,
-    onClick: () => handleChange(a.id)
+    label: a.name,
+    value: a.id
   }))
-})
+});
+const serviceOptions = computed<Array<SelectOption>>(() => {
+  const {aiServices} = useAiServiceStore();
+  return aiServices.map(a => ({
+    content: a.name,
+    label: a.name,
+    value: a.id
+  }))
+});
 
-function handleChange(id: string) {
-  useChatStore().changeAssistantId(id);
-}
+const goBack = () => useChatStore().clear();
 </script>
 <style scoped lang="less">
 .home-assistant-select {
-  max-width: v-bind(width);
   height: 32px;
-  text-align: right;
-  line-height: 32px;
-  border-radius: var(--border-radius-medium);
-  display: flex;
-  flex-direction: row-reverse;
-  background-color: var(--td-bg-color-container);
 
   .home-assistant-select__wrap {
     padding: 0 8px;

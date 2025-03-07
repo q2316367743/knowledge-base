@@ -29,32 +29,16 @@
         </div>
       </div>
     </div>
-    <div class="home-welcome-extra">
-      <t-space>
-        <home-assistant-select width="360px"/>
-        <t-dropdown position="br" :options="options">
-          <t-button variant="outline" theme="primary" shape="square" class="home-welcome-setting">
-            <template #icon>
-              <setting-icon />
-            </template>
-          </t-button>
-        </t-dropdown>
-      </t-space>
-    </div>
     <welcome-guide/>
     <article-interpretation v-model="aiVisible"/>
-    <intelligent-writing v-model="iwVisible" />
+    <intelligent-writing v-model="iwVisible"/>
   </div>
 </template>
 <script lang="ts" setup>
-import {SettingIcon} from "tdesign-icons-vue-next";
 import AiInput from "@/pages/home/components/AiInput.vue";
-import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
 import ArticleInterpretation from "@/pages/home/modal/ArticleInterpretation.vue";
 import IntelligentWriting from "@/pages/home/modal/IntelligentWriting.vue";
-
-const router = useRouter();
 
 const aiVisible = ref(false);
 const iwVisible = ref(false);
@@ -63,26 +47,17 @@ const iwVisible = ref(false);
 const article = () => aiVisible.value = true;
 const write = () => iwVisible.value = true;
 
-const options = [{
-  content: 'AI 服务',
-  onClick: () => router.push("/setting/ai-service")
-}, {
-  content: 'AI 助手',
-  onClick: () => router.push("/setting/ai-assistant")
-}]
-
-
 </script>
 <style scoped lang="less">
 .home-welcome {
   display: grid;
   place-items: center; /* 使内容在水平和垂直方向上都居中 */
   height: 100vh; /* 使容器占满整个视口高度 */
-  background-color: var(--color-fill-1);
 
   .home-welcome-container {
     max-width: 600px;
     width: 100%;
+    margin-top: -48px;
 
     .line1 {
       color: var(--color-text-1);
@@ -130,9 +105,10 @@ const options = [{
     }
   }
 
-  .home-welcome-extra {
+  .home-welcome-header {
     position: absolute;
     top: 8px;
+    left: 8px;
     right: 8px;
   }
 }

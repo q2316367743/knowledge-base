@@ -15,13 +15,19 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 const current = ref(-1);
 const steps: GuideProps['steps'] = [
   {
-    element: '.home-welcome-setting',
+    element: '.home-setting',
     title: 'AI 设置',
     body: '首先在这里设置 AI 服务和 AI 助手',
     placement: 'bottom-right',
   },
   {
-    element: '.home-assistant-select',
+    element: '.home-assistant-select-service',
+    title: 'AI 服务',
+    body: '再来这里选择 AI 服务',
+    placement: 'bottom-right',
+  },
+  {
+    element: '.home-assistant-select-assistant',
     title: '选择 AI 助手',
     body: '再来这里选择 AI 助手',
     placement: 'bottom',

@@ -9,6 +9,12 @@ import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 
+
+export const serviceId = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_SERVICE, "");
+export const assistantId = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_ASSISTANT, "");
+
+watch(serviceId, () => assistantId.value = '');
+
 export const useChatStore = defineStore('chat', () => {
   // 引用的笔记
   const articleIds = ref(new Array<number>());
@@ -17,8 +23,6 @@ export const useChatStore = defineStore('chat', () => {
   // 最后的一个消息
   const lastId = ref(0);
   const loading = ref(false);
-
-  const assistantId = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_ASSISTANT, "");
 
   const abort = shallowRef<AbortController>();
 
@@ -73,7 +77,7 @@ export const useChatStore = defineStore('chat', () => {
       baseURL: service.url,
       apiKey: service.key,
       dangerouslyAllowBrowser: true
-    })
+    });
 
     const now = Date.now();
     const oldMessages = buildMessage();
@@ -170,16 +174,8 @@ export const useChatStore = defineStore('chat', () => {
     articleIds.value = [];
   }
 
-  function changeAssistantId(id: string) {
-    assistantId.value = id;
-  }
-
-  function changeArticleIds(ids: Array<number>) {
-    articleIds.value = ids;
-  }
-
   return {
     messages, steamLoading, empty, lastId, assistantId, loading, articleIds,
-    ask, stop, clear, changeAssistantId, changeArticleIds
+    ask, stop, clear
   }
 })

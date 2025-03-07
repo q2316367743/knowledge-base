@@ -155,6 +155,9 @@ enum LocalNameEnum {
    */
   KEY_PRIVACY = '/key/privacy',
 
+  // 首页服务
+  KEY_HOME_SERVICE = '/key/home/service',
+
   // 首页模型
   KEY_HOME_ASSISTANT = '/key/home/assistant',
 
