@@ -18,11 +18,11 @@ import {openKanbanNodeInfo} from "@/editor/SuperEditor/tools/KanbanTool/componen
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
-const node = defineModel({
-  type: Object as PropType<KanbanDataNode>,
-  required: true
-});
 const props = defineProps({
+  node: {
+    type: Object as PropType<KanbanDataNode>,
+    required: true
+  },
   readOnly: {
     type: Boolean,
     default: false
@@ -55,7 +55,7 @@ function removeHtmlTag(html: string) {
 
 function onClick() {
   if (props.readOnly) return;
-  openKanbanNodeInfo(node.value);
+  openKanbanNodeInfo(props.node);
 }
 
 function onContextmenu(e: MouseEvent) {
@@ -84,13 +84,13 @@ function onContextmenu(e: MouseEvent) {
         label: '查看记录',
         icon: () => <InfoCircleIcon/>,
         onClick: () => {
-          openKanbanNodeInfo(node.value);
+          openKanbanNodeInfo(props.node);
         }
       }, {
         label: '编辑记录',
         icon: () => <EditIcon/>,
         onClick: () => {
-          openKanbanNodePost(props.groupId, node.value, instance);
+          openKanbanNodePost(props.groupId, props.node, instance);
         }
       }, {
         label: '删除记录',
@@ -101,7 +101,7 @@ function onContextmenu(e: MouseEvent) {
             confirmButtonText: "删除"
           }).then(() => {
             try {
-              instance.deleteNode(props.groupId, node.value.id);
+              instance.deleteNode(props.groupId, props.node.id);
               MessageUtil.success("删除成功");
             } catch (e) {
               MessageUtil.error("删除失败", e)
