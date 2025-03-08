@@ -4,7 +4,7 @@ import {buildKanbanData, KanbanData} from "@/editor/SuperEditor/tools/KanbanTool
 import KanbanTool from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanTool.vue";
 
 
-export default class Index implements BlockTool {
+export default class Kanban implements BlockTool {
 
   /**
    * Notify core that read-only mode is supported
