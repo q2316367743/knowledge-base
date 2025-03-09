@@ -79,12 +79,12 @@ const onMouseUp = () => {
 .encrypt-text-tool {
   width: 100%;
   min-height: 300px;
+  margin: 8px 0;
 
   position: relative;
   background-color: var(--td-bg-color-container);
   border: 1px solid var(--td-border-level-1-color);
   border-radius: var(--td-radius-default);
-  margin: 0;
   padding: 0;
 
   .encrypt-text-tool-resize-handle {
