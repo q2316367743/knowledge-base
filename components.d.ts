@@ -78,6 +78,7 @@ declare module 'vue' {
     TSpace: typeof import('tdesign-vue-next')['Space']
     TSwitch: typeof import('tdesign-vue-next')['Switch']
     TTag: typeof import('tdesign-vue-next')['Tag']
+    TText: typeof import('tdesign-vue-next')['Text']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
     UpdateCheck: typeof import('./src/components/update-check/index.vue')['default']
   }

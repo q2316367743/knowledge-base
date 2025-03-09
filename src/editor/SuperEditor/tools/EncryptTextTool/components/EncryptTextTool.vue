@@ -1,8 +1,8 @@
 <template>
   <div class="encrypt-text-tool" :style="{height: content.height + 'px'}">
-    <encrypt-text-password v-if="status === 1"/>
-    <encrypt-text-edit v-else-if="status === 2"/>
-    <encrypt-text-display v-else-if="status === 3"/>
+    <encrypt-text-password :data="content" @unlock="onUnlock" v-if="status === 1"/>
+    <encrypt-text-edit v-model="content" :lock="lock" @lock="onLock" v-else-if="status === 2"/>
+    <encrypt-text-display :data="content" v-else-if="status === 3"/>
     <t-empty type="fail" title="系统异常，加密文本类型错误" v-else/>
     <div v-if="!readOnly" class="encrypt-text-tool-resize-handle" @mousedown="onMouseDown"></div>
   </div>
@@ -49,6 +49,9 @@ const status = computed<1 | 2 | 3>(() => {
   }
 });
 
+const onLock = () => lock.value = true;
+const onUnlock = () => lock.value = false;
+
 
 let startY = 0;
 let startHeight = 0;
@@ -75,13 +78,14 @@ const onMouseUp = () => {
 <style scoped lang="less">
 .encrypt-text-tool {
   width: 100%;
-  min-height: 250px;
+  min-height: 300px;
 
   position: relative;
-  background-color: var(--td-bg-color-component);
-  margin: 8px 0;
+  background-color: var(--td-bg-color-container);
   border: 1px solid var(--td-border-level-1-color);
   border-radius: var(--td-radius-default);
+  margin: 0;
+  padding: 0;
 
   .encrypt-text-tool-resize-handle {
     width: 100%;

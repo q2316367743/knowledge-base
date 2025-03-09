@@ -8,6 +8,6 @@ export function buildEncryptTextData(): EncryptTextData {
   return {
     text: '',
     password: '',
-    height: 250
+    height: 350
   };
 }
