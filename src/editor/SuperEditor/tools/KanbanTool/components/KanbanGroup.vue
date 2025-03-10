@@ -51,7 +51,7 @@ const options = [{
 }, {
   content: '删除分组',
   onClick: () => {
-    deleteGroup(props.group.id, instance)
+    deleteGroup(props.group!.id, instance)
   }
 }]
 </script>

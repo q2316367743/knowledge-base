@@ -122,11 +122,11 @@ onMounted(() => {
         }
       },
       alert: {
-        class: AlertTool,
+        class: AlertTool as any,
         inlineToolbar: true,
       },
       list: {
-        class: List,
+        class: List as any,
         inlineToolbar: true,
         config: {
           defaultStyle: 'unordered'

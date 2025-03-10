@@ -13,12 +13,12 @@
       <div class="setting-item">
         <span>背景色</span>
         <t-color-picker v-model="style.backgroundColor"
-                        show-text :color-modes="['monochrome']" :recent-colors="false" :swatch-colors="null"/>
+                        show-text :color-modes="['monochrome']" :recent-colors="false" :swatch-colors="[]"/>
       </div>
       <div class="setting-item">
         <span>线条颜色</span>
         <t-color-picker v-model="style.borderColor" default-value="#187DFF" show-text :color-modes="['monochrome']"
-                        :recent-colors="false" :swatch-colors="null"/>
+                        :recent-colors="false" :swatch-colors="[]"/>
       </div>
       <div class="setting-item">
         <span>线条样式</span>
@@ -42,7 +42,7 @@
       <div class="setting-item">
         <span>文本颜色</span>
         <t-color-picker v-model="style.fontColor" show-text :color-modes="['monochrome']" :recent-colors="false"
-                        :swatch-colors="null"/>
+                        :swatch-colors="[]"/>
       </div>
       <div class="setting-item">
         <span>文本大小</span>

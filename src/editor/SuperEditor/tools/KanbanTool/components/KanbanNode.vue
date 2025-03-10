@@ -54,8 +54,8 @@ function removeHtmlTag(html: string) {
 
 const showRemark = computed(() => instance?.data.value.showRemark);
 const content = computed(() => {
-  if (!node.value) return '';
-  return removeHtmlTag(node.value.content);
+  if (!props.node) return '';
+  return removeHtmlTag(props.node.content);
 });
 
 function onClick() {

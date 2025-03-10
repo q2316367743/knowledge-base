@@ -3,7 +3,9 @@ import {Ref, ref} from "vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {Form, FormItem, Input, Modal, Radio, RadioGroup} from "@arco-design/web-vue";
 import {
-  getDefaultTodoCategory, renderTodoCategoryType,
+  getDefaultTodoCategory,
+  renderTodoCategoryType,
+  TodoCategoryGroupEnum,
   TodoCategoryRecord,
   TodoCategoryTypeEnum,
   TodoListLayoutEnum
@@ -42,11 +44,10 @@ export function openAddTodoCategory(pid: number) {
     type: TodoCategoryTypeEnum.FOLDER,
     todoListSort: TodoListSortEnum.PRIORITY,
     todoListLayout: TodoListLayoutEnum.DEFAULT,
-    hideOfTodo: false,
-    hideOfAbandon: false,
     hideOfArticle: false,
-    hideOfComplete: false,
-    hideOfDoing: false
+    groupType: TodoCategoryGroupEnum.DEFAULT,
+    hideOfCompleteOrAbandon: false,
+    showAddGroupBtn: true
   });
 
   Modal.open({

@@ -174,8 +174,12 @@ export const useChatStore = defineStore('chat', () => {
     articleIds.value = [];
   }
 
+  function changeArticleIds(res: Array<number>) {
+    articleIds.value = res;
+  }
+
   return {
     messages, steamLoading, empty, lastId, assistantId, loading, articleIds,
-    ask, stop, clear
+    ask, stop, clear, changeArticleIds
   }
 })
