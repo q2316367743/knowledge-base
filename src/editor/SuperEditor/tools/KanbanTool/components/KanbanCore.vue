@@ -1,13 +1,15 @@
 <template>
   <div class="kanban-core w-full h-full" ref="el">
-    <kanban-group v-for="(group, i) in groups" v-model="groups[i]" :key="group.id"
+    <kanban-group v-for="group in groups" :group="group" :key="group?.id"
                   :read-only="readOnly"/>
+    <kanban-group-add />
   </div>
 </template>
 <script lang="ts" setup>
 import {KanbanDataGroup} from "@/editor/SuperEditor/tools/KanbanTool/types";
 import KanbanGroup from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroup.vue";
 import {useSortable} from "@vueuse/integrations/useSortable";
+import KanbanGroupAdd from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroupAdd.vue";
 
 const groups = defineModel({
   type: Object as PropType<Array<KanbanDataGroup>>,

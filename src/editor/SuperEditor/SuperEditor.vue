@@ -23,6 +23,7 @@ import AlertTool from './tools/AlertTool';
 import MindMapTool from './tools/MindMapTool';
 import LogicFlowTool from './tools/LogicFlowTool';
 import KanbanTool from './tools/KanbanTool';
+import EncryptText from './tools/EncryptTextTool';
 
 
 const content = defineModel({
@@ -130,7 +131,7 @@ onMounted(() => {
         config: {
           defaultStyle: 'unordered'
         },
-      }, Delimiter, Table, CodeTool, MindMapTool, LogicFlowTool, KanbanTool,
+      }, Delimiter, Table, CodeTool, MindMapTool, LogicFlowTool, KanbanTool, EncryptText,
 
       // 内联工具
       Underline: {

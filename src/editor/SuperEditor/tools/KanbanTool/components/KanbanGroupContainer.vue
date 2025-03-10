@@ -1,6 +1,6 @@
 <template>
   <div class="kanban-group-container" ref="el">
-    <kanban-node v-for="(node, i) in nodes" v-model="nodes[i]" :key="node.id" :readOnly="readOnly"
+    <kanban-node v-for="(node, i) in nodes" :key="node.id" :node="node" :readOnly="readOnly"
                  :data-group-id="groupId" :data-node-id="node.id" :idx="i" :group-id="groupId"/>
   </div>
 </template>
@@ -9,11 +9,11 @@ import {IKanbanInstance, KanbanDataNode, KanbanInstance} from "@/editor/SuperEdi
 import KanbanNode from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanNode.vue";
 import {useSortable} from "@vueuse/integrations/useSortable";
 
-const nodes = defineModel({
-  type: Object as PropType<Array<KanbanDataNode>>,
-  default: () => ([])
-});
 const props = defineProps({
+  nodes: {
+    type: Object as PropType<Array<KanbanDataNode>>,
+    default: () => ([])
+  },
   readOnly: {
     type: Boolean,
     default: false
@@ -25,7 +25,7 @@ const el = ref();
 
 const instance = inject<IKanbanInstance>(KanbanInstance);
 
-const sortable = useSortable(el, nodes, {
+const sortable = useSortable(el, props.nodes, {
   animation: 300,
   handle: '.kanban-node',
   group: 'kanban-node',

@@ -48,7 +48,7 @@ const height = computed(() => {
   if (fs.value) {
     return '100%';
   }
-  return content.height + 'px';
+  return content.value.height + 'px';
 })
 
 provide(KanbanInstance, {
@@ -114,6 +114,29 @@ provide(KanbanInstance, {
       }
     }
 
+  },
+  addGroup(name: string, color: string) {
+    const {groups} = content.value;
+    groups.push({
+      id: Math.random().toString(36).substring(2),
+      name,
+      color,
+      nodes: []
+    });
+  },
+  updateGroup(groupId: string, name: string, color: string) {
+    const {groups} = content.value;
+    for (const group of groups) {
+      if (group.id === groupId) {
+        group.name = name;
+        group.color = color;
+        return;
+      }
+    }
+  },
+  deleteGroup(groupId: string) {
+    const {groups} = content.value;
+    content.value.groups = groups.filter(group => group.id !== groupId);
   }
 });
 

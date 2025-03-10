@@ -73,6 +73,16 @@ export function buildKanbanNode(): KanbanDataNode {
   }
 }
 
+export function buildKanbanGroup(): KanbanDataGroup {
+  return {
+    id: useSnowflake().nextId(),
+    name: '',
+    // 随机获取一个颜色
+    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+    nodes: []
+  }
+}
+
 export interface IKanbanInstance {
   api: API;
   data: Ref<KanbanData>;
@@ -82,7 +92,11 @@ export interface IKanbanInstance {
 
   moveNode: (oldGroupId: string, oldNodeId: string, newGroupId: string, newIndex: number) => void;
   postNode: (groupId: string, node: KanbanDataNode, index?: number) => void;
-  deleteNode: (groupId: string, nodeId: string) => void
+  deleteNode: (groupId: string, nodeId: string) => void;
+
+  addGroup: (name: string, color: string) => void;
+  updateGroup: (groupId: string, name: string, color: string) => void;
+  deleteGroup: (groupId: string) => void;
 }
 
 
