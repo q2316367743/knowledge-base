@@ -3,8 +3,8 @@
     <div class="kanban-node-title">
       {{ node.name }}
     </div>
-    <t-paragraph :ellipsis="ellipsisState" class="kanban-node-remark" v-if="showRemark">
-      {{ removeHtmlTag(node.content) }}
+    <t-paragraph :ellipsis="ellipsisState" class="kanban-node-remark" v-if="showRemark && content">
+      {{ content }}
     </t-paragraph>
   </div>
 </template>
@@ -39,8 +39,6 @@ const props = defineProps({
 
 const instance = inject<IKanbanInstance>(KanbanInstance);
 
-const showRemark = computed(() => instance?.data.value.showRemark);
-
 const ellipsisState = ref({
   row: 3,
   expandable: false,
@@ -52,6 +50,13 @@ const parser = new DOMParser();
 function removeHtmlTag(html: string) {
   return parser.parseFromString(html, "text/html").body.textContent
 }
+
+
+const showRemark = computed(() => instance?.data.value.showRemark);
+const content = computed(() => {
+  if (!node.value) return '';
+  return removeHtmlTag(node.value.content);
+});
 
 function onClick() {
   if (props.readOnly) return;
@@ -131,6 +136,7 @@ function onContextmenu(e: MouseEvent) {
   .kanban-node-remark {
     color: var(--td-text-color-secondary) !important;
     font-size: var(--td-font-size-body-small) !important;
+    margin: 0;
   }
 }
 </style>
