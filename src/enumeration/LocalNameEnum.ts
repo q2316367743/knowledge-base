@@ -24,6 +24,10 @@ enum LocalNameEnum {
    */
   ARTICLE_ATTACHMENT = '/article/attachment/',
 
+  NEWS_LIST = '/list/news',
+
+  NEWS_CONTENT = '/item/news',
+
   // ========================== 设置 ==========================
 
   SETTING_BASE = '/local/setting/base',

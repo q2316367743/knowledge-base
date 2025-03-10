@@ -25,3 +25,7 @@ export function renderAttachmentUrl(key: string) {
 }
 
 export const fetchUrl = `http://localhost:${port}/fetchUrl`
+
+export function renderHttpImage(key: string) {
+  return `http://localhost:${port}/image?url=${encodeURIComponent(key)}`;
+}

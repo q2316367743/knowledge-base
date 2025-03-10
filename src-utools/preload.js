@@ -3,11 +3,13 @@ const {join} = require('node:path');
 const http = require('node:http');
 const https = require('node:https');
 const {ipcRenderer} = require('electron');
-const {createServer} = require('./src/server');
-const {openFile} = require('./src/file');
 const {ServiceClient} = require('@xiaou66/interconnect-client');
 const path = require('path');
 const {spawn} = require('node:child_process');
+const axios = require('axios');
+const {createServer} = require('./src/server');
+const {openFile} = require('./src/file');
+const {parseBuffer, parseArrayBuffer, convertCharset} = require('./src/iconv');
 
 
 /**
@@ -16,7 +18,7 @@ const {spawn} = require('node:child_process');
  * @return {Promise<Buffer>}
  */
 const blobToBuffer = async (blob) => {
-  return  blob.arrayBuffer().then(buffer => Buffer.from(buffer));
+  return blob.arrayBuffer().then(buffer => Buffer.from(buffer));
 };
 
 /**
@@ -166,7 +168,7 @@ window.preload = {
       const {onProgress, onSuccess, onError} = options;
 
       const controller = new AbortController();
-      const { signal } = controller;
+      const {signal} = controller;
 
       const child = spawn(command, {
         shell: true,
@@ -188,8 +190,17 @@ window.preload = {
       return {
         abort: () => controller.abort(),
       }
-    }
-  }
+    },
+
+    axios: axios.create({
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      }),
+      adapter: 'http',
+      timeout: '30000'
+    }),
+  },
+  iconv: {parseBuffer, parseArrayBuffer, convertCharset},
 };
 
 

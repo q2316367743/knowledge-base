@@ -6,6 +6,12 @@
       </template>
       主页
     </a-menu-item>
+    <a-menu-item key="/news/list">
+      <template #icon>
+        <article-icon />
+      </template>
+      资讯
+    </a-menu-item>
     <a-menu-item key="/note">
       <template #icon>
         <icon-edit/>
@@ -172,6 +178,7 @@ import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {toDoc, toFeedback} from "@/global/Constant";
+import {ArticleIcon} from "tdesign-icons-vue-next";
 
 const route = useRoute();
 const router = useRouter();

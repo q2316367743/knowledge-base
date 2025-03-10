@@ -86,7 +86,13 @@ declare interface Window {
         onProgress: (e: string) => void,
         onSuccess: () => void,
         onError: (e: string) => void
-      }): { abort: () => void }
+      }): { abort: () => void },
+      axios: any,
+    }
+    iconv: {
+      parseBuffer(buffer: Buffer, charset: string): string;
+      parseArrayBuffer(arrayBuffer: ArrayBuffer, charset: string): string;
+      convertCharset(content: string, fromCharset: string, toCharset?: string): string;
     }
   }
 }
