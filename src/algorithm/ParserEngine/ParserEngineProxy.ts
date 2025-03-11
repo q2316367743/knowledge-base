@@ -1,5 +1,5 @@
 import {ParserEngine} from "@/algorithm/ParserEngine/types";
-import {parseSelectWithJsCode, parseSelectWithReplace} from "@/algorithm/SelectUtil";
+import {parseSelectWithJsCode, parseSelectWithReplace} from "@/algorithm/ParserEngine/SelectUtil";
 
 export class ParserEngineProxy implements ParserEngine {
     constructor(private engine: ParserEngine) {

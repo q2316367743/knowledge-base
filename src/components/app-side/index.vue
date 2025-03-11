@@ -6,7 +6,7 @@
       </template>
       主页
     </a-menu-item>
-    <a-menu-item key="/news/list">
+    <a-menu-item key="/news">
       <template #icon>
         <article-icon />
       </template>

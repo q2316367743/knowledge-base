@@ -1,7 +1,7 @@
 <template>
   <div class="monaco-editor">
-    <MonacoEditorCore v-model="content" :language :read-only="readOnly" :article-id="articleId" @change="emit('change')"
-                      @editor-mounted="emit('editor-mounted')"/>
+    <MonacoEditorCore v-model="content" :language :read-only="readOnly" :article-id="articleId" :mini-map="miniMap"
+                      @change="emit('change')" @editor-mounted="emit('editor-mounted')"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -25,6 +25,10 @@ defineProps({
   height: {
     type: String,
     default: '100%'
+  },
+  miniMap: {
+    type: Boolean,
+    default: true
   }
 });
 const emit = defineEmits(['change', 'editor-mounted']);

@@ -1,5 +1,5 @@
 <template>
-  <t-content>主题</t-content>
+  <div>内容</div>
 </template>
 <script lang="ts" setup>
 </script>

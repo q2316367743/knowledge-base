@@ -16,9 +16,13 @@ const routers: Array<RouteRecordRaw> = [{
   component: () => import('@/pages/news/index.vue'),
   children: [
     {
-      name: "资讯-列表",
-      path: "list",
-      component: () => import('@/pages/news/list/index.vue')
+      name: "资讯-项",
+      path: "item/:id",
+      component: () => import('@/pages/news/item/index.vue')
+    }, {
+      name: "资讯-详情",
+      path: "content/:id",
+      component: () => import('@/pages/news/content/index.vue')
     }
   ]
 }, {

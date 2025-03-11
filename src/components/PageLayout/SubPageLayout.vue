@@ -1,17 +1,17 @@
 <template>
   <div class="page-layout">
     <header class="page-header">
-      <a-space size="small" class="page-header__left">
-        <a-button theme="primary" variant="text" shape="circle" @click="handlerClick">
+      <t-space size="small" class="page-header__left">
+        <t-button theme="primary" variant="text" shape="square" @click="handlerClick">
           <template #icon>
             <icon-arrow-left />
           </template>
-        </a-button>
+        </t-button>
         <div class="page-header__title">
           <slot name="title" v-if="slots['title']"></slot>
           <span v-else-if="title">{{ title }}</span>
         </div>
-      </a-space>
+      </t-space>
       <div class="page-header__right" v-if="slots['extra']">
         <slot name="extra"></slot>
       </div>
@@ -19,7 +19,7 @@
     <div class="page-container">
       <slot/>
     </div>
-    <a-back-top container=".page-layout .page-container" />
+    <t-back-top container=".page-layout .page-container" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -44,7 +44,7 @@ function handlerClick() {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
+    padding: 8px 0;
     border-bottom: 1px solid var(--color-border);
     height: 50px;
     box-sizing: border-box;

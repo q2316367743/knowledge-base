@@ -26,7 +26,7 @@ enum LocalNameEnum {
 
   NEWS_LIST = '/list/news',
 
-  NEWS_CONTENT = '/item/news',
+  NEWS_RULE = '/item/news/rule',
 
   // ========================== 设置 ==========================
 

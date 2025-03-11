@@ -37,7 +37,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  articleId: Number
+  articleId: Number,
+  miniMap: {
+    type: Boolean,
+    default: true
+  }
 });
 const emit = defineEmits(['change', 'editor-mounted']);
 
@@ -56,8 +60,11 @@ const init = () => {
     language: props.language,
     theme: useGlobalStore().isDark ? 'vs-dark' : 'vs',
     readOnly: props.readOnly,
-    ...codeEditorSetting.value
+    ...codeEditorSetting.value,
   });
+  if (!props.miniMap) {
+    editor.updateOptions({minimap: {enabled: false}});
+  }
 
   // 监听值的变化
   editor.onDidChangeModelContent(() => {

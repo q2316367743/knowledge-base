@@ -1,3 +1,4 @@
+import {template} from 'radash';
 import {HttpRequestCore} from "@/types/HttpRequest";
 import http from "@/plugin/http";
 import uBrowser from "@/plugin/uBrowser";
@@ -6,8 +7,6 @@ import HttpResponse from "@/types/HttpResponse";
 import {useNProgress} from "@vueuse/integrations/useNProgress";
 import {assignDeep} from "@/utils/lang/ObjectUtil";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
-import {SubscribeListData} from "@/algorithm/subscribe/list";
-import {template} from 'radash'
 
 export function buildRequestHeaders(headers: string | Record<string, string>, cookie: string = '') {
   // 构建请求配置
@@ -157,7 +156,7 @@ interface RenderUrlResult {
   allowPage: boolean;
 }
 
-export function renderUrl(url: string, data: SubscribeListData): RenderUrlResult {
+export function renderUrl(url: string, data: Record<string, any>): RenderUrlResult {
   let allowPage = url.includes('{{page}}');
   // 此处是为了处理一些特殊的情况，比如 {{page}} 等
   const requestUrl = template(url, data);

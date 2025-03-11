@@ -1,6 +1,6 @@
 import {HttpRequest} from "@/types/HttpRequest";
 import HttpResponse from "@/types/HttpResponse";
-import {buildUrl} from "@/algorithm/bookUtil";
+import {buildUrl} from "@/algorithm/ParserEngine/bookUtil";
 
 export default function uBrowser<T = string, D = any>(config: HttpRequest<D>): Promise<HttpResponse<T>> {
   const now = Date.now();
