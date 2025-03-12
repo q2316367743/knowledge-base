@@ -16,7 +16,7 @@ import {isEmptyString} from "@/utils/lang/FieldUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MonacoEditor from "@/editor/MonacoEditor/MonacoEditor.vue";
 
-export async function addNews(old?: NewsIndex) {
+export async function postNews(old?: NewsIndex) {
   let target: NewsContent;
   if (old) {
     const rule = await useNewsStore().getNewsRule(old.id);

@@ -12,7 +12,11 @@
               <span class="block truncate">{{ item.author || index.name }}</span>
             </div>
           </div>
-          <t-tag theme="primary" size="small" variant="outline" class="ml-2">1 小时前</t-tag>
+          <t-tooltip v-if="item.pubDate" :content="toDateString(item.pubDate)">
+            <t-tag theme="primary" size="small" variant="outline" class="ml-2">
+              {{ prettyDate(item.pubDate) }}
+            </t-tag>
+          </t-tooltip>
         </div>
         <div class="news-list-item__title">{{ item.title }}</div>
         <div class="news-list-item__desc">{{ item.description }}</div>
@@ -24,11 +28,11 @@
              :src="item.image" :alt="item.title">
       </span>
     </div>
-
   </div>
 </template>
 <script lang="ts" setup>
 import {NewsIndex, NewsInstance} from "@/entity/news";
+import {prettyDate, toDateString} from '@/utils/lang/FormatUtil.ts';
 
 defineProps({
   item: {
@@ -44,6 +48,7 @@ defineProps({
 .news-list-item {
   transition: background-color 0.3s;
   padding: 8px;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--td-bg-color-container-hover);

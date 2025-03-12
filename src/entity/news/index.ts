@@ -110,7 +110,17 @@ export interface NewsInstance {
 
 }
 
+export interface NewsInstanceCache {
+  date: number;
+  data: Array<NewsInstance>;
+}
+
 export interface NewsContent extends NewsIndex, NewsRule {
+}
+
+export interface NewsArticle {
+  html: string;
+  date: number;
 }
 
 export function buildNewsContent(): NewsContent {
@@ -129,6 +139,6 @@ export function buildNewsContent(): NewsContent {
     link: '',
     webview: false,
     wait: '',
-    content: '// 此处返回html字符串，默认返回body\nreturn root.parseToString("body@html");'
+    content: '// 此处返回html字符串，默认返回body\nreturn root.toInnerHTML();'
   }
 }

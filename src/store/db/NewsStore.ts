@@ -1,8 +1,9 @@
 import {defineStore} from "pinia";
-import {NewsContent, NewsIndex, NewsInstance, NewsRule} from "@/entity/news";
+import {useIDBKeyval} from '@vueuse/integrations/useIDBKeyval';
+import {NewsContent, NewsIndex, NewsInstanceCache, NewsRule} from "@/entity/news";
 import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {getNewsList} from "@/algorithm/rule/NewsList";
+import {getNewsList} from "@/algorithm/rule";
 
 // 当前新闻的选择项
 export const newsActiveKey = ref('');
@@ -13,8 +14,7 @@ export const useNewsStore = defineStore('news', () => {
   const news = ref(new Array<NewsIndex>());
   const rev = ref<string>();
   let isInit = false;
-
-  const newsMap = new Map<string, Array<NewsInstance>>();
+  const {data: newsMap} = useIDBKeyval<Record<string, NewsInstanceCache>>("cache-news-instances", {});
 
   async function init() {
     if (isInit) return;
@@ -33,9 +33,9 @@ export const useNewsStore = defineStore('news', () => {
     rev.value = await saveListByAsync<NewsIndex>(LocalNameEnum.NEWS_LIST, news.value, rev.value);
   }
 
-  async function getNews(id: string, refresh = false): Promise<Array<NewsInstance>> {
+  async function getNews(id: string, refresh = false): Promise<NewsInstanceCache> {
     if (!refresh) {
-      const target = newsMap.get(id);
+      const target = newsMap.value[id];
       if (target) {
         return target;
       }
@@ -54,8 +54,12 @@ export const useNewsStore = defineStore('news', () => {
       ...newsIndex,
       ...rule
     });
-    newsMap.set(id, list);
-    return list;
+    const target = {
+      data: list,
+      date: Date.now()
+    };
+    newsMap.value[id] = target;
+    return target;
   }
 
   function getNewsIndex(id: string) {

@@ -2,17 +2,14 @@
   <div class="news-list-item">
     <header class="page-header">
       <t-space size="small" class="page-header__left">
-        <t-button theme="primary" variant="text" shape="square" @click="handlerClick">
-          <template #icon>
-            <menu-fold-icon v-if="newsSideCollapse"/>
-            <menu-unfold-icon v-else/>
-          </template>
-        </t-button>
         <div class="page-header__title">{{ idx?.name }}</div>
       </t-space>
-      <div class="page-header__right mr-4">
+      <div class="page-header__right flex mr-4 items-center">
+        <div v-if="cache" class="mr-8px news-list-item__date">
+          上次刷新：{{ prettyDate(cache.date) }}
+        </div>
         <t-tooltip content="强制刷新" placement="bottom-right">
-          <t-button theme="primary" variant="text" shape="square" @click="refresh">
+          <t-button theme="primary" variant="outline" shape="square" @click="refresh">
             <template #icon>
               <refresh-icon/>
             </template>
@@ -22,8 +19,8 @@
     </header>
     <div class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
-        <div v-if="list.length>0 || loading">
-          <news-list-item v-for="item in list" :index="idx" :item="item"/>
+        <div v-if="cache && (cache.data.length>0 || loading)">
+          <news-list-item v-for="item in cache.data" :index="idx" :item="item" @click="onPush(item)"/>
         </div>
         <div class="empty" v-else>
           <div class="empty-c">
@@ -36,50 +33,57 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {NewsInstance} from "@/entity/news";
-import {newsSideCollapse, useNewsStore} from "@/store/db/NewsStore";
+import {RefreshIcon} from "tdesign-icons-vue-next";
+import {NewsInstance, NewsInstanceCache} from "@/entity/news";
+import {useNewsStore} from "@/store/db/NewsStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {MenuFoldIcon, MenuUnfoldIcon, RefreshIcon} from "tdesign-icons-vue-next";
+import {prettyDate} from "@/utils/lang/FormatUtil";
 import NewsListItem from "@/pages/news/components/NewsListItem.vue";
 
 const route = useRoute();
+const router = useRouter();
 
 const id = computed(() => route.params.id as string);
 
-const list = ref(new Array<NewsInstance>());
+const cache = ref<NewsInstanceCache>();
 const loading = ref(false);
 
 watch(id, value => {
-  list.value = [];
+  cache.value = undefined;
   if (id) {
     loading.value = true;
     useNewsStore().getNews(value)
-      .then(res => list.value = res)
+      .then(res => cache.value = res)
       .catch(e => MessageUtil.error("资讯查询失败", e))
       .finally(() => loading.value = false);
   }
 }, {immediate: true})
 
-const width = computed(() => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 0 : 232)}px)`);
 const idx = computed(() => useNewsStore().getNewsIndex(id.value));
 
-function handlerClick() {
-  newsSideCollapse.value = !newsSideCollapse.value;
-}
 
 function refresh() {
   loading.value = true;
   useNewsStore().getNews(id.value, true)
-    .then(res => list.value = res)
+    .then(res => cache.value = res)
     .catch(e => MessageUtil.error("资讯查询失败", e))
     .finally(() => loading.value = false);
+}
 
+function onPush(item: NewsInstance) {
+  router.push({
+    path: `/news/content/${id.value}`,
+    query: {
+      title: item.title,
+      link: item.link
+    }
+  })
 }
 </script>
 <style scoped lang="less">
 .news-list-item {
   height: 100%;
-  width: v-bind(width);
+  width: 100%;
   position: relative;
   background-color: var(--td-bg-color-container);
 
@@ -95,12 +99,16 @@ function refresh() {
     &__left {
       display: flex;
       align-items: center;
-      padding-left: 8px;
+      padding-left: 16px;
     }
 
     &__title {
       display: flex;
       align-items: center;
+    }
+
+    .news-list-item__date {
+      color: var(--td-text-color-secondary);
     }
 
   }
@@ -111,7 +119,8 @@ function refresh() {
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .empty {

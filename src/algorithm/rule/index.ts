@@ -1,8 +1,7 @@
 import {parse} from 'rss-to-json';
-import {NewsContent, NewsInstance, NewsTypeEnum} from "@/entity/news";
+import {NewsArticle, NewsContent, NewsInstance, NewsRule, NewsTypeEnum} from "@/entity/news";
 import {request} from "@/algorithm/ParserEngine/bookUtil";
 import {buildParseEngine} from "@/algorithm/ParserEngine";
-
 
 export async function getNewsList(rule: NewsContent): Promise<Array<NewsInstance>> {
   if (rule.type === NewsTypeEnum.CUSTOMER) {
@@ -25,8 +24,7 @@ export async function getNewsList(rule: NewsContent): Promise<Array<NewsInstance
 
   // 使用rss
   const rss = await parse(rule.url);
-  console.log(rss.items)
-  return  rss.items.map(item => {
+  return rss.items.map(item => {
     return {
       title: item.title,
       description: item.description,
@@ -38,4 +36,15 @@ export async function getNewsList(rule: NewsContent): Promise<Array<NewsInstance
       category: item.category || []
     }
   })
+}
+
+export async function getNewsArticle(link: string, rule: NewsRule): Promise<NewsArticle> {
+  const rsp = await request(link);
+  const engine = buildParseEngine(rsp);
+  const func = new Function('root', rule.content);
+  const html = func(engine);
+  return {
+    html: `${html}`,
+    date: Date.now()
+  }
 }
