@@ -15,6 +15,7 @@ import {useNewsStore} from "@/store/db/NewsStore";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MonacoEditor from "@/editor/MonacoEditor/MonacoEditor.vue";
+import {getLogoFromUrl} from "@/utils/lang/DocumentUtil";
 
 export async function postNews(old?: NewsIndex) {
   let target: NewsContent;
@@ -32,6 +33,20 @@ export async function postNews(old?: NewsIndex) {
   }
   const form = ref<NewsContent>(target);
   const action = old ? '修改' : '新增';
+  const getLogoLoading = ref(false);
+
+  function getLogo() {
+    if (!form.value.url) return MessageUtil.warning("请先输入链接")
+    getLogoLoading.value = true;
+    getLogoFromUrl(form.value.url)
+      .then((logo) => {
+        form.value.icon = logo;
+      })
+      .finally(() => {
+        getLogoLoading.value = false;
+      });
+  }
+
   const plugin = DialogPlugin({
     header: action + '插件',
     placement: 'center',
@@ -58,7 +73,7 @@ export async function postNews(old?: NewsIndex) {
           <FormItem label={'链接'} name={'url'} labelAlign={'top'}>
             <InputGroup class={'w-full'}>
               <Input v-model={form.value.url} clearable={true}/>
-              <Button theme={'primary'} disabled={isEmptyString(form.value.url)}>获取图标</Button>
+              <Button theme={'primary'} disabled={isEmptyString(form.value.url)} onClick={getLogo}>获取图标</Button>
             </InputGroup>
           </FormItem>
         </Form>

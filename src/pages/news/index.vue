@@ -1,7 +1,7 @@
 <template>
   <t-layout class="news-list w-full h-full">
-    <t-aside class="news-list-aside" :width="newsSideCollapse ? '48px' : '232px'">
-      <t-header class="flex p-4 justify-between h-32px">
+    <t-aside class="news-list-aside" :width="newsSideCollapse ? '0px' : '232px'">
+      <t-header class="news-list__header flex p-4 justify-between h-32px">
         <t-button class="shrink-0 ml-4px" theme="primary" variant="text" shape="square" @click="handlerClick">
           <template #icon>
             <menu-fold-icon v-if="newsSideCollapse"/>
@@ -78,6 +78,7 @@ watch(newsActiveKey, val => {
 function changeNewsKey(res: string) {
   newsActiveKey.value = res;
 }
+
 function handlerClick() {
   newsSideCollapse.value = !newsSideCollapse.value;
 }
@@ -119,6 +120,10 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
   .news-list-aside {
     border-right: 1px solid var(--td-border-level-1-color);
     overflow: hidden;
+
+    .news-list__header {
+      border-bottom: 1px solid var(--td-border-level-1-color);
+    }
   }
 
   .news-list-content {
@@ -160,6 +165,7 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
     .menu-item-text {
       margin-left: 8px;
     }
+
     .menu-item-move {
       align-items: center;
     }

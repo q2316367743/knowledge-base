@@ -21,3 +21,32 @@ export function makeElement<T extends keyof HTMLElementTagNameMap, K extends key
 
   return el;
 }
+
+/**
+ * 通过链接获取网站logo
+ * @param url 网站链接
+ */
+export async function getLogoFromUrl(url: string) {
+  const response = await fetch(url);
+  if (response.ok) {
+    const html = await response.text();
+    // 从html中解析logo地址
+    const logoUrl = html.match(/<link.*?rel="icon".*?href="(.*?)"/)?.[1];
+    if (logoUrl) {
+      return new URL(logoUrl, url).toString();
+    }else {
+      // 尝试获取网站默认图标，并判断是否存在
+      const defaultIconUrl = new URL('/favicon.ico', url).toString();
+      try {
+        const response = await fetch(defaultIconUrl);
+        if (response.ok) {
+          return defaultIconUrl;
+        }
+      } catch (error) {
+        console.error('Failed to fetch default icon:', error);
+      }
+    }
+  }
+  return '';
+
+}

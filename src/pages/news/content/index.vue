@@ -11,18 +11,23 @@
         <t-tag v-if="article" theme="primary" size="small">{{ prettyDate(article.date) }}</t-tag>
       </t-space>
       <div class="page-header__right mr-4">
-        <t-tooltip content="强制刷新" placement="bottom-right">
-          <t-button theme="primary" variant="text" shape="square" @click="refresh">
-            <template #icon>
-              <refresh-icon/>
-            </template>
-          </t-button>
-        </t-tooltip>
+        <t-space size="small" class="items-center">
+          <t-input-number v-model="scale" :min="80" :max="200" :step="10" size="small" style="width: 120px;">
+            <template #suffix>%</template>
+          </t-input-number>
+          <t-tooltip content="强制刷新" placement="bottom-right">
+            <t-button theme="primary" variant="text" shape="square" @click="refresh">
+              <template #icon>
+                <refresh-icon/>
+              </template>
+            </t-button>
+          </t-tooltip>
+        </t-space>
       </div>
     </header>
     <div class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
-        <iframe frameborder="none" :src="url" class="w-full h-full"/>
+        <iframe ref="iframeRef" frameborder="none" :src="url" class="w-full h-full"/>
       </t-loading>
     </div>
   </div>
@@ -34,6 +39,8 @@ import {getNewsArticle} from "@/algorithm/rule";
 import {newsSideCollapse, useNewsStore} from "@/store/db/NewsStore";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const route = useRoute();
 const router = useRouter();
@@ -44,10 +51,11 @@ const title = route.query.title as string;
 const article = ref<NewsArticle>();
 const loading = ref(true);
 const url = ref('');
+const scale = useUtoolsDbStorage<number>(LocalNameEnum.KEY_NEWS_CONTENT_SCALE, 100);
+const iframeRef = ref<HTMLIFrameElement>();
 
 
 const width = computed(() => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 0 : 232)}px)`);
-const idx = computed(() => useNewsStore().getNewsIndex(id));
 
 onMounted(async () => {
   try {
@@ -57,7 +65,37 @@ onMounted(async () => {
       return Promise.reject(new Error("资讯规则不存在"));
     }
     article.value = await getNewsArticle(route.query.link as string, rule);
-    url.value = URL.createObjectURL(new Blob([article.value.html], {type: 'text/html'}));
+    url.value = URL.createObjectURL(new Blob([`<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="referrer" content="never">
+  <title>${title}</title>
+  <style>
+    html {
+      font-size: ${scale.value}%;
+    }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    #app {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">${article.value.html}</div>
+</body>
+</html>`], {type: 'text/html'}));
   } catch (e) {
     MessageUtil.error("获取内容失败", e);
   } finally {
@@ -77,6 +115,15 @@ function handlerClick() {
 
 function refresh() {
 }
+
+watch(scale, (newScale) => {
+  if (iframeRef.value) {
+    const doc = iframeRef.value.contentDocument;
+    if (doc && doc.documentElement) {
+      doc.documentElement.style.fontSize = `${newScale}%`;
+    }
+  }
+});
 </script>
 <style scoped lang="less">
 .news-content {

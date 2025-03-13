@@ -171,6 +171,8 @@ enum LocalNameEnum {
   // 小部件-聊天使用的助手
   KEY_WIDGET_CHAT_ASSISTANT = '/key/widget/chat/assistant',
 
+  KEY_NEWS_CONTENT_SCALE = '/key/news/content/scale',
+
   // ========================== 窗口 ==========================
 
   WINDOW_CANVAS_FOLDER = '/window/canvas/folder',

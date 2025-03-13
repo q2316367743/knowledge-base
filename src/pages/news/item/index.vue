@@ -2,14 +2,21 @@
   <div class="news-list-item">
     <header class="page-header">
       <t-space size="small" class="page-header__left">
+        <t-button class="shrink-0" theme="primary" variant="text" shape="square" @click="handlerClick"
+                  v-show="newsSideCollapse">
+          <template #icon>
+            <menu-fold-icon v-if="newsSideCollapse"/>
+            <menu-unfold-icon v-else/>
+          </template>
+        </t-button>
         <div class="page-header__title">{{ idx?.name }}</div>
       </t-space>
-      <div class="page-header__right flex mr-4 items-center">
+      <div class="page-header__right flex mr-8px items-center">
         <div v-if="cache" class="mr-8px news-list-item__date">
           上次刷新：{{ prettyDate(cache.date) }}
         </div>
         <t-tooltip content="强制刷新" placement="bottom-right">
-          <t-button theme="primary" variant="outline" shape="square" @click="refresh">
+          <t-button theme="primary" variant="outline" shape="square" @click="refresh" :loading="loading">
             <template #icon>
               <refresh-icon/>
             </template>
@@ -19,7 +26,7 @@
     </header>
     <div class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
-        <div v-if="cache && (cache.data.length>0 || loading)">
+        <div v-if="cache && (cache.data.length > 0 || loading)" class="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 m-4px">
           <news-list-item v-for="item in cache.data" :index="idx" :item="item" @click="onPush(item)"/>
         </div>
         <div class="empty" v-else>
@@ -33,9 +40,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {RefreshIcon} from "tdesign-icons-vue-next";
+import {MenuFoldIcon, MenuUnfoldIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {NewsInstance, NewsInstanceCache} from "@/entity/news";
-import {useNewsStore} from "@/store/db/NewsStore";
+import {newsSideCollapse, useNewsStore} from "@/store/db/NewsStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import NewsListItem from "@/pages/news/components/NewsListItem.vue";
@@ -79,6 +86,10 @@ function onPush(item: NewsInstance) {
     }
   })
 }
+
+function handlerClick() {
+  newsSideCollapse.value = !newsSideCollapse.value;
+}
 </script>
 <style scoped lang="less">
 .news-list-item {
@@ -93,18 +104,19 @@ function onPush(item: NewsInstance) {
     justify-content: space-between;
     padding: 8px 0;
     border-bottom: 1px solid var(--td-border-level-1-color);
-    height: 50px;
+    height: 41px;
     box-sizing: border-box;
 
     &__left {
       display: flex;
       align-items: center;
-      padding-left: 16px;
+      padding-left: 4px;
     }
 
     &__title {
       display: flex;
       align-items: center;
+      padding-left: 12px;
     }
 
     .news-list-item__date {
@@ -115,7 +127,7 @@ function onPush(item: NewsInstance) {
 
   .page-container {
     position: absolute;
-    top: 51px;
+    top: 41px;
     left: 0;
     right: 0;
     bottom: 0;

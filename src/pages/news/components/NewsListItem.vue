@@ -1,38 +1,46 @@
 <template>
-  <div class="news-list-item group relative flex" v-if="item && index">
-    <div class="cursor-menu group relative flex pl-3 pr-2 py-4">
-      <span class="shrink-0 mr-2" style="width: 20px; height: 20px;" v-if="index.icon">
-        <img class=" rounded-sm object-cover center mr-2" :src="index.icon" style="width: 20px; height: 20px;"
-             :alt="index.name">
-      </span>
-      <div class="-mt-0.5 flex-1 text-sm leading-tight line-clamp-[4]" style="max-width: calc(100% - 116px);">
-        <div class="flex gap-1  font-bold text-zinc-400 dark:text-neutral-500 items-center">
-          <div class="block truncate">
-            <div class="flex select-none items-center truncate space-x-0.5">
-              <span class="block truncate">{{ item.author || index.name }}</span>
-            </div>
-          </div>
-          <t-tooltip v-if="item.pubDate" :content="toDateString(item.pubDate)">
-            <t-tag theme="primary" size="small" variant="outline" class="ml-2">
-              {{ prettyDate(item.pubDate) }}
-            </t-tag>
-          </t-tooltip>
-        </div>
-        <div class="news-list-item__title">{{ item.title }}</div>
-        <div class="news-list-item__desc">{{ item.description }}</div>
+  <div class="t-card t-card--bordered news-list-item relative flex overflow-hidden" v-if="item && index">
+    <div class="flex flex-col md:flex-row w-full">
+      <div class="md-w-1/3" v-if="item.image">
+        <img class="w-full h-full object-cover" :src="item.image" :alt="item.title"/>
       </div>
-      <span data-state="loaded" class="relative overflow-hidden center ml-2 flex shrink-0 rounded size-20"
-            v-if="item.image">
-        <img height="560" width="840" loading="lazy"
-             class="size-full object-contain duration-200 opacity-100 !my-0 w-auto h-auto rounded"
-             :src="item.image" :alt="item.title">
-      </span>
+      <div class="flex flex-1 flex-col md:w-2/3">
+        <div class="news-list-item__header pb-2">
+          <t-space size="small">
+            <t-tag v-for="c in item.category" v-if="item.category" theme="primary" variant="outline" shape="round">
+              {{ c }}
+            </t-tag>
+          </t-space>
+          <div class="news-list-item__title line-clamp-1 text-lg">{{ item.title }}</div>
+          <div class="news-list-item__desc line-clamp-2 mt-1">{{ item.description }}</div>
+        </div>
+        <div class="news-list-item__content">
+          <div class="flex items-center text-sm text-muted-foreground">
+            <span>{{ index.name }}</span>
+            <span class="mx-1">·</span>
+            <span v-if="item.pubDate">{{ toDateString(item.pubDate) }}</span>
+          </div>
+        </div>
+        <div class="news-list-item__footer flex items-center justify-between pt-0">
+          <div class="flex items-center gap-2">
+            <t-avatar :image="index.icon">{{ index.name.slice(0, 1) }}</t-avatar>
+            <span class="text-sm font-medium">{{ item.author || index.name }}</span>
+          </div>
+          <t-button theme="primary" variant="text" size="small" class="gap-1">
+            <template #icon>
+              <share-icon/>
+            </template>
+            分享
+          </t-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import {NewsIndex, NewsInstance} from "@/entity/news";
-import {prettyDate, toDateString} from '@/utils/lang/FormatUtil.ts';
+import {prettyDate, toDateString} from '@/utils/lang/FormatUtil';
+import {ShareIcon, StarIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   item: {
@@ -46,24 +54,34 @@ defineProps({
 </script>
 <style scoped lang="less">
 .news-list-item {
-  transition: background-color 0.3s;
   padding: 8px;
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--td-bg-color-container-hover);
+  .news-list-item__header {
+    padding: 16px 16px 8px;
+    display: flex;
+    flex-direction: column;
+
+    .news-list-item__title {
+      font-weight: bold;
+      color: var(--td-text-color-primary);
+      font-size: var(--td-font-size-title-medium);
+      margin-top: 8px;
+    }
+
+    .news-list-item__desc {
+      color: var(--td-text-color-secondary);
+      font-size: var(--td-font-size-body-medium);
+      margin-top: 4px;
+    }
   }
 
-  .news-list-item__title {
-    color: var(--td-text-color-primary);
-    font-size: var(--td-font-size-title-medium);
-    margin-top: 8px;
+  .news-list-item__content {
+    padding: 0 16px 8px;
   }
 
-  .news-list-item__desc {
-    color: var(--td-text-color-placeholder);
-    font-size: var(--td-font-size-body-small);
-    margin-top: 4px;
+  .news-list-item__footer {
+    padding: 0 16px 16px;
   }
 }
 </style>
