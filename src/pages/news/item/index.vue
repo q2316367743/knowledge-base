@@ -5,7 +5,7 @@
         <div class="page-header__title">{{ idx?.name }}</div>
       </div>
       <div class="page-header__right flex mr-8px items-center">
-        <div v-if="cache" class="mr-8px news-list-item__date">
+        <div v-if="cache" class="mr-16px news-list-item__date">
           上次刷新：{{ prettyDate(cache.date) }}
         </div>
         <t-tooltip content="强制刷新" placement="bottom-right">
@@ -19,8 +19,9 @@
     </header>
     <div class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
-        <div v-if="cache && (cache.data.length > 0 || loading)" class="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 m-4px">
-          <news-list-item v-for="item in cache.data" :index="idx" :item="item" @click="onPush(item)"/>
+        <div v-if="(cache && cache.data.length > 0) || loading"
+             class="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 m-4px">
+          <news-list-item v-for="item in (cache?.data||[])" :index="idx" :item="item" @click="onPush(item)"/>
         </div>
         <div class="empty" v-else>
           <div class="empty-c">

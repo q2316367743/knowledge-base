@@ -34,7 +34,7 @@ export async function getLogoFromUrl(url: string) {
     const logoUrl = html.match(/<link.*?rel="icon".*?href="(.*?)"/)?.[1];
     if (logoUrl) {
       return new URL(logoUrl, url).toString();
-    }else {
+    } else {
       // 尝试获取网站默认图标，并判断是否存在
       const defaultIconUrl = new URL('/favicon.ico', url).toString();
       try {
@@ -49,4 +49,16 @@ export async function getLogoFromUrl(url: string) {
   }
   return '';
 
+}
+
+/**
+ * 安全化html，去除html中的标签
+ * @param html html字符串
+ */
+export function htmlDecode(html: string) {
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  const output = temp.innerText || temp.textContent;
+  temp.remove();
+  return output || html;
 }

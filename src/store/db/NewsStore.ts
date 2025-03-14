@@ -11,6 +11,8 @@ import {
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getNewsList} from "@/algorithm/rule";
 import {debounce} from "radash";
+import {download} from "@/utils/BrowserUtil";
+import {useSnowflake} from "@/hooks/Snowflake";
 
 // 当前新闻的选择项
 export const newsActiveKey = ref('');
@@ -145,9 +147,36 @@ export const useNewsStore = defineStore('news', () => {
     dbSync();
   }
 
+  async function exportNews() {
+    const rules = new Array<NewsContent>()
+    for (let n of news.value) {
+      const rule = await getNewsRule(n.id);
+      if (rule) {
+        rules.push({
+          ...n,
+          ...rule
+        })
+      }
+    }
+    const text =  JSON.stringify(rules);
+    download(text, '资讯列表导出.json', 'text/plain');
+  }
+
+  async function importNews(text: string) {
+    const items = JSON.parse(text) as Array<NewsContent>;
+    for (const item of items) {
+      await postNews({
+        ...item,
+        id: useSnowflake().nextId(),
+        createTime: Date.now()
+      });
+    }
+  }
+
   return {
     news,
     getNews, getNewsIndex, getNewsRule,
-    postNews, deleteNews, changeOrder
+    postNews, deleteNews, changeOrder,
+    exportNews, importNews
   }
 })

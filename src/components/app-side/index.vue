@@ -1,5 +1,5 @@
 <template>
-  <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys">
+  <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys" @menu-item-click="onMenuItemClick">
     <a-menu-item key="/home">
       <template #icon>
         <icon-home/>
@@ -8,7 +8,7 @@
     </a-menu-item>
     <a-menu-item key="/news">
       <template #icon>
-        <article-icon />
+        <article-icon/>
       </template>
       资讯
     </a-menu-item>
@@ -187,15 +187,21 @@ const selectedKeys = ref(['/home']);
 
 const themeType = computed(() => useGlobalStore().globalType)
 
-watch(() => selectedKeys.value, value => router.push(value[0]));
 watch(() => route.path, path => {
   if (selectedKeys.value[0] !== path) {
-    selectedKeys.value[0] = path;
+    if (path.startsWith("/news")) {
+      selectedKeys.value = ['/news'];
+    } else {
+      selectedKeys.value[0] = path;
+    }
   }
 });
 
 const toUpdateLog = () => router.push('/more/update')
 
+function onMenuItemClick(key: string) {
+  router.push(key)
+}
 </script>
 <style scoped>
 .app-exit {

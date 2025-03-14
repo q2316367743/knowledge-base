@@ -6,11 +6,13 @@
       </div>
       <div class="flex flex-1 flex-col md:w-2/3">
         <div class="news-list-item__header pb-2">
-          <t-space size="small">
-            <t-tag v-for="c in item.category" v-if="item.category" theme="primary" variant="outline" shape="round">
-              {{ c }}
-            </t-tag>
-          </t-space>
+          <div class="tags-wrapper">
+            <div class="flex gap-2 flex-nowrap overflow-hidden">
+              <t-tag v-for="c in item.category" v-if="item.category" theme="primary" variant="outline" shape="round">
+                {{ c }}
+              </t-tag>
+            </div>
+          </div>
           <div class="news-list-item__title line-clamp-1 text-lg">{{ item.title }}</div>
           <div class="news-list-item__desc line-clamp-2 mt-1">{{ item.description }}</div>
         </div>
@@ -39,8 +41,8 @@
 </template>
 <script lang="ts" setup>
 import {NewsIndex, NewsInstance} from "@/entity/news";
-import {prettyDate, toDateString} from '@/utils/lang/FormatUtil';
-import {ShareIcon, StarIcon} from "tdesign-icons-vue-next";
+import {toDateString} from '@/utils/lang/FormatUtil';
+import {ShareIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   item: {
@@ -83,5 +85,9 @@ defineProps({
   .news-list-item__footer {
     padding: 0 16px 16px;
   }
+}
+
+.tags-wrapper {
+  max-width: 100%;
 }
 </style>

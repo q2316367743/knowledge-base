@@ -8,15 +8,22 @@
           </template>
         </t-button>
         <div class="page-header__title">{{ title }}</div>
-        <t-tag v-if="article" theme="primary" size="small">{{ updateTime }}</t-tag>
+        <t-tooltip content="默认浏览器打开">
+          <t-button theme="primary" variant="text" shape="square" size="small" @click="openLink">
+            <template #icon>
+              <link-icon/>
+            </template>
+          </t-button>
+        </t-tooltip>
       </t-space>
       <div class="page-header__right mr-4">
         <t-space size="small" class="items-center">
           <t-input-number v-model="scale" :min="80" :max="200" :step="10" size="small" style="width: 120px;">
             <template #suffix>%</template>
           </t-input-number>
+          <t-tag v-if="article" theme="primary" size="small">{{ updateTime }}</t-tag>
           <t-tooltip content="强制刷新" placement="bottom-right">
-            <t-button theme="primary" variant="text" shape="square" @click="refresh">
+            <t-button theme="primary" variant="text" shape="square" @click="init">
               <template #icon>
                 <refresh-icon/>
               </template>
@@ -33,7 +40,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ArrowLeftIcon, RefreshIcon} from "tdesign-icons-vue-next";
+import {ArrowLeftIcon, LinkIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {NewsArticle} from "@/entity/news";
 import {getNewsArticle} from "@/algorithm/rule";
 import {newsSideCollapse, useNewsStore} from "@/store/db/NewsStore";
@@ -60,8 +67,9 @@ const updateTime = useIntervalComputer(() => article.value ? prettyDate(article.
 
 const width = computed(() => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 0 : 232)}px)`);
 
-onMounted(async () => {
+const init = async () => {
   try {
+    loading.value = true;
     const {getNewsRule} = useNewsStore();
     const rule = await getNewsRule(id);
     if (!rule) {
@@ -99,12 +107,34 @@ onMounted(async () => {
 <div id="app">${article.value.html}</div>
 </body>
 </html>`], {type: 'text/html'}));
+
+    // 监听iframe加载完成事件
+    iframeRef.value?.addEventListener('load', () => {
+      const doc = iframeRef.value?.contentDocument;
+      if (doc) {
+        // 为所有a标签添加点击事件监听
+        doc.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('javascript:')) {
+              // 使用URL对象处理相对路径
+              const baseUrl = new URL(route.query.link as string);
+              const absoluteUrl = new URL(href, baseUrl.href).href;
+              utools.shellOpenExternal(absoluteUrl);
+            }
+          });
+        });
+      }
+    });
   } catch (e) {
     MessageUtil.error("获取内容失败", e);
   } finally {
     loading.value = false;
   }
-});
+};
+
+onMounted(init);
 
 onUnmounted(() => {
   if (url.value) {
@@ -116,7 +146,9 @@ function handlerClick() {
   router.back();
 }
 
-function refresh() {
+
+function openLink() {
+  utools.shellOpenExternal(route.query.link as string);
 }
 
 watch(scale, (newScale) => {
@@ -153,6 +185,7 @@ watch(scale, (newScale) => {
     &__title {
       display: flex;
       align-items: center;
+      max-width: 50vw;
     }
 
   }
