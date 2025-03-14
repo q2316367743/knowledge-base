@@ -8,7 +8,7 @@
           </template>
         </t-button>
         <div class="page-header__title">{{ title }}</div>
-        <t-tag v-if="article" theme="primary" size="small">{{ prettyDate(article.date) }}</t-tag>
+        <t-tag v-if="article" theme="primary" size="small">{{ updateTime }}</t-tag>
       </t-space>
       <div class="page-header__right mr-4">
         <t-space size="small" class="items-center">
@@ -41,6 +41,7 @@ import {prettyDate} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useIntervalComputer} from "@/hooks/IntervalComputer";
 
 const route = useRoute();
 const router = useRouter();
@@ -51,8 +52,10 @@ const title = route.query.title as string;
 const article = ref<NewsArticle>();
 const loading = ref(true);
 const url = ref('');
-const scale = useUtoolsDbStorage<number>(LocalNameEnum.KEY_NEWS_CONTENT_SCALE, 100);
+const scale = useUtoolsDbStorage<number>(`${LocalNameEnum.KEY_NEWS_CONTENT_SCALE}/${id}`, 100);
 const iframeRef = ref<HTMLIFrameElement>();
+
+const updateTime = useIntervalComputer(() => article.value ? prettyDate(article.value.date) : '', 1000)
 
 
 const width = computed(() => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 0 : 232)}px)`);

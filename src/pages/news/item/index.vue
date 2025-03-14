@@ -1,16 +1,9 @@
 <template>
   <div class="news-list-item">
     <header class="page-header">
-      <t-space size="small" class="page-header__left">
-        <t-button class="shrink-0" theme="primary" variant="text" shape="square" @click="handlerClick"
-                  v-show="newsSideCollapse">
-          <template #icon>
-            <menu-fold-icon v-if="newsSideCollapse"/>
-            <menu-unfold-icon v-else/>
-          </template>
-        </t-button>
+      <div size="small" class="page-header__left">
         <div class="page-header__title">{{ idx?.name }}</div>
-      </t-space>
+      </div>
       <div class="page-header__right flex mr-8px items-center">
         <div v-if="cache" class="mr-8px news-list-item__date">
           上次刷新：{{ prettyDate(cache.date) }}
@@ -40,9 +33,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {MenuFoldIcon, MenuUnfoldIcon, RefreshIcon} from "tdesign-icons-vue-next";
+import {RefreshIcon} from "tdesign-icons-vue-next";
 import {NewsInstance, NewsInstanceCache} from "@/entity/news";
-import {newsSideCollapse, useNewsStore} from "@/store/db/NewsStore";
+import {useNewsStore} from "@/store/db/NewsStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import NewsListItem from "@/pages/news/components/NewsListItem.vue";
@@ -87,9 +80,6 @@ function onPush(item: NewsInstance) {
   })
 }
 
-function handlerClick() {
-  newsSideCollapse.value = !newsSideCollapse.value;
-}
 </script>
 <style scoped lang="less">
 .news-list-item {

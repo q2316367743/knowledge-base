@@ -64,7 +64,7 @@ export async function postNews(old?: NewsIndex) {
           <FormItem label={'类型'} name={'type'} labelAlign={'top'}>
             <RadioGroup v-model={form.value.type}>
               <Radio value={NewsTypeEnum.RSS}>RSS</Radio>
-              <Radio value={NewsTypeEnum.CUSTOMER}>自定义</Radio>
+              <Radio value={NewsTypeEnum.CUSTOMER} disabled={true}>自定义</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label={'图标'} name={'icon'} labelAlign={'top'}>
@@ -100,7 +100,7 @@ export async function postNews(old?: NewsIndex) {
           </FormItem>
         </Form>
       </TabPanel>}
-      <TabPanel value={'3'} label={'网络设置'}>
+      {form.value.type === NewsTypeEnum.CUSTOMER && <TabPanel value={'3'} label={'网络设置'}>
         <Form data={form.value}>
           <FormItem label={'是否使用webview'} name={'webview'} labelAlign={'top'}
                     help={'如果是客户端渲染，可以打开此开关'}>
@@ -110,7 +110,7 @@ export async function postNews(old?: NewsIndex) {
             <Input v-model={form.value.wait} clearable={true} disabled={!form.value.webview}/>
           </FormItem>
         </Form>
-      </TabPanel>
+      </TabPanel>}
       <TabPanel value={'4'} label={'内容设置'}>
         <div class={'w-full h-250px mt-8'}>
           <MonacoEditor v-model={form.value.content} language={'javascript'} miniMap={false}/>

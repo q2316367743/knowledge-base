@@ -1,9 +1,16 @@
 import {defineStore} from "pinia";
 import {useIDBKeyval} from '@vueuse/integrations/useIDBKeyval';
 import {NewsContent, NewsIndex, NewsInstanceCache, NewsRule} from "@/entity/news";
-import {getFromOneByAsync, listByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {
+  getFromOneByAsync,
+  listByAsync,
+  removeOneByAsync,
+  saveListByAsync,
+  saveOneByAsync
+} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getNewsList} from "@/algorithm/rule";
+import {debounce} from "radash";
 
 // 当前新闻的选择项
 export const newsActiveKey = ref('');
@@ -109,9 +116,38 @@ export const useNewsStore = defineStore('news', () => {
     await sync();
   }
 
+  async function deleteNews(id: string) {
+    const index = news.value.findIndex(e => e.id === id);
+    if (index === -1) {
+      return;
+    }
+    news.value.splice(index, 1);
+    await sync();
+    // 删除内容
+    await removeOneByAsync(`${LocalNameEnum.NEWS_RULE}/${id}`, true)
+    await sync();
+  }
+
+  const dbSync = debounce({delay: 300},
+    () => {
+      sync().then(() => console.debug("同步成功"))
+        .catch(e => console.error("同步失败", e));
+    })
+
+  /**
+   * 修改顺序，元素从from移动到to
+   * @param from 原始索引
+   * @param to 目标索引
+   */
+  function changeOrder(from: number, to: number) {
+    if (from === to) return;
+    news.value.splice(to, 0, news.value.splice(from, 1)[0]);
+    dbSync();
+  }
+
   return {
     news,
     getNews, getNewsIndex, getNewsRule,
-    postNews
+    postNews, deleteNews, changeOrder
   }
 })
