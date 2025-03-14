@@ -74,7 +74,7 @@
     </t-content>
   </t-layout>
 </template>
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import ContextMenu from "@imengyu/vue3-context-menu";
 import {useSortable} from "@vueuse/integrations/useSortable";
 import {
@@ -83,6 +83,7 @@ import {
   MoveIcon,
   PlusIcon,
 } from "tdesign-icons-vue-next";
+import {DeleteIcon, EditIcon} from 'tdesign-icons-vue-next';
 import {postNews} from "@/pages/news/components/NewsPost";
 import {NewsIndex} from "@/entity/news";
 import {useGlobalStore} from "@/store/GlobalStore";
@@ -137,9 +138,7 @@ const el = ref();
 
 const show = computed(() => isNotEmptyString(newsActiveKey.value));
 const news = computed(() => useNewsStore().news.filter((n) => !!n));
-const width = computed(
-  () => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 48 : 232)}px)`
-);
+const width = computed(() => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 48 : 232)}px)`);
 
 useSortable(el, news, {
   animation: 300,
@@ -176,21 +175,15 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
     theme: useGlobalStore().isDark ? "default-dark" : "default",
     items: [
       {
+        icon: () => <EditIcon/>,
         label: "编辑",
         onClick: () => {
           postNews(idx);
         },
       },
       {
-        label: h(
-          "div",
-          {
-            style: {
-              color: "var(--td-error-color)",
-            },
-          },
-          "删除"
-        ),
+        icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
+        label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
         onClick: () => {
           MessageBoxUtil.confirm("确定删除该资讯吗？", "删除", {
             confirmButtonText: "删除",

@@ -13,8 +13,8 @@
               </t-tag>
             </div>
           </div>
-          <div class="news-list-item__title line-clamp-1 text-lg">{{ item.title }}</div>
-          <div class="news-list-item__desc line-clamp-2 mt-1">{{ item.description }}</div>
+          <div class="news-list-item__title line-clamp-1 text-lg" @click="onPush(item)">{{ item.title }}</div>
+          <div class="news-list-item__desc line-clamp-2 mt-1" @click="onPush(item)">{{ item.description }}</div>
         </div>
         <div class="news-list-item__content">
           <div class="flex items-center text-sm text-muted-foreground">
@@ -44,7 +44,9 @@ import {NewsIndex, NewsInstance} from "@/entity/news";
 import {toDateString} from '@/utils/lang/FormatUtil';
 import {ShareIcon} from "tdesign-icons-vue-next";
 
-defineProps({
+const router = useRouter();
+
+const props = defineProps({
   item: {
     type: Object as PropType<NewsInstance>,
     required: true
@@ -53,11 +55,19 @@ defineProps({
     type: Object as PropType<NewsIndex>
   }
 })
+function onPush(item: NewsInstance) {
+  router.push({
+    path: `/news/content/${props.index?.id}`,
+    query: {
+      title: item.title,
+      link: item.link
+    }
+  })
+}
 </script>
 <style scoped lang="less">
 .news-list-item {
   padding: 8px;
-  cursor: pointer;
 
   .news-list-item__header {
     padding: 16px 16px 8px;
@@ -65,6 +75,7 @@ defineProps({
     flex-direction: column;
 
     .news-list-item__title {
+      cursor: pointer;
       font-weight: bold;
       color: var(--td-text-color-primary);
       font-size: var(--td-font-size-title-medium);
@@ -72,6 +83,7 @@ defineProps({
     }
 
     .news-list-item__desc {
+      cursor: pointer;
       color: var(--td-text-color-secondary);
       font-size: var(--td-font-size-body-medium);
       margin-top: 4px;

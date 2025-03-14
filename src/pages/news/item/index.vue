@@ -21,7 +21,7 @@
       <t-loading :loading class="w-full h-full" text="正在加载中">
         <div v-if="(cache && cache.data.length > 0) || loading"
              class="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 m-4px">
-          <news-list-item v-for="item in (cache?.data||[])" :index="idx" :item="item" @click="onPush(item)"/>
+          <news-list-item v-for="item in (cache?.data||[])" :index="idx" :item="item"/>
         </div>
         <div class="empty" v-else>
           <div class="empty-c">
@@ -35,7 +35,7 @@
 </template>
 <script lang="ts" setup>
 import {RefreshIcon} from "tdesign-icons-vue-next";
-import {NewsInstance, NewsInstanceCache} from "@/entity/news";
+import {NewsInstanceCache} from "@/entity/news";
 import {useNewsStore} from "@/store/db/NewsStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {prettyDate} from "@/utils/lang/FormatUtil";
@@ -70,17 +70,6 @@ function refresh() {
     .catch(e => MessageUtil.error("资讯查询失败", e))
     .finally(() => loading.value = false);
 }
-
-function onPush(item: NewsInstance) {
-  router.push({
-    path: `/news/content/${id.value}`,
-    query: {
-      title: item.title,
-      link: item.link
-    }
-  })
-}
-
 </script>
 <style scoped lang="less">
 .news-list-item {
