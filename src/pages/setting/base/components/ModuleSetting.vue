@@ -5,7 +5,7 @@
       <t-checkbox v-model="moduleForAi">是否启用AI主页</t-checkbox>
     </t-paragraph>
     <t-paragraph>
-      <t-checkbox v-model="moduleForNews">是否启用资讯模块</t-checkbox>
+      <t-checkbox v-model="moduleForNews">是否启用资讯模块（Beta版）</t-checkbox>
     </t-paragraph>
   </div>
 </template>
