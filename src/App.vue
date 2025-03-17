@@ -2,7 +2,7 @@
   <div class="app">
     <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
       <a-layout class="app-layout">
-        <a-layout-sider collapsed style="z-index: 50">
+        <a-layout-sider :collapsed="appCollapse" style="z-index: 50" :collapsed-width="0" :width="48" class="overflow-hidden">
           <app-side/>
         </a-layout-sider>
         <a-layout-content>
@@ -16,27 +16,26 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {useRouter} from "vue-router";
 import {useUmami} from "@/plugin/umami";
-import {computed, defineAsyncComponent, ref} from "vue";
-import {keyword, useDbKeyRefreshEvent, usePageJumpEvent} from "@/global/BeanFactory";
+import {createServer} from "@/plugin/server";
+import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
-import {useGlobalStore} from "@/store/GlobalStore";
+import {useAppCollapse, useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 // 组件
+import {windowConfig} from "@/global/WindowConfig";
 import {ArticleIndex} from "@/entity/article";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useRouter} from "vue-router";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {htmlToArticle} from "@/components/export-component/htmlToArticle";
-import {windowConfig} from "@/global/WindowConfig";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
-import {createServer} from "@/plugin/server";
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import AppSide from "@/components/app-side/index.vue";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
 const privacy = defineAsyncComponent(() => import("@/components/update-check/privacy.vue"));
-const AppSide = defineAsyncComponent(() => import("@/components/app-side/index.vue"))
 
 const router = useRouter();
 
@@ -47,7 +46,7 @@ const preview = ref({
 
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
-
+const appCollapse = computed<boolean>(() => useAppCollapse().collapse.value);
 
 // 插件进入
 utools.onPluginEnter(action => {

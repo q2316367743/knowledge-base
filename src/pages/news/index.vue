@@ -86,7 +86,7 @@ import {
 import {DeleteIcon, EditIcon} from 'tdesign-icons-vue-next';
 import {postNews} from "@/pages/news/components/NewsPost";
 import {NewsIndex} from "@/entity/news";
-import {useGlobalStore} from "@/store/GlobalStore";
+import {useAppCollapse, useGlobalStore} from "@/store/GlobalStore";
 import {
   newsActiveKey,
   newsSideCollapse,
@@ -165,7 +165,10 @@ function changeNewsKey(res: string) {
   newsActiveKey.value = res;
 }
 
-const toggleCollapse = useToggle(newsSideCollapse);
+const toggleCollapse = () => {
+  newsSideCollapse.value = !newsSideCollapse.value;
+  useAppCollapse().toggleCollapse(newsSideCollapse.value);
+};
 
 function onContextmenu(e: MouseEvent, idx: NewsIndex) {
   e.preventDefault();

@@ -2,12 +2,14 @@
   <div class="setting">
     <t-tabs v-model="activeKey">
       <t-tab-panel value="base" label="基础设置"/>
+      <t-tab-panel value="module" label="模块设置"/>
       <t-tab-panel value="code-editor" label="代码笔记设置"/>
       <t-tab-panel value="theme" label="主题设置"/>
       <t-tab-panel value="chat" label="AI设置"/>
     </t-tabs>
     <main class="main">
       <base-setting v-if="activeKey === 'base'"/>
+      <module-setting v-else-if="activeKey === 'module'"/>
       <code-editor-setting v-else-if="activeKey === 'code-editor'"/>
       <theme-setting v-else-if="activeKey === 'theme'"/>
       <chat-setting v-else-if="activeKey === 'chat'"/>
@@ -19,6 +21,7 @@ import BaseSetting from "@/pages/setting/base/components/BaseSetting.vue";
 import CodeEditorSetting from "@/pages/setting/base/components/CodeEditorSetting.vue";
 import ThemeSetting from "@/pages/setting/base/components/ThemeSetting.vue";
 import ChatSetting from "@/pages/setting/base/components/ChatSetting.vue";
+import ModuleSetting from "@/pages/setting/base/components/ModuleSetting.vue";
 
 const route = useRoute();
 

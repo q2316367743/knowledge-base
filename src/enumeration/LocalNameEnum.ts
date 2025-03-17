@@ -194,7 +194,15 @@ enum LocalNameEnum {
   // ========================== 一次性变量 ==========================
 
   // 首页欢迎的提示
-  GUIDE_HOME_WELCOME = '/guide/home/welcome'
+  GUIDE_HOME_WELCOME = '/guide/home/welcome',
+
+  // ========================== 功能模块 ==========================
+
+  // 首页AI模块
+  MODULE_AI = '/module/AI',
+
+  // 新闻模块
+  MODULE_NEWS = '/module/news',
 }
 
 export default LocalNameEnum;

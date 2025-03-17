@@ -62,3 +62,20 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
 });
+
+export const useAppCollapse = createGlobalState(() => {
+  const collapse = ref(false) as Ref<boolean>;
+  const toggleCollapse = (val?: boolean) => {
+    if (val === undefined) {
+      collapse.value = !collapse.value;
+    } else {
+      collapse.value = val;
+    }
+  };
+
+  return {collapse, toggleCollapse};
+});
+
+
+
+

@@ -1,12 +1,12 @@
 <template>
   <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys" @menu-item-click="onMenuItemClick">
-    <a-menu-item key="/home">
+    <a-menu-item key="/home" v-if="moduleForAi">
       <template #icon>
         <icon-home/>
       </template>
       主页
     </a-menu-item>
-    <a-menu-item key="/news">
+    <a-menu-item key="/news" v-if="moduleForNews">
       <template #icon>
         <article-icon/>
       </template>
@@ -179,6 +179,7 @@ import {isUtools} from "@/global/BeanFactory";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {toDoc, toFeedback} from "@/global/Constant";
 import {ArticleIcon} from "tdesign-icons-vue-next";
+import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
 
 const route = useRoute();
 const router = useRouter();

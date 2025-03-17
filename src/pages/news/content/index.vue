@@ -43,7 +43,7 @@
 import {ArrowLeftIcon, LinkIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {NewsArticle} from "@/entity/news";
 import {getNewsArticle} from "@/algorithm/rule";
-import {newsSideCollapse, useNewsStore} from "@/store/db/NewsStore";
+import {useNewsStore} from "@/store/db/NewsStore";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
@@ -65,7 +65,6 @@ const iframeRef = ref<HTMLIFrameElement>();
 const updateTime = useIntervalComputer(() => article.value ? prettyDate(article.value.date) : '', 1000)
 
 
-const width = computed(() => `calc(100vw - ${48 + 1 + (newsSideCollapse.value ? 0 : 232)}px)`);
 
 const init = async () => {
   try {
@@ -163,7 +162,7 @@ watch(scale, (newScale) => {
 <style scoped lang="less">
 .news-content {
   height: 100%;
-  width: v-bind(width);
+  width: 100%;
   position: relative;
   background-color: var(--td-bg-color-container);
 
