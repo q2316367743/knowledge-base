@@ -1,173 +1,178 @@
 <template>
-  <a-menu style="width: 200px;height: 100%;" breakpoint="xl" v-model:selected-keys="selectedKeys" @menu-item-click="onMenuItemClick">
-    <a-menu-item key="/home" v-if="moduleForAi">
-      <template #icon>
-        <icon-home/>
-      </template>
-      主页
-    </a-menu-item>
-    <a-menu-item key="/news" v-if="moduleForNews">
-      <template #icon>
-        <article-icon/>
-      </template>
-      资讯
-    </a-menu-item>
-    <a-menu-item key="/note">
-      <template #icon>
-        <icon-edit/>
-      </template>
-      笔记
-    </a-menu-item>
-    <a-menu-item key="/todo">
-      <template #icon>
-        <icon-check-square/>
-      </template>
-      待办
-    </a-menu-item>
-    <a-sub-menu key="/tool">
-      <template #icon>
-        <icon-tool/>
-      </template>
-      <a-menu-item key="/tool/search">
+  <div class="app-side">
+    <t-menu class="h-full" breakpoint="xl" v-model="selectedKey" @change="onMenuItemClick" :collapsed="true">
+      <t-menu-item value="/home" v-if="moduleForAi">
         <template #icon>
-          <icon-search/>
+          <questionnaire-icon size="12px" />
         </template>
-        搜索内容
-      </a-menu-item>
-      <template #title>工具</template>
-      <a-menu-item key="/tool/recycle">
-        回收站
-      </a-menu-item>
-      <a-menu-item key="/tool/category">
-        分类图
-      </a-menu-item>
-      <a-menu-item key="/plugin">
-        主题|插件|模板
-      </a-menu-item>
-    </a-sub-menu>
-    <a-sub-menu key="/setting">
-      <template #icon>
-        <icon-settings/>
-      </template>
-      <template #title>设置</template>
-      <a-menu-item key="/setting/base">
-        基础设置
-      </a-menu-item>
-      <a-menu-item key="/setting/code-run">
-        代码运行设置
-      </a-menu-item>
-      <a-menu-item key="/setting/ai-service">
-        AI 服务设置
-      </a-menu-item>
-      <a-menu-item key="/setting/ai-assistant">
-        AI 助手设置
-      </a-menu-item>
-      <a-menu-item key="/setting/feature" v-if="isUtools">
-        关键字设置
-      </a-menu-item>
-    </a-sub-menu>
-    <a-sub-menu key="/more">
-      <template #icon>
-        <icon-more/>
-      </template>
-      <template #title>更多</template>
-      <a-menu-item key="/more/backup">
+        问一问
+      </t-menu-item>
+      <t-menu-item value="/news" v-if="moduleForNews">
         <template #icon>
-          <icon-sync/>
+          <article-icon/>
         </template>
-        备份
-      </a-menu-item>
-      <a-menu-item key="/more/attachment" v-if="isUtools">
+        资讯
+      </t-menu-item>
+      <t-menu-item value="/note">
         <template #icon>
-          <icon-attachment/>
+          <edit2-icon />
         </template>
-        附件
-      </a-menu-item>
-      <a-menu-item key="/more/recommend">
+        笔记
+      </t-menu-item>
+      <t-menu-item value="/todo">
         <template #icon>
-          <icon-thumb-up/>
+          <check-rectangle-icon />
         </template>
-        推荐
-      </a-menu-item>
-      <a-menu-item key="/more/update">
+        待办
+      </t-menu-item>
+      <t-submenu value="/tool">
         <template #icon>
-          <icon-time-line/>
+          <tools-icon  />
         </template>
-        更新
-      </a-menu-item>
-      <a-menu-item key="/more/about">
-        <template #icon>
-          <icon-exclamation-circle/>
-        </template>
-        关于
-      </a-menu-item>
-    </a-sub-menu>
-  </a-menu>
-  <div class="app-exit">
-    <a-dropdown position="tl">
-      <a-button type="text" style="margin-bottom: 7px;">
-        <template #icon>
-          <icon-moon v-if="themeType === GlobalType.DARK"/>
-          <icon-sun v-else-if="themeType === GlobalType.LIGHT"/>
-          <icon-palette v-else/>
-        </template>
-      </a-button>
-      <template #content>
-        <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.DARK)">
+        <template #title>工具</template>
+        <t-menu-item value="/tool/search">
           <template #icon>
-            <icon-moon/>
+            <search-icon />
           </template>
-          暗黑
-        </a-doption>
-        <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.LIGHT)">
+          搜索内容
+        </t-menu-item>
+        <t-menu-item value="/tool/recycle">
           <template #icon>
-            <icon-sun/>
+            <delete-icon />
           </template>
-          明亮
-        </a-doption>
-        <a-doption @click="useGlobalStore().switchDarkColors(GlobalType.AUTO)">
-          跟随系统
-        </a-doption>
-      </template>
-    </a-dropdown>
-    <a-dropdown position="tl">
-      <a-button type="text" style="margin-bottom: 7px;">
+          回收站
+        </t-menu-item>
+        <t-menu-item value="/tool/category">
+          分类图
+        </t-menu-item>
+        <t-menu-item value="/plugin">
+          主题|插件|模板
+        </t-menu-item>
+      </t-submenu>
+      <t-submenu value="/setting">
         <template #icon>
-          <icon-question-circle/>
+          <setting-icon />
         </template>
-      </a-button>
-      <template #content>
-        <a-doption @click="openKeyDrawer()">
+        <template #title>设置</template>
+        <t-menu-item value="/setting/base">
+          基础设置
+        </t-menu-item>
+        <t-menu-item value="/setting/code-run">
+          代码运行设置
+        </t-menu-item>
+        <t-menu-item value="/setting/ai-service">
+          AI 服务设置
+        </t-menu-item>
+        <t-menu-item value="/setting/ai-assistant">
+          AI 助手设置
+        </t-menu-item>
+        <t-menu-item value="/setting/feature" v-if="isUtools">
+          关键字设置
+        </t-menu-item>
+      </t-submenu>
+      <t-submenu value="/more">
+        <template #icon>
+          <ellipsis-icon />
+        </template>
+        <template #title>更多</template>
+        <t-menu-item value="/more/backup">
           <template #icon>
-            <icon-to-bottom/>
+            <icon-sync/>
           </template>
-          快捷键
-        </a-doption>
-        <a-doption @click="toDoc()">
+          备份
+        </t-menu-item>
+        <t-menu-item value="/more/attachment" v-if="isUtools">
+          <template #icon>
+            <icon-attachment/>
+          </template>
+          附件
+        </t-menu-item>
+        <t-menu-item value="/more/recommend">
+          <template #icon>
+            <icon-thumb-up/>
+          </template>
+          推荐
+        </t-menu-item>
+        <t-menu-item value="/more/update">
+          <template #icon>
+            <icon-time-line/>
+          </template>
+          更新
+        </t-menu-item>
+        <t-menu-item value="/more/about">
+          <template #icon>
+            <icon-exclamation-circle/>
+          </template>
+          关于
+        </t-menu-item>
+      </t-submenu>
+    </t-menu>
+    <div class="app-exit">
+      <t-dropdown position="tl" trigger="click">
+        <t-button theme="primary" variant="text" shape="square" style="margin-bottom: 7px;">
+          <template #icon>
+            <icon-moon v-if="themeType === GlobalType.DARK"/>
+            <icon-sun v-else-if="themeType === GlobalType.LIGHT"/>
+            <icon-palette v-else/>
+          </template>
+        </t-button>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.DARK)">
+            <template #icon>
+              <icon-moon/>
+            </template>
+            暗黑
+          </t-dropdown-item>
+          <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.LIGHT)">
+            <template #icon>
+              <icon-sun/>
+            </template>
+            明亮
+          </t-dropdown-item>
+          <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.AUTO)">
+            跟随系统
+          </t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown>
+      <t-dropdown position="tl" trigger="click">
+        <t-button theme="primary" variant="text" shape="square" style="margin-bottom: 7px;">
           <template #icon>
             <icon-question-circle/>
           </template>
-          帮助中心
-        </a-doption>
-        <a-doption @click="toFeedback()">
-          <template #icon>
-            <icon-message/>
-          </template>
-          反馈与建议
-        </a-doption>
-        <a-doption @click="toUpdateLog()">
-          <template #icon>
-            <icon-message-banned/>
-          </template>
-          查看更新日志
-        </a-doption>
-      </template>
-    </a-dropdown>
-    <a-button type="text" @click="openShangZan()">
-      <template #icon>
-        <icon-heart/>
-      </template>
-    </a-button>
+        </t-button>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="openKeyDrawer()">
+            <template #icon>
+              <icon-to-bottom/>
+            </template>
+            快捷键
+          </t-dropdown-item>
+          <t-dropdown-item @click="toDoc()">
+            <template #icon>
+              <icon-question-circle/>
+            </template>
+            帮助中心
+          </t-dropdown-item>
+          <t-dropdown-item @click="toFeedback()">
+            <template #icon>
+              <icon-message/>
+            </template>
+            反馈与建议
+          </t-dropdown-item>
+          <t-dropdown-item @click="toUpdateLog()">
+            <template #icon>
+              <icon-message-banned/>
+            </template>
+            查看更新日志
+          </t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown>
+      <t-button theme="primary" variant="text" shape="square" @click="openShangZan()">
+        <template #icon>
+          <icon-heart/>
+        </template>
+      </t-button>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -178,36 +183,60 @@ import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {isUtools} from "@/global/BeanFactory";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {toDoc, toFeedback} from "@/global/Constant";
-import {ArticleIcon} from "tdesign-icons-vue-next";
+import {
+  ArticleIcon,
+  CheckRectangleIcon, DeleteIcon,
+  Edit2Icon, EllipsisIcon,
+  QuestionnaireIcon,
+  SearchIcon, SettingIcon,
+  ToolsIcon
+} from "tdesign-icons-vue-next";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
 
 const route = useRoute();
 const router = useRouter();
 
-const selectedKeys = ref(['/home']);
+const selectedKey = ref('/note');
 
 const themeType = computed(() => useGlobalStore().globalType)
 
 watch(() => route.path, path => {
-  if (selectedKeys.value[0] !== path) {
+  if (selectedKey.value !== path) {
     if (path.startsWith("/news")) {
-      selectedKeys.value = ['/news'];
+      selectedKey.value = '/news';
     } else {
-      selectedKeys.value[0] = path;
+      selectedKey.value = path;
     }
   }
 });
 
 const toUpdateLog = () => router.push('/more/update')
 
-function onMenuItemClick(key: string) {
-  router.push(key)
+function onMenuItemClick(value: string | number) {
+  router.push(`${value}`)
 }
 </script>
-<style scoped>
-.app-exit {
+<style scoped lang="less">
+.app-side {
   position: absolute;
-  left: 8px;
-  bottom: 8px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  :deep(.t-menu) {
+    padding: 4px;
+    .t-menu__item {
+      padding: 0 4px !important;
+      width: 40px !important;
+    }
+  }
+  .app-exit {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+  }
 }
 </style>

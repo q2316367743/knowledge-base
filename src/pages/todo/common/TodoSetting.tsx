@@ -2,6 +2,7 @@ import {Checkbox, Drawer, Form, FormItem, Radio, RadioGroup, TypographyParagraph
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 export function openTodoSetting() {
   const todoCategory = useTodoCategoryStore().todoCategoryMap.get(useTodoWrapStore().categoryId);
@@ -44,7 +45,8 @@ export function openTodoSetting() {
         hideOfCompleteOrAbandon: config.value.hideOfCompleteOrAbandon,
         hideOfArticle: config.value.hideOfArticle,
         todoListLayout: config.value.todoListLayout
-      }).then(() => useTodoWrapStore().init(todoCategory.id))
+      }).then(() => useTodoWrapStore().init(todoCategory.id).catch(e => MessageUtil.error("重新初始化错误", e)))
+        .catch(e => MessageUtil.error("更新待办分组错误", e))
     }
   })
 }

@@ -1,18 +1,18 @@
 <template>
   <div class='card-todo-info'>
     <div class='header'>
-      <a-button type='text' @click="onClose()" :loading="loading">
+      <t-button theme="primary" variant='text' shape="square" @click="onClose()" :loading="loading">
         <template #icon>
-          <icon-left/>
+          <chevron-left-icon />
         </template>
-      </a-button>
-      <a-input allow-clear v-model="todoItem.index.title" :disabled="loading"/>
-      <a-button type='text' style='margin-left: 7px;' @click="onSave"
+      </t-button>
+      <t-input :clearable="true" v-model="todoItem.index.title" :disabled="loading"/>
+      <t-button theme="primary" variant='text' shape="square" style='margin-left: 7px;' @click="onSave"
                 :loading="loading">
         <template #icon>
-          <icon-save/>
+          <save-icon />
         </template>
-      </a-button>
+      </t-button>
     </div>
     <div class='container kb-wang-editor'>
       <rich-text-editor v-model="content" simple/>
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {ChevronLeftIcon, SaveIcon} from "tdesign-icons-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {getDefaultTodoItem} from "@/entity/todo/TodoItem";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";

@@ -1,25 +1,24 @@
 <template>
-  <a-space wrap>
-    <a-tag
+  <t-space wrap size="small">
+    <t-tag
       v-for="tag in tags"
-      :key="tag"
-      closable
       @close="handleRemove(tag)"
-      color="arcoblue"
+      theme="primary"
+      :closable="true"
     >
       {{ tag }}
-    </a-tag>
+    </t-tag>
 
-    <a-input
+    <t-input
       v-if="showInput"
-      ref="inputRef"
+      :autofocus="true"
       :style="{ width: '90px'}"
-      size="mini"
+      size="small"
       v-model.trim="inputVal"
-      @keyup.enter="handleAdd"
+      @enter="handleAdd"
       @blur="handleAdd"
     />
-    <a-tag
+    <t-tag
       v-else
       :style="{
         width: '90px',
@@ -30,15 +29,14 @@
       @click="handleEdit"
     >
       <template #icon>
-        <icon-plus/>
+        <plus-icon/>
       </template>
       新增标签
-    </a-tag>
-  </a-space>
+    </t-tag>
+  </t-space>
 </template>
 <script lang="ts" setup>
-import {Input as AInput, Space as ASpace, Tag as ATag} from "@arco-design/web-vue";
-import {IconPlus} from '@arco-design/web-vue/es/icon';
+import {PlusIcon} from "tdesign-icons-vue-next";
 
 const tags = defineModel({
   type: Array as PropType<string[]>,
@@ -46,18 +44,11 @@ const tags = defineModel({
 });
 const emit = defineEmits(['change']);
 
-const inputRef = ref<InstanceType<typeof AInput>>();
 const showInput = ref(false);
 const inputVal = ref('');
 
 const handleEdit = () => {
   showInput.value = true;
-
-  nextTick(() => {
-    if (inputRef.value) {
-      inputRef.value.focus();
-    }
-  });
 };
 
 const handleAdd = () => {

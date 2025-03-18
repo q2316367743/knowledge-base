@@ -1,13 +1,13 @@
 <template>
   <a-modal v-model:visible="visible" title="版本更新" mask-closable draggable lock-scroll
            width="600px" ok-text="查看更详细更新内容" @ok="toUpdateLog()">
-    <a-alert style="margin-bottom: 7px">
+    <t-alert style="margin-bottom: 7px">
       <span>更加详细的更新说明，可以关注</span>
-      <a-link @click="toBlog()">作者博客</a-link>
+      <t-link @click="toBlog()">作者博客</t-link>
       <span>，反馈请前往</span>
-      <a-link @click="toFeedback()">兔小巢</a-link>
+      <t-link @click="toFeedback()">兔小巢</t-link>
       <span>。</span>
-    </a-alert>
+    </t-alert>
     <div class="entry">
       <div>
         <span>恭喜你成功更新到 </span>

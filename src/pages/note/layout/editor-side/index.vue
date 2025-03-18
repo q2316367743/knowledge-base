@@ -1,16 +1,16 @@
 <template>
   <div class="home-editor-side" ref="homeEditorSideRef">
     <header class="m-2">
-      <a-input-group style="width: 100%">
-        <a-input style="width: calc(100% - 32px);" v-model="keyword" allow-clear placeholder="请输入文件名"/>
+      <t-input-group style="width: 100%">
+        <t-input style="width: calc(100% - 32px);" v-model="keyword" :clearable="true" placeholder="请输入文件名"/>
         <editor-tree-menu :id="0" :more="false" @multi="multiCheckStart">
-          <a-button type="primary">
+          <t-button theme="primary" shape="square">
             <template #icon>
               <icon-more-vertical/>
             </template>
-          </a-button>
+          </t-button>
         </editor-tree-menu>
-      </a-input-group>
+      </t-input-group>
     </header>
     <a-tree :data="treeNodeData" :virtual-list-props="virtualListProps" :checkable="checkKeys.length > 0"
             :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable @select="onSelect($event)"
@@ -19,43 +19,43 @@
       <template #extra="nodeData">
         <editor-tree-menu :id="nodeData.key" :name="nodeData.title" :folder="!nodeData.isLeaf"
                           @multi="multiCheckStart">
-          <a-button type="text">
+          <t-button variant="text" shape="square" theme="primary">
             <template #icon>
               <icon-more/>
             </template>
-          </a-button>
+          </t-button>
         </editor-tree-menu>
       </template>
     </a-tree>
     <div class="option" v-if="checkKeys.length > 0">
-      <a-space class="btn">
-        <a-popconfirm content="确认删除这些笔记，注意：不会删除目录" @ok="multiCheckDelete()">
-          <a-button status="danger" type="text">
+      <t-space class="btn" size="small">
+        <t-popconfirm content="确认删除这些笔记，注意：不会删除目录" @confirm="multiCheckDelete()">
+          <t-button theme="danger" variant="text" shape="square">
             <template #icon>
               <icon-delete/>
             </template>
-          </a-button>
-        </a-popconfirm>
-        <a-tooltip content="移动到">
-          <a-button type="text" @click="moveMultiTo()">
+          </t-button>
+        </t-popconfirm>
+        <t-tooltip content="移动到">
+          <t-button theme="primary" variant="text" shape="square" @click="moveMultiTo()">
             <template #icon>
               <icon-to-right/>
             </template>
-          </a-button>
-        </a-tooltip>
-        <a-tooltip content="全选">
-          <a-button type="text" @click="selectAll()">
+          </t-button>
+        </t-tooltip>
+        <t-tooltip content="全选">
+          <a-button theme="primary" variant="text" shape="square" @click="selectAll()">
             <template #icon>
               <icon-select-all/>
             </template>
           </a-button>
-        </a-tooltip>
-        <a-button type="text" @click="multiCheckStop()">
+        </t-tooltip>
+        <t-button theme="primary" variant="text" shape="square" @click="multiCheckStop()">
           <template #icon>
             <icon-close/>
           </template>
-        </a-button>
-      </a-space>
+        </t-button>
+      </t-space>
     </div>
   </div>
 </template>

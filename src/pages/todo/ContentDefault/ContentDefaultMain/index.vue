@@ -3,11 +3,11 @@
     <header class="header">
       <!-- 标题 -->
       <div class="title">
-        <a-input v-model="item.index.title" allow-clear placeholder="待办标题，回车修改"
+        <t-input v-model="item.index.title" :clearable="true" placeholder="待办标题，回车修改"
                  @change="updateSelf()"/>
       </div>
       <!-- 优先级 -->
-      <priority-dropdown v-model="item.index.priority" type="secondary" @change="updateSelf()"/>
+      <priority-dropdown v-model="item.index.priority" variant="outline" @change="updateSelf()"/>
     </header>
     <div class="content">
       <main class="container kb-wang-editor">

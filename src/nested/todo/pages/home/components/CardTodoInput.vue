@@ -1,14 +1,14 @@
 <template>
-  <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
+  <t-input v-model="titleWrap" :clearable="true" class="input" :placeholder="placeholder" @enter="submit()"
            :disabled="id === 0">
     <template #suffix>
       <!-- 优先级 -->
       <a-dropdown position="br" @select="updatePriority($event)" :disabled="disabled">
-        <a-button type="text" :style="{color: color}" class="priority">
+        <t-button theme="primary" shape="square" variant="text" :style="{color: color}" class="priority">
           <template #icon>
             <icon-thunderbolt/>
           </template>
-        </a-button>
+        </t-button>
         <template #content>
           <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
                      :value="TodoItemPriority.HIGH">
@@ -29,7 +29,7 @@
         </template>
       </a-dropdown>
     </template>
-  </a-input>
+  </t-input>
 </template>
 <script lang="ts" setup>
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";

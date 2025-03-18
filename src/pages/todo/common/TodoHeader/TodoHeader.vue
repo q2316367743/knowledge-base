@@ -11,7 +11,7 @@
       </div>
       <div class="todo-header__right">
         <div class="todo-header__progress" v-if="!side">
-          <a-progress :percent="percent"/>
+          <t-progress :percent="percent"/>
         </div>
         <a-button-group type="text">
           <!-- 排序 -->
@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="todo-header__bottom" v-if="side">
-      <a-progress :percent="percent"/>
+      <t-progress :percent="percent"/>
     </div>
   </header>
 </template>

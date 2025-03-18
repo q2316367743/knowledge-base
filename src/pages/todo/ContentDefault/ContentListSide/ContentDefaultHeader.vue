@@ -1,13 +1,13 @@
 <template>
   <div class="header-wrap">
     <todo-header side/>
-    <a-input v-model="titleWrap" allow-clear class="input" :placeholder="placeholder" @keydown.enter="submit()"
+    <t-input v-model="titleWrap" :clearable="true" class="input" :placeholder="placeholder" @enter="submit()"
              :disabled>
       <template #suffix>
         <!-- 优先级 -->
         <priority-dropdown v-model="priority"/>
       </template>
-    </a-input>
+    </t-input>
   </div>
 </template>
 <script lang="ts" setup>

@@ -1,30 +1,30 @@
 <template>
   <!-- 优先级 -->
-  <a-dropdown position="br" @select="updatePriority($event)">
-    <a-button :style="{color: color}" class="priority" :type>
+  <t-dropdown position="br" @select="updatePriority($event)" trigger="click">
+    <t-button :style="{color: color}" class="priority" theme="default" :variant="variant" shape="square">
       <template #icon>
         <icon-thunderbolt/>
       </template>
-    </a-button>
-    <template #content>
-      <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
-                 :value="TodoItemPriority.HIGH">
+    </t-button>
+    <t-dropdown-menu>
+      <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
+                       :value="TodoItemPriority.HIGH">
         高优先级
-      </a-doption>
-      <a-doption :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
-                 :value="TodoItemPriority.MIDDLE">
+      </t-dropdown-item>
+      <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
+                       :value="TodoItemPriority.MIDDLE">
         中优先级
-      </a-doption>
-      <a-doption :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
-                 :value="TodoItemPriority.FLOOR">
+      </t-dropdown-item>
+      <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
+                       :value="TodoItemPriority.FLOOR">
         低优先级
-      </a-doption>
-      <a-doption :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
-                 :value="TodoItemPriority.NONE">
+      </t-dropdown-item>
+      <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
+                       :value="TodoItemPriority.NONE">
         无优先级
-      </a-doption>
-    </template>
-  </a-dropdown>
+      </t-dropdown-item>
+    </t-dropdown-menu>
+  </t-dropdown>
 
 </template>
 <script lang="ts" setup>
@@ -38,8 +38,8 @@ const priority = defineModel({
   default: TodoItemPriority.NONE
 });
 defineProps({
-  type: {
-    type: String as PropType< "dashed" | "text" | "outline" | "primary" | "secondary">,
+  variant: {
+    type: String as PropType< 'text' | 'outline'>,
     default: 'text'
   }
 });

@@ -1,54 +1,54 @@
 <template>
   <div class="todo-side">
     <header class="m-2">
-      <a-input-group>
-        <a-input style="width: 233px;" v-model="keyword" allow-clear placeholder="请输入清单名称"/>
-        <a-button type="primary" @click="add(0)">
+      <t-input-group>
+        <t-input style="width: 233px;" v-model="keyword" allow-clear placeholder="请输入清单名称"/>
+        <t-button theme="primary" shape="square" @click="add(0)">
           <template #icon>
             <icon-plus/>
           </template>
-        </a-button>
-      </a-input-group>
+        </t-button>
+      </t-input-group>
     </header>
     <a-tree v-model:selected-keys="selectKeys" :data="treeNodeData" block-node
             style="margin: 7px;width: calc(100% - 14px)" draggable :virtual-list-props="virtualListProps"
             :allow-drop="checkAllowDrop" @drop="onDrop($event)">
       <template #extra="nodeData">
-        <a-dropdown>
-          <a-button type="text">
+        <t-dropdown trigger="click">
+          <t-button variant="text" theme="primary" shape="square">
             <template #icon>
               <icon-more/>
             </template>
-          </a-button>
-          <template #content>
-            <a-doption v-if="!nodeData.isLeaf" @click="add(nodeData.key)">
-              <template #icon>
-                <icon-plus/>
+          </t-button>
+          <t-dropdown-menu>
+            <t-dropdown-item v-if="!nodeData.isLeaf" @click="add(nodeData.key)">
+              <template #prefix-icon>
+                <plus-icon />
               </template>
               新增
-            </a-doption>
-            <a-doption @click="update(nodeData.key)">
-              <template #icon>
-                <icon-edit/>
+            </t-dropdown-item>
+            <t-dropdown-item @click="update(nodeData.key)">
+              <template #prefix-icon>
+                <edit2-icon />
               </template>
               修改
-            </a-doption>
-            <a-doption v-if="!nodeData.children || nodeData.children.length === 0"
-                       @click="remove(nodeData.key, nodeData.title)" style="color: red;">
-              <template #icon>
-                <icon-delete/>
+            </t-dropdown-item>
+            <t-dropdown-item v-if="!nodeData.children || nodeData.children.length === 0"
+                             @click="remove(nodeData.key, nodeData.title)" style="color: red;">
+              <template #prefix-icon>
+                <delete-icon />
               </template>
               删除
-            </a-doption>
-            <a-doption v-if="nodeData.isLeaf" @click="switchFeature(nodeData.key)">
-              <template #icon>
-                <icon-star-fill v-if="hasFeature(nodeData.key)"/>
-                <icon-star v-else/>
+            </t-dropdown-item>
+            <t-dropdown-item v-if="nodeData.isLeaf" @click="switchFeature(nodeData.key)">
+              <template #prefix-icon>
+                <star-filled-icon v-if="hasFeature(nodeData.key)"/>
+                <star-icon v-else/>
               </template>
               快速启动
-            </a-doption>
-          </template>
-        </a-dropdown>
+            </t-dropdown-item>
+          </t-dropdown-menu>
+        </t-dropdown>
       </template>
     </a-tree>
   </div>
@@ -66,6 +66,7 @@ import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
 import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {DeleteIcon, Edit2Icon, PlusIcon, StarFilledIcon, StarIcon} from "tdesign-icons-vue-next";
 
 const size = useWindowSize();
 

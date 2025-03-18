@@ -23,6 +23,7 @@
     "@editorjs/underline": "^1.2.1",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@imengyu/vue3-context-menu": "^1.4.4",

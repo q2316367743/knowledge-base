@@ -2,7 +2,7 @@
   <div class="app">
     <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
       <a-layout class="app-layout">
-        <a-layout-sider :collapsed="appCollapse" style="z-index: 50" :collapsed-width="0" :width="48" class="overflow-hidden">
+        <a-layout-sider :collapsed="appCollapse" style="z-index: 50" :collapsed-width="0" :width="48">
           <app-side/>
         </a-layout-sider>
         <a-layout-content>
