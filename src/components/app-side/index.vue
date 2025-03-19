@@ -77,31 +77,31 @@
         <template #title>更多</template>
         <t-menu-item value="/more/backup">
           <template #icon>
-            <icon-sync/>
+            <refresh-icon />
           </template>
           备份
         </t-menu-item>
         <t-menu-item value="/more/attachment" v-if="isUtools">
           <template #icon>
-            <icon-attachment/>
+            <file-attachment-icon />
           </template>
           附件
         </t-menu-item>
         <t-menu-item value="/more/recommend">
           <template #icon>
-            <icon-thumb-up/>
+            <thumb-up-icon />
           </template>
           推荐
         </t-menu-item>
         <t-menu-item value="/more/update">
           <template #icon>
-            <icon-time-line/>
+            <history-icon />
           </template>
           更新
         </t-menu-item>
         <t-menu-item value="/more/about">
           <template #icon>
-            <icon-exclamation-circle/>
+            <info-circle-icon />
           </template>
           关于
         </t-menu-item>
@@ -134,7 +134,7 @@
           </t-dropdown-item>
         </t-dropdown-menu>
       </t-dropdown>
-      <t-dropdown position="tl" trigger="click">
+      <t-dropdown placement="top-left" trigger="click">
         <t-button theme="primary" variant="text" shape="square" style="margin-bottom: 7px;">
           <template #icon>
             <icon-question-circle/>
@@ -142,25 +142,25 @@
         </t-button>
         <t-dropdown-menu>
           <t-dropdown-item @click="openKeyDrawer()">
-            <template #icon>
+            <template #prefix-icon>
               <icon-to-bottom/>
             </template>
             快捷键
           </t-dropdown-item>
           <t-dropdown-item @click="toDoc()">
-            <template #icon>
+            <template #prefix-icon>
               <icon-question-circle/>
             </template>
             帮助中心
           </t-dropdown-item>
           <t-dropdown-item @click="toFeedback()">
-            <template #icon>
+            <template #prefix-icon>
               <icon-message/>
             </template>
             反馈与建议
           </t-dropdown-item>
           <t-dropdown-item @click="toUpdateLog()">
-            <template #icon>
+            <template #prefix-icon>
               <icon-message-banned/>
             </template>
             查看更新日志
@@ -186,9 +186,9 @@ import {toDoc, toFeedback} from "@/global/Constant";
 import {
   ArticleIcon,
   CheckRectangleIcon, DeleteIcon,
-  Edit2Icon, EllipsisIcon,
-  QuestionnaireIcon,
-  SearchIcon, SettingIcon,
+  Edit2Icon, EllipsisIcon, FileAttachmentIcon, HistoryIcon, InfoCircleIcon,
+  QuestionnaireIcon, RefreshIcon,
+  SearchIcon, SettingIcon, ThumbUpIcon,
   ToolsIcon
 } from "tdesign-icons-vue-next";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";

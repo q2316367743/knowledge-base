@@ -158,7 +158,6 @@ onBeforeUnmount(() => editor.value?.destroy());
 </script>
 <style scoped lang="less">
 .super-editor {
-  padding: 0 8px;
   overflow: auto;
   position: relative;
   height: 100%;

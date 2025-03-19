@@ -14,7 +14,7 @@
         <rich-text-editor v-model="item.content.record.content" simple @change="updateContent()" v-if="isInit"/>
       </main>
     </div>
-    <footer class="footer">
+    <footer class="footer overflow-y-hidden">
       <tag-group v-model="item.attr.tags" @change="updateSelf()"/>
       <main-content-attr/>
     </footer>

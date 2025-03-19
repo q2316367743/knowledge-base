@@ -4,11 +4,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {Calendar, EventSourceInput, EventInput, EventClickArg} from '@fullcalendar/core';
+import {Calendar, EventSourceInput, EventInput, EventClickArg, EventImpl} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {handlePriorityColor, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
@@ -73,13 +73,13 @@ onMounted(() => {
           }
         }
       },
-      eventDrop: function (info) {
-        console.log(info);
-        // const targetId = parseInt(info.event.id);
-        // todoStore.updateById(targetId, {}, {
-        //   start: info.event.startStr,
-        //   end: info.event.endStr
-        // });
+      eventDrop: function (info: {event: EventClickArg['event'], oldEvent: EventClickArg['event']}) {
+        const {event} = info;
+        const targetId = parseInt(info.event.id);
+        todoStore.updateById(targetId, {}, {
+          start: event.startStr,
+          end: event.endStr
+        });
       },
     });
     calendar.render();

@@ -41,7 +41,6 @@ import EditorContentEditor
     right: 0;
     bottom: 0;
     overflow-y: auto;
-    padding: 10px;
     box-sizing: border-box;
   }
 
