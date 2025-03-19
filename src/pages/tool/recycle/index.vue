@@ -21,7 +21,7 @@
             </template>
           </a-list-item-meta>
           <template #extra>
-            <a-space>
+            <t-space size="small">
               <a-button type="primary" @click="restore(item.item.id)">
                 恢复
               </a-button>
@@ -31,7 +31,7 @@
                   彻底删除
                 </a-button>
               </a-popconfirm>
-            </a-space>
+            </t-space>
           </template>
         </a-list-item>
       </template>

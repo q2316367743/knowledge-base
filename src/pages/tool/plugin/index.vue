@@ -1,13 +1,13 @@
 <template>
-  <a-layout class="setting-plugin">
-    <a-layout-sider :width="300">
+  <t-layout class="setting-plugin">
+    <t-aside width="300px">
       <setting-plugin-side @select="onSelect"/>
-    </a-layout-sider>
-    <a-layout-content>
+    </t-aside>
+    <t-content>
       <setting-plugin-content :plugin="plugin" v-if="load"/>
       <a-result v-else title="主题、插件和模板" status="warning" style="margin-top: 15vh;">
         <template #icon>
-          <icon-question/>
+          <questionnaire-icon />
         </template>
         <template #subtitle>
           <p>选择左侧的插件进行编辑</p>
@@ -18,24 +18,24 @@
           <p style="color: rgb(var(--warning-6))">请注意，如果修改的主题是正在使用的，修改后需要前往主题设置中刷新主题</p>
         </template>
         <template #extra>
-          <a-space>
-            <a-button type="primary" @click="toHelp">
+          <t-space size="small">
+            <t-button theme="primary" @click="toHelp" >
               <template #icon>
-                <icon-question/>
+                <questionnaire-icon />
               </template>
               查看帮助
-            </a-button>
-            <a-button type="primary" @click="toSetting">
+            </t-button>
+            <t-button theme="primary" @click="toSetting">
               <template #icon>
-                <icon-settings/>
+                <setting-icon />
               </template>
               前往设置
-            </a-button>
-          </a-space>
+            </t-button>
+          </t-space>
         </template>
       </a-result>
-    </a-layout-content>
-  </a-layout>
+    </t-content>
+  </t-layout>
 </template>
 <script lang="ts" setup>
 import {nextTick, ref} from "vue";
@@ -43,8 +43,9 @@ import {useRouter} from "vue-router";
 import Constant from "@/global/Constant";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
-import SettingPluginSide from "@/pages/plugin/layout/SettingPluginSide.vue";
-import SettingPluginContent from "@/pages/plugin/layout/SettingPluginContent.vue";
+import SettingPluginSide from "@/pages/tool/plugin/layout/SettingPluginSide.vue";
+import SettingPluginContent from "@/pages/tool/plugin/layout/SettingPluginContent.vue";
+import {QuestionnaireIcon, SettingIcon} from "tdesign-icons-vue-next";
 
 const router = useRouter();
 

@@ -9,11 +9,11 @@
         <div class="content-default-article__header-count">{{ count }}</div>
       </div>
       <div class="extra">
-        <a-button type="text" size="mini" @click.stop="openAddRelationArticle">
+        <t-button variant="text" theme="primary" shape="square" size="small" @click.stop="openAddRelationArticle">
           <template #icon>
-            <icon-edit/>
+            <edit2-icon />
           </template>
-        </a-button>
+        </t-button>
       </div>
     </div>
     <div v-if="visible" class="content-default-article__content">
@@ -31,6 +31,7 @@ import {openAddRelationArticle} from "@/pages/todo/common/AddRelationArticle";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {ArticleIndex} from "@/entity/article";
+import {Edit2Icon} from "tdesign-icons-vue-next";
 
 const items = computed<Array<number>>(() => useTodoArticleStore().items);
 const articles = computed<Array<ArticleIndex>>(() => {

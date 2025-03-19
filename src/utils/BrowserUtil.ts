@@ -176,8 +176,8 @@ export function sleep(timestamp: number) {
 }
 
 const colors = [
-    'red', 'orangered', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue',
-    'arcoblue', 'purple', 'pinkpurple', 'magenta', 'gray'];
+    '#ed5a65', '#f07c82', '#bf3553', '#fecc11', '#e8b004', '#66c18c', '#55bb8a', '#29b7cb',
+    '#22a2c3', '#813c85', '#7e1671', '#7e2065', '#1e131d'];
 
 export function randomColor(str?: string): string {
     let index = Math.floor(Math.random() * colors.length);

@@ -1,8 +1,8 @@
 <template>
-    <a-layout class="app kb-preview">
-        <home/>
-        <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
-    </a-layout>
+  <div class="app kb-preview">
+    <home/>
+    <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
+  </div>
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
@@ -17,28 +17,28 @@ useArticleStore().init();
 useFolderStore().init();
 
 const preview = ref({
-    visible: false,
-    src: ''
+  visible: false,
+  src: ''
 })
 
 // @ts-ignore 全局事件
 window.onImagePreview = (src: string) => {
-    preview.value = {
-        visible: true,
-        src
-    }
+  preview.value = {
+    visible: true,
+    src
+  }
 }
 
 // @ts-ignore 全局事件
 window.jumpToArticle = (title: string) => {
-    title = decodeURIComponent(title);
-    toArticleByRelation(title)
+  title = decodeURIComponent(title);
+  toArticleByRelation(title)
 }
 
 
 </script>
 <style scoped lang="less">
 .kb-preview {
-    background-color: var(--color-bg-1);
+  background-color: var(--color-bg-1);
 }
 </style>

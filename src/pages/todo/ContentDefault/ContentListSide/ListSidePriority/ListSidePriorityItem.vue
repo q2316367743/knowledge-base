@@ -3,17 +3,18 @@
     <div class="content-default-group__header" @click.stop="toggleVisible()">
       <div class="content-default-group__header-left">
         <div class="content-default-group__header-handle">
-          <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
+          <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
         <div class="content-default-group__header-title">{{ priority.label }}</div>
         <div class="content-default-group__header-count">{{ count }}</div>
       </div>
       <div class="extra">
-        <a-button type="text" @click.stop="openAddTodoItem(undefined, priority.value)" size="mini">
+        <t-button variant="text" theme="primary" shape="square" @click.stop="openAddTodoItem(undefined, priority.value)"
+                  size="small">
           <template #icon>
-            <icon-plus/>
+            <plus-icon/>
           </template>
-        </a-button>
+        </t-button>
       </div>
     </div>
     <list-side-priority-content v-if="visible" :items="todoItems"/>
@@ -25,6 +26,7 @@ import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 import ListSidePriorityContent
   from "@/pages/todo/ContentDefault/ContentListSide/ListSidePriority/ListSidePriorityContent.vue";
+import {ChevronDownIcon, PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   priority: {
@@ -62,9 +64,9 @@ const toggleVisible = useToggle(visible);
 
 
       .content-default-group__header-handle {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
 
-        :deep(.arco-icon) {
+        :deep(.t-icon) {
           transition: 0.3s;
         }
       }
@@ -76,7 +78,7 @@ const toggleVisible = useToggle(visible);
       }
 
       .content-default-group__header-count {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
       }
     }
 

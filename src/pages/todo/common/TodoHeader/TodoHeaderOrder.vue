@@ -1,10 +1,10 @@
 <template>
   <a-dropdown position="br" :disabled="disabled">
-    <a-button>
+    <t-button variant="text" theme="primary" shape="square">
       <template #icon>
-        <icon-sort/>
+        <filter-sort-icon />
       </template>
-    </a-button>
+    </t-button>
     <template #content>
       <a-dsubmenu value="option-2-2" trigger="hover">
         <template #icon>
@@ -80,6 +80,7 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoCategory, TodoCategoryGroupEnum} from "@/entity/todo/TodoCategory";
+import {FilterSortIcon} from "tdesign-icons-vue-next";
 
 const todoListSort = computed<TodoListSortEnum>(() => useTodoWrapStore().sort);
 const groupType = computed<TodoCategoryGroupEnum>(() => useTodoWrapStore().groupType);

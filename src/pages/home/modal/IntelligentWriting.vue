@@ -1,17 +1,17 @@
 <template>
   <t-dialog placement="center" v-model:visible="visible" width="700px" :footer="false">
     <template #header>
-      <a-space>
+      <t-space size="small">
         <icon-edit/>
         <div>智能写作</div>
-      </a-space>
+      </t-space>
     </template>
     <t-paragraph>
       <t-check-tag-group v-model="value" :options="options"/>
     </t-paragraph>
     <t-textarea v-model="text" :autosize="{minRows: 5, maxRows: 100}" :autofocus="true"/>
     <t-paragraph v-if="articles.length > 0">
-      <a-space wrap>
+      <t-space wrap size="small">
         <div class="article-item" v-for="article in articles" :key="article.id">
           <div class="article-item-title ellipsis" :title="article.name">
             {{ article.name }}
@@ -25,7 +25,7 @@
             <icon-close/>
           </div>
         </div>
-      </a-space>
+      </t-space>
     </t-paragraph>
     <t-paragraph>
       <div class="w-full flex justify-between">

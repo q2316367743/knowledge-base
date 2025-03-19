@@ -1,19 +1,19 @@
 <template>
-    <div class="app kb-note">
-        <div class="option">
-            <div style="width: 50%;max-width: 230px">
-                <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
-            </div>
-            <a-space>
-                <a-popconfirm content="二次确认" @ok="onSubmit()" ok-text="新建" position="br">
-                    <a-button type="primary" :loading="loading">新建</a-button>
-                </a-popconfirm>
-            </a-space>
-        </div>
-        <div class="container kb-wang-editor">
-            <rich-text-editor v-model="content" ref="editorRef"/>
-        </div>
+  <div class="app kb-note">
+    <div class="option">
+      <div style="width: 50%;max-width: 230px">
+        <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
+      </div>
+      <t-space size="small">
+        <t-popconfirm content="二次确认" @confirm="onSubmit()" confirm-btn="新建" placement="bottom-right">
+          <t-button theme="primary" :loading="loading">新建</t-button>
+        </t-popconfirm>
+      </t-space>
     </div>
+    <div class="container kb-wang-editor">
+      <rich-text-editor v-model="content" ref="editorRef"/>
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
 import {computed, ref} from "vue";
@@ -40,43 +40,42 @@ const content = ref('');
 const folderTree = computed(() => useFolderStore().folderTree);
 
 
-
 function onSubmit() {
-    loading.value = true;
-    _addArticle(folder.value, ArticleTypeEnum.RICH_TEXT, content.value)
-        .then(() => {
-            MessageUtil.success("新建成功");
-            content.value = '';
-            editorRef.value && editorRef.value.setContent("");
-        })
-        .catch(e => MessageUtil.error("新建失败", e))
-        .finally(() => loading.value = false);
+  loading.value = true;
+  _addArticle(folder.value, ArticleTypeEnum.RICH_TEXT, content.value)
+    .then(() => {
+      MessageUtil.success("新建成功");
+      content.value = '';
+      editorRef.value && editorRef.value.setContent("");
+    })
+    .catch(e => MessageUtil.error("新建失败", e))
+    .finally(() => loading.value = false);
 }
 
 
 </script>
 <style scoped lang="less">
 .kb-note {
-    background-color: var(--color-bg-1);
+  background-color: var(--color-bg-1);
 
-    .option {
-        display: flex;
-        justify-content: space-between;
-        padding: 7px;
+  .option {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px;
+  }
+
+  .container {
+    position: absolute;
+    top: 46px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+
+    .note {
+      position: relative;
+      height: 100%;
+      width: 100%;
     }
-
-    .container {
-        position: absolute;
-        top: 46px;
-        left: 7px;
-        right: 7px;
-        bottom: 7px;
-
-        .note {
-            position: relative;
-            height: 100%;
-            width: 100%;
-        }
-    }
+  }
 }
 </style>

@@ -1,13 +1,14 @@
 <template>
-  <a-tooltip :content="disabled ? '请先配置运行命令' : '代码运行'" position="br" v-if="show">
-    <a-button status="success" type="text" @click="run">
+  <t-tooltip :content="disabled ? '请先配置运行命令' : '代码运行'" placement="bottom-left" v-if="show">
+    <t-button status="success" variant="text" theme="primary" shape="square" @click="run">
       <template #icon>
-        <icon-play-arrow/>
+        <play-circle-icon />
       </template>
-    </a-button>
-  </a-tooltip>
+    </t-button>
+  </t-tooltip>
 </template>
 <script lang="ts" setup>
+import {PlayCircleIcon} from "tdesign-icons-vue-next";
 import {ArticleIndex} from "@/entity/article";
 import {homeEditorId} from "@/store/components/HomeEditorStore";
 import {useArticleStore} from "@/store/db/ArticleStore";

@@ -1,9 +1,9 @@
 <template>
-  <a-button type="text" size="mini">
+  <t-button theme="primary" variant="text" size="small" shape="square">
     <template #icon>
       <icon-more-vertical/>
     </template>
-  </a-button>
+  </t-button>
 </template>
 <script lang="ts" setup>
 </script>

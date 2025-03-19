@@ -118,7 +118,7 @@ export default {
       const res = DialogPlugin({
         default: () => <div>
           <Paragraph>{content}</Paragraph>
-          <Input autofocus={true} v-model={value.value} clearable onEnter={onKeydown}></Input>
+          <Input autofocus={true} v-model={value.value} clearable={true} onEnter={onKeydown}></Input>
         </div>,
         top: 'auto',
         header: title,

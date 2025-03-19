@@ -2,11 +2,12 @@
   <header class="todo-header">
     <div class="todo-header__top">
       <div class="todo-header__left">
-        <a-button type="text" @click="switchCollapsed()">
+        <t-button variant="text" theme="primary" shape="square" @click="switchCollapsed()">
           <template #icon>
-            <icon-menu/>
+            <menu-fold-icon v-if="collapsed"/>
+            <menu-unfold-icon v-else/>
           </template>
-        </a-button>
+        </t-button>
         <div class="title">{{ title }}</div>
       </div>
       <div class="todo-header__right">
@@ -15,14 +16,14 @@
         </div>
         <a-button-group type="text">
           <!-- 排序 -->
-          <todo-header-order />
+          <todo-header-order/>
           <!-- 更多 -->
           <a-dropdown position="br">
-            <a-button>
+            <t-button variant="text" theme="primary" shape="square">
               <template #icon>
-                <icon-more-vertical/>
+                <more-icon />
               </template>
-            </a-button>
+            </t-button>
             <template #content>
               <a-doption :disabled="disabled" @click="openTodoExport()">
                 <template #icon>
@@ -79,6 +80,7 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import TodoHeaderOrder from "@/pages/todo/common/TodoHeader/TodoHeaderOrder.vue";
+import {MenuFoldIcon, MenuUnfoldIcon, MoreIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   side: {
@@ -89,6 +91,7 @@ defineProps({
 
 const disabled = computed(() => useTodoWrapStore().categoryId === 0);
 const title = computed(() => useTodoWrapStore().currentCategory?.name);
+const collapsed = computed(() => useTodoWrapStore().collapsed);
 
 const percent = computed(() => {
   const {items} = useTodoItemStore();

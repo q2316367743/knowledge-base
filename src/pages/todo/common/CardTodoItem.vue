@@ -11,17 +11,17 @@
       </div>
     </div>
     <div v-if="hasAttr" class="todo-item__sub">
-      <a-tag color="arcoblue" size="small" bordered>
+      <t-tag theme="primary" size="small" variant="outline">
         <template #icon>
           <icon-clock-circle/>
         </template>
         {{ start }}{{ end ? ' · ' + end : '' }}
-      </a-tag>
+      </t-tag>
     </div>
     <div class="todo-item__tag" v-if="attr.tags.length > 0">
-      <a-space wrap>
-        <a-tag v-for="t in attr.tags" :key="t" :color="randomColor(t)" bordered>{{ t }}</a-tag>
-      </a-space>
+      <t-space size="small" >
+        <t-tag v-for="t in attr.tags" :key="t" :color="randomColor(t)" variant="outline">{{ t }}</t-tag>
+      </t-space>
     </div>
     <a-tooltip content="置顶" v-if="index.top && index.status === TodoItemStatus.TODO">
       <div class="top">

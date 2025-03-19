@@ -9,7 +9,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {IconEdit, IconLeft} from "@arco-design/web-vue/es/icon";
 import {usePageJumpEvent} from "@/global/BeanFactory";
 import EditorContentContainer
-  from "@/pages/note/layout/editor-content/layout/EditorContentContainer/EditorContentEditor.vue";
+  from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
 
 
 function _openArticle(articleIndex: ArticleIndex, width = '80vw') {

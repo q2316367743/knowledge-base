@@ -1,15 +1,15 @@
 <template>
-  <a-layout class="todo">
-    <a-layout-sider :width="270" :collapsed-width="0" :collapsed="collapsed">
-      <todo-side v-show="!collapsed"/>
-    </a-layout-sider>
-    <a-layout-content>
+  <t-layout class="todo">
+    <t-aside :width="collapsed ? '0px' : '270px'" class="overflow-hidden">
+      <todo-side/>
+    </t-aside>
+    <t-content style="position: relative;background-color: var(--td-bg-color-container)">
       <a-result title="请在左侧选择清单" status="404" style="margin-top: 20vh" v-if="empty"/>
       <content-default v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
       <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD"/>
       <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
-    </a-layout-content>
-  </a-layout>
+    </t-content>
+  </t-layout>
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";

@@ -1,40 +1,40 @@
 <template>
-  <div>
+  <div class="h-32px p-2px">
     <editor-content-extra-run />
     <editor-content-extra-ai />
-    <a-dropdown position="br">
-      <a-button type="text">
+    <t-dropdown trigger="click" placement="bottom-left">
+      <t-button variant="text" theme="primary" shape="square">
         <template #icon>
           <icon-more/>
         </template>
-      </a-button>
-      <template #content>
-        <a-doption @click="switchPreview()" :disabled="editorType === ArticleTypeEnum.EXCEL">
-          <template #icon>
+      </t-button>
+      <t-dropdown-menu>
+        <t-dropdown-item @click="switchPreview()" :disabled="editorType === ArticleTypeEnum.EXCEL">
+          <template #prefix-icon>
             <icon-lock/>
           </template>
           编辑/预览
-        </a-doption>
-        <a-doption @click="openHeExtra(homeEditorId)" :disabled="preview">
-          <template #icon>
+        </t-dropdown-item>
+        <t-dropdown-item @click="openHeExtra(homeEditorId)" :disabled="preview">
+          <template #prefix-icon>
             <icon-settings/>
           </template>
           设置
-        </a-doption>
-        <a-doption @click="onImport()">
-          <template #icon>
+        </t-dropdown-item>
+        <t-dropdown-item @click="onImport()">
+          <template #prefix-icon>
             <icon-import/>
           </template>
           导入
-        </a-doption>
-        <a-doption @click="onExport()">
-          <template #icon>
+        </t-dropdown-item>
+        <t-dropdown-item @click="onExport()">
+          <template #prefix-icon>
             <icon-export/>
           </template>
           导出
-        </a-doption>
-      </template>
-    </a-dropdown>
+        </t-dropdown-item>
+      </t-dropdown-menu>
+    </t-dropdown>
   </div>
 </template>
 <script lang="ts" setup>

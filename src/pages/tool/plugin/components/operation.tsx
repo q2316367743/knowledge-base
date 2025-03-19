@@ -1,7 +1,7 @@
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {parseType, renderType} from "@/pages/plugin/components/func";
+import {parseType, renderType} from "@/pages/tool/plugin/components/func";
 import {TreeNodeData} from "@arco-design/web-vue";
 import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 

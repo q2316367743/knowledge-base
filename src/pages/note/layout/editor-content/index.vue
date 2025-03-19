@@ -1,23 +1,49 @@
 <template>
-  <a-layout class="he-editor">
-    <a-layout-header>
+  <div class="he-editor">
+    <div class="he-editor__header">
       <editor-content-header/>
-    </a-layout-header>
-    <a-layout-content>
-      <editor-content-container v-for="article in homeEditorArticles" :key="article.id" :article-index="article"
-                                v-show="article.id === homeEditorId"/>
+    </div>
+    <div class="he-editor__body">
+      <editor-content-editor v-for="article in homeEditorArticles" :key="article.id" :article-index="article"
+                             v-show="article.id === homeEditorId"/>
       <not-note status="404" v-if="homeEditorArticles.length === 0"/>
-    </a-layout-content>
-  </a-layout>
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
 import {homeEditorArticles, homeEditorId} from "@/store/components/HomeEditorStore";
 import EditorContentHeader from "@/pages/note/layout/editor-content/layout/EditorContentHeader/index.vue";
-import EditorContentContainer from "@/pages/note/layout/editor-content/layout/EditorContentContainer/index.vue";
 import NotNote from "@/pages/note/components/NotNote.vue";
-
-
+import EditorContentEditor
+  from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
 </script>
-<style lang="less">
-@import "./index.less";
+<style lang="less" scoped>
+.he-editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+
+  .he-editor__header {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .he-editor__body {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+}
 </style>

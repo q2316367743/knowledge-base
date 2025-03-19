@@ -1,10 +1,10 @@
 <template>
   <t-dialog v-model:visible="visible" placement="center" confirm-btn="选择" @confirm="onConfirm">
     <template #header>
-      <a-space>
-        <icon-book/>
+      <t-space size="small">
+        <book-icon/>
         <div>参考笔记</div>
-      </a-space>
+      </t-space>
     </template>
     <t-input v-model="keyword" @change="inputChange" placeholder="请输入笔记标题进行搜索"/>
     <t-tree v-model="checkedKeys" :data="treeData" :expand-all="false" :checkable="true" max-height="70vh"
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import {InputProps, TreeNodeModel, TreeProps} from "tdesign-vue-next";
 import {useNoteTree} from "@/hooks/NoteTree";
+import {BookIcon} from "tdesign-icons-vue-next";
 
 const visible = defineModel({
   type: Boolean,

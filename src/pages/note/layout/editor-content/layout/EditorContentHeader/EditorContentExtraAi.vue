@@ -1,11 +1,11 @@
 <template>
-  <a-tooltip content="AI助理" position="bottom">
-    <a-button @click="openAiChatWidget()" type="text">
+  <t-tooltip content="AI助理" placement="bottom">
+    <t-button @click="openAiChatWidget()" variant="text" theme="primary" shape="square">
       <template #icon>
         <icon-robot/>
       </template>
-    </a-button>
-  </a-tooltip>
+    </t-button>
+  </t-tooltip>
 </template>
 <script lang="ts" setup>
 import {openAiChatWidget} from "@/widget/AiChat";

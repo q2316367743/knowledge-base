@@ -1,15 +1,15 @@
 <template>
   <div class="content-card-empty">
-    <a-button type="outline" long @click="openEditTodoGroupFunc()">
+    <t-button theme="primary" variant="outline" :block="true" @click="openEditTodoGroupFunc()">
       添加分组
-    </a-button>
+    </t-button>
   </div>
 </template>
 <script lang="ts" setup>
 import {openEditTodoGroupFunc} from "@/pages/todo/common/TodoGroupFunc";
 </script>
 <style scoped lang="less">
-.content-card-empty{
+.content-card-empty {
   width: 256px;
   height: calc(100vh - 40px);
   padding: 16px 8px;

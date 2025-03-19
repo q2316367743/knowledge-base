@@ -3,14 +3,14 @@
     <header class="content-card-article__header">
       <div class="title">
         关联的笔记
-        <a-tag class="length">{{ count }}</a-tag>
+        <t-tag class="length">{{ count }}</t-tag>
       </div>
       <div class="extra">
-        <a-button type="text" @click="openAddRelationArticle">
+        <t-button variant="text" theme="primary" shape="square" @click="openAddRelationArticle">
           <template #icon>
             <icon-edit/>
           </template>
-        </a-button>
+        </t-button>
       </div>
     </header>
     <div class="content-card-article__content">

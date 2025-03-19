@@ -6,36 +6,34 @@
     <div class="container">
       <a-tree :data="treeData" block-node :virtual-list-props="{height: height}" draggable @drop="onDrop($event)">
         <template #extra="nodeData">
-          <a-button-group type="text">
-            <t-button theme="primary" @click="add(nodeData.key)">
+          <t-space size="small">
+            <t-button theme="primary" size="small" @click="add(nodeData.key)">
               <template #icon>
                 <icon-plus/>
               </template>
             </t-button>
-            <t-button theme="primary" @click="update(nodeData.key)">
+            <t-button theme="primary" size="small" @click="update(nodeData.key)">
               <template #icon>
                 <icon-edit/>
               </template>
             </t-button>
             <t-popconfirm content="确定要删除此分类？" confirm-btn="删除" @confirm="remove(nodeData.key)">
-              <t-button theme="danger">
+              <t-button theme="danger" size="small">
                 <template #icon>
                   <icon-delete/>
                 </template>
               </t-button>
             </t-popconfirm>
-          </a-button-group>
+          </t-space>
         </template>
       </a-tree>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref} from "vue";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TreeNodeData} from "@arco-design/web-vue";
-import {useWindowSize} from "@vueuse/core";
 
 const size = useWindowSize();
 

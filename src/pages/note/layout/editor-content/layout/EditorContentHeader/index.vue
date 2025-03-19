@@ -1,60 +1,42 @@
 <template>
   <header class="editor-content-header">
-    <div class="menu" :style="{padding: '4px'}">
-      <a-button type="text" @click="switchCollapsed()">
+    <div :style="{padding: '4px'}" :class="{menu: true, border: homeEditorArticles.length > 0}">
+      <t-button variant="text" theme="primary" shape="square" @click="switchCollapsed()">
         <template #icon>
           <icon-menu/>
         </template>
-      </a-button>
+      </t-button>
     </div>
     <div class="tab" v-if="homeEditorArticles.length > 0">
-      <a-tabs v-model:active-key="homeEditorId" hide-content editable @delete="close">
-        <template #extra>
+      <t-tabs v-model="homeEditorId" size="medium">
+        <template #action>
           <editor-content-extra/>
         </template>
-        <a-tab-pane v-for="article in homeEditorArticles" :key="article.id" style="height: auto">
-          <template #title>
-            <a-dropdown position="bottom" trigger="contextMenu" :popup-max-height="false">
-              <div>
-                <icon-lock v-if="article.preview" style="margin-right: 4px"/>
-                <span>{{ article.name }}</span>
-              </div>
-              <template #content>
-                <a-doption @click="close(article.id)">
-                  关闭
-                </a-doption>
-                <a-doption @click="useHomeEditorStore().closeOther(article.id)">
-                  关闭其他标签
-                </a-doption>
-                <a-doption @click="useHomeEditorStore().closeAll()">
-                  关闭全部标签
-                </a-doption>
-                <a-dgroup title="更多">
-                  <a-doption @click="rename(article.id, article.name, true)">
-                    重命名
-                  </a-doption>
-                  <a-doption @click="remove(article.id, article.name, true)">
-                    删除
-                  </a-doption>
-                  <a-doption @click="switchPreview(article.id)" :disabled="editorType === ArticleTypeEnum.EXCEL">
-                    {{ article.preview ? '编辑' : '预览' }}
-                  </a-doption>
-                </a-dgroup>
-              </template>
-            </a-dropdown>
+        <t-tab-panel v-for="article in homeEditorArticles" :value="article.id" style="height: auto">
+          <template #label>
+            <div class="items-center" @contextmenu="onContextmenu($event, article)">
+              <lock-on-icon v-if="article.preview" class="mr-4px"/>
+              <span>{{ article.name }}</span>
+              <close-icon color="red" class="ml-8px hover:bg-#f2f2f2" style="transition:all 0.3s"
+                          @click="close(article.id)"/>
+            </div>
           </template>
-        </a-tab-pane>
-      </a-tabs>
+        </t-tab-panel>
+      </t-tabs>
     </div>
   </header>
 </template>
 <script lang="ts" setup>
+import ContextMenu from "@imengyu/vue3-context-menu";
 import {
   editorType, useArticlePreviewEvent, useHomeEditorStore, homeEditorId, homeEditorArticles
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {remove, rename} from "@/pages/note/components/he-context";
 import EditorContentExtra from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
+import {useGlobalStore} from "@/store/GlobalStore";
+import {ArticleIndex} from "@/entity/article";
+import {CloseIcon, LockOnIcon} from "tdesign-icons-vue-next";
 
 
 const switchCollapsed = useHomeEditorStore().switchCollapsed;
@@ -68,17 +50,53 @@ function switchPreview(id: number) {
   useArticlePreviewEvent.emit(id);
 }
 
+function onContextmenu(e: MouseEvent, article: ArticleIndex) {
+  e.preventDefault();
+  ContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    theme: useGlobalStore().isDark ? "default-dark" : "default",
+    zIndex: 200,
+    items: [{
+      label: '关闭',
+      onClick: () => close(article.id)
+    }, {
+      label: '关闭其他标签',
+      onClick: () => useHomeEditorStore().closeOther(article.id)
+    }, {
+      label: '关闭全部标签',
+      onClick: () => useHomeEditorStore().closeAll()
+    }, {
+      divided: 'self'
+    }, {
+      label: '重命名',
+      onClick: () => rename(article.id, article.name, true)
+    }, {
+      label: '删除',
+      onClick: () => remove(article.id, article.name, true)
+    }, {
+      label: article.preview ? '编辑' : '预览',
+      onClick: () => switchPreview(article.id),
+      disabled: editorType.value === ArticleTypeEnum.EXCEL
+    }]
+  });
+}
+
 </script>
 <style scoped lang="less">
 .editor-content-header {
   height: 40px;
   align-items: center;
-  border-bottom: 1px solid var(--color-border-2);
 
   .menu {
     width: 32px;
     height: 31px;
     overflow-y: hidden;
+    border-bottom: 1px solid transparent;
+
+    &.border {
+      border-bottom: 1px solid var(--td-border-level-1-color);
+    }
   }
 
   .tab {
@@ -88,8 +106,12 @@ function switchPreview(id: number) {
     right: 4px;
     height: 40px;
 
-    :deep(.arco-tabs-nav::before) {
-      display: none;
+    :deep(.t-tabs__nav-item) {
+      height: 40px !important;
+    }
+
+    :deep(.t-tabs__operations) {
+      border: none;
     }
   }
 }

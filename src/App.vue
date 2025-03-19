@@ -1,14 +1,14 @@
 <template>
   <div class="app">
-    <a-spin :loading="loading" :tip="loadingText" class="rain-loading">
-      <a-layout class="app-layout">
-        <a-layout-sider :collapsed="appCollapse" style="z-index: 50" :collapsed-width="0" :width="48">
+    <a-spin :loading="loading" :tip="loadingText" class="w-full h-full">
+      <div class="app-layout">
+        <div class="app-aside">
           <app-side/>
-        </a-layout-sider>
-        <a-layout-content>
+        </div>
+        <div class="app-content">
           <router-view/>
-        </a-layout-content>
-      </a-layout>
+        </div>
+      </div>
     </a-spin>
     <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
     <update-check/>
@@ -179,4 +179,32 @@ createServer();
 
 
 </script>
-<style lang="less"></style>
+<style lang="less" scoped>
+.app-layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+
+  .app-aside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    z-index: 50;
+    overflow: hidden;
+    border-right: 1px solid var(--td-border-level-1-color);
+  }
+
+  .app-content {
+    position: absolute;
+    top: 0;
+    left: 49px;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+}
+</style>

@@ -36,7 +36,7 @@ const routers: Array<RouteRecordRaw> = [{
 }, {
   name: "插件",
   path: "/plugin",
-  component: () => import("@/pages/plugin/index.vue")
+  component: () => import("@/pages/tool/plugin/index.vue")
 }, {
   name: "工具",
   path: "/tool",

@@ -3,14 +3,14 @@
     <header class="card-priority-item__header">
       <div class="title">
         {{ priority.label }}
-        <a-tag class="length">{{ count }}</a-tag>
+        <t-tag class="length">{{ count }}</t-tag>
       </div>
       <div class="extra">
-        <a-button type="text" @click="openAddTodoItem(undefined, priority.value)">
+        <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem(undefined, priority.value)">
           <template #icon>
             <icon-plus/>
           </template>
-        </a-button>
+        </t-button>
       </div>
     </header>
     <div class="card-priority-item__content">

@@ -5,24 +5,24 @@
     <header class="content-card-group__header">
       <div class="title">
         {{ group.name }}
-        <a-tag class="length">{{ count }}</a-tag>
+        <t-tag class="length">{{ count }}</t-tag>
       </div>
       <div class="extra">
-        <a-button type="text" @click="openAddTodoItem(group)">
+        <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem(group)">
           <template #icon>
-            <icon-plus/>
+            <plus-icon/>
           </template>
-        </a-button>
+        </t-button>
         <a-dropdown>
-          <a-button type="text">
+          <t-button variant="text" theme="primary" shape="square">
             <template #icon>
-              <icon-more/>
+              <ellipsis-icon/>
             </template>
-          </a-button>
+          </t-button>
           <template #content>
             <a-doption @click="openEditTodoGroupFunc(group)">
               <template #icon>
-                <icon-edit/>
+                <edit2-icon/>
               </template>
               重命名
             </a-doption>
@@ -40,7 +40,7 @@
             </a-doption>
             <a-doption @click="openDeleteTodoGroupFunc(group.id, group.name)">
               <template #icon>
-                <icon-delete/>
+                <delete-icon />
               </template>
               删除
             </a-doption>
@@ -67,6 +67,7 @@ import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import TodoItemPriority from "@/pages/todo/common/TodoItemPriority.vue";
 import TodoItemComplete from "@/pages/todo/common/TodoItemComplete.vue";
+import {DeleteIcon, Edit2Icon, EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   group: {

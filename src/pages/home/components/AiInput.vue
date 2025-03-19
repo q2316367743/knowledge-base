@@ -9,16 +9,17 @@
       @keydown.enter="send()"
     />
     <div class="flex flex-items-end" style="flex-direction: row" :class="{'w-72px': loading}">
-      <a-button class="ai-input-send" :type="disabled ? 'text' : 'primary'" shape="circle" :disabled @click="ask">
+      <t-button class="ai-input-send" theme="primary" :variant="disabled ? 'text' : 'base'" shape="circle" :disabled
+                @click="ask">
         <template #icon>
-          <icon-send/>
+          <send-icon/>
         </template>
-      </a-button>
-      <a-button type="outline" class="ml-8px" status="danger" v-if="loading" @click="onStop">
+      </t-button>
+      <t-button variant="outline" class="ml-8px" theme="danger" v-if="loading" @click="onStop">
         <template #icon>
           <icon-stop/>
         </template>
-      </a-button>
+      </t-button>
     </div>
   </div>
 </template>
@@ -26,6 +27,7 @@
 import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {useChatStore} from "@/store/components/ChatStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {SendIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   placeholder: {
