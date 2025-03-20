@@ -32,16 +32,16 @@ import EditorContentEditor
     top: 0;
     left: 0;
     right: 0;
+    background-color: var(--td-bg-color-container);
   }
 
   .he-editor__body {
     position: absolute;
-    top: 50px;
+    top: 41px;
     left: 0;
     right: 0;
     bottom: 0;
-    overflow-y: auto;
-    box-sizing: border-box;
+    overflow: hidden;
   }
 
 }

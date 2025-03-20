@@ -14,7 +14,7 @@
         <div class="todo-header__progress" v-if="!side">
           <t-progress :percent="percent"/>
         </div>
-        <a-button-group type="text">
+        <div class="flex">
           <!-- 排序 -->
           <todo-header-order/>
           <!-- 更多 -->
@@ -58,7 +58,7 @@
               </a-doption>
             </template>
           </a-dropdown>
-        </a-button-group>
+        </div>
       </div>
     </div>
     <div class="todo-header__bottom" v-if="side">
@@ -67,10 +67,6 @@
   </header>
 </template>
 <script lang="ts" setup>
-import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
-import {computed} from "vue";
-import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoExport} from "@/pages/todo/common/TodoExport";
 import {openTodoSetting} from "@/pages/todo/common/TodoSetting";
 import {openAddRelationArticle} from "@/pages/todo/common/AddRelationArticle";

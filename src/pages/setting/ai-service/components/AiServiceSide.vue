@@ -6,13 +6,13 @@
           <template #radio="{ checked }">
             <div class="ai-service-item w-full flex justify-between items-center" :class="{checked}">
               <div class="ellipsis">{{ s.name }}</div>
-              <a-popconfirm content="确认删除此AI服务" @ok="handleRemove(s.id)">
-                <a-button type="text" size="mini" status="danger" @click.stop>
+              <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)">
+                <t-button theme="primary" variant="text" shape="square" size="small" status="danger" @click.stop>
                   <template #icon>
                     <icon-delete/>
                   </template>
-                </a-button>
-              </a-popconfirm>
+                </t-button>
+              </t-popconfirm>
             </div>
           </template>
         </a-radio>

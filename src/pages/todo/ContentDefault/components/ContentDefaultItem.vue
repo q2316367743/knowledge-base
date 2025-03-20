@@ -31,25 +31,25 @@
         </a-dsubmenu>
         <a-doption style="color: rgb(var(--orange-6));" @click="updateStatusToAbandon(item.id)">
           <template #icon>
-            <icon-thumb-down/>
+            <thumb-down-icon />
           </template>
           放弃
         </a-doption>
         <a-doption style="color: rgb(var(--red-6));" @click="removeById(item.id)">
           <template #icon>
-            <icon-delete/>
+            <delete-icon />
           </template>
           删除
         </a-doption>
       </template>
     </a-dropdown>
     <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="right">
-      <a-button type="text" :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
+      <t-button theme="primary" variant="text" shape="square" :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
                 @click="updateTop(item.id, !item.top)">
         <template #icon>
           <icon-arrow-rise/>
         </template>
-      </a-button>
+      </t-button>
     </a-tooltip>
   </div>
 </template>
@@ -68,6 +68,7 @@ import {useUmami} from "@/plugin/umami";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import ContentDefaultItemDoption from "@/pages/todo/ContentDefault/components/ContentDefaultItemDoption.vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {DeleteIcon, ThumbDownIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   item: {

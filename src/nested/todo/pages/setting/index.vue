@@ -1,17 +1,17 @@
 <template>
   <div class='setting-modal'>
     <div class='header'>
-            <span>
-                <a-button type='text' :loading="loading" @click="onClose">
-                    <template #icon><icon-left/></template>
-                </a-button>
-                <span style="margin-left: 7px">设置</span>
-            </span>
-      <a-button type='text' :loading="loading" @click="onSave">
+      <span>
+        <t-button theme="primary" variant='text' shape="square" :loading="loading" @click="onClose">
+          <template #icon><icon-left/></template>
+        </t-button>
+        <span style="margin-left: 7px">设置</span>
+      </span>
+      <t-button theme="primary" variant="text" shape="square" :loading="loading" @click="onSave">
         <template #icon>
           <icon-save/>
         </template>
-      </a-button>
+      </t-button>
     </div>
     <div class='container'>
       <t-alert style="margin-bottom: 7px;" type="warning" v-if="todoCategoryTree.length === 0">

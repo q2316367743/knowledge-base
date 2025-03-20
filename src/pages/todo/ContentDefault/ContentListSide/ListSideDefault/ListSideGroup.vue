@@ -9,17 +9,17 @@
         <div class="content-default-group__header-count">{{ count }}</div>
       </div>
       <div class="extra">
-        <a-button type="text" @click.stop="openAddTodoItem({group})" size="mini">
+        <t-button theme="primary" variant="text" shape="square" @click.stop="openAddTodoItem({group})" size="small">
           <template #icon>
-            <icon-plus/>
+            <plus-icon/>
           </template>
-        </a-button>
+        </t-button>
         <a-dropdown>
-          <a-button type="text" size="mini" @click.stop>
+          <t-button theme="primary" variant="text" shape="square" size="small" @click.stop>
             <template #icon>
-              <icon-more/>
+              <ellipsis-icon/>
             </template>
-          </a-button>
+          </t-button>
           <template #content>
             <a-doption @click="openEditTodoGroupFunc(group)">
               <template #icon>
@@ -63,6 +63,7 @@ import {
 } from "@/pages/todo/common/TodoGroupFunc";
 import ListSideGroupList
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideGroupList.vue";
+import {EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   group: {

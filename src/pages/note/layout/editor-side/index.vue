@@ -32,7 +32,7 @@
         <t-popconfirm content="确认删除这些笔记，注意：不会删除目录" @confirm="multiCheckDelete()">
           <t-button theme="danger" variant="text" shape="square">
             <template #icon>
-              <icon-delete/>
+              <delete-icon />
             </template>
           </t-button>
         </t-popconfirm>
@@ -44,15 +44,15 @@
           </t-button>
         </t-tooltip>
         <t-tooltip content="全选">
-          <a-button theme="primary" variant="text" shape="square" @click="selectAll()">
+          <t-button theme="primary" variant="text" shape="square" @click="selectAll()">
             <template #icon>
               <icon-select-all/>
             </template>
-          </a-button>
+          </t-button>
         </t-tooltip>
         <t-button theme="primary" variant="text" shape="square" @click="multiCheckStop()">
           <template #icon>
-            <icon-close/>
+            <close-icon />
           </template>
         </t-button>
       </t-space>
@@ -76,6 +76,7 @@ import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useNoteTree} from "@/hooks/NoteTree";
 import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
+import {CloseIcon, DeleteIcon} from "tdesign-icons-vue-next";
 
 const homeEditorSideRef = ref();
 const size = useElementSize(homeEditorSideRef);

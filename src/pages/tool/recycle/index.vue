@@ -8,7 +8,7 @@
       </t-input>
       <t-popconfirm content="是否清空回收站，此操作不可逆" @confirm="clearAll" confirm-btn="清空"
                     :ok-button-props="{status:'danger'}">
-        <t-button theme="danger" >清空</t-button>
+        <t-button theme="danger">清空</t-button>
       </t-popconfirm>
     </header>
     <a-list :data="results" :virtual-list-props="virtualListProps" style="margin: 0 7px;">
@@ -22,15 +22,15 @@
           </a-list-item-meta>
           <template #extra>
             <t-space size="small">
-              <a-button type="primary" @click="restore(item.item.id)">
+              <t-button theme="primary" @click="restore(item.item.id)">
                 恢复
-              </a-button>
-              <a-popconfirm content="删除后将无法恢复，是否继续？" @ok="remove(item.item.id)" position="br"
-                            ok-text="彻底删除" :ok-button-props="{status: 'danger'}">
-                <a-button type="primary" status="danger">
+              </t-button>
+              <t-popconfirm content="删除后将无法恢复，是否继续？" @confirm="remove(item.item.id)"
+                            placement="bottom-right"  confirm-btn="彻底删除">
+                <t-button theme="danger">
                   彻底删除
-                </a-button>
-              </a-popconfirm>
+                </t-button>
+              </t-popconfirm>
             </t-space>
           </template>
         </a-list-item>

@@ -125,7 +125,7 @@ type RenderElement = () => JSX.Element;
 
 export async function checkPower(type: 'note' | 'todo' | 'all') {
   const vipStore = useVipStore();
-  let isNoVip = true;
+  let isNoVip: boolean;
   let header: RenderElement;
   let content: RenderElement;
 

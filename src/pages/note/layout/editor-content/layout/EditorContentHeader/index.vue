@@ -17,7 +17,7 @@
             <div class="items-center" @contextmenu="onContextmenu($event, article)">
               <lock-on-icon v-if="article.preview" class="mr-4px"/>
               <span>{{ article.name }}</span>
-              <close-icon color="red" class="ml-8px hover:bg-#f2f2f2" style="transition:all 0.3s"
+              <close-icon color="red" class="ml-8px editor-content-tab-close"
                           @click="close($event, article.id)"/>
             </div>
           </template>
@@ -112,6 +112,14 @@ function onContextmenu(e: MouseEvent, article: ArticleIndex) {
 
     :deep(.t-tabs__operations) {
       border: none;
+    }
+
+    .editor-content-tab-close {
+      transition: all 0.3s;
+
+      &:hover {
+        background-color: var(--td-bg-color-component-hover);
+      }
     }
   }
 }

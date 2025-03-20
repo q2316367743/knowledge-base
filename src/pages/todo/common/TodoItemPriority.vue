@@ -9,11 +9,11 @@
         <div class="todo-item-priority__header-count">{{ todoItems.length }}</div>
       </div>
       <div class="todo-item-priority__header-plus">
-        <a-button type="text" size="mini" @click.stop="openAddTodoItem({group, priority: priorityView?.value})">
+        <t-button theme="primary" variant="text" shape="square" size="small" @click.stop="openAddTodoItem({group, priority: priorityView?.value})">
           <template #icon>
-            <icon-plus/>
+            <plus-icon />
           </template>
-        </a-button>
+        </t-button>
       </div>
     </div>
     <div class="todo-content-priority__content" v-show="visible">
@@ -26,6 +26,7 @@
 import {TodoGroupPriorityView, TodoGroupView} from "@/entity/todo/TodoGroup";
 import CardTodoItem from "@/pages/todo/common/CardTodoItem.vue";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
+import {PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   priorityView: {
