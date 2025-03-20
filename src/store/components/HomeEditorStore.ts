@@ -140,11 +140,10 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
 
       const idx = homeEditorIds.value.findIndex(e => e === res);
       if (idx === -1) {
-        return;
+        continue;
       }
-      const target = homeEditorIds.value[idx];
       homeEditorIds.value.splice(idx, 1);
-      if (target === homeEditorId.value) {
+      if (res === homeEditorId.value) {
         // 关闭自己
         if (homeEditorIds.value.length > 0) {
           homeEditorId.value = homeEditorIds.value[homeEditorIds.value.length - 1];

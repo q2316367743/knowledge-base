@@ -60,6 +60,7 @@ declare module 'vue' {
     FileMarkdown: typeof import('./src/components/KbIcon/FileMarkdown.vue')['default']
     FileMindMap: typeof import('./src/components/KbIcon/FileMindMap.vue')['default']
     FileRichText: typeof import('./src/components/KbIcon/FileRichText.vue')['default']
+    FileSuperNote: typeof import('./src/components/KbIcon/FileSuperNote.vue')['default']
     Item: typeof import('./src/components/update-check/item.vue')['default']
     PageLayout: typeof import('./src/components/PageLayout/PageLayout.vue')['default']
     PriorityDropdown: typeof import('./src/components/PriorityDropdown/PriorityDropdown.vue')['default']
@@ -124,8 +125,11 @@ declare module 'vue' {
     TTag: typeof import('tdesign-vue-next')['Tag']
     TText: typeof import('tdesign-vue-next')['Text']
     TTextarea: typeof import('tdesign-vue-next')['Textarea']
+    TTimeline: typeof import('tdesign-vue-next')['Timeline']
+    TTimelineItem: typeof import('tdesign-vue-next')['TimelineItem']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
     TTree: typeof import('tdesign-vue-next')['Tree']
     UpdateCheck: typeof import('./src/components/update-check/index.vue')['default']
+    VipIcon: typeof import('./src/components/KbIcon/VipIcon.vue')['default']
   }
 }

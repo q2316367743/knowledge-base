@@ -25,6 +25,10 @@ const Constant = {
   umami: {
     id: 'de82e31d-1399-4aca-a90a-21db9e2b87f4',
     url: 'https://umami.esion.xyz'
+  },
+  goods: {
+    note: '',
+    todo: ''
   }
 }
 

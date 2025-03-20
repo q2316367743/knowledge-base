@@ -18,7 +18,7 @@
               <lock-on-icon v-if="article.preview" class="mr-4px"/>
               <span>{{ article.name }}</span>
               <close-icon color="red" class="ml-8px hover:bg-#f2f2f2" style="transition:all 0.3s"
-                          @click="close(article.id)"/>
+                          @click="close($event, article.id)"/>
             </div>
           </template>
         </t-tab-panel>
@@ -38,12 +38,12 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import {ArticleIndex} from "@/entity/article";
 import {CloseIcon, LockOnIcon} from "tdesign-icons-vue-next";
 
+const {switchCollapsed, closeArticle, closeOther, closeAll} = useHomeEditorStore();
 
-const switchCollapsed = useHomeEditorStore().switchCollapsed;
-
-
-function close(e: any) {
-  useHomeEditorStore().closeArticle(e);
+function close(ev: { e: Event }, id: any) {
+  ev.e.stopPropagation();
+  ev.e.preventDefault();
+  closeArticle(id);
 }
 
 function switchPreview(id: number) {
@@ -59,13 +59,13 @@ function onContextmenu(e: MouseEvent, article: ArticleIndex) {
     zIndex: 200,
     items: [{
       label: '关闭',
-      onClick: () => close(article.id)
+      onClick: () => close({e}, article.id)
     }, {
       label: '关闭其他标签',
-      onClick: () => useHomeEditorStore().closeOther(article.id)
+      onClick: () => closeOther(article.id)
     }, {
       label: '关闭全部标签',
-      onClick: () => useHomeEditorStore().closeAll()
+      onClick: () => closeAll()
     }, {
       divided: 'self'
     }, {

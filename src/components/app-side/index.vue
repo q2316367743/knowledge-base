@@ -66,7 +66,7 @@
         <t-menu-item value="/setting/ai-assistant">
           AI 助手设置
         </t-menu-item>
-        <t-menu-item value="/setting/feature" v-if="isUtools">
+        <t-menu-item value="/setting/feature">
           关键字设置
         </t-menu-item>
       </t-submenu>
@@ -81,7 +81,7 @@
           </template>
           备份
         </t-menu-item>
-        <t-menu-item value="/more/attachment" v-if="isUtools">
+        <t-menu-item value="/more/attachment">
           <template #icon>
             <file-attachment-icon />
           </template>
@@ -176,13 +176,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import IconTimeLine from "@/icon/IconTimeLine.vue";
-import {computed, ref, watch} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
-import {isUtools} from "@/global/BeanFactory";
-import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
-import {toDoc, toFeedback} from "@/global/Constant";
 import {
   ArticleIcon,
   CheckRectangleIcon, DeleteIcon,
@@ -191,6 +184,9 @@ import {
   SearchIcon, SettingIcon, ThumbUpIcon,
   ToolsIcon
 } from "tdesign-icons-vue-next";
+import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
+import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
+import {toDoc, toFeedback} from "@/global/Constant";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
 
 const route = useRoute();

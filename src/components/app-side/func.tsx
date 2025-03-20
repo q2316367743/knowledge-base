@@ -1,12 +1,13 @@
-import {Descriptions, DescriptionsItem, Drawer, Image, Modal} from "@arco-design/web-vue";
 import reward from '@/assets/image/reward.png';
+import {Descriptions, DescriptionsItem, DialogPlugin, Image} from "tdesign-vue-next";
 
 export function openKeyDrawer() {
-  Drawer.open({
-    title: '快捷键',
-    width: 350,
+  DialogPlugin({
+    header: '快捷键',
+    placement: 'center',
+    width: 600,
     footer: false,
-    content: () => <Descriptions column={1} bordered title={'首页有效'}>
+    default: () => <Descriptions column={1} bordered title={'首页有效'} layout={'vertical'} itemLayout={'horizontal'}>
       <DescriptionsItem label={'新建笔记'}>
         Ctrl / Alt + N
       </DescriptionsItem>
@@ -27,10 +28,11 @@ export function openKeyDrawer() {
 }
 
 export function openShangZan() {
-  Modal.open({
-    title: '赏赞',
+  DialogPlugin({
+    header: '赏赞',
     footer: false,
+    placement: 'center',
     width: 440,
-    content: () => <Image src={reward} width={400} height={400}></Image>
+    default: () => <Image src={reward}/>
   })
 }

@@ -22,7 +22,6 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {map, traverseNumber} from "@/utils/lang/ArrayUtil";
 // 组件
-import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 // 图标
 import FileMarkdown from '@/components/KbIcon/FileMarkdown.vue';
@@ -35,40 +34,51 @@ import NotificationUtil from "@/utils/modal/NotificationUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {buildMindMapData} from "@/editor/MindMapEditor/constant";
 import {buildLogicFlowData} from "@/editor/LogicFlow/constants";
+import {StickyNoteIcon} from "tdesign-icons-vue-next";
+import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
+import {checkPower} from "@/store";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
+interface ArticleTypeList {
+  key: ArticleTypeEnum;
+  name: string;
+  icon: any;
+  lock: any;
+  vip?: boolean;
+}
 
-export const articleTextTypes = [{
-  key: ArticleTypeEnum.SUPER_EDITOR,
-  name: '超级笔记',
-  // TODO: 图标
-  icon: shallowRef(IconCode),
-  lock: FileLct
-},{
-  key: ArticleTypeEnum.RICH_TEXT,
-  name: '富文本',
-  icon: shallowRef(IconBook),
-  lock: IconRichText
-}, {
-  key: ArticleTypeEnum.MARKDOWN,
-  name: 'markdown',
-  icon: shallowRef(IconFile),
-  lock: FileMarkdown
-}, {
-  key: ArticleTypeEnum.CODE,
-  name: '代码',
-  icon: shallowRef(IconCode),
-  lock: FileCode
-}, {
-  key: ArticleTypeEnum.MIND_MAP,
-  name: '思维导图',
-  icon: shallowRef(IconMindMapping),
-  lock: FileMindMap
-}]
+export const articleTextTypes: Array<ArticleTypeList> = [
+  {
+    key: ArticleTypeEnum.SUPER_EDITOR,
+    name: '超级笔记',
+    icon: shallowRef(StickyNoteIcon),
+    lock: FileSuperNote,
+    vip: true
+  }, {
+    key: ArticleTypeEnum.RICH_TEXT,
+    name: '富文本',
+    icon: shallowRef(IconBook),
+    lock: IconRichText
+  }, {
+    key: ArticleTypeEnum.MARKDOWN,
+    name: 'markdown',
+    icon: shallowRef(IconFile),
+    lock: FileMarkdown
+  }, {
+    key: ArticleTypeEnum.CODE,
+    name: '代码',
+    icon: shallowRef(IconCode),
+    lock: FileCode
+  }, {
+    key: ArticleTypeEnum.MIND_MAP,
+    name: '思维导图',
+    icon: shallowRef(IconMindMapping),
+    lock: FileMindMap
+  }]
 
-export const articleTypes = [
+export const articleTypes: Array<ArticleTypeList> = [
   ...articleTextTypes, {
     key: ArticleTypeEnum.HANDSONTABLE,
     name: '表格',
@@ -140,14 +150,20 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
 /**
  * 新增一篇笔记
  * @param pid 父ID
- * @param type 笔记类型
+ * @param item 笔记类型
  */
-export function addArticle(pid: number, type: ArticleTypeEnum) {
-  _addArticle(pid, type).then(article => {
+export function addArticle(pid: number, item: ArticleTypeList) {
+  const {key, vip} = item;
+  (async () => {
+    if (vip) {
+      await checkPower('note');
+    }
+    return _addArticle(pid, key)
+  })().then(article => {
     MessageUtil.success("新增成功");
     useHomeEditorStore().openArticle(article);
     // 新建笔记
-    useUmami.track(`/新建/笔记/${renderArticleType(type)}`);
+    useUmami.track(`/新建/笔记/${renderArticleType(key)}`);
   })
     .catch(e => MessageUtil.error("新增失败", e));
 }

@@ -10,7 +10,7 @@
             </li>
           </ol>
           <li v-else>
-            <t-tag :color="renderTag(item.label).color" style="margin-left:5px;">
+            <t-tag :color="renderTag(item.label).color" variant="light-outline" style="margin-left:5px;">
               {{ renderTag(item.label).name }}
             </t-tag>
             <span style="margin-left:5px;">{{ item.content }}</span>

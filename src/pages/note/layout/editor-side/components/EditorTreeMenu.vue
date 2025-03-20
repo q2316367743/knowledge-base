@@ -9,11 +9,14 @@
         新增笔记
         <template #content>
           <a-doption v-for="articleType in articleTypes" :key="articleType.key"
-                     @click="addArticle(id, articleType.key)">
+                     @click="addArticle(id, articleType)">
             <template #icon>
               <component :is="articleType.icon"/>
             </template>
-            {{ articleType.name }}
+            <div class="flex items-center">
+              <div>{{ articleType.name }}</div>
+              <vip-icon v-if="articleType.vip && noteNoVip" class="ml-8px"/>
+            </div>
           </a-doption>
         </template>
       </a-dsubmenu>
@@ -132,9 +135,13 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {exportToUTools} from "@/components/ArticleExport/exportForUtools";
 import {exportForEpub} from "@/components/ArticleExport/exportForEpub";
+import VipIcon from "@/components/KbIcon/VipIcon.vue";
+import {mapState} from "pinia";
+import {useVipStore} from "@/store";
 
 export default defineComponent({
   name: 'EditorTreeMenu',
+  components: {VipIcon},
   props: {
     id: {
       type: Number,
@@ -157,6 +164,9 @@ export default defineComponent({
   data: () => ({
     articleTypes
   }),
+  computed: {
+    ...mapState(useVipStore, ['noteNoVip'])
+  },
   methods: {
     exportForEpub,
     exportToMd, exportToUTools,
