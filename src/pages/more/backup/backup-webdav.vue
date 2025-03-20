@@ -49,7 +49,7 @@ import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupS
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {urlJoin} from "@/utils/file/FileUtil";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
@@ -152,7 +152,7 @@ async function _execBackup() {
   });
 
   await client.putFileContents(
-    urlJoin(FOLDER_PATH, toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip"),
+    urlJoin(FOLDER_PATH, toDateTimeString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip"),
     content)
 
 }

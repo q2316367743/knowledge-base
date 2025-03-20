@@ -44,7 +44,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useWindowSize} from "@vueuse/core";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {ArticleIndex} from "@/entity/article";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
 const size = useWindowSize();
@@ -65,7 +65,7 @@ const {results} = useFuse<ArticleIndex>(keyword, items, {
 const virtualListProps = computed(() => ({
   height: size.height.value - 56
 }))
-const formatDate = (date: Date | string | number) => toDateString(date);
+const formatDate = (date: Date | string | number) => toDateTimeString(date);
 
 function restore(id: number) {
   useArticleStore().updateIndex(id, {

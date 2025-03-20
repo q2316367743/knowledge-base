@@ -9,7 +9,7 @@
         <div class="content-default-group__header-count">{{ count }}</div>
       </div>
       <div class="extra">
-        <a-button type="text" @click.stop="openAddTodoItem(group)" size="mini">
+        <a-button type="text" @click.stop="openAddTodoItem({group})" size="mini">
           <template #icon>
             <icon-plus/>
           </template>

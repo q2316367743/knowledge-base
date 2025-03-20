@@ -38,7 +38,7 @@ import {
   TodoItemStatus
 } from "@/entity/todo/TodoItem";
 import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
-import {handleDate, toDateString} from "@/utils/lang/FormatUtil";
+import {handleDate, toDateTimeString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {randomColor} from "@/utils/BrowserUtil";
@@ -84,8 +84,8 @@ function initAttr(id: number) {
         hasAttr.value = true;
       }
       if (attr.value.end !== '' && attr.value.start !== attr.value.end && attr.value.start !== '') {
-        start.value = toDateString(attr.value.start, "YYYY-MM-DD");
-        end.value = toDateString(attr.value.end, "YYYY-MM-DD");
+        start.value = toDateTimeString(attr.value.start, "YYYY-MM-DD");
+        end.value = toDateTimeString(attr.value.end, "YYYY-MM-DD");
         hasAttr.value = true;
       }
 

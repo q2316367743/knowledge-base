@@ -6,7 +6,7 @@
         <t-tag class="length">{{ count }}</t-tag>
       </div>
       <div class="extra">
-        <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem(undefined, priority.value)">
+        <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem({priority: priority.value})">
           <template #icon>
             <icon-plus/>
           </template>

@@ -3,7 +3,7 @@
     <div class="chat-article__title">{{ message.q }}</div>
     <div class="chat-article__time">
       <t-space size="4px">
-        <div>{{ toDateString(message.id) }}</div>
+        <div>{{ toDateTimeString(message.id) }}</div>
         <div>{{ assistant }}</div>
         <template #separator>
           <t-divider layout="vertical"/>
@@ -43,7 +43,7 @@
 <script lang="ts" setup>
 import {ChatMessage} from "@/types/Chat";
 import {useChatStore} from "@/store/components/ChatStore";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {copyText} from "@/utils/utools/NativeUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";

@@ -5,17 +5,24 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
+interface AddTodoItemProps {
+  group?: TodoGroupView;
+  priority?: TodoItemPriority;
+  start?: string;
+  end?: string;
+}
+
 /**
  * 打开新增待办对话框
- * @param group 新增到的分组
- * @param priority 新增到的默认优先级
+ * @param props 参数
  */
-export function openAddTodoItem(group?: TodoGroupView, priority?: TodoItemPriority) {
+export function openAddTodoItem(props?: AddTodoItemProps) {
+  const {group, priority, start, end} = props || {};
   const record = ref({
     title: '',
     priority: priority || TodoItemPriority.NONE,
   });
-  const range = ref(['', '']);
+  const range = ref([start || '', end || '']);
   const isRange = ref(false);
   watch(() => range.value[0], (newValue) => {
     if (!isRange.value) {

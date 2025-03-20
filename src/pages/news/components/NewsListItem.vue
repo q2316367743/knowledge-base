@@ -20,7 +20,7 @@
           <div class="flex items-center text-sm text-muted-foreground">
             <span>{{ index.name }}</span>
             <span class="mx-1">·</span>
-            <span v-if="item.pubDate">{{ toDateString(item.pubDate) }}</span>
+            <span v-if="item.pubDate">{{ toDateTimeString(item.pubDate) }}</span>
           </div>
         </div>
         <div class="news-list-item__footer flex items-center justify-between pt-0">
@@ -41,7 +41,7 @@
 </template>
 <script lang="ts" setup>
 import {NewsIndex, NewsInstance} from "@/entity/news";
-import {toDateString} from '@/utils/lang/FormatUtil';
+import {toDateTimeString} from '@/utils/lang/FormatUtil';
 import {ShareIcon} from "tdesign-icons-vue-next";
 
 const router = useRouter();

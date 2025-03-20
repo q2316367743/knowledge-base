@@ -8,7 +8,7 @@
         <t-tag class="length">{{ count }}</t-tag>
       </div>
       <div class="extra">
-        <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem(group)">
+        <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem({group})">
           <template #icon>
             <plus-icon/>
           </template>
@@ -40,7 +40,7 @@
             </a-doption>
             <a-doption @click="openDeleteTodoGroupFunc(group.id, group.name)">
               <template #icon>
-                <delete-icon />
+                <delete-icon/>
               </template>
               删除
             </a-doption>

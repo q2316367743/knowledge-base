@@ -1,6 +1,6 @@
 import JSZip from "jszip";
 import {download, generateUUID} from "@/utils/BrowserUtil";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {buildMdEngine, commonAsset, parseRichTextForAttachment} from "@/components/ArticleExport/exportForCommon";
 import {listToList, listToTreeSpecial, treeEach} from "@/entity/ListTree";
 import {useFolderStore} from "@/store/db/FolderStore";
@@ -193,9 +193,9 @@ export async function exportForEpub(folder: number) {
     <dc:language>zh-CN</dc:language>
     <dc:creator>${utools.getUser()?.nickname || "匿名"}</dc:creator>
     <dc:identifier id="bookid">urn:uuid${uuid}</dc:identifier>
-    <dc:date>${toDateString(new Date(), "YYYY-MM-DD")}</dc:date>
+    <dc:date>${toDateTimeString(new Date(), "YYYY-MM-DD")}</dc:date>
     <dc:contributor>知识库 [https://u.tools/plugins/detail/%E7%9F%A5%E8%AF%86%E5%BA%93/]</dc:contributor>
-    <meta property="dcterms:modified">${toDateString(new Date(), "YYYY-MM-DDTHH:mm:ssZ")}</meta>
+    <meta property="dcterms:modified">${toDateTimeString(new Date(), "YYYY-MM-DDTHH:mm:ssZ")}</meta>
     <meta name="cover" content="assets/logo.jpg" />
   </metadata>
   <manifest>
@@ -271,6 +271,6 @@ export async function exportForEpub(folder: number) {
     // 导出epub文件
     const blob = await epub.generateAsync({type: "arraybuffer"});
     download(blob,
-        "知识库|" + toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".epub",
+        "知识库|" + toDateTimeString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".epub",
         "application/epub+zip");
 }

@@ -13,7 +13,7 @@
 import {ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import Constant from "@/global/Constant";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
 import {Notification} from "@arco-design/web-vue";
@@ -34,7 +34,7 @@ function execFileBackup() {
   buildBackup()
     .then(content => {
       download(content,
-        FOLDER + "|" + toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
+        FOLDER + "|" + toDateTimeString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
         "application/zip");
       MessageUtil.success("备份完成");
     }).catch(e => MessageUtil.error("备份失败", e))

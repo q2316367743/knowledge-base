@@ -7,7 +7,7 @@ import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {isUtools} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -91,7 +91,7 @@ export async function articleToZip(folder: number): Promise<void> {
     }
     const zipContent = await zip.generateAsync({type: "arraybuffer"});
     download(zipContent,
-        "知识库|" + toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
+        "知识库|" + toDateTimeString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
         "application/zip");
     if (hasExcel) {
         const msg: string = '导出的笔记中包含表格笔记，请使用插件【Json & Excel】插件将json文件转为表格';

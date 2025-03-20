@@ -8,7 +8,7 @@ import {ArticleContent} from "@/entity/article/ArticleContent";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {download} from "@/utils/BrowserUtil";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {
     _createDataByColumns, _createDataNotColumns,
 } from "@/editor/HandsontableEditor/hooks/ExportHook";
@@ -197,6 +197,6 @@ window.exports = {
 
     const zipContent = await zip.generateAsync({type: "arraybuffer"});
     download(zipContent,
-        "知识库|" + toDateString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
+        "知识库|" + toDateTimeString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip",
         "application/zip");
 }

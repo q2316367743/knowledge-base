@@ -83,6 +83,6 @@ export function handleDate(date: Date | string | number) {
     }
 }
 
-export function toDateString(date: number | string | Date, format = 'YYYY-MM-DD HH:mm:ss') {
+export function toDateTimeString(date: number | string | Date, format = 'YYYY-MM-DD HH:mm:ss') {
     return dayjs(date).format(format);
 }

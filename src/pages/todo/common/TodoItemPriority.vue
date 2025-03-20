@@ -9,7 +9,7 @@
         <div class="todo-item-priority__header-count">{{ todoItems.length }}</div>
       </div>
       <div class="todo-item-priority__header-plus">
-        <a-button type="text" size="mini" @click.stop="openAddTodoItem(group!, priorityView?.value)">
+        <a-button type="text" size="mini" @click.stop="openAddTodoItem({group, priority: priorityView?.value})">
           <template #icon>
             <icon-plus/>
           </template>

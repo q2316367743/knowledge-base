@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {Calendar, EventSourceInput, EventInput, EventClickArg, EventImpl} from '@fullcalendar/core';
+import {Calendar, EventSourceInput, EventInput, EventClickArg} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -13,7 +13,7 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {handlePriorityColor, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 
 const el = ref();
 let calendar: Calendar | null = null;
@@ -28,8 +28,8 @@ async function getEvents(): Promise<EventSourceInput> {
       events.push({
         id: todoItem.index.id.toString(),
         title: todoItem.index.title,
-        start: todoItem.attr.start || toDateString(todoItem.index.id, 'YYYY-MM-DD'),
-        end: todoItem.attr.end || todoItem.attr.start || toDateString(todoItem.index.id, 'YYYY-MM-DD'),
+        start: todoItem.attr.start || toDateTimeString(todoItem.index.id, 'YYYY-MM-DD'),
+        end: todoItem.attr.end || todoItem.attr.start || toDateTimeString(todoItem.index.id, 'YYYY-MM-DD'),
         backgroundColor: todoItem.index.status === TodoItemStatus.COMPLETE ? '#86909c' : handlePriorityColor(todoItem.index.priority),
         editable: true
       });
@@ -69,13 +69,17 @@ onMounted(() => {
         addEventButton: {
           text: '新增日程',
           click: function () {
-            openAddTodoItem();
+            openAddTodoItem({start: toDateTimeString(new Date(), 'YYYY-MM-DD')});
           }
         }
       },
-      eventDrop: function (info: {event: EventClickArg['event'], oldEvent: EventClickArg['event']}) {
-        const {event} = info;
+      eventDrop: function (info: { event: EventClickArg['event'], oldEvent: EventClickArg['event'] }) {
+        const {event, oldEvent} = info;
         const targetId = parseInt(info.event.id);
+        if (event.startStr === oldEvent.endStr && event.endStr === oldEvent.endStr) {
+          // 没变化
+          return;
+        }
         todoStore.updateById(targetId, {}, {
           start: event.startStr,
           end: event.endStr

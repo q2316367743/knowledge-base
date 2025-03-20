@@ -9,7 +9,7 @@
         <div class="content-default-group__header-count">{{ count }}</div>
       </div>
       <div class="extra">
-        <t-button variant="text" theme="primary" shape="square" @click.stop="openAddTodoItem(undefined, priority.value)"
+        <t-button variant="text" theme="primary" shape="square" @click.stop="openAddTodoItem({priority: priority.value})"
                   size="small">
           <template #icon>
             <plus-icon/>

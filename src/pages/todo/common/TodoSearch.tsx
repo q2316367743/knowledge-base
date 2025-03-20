@@ -25,7 +25,7 @@ import {
   TodoItemPriority,
   TodoItemStatus
 } from "@/entity/todo/TodoItem";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {randomColor} from "@/utils/BrowserUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
@@ -292,13 +292,13 @@ export function todoSearch() {
               </Space>
               <Space class={'mt-8'}>
                 <Tag
-                  color={'orange'}>创建：{toDateString(item.index.createTime, 'YYYY-MM-DD HH:mm')}</Tag>
+                  color={'orange'}>创建：{toDateTimeString(item.index.createTime, 'YYYY-MM-DD HH:mm')}</Tag>
                 <Tag
-                  color={'purple'}>更新：{toDateString(item.index.updateTime, 'YYYY-MM-DD HH:mm')}</Tag>
+                  color={'purple'}>更新：{toDateTimeString(item.index.updateTime, 'YYYY-MM-DD HH:mm')}</Tag>
                 {item.index.status === TodoItemStatus.COMPLETE &&
                   item.attr.completeTime &&
                   <Tag
-                    color={'green'}>完成：{toDateString(item.attr.completeTime, 'YYYY-MM-DD HH:mm')}</Tag>}
+                    color={'green'}>完成：{toDateTimeString(item.attr.completeTime, 'YYYY-MM-DD HH:mm')}</Tag>}
               </Space>
               {item.attr.tags.length > 0 && <>
                 <Space wrap style={{marginTop: '8px'}}>

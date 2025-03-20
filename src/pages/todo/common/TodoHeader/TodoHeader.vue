@@ -128,7 +128,6 @@ const switchCollapsed = () => useTodoWrapStore().switchCollapsed();
 
   &__progress {
     width: 200px;
-    margin-top: -5px;
     margin-right: 15px;
   }
 

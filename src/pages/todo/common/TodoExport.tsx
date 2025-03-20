@@ -16,7 +16,7 @@ import {download} from "@/utils/BrowserUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {toDateString} from "@/utils/lang/FormatUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
@@ -199,7 +199,7 @@ async function exportToCustomer(items: Array<TodoItemIndex>, config: Config): Pr
   for (let item of items) {
     const todoItem = await useTodoItemStore().getTodoItem(item.id);
     lines.push(run(todoItem, {
-      toDateString
+      toDateString: toDateTimeString
     }))
   }
   return Promise.resolve(lines.join("\n"));
