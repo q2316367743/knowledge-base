@@ -18,6 +18,7 @@ export default {
         default: content,
         header: title,
         draggable: true,
+        placement: "center",
         confirmBtn: {
           default: config?.confirmButtonText || ''
         },

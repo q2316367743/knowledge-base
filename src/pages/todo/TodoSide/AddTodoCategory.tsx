@@ -1,7 +1,6 @@
 import {useUmami} from "@/plugin/umami";
-import {Ref, ref} from "vue";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
-import {Form, FormItem, Input, Modal, Radio, RadioGroup} from "@arco-design/web-vue";
+import {DialogPlugin, Form, FormItem, Input, Radio, RadioGroup} from "tdesign-vue-next";
 import {
   getDefaultTodoCategory,
   renderTodoCategoryType,
@@ -17,17 +16,17 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 
 function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
-  return () => <Form model={record.value} layout={'vertical'}>
-    <FormItem label="名称">
-      <Input v-model={record.value.name} allow-clear/>
+  return () => <Form data={record.value}>
+    <FormItem label="名称" labelAlign={'top'}>
+      <Input v-model={record.value.name} clearable={true} autofocus />
     </FormItem>
-    {allowType && <FormItem label="类型">
+    {allowType && <FormItem label="类型" labelAlign={'top'}>
       <RadioGroup v-model={record.value.type}>
         <Radio value={TodoCategoryTypeEnum.FOLDER}>文件夹</Radio>
         <Radio value={TodoCategoryTypeEnum.TODO}>清单</Radio>
       </RadioGroup>
     </FormItem>}
-    {record.value.type === TodoCategoryTypeEnum.TODO && <FormItem label="布局">
+    {record.value.type === TodoCategoryTypeEnum.TODO && <FormItem label="布局" labelAlign={'top'}>
       <RadioGroup v-model={record.value.todoListLayout}>
         <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
         <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
@@ -50,23 +49,25 @@ export function openAddTodoCategory(pid: number) {
     showAddGroupBtn: true
   });
 
-  Modal.open({
-    title: "新增待办分类",
+  const instance = DialogPlugin({
+    header: "新增待办分类",
+    placement: 'center',
     draggable: true,
-    okText: '新增',
-    content: renderContent(record, true),
-    async onBeforeOk() {
+    confirmBtn: '新增',
+    default: renderContent(record, true),
+    async onConfirm() {
       try {
         await useTodoCategoryStore().add(record.value);
         MessageUtil.success("新增成功");
         useUmami.track(`/待办/新增/${renderTodoCategoryType(record.value.type)}`);
+        instance.destroy();
         return true;
       } catch (e) {
         MessageUtil.error("新增失败", e);
         return false;
       }
     }
-  })
+  });
 
 }
 
@@ -79,18 +80,20 @@ export function openUpdateTodoCategory(id: number) {
   }
   const record = ref<TodoCategoryRecord>(clone(getDefaultTodoCategory(temp), true));
 
-  Modal.open({
-    title: "修改待办分类",
+  const instance = DialogPlugin({
+    header: "修改待办分类",
+    placement: 'center',
     draggable: true,
-    okText: '更新',
-    content: renderContent(record, false),
-    async onBeforeOk() {
+    confirmBtn: '更新',
+    default: renderContent(record, false),
+    async onConfirm() {
       try {
         await useTodoCategoryStore().update(id, record.value);
         if (id === useTodoWrapStore().categoryId) {
-          useTodoWrapStore().init(id);
+          await useTodoWrapStore().init(id);
         }
         MessageUtil.success("修改成功");
+        instance.destroy();
         return true;
       } catch (e) {
         MessageUtil.error("修改失败", e);
