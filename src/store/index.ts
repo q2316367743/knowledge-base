@@ -1,3 +1,3 @@
 export * from './GlobalStore';
-export * from './VipStore';
+export * from './components/VipStore';
 export * from './ModuleStore';

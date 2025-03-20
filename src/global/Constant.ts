@@ -27,6 +27,7 @@ const Constant = {
     url: 'https://umami.esion.xyz'
   },
   goods: {
+    all: '',
     note: '',
     todo: ''
   }
