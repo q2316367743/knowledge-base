@@ -40,18 +40,17 @@ export const useVipStore = defineStore('vip', () => {
     } else {
       goodsId = Constant.goods.all;
     }
-    // TODO: 暂时不开放购买功能
-    // return new Promise<void>((resolve, reject) => {
-    //   try {
-    //     utools.openPurchase({
-    //       goodsId
-    //     }, () => resolve());
-    //   } catch (e) {
-    //     reject(e);
-    //   }
-    // })
-    allVip.value = true;
-    return Promise.resolve();
+    return new Promise<void>((resolve, reject) => {
+      try {
+        utools.openPurchase({
+          goodsId
+        }, () => resolve());
+      } catch (e) {
+        reject(e);
+      }
+    })
+    // allVip.value = true;
+    // return Promise.resolve();
   }
 
   return {
