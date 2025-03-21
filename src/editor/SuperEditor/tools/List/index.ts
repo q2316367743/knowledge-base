@@ -13,7 +13,7 @@ export default class List extends EditorjsList implements BlockTool {
     return [
       {
         icon: IconListBulleted,
-        title: '无需列表',
+        title: '无序列表',
         data: {
           style: 'unordered',
         },

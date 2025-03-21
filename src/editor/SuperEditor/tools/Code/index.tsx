@@ -73,7 +73,7 @@ export default class CodeTool implements BlockTool {
     };
 
     this.content = ref(data.html || '');
-    this.height = ref(data.height || '200');
+    this.height = ref(data.height || '250px');
     this.filename = ref(data.filename || '');
 
   }
@@ -126,7 +126,7 @@ export default class CodeTool implements BlockTool {
         const onMouseMove = (e: MouseEvent) => {
           const newHeight = startHeight + e.clientY - startY;
           // 限制高度在200px到800px之间
-          const clampedHeight = Math.max(200, Math.min(800, newHeight));
+          const clampedHeight = Math.max(250, Math.min(800, newHeight));
           height.value = `${clampedHeight}px`;
         };
 
