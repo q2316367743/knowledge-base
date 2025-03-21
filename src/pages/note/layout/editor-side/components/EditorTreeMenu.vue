@@ -1,128 +1,128 @@
 <template>
-  <a-dropdown trigger="click" :popup-max-height="false">
+  <t-dropdown trigger="click">
     <slot></slot>
-    <template #content>
-      <a-dsubmenu v-if="folder">
-        <template #icon>
-          <icon-plus/>
+    <t-dropdown-menu>
+      <t-dropdown-item v-if="folder">
+        <template #prefix-icon>
+          <plus-icon />
         </template>
         新增笔记
-        <template #content>
-          <a-doption v-for="articleType in articleTypes" :key="articleType.key"
-                     @click="addArticle(id, articleType)">
-            <template #icon>
+        <t-dropdown-menu>
+          <t-dropdown-item v-for="articleType in articleTypes" :key="articleType.key"
+                           @click="addArticle(id, articleType)">
+            <template #prefix-icon>
               <component :is="articleType.icon"/>
             </template>
             <div class="flex items-center">
               <div>{{ articleType.name }}</div>
               <vip-icon v-if="articleType.vip && noteNoVip" class="ml-8px"/>
             </div>
-          </a-doption>
-        </template>
-      </a-dsubmenu>
-      <a-doption v-if="folder" @click="addFolder(id)">
-        <template #icon>
-          <icon-folder-add/>
+          </t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown-item>
+      <t-dropdown-item v-if="folder" @click="addFolder(id)">
+        <template #prefix-icon>
+          <folder-add1-icon />
         </template>
         新建文件夹
-      </a-doption>
-      <a-dsubmenu v-if="folder && more">
-        <template #icon>
-          <icon-apps/>
+      </t-dropdown-item>
+      <t-dropdown-item v-if="folder && more">
+        <template #prefix-icon>
+          <app-icon />
         </template>
         更多操作
-        <template #content>
-          <a-doption @click="$emit('multi',id)">
-            <template #icon>
-              <icon-check-square/>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="$emit('multi',id)">
+            <template #prefix-icon>
+              <check-rectangle-icon />
             </template>
             多选
-          </a-doption>
-          <a-doption @click="rename(id, name, !folder)">
-            <template #icon>
-              <icon-edit/>
+          </t-dropdown-item>
+          <t-dropdown-item @click="rename(id, name, !folder)">
+            <template #prefix-icon>
+              <edit2-icon />
             </template>
             重命名
-          </a-doption>
-          <a-doption @click="remove(id, name, !folder)"
-                     style="color: red;">
-            <template #icon>
-              <icon-delete/>
+          </t-dropdown-item>
+          <t-dropdown-item @click="remove(id, name, !folder)"
+                           style="color: red;">
+            <template #prefix-icon>
+              <delete-icon />
             </template>
             删除
-          </a-doption>
-          <a-doption @click="moveTo(id, name, !folder)">
-            <template #icon>
-              <icon-to-right/>
+          </t-dropdown-item>
+          <t-dropdown-item @click="moveTo(id, name, !folder)">
+            <template #prefix-icon>
+              <gesture-right-icon />
             </template>
             移动到
-          </a-doption>
-        </template>
-      </a-dsubmenu>
-      <a-doption v-if="!folder"
-                 @click="rename(id, name, !folder)">
-        <template #icon>
-          <icon-edit/>
+          </t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown-item>
+      <t-dropdown-item v-if="!folder"
+                       @click="rename(id, name, !folder)">
+        <template #prefix-icon>
+          <edit2-icon />
         </template>
         重命名
-      </a-doption>
-      <a-dsubmenu v-if="!folder">
-        <template #icon>
-          <icon-apps/>
+      </t-dropdown-item>
+      <t-dropdown-item v-if="!folder">
+        <template #prefix-icon>
+          <app-icon />
         </template>
         更多操作
-        <template #content>
-          <a-doption @click="rename(id, name, !folder)">
-            <template #icon>
-              <icon-bg-colors/>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="rename(id, name, !folder)">
+            <template #prefix-icon>
+              <fill-color1-icon />
             </template>
             设置颜色
-          </a-doption>
-          <a-doption @click="remove(id, name, !folder)"
-                     style="color: red;">
-            <template #icon>
-              <icon-delete/>
+          </t-dropdown-item>
+          <t-dropdown-item @click="remove(id, name, !folder)"
+                           style="color: red;">
+            <template #prefix-icon>
+              <delete-icon />
             </template>
             删除
-          </a-doption>
-          <a-doption @click="moveTo(id, name, !folder)">
-            <template #icon>
-              <icon-to-right/>
+          </t-dropdown-item>
+          <t-dropdown-item @click="moveTo(id, name, !folder)">
+            <template #prefix-icon>
+              <gesture-right-icon />
             </template>
             移动到
-          </a-doption>
-          <a-doption @click="$emit('multi',id)">
-            <template #icon>
-              <icon-check-square/>
+          </t-dropdown-item>
+          <t-dropdown-item @click="$emit('multi',id)">
+            <template #prefix-icon>
+              <check-rectangle-icon />
             </template>
             多选
-          </a-doption>
-        </template>
-      </a-dsubmenu>
-      <a-dsubmenu v-if="folder">
-        <template #icon>
-          <icon-import/>
+          </t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown-item>
+      <t-dropdown-item v-if="folder">
+        <template #prefix-icon>
+          <file-import-icon />
         </template>
         笔记导入
-        <template #content>
-          <a-doption @click="showArticleImportModal(id)">常规导入</a-doption>
-          <a-doption disabled>Gitee</a-doption>
-          <a-doption disabled>GitHub</a-doption>
-        </template>
-      </a-dsubmenu>
-      <a-dsubmenu v-if="folder">
-        <template #icon>
-          <icon-export/>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="showArticleImportModal(id)">常规导入</t-dropdown-item>
+          <t-dropdown-item :disabled="true">Gitee</t-dropdown-item>
+          <t-dropdown-item :disabled="true">GitHub</t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown-item>
+      <t-dropdown-item v-if="folder">
+        <template #prefix-icon>
+          <file-export-icon />
         </template>
         笔记导出
-        <template #content>
-          <a-doption @click="exportToMd(id)">ZIP</a-doption>
-          <a-doption @click="exportToUTools(id)">uTools文档插件</a-doption>
-          <a-doption @click="exportForEpub(id)">Epub</a-doption>
-        </template>
-      </a-dsubmenu>
-    </template>
-  </a-dropdown>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="exportToMd(id)">ZIP</t-dropdown-item>
+          <t-dropdown-menu @click="exportToUTools(id)">uTools文档插件</t-dropdown-menu>
+          <t-dropdown-item @click="exportForEpub(id)">Epub</t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown-item>
+    </t-dropdown-menu>
+  </t-dropdown>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -138,10 +138,23 @@ import {exportForEpub} from "@/components/ArticleExport/exportForEpub";
 import VipIcon from "@/components/KbIcon/VipIcon.vue";
 import {mapState} from "pinia";
 import {useVipStore} from "@/store";
+import {
+  AppIcon,
+  CheckRectangleIcon,
+  DeleteIcon,
+  Edit2Icon, FileExportIcon, FileImportIcon, FillColor1Icon,
+  FolderAdd1Icon,
+  GestureRightIcon,
+  PlusIcon
+} from "tdesign-icons-vue-next";
 
 export default defineComponent({
   name: 'EditorTreeMenu',
-  components: {VipIcon},
+  components: {
+    FileExportIcon,
+    FileImportIcon,
+    FillColor1Icon,
+    GestureRightIcon, DeleteIcon, Edit2Icon, CheckRectangleIcon, AppIcon, FolderAdd1Icon, PlusIcon, VipIcon},
   props: {
     id: {
       type: Number,

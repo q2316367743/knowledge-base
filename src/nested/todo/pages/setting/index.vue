@@ -17,14 +17,14 @@
       <t-alert style="margin-bottom: 7px;" type="warning" v-if="todoCategoryTree.length === 0">
         请前往【知识库】中新增待办清单
       </t-alert>
-      <a-form-item :model="{}" layout='vertical'>
-        <a-form-item label='当前清单'>
+      <t-form-item :data="{}">
+        <t-form-item label='当前清单' label-align="top">
           <a-tree-select :data="todoCategoryTree" allow-clear allow-search
                          v-model="setting.categoryId">
           </a-tree-select>
           <template #help>请选择待办清单，请勿选择待办文件夹</template>
-        </a-form-item>
-      </a-form-item>
+        </t-form-item>
+      </t-form-item>
     </div>
   </div>
 </template>

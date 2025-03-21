@@ -14,39 +14,39 @@
             <plus-icon/>
           </template>
         </t-button>
-        <a-dropdown>
+        <t-dropdown trigger="click" placement="bottom">
           <t-button theme="primary" variant="text" shape="square" size="small" @click.stop>
             <template #icon>
               <ellipsis-icon/>
             </template>
           </t-button>
-          <template #content>
-            <a-doption @click="openEditTodoGroupFunc(group)">
-              <template #icon>
-                <icon-edit/>
+          <t-dropdown-menu>
+            <t-dropdown-item @click="openEditTodoGroupFunc(group)">
+              <template #prefix-icon>
+                <edit2-icon/>
               </template>
               重命名
-            </a-doption>
-            <a-doption @click="openAddTodoGroupFunc(group.id, 0)">
-              <template #icon>
+            </t-dropdown-item>
+            <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 0)">
+              <template #prefix-icon>
                 <icon-rotate-left/>
               </template>
               在上侧添加分组
-            </a-doption>
-            <a-doption @click="openAddTodoGroupFunc(group.id, 1)">
-              <template #icon>
+            </t-dropdown-item>
+            <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 1)">
+              <template #prefix-icon>
                 <icon-rotate-right/>
               </template>
               在下侧添加分组
-            </a-doption>
-            <a-doption @click="openDeleteTodoGroupFunc(group.id, group.name)">
-              <template #icon>
-                <icon-delete/>
+            </t-dropdown-item>
+            <t-dropdown-item @click="openDeleteTodoGroupFunc(group.id, group.name)">
+              <template #prefix-icon>
+                <delete-icon/>
               </template>
               删除
-            </a-doption>
-          </template>
-        </a-dropdown>
+            </t-dropdown-item>
+          </t-dropdown-menu>
+        </t-dropdown>
       </div>
     </div>
     <list-side-group-list v-if="visible" :group-id="group.id" :items="todoItems"/>
@@ -63,7 +63,7 @@ import {
 } from "@/pages/todo/common/TodoGroupFunc";
 import ListSideGroupList
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideGroupList.vue";
-import {EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
+import {DeleteIcon, Edit2Icon, EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   group: {

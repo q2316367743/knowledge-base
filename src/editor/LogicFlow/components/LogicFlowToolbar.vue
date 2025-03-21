@@ -20,17 +20,15 @@
       </div>
     </t-tooltip>
     <div v-if="!readonly">
-      <a-select v-model="linetype" size="mini" @change="changeLineType">
-        <a-option v-for="item in lineOptions" :key="item.value" :value="item.value"
-                  :label="item.label"></a-option>
-      </a-select>
+      <t-select v-model="linetype" size="small" @change="changeLineType" class="w-100px">
+        <t-option v-for="item in lineOptions" :key="item.value" :value="item.value"
+                  :label="item.label"></t-option>
+      </t-select>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {useKeyModifier} from '@vueuse/core'
-import {defineComponent, PropType} from 'vue'
 import {LogicFlow} from "@logicflow/core";
 import {
   CursorFilledIcon,

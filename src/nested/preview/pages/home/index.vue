@@ -1,22 +1,22 @@
 <template>
   <div class="preview-home" ref="previewHome">
     <header style="margin: 7px;">
-      <a-row :gutter="8">
-        <a-col flex="auto">
+      <t-row :gutter="8">
+        <t-col flex="auto">
           <t-input v-model="keyword" :clearable="true">
             <template #suffix>
               <icon-search/>
             </template>
           </t-input>
-        </a-col>
-        <a-col flex="32px">
+        </t-col>
+        <t-col flex="32px">
           <t-button theme="primary" shape="square" @click="onRefresh()">
             <template #icon>
               <icon-refresh/>
             </template>
           </t-button>
-        </a-col>
-      </a-row>
+        </t-col>
+      </t-row>
     </header>
     <a-tree :data="treeNodeData" :virtual-list-props="virtualListProps"
             :default-expand-all="false" block-node draggable

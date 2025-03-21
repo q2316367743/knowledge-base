@@ -18,6 +18,7 @@ import PriorityDropdown from "@/components/PriorityDropdown/PriorityDropdown.vue
 import TagGroup from "@/components/TagGroup/TagGroup.vue";
 import DateRange from "@/components/DateRange/DateRange.vue";
 import './model.less';
+import {Checkbox, Switch} from "tdesign-vue-next";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
   if (attr.start === '' && attr.end === '') {
@@ -80,8 +81,9 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
     content: () => <div class={'todo-item-setting'}>
       <div class={'todo-item-setting__header'}>
         <TodoItemCheckbox priority={base.value.priority} status={base.value.status}/>
-        <div>
-          <Trigger position={isRange.value ? 'bottom' : 'bl'} auto-fit-position trigger="click" showArrow={true} popupTranslate={[0, 10]}>{{
+        <div class={'ml-8px'}>
+          <Trigger position={isRange.value ? 'bottom' : 'bl'} auto-fit-position trigger="click" showArrow={true}
+                   popupTranslate={[0, 10]}>{{
             default: () => <Button size={'small'}>
               <DateRange start={range.value[0]} end={range.value[1]}/>
             </Button>,
@@ -99,7 +101,12 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
             </div>
           }}</Trigger>
         </div>
-        <PriorityDropdown v-model={base.value.priority}/>
+        <div class={'ml-8px'}>
+          <Checkbox v-model={base.value.top}>置顶</Checkbox>
+        </div>
+        <div style={{marginLeft: 'auto'}}>
+          <PriorityDropdown v-model={base.value.priority}/>
+        </div>
       </div>
       <Divider margin={2}/>
       <div class={'todo-item-setting__input'}>

@@ -3,31 +3,31 @@
            :disabled="id === 0">
     <template #suffix>
       <!-- 优先级 -->
-      <a-dropdown position="br" @select="updatePriority($event)" :disabled="disabled">
+      <t-dropdown placement="bottom-right" @select="updatePriority($event)" :disabled="disabled">
         <t-button theme="primary" shape="square" variant="text" :style="{color: color}" class="priority">
           <template #icon>
-            <icon-thunderbolt/>
+            <flag-icon/>
           </template>
         </t-button>
-        <template #content>
-          <a-doption :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
-                     :value="TodoItemPriority.HIGH">
+        <t-dropdown-menu>
+          <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
+                           :value="TodoItemPriority.HIGH">
             高优先级
-          </a-doption>
-          <a-doption :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
-                     :value="TodoItemPriority.MIDDLE">
+          </t-dropdown-item>
+          <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
+                           :value="TodoItemPriority.MIDDLE">
             中优先级
-          </a-doption>
-          <a-doption :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
-                     :value="TodoItemPriority.FLOOR">
+          </t-dropdown-item>
+          <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
+                           :value="TodoItemPriority.FLOOR">
             低优先级
-          </a-doption>
-          <a-doption :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
-                     :value="TodoItemPriority.NONE">
+          </t-dropdown-item>
+          <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
+                           :value="TodoItemPriority.NONE">
             无优先级
-          </a-doption>
-        </template>
-      </a-dropdown>
+          </t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown>
     </template>
   </t-input>
 </template>
@@ -36,6 +36,7 @@ import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {computed, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {FlagIcon} from "tdesign-icons-vue-next";
 
 
 const titleWrap = ref("");

@@ -4,47 +4,13 @@
        :key="item.id" @click.stop>
     <todo-item-checkbox :priority="item.priority" :status="item.status"
                         @click.stop="updateStatus(item.id, item.status)"/>
-    <a-dropdown align-point trigger="contextMenu">
-      <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}">
-        {{ item.title }}
-      </div>
-      <template #content>
-        <a-dsubmenu>
-          <template #icon>
-            <icon-thunderbolt/>
-          </template>
-          <span>优先级</span>
-          <template #content>
-            <content-default-item-doption
-              :priority="TodoItemPriority.HIGH"
-              @click="updatePriority(item.id, TodoItemPriority.HIGH)" text="高优先级"/>
-            <content-default-item-doption
-              :priority="TodoItemPriority.MIDDLE"
-              @click="updatePriority(item.id, TodoItemPriority.MIDDLE)" text="中优先级"/>
-            <content-default-item-doption
-              :priority="TodoItemPriority.FLOOR"
-              @click="updatePriority(item.id, TodoItemPriority.FLOOR)" text="低优先级"/>
-            <content-default-item-doption
-              :priority="TodoItemPriority.NONE"
-              @click="updatePriority(item.id, TodoItemPriority.NONE)" text="无优先级"/>
-          </template>
-        </a-dsubmenu>
-        <a-doption style="color: rgb(var(--orange-6));" @click="updateStatusToAbandon(item.id)">
-          <template #icon>
-            <thumb-down-icon />
-          </template>
-          放弃
-        </a-doption>
-        <a-doption style="color: rgb(var(--red-6));" @click="removeById(item.id)">
-          <template #icon>
-            <delete-icon />
-          </template>
-          删除
-        </a-doption>
-      </template>
-    </a-dropdown>
+    <div class="title" @click="setItemId(item.id)" :style="{color: handleColor(item)}"
+         @contextmenu="onContentDefaultItem($event, item)">
+      {{ item.title }}
+    </div>
     <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="right">
-      <t-button theme="primary" variant="text" shape="square" :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
+      <t-button theme="primary" variant="text" shape="square"
+                :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
                 @click="updateTop(item.id, !item.top)">
         <template #icon>
           <icon-arrow-rise/>
@@ -66,9 +32,8 @@ import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useUmami} from "@/plugin/umami";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
-import ContentDefaultItemDoption from "@/pages/todo/ContentDefault/components/ContentDefaultItemDoption.vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {DeleteIcon, ThumbDownIcon} from "tdesign-icons-vue-next";
+import {onContentDefaultItem} from "@/pages/todo/ContentDefault/components/ContentDefaultItem";
 
 defineProps({
   item: {

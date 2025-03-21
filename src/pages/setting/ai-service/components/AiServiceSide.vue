@@ -1,25 +1,21 @@
 <template>
   <t-layout class="h-full" style="background-color: var(--td-bg-color-container);">
     <t-content style="overflow: auto;" @click="close">
-      <a-radio-group v-model="currentId" direction="vertical" class="w-full">
-        <a-radio v-for="s in aiServices" :key="s.id" :value="s.id">
-          <template #radio="{ checked }">
-            <div class="ai-service-item w-full flex justify-between items-center" :class="{checked}">
-              <div class="ellipsis">{{ s.name }}</div>
-              <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)">
-                <t-button theme="primary" variant="text" shape="square" size="small" status="danger" @click.stop>
-                  <template #icon>
-                    <icon-delete/>
-                  </template>
-                </t-button>
-              </t-popconfirm>
-            </div>
-          </template>
-        </a-radio>
-      </a-radio-group>
+      <div class="ai-service-item w-full flex justify-between items-center ml-3px mb-4px" v-for="s in aiServices" :key="s.id"
+           :class="{checked:s.id===currentId}" @click.stop="currentId = s.id">
+        <div class="ellipsis">{{ s.name }}</div>
+        <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)">
+          <t-button theme="primary" variant="text" shape="square" size="small" status="danger" @click.stop>
+            <template #icon>
+              <icon-delete/>
+            </template>
+          </t-button>
+        </t-popconfirm>
+      </div>
     </t-content>
     <t-footer style="padding: 8px;">
-      <t-button theme="primary" variant="outline" :block="true" @click="handleAdd" :disabled="currentId === '0'">新增</t-button>
+      <t-button theme="primary" variant="outline" :block="true" @click="handleAdd" :disabled="currentId === '0'">新增
+      </t-button>
     </t-footer>
   </t-layout>
 </template>

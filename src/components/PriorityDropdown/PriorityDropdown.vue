@@ -1,26 +1,26 @@
 <template>
   <!-- 优先级 -->
   <t-dropdown position="br" @select="updatePriority($event)" trigger="click">
-    <t-button :style="{color: color}" class="priority" theme="default" :variant="variant" shape="square">
+    <t-button class="priority" theme="default" :variant="variant" shape="square">
       <template #icon>
-        <icon-thunderbolt/>
+        <flag-icon :style="{color:color}"/>
       </template>
     </t-button>
     <t-dropdown-menu>
       <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.HIGH)}"
-                       :value="TodoItemPriority.HIGH">
+                       :value="TodoItemPriority.HIGH" @click="priority = TodoItemPriority.HIGH">
         高优先级
       </t-dropdown-item>
       <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.MIDDLE)}"
-                       :value="TodoItemPriority.MIDDLE">
+                       :value="TodoItemPriority.MIDDLE" @click="priority = TodoItemPriority.MIDDLE">
         中优先级
       </t-dropdown-item>
       <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.FLOOR)}"
-                       :value="TodoItemPriority.FLOOR">
+                       :value="TodoItemPriority.FLOOR" @click="priority = TodoItemPriority.FLOOR">
         低优先级
       </t-dropdown-item>
       <t-dropdown-item :style="{color:handlePriorityColor(TodoItemPriority.NONE)}"
-                       :value="TodoItemPriority.NONE">
+                       :value="TodoItemPriority.NONE" @click="priority = TodoItemPriority.NONE">
         无优先级
       </t-dropdown-item>
     </t-dropdown-menu>
@@ -32,6 +32,7 @@ import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 import {computed} from "vue";
 import {Dropdown as ADropdown, Doption as ADoption, Button as AButton} from "@arco-design/web-vue";
 import {IconThunderbolt} from "@arco-design/web-vue/es/icon";
+import {FlagIcon} from "tdesign-icons-vue-next";
 
 const priority = defineModel({
   type: Number as PropType<TodoItemPriority>,
@@ -39,7 +40,7 @@ const priority = defineModel({
 });
 defineProps({
   variant: {
-    type: String as PropType< 'text' | 'outline'>,
+    type: String as PropType<'text' | 'outline'>,
     default: 'text'
   }
 });

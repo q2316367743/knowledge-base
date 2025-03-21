@@ -1,5 +1,5 @@
 <template>
-  <a-doption :style="{color:handlePriorityColor(priority)}" :value="priority">{{ text }}</a-doption>
+  <t-dropdown-item :style="{color:handlePriorityColor(priority)}" :value="priority">{{ text }}</t-dropdown-item>
 </template>
 <script lang="ts" setup>
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";

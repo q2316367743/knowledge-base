@@ -18,46 +18,7 @@
           <!-- 排序 -->
           <todo-header-order/>
           <!-- 更多 -->
-          <a-dropdown position="br">
-            <t-button variant="text" theme="primary" shape="square">
-              <template #icon>
-                <more-icon />
-              </template>
-            </t-button>
-            <template #content>
-              <a-doption :disabled="disabled" @click="openTodoExport()">
-                <template #icon>
-                  <icon-export/>
-                </template>
-                导出
-              </a-doption>
-              <a-doption :disabled="disabled" @click="openAddRelationArticle()">
-                <template #icon>
-                  <icon-relation/>
-                </template>
-                关联笔记
-              </a-doption>
-              <a-doption :disabled="disabled" @click="todoSearch()">
-                <template #icon>
-                  <icon-search/>
-                </template>
-                搜索
-              </a-doption>
-              <a-doption :disabled="disabled" @click="openTodoSetting()">
-                <template #icon>
-                  <icon-settings/>
-                </template>
-                设置
-              </a-doption>
-              <a-divider :margin="2"/>
-              <a-doption :disabled="disabled" @click="openEditTodoGroupFunc()">
-                <template #icon>
-                  <icon-plus/>
-                </template>
-                添加分组
-              </a-doption>
-            </template>
-          </a-dropdown>
+          <todo-header-more />
         </div>
       </div>
     </div>
@@ -67,16 +28,12 @@
   </header>
 </template>
 <script lang="ts" setup>
-import {openTodoExport} from "@/pages/todo/common/TodoExport";
-import {openTodoSetting} from "@/pages/todo/common/TodoSetting";
-import {openAddRelationArticle} from "@/pages/todo/common/AddRelationArticle";
-import {todoSearch} from "@/pages/todo/common/TodoSearch";
-import {openEditTodoGroupFunc} from "@/pages/todo/common/TodoGroupFunc";
-import {useTodoItemStore} from "@/store/db/TodoItemStore";
+import {MenuFoldIcon, MenuUnfoldIcon} from "tdesign-icons-vue-next";
 import {TodoItemStatus} from "@/entity/todo/TodoItem";
+import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import TodoHeaderOrder from "@/pages/todo/common/TodoHeader/TodoHeaderOrder.vue";
-import {MenuFoldIcon, MenuUnfoldIcon, MoreIcon} from "tdesign-icons-vue-next";
+import TodoHeaderMore from "@/pages/todo/common/TodoHeader/TodoHeaderMore.vue";
 
 defineProps({
   side: {
@@ -85,7 +42,6 @@ defineProps({
   }
 });
 
-const disabled = computed(() => useTodoWrapStore().categoryId === 0);
 const title = computed(() => useTodoWrapStore().currentCategory?.name);
 const collapsed = computed(() => useTodoWrapStore().collapsed);
 

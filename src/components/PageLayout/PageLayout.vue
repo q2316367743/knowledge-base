@@ -14,7 +14,7 @@
     <div class="page-container">
       <slot/>
     </div>
-    <a-back-top container=".page-layout .page-container" />
+    <t-back-top container=".page-layout .page-container" />
   </div>
 </template>
 <script lang="ts" setup>

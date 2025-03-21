@@ -19,15 +19,15 @@
       </t-tag>
     </div>
     <div class="todo-item__tag" v-if="attr.tags.length > 0">
-      <t-space size="small" >
+      <t-space size="small">
         <t-tag v-for="t in attr.tags" :key="t" :color="randomColor(t)" variant="outline">{{ t }}</t-tag>
       </t-space>
     </div>
-    <a-tooltip content="置顶" v-if="index.top && index.status === TodoItemStatus.TODO">
+    <t-tooltip content="置顶" v-if="index.top && index.status === TodoItemStatus.TODO">
       <div class="top">
-        <icon-arrow-up class="color-#fff"/>
+        <icon-arrow-up />
       </div>
-    </a-tooltip>
+    </t-tooltip>
   </div>
 </template>
 <script lang="ts" setup>
@@ -169,18 +169,18 @@ function handleDragstart(e: DragEvent) {
   .top {
     position: absolute;
     right: 0;
-    bottom: 0;
+    top: 0;
     background-color: rgb(var(--orange-6));
-    color: var(--color-fill-2);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    color: var(--td-bg-color-container);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
     width: 25px;
     height: 25px;
     text-align: right;
 
     .arco-icon {
       position: absolute;
+      top: 2px;
       right: 0;
-      bottom: 0;
     }
   }
 

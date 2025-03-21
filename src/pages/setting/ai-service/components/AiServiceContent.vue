@@ -22,8 +22,8 @@
           <!--        <t-input allow-clear v-model="form.modelVersion" />-->
           <!--      </t-form-item>-->
           <t-form-item label="模型" label-align="top" help="上面填写完成后注意刷新模型">
-            <a-card class="w-full">
-              <template #title>
+            <t-card class="w-full" :header-bordered="true">
+              <template #header>
                 <t-space>
                   <t-button theme="primary" :loading @click="getAllModules">
                     <template #icon>
@@ -39,12 +39,12 @@
                   </t-button>
                 </t-space>
               </template>
-              <t-list :split="true" class="max-h-500px">
+              <t-list :split="true" class="max-h-350px">
                 <t-list-item v-for="(item, index) in form.models" :key="index">
                   {{ item }}
                 </t-list-item>
               </t-list>
-            </a-card>
+            </t-card>
           </t-form-item>
         </t-form>
       </t-content>

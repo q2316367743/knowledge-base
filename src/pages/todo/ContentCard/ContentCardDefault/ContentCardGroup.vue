@@ -10,42 +10,42 @@
       <div class="extra">
         <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem({group})">
           <template #icon>
-            <plus-icon/>
+            <plus-icon style="font-size: 24px;"/>
           </template>
         </t-button>
-        <a-dropdown>
+        <t-dropdown trigger="click">
           <t-button variant="text" theme="primary" shape="square">
             <template #icon>
-              <ellipsis-icon/>
+              <ellipsis-icon style="font-size: 16px;"/>
             </template>
           </t-button>
-          <template #content>
-            <a-doption @click="openEditTodoGroupFunc(group)">
-              <template #icon>
+          <t-dropdown-menu>
+            <t-dropdown-item @click="openEditTodoGroupFunc(group)">
+              <template #prefix-icon>
                 <edit2-icon/>
               </template>
               重命名
-            </a-doption>
-            <a-doption @click="openAddTodoGroupFunc(group.id, 0)">
-              <template #icon>
+            </t-dropdown-item>
+            <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 0)">
+              <template #prefix-icon>
                 <icon-rotate-left/>
               </template>
               在左侧添加分组
-            </a-doption>
-            <a-doption @click="openAddTodoGroupFunc(group.id, 1)">
-              <template #icon>
+            </t-dropdown-item>
+            <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 1)">
+              <template #prefix-icon>
                 <icon-rotate-right/>
               </template>
               在右侧添加分组
-            </a-doption>
-            <a-doption @click="openDeleteTodoGroupFunc(group.id, group.name)">
-              <template #icon>
+            </t-dropdown-item>
+            <t-dropdown-item @click="openDeleteTodoGroupFunc(group.id, group.name)">
+              <template #prefix-icon>
                 <delete-icon/>
               </template>
               删除
-            </a-doption>
-          </template>
-        </a-dropdown>
+            </t-dropdown-item>
+          </t-dropdown-menu>
+        </t-dropdown>
       </div>
     </header>
     <div class="content-card-group__content">
