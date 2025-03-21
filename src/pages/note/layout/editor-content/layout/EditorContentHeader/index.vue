@@ -114,6 +114,10 @@ function onContextmenu(e: MouseEvent, article: ArticleIndex) {
       border: none;
     }
 
+    :deep(.t-tabs__operations--right) {
+      z-index: 0 !important;
+    }
+
     .editor-content-tab-close {
       transition: all 0.3s;
 

@@ -57,5 +57,4 @@ const switchPreview = (id?: number) => useArticlePreviewEvent.emit(id || homeEdi
 
 </script>
 <style scoped lang="less">
-
 </style>

@@ -84,7 +84,15 @@ export default class CodeTool implements BlockTool {
    * @public
    */
   render(): HTMLDivElement {
-    if (!this.wrapper) this.wrapper = makeElement('div', ['ce-code']);
+    if (!this.wrapper) {
+      this.wrapper = makeElement('div', ['ce-code']);
+      this.wrapper.addEventListener('keydown', (e: KeyboardEvent) => {
+        // 如果是enter键
+        if (e.key === 'Enter') {
+          e.stopPropagation();
+        }
+      });
+    }
     this.wrapper.style.position = 'relative';
 
     const {readOnly, filename, content, height, fs} = this;

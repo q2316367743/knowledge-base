@@ -35,20 +35,23 @@ export const useVipStore = defineStore('vip', () => {
     let goodsId: string;
     if (type === 'note') {
       goodsId = Constant.goods.note;
-    }else if (type === 'todo') {
+    } else if (type === 'todo') {
       goodsId = Constant.goods.todo;
-    }else {
+    } else {
       goodsId = Constant.goods.all;
     }
-    return new Promise<void>((resolve, reject) => {
-      try {
-        utools.openPurchase({
-          goodsId
-        }, () => resolve());
-      } catch (e) {
-        reject(e);
-      }
-    })
+    // TODO: 暂时不开放购买功能
+    // return new Promise<void>((resolve, reject) => {
+    //   try {
+    //     utools.openPurchase({
+    //       goodsId
+    //     }, () => resolve());
+    //   } catch (e) {
+    //     reject(e);
+    //   }
+    // })
+    allVip.value = true;
+    return Promise.resolve();
   }
 
   return {
