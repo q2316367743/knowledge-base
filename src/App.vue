@@ -21,15 +21,13 @@ import {useUmami} from "@/plugin/umami";
 import {createServer} from "@/plugin/server";
 import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
-import {useAppCollapse, useGlobalStore} from "@/store/GlobalStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 // 组件
 import {windowConfig} from "@/global/WindowConfig";
 import {ArticleIndex} from "@/entity/article";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {htmlToArticle} from "@/components/export-component/htmlToArticle";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import AppSide from "@/components/app-side/index.vue";
 
@@ -46,7 +44,6 @@ const preview = ref({
 
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
-const appCollapse = computed<boolean>(() => useAppCollapse().collapse.value);
 
 // 插件进入
 utools.onPluginEnter(action => {
@@ -141,14 +138,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     useUmami.track("feature", "查看待办");
     toTodo(preload);
   } else if (operate === 'function') {
-    if (preload === 'import') {
-      useUmami.track("feature", "导入笔记");
-      useGlobalStore().startLoading("开始导入")
-      htmlToArticle(extra)
-        .then(() => MessageUtil.success("导入成功"))
-        .catch(e => MessageUtil.error("导入失败", e))
-        .finally(() => useGlobalStore().closeLoading());
-    } else if (preload === 'editor') {
+    if (preload === 'editor') {
       useUmami.track("feature", "前往编辑器");
       router.push('/note');
     } else if (preload === 'todo') {

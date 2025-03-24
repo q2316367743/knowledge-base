@@ -9,7 +9,7 @@
           新建笔记
         </div>
       </div>
-      <div class="module-item" @click="onImport">
+      <div class="module-item" @click="openArticleImport">
         <div class="module-item-icon">
           <file-import-icon size="36px"/>
         </div>
@@ -23,10 +23,8 @@
 <script lang="ts" setup>
 import {FileImportIcon, StickyNoteIcon} from "tdesign-icons-vue-next";
 import {addArticleModal} from "@/pages/note/components/he-context";
+import {openArticleImport} from "@/modules/ArticleImport";
 
-function onImport() {
-  utools.redirect(["网页剪报", "网页剪报"], "");
-}
 </script>
 <style scoped lang="less">
 .not-note {
