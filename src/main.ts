@@ -1,7 +1,6 @@
 import {useUmami} from "@/plugin/umami";
 import {createPinia} from 'pinia';
 import App from './App.vue'
-import {setupCalendar} from 'v-calendar';
 import router from './plugin/router';
 // 额外引入图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
@@ -15,7 +14,6 @@ import 'tdesign-vue-next/es/style/index.css';
 import '@/assets/style/theme.css';
 import '@/assets/style/global.less';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
-import 'v-calendar/style.css';
 import 'virtual:uno.css'
 import 'handsontable/dist/handsontable.full.min.css';
 import '@wangeditor/editor/dist/css/style.css';
@@ -66,7 +64,6 @@ createApp(App)
   .use(createPinia())
   .use(router)
   .use(ArcoVueIcon)
-  .use(setupCalendar, {})
   .mount('#app');
 
 function getKey(e: KeyboardEvent) {
