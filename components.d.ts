@@ -35,6 +35,7 @@ declare module 'vue' {
     FileSuperNote: typeof import('./src/components/KbIcon/FileSuperNote.vue')['default']
     Item: typeof import('./src/components/update-check/item.vue')['default']
     KbAlert: typeof import('./src/components/KbAlert/KbAlert.vue')['default']
+    KbTree: typeof import('./src/components/KbTree/KbTree.vue')['default']
     PageLayout: typeof import('./src/components/PageLayout/PageLayout.vue')['default']
     PriorityDropdown: typeof import('./src/components/PriorityDropdown/PriorityDropdown.vue')['default']
     Privacy: typeof import('./src/components/update-check/privacy.vue')['default']

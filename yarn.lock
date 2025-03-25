@@ -274,6 +274,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.7.7":
+  version "7.27.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/@babel/runtime/-/runtime-7.27.0.tgz#fbee7cf97c709518ecc1f590984481d5460d4762"
+  integrity sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.25.0", "@babel/template@^7.25.9", "@babel/template@^7.26.8":
   version "7.26.8"
   resolved "https://mirrors.cloud.tencent.com/npm/@babel/template/-/template-7.26.8.tgz#db3898f47a17bab2f4c78ec1d0de38527c2ffe19"
@@ -534,6 +541,35 @@
   version "1.0.0"
   resolved "https://mirrors.cloud.tencent.com/npm/@handsontable/pikaday/-/pikaday-1.0.0.tgz#21a432b727791d48f4f231094d999b1a4b5f6f5f"
   integrity sha512-1VN6N38t5/DcjJ7y7XUYrDx1LuzvvzlrFdBdMG90Qo1xc8+LXHqbWbsTEm5Ec5gXTEbDEO53vUT35R+2COmOyg==
+
+"@he-tree/dnd-utils@^0.1.0-alpha.4":
+  version "0.1.0-alpha.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/@he-tree/dnd-utils/-/dnd-utils-0.1.0-alpha.4.tgz#7438684dba7b69abc5f8b1aa386a910d9091cf7a"
+  integrity sha512-DuxkFOQ8eztoHrX1/VelqOnQphQbRszemfMKSKlAEEhVjqR/IkaOE2QSRlAdj6OC6AfMvHDPvIZOiEPFwP6/ZQ==
+  dependencies:
+    "@babel/runtime" "^7.7.7"
+    drag-event-service "^2.0.0"
+    helper-js "^3.1.2"
+
+"@he-tree/tree-utils@^0.1.0-alpha.6":
+  version "0.1.0-alpha.6"
+  resolved "https://mirrors.cloud.tencent.com/npm/@he-tree/tree-utils/-/tree-utils-0.1.0-alpha.6.tgz#fd42b54bd4eca5a0f64c17dedd4339c36776be97"
+  integrity sha512-TIH1iIRLpn3sjd4EuIfKQzFd6ToY8GLYk3i5bfK1njCW7lBBDHLqSyK0mlJPbCPk4PfkZBC4K+sMcYyH4hokyg==
+  dependencies:
+    "@babel/runtime" "^7.7.7"
+    drag-event-service "^2.0.0"
+    helper-js "^3.1.2"
+
+"@he-tree/vue@^2.9.4":
+  version "2.9.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/@he-tree/vue/-/vue-2.9.4.tgz#869dd7cc219d16d686902cca7264e65fcc0315ac"
+  integrity sha512-n8yycL4fk46mlg6sIkcdSZmSCRvdzqj7Ts14ulKXLqmyR6NyTSnP6O9pj6dPk2S2wJIuX2Ad6MOzpg0qDhlBXA==
+  dependencies:
+    "@he-tree/dnd-utils" "^0.1.0-alpha.4"
+    "@he-tree/tree-utils" "^0.1.0-alpha.6"
+    "@virtual-list/vue" "^1.2.1"
+    helper-js "^3.1.2"
+    vue-demi latest
 
 "@iconify/types@^2.0.0":
   version "2.0.0"
@@ -1186,6 +1222,14 @@
     "@uppy/companion-client" "^2.2.2"
     "@uppy/utils" "^4.1.2"
     nanoid "^3.1.25"
+
+"@virtual-list/vue@^1.2.1":
+  version "1.2.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/@virtual-list/vue/-/vue-1.2.1.tgz#6920dc3850362587cc71f6955fec382e4bb8dbab"
+  integrity sha512-sVangNRLgHJsrwjf2EeXuc8mUExbLRJO39J9/FXFWXXQkue/FBT4ZWN7GH5+GJTeVaEEfHW1W2UuVaf3LEB3jQ==
+  dependencies:
+    helper-js "^3.1.2"
+    vue-demi latest
 
 "@vitejs/plugin-vue-jsx@^3.1.0":
   version "3.1.0"
@@ -2351,6 +2395,14 @@ dompurify@^2.1.1:
   resolved "https://mirrors.cloud.tencent.com/npm/dompurify/-/dompurify-2.5.8.tgz#2809d89d7e528dc7a071dea440d7376df676f824"
   integrity sha512-o1vSNgrmYMQObbSSvF/1brBYEQPHhV1+gsmrusO7/GXtp1T9rCS8cXFqVxK/9crT1jA6Ccv+5MTSjBNqr7Sovw==
 
+drag-event-service@^2.0.0:
+  version "2.0.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/drag-event-service/-/drag-event-service-2.0.0.tgz#7e9fd5beacdf9c3e7c502c717164a4fc284a696f"
+  integrity sha512-JVEnOEbbNDS3RrWd+tVVIDu2SHQZ9luhEFGSQ1hXMjl+ABw0PxhHmnkGjzPVE836Tsg+k7rkm5GM9Ln/UgbYpA==
+  dependencies:
+    "@babel/runtime" "^7.7.7"
+    helper-js "^3.0.0"
+
 dunder-proto@^1.0.1:
   version "1.0.1"
   resolved "https://mirrors.cloud.tencent.com/npm/dunder-proto/-/dunder-proto-1.0.1.tgz#d7ae667e1dc83482f8b70fd0f6eefc50da30f58a"
@@ -2816,6 +2868,13 @@ he@^1.2.0:
   version "1.2.0"
   resolved "https://mirrors.cloud.tencent.com/npm/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
+
+helper-js@^3.0.0, helper-js@^3.1.2:
+  version "3.1.6"
+  resolved "https://mirrors.cloud.tencent.com/npm/helper-js/-/helper-js-3.1.6.tgz#37efaa5ca6fc9ad64d4f2a91e77363b7eac06207"
+  integrity sha512-lhncHDAxS2PTA44aG1AofxT51v0IXEVOmaUCC6HwuGaGqE1yEkjhPH74Vb/Aw4xt8Kt5bMvStCr6FekANp+PGg==
+  dependencies:
+    "@babel/runtime" "^7.7.7"
 
 highlight.js@^11.9.0:
   version "11.11.1"
@@ -4701,7 +4760,7 @@ vite@5.4.6:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vue-demi@*, vue-demi@>=0.14.8, vue-demi@^0.14.10:
+vue-demi@*, vue-demi@>=0.14.8, vue-demi@^0.14.10, vue-demi@latest:
   version "0.14.10"
   resolved "https://mirrors.cloud.tencent.com/npm/vue-demi/-/vue-demi-0.14.10.tgz#afc78de3d6f9e11bf78c55e8510ee12814522f04"
   integrity sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==

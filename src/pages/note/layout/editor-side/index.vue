@@ -12,27 +12,47 @@
         </editor-tree-menu>
       </t-input-group>
     </header>
-    <a-tree :data="treeNodeData" :virtual-list-props="virtualListProps" :checkable="checkKeys.length > 0"
-            :default-expand-all="false" :allow-drop="checkAllowDrop" block-node draggable @select="onSelect($event)"
-            @drop="onDrop($event)" style="margin: 0 7px;" v-model:selected-keys="selectedKeys"
-            v-model:checked-keys="checkKeys" v-model:expanded-keys="expandedKeys">
-      <template #extra="nodeData">
-        <editor-tree-menu :id="nodeData.key" :name="nodeData.title" :folder="!nodeData.isLeaf"
-                          @multi="multiCheckStart">
-          <t-button variant="text" shape="square" theme="primary">
-            <template #icon>
-              <icon-more/>
-            </template>
-          </t-button>
-        </editor-tree-menu>
+    <Draggable class="note-tree p-4px" v-model="treeNodeData" tree-line virtualization :style="{height: virtualHeight}"
+               ref="tree" root-droppable :drag-copy="false" :each-droppable="checkAllowDrop" @change="onDrop">
+      <template #default="{ node, stat }">
+        <div class="note-tree-node flex justify-between p-1px pl-4px"
+             :class="{active: homeEditorId===node.key}"
+             @click="onSelect(node.key)" @contextmenu="openEditorTreeMenu($event, {node, multi: multiCheckStart})">
+          <div class="flex items-center">
+            <OpenIcon
+              v-if="!node.isLeaf"
+              :open="stat.open"
+              class="mtl-mr"
+              @click.native="stat.open = !stat.open"
+            />
+            <t-checkbox
+              v-if="checkKeys.length > 0"
+              class="mtl-checkbox mtl-mr"
+              type="checkbox"
+              :checked="multiChecked(node.key)"
+              @change="multiCheckClick(node.key)"
+              @click.stop
+            />
+            <component :is="node.icon"/>
+            <span class="mtl-ml p-3px">{{ node.title }}</span>
+          </div>
+          <editor-tree-menu :id="node.key" :name="node.title" :folder="!node.isLeaf"
+                            @multi="multiCheckStart">
+            <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
+              <template #icon>
+                <icon-more/>
+              </template>
+            </t-button>
+          </editor-tree-menu>
+        </div>
       </template>
-    </a-tree>
+    </Draggable>
     <div class="option" v-if="checkKeys.length > 0">
       <t-space class="btn" size="small">
         <t-popconfirm content="确认删除这些笔记，注意：不会删除目录" @confirm="multiCheckDelete()">
           <t-button theme="danger" variant="text" shape="square">
             <template #icon>
-              <delete-icon />
+              <delete-icon/>
             </template>
           </t-button>
         </t-popconfirm>
@@ -52,7 +72,7 @@
         </t-tooltip>
         <t-button theme="primary" variant="text" shape="square" @click="multiCheckStop()">
           <template #icon>
-            <close-icon />
+            <close-icon/>
           </template>
         </t-button>
       </t-space>
@@ -60,34 +80,37 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
-import {TreeNodeData} from "@arco-design/web-vue";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {useFolderStore} from "@/store/db/FolderStore";
-import {useElementSize} from "@vueuse/core";
-import {homeEditorId, useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {useGlobalStore} from "@/store/GlobalStore";
-import {keyword} from "@/global/BeanFactory";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import Constant from "@/global/Constant";
-import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
-import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useNoteTree} from "@/hooks/NoteTree";
-import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
+import {Draggable, OpenIcon, DraggableTreeType} from '@he-tree/vue'
 import {CloseIcon, DeleteIcon} from "tdesign-icons-vue-next";
+import {
+  useGlobalStore,
+  useArticleStore,
+  useFolderStore,
+  homeEditorId,
+  useHomeEditorStore,
+  useBaseSettingStore
+} from "@/store";
+import {useNoteTree} from "@/hooks";
+import {keyword} from "@/global/BeanFactory";
+import Constant from "@/global/Constant";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
+import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
+import {openEditorTreeMenu} from "@/pages/note/layout/editor-side/components/EditorTreeMenu";
+import {PropDroppable} from "@he-tree/vue/dist/v3/components/DraggableTree";
 
 const homeEditorSideRef = ref();
+const tree = ref<DraggableTreeType>();
+
 const size = useElementSize(homeEditorSideRef);
 
 const selectedKeys = ref<Array<number>>(homeEditorId.value === 0 ? [] : [homeEditorId.value]);
 const checkKeys = ref<Array<number>>([]);
 const expandedKeys = ref<Array<number>>(getItemByDefault<Array<number>>(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, []));
 
-const virtualListProps = computed(() => ({
-  height: size.height.value - 56
-}));
+const virtualHeight = computed(() => (size.height.value - 44) + 'px');
 const {treeNodeData} = useNoteTree(keyword);
 
 watch(homeEditorId, id => {
@@ -98,8 +121,7 @@ watch(homeEditorId, id => {
 
 watch(() => expandedKeys.value, value => setItem(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, value), {deep: true});
 
-function onSelect(selectKeys: Array<number | string>) {
-  const id = selectKeys[0] as number;
+function onSelect(id: number) {
   if (useArticleStore().articleMap.has(id)) {
     useHomeEditorStore().openArticle(id);
     if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
@@ -126,6 +148,19 @@ function multiCheckStop() {
   checkKeys.value = [];
 }
 
+function multiCheckClick(id: number) {
+  const index = checkKeys.value.indexOf(id);
+  if (index === -1) {
+    checkKeys.value.push(id);
+  } else {
+    checkKeys.value.splice(index, 1);
+  }
+}
+
+function multiChecked(id: number) {
+  return checkKeys.value.indexOf(id) !== -1;
+}
+
 function multiCheckDelete() {
   useGlobalStore().startLoading("开始删除")
   useArticleStore().removeBatchByIds(checkKeys.value)
@@ -137,43 +172,45 @@ function multiCheckDelete() {
     });
 }
 
-function checkAllowDrop(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 | 1; }): boolean {
-  return !options.dropNode.isLeaf
+const checkAllowDrop: PropDroppable = (options) => {
+  return !options.data.isLeaf;
 }
 
-function onDrop(data: { dragNode: TreeNodeData, dropNode: TreeNodeData, dropPosition: number }) {
-  if (typeof data.dragNode.key !== 'undefined' &&
-    typeof data.dropNode.key !== 'undefined') {
-    if (data.dropPosition === 0) {
-      if (data.dragNode.isLeaf) {
-        // 笔记
-        useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      } else {
-        useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      }
-    } else {
-      // 上或者下
-      const target = useFolderStore().folderMap.get(data.dropNode.key as number);
-      if (!target) {
-        return;
-      }
-      if (data.dragNode.isLeaf) {
-        // 笔记
-        useArticleStore().drop(data.dragNode.key as number, target.pid)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      } else {
-        useFolderStore().drop(data.dragNode.key as number, target.pid)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      }
-    }
-  }
+function onDrop(a: any, b: any, c: any, d: any) {
+  console.log(a, b, c, d);
+  // if (typeof data.dragNode.key !== 'undefined' &&
+  //   typeof data.dropNode.key !== 'undefined') {
+  //   if (data.dropPosition === 0) {
+  //     if (data.dragNode.isLeaf) {
+  //       // 笔记
+  //       useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+  //         .then(() => MessageUtil.success("移动成功"))
+  //         .catch(e => MessageUtil.error("移动失败", e));
+  //     } else {
+  //       useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+  //         .then(() => MessageUtil.success("移动成功"))
+  //         .catch(e => MessageUtil.error("移动失败", e));
+  //     }
+  //   } else {
+  //     // 上或者下
+  //     const target = useFolderStore().folderMap.get(data.dropNode.key as number);
+  //     if (!target) {
+  //       return;
+  //     }
+  //     if (data.dragNode.isLeaf) {
+  //       // 笔记
+  //       useArticleStore().drop(data.dragNode.key as number, target.pid)
+  //         .then(() => MessageUtil.success("移动成功"))
+  //         .catch(e => MessageUtil.error("移动失败", e));
+  //     } else {
+  //       useFolderStore().drop(data.dragNode.key as number, target.pid)
+  //         .then(() => MessageUtil.success("移动成功"))
+  //         .catch(e => MessageUtil.error("移动失败", e));
+  //     }
+  //   }
+  // }
 }
+
 
 expandTo(homeEditorId.value);
 
@@ -234,7 +271,7 @@ function moveMultiTo() {
 }
 
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .home-editor-side {
   position: absolute;
   top: 0;
@@ -255,21 +292,21 @@ function moveMultiTo() {
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       background-color: rgba(255, 255, 255, 0.6);
     }
-
   }
-}
 
-body[arco-theme=dark] {
-  .home-editor-side {
+  .note-tree {
+    .note-tree-node {
+      cursor: pointer;
 
-    .option {
-
-      .btn {
-        background-color: rgba(0, 0, 0, 0.6);
+      &:hover {
+        background-color: var(--td-bg-color-container-hover);
       }
 
+      &.active {
+        background-color: var(--td-bg-color-container-active);
+      }
     }
   }
-
 }
+
 </style>

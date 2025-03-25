@@ -21,6 +21,8 @@ import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
 import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css';
 import 'nprogress/nprogress.css';
+import '@he-tree/vue/style/default.css'
+import '@he-tree/vue/style/material-design.css'
 // 代码编辑器
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'

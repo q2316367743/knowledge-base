@@ -125,14 +125,13 @@
   </t-dropdown>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
 import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
-import {exportToMd} from "@/pages/note/components/EditorExport";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useFolderStore} from "@/store/db/FolderStore";
+import {exportToMd} from "@/pages/note/components/EditorExport";
 import {exportToUTools} from "@/components/ArticleExport/exportForUtools";
 import {exportForEpub} from "@/components/ArticleExport/exportForEpub";
 import VipIcon from "@/components/KbIcon/VipIcon.vue";
