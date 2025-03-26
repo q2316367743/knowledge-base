@@ -12,31 +12,19 @@
         </editor-tree-menu>
       </t-input-group>
     </header>
-    <Draggable class="note-tree p-4px" v-model="treeNodeData" tree-line virtualization :style="{height: virtualHeight}"
-               ref="tree" root-droppable :drag-copy="false" :each-droppable="checkAllowDrop" @change="onDrop">
-      <template #default="{ node, stat }">
+    <t-tree :data="treeNodeData" :virtual-list-props="virtualListProps" :checkable="checkKeys.length > 0"
+            :default-expand-all="false" :allow-drop="checkAllowDrop" :draggable="true" :line="true"
+            @drop="onDrop($event)" style="margin: 0 7px;" v-model:actived="selectedKeys"
+            v-model="checkKeys" v-model:expanded="expandedKeys">
+      <template #label="{ node }">
         <div class="note-tree-node flex justify-between p-1px pl-4px"
-             :class="{active: homeEditorId===node.key}"
-             @click="onSelect(node.key)" @contextmenu="openEditorTreeMenu($event, {node, multi: multiCheckStart})">
+             :class="{active: homeEditorId===node.value}"
+             @click="onSelect(node.value)" @contextmenu="openEditorTreeMenu($event, {node, multi: multiCheckStart})">
           <div class="flex items-center">
-            <OpenIcon
-              v-if="!node.isLeaf"
-              :open="stat.open"
-              class="mtl-mr"
-              @click.native="stat.open = !stat.open"
-            />
-            <t-checkbox
-              v-if="checkKeys.length > 0"
-              class="mtl-checkbox mtl-mr"
-              type="checkbox"
-              :checked="multiChecked(node.key)"
-              @change="multiCheckClick(node.key)"
-              @click.stop
-            />
-            <component :is="node.icon"/>
-            <span class="mtl-ml p-3px">{{ node.title }}</span>
+            <component :is="node.data.icon"/>
+            <span class="mtl-ml p-3px" @click="onSelect(node)">{{ node.label }}</span>
           </div>
-          <editor-tree-menu :id="node.key" :name="node.title" :folder="!node.isLeaf"
+          <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.leaf"
                             @multi="multiCheckStart">
             <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
               <template #icon>
@@ -46,7 +34,7 @@
           </editor-tree-menu>
         </div>
       </template>
-    </Draggable>
+    </t-tree>
     <div class="option" v-if="checkKeys.length > 0">
       <t-space class="btn" size="small">
         <t-popconfirm content="确认删除这些笔记，注意：不会删除目录" @confirm="multiCheckDelete()">
@@ -80,7 +68,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {Draggable, OpenIcon, DraggableTreeType} from '@he-tree/vue'
+import {TreeNodeModel} from 'tdesign-vue-next';
 import {CloseIcon, DeleteIcon} from "tdesign-icons-vue-next";
 import {
   useGlobalStore,
@@ -99,18 +87,17 @@ import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
 import {openEditorTreeMenu} from "@/pages/note/layout/editor-side/components/EditorTreeMenu";
-import {PropDroppable} from "@he-tree/vue/dist/v3/components/DraggableTree";
 
 const homeEditorSideRef = ref();
-const tree = ref<DraggableTreeType>();
-
 const size = useElementSize(homeEditorSideRef);
 
 const selectedKeys = ref<Array<number>>(homeEditorId.value === 0 ? [] : [homeEditorId.value]);
 const checkKeys = ref<Array<number>>([]);
 const expandedKeys = ref<Array<number>>(getItemByDefault<Array<number>>(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, []));
 
-const virtualHeight = computed(() => (size.height.value - 44) + 'px');
+const virtualListProps = computed(() => ({
+  height: size.height.value - 56
+}));
 const {treeNodeData} = useNoteTree(keyword);
 
 watch(homeEditorId, id => {
@@ -121,7 +108,12 @@ watch(homeEditorId, id => {
 
 watch(() => expandedKeys.value, value => setItem(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, value), {deep: true});
 
-function onSelect(id: number) {
+function onSelect(node: TreeNodeModel) {
+  let id = node.value;
+  if (!id) return;
+  if (typeof id === 'string') {
+    id = Number(id);
+  }
   if (useArticleStore().articleMap.has(id)) {
     useHomeEditorStore().openArticle(id);
     if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
@@ -148,19 +140,6 @@ function multiCheckStop() {
   checkKeys.value = [];
 }
 
-function multiCheckClick(id: number) {
-  const index = checkKeys.value.indexOf(id);
-  if (index === -1) {
-    checkKeys.value.push(id);
-  } else {
-    checkKeys.value.splice(index, 1);
-  }
-}
-
-function multiChecked(id: number) {
-  return checkKeys.value.indexOf(id) !== -1;
-}
-
 function multiCheckDelete() {
   useGlobalStore().startLoading("开始删除")
   useArticleStore().removeBatchByIds(checkKeys.value)
@@ -172,45 +151,48 @@ function multiCheckDelete() {
     });
 }
 
-const checkAllowDrop: PropDroppable = (options) => {
-  return !options.data.isLeaf;
+function checkAllowDrop(options: {
+  e: DragEvent;
+  dragNode: TreeNodeModel;
+  dropNode: TreeNodeModel;
+  dropPosition: number;
+}): boolean {
+  return !options.dropNode.isLeaf
 }
 
-function onDrop(a: any, b: any, c: any, d: any) {
-  console.log(a, b, c, d);
-  // if (typeof data.dragNode.key !== 'undefined' &&
-  //   typeof data.dropNode.key !== 'undefined') {
-  //   if (data.dropPosition === 0) {
-  //     if (data.dragNode.isLeaf) {
-  //       // 笔记
-  //       useArticleStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-  //         .then(() => MessageUtil.success("移动成功"))
-  //         .catch(e => MessageUtil.error("移动失败", e));
-  //     } else {
-  //       useFolderStore().drop(data.dragNode.key as number, data.dropNode.key as number)
-  //         .then(() => MessageUtil.success("移动成功"))
-  //         .catch(e => MessageUtil.error("移动失败", e));
-  //     }
-  //   } else {
-  //     // 上或者下
-  //     const target = useFolderStore().folderMap.get(data.dropNode.key as number);
-  //     if (!target) {
-  //       return;
-  //     }
-  //     if (data.dragNode.isLeaf) {
-  //       // 笔记
-  //       useArticleStore().drop(data.dragNode.key as number, target.pid)
-  //         .then(() => MessageUtil.success("移动成功"))
-  //         .catch(e => MessageUtil.error("移动失败", e));
-  //     } else {
-  //       useFolderStore().drop(data.dragNode.key as number, target.pid)
-  //         .then(() => MessageUtil.success("移动成功"))
-  //         .catch(e => MessageUtil.error("移动失败", e));
-  //     }
-  //   }
-  // }
+function onDrop(data: { e: DragEvent; dragNode: TreeNodeModel; dropNode: TreeNodeModel; dropPosition: number; }) {
+  if (typeof data.dragNode.value !== 'undefined' &&
+    typeof data.dropNode.value !== 'undefined') {
+    if (data.dropPosition === 0) {
+      if (data.dragNode.data.leaf) {
+        // 笔记
+        useArticleStore().drop(data.dragNode.value as number, data.dropNode.value as number)
+          .then(() => MessageUtil.success("移动成功"))
+          .catch(e => MessageUtil.error("移动失败", e));
+      } else {
+        useFolderStore().drop(data.dragNode.value as number, data.dropNode.value as number)
+          .then(() => MessageUtil.success("移动成功"))
+          .catch(e => MessageUtil.error("移动失败", e));
+      }
+    } else {
+      // 上或者下
+      const target = useFolderStore().folderMap.get(data.dropNode.value as number);
+      if (!target) {
+        return;
+      }
+      if (data.dragNode.data.leaf) {
+        // 笔记
+        useArticleStore().drop(data.dragNode.value as number, target.pid)
+          .then(() => MessageUtil.success("移动成功"))
+          .catch(e => MessageUtil.error("移动失败", e));
+      } else {
+        useFolderStore().drop(data.dragNode.value as number, target.pid)
+          .then(() => MessageUtil.success("移动成功"))
+          .catch(e => MessageUtil.error("移动失败", e));
+      }
+    }
+  }
 }
-
 
 expandTo(homeEditorId.value);
 
@@ -271,7 +253,7 @@ function moveMultiTo() {
 }
 
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .home-editor-side {
   position: absolute;
   top: 0;
@@ -292,21 +274,21 @@ function moveMultiTo() {
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       background-color: rgba(255, 255, 255, 0.6);
     }
-  }
 
-  .note-tree {
-    .note-tree-node {
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--td-bg-color-container-hover);
-      }
-
-      &.active {
-        background-color: var(--td-bg-color-container-active);
-      }
-    }
   }
 }
 
+body[arco-theme=dark] {
+  .home-editor-side {
+
+    .option {
+
+      .btn {
+        background-color: rgba(0, 0, 0, 0.6);
+      }
+
+    }
+  }
+
+}
 </style>

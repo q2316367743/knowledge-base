@@ -1,20 +1,20 @@
-import {TreeNodeData} from "@arco-design/web-vue";
 import {IconFolder} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
 import {pathJoin} from "@/utils/file/FileUtil";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
+import {TreeOptionData} from "tdesign-vue-next/es/common";
 
 /**
  * 基础列表树
  */
 export interface ListTree {
 
-    id: number;
+  id: number;
 
-    pid: number;
+  pid: number;
 
-    name: string;
+  name: string;
 
 }
 
@@ -24,19 +24,19 @@ export interface ListTree {
  * @param list 列表
  * @param topName 顶部名称
  */
-export function listToTree(list: Array<ListTree>, topName: string): Array<TreeNodeData> {
-    const base: Array<TreeNodeData> = list.filter(c => c.pid === 0 || !c.pid)
-        .map(c => ({
-            key: c.id,
-            title: c.name,
-            children: []
-        }));
-    base.forEach(item => _listToTree(item, item.key as number, list));
-    return [{
-        key: 0,
-        title: topName,
-        children: base
-    }];
+export function listToTree(list: Array<ListTree>, topName: string): Array<TreeOptionData> {
+  const base: Array<TreeOptionData> = list.filter(c => c.pid === 0 || !c.pid)
+    .map(c => ({
+      value: c.id,
+      label: c.name,
+      children: []
+    }));
+  base.forEach(item => _listToTree(item, item.value as number, list));
+  return [{
+    value: 0,
+    label: topName,
+    children: base
+  }];
 }
 
 /**
@@ -44,25 +44,25 @@ export function listToTree(list: Array<ListTree>, topName: string): Array<TreeNo
  * @param list 列表
  * @param pid 基础目录ID
  */
-export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<TreeNodeData> {
-    const base: Array<TreeNodeData> = list.filter(c => c.pid === pid)
-        .map(c => ({
-            key: c.id,
-            title: c.name,
-            children: []
-        }));
-    base.forEach(item => _listToTree(item, item.key as number, list));
-    return base;
+export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<TreeOptionData> {
+  const base: Array<TreeOptionData> = list.filter(c => c.pid === pid)
+    .map(c => ({
+      value: c.id,
+      label: c.name,
+      children: []
+    }));
+  base.forEach(item => _listToTree(item, item.value as number, list));
+  return base;
 }
 
-function _listToTree(tree: TreeNodeData, pid: number, categories: Array<ListTree>) {
-    tree.children = categories.filter(c => c.pid === pid)
-        .map(c => ({
-            key: c.id,
-            title: c.name,
-            children: []
-        } as TreeNodeData));
-    tree.children.forEach(item => _listToTree(item, item.key as number, categories));
+function _listToTree(tree: TreeOptionData, pid: number, categories: Array<ListTree>) {
+  tree.children = categories.filter(c => c.pid === pid)
+    .map(c => ({
+      value: c.id,
+      label: c.name,
+      children: []
+    } as TreeOptionData));
+  tree.children.forEach(item => _listToTree(item, item.value as number, categories));
 }
 
 
@@ -74,49 +74,52 @@ function _listToTree(tree: TreeNodeData, pid: number, categories: Array<ListTree
  * @param map 映射函数
  */
 export function treeEach(
-    list: Array<TreeNodeData>,
-    treeData: Array<TreeNodeData>,
-    articleListMap: Map<number | null, Array<ArticleIndex>>,
-    map?: (data: TreeNodeData) => TreeNodeData
+  list: Array<TreeOptionData>,
+  treeData: Array<TreeOptionData>,
+  articleListMap: Map<number | null, Array<ArticleIndex>>,
+  map?: (data: TreeOptionData) => TreeOptionData
 ) {
-    list.forEach(item => {
-        let temp: TreeNodeData = {
-            key: item.key,
-            title: item.title,
-            children: [],
-            icon: () => h(IconFolder, {}),
-        }
+  list.forEach(item => {
+    let temp: TreeOptionData = {
+      value: item.value,
+      label: item.label,
+      children: [],
+      icon: () => h(IconFolder, {}),
+    }
+
+    if (map) {
+      temp = map(temp);
+    }
+
+    treeData.push(temp);
+
+    // 分类
+    treeEach((item.children as Array<TreeOptionData>) || [], (temp.children as Array<TreeOptionData>) || [], articleListMap, map);
+    // 笔记
+    const articles = articleListMap.get(item.value as number);
+    if (articles) {
+      articles.map(article => ({
+        value: article.id,
+        label: article.name,
+        leaf: true,
+        icon: () => buildArticleIcon(article.type, article.preview)
+      } as TreeOptionData)).forEach(article => {
 
         if (map) {
-            temp = map(temp);
+          article = map(article);
         }
 
-        treeData.push(temp);
 
-        // 分类
-        treeEach(item.children || [], temp.children || [], articleListMap, map);
-        // 笔记
-        const articles = articleListMap.get(item.key as number);
-        if (articles) {
-            articles.map(article => ({
-                key: article.id,
-                title: article.name,
-                isLeaf: true,
-                icon: () => buildArticleIcon(article.type, article.preview)
-            } as TreeNodeData)).forEach(article => {
-
-                if (map) {
-                    article = map(article);
-                }
-
-
-                if (!temp.children) {
-                    temp.children = [];
-                }
-                temp.children.push(article)
-            });
+        if (!temp.children) {
+          temp.children = [];
         }
-    });
+        if (!Array.isArray(temp.children)) {
+          temp.children = [];
+        }
+        temp.children.push(article)
+      });
+    }
+  });
 }
 
 /**
@@ -124,59 +127,59 @@ export function treeEach(
  * @param keyword 关键字
  * @param tree 树
  */
-export function searchData(keyword: string, tree: Array<TreeNodeData>): Array<TreeNodeData> {
-    if (!keyword || keyword.length === 0) {
-        return tree;
-    }
-    const loop = (data: Array<TreeNodeData>): Array<TreeNodeData> => {
-        const result = new Array<TreeNodeData>();
-        data.forEach(item => {
-            if (item.title && item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-                result.push({...item});
-            } else if (item.children) {
-                const filterData = loop(item.children);
-                if (filterData.length) {
-                    result.push({
-                        ...item,
-                        children: filterData
-                    })
-                }
-            }
-        })
-        return result;
-    }
+export function searchData(keyword: string, tree: Array<TreeOptionData>): Array<TreeOptionData> {
+  if (!keyword || keyword.length === 0) {
+    return tree;
+  }
+  const loop = (data: Array<TreeOptionData>): Array<TreeOptionData> => {
+    const result = new Array<TreeOptionData>();
+    data.forEach(item => {
+      if (item.label && typeof item.label === 'string' && item.label.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+        result.push({...item});
+      } else if (Array.isArray(item.children)) {
+        const filterData = loop(item.children);
+        if (filterData.length) {
+          result.push({
+            ...item,
+            children: filterData
+          })
+        }
+      }
+    })
+    return result;
+  }
 
-    return loop(tree);
+  return loop(tree);
 }
 
 export function listToList(list: Array<ListTree>, articleListMap: Map<number, Array<ArticleIndex>>, pid: number = 0): Map<string, number> {
-    const map = new Map<string, number>();
-    _listToMap(list, map, articleListMap, '', pid);
-    return map;
+  const map = new Map<string, number>();
+  _listToMap(list, map, articleListMap, '', pid);
+  return map;
 }
 
 function _listToMap(
-    list: Array<ListTree>,
-    map: Map<string, number>,
-    articleListMap: Map<number, Array<ArticleIndex>>,
-    path: string,
-    pid: number) {
+  list: Array<ListTree>,
+  map: Map<string, number>,
+  articleListMap: Map<number, Array<ArticleIndex>>,
+  path: string,
+  pid: number) {
 
 
-    // 此目录下可能存在的笔记
-    const articles = articleListMap.get(pid);
-    if (articles) {
-        for (let article of articles) {
-            map.set(pathJoin(path, article.name), article.id);
-        }
+  // 此目录下可能存在的笔记
+  const articles = articleListMap.get(pid);
+  if (articles) {
+    for (let article of articles) {
+      map.set(pathJoin(path, article.name), article.id);
     }
+  }
 
-    // 此目录下可能存在的其他目录
-    let items = list.filter(i => i.pid === pid);
-    for (let item of items) {
-        // 此目录下的目录
-        _listToMap(list, map, articleListMap, pathJoin(path, item.name), item.id);
-    }
+  // 此目录下可能存在的其他目录
+  let items = list.filter(i => i.pid === pid);
+  for (let item of items) {
+    // 此目录下的目录
+    _listToMap(list, map, articleListMap, pathJoin(path, item.name), item.id);
+  }
 }
 
 /**
@@ -185,16 +188,16 @@ function _listToMap(
  * @param treeNodes 树节点
  * @param sortType 排序类型
  */
-export function treeSort(treeNodes: Array<TreeNodeData>, sortType: ArticleSortEnum) {
-    treeNodes.sort((a, b) => {
-        if (sortType === ArticleSortEnum.CREATE_TiME_DESC) {
-            return (b.key as number) - (a.key as number);
-        } else if (sortType === ArticleSortEnum.NAME_ASC) {
-            return (a.title as string).localeCompare(b.title as string);
-        } else if (sortType === ArticleSortEnum.NAME_DESC) {
-            return (b.title as string).localeCompare(a.title as string);
-        } else {
-            return (a.key as number) - (b.key as number);
-        }
-    })
+export function treeSort(treeNodes: Array<TreeOptionData>, sortType: ArticleSortEnum) {
+  treeNodes.sort((a, b) => {
+    if (sortType === ArticleSortEnum.CREATE_TiME_DESC) {
+      return (b.key as number) - (a.key as number);
+    } else if (sortType === ArticleSortEnum.NAME_ASC) {
+      return (a.title as string).localeCompare(b.title as string);
+    } else if (sortType === ArticleSortEnum.NAME_DESC) {
+      return (b.title as string).localeCompare(a.title as string);
+    } else {
+      return (a.key as number) - (b.key as number);
+    }
+  })
 }
