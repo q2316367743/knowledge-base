@@ -11,31 +11,30 @@
         <t-button theme="danger">清空</t-button>
       </t-popconfirm>
     </header>
-    <a-list :data="results" :virtual-list-props="virtualListProps" style="margin: 0 7px;">
-      <template #item="{ item }">
-        <a-list-item>
-          <a-list-item-meta :title="item.item.name">
-            <template #description>
-              <div>创建时间：{{ formatDate(item.item.createTime) }}</div>
-              <div>删除时间：{{ formatDate(item.item.updateTime) }}</div>
-            </template>
-          </a-list-item-meta>
-          <template #extra>
-            <t-space size="small">
-              <t-button theme="primary" @click="restore(item.item.id)">
-                恢复
-              </t-button>
-              <t-popconfirm content="删除后将无法恢复，是否继续？" @confirm="remove(item.item.id)"
-                            placement="bottom-right"  confirm-btn="彻底删除">
-                <t-button theme="danger">
-                  彻底删除
-                </t-button>
-              </t-popconfirm>
-            </t-space>
+    <t-list style="margin: 0 7px;" :split="true" :style="{height: virtualHeight}"
+            :scroll="{ type: 'virtual', rowHeight: 96, bufferSize: 10, threshold: 10 }">
+      <t-list-item v-for="item in results" :key="item.item.id">
+        <t-list-item-meta :title="item.item.name">
+          <template #description>
+            <div>创建时间：{{ formatDate(item.item.createTime) }}</div>
+            <div>删除时间：{{ formatDate(item.item.updateTime) }}</div>
           </template>
-        </a-list-item>
-      </template>
-    </a-list>
+        </t-list-item-meta>
+        <template #action>
+          <t-space size="small">
+            <t-button theme="primary" @click="restore(item.item.id)">
+              恢复
+            </t-button>
+            <t-popconfirm content="删除后将无法恢复，是否继续？" @confirm="remove(item.item.id)"
+                          placement="bottom-right" confirm-btn="彻底删除">
+              <t-button theme="danger">
+                彻底删除
+              </t-button>
+            </t-popconfirm>
+          </t-space>
+        </template>
+      </t-list-item>
+    </t-list>
   </div>
 </template>
 <script lang="ts" setup>
@@ -62,9 +61,7 @@ const {results} = useFuse<ArticleIndex>(keyword, items, {
   }
 });
 
-const virtualListProps = computed(() => ({
-  height: size.height.value - 56
-}))
+const virtualHeight = computed(() => (size.height.value - 52) + 'px')
 const formatDate = (date: Date | string | number) => toDateTimeString(date);
 
 function restore(id: number) {

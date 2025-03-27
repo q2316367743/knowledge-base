@@ -29,7 +29,7 @@
         </div>
       </template>
       <template #operations="{ node }">
-        <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.leaf"
+        <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.data.leaf"
                           @multi="multiCheckStart">
           <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
             <template #icon>

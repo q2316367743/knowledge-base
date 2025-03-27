@@ -1,7 +1,7 @@
 <template>
   <div class="app kb-preview">
     <home/>
-    <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
+    <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
   </div>
 </template>
 <script lang="ts" setup>

@@ -8,7 +8,7 @@
          @contextmenu="onContentDefaultItem($event, item)">
       {{ item.title }}
     </div>
-    <a-tooltip :content="(item.top? '取消': '') + '置顶'" position="right">
+    <t-tooltip :content="(item.top? '取消': '') + '置顶'" placement="right">
       <t-button theme="primary" variant="text" shape="square"
                 :style="{color: item.top ? 'rgb(var(--orange-6))' : 'var(--color-neutral-4)'}"
                 @click="updateTop(item.id, !item.top)">
@@ -16,7 +16,7 @@
           <icon-arrow-rise/>
         </template>
       </t-button>
-    </a-tooltip>
+    </t-tooltip>
   </div>
 </template>
 <script lang="ts" setup>

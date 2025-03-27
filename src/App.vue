@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <a-spin :loading="loading" :tip="loadingText" class="w-full h-full">
+    <t-loading :loading="loading" :text="loadingText" class="w-full h-full">
       <div class="app-layout">
         <div class="app-aside">
           <app-side/>
@@ -9,8 +9,8 @@
           <router-view/>
         </div>
       </div>
-    </a-spin>
-    <a-image-preview v-model:visible="preview.visible" :src="preview.src"/>
+    </t-loading>
+    <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
     <update-check/>
     <privacy/>
   </div>
