@@ -14,7 +14,7 @@
     </header>
     <t-tree :data="treeNodeData" :scroll="scroll" :height="virtualHeight" :checkable="checkKeys.length > 0"
             :default-expand-all="false" :allow-drop="checkAllowDrop" :draggable="true" :line="true"
-            value-mode="onlyLeaf" style="margin: 0 7px;" :activable="true"
+            value-mode="onlyLeaf" style="margin: 0 7px;" :activable="true" :hover="true"
             :actived="selectedKeys" v-model="checkKeys" v-model:expanded="expandedKeys"
             @drop="onDrop($event)">
       <template #label="{ node }">
@@ -264,7 +264,6 @@ function moveMultiTo() {
 }
 
 function onContextmenu(node: TreeNodeModel, e: MouseEvent) {
-  console.log(node);
   openEditorTreeMenu(e, {node: node.data as any, multi: multiCheckStart, select: onSelect})
 }
 </script>
