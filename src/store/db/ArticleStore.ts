@@ -201,6 +201,9 @@ export const useArticleStore = defineStore('article', {
       if (index === -1) {
         return Promise.reject("笔记未找到，请刷新后重试！");
       }
+      if (this.value[index].folder === pid) {
+        return Promise.resolve();
+      }
       this.value[index] = {
         ...this.value[index],
         folder: pid,

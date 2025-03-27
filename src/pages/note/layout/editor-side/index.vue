@@ -12,27 +12,31 @@
         </editor-tree-menu>
       </t-input-group>
     </header>
-    <t-tree :data="treeNodeData" :virtual-list-props="virtualListProps" :checkable="checkKeys.length > 0"
+    <t-tree :data="treeNodeData" :scroll="scroll" :height="virtualHeight" :checkable="checkKeys.length > 0"
             :default-expand-all="false" :allow-drop="checkAllowDrop" :draggable="true" :line="true"
-            @drop="onDrop($event)" style="margin: 0 7px;" v-model:actived="selectedKeys"
-            v-model="checkKeys" v-model:expanded="expandedKeys">
+            value-mode="onlyLeaf" style="margin: 0 7px;" :activable="true"
+            :actived="selectedKeys" v-model="checkKeys" v-model:expanded="expandedKeys"
+            @drop="onDrop($event)">
       <template #label="{ node }">
-        <div class="note-tree-node flex justify-between p-1px pl-4px"
-             :class="{active: homeEditorId===node.value}"
-             @click="onSelect(node.value)" @contextmenu="openEditorTreeMenu($event, {node, multi: multiCheckStart})">
+        <div class="flex justify-between w-full" :class="{active: homeEditorId===node.value}"
+             @contextmenu="onContextmenu(node, $event)" @click="onSelect(node.value)">
           <div class="flex items-center">
-            <component :is="node.data.icon"/>
-            <span class="mtl-ml p-3px" @click="onSelect(node)">{{ node.label }}</span>
+            <div :class="{'pt-6px': node.data.preview}">
+              <component :is="node.data.icon"/>
+            </div>
+            <span class="mtl-ml p-3px">{{ node.label }}</span>
           </div>
-          <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.leaf"
-                            @multi="multiCheckStart">
-            <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
-              <template #icon>
-                <icon-more/>
-              </template>
-            </t-button>
-          </editor-tree-menu>
         </div>
+      </template>
+      <template #operations="{ node }">
+        <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.leaf"
+                          @multi="multiCheckStart">
+          <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
+            <template #icon>
+              <icon-more/>
+            </template>
+          </t-button>
+        </editor-tree-menu>
       </template>
     </t-tree>
     <div class="option" v-if="checkKeys.length > 0">
@@ -68,7 +72,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TreeNodeModel} from 'tdesign-vue-next';
+import {TreeNodeModel, TypeTreeProps} from 'tdesign-vue-next';
 import {CloseIcon, DeleteIcon} from "tdesign-icons-vue-next";
 import {
   useGlobalStore,
@@ -82,34 +86,38 @@ import {useNoteTree} from "@/hooks";
 import {keyword} from "@/global/BeanFactory";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
 import {openEditorTreeMenu} from "@/pages/note/layout/editor-side/components/EditorTreeMenu";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+
+interface DropContext {
+  e: DragEvent;
+  dragNode: TreeNodeModel;
+  dropNode: TreeNodeModel;
+  // 拖拽位置，0: 内，-1：上，1：下
+  dropPosition: number;
+}
 
 const homeEditorSideRef = ref();
 const size = useElementSize(homeEditorSideRef);
 
-const selectedKeys = ref<Array<number>>(homeEditorId.value === 0 ? [] : [homeEditorId.value]);
+const selectedKeys = computed<Array<number>>(() => homeEditorId.value === 0 ? [] : [homeEditorId.value]);
 const checkKeys = ref<Array<number>>([]);
-const expandedKeys = ref<Array<number>>(getItemByDefault<Array<number>>(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, []));
+const expandedKeys = useUtoolsDbStorage<Array<number>>(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, []);
 
-const virtualListProps = computed(() => ({
-  height: size.height.value - 56
-}));
+const virtualHeight = computed(() => (size.height.value - 36) + 'px');
+const scroll = computed<TypeTreeProps['scroll']>(() => ({
+  type: 'virtual'
+}))
 const {treeNodeData} = useNoteTree(keyword);
 
 watch(homeEditorId, id => {
-  selectedKeys.value = [id];
   expandTo(id);
 });
 
-
-watch(() => expandedKeys.value, value => setItem(LocalNameEnum.KEY_HOME_EXPANDED_KEYS, value), {deep: true});
-
-function onSelect(node: TreeNodeModel) {
-  let id = node.value;
+function onSelect(id: number | string) {
   if (!id) return;
   if (typeof id === 'string') {
     id = Number(id);
@@ -151,51 +159,50 @@ function multiCheckDelete() {
     });
 }
 
-function checkAllowDrop(options: {
-  e: DragEvent;
-  dragNode: TreeNodeModel;
-  dropNode: TreeNodeModel;
-  dropPosition: number;
-}): boolean {
-  return !options.dropNode.isLeaf
+function checkAllowDrop(options: DropContext): boolean {
+  const {leaf} = options.dropNode.data;
+  if (options.dragNode.data.pid === options.dropNode.data.pid) {
+    // 同目录不能拖拽
+    return false;
+  }
+  if (leaf) {
+    // 子节点，不能为0
+    return options.dropPosition !== 0;
+  } else {
+    // 文件夹，可以为0
+    return true;
+  }
 }
 
-function onDrop(data: { e: DragEvent; dragNode: TreeNodeModel; dropNode: TreeNodeModel; dropPosition: number; }) {
-  if (typeof data.dragNode.value !== 'undefined' &&
-    typeof data.dropNode.value !== 'undefined') {
+function onDrop(data: DropContext) {
+  let dragId = data.dragNode.value as number;
+  let dropId = data.dropNode.value as number;
+
+  const {leaf, pid} = data.dropNode.data;
+  if (leaf) {
     if (data.dropPosition === 0) {
-      if (data.dragNode.data.leaf) {
-        // 笔记
-        useArticleStore().drop(data.dragNode.value as number, data.dropNode.value as number)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      } else {
-        useFolderStore().drop(data.dragNode.value as number, data.dropNode.value as number)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      }
-    } else {
-      // 上或者下
-      const target = useFolderStore().folderMap.get(data.dropNode.value as number);
-      if (!target) {
-        return;
-      }
-      if (data.dragNode.data.leaf) {
-        // 笔记
-        useArticleStore().drop(data.dragNode.value as number, target.pid)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      } else {
-        useFolderStore().drop(data.dragNode.value as number, target.pid)
-          .then(() => MessageUtil.success("移动成功"))
-          .catch(e => MessageUtil.error("移动失败", e));
-      }
+      return;
     }
+    dropId = pid;
+  }
+  if (data.dragNode.data.leaf) {
+    // 笔记
+    useArticleStore().drop(dragId, dropId)
+      .then(() => MessageUtil.success("移动成功"))
+      .catch(e => MessageUtil.error("移动失败", e));
+  } else {
+    useFolderStore().drop(data.dragNode.value as number, data.dropNode.value as number)
+      .then(() => MessageUtil.success("移动成功"))
+      .catch(e => MessageUtil.error("移动失败", e));
   }
 }
 
 expandTo(homeEditorId.value);
 
+/**
+ * 展开笔记所在的文件夹
+ * @param id 笔记ID
+ */
 function expandTo(id: number) {
   const article = useArticleStore().articleMap.get(id);
   if (article && article.folder !== 0) {
@@ -203,6 +210,10 @@ function expandTo(id: number) {
   }
 }
 
+/**
+ * 展开文件夹
+ * @param id 文件夹ID
+ */
 function _expandTo(id: number) {
   if (id === 0) {
     return;
@@ -252,6 +263,10 @@ function moveMultiTo() {
   })
 }
 
+function onContextmenu(node: TreeNodeModel, e: MouseEvent) {
+  console.log(node);
+  openEditorTreeMenu(e, {node: node.data as any, multi: multiCheckStart, select: onSelect})
+}
 </script>
 <style lang="less">
 .home-editor-side {
@@ -270,25 +285,11 @@ function moveMultiTo() {
     justify-content: center;
 
     .btn {
-      border: 1px solid var(--color-neutral-3);
+      border: 1px solid var(--td-border-level-1-color);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      background-color: rgba(255, 255, 255, 0.6);
+      background-color: var(--td-bg-color-container);
     }
 
   }
-}
-
-body[arco-theme=dark] {
-  .home-editor-side {
-
-    .option {
-
-      .btn {
-        background-color: rgba(0, 0, 0, 0.6);
-      }
-
-    }
-  }
-
 }
 </style>

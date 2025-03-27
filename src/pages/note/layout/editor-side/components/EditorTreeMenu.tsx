@@ -6,19 +6,16 @@ import {
   Edit2Icon, FileExportIcon, FileImportIcon,
   FolderAdd1Icon,
   GestureRightIcon,
-  PlusIcon
+  PlusIcon, RoundIcon
 } from "tdesign-icons-vue-next";
-import {useGlobalStore, useVipStore} from "@/store";
-import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
-import VipIcon from "@/components/KbIcon/VipIcon.vue";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
+import {useArticleStore, useFolderStore, useGlobalStore, useVipStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useFolderStore} from "@/store/db/FolderStore";
+import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
+import {exportToUTools, exportForEpub} from "@/components/ArticleExport";
+import VipIcon from "@/components/KbIcon/VipIcon.vue";
+import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {exportToMd} from "@/pages/note/components/EditorExport";
-import {exportToUTools} from "@/components/ArticleExport/exportForUtools";
-import {exportForEpub} from "@/components/ArticleExport/exportForEpub";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -46,12 +43,13 @@ interface EditorTreeMenuProps {
   node: EditorTreeNode;
   more?: boolean;
   multi: (id: number) => void;
+  select: (id: number | string) => void;
 }
 
 export interface EditorTreeNode {
-  key: number;
-  title: string;
-  isLeaf: boolean;
+  value: number;
+  label: string;
+  leaf: boolean;
 }
 
 export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
@@ -60,12 +58,18 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
 
   const items = new Array<MenuItem>();
 
-  if (node.isLeaf) {
+  if (node.leaf) {
     items.push({
+      label: '打开',
+      icon: () => <RoundIcon/>,
+      onClick: () => {
+        props.select(node.value);
+      }
+    }, {
       label: '重命名',
       icon: () => <Edit2Icon/>,
       onClick: () => {
-        rename(node.key, node.title, node.isLeaf);
+        rename(node.value, node.label, node.leaf);
       }
     }, {
       label: '更多操作',
@@ -74,19 +78,19 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         label: '多选',
         icon: () => <CheckRectangleIcon/>,
         onClick: () => {
-          multi(node.key);
+          multi(node.value);
         }
-      },  {
+      }, {
         label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
         icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
         onClick: () => {
-          remove(node.key, node.title, node.isLeaf);
+          remove(node.value, node.label, node.leaf);
         }
       }, {
         label: '移动到',
         icon: () => <GestureRightIcon/>,
         onClick: () => {
-          moveTo(node.key, node.title, node.isLeaf);
+          moveTo(node.value, node.label, node.leaf);
         }
       }]
     });
@@ -102,14 +106,14 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         </div>,
         icon: () => <type.icon/>,
         onClick: () => {
-          addArticle(node.key, type);
+          addArticle(node.value, type);
         }
       }))
     }, {
       label: '新建文件夹',
       icon: () => <FolderAdd1Icon/>,
       onClick: () => {
-        addFolder(node.key);
+        addFolder(node.value);
       }
     });
     if (more) {
@@ -120,36 +124,36 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
           label: '多选',
           icon: () => <CheckRectangleIcon/>,
           onClick: () => {
-            multi(node.key);
+            multi(node.value);
           }
         }, {
           label: '重命名',
           icon: () => <Edit2Icon/>,
           onClick: () => {
-            rename(node.key, node.title, node.isLeaf);
+            rename(node.value, node.label, node.leaf);
           }
         }, {
           label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
           icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
           onClick: () => {
-            remove(node.key, node.title, node.isLeaf);
+            remove(node.value, node.label, node.leaf);
           }
         }, {
           label: '移动到',
           icon: () => <GestureRightIcon/>,
           onClick: () => {
-            moveTo(node.key, node.title, node.isLeaf);
+            moveTo(node.value, node.label, node.leaf);
           }
         }]
       })
     }
     items.push({
       label: '笔记导入',
-      icon: () => <FileImportIcon />,
+      icon: () => <FileImportIcon/>,
       children: [{
         label: '常规导入',
-        onClick: ()  => {
-          showArticleImportModal(node.key);
+        onClick: () => {
+          showArticleImportModal(node.value);
         }
       }, {
         label: 'Gitee',
@@ -160,21 +164,21 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       }]
     }, {
       label: '笔记导出',
-      icon: () => <FileExportIcon />,
+      icon: () => <FileExportIcon/>,
       children: [{
         label: 'ZIP',
-        onClick: ()  => {
-          exportToMd(node.key)
+        onClick: () => {
+          exportToMd(node.value)
         }
       }, {
         label: 'uTools文档插件',
-        onClick: ()  => {
-          exportToUTools(node.key)
+        onClick: () => {
+          exportToUTools(node.value)
         }
       }, {
         label: 'Epub',
-        onClick: ()  => {
-          exportForEpub(node.key)
+        onClick: () => {
+          exportForEpub(node.value)
         }
       }]
     });

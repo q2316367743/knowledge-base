@@ -1,7 +1,6 @@
 import {IconFolder} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
 import {pathJoin} from "@/utils/file/FileUtil";
-import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {TreeOptionData} from "tdesign-vue-next/es/common";
 
@@ -85,6 +84,8 @@ export function treeEach(
       label: item.label,
       children: [],
       icon: () => h(IconFolder, {}),
+      pid: item.pid,
+      preview: item.preview
     }
 
     if (map) {
@@ -102,7 +103,9 @@ export function treeEach(
         value: article.id,
         label: article.name,
         leaf: true,
-        icon: () => buildArticleIcon(article.type, article.preview)
+        icon: () => buildArticleIcon(article.type, article.preview),
+        pid: article.folder,
+        preview: article.preview
       } as TreeOptionData)).forEach(article => {
 
         if (map) {
@@ -180,24 +183,4 @@ function _listToMap(
     // 此目录下的目录
     _listToMap(list, map, articleListMap, pathJoin(path, item.name), item.id);
   }
-}
-
-/**
- * 树排序
- *
- * @param treeNodes 树节点
- * @param sortType 排序类型
- */
-export function treeSort(treeNodes: Array<TreeOptionData>, sortType: ArticleSortEnum) {
-  treeNodes.sort((a, b) => {
-    if (sortType === ArticleSortEnum.CREATE_TiME_DESC) {
-      return (b.key as number) - (a.key as number);
-    } else if (sortType === ArticleSortEnum.NAME_ASC) {
-      return (a.title as string).localeCompare(b.title as string);
-    } else if (sortType === ArticleSortEnum.NAME_DESC) {
-      return (b.title as string).localeCompare(a.title as string);
-    } else {
-      return (a.key as number) - (b.key as number);
-    }
-  })
 }
