@@ -1,13 +1,13 @@
 import {defineStore} from "pinia";
-import OpenAI from "openai";
 import {ChatMessage, ChatMessageParam} from "@/types/Chat";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
-import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
+import {isNotEmptyArray, isNotEmptyString} from "@/utils/lang/FieldUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {askToAi} from "@/utils/component/ChatUtil";
 
 
 export const serviceId = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_SERVICE, "");
@@ -73,12 +73,6 @@ export const useChatStore = defineStore('chat', () => {
       articleIds.value = res;
     }
 
-    const openAi = new OpenAI({
-      baseURL: service.url,
-      apiKey: service.key,
-      dangerouslyAllowBrowser: true
-    });
-
     const now = Date.now();
     const oldMessages = buildMessage();
     lastId.value = now;
@@ -114,37 +108,30 @@ export const useChatStore = defineStore('chat', () => {
           })
         }
       }
-
-
-      const response = await openAi.chat?.completions.create({
-        model: assistant.model,
-        messages: [
-          // 助手提示词
-          {
-            role: 'system',
-            content: assistant.system
-          },
-          // 附带的笔记
-          ...articles,
-          // 历史消息
-          ...oldMessages,
-          // 当前的问题
-          {
-            role: 'user',
-            content: question,
-          }],
-        stream: true,
-        temperature: assistant.temperature,
-        top_p: assistant.topP,
-        // top_logprobs: assistant.maxChats,
-      });
-      abort.value = response.controller;
-      // 流式处理结果
-      for await (const chunk of response) {
-        const content = chunk.choices[0]?.delta?.content || '';
-        appendTo(now, content);
-        loading.value = false;
+      const messages = new Array<ChatMessageParam>();
+      if (isNotEmptyString(assistant.system)) {
+        messages.push({
+          role: 'system',
+          content: assistant.system,
+        })
       }
+      messages.push(...articles, ...oldMessages, {
+        role: 'user',
+        content: question,
+      });
+
+      await askToAi({
+        messages,
+        service,
+        assistant,
+        onAppend: (data) => {
+          appendTo(now, data);
+          loading.value = false;
+        },
+        onAborted: (e) => {
+          abort.value = e;
+        }
+      })
     })()
       .catch(e => {
         if (e.name === "AbortError") {

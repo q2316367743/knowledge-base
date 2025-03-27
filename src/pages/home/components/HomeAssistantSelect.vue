@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import {SelectOption} from "tdesign-vue-next";
 import {ChevronRightIcon, HomeIcon} from "tdesign-icons-vue-next";
-import {assistantId, serviceId, useChatStore} from "@/store/components/ChatStore";
+import {assistantId, serviceId, useChatStore} from "@/store";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 

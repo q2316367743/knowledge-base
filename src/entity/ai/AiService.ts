@@ -1,7 +1,9 @@
 import {useSnowflake} from "@/hooks/Snowflake";
 
 export enum AiServiceType {
-  OPENAI = 'openai'
+  OPENAI = 'openai',
+  // uTools提供
+  U_TOOLS = 'uTools'
 }
 
 /**

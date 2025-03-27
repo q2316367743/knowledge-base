@@ -4,7 +4,8 @@
       <div class="ai-service-item w-full flex justify-between items-center ml-3px mb-4px" v-for="s in aiServices" :key="s.id"
            :class="{checked:s.id===currentId}" @click.stop="currentId = s.id">
         <div class="ellipsis">{{ s.name }}</div>
-        <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)">
+        <t-tag v-if="s.type === AiServiceType.U_TOOLS" theme="success" size="small" variant="outline">uTools</t-tag>
+        <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)" v-else>
           <t-button theme="primary" variant="text" shape="square" size="small" status="danger" @click.stop>
             <template #icon>
               <icon-delete/>
@@ -22,6 +23,7 @@
 <script lang="ts" setup>
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {AiServiceType} from "@/entity/ai/AiService";
 
 const currentId = defineModel({
   type: String,

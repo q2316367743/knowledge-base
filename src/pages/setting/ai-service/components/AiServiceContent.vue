@@ -5,25 +5,25 @@
       <t-content class="overflow-auto" style="height: calc(100% - 18px);padding: 8px;">
         <t-form :model="form">
           <t-form-item label="服务名称" label-align="top">
-            <t-input allow-clear v-model="form.name"/>
+            <t-input allow-clear v-model="form.name" :disabled="disabled"/>
           </t-form-item>
           <t-form-item label="服务类型" label-align="top">
-            <t-radio-group v-model="form.type">
+            <t-radio-group v-model="form.type" :disabled="disabled">
               <t-radio :value="AiServiceType.OPENAI">OpenAI</t-radio>
             </t-radio-group>
           </t-form-item>
           <t-form-item label="API 地址" label-align="top" help="注意，OpenAI的地址，结尾要加上/v1/">
-            <t-input allow-clear v-model="form.url"/>
+            <t-input allow-clear v-model="form.url" :disabled="disabled"/>
           </t-form-item>
           <t-form-item label="API 密钥" label-align="top">
-            <t-input type="password" allow-clear v-model="form.key"/>
+            <t-input type="password" allow-clear v-model="form.key" :disabled="disabled"/>
           </t-form-item>
           <!--      <t-form-item label="模型版本">-->
           <!--        <t-input allow-clear v-model="form.modelVersion" />-->
           <!--      </t-form-item>-->
           <t-form-item label="模型" label-align="top" help="上面填写完成后注意刷新模型">
             <t-card class="w-full" :header-bordered="true">
-              <template #header>
+              <template #header v-if="!disabled">
                 <t-space>
                   <t-button theme="primary" :loading @click="getAllModules">
                     <template #icon>
@@ -48,7 +48,7 @@
           </t-form-item>
         </t-form>
       </t-content>
-      <t-footer style="padding: 8px 0;border-top: 1px solid var(--color-border-2)">
+      <t-footer style="padding: 8px 0;border-top: 1px solid var(--color-border-2)" v-if="!disabled">
         <t-space>
           <t-button theme="primary" @click="save">保存</t-button>
           <t-popconfirm content="是否立即删除此服务，删除后，此服务创建的 AI 助手将无法使用" @ok="onDelete()">
@@ -80,6 +80,8 @@ const emit = defineEmits(['save']);
 
 const form = ref(buildAiService());
 const loading = ref(false);
+
+const disabled = computed(() => form.value.type === AiServiceType.U_TOOLS);
 
 watch(() => props.currentId, val => {
   if (val) {
