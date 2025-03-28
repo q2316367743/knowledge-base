@@ -101,11 +101,11 @@ const routers: Array<RouteRecordRaw> = [{
       path: "recommend",
       component: () => import("@/pages/more/recommend/index.vue")
     }, {
-      name: "更新",
+      name: "更多-更新",
       path: "update",
       component: () => import("@/pages/more/update-log/index.vue")
     }, {
-      name: "关于",
+      name: "更多-关于",
       path: "about",
       component: () => import("@/pages/more/about/index.vue")
     }

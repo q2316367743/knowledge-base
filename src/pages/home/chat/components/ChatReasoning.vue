@@ -17,7 +17,7 @@
 </template>
 <script lang="ts" setup>
 import {CheckCircleIcon, ChevronDownIcon} from "tdesign-icons-vue-next";
-import {ChatLoading} from '@tdesign-vue-next/chat';
+import ChatLoading from './ChatLoading.vue';
 
 defineProps({
   text: String,

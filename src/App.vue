@@ -12,7 +12,6 @@
     </t-loading>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
     <update-check/>
-    <privacy/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -33,7 +32,6 @@ import AppSide from "@/components/app-side/index.vue";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
-const privacy = defineAsyncComponent(() => import("@/components/update-check/privacy.vue"));
 
 const router = useRouter();
 

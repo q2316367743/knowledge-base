@@ -19,6 +19,7 @@
           <t-button @click="openUrl(Constant.repo)">开源地址</t-button>
           <t-button @click="toFeedback()">反馈中心</t-button>
           <t-button @click="toUpdateLog()">更新日志</t-button>
+          <t-button @click="openPrivacy()">隐私协议</t-button>
         </t-space>
         <br/>
         <t-tooltip content="控制台">
@@ -33,6 +34,7 @@
 <script lang="ts" setup>
 import Constant, {toFeedback, toUpdateLog} from "@/global/Constant";
 import {useErrorStore} from "@/store/components/ErrorStore";
+import {openPrivacy} from "@/pages/more/about/components/privacy";
 
 const consoleShow = computed(() => useErrorStore().consoleShow);
 const changeConsole = () => useErrorStore().changeConsole();

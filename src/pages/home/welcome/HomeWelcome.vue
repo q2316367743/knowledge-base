@@ -39,6 +39,7 @@ import AiInput from "@/pages/home/components/AiInput.vue";
 import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
 import ArticleInterpretation from "@/pages/home/modal/ArticleInterpretation.vue";
 import IntelligentWriting from "@/pages/home/modal/IntelligentWriting.vue";
+import ChatLoading from "@/pages/home/chat/components/ChatLoading.vue";
 
 const aiVisible = ref(false);
 const iwVisible = ref(false);

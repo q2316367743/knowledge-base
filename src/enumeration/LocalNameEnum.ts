@@ -165,6 +165,9 @@ enum LocalNameEnum {
   // 首页模型
   KEY_HOME_ASSISTANT = '/key/home/assistant',
 
+  // 保存思考过程
+  KEY_HOME_SAVE_THINK = '/key/home/save-think',
+
   // 编辑器使用的助手
   KEY_EDITOR_ASSISTANT = '/key/editor/assistant',
 
