@@ -15,7 +15,7 @@
           <send-icon/>
         </template>
       </t-button>
-      <t-button variant="outline" class="ml-8px" theme="danger" v-if="loading" @click="onStop">
+      <t-button variant="outline" style="margin-left: 8px;" theme="danger" shape="circle" v-if="loading" @click="onStop">
         <template #icon>
           <icon-stop/>
         </template>

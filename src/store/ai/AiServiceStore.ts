@@ -17,33 +17,37 @@ const DEFAULT_AI_SERVICES: Array<AiService> = [{
 
 
 export const useAiServiceStore = defineStore('ai-service', () => {
-  const aiServices = ref<Array<AiService>>([]);
+  const list = ref<Array<AiService>>([]);
   const rev = ref<string>();
 
-
+  const aiServices = computed<Array<AiService>>(() => {
+    let appVersion = utools.getAppVersion();
+    // 大于7.0才可以
+    return [...DEFAULT_AI_SERVICES, ...list.value]
+  });
   const aiServiceMap = computed(() => map(aiServices.value, 'id'));
 
   async function init() {
     const res = await listByAsync<AiService>(LocalNameEnum.AI_SERVICE);
-    aiServices.value = [...DEFAULT_AI_SERVICES, ...res.list];
+    list.value = res.list;
     rev.value = res.rev;
   }
 
   async function saveOrUpdate(aiService: AiService) {
-    const index = aiServices.value.findIndex(e => e.id === aiService.id);
+    const index = list.value.findIndex(e => e.id === aiService.id);
     if (index !== -1) {
-      aiServices.value[index] = aiService;
+      list.value[index] = aiService;
     } else {
-      aiServices.value.push(aiService);
+      list.value.push(aiService);
     }
-    rev.value = await saveListByAsync(LocalNameEnum.AI_SERVICE, aiServices.value, rev.value);
+    rev.value = await saveListByAsync(LocalNameEnum.AI_SERVICE, list.value, rev.value);
   }
 
   async function remove(id: string) {
-    const index = aiServices.value.findIndex(e => e.id === id);
+    const index = list.value.findIndex(e => e.id === id);
     if (index !== -1) {
-      aiServices.value.splice(index, 1);
-      rev.value = await saveListByAsync(LocalNameEnum.AI_SERVICE, aiServices.value, rev.value);
+      list.value.splice(index, 1);
+      rev.value = await saveListByAsync(LocalNameEnum.AI_SERVICE, list.value, rev.value);
     }
   }
 

@@ -6,3 +6,5 @@ export * from './components/ChatStore';
 export * from './db/ArticleStore';
 export * from './db/FolderStore';
 export * from './setting/BaseSettingStore';
+export * from './ai/AiServiceStore';
+export * from './ai/AiAssistantStore';

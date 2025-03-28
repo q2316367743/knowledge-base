@@ -45,10 +45,15 @@ export const useChatStore = defineStore('chat', () => {
     return m;
   }
 
-  function appendTo(id: number, content: string) {
+  function appendTo(id: number, data: string, t?: boolean) {
     for (let m of messages.value) {
       if (m.id === id) {
-        m.a += content;
+        if (t) {
+          m.t += data;
+        } else {
+          m.a += data;
+        }
+        m.isThinking = !!t;
         return;
       }
     }
@@ -80,8 +85,10 @@ export const useChatStore = defineStore('chat', () => {
     messages.value.push({
       id: now,
       q: question,
+      t: '',
       a: '',
       assistantId: assistant.id,
+      isThinking: false
     });
     // 异步处理
     (async () => {
@@ -124,8 +131,8 @@ export const useChatStore = defineStore('chat', () => {
         messages,
         service,
         assistant,
-        onAppend: (data) => {
-          appendTo(now, data);
+        onAppend: (data, t) => {
+          appendTo(now, data, t);
           loading.value = false;
         },
         onAborted: (e) => {

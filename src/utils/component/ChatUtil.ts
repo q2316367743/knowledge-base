@@ -7,7 +7,7 @@ interface AskToOpenAiProps {
   messages: Array<ChatMessageParam>;
   service: AiService;
   assistant: AiAssistant;
-  onAppend: (data: string) => void;
+  onAppend: (data: string, t?: boolean) => void;
   onAborted: (a: AbortController) => void;
 }
 
@@ -41,10 +41,17 @@ export async function askToUTools(props: AskToOpenAiProps): Promise<void> {
 
   // TODO: 适配新版utools ai接口
   // @ts-ignore
-  await utools.ai({model: assistant.model, messages}, (delta) => {
-    console.log(delta);
-    onAppend(delta.reasoning_content || delta.content);
+  const abortPromise = utools.ai({model: assistant.model, messages}, (delta) => {
+    onAppend(delta.reasoning_content || delta.content, !!delta.reasoning_content);
   })
+  // @ts-ignore
+  onAborted({
+    abort(reason?: any) {
+      abortPromise.abort(reason);
+      onAppend("\n\n求被手动终止！");
+    },
+  });
+  await abortPromise;
 }
 
 export async function askToAi(props: AskToOpenAiProps) {

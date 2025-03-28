@@ -11,9 +11,11 @@
       </t-space>
     </div>
     <div class="chat-article__content">
-      <t-skeleton animation="gradient" v-if="loading && message.id === lastId" :row-col="[1,1,1]">
-      </t-skeleton>
-      <chat-content :value="message.a" v-else/>
+      <t-skeleton animation="gradient" v-if="loading && message.id === lastId" :row-col="[1,1,1]"/>
+      <template v-else>
+        <chat-reasoning :text="message.t" :think="message.isThinking" class="mb-8px" v-if="message.t"/>
+        <chat-content :value="message.a"/>
+      </template>
       <t-divider v-if="message.id === lastId">
         <icon-loading spin/>
       </t-divider>
@@ -41,14 +43,14 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {CopyIcon, EditIcon} from "tdesign-icons-vue-next";
 import {ChatMessage} from "@/types/Chat";
-import {useChatStore} from "@/store/components/ChatStore";
+import {useAiAssistantStore, useChatStore} from "@/store";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {copyText} from "@/utils/utools/NativeUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
-import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import ChatContent from "@/components/ChatContent/ChatContent.vue";
-import {CopyIcon, EditIcon} from "tdesign-icons-vue-next";
+import ChatReasoning from "@/pages/home/chat/components/ChatReasoning.vue";
 
 const router = useRouter();
 
