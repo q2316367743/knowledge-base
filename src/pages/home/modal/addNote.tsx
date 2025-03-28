@@ -29,7 +29,7 @@ export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
       <FormItem label={'笔记名称'} labelAlign={'top'}>
         <Input v-model={name.value} class={'arco-input'} placeholder={'请输入笔记名称'} clearable={true}/>
       </FormItem>
-      {saveThink && <FormItem label={'保存思考过程'} labelAlign={'top'}>
+      {hasThink && <FormItem label={'保存思考过程'} labelAlign={'top'}>
         <Switch v-model={saveThink.value}/>
       </FormItem>}
     </Form>,

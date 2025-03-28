@@ -28,7 +28,6 @@ declare module 'vue' {
     KbAlert: typeof import('./src/components/KbAlert/KbAlert.vue')['default']
     PageLayout: typeof import('./src/components/PageLayout/PageLayout.vue')['default']
     PriorityDropdown: typeof import('./src/components/PriorityDropdown/PriorityDropdown.vue')['default']
-    Privacy: typeof import('./src/components/update-check/privacy.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SubPageLayout: typeof import('./src/components/PageLayout/SubPageLayout.vue')['default']

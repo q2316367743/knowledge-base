@@ -154,11 +154,6 @@ enum LocalNameEnum {
 
   KEY_TOKEN = '/key/token',
 
-  /**
-   * 隐私协议
-   */
-  KEY_PRIVACY = '/key/privacy',
-
   // 首页服务
   KEY_HOME_SERVICE = '/key/home/service',
 

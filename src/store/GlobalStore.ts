@@ -1,8 +1,6 @@
 import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {ref} from "vue";
-import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 
 export enum GlobalType {
   DARK = 1,
@@ -15,7 +13,6 @@ export const useGlobalStore = defineStore('global', () => {
   const loading = ref(false);
   const loadingText = ref('');
   const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
-  const privacy = useUtoolsKvStorage<number>(LocalNameEnum.KEY_PRIVACY, 0);
 
   function renderTheme(): boolean {
     if (globalType.value === GlobalType.AUTO) {
@@ -57,7 +54,7 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
   return {
-    isDark, globalType, loading, loadingText, privacy,
+    isDark, globalType, loading, loadingText,
     initDarkColors, switchDarkColors, startLoading, closeLoading
   }
 
