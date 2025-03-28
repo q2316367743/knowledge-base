@@ -1,8 +1,6 @@
 import {ListTree} from "@/entity/ListTree";
-import {TreeNodeData} from "@arco-design/web-vue";
-import {h} from "vue";
-import {IconFolder, IconList} from "@arco-design/web-vue/es/icon";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
+import {TreeOptionData} from "tdesign-vue-next";
 
 /**
  * 待办分类
@@ -127,27 +125,25 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
 
 export type TodoCategoryRecord = Omit<TodoCategory, 'id' | 'createTime' | 'updateTime'>;
 
-export function listToTree(list: Array<TodoCategory>): Array<TreeNodeData> {
-  const base: Array<TreeNodeData> = list.filter(c => c.pid === 0 || !c.pid)
+export function listToTree(list: Array<TodoCategory>): Array<TreeOptionData> {
+  const base: Array<TreeOptionData> = list.filter(c => c.pid === 0 || !c.pid)
     .map(c => ({
-      key: c.id,
-      title: c.name,
+      value: c.id,
+      label: c.name,
       children: [],
-      isLeaf: c.type === TodoCategoryTypeEnum.TODO,
-      icon: () => c.type === TodoCategoryTypeEnum.TODO ? h(IconList, {}) : h(IconFolder, {})
+      leaf: c.type === TodoCategoryTypeEnum.TODO
     }));
-  base.forEach(item => _listToTree(item, item.key as number, list));
+  base.forEach(item => _listToTree(item, item.value as number, list));
   return base;
 }
 
-function _listToTree(tree: TreeNodeData, pid: number, categories: Array<TodoCategory>) {
+function _listToTree(tree: TreeOptionData, pid: number, categories: Array<TodoCategory>) {
   tree.children = categories.filter(c => c.pid === pid)
     .map(c => ({
-      key: c.id,
-      title: c.name,
+      value: c.id,
+      label: c.name,
       children: [],
       isLeaf: c.type === TodoCategoryTypeEnum.TODO,
-      icon: () => c.type === TodoCategoryTypeEnum.TODO ? h(IconList, {}) : h(IconFolder, {})
-    } as TreeNodeData));
-  tree.children.forEach(item => _listToTree(item, item.key as number, categories));
+    } as TreeOptionData));
+  tree.children.forEach(item => _listToTree(item, item.value as number, categories));
 }

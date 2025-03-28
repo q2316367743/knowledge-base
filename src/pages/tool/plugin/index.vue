@@ -5,11 +5,11 @@
     </t-aside>
     <t-content>
       <setting-plugin-content :plugin="plugin" v-if="load"/>
-      <a-result v-else title="主题、插件和模板" status="warning" style="margin-top: 15vh;">
-        <template #icon>
+      <t-empty v-else title="主题、插件和模板" type="fail" style="margin-top: 20vh;">
+        <template #image>
           <questionnaire-icon />
         </template>
-        <template #subtitle>
+        <template #description>
           <p>选择左侧的插件进行编辑</p>
           <p>通过主题与插件，可以自定义您的知识库插件</p>
           <p>主题、markdown菜单、markdown语法需要设置才可以启用。</p>
@@ -17,7 +17,7 @@
           </p>
           <p style="color: rgb(var(--warning-6))">请注意，如果修改的主题是正在使用的，修改后需要前往主题设置中刷新主题</p>
         </template>
-        <template #extra>
+        <template #action>
           <t-space size="small">
             <t-button theme="primary" @click="toHelp" >
               <template #icon>
@@ -33,7 +33,7 @@
             </t-button>
           </t-space>
         </template>
-      </a-result>
+      </t-empty>
     </t-content>
   </t-layout>
 </template>

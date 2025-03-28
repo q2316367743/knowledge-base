@@ -46,11 +46,14 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-const props = defineProps({
-  title: String,
-  tip: String,
-});
+<script lang="ts">
+export default defineComponent({
+  name: 'EmptyResult',
+  props: {
+    title: String,
+    tip: String,
+  }
+})
 </script>
 <style lang="less" scoped>
 .result {

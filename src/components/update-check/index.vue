@@ -1,6 +1,6 @@
 <template>
-  <a-modal v-model:visible="visible" title="版本更新" mask-closable draggable lock-scroll
-           width="600px" ok-text="查看更详细更新内容" @ok="toUpdateLog()">
+  <t-dialog v-model:visible="visible" header="版本更新" placement="center" width="600px"
+            confirm-btn="查看更详细更新内容" @confirm="toUpdateLog()">
     <t-alert style="margin-bottom: 7px">
       <span>更加详细的更新说明，可以关注</span>
       <t-link @click="toBlog()">作者博客</t-link>
@@ -16,7 +16,7 @@
       <div>本次更新如下：</div>
       <update-item :log="log"/>
     </div>
-  </a-modal>
+  </t-dialog>
 </template>
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";

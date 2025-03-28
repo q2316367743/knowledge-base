@@ -14,15 +14,15 @@
         <t-dropdown-menu>
           <t-dropdown-item @click="setTodoList('groupType', TodoCategoryGroupEnum.DEFAULT)">
             <template #prefix-icon>
-              <icon-check v-if="groupType === TodoCategoryGroupEnum.DEFAULT"/>
-              <a-icon v-else/>
+              <check-icon v-if="groupType === TodoCategoryGroupEnum.DEFAULT" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             自定义
           </t-dropdown-item>
           <t-dropdown-item @click="setTodoList('groupType', TodoCategoryGroupEnum.PRIORITY)">
             <template #prefix-icon>
-              <icon-check v-if="groupType === TodoCategoryGroupEnum.PRIORITY"/>
-              <a-icon v-else/>
+              <check-icon v-if="groupType === TodoCategoryGroupEnum.PRIORITY" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             优先级
           </t-dropdown-item>
@@ -36,36 +36,36 @@
         <t-dropdown-menu>
           <t-dropdown-item @click="setTodoList('todoListSort', TodoListSortEnum.PRIORITY)">
             <template #prefix-icon>
-              <icon-check v-if="todoListSort === TodoListSortEnum.PRIORITY"/>
-              <a-icon v-else/>
+              <check-icon v-if="todoListSort === TodoListSortEnum.PRIORITY" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             优先级
           </t-dropdown-item>
           <t-dropdown-item @click="setTodoList('todoListSort', TodoListSortEnum.NAME_ASC)">
             <template #prefix-icon>
-              <icon-check v-if="todoListSort === TodoListSortEnum.NAME_ASC"/>
-              <a-icon v-else/>
+              <check-icon v-if="todoListSort === TodoListSortEnum.NAME_ASC" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             名称正序
           </t-dropdown-item>
           <t-dropdown-item @click="setTodoList('todoListSort', TodoListSortEnum.NAME_DESC)">
             <template #prefix-icon>
-              <icon-check v-if="todoListSort === TodoListSortEnum.NAME_DESC"/>
-              <a-icon v-else/>
+              <check-icon v-if="todoListSort === TodoListSortEnum.NAME_DESC" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             名称倒序
           </t-dropdown-item>
           <t-dropdown-item @click="setTodoList('todoListSort', TodoListSortEnum.CREATE_TIME_ASC)">
             <template #prefix-icon>
-              <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_ASC"/>
-              <a-icon v-else/>
+              <check-icon v-if="todoListSort === TodoListSortEnum.CREATE_TIME_ASC" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             创建时间正序
           </t-dropdown-item>
           <t-dropdown-item @click="setTodoList('todoListSort', TodoListSortEnum.CREATE_TIME_DESC)">
             <template #prefix-icon>
-              <icon-check v-if="todoListSort === TodoListSortEnum.CREATE_TIME_DESC"/>
-              <a-icon v-else/>
+              <check-icon v-if="todoListSort === TodoListSortEnum.CREATE_TIME_DESC" style="color: var(--td-brand-color)"/>
+              <minus-icon v-else/>
             </template>
             创建时间倒序
           </t-dropdown-item>
@@ -75,7 +75,7 @@
   </t-dropdown>
 </template>
 <script lang="ts" setup>
-import {FilterSortIcon, UsergroupIcon} from "tdesign-icons-vue-next";
+import {CheckIcon, FilterSortIcon, MinusIcon, UsergroupIcon} from "tdesign-icons-vue-next";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";

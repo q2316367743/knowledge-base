@@ -19,9 +19,9 @@
       </t-alert>
       <t-form-item :data="{}">
         <t-form-item label='当前清单' label-align="top">
-          <a-tree-select :data="todoCategoryTree" allow-clear allow-search
+          <t-tree-select :data="todoCategoryTree" :clearable="true" :filterable="true"
                          v-model="setting.categoryId">
-          </a-tree-select>
+          </t-tree-select>
           <template #help>请选择待办清单，请勿选择待办文件夹</template>
         </t-form-item>
       </t-form-item>

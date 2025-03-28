@@ -4,7 +4,7 @@
       <todo-side/>
     </t-aside>
     <t-content style="position: relative;background-color: var(--td-bg-color-container)">
-      <a-result title="请在左侧选择清单" status="404" style="margin-top: 20vh" v-if="empty"/>
+      <empty-result v-if="empty" title="未选择清单" tip="请在左侧选择清单"/>
       <content-default v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
       <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD"/>
       <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>

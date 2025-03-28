@@ -1,7 +1,7 @@
 <template>
   <div class="h-32px p-2px">
-    <editor-content-extra-run />
-    <editor-content-extra-ai />
+    <editor-content-extra-run/>
+    <editor-content-extra-ai/>
     <t-dropdown trigger="click" placement="bottom-left">
       <t-button variant="text" theme="primary" shape="square">
         <template #icon>
@@ -11,9 +11,10 @@
       <t-dropdown-menu>
         <t-dropdown-item @click="switchPreview()" :disabled="editorType === ArticleTypeEnum.EXCEL">
           <template #prefix-icon>
-            <icon-lock/>
+            <edit2-icon v-if="preview"/>
+            <lock-on-icon v-else/>
           </template>
-          编辑/预览
+          {{ preview ? '编辑' : '预览' }}
         </t-dropdown-item>
         <t-dropdown-item @click="openHeExtra(homeEditorId)" :disabled="preview">
           <template #prefix-icon>
@@ -46,9 +47,11 @@ import {
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {openHeExtra} from "@/pages/note/layout/editor-content/components/HecExtra";
-import EditorContentExtraAi from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtraAi.vue";
+import EditorContentExtraAi
+  from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtraAi.vue";
 import EditorContentExtraRun
   from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtraRun.vue";
+import {Edit2Icon, LockOnIcon} from "tdesign-icons-vue-next";
 
 const onExport = () => useArticleExportEvent.emit(homeEditorId.value);
 const onImport = () => useArticleImportEvent.emit(homeEditorId.value);

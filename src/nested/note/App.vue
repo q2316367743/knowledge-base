@@ -2,7 +2,7 @@
   <div class="app kb-note">
     <div class="option">
       <div style="width: 50%;max-width: 230px">
-        <a-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
+        <t-tree-select :data="folderTree" v-model="folder" :loading="loading"/>
       </div>
       <t-space size="small">
         <t-popconfirm content="二次确认" @confirm="onSubmit()" confirm-btn="新建" placement="bottom-right">

@@ -5,12 +5,8 @@
     </template>
     <template #second>
       <div class="info">
-        <t-empty v-if="itemId === 0" type="empty" title="请选择待办项"/>
-        <t-empty type="maintenance" title="正在加载中" v-else-if="!show && itemId > 0">
-          <template #image>
-            <icon-loading spin/>
-          </template>
-        </t-empty>
+        <empty-result v-if="itemId === 0" title="未选择待办项" tip="请选择待办项"/>
+        <loading-result title="正在加载中" v-else-if="!show && itemId > 0"/>
         <content-default-main v-else-if="show"/>
       </div>
     </template>
