@@ -1,8 +1,9 @@
 import {defineStore} from "pinia";
-import {AiService, AiServiceType} from "@/entity/ai/AiService";
-import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {AiService, AiServiceType} from "@/entity/ai/AiService";
 import {map} from "@/utils/lang/ArrayUtil";
+import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {versionLess} from "@/utils/lang/FieldUtil";
 
 const DEFAULT_AI_SERVICES: Array<AiService> = [{
   id: '1',
@@ -21,11 +22,11 @@ export const useAiServiceStore = defineStore('ai-service', () => {
   const rev = ref<string>();
 
   const aiServices = computed<Array<AiService>>(() => {
-    // TODO: 大于7.0才可以
-    // let appVersion = utools.getAppVersion();
-    // if (versionCompare(appVersion, '7.0.0') < 0) {
-    //   return list.value;
-    // }
+    let appVersion = utools.getAppVersion();
+    if (versionLess(appVersion, 7)) {
+      return list.value;
+    }
+    // 大于7.0才可以
     return [...DEFAULT_AI_SERVICES, ...list.value]
   });
   const aiServiceMap = computed(() => map(aiServices.value, 'id'));

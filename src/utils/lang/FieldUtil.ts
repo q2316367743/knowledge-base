@@ -93,3 +93,25 @@ export function isVersionUpdate(newVersion: string, oldVersion: string, minVersi
 export function getValueBetween(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
+
+/**
+ * 版本是否大于指定大版本
+ * @param version 版本
+ * @param level 指定大版本
+ */
+export function versionGreaterEqual(version: string, level: number): boolean {
+  const v = version.split('.')[0];
+  if (!v) return false;
+  return parseInt(v) >= level;
+}
+
+/**
+ * 版本是否小于指定大版本
+ * @param version 版本
+ * @param level 指定大版本
+ */
+export function versionLess(version: string, level: number): boolean {
+  const v = version.split('.')[0];
+  if (!v) return false;
+  return parseInt(v) < level;
+}
