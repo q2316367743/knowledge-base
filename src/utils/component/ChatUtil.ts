@@ -3,12 +3,16 @@ import {ChatMessageParam} from "@/types/Chat";
 import {AiService, AiServiceType} from "@/entity/ai/AiService";
 import {AiAssistant} from "@/entity/ai/AiAssistant";
 
+export interface AskToOpenAiAbort {
+  abort: (reason?: string) => void;
+}
+
 interface AskToOpenAiProps {
   messages: Array<ChatMessageParam>;
   service: AiService;
   assistant: AiAssistant;
   onAppend: (data: string, t?: boolean) => void;
-  onAborted: (a: AbortController) => void;
+  onAborted: (a: AskToOpenAiAbort) => void;
 }
 
 export async function askToOpenAi(props: AskToOpenAiProps): Promise<void> {
@@ -44,11 +48,11 @@ export async function askToUTools(props: AskToOpenAiProps): Promise<void> {
   const abortPromise = utools.ai({model: assistant.model, messages}, (delta) => {
     onAppend(delta.reasoning_content || delta.content, !!delta.reasoning_content);
   })
-  // @ts-ignore
   onAborted({
     abort(reason?: any) {
       abortPromise.abort(reason);
-      onAppend("\n\n求被手动终止！");
+      // 无奈之举
+      onAppend("\n\n请求被手动终止！");
     },
   });
   await abortPromise;

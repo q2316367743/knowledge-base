@@ -7,7 +7,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import {isNotEmptyArray, isNotEmptyString} from "@/utils/lang/FieldUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {askToAi} from "@/utils/component/ChatUtil";
+import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
 
 
 export const serviceId = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_SERVICE, "");
@@ -24,7 +24,7 @@ export const useChatStore = defineStore('chat', () => {
   const lastId = ref(0);
   const loading = ref(false);
 
-  const abort = shallowRef<AbortController>();
+  const abort = shallowRef<AskToOpenAiAbort>();
 
   const empty = computed(() => messages.value.length === 0);
   const steamLoading = computed(() => {
@@ -143,7 +143,7 @@ export const useChatStore = defineStore('chat', () => {
       .catch(e => {
         if (e.name === "AbortError") {
           if (messages.value.length > 0) {
-            appendTo(now, "\n\n求被手动终止！");
+            appendTo(now, "\n\n请求被手动终止！");
           }
         } else {
           MessageUtil.error("获取结果失败", e);

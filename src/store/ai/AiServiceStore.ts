@@ -21,8 +21,11 @@ export const useAiServiceStore = defineStore('ai-service', () => {
   const rev = ref<string>();
 
   const aiServices = computed<Array<AiService>>(() => {
-    let appVersion = utools.getAppVersion();
-    // 大于7.0才可以
+    // TODO: 大于7.0才可以
+    // let appVersion = utools.getAppVersion();
+    // if (versionCompare(appVersion, '7.0.0') < 0) {
+    //   return list.value;
+    // }
     return [...DEFAULT_AI_SERVICES, ...list.value]
   });
   const aiServiceMap = computed(() => map(aiServices.value, 'id'));
