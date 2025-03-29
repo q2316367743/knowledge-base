@@ -69,7 +69,7 @@ function onSave() {
   left: 0;
   right: 0;
   bottom: 0;
-  color: var(--color-text-1);
+  color: var(--td-text-color-primary);
 
   .header {
     border-bottom: 1px solid var(--color-border);

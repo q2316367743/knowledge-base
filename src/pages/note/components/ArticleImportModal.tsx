@@ -90,7 +90,7 @@ export function showArticleImportModal(id: number) {
         </div>,
         footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <InputGroup>
-                <span style={{width: '120px', marginRight: '7px', color: 'var(--color-text-1)'}}>导入至：</span>
+                <span style={{width: '120px', marginRight: '7px', color: 'var(--td-text-color-primary)'}}>导入至：</span>
                 <TreeSelect data={folderTree} v-model={folderId.value}/>
             </InputGroup>
             <Space>

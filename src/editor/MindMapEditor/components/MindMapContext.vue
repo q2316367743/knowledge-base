@@ -206,7 +206,7 @@ const unExpandAll = () => {
     left: v-bind(left);
     top: v-bind(top);
     background-color: var(--color-fill-2);
-    color: var(--color-text-1);
+    color: var(--td-text-color-primary);
     border: 1px solid var(--color-border-2);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     border-radius: 2px;

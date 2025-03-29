@@ -275,7 +275,7 @@ const insertAssociativeLine = () => {
 
     &.active {
       cursor: pointer;
-      color: var(--color-text-1);
+      color: var(--td-text-color-primary);
     }
   }
 }

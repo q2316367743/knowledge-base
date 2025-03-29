@@ -39,6 +39,6 @@ window.jumpToArticle = (title: string) => {
 </script>
 <style scoped lang="less">
 .kb-preview {
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
 }
 </style>

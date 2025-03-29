@@ -184,10 +184,11 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     });
   }
 
+  const {isDark} = useGlobalStore();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,
-    theme: useGlobalStore().isDark ? "default-dark" : "default",
+    theme: isDark ? "default dark" : "default",
     items
   })
 }

@@ -17,6 +17,6 @@ useSettingStore().init();
 </script>
 <style scoped>
 .app {
-    background-color: var(--color-bg-1);
+    background-color: var(--td-bg-color-container);
 }
 </style>

@@ -10,6 +10,9 @@ export const useVipStore = defineStore('vip', () => {
   const allVip = ref(false);
 
   async function init() {
+    noteVip.value = false;
+    todoVip.value = false;
+    allVip.value = false;
     const payments = await utools.fetchUserPayments();
     for (const payment of payments) {
       if (payment.goods_id === Constant.goods.note) {
@@ -44,7 +47,11 @@ export const useVipStore = defineStore('vip', () => {
       try {
         utools.openPurchase({
           goodsId
-        }, () => resolve());
+        }, () => {
+          // 重新初始化
+          init();
+          resolve();
+        });
       } catch (e) {
         reject(e);
       }

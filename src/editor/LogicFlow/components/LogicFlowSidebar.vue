@@ -52,7 +52,7 @@ export default defineComponent({
 .logic-flow-sidebar {
   user-select: none;
   padding: 8px 4px;
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
   border-radius: var(--border-radius-medium);
   border: 1px solid var(--color-border-2);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);

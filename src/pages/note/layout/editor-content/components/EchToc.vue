@@ -47,7 +47,7 @@ const toc = getToc.value();
   max-height: 70vh;
   overflow: auto;
   background-color: var(--color-neutral-3);
-  color: var(--color-text-1);
+  color: var(--td-text-color-primary);
   padding: 21px 14px 0;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }

@@ -174,7 +174,7 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,
-    theme: useGlobalStore().isDark ? "default-dark" : "default",
+    theme: useGlobalStore().isDark ? "default dark" : "default",
     items: [
       {
         icon: () => <EditIcon/>,

@@ -27,9 +27,9 @@ const Constant = {
     url: 'https://umami.esion.xyz'
   },
   goods: {
-    all: '',
-    note: '',
-    todo: ''
+    all: '6ruxx1z1o72gonrpwponq4gonwi1v2ix',
+    note: '5v6oq0mkukbzcjdc0y5mitz4pkglwl1q',
+    todo: 'nu9lc6yed8zx80dc6ry5fruyjblrwh7s'
   }
 }
 

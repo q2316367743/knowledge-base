@@ -122,7 +122,7 @@ function handleDragstart(e: DragEvent) {
   cursor: pointer;
   position: relative;
   border-radius: var(--border-radius-medium);
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
   transition: background-color 0.3s;
   border: 1px solid var(--color-border-2);
 

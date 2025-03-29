@@ -31,7 +31,7 @@
 }
 
 .custom-radio-card-title {
-    color: var(--color-text-1);
+    color: var(--td-text-color-primary);
     font-size: 14px;
     font-weight: bold;
     margin-left: 7px;

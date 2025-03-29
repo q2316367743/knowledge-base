@@ -126,7 +126,7 @@ onMounted(() => {
     },
     snapline: true,
     background: {
-      backgroundImage: 'var(--color-bg-1)'
+      backgroundImage: 'var(--td-bg-color-container)'
     },
     ...buildLogicFlowConfigFromOptions(option.value)
   });
@@ -315,7 +315,7 @@ firstUseLogicFlow();
       position: absolute;
       left: 8px;
       bottom: 8px;
-      background-color: var(--color-bg-1);
+      background-color: var(--td-bg-color-container);
       border-radius: var(--border-radius-medium);
       border: 1px solid var(--color-border-2);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);;
@@ -332,22 +332,22 @@ firstUseLogicFlow();
 
 
   .lf-graph {
-    background-color: var(--color-bg-1) !important;
+    background-color: var(--td-bg-color-container) !important;
 
     .lf-text-input {
-      background-color: var(--color-bg-1) !important;
-      color: var(--color-text-1);
+      background-color: var(--td-bg-color-container) !important;
+      color: var(--td-text-color-primary);
     }
   }
 
   .bpmn-pattern {
     background-color: var(--color-bg-3);
-    color: var(--color-text-1);
+    color: var(--td-text-color-primary);
   }
 
   .lf-control {
     background-color: var(--color-bg-3);
-    color: var(--color-text-1);
+    color: var(--td-text-color-primary);
   }
 
   .lf-control-item:hover {
@@ -356,8 +356,8 @@ firstUseLogicFlow();
   }
 
   .lf-menu {
-    background-color: var(--color-bg-1) !important;
-    color: var(--color-text-1);
+    background-color: var(--td-bg-color-container) !important;
+    color: var(--td-text-color-primary);
   }
 
   .lf-menu-item:hover {

@@ -65,7 +65,7 @@ function _openMindMapLayout() {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  color: var(--color-text-1);
+  color: var(--td-text-color-primary);
   background: var(--color-fill-3);
   border-radius: 2px;
   padding: 3px 6px;

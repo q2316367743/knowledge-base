@@ -22,7 +22,7 @@ class TextNewModel extends TextNodeModel {
         }
         return getTextStyleFunction(style, {
             ...properties,
-            fontColor: 'var(--color-text-1)'
+            fontColor: 'var(--td-text-color-primary)'
         })
     }
 

@@ -77,7 +77,7 @@ const onStop = () => useChatStore().stop();
   border-radius: var(--border-radius-medium);
   padding: 8px;
   transition: border-color 0.3s;
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
   min-width: 616px;
 
   &:hover {

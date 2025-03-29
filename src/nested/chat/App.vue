@@ -231,7 +231,7 @@ function handleOperation(type: string, e: { e: Error, index: number }) {
 <style scoped lang="less">
 .chat {
   background-color: var(--td-bg-color-container);
-  color: var(--color-text-1);
+  color: var(--td-text-color-primary);
   position: fixed;
   top: 0;
   left: 0;

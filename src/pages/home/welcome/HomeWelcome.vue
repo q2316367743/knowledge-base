@@ -61,7 +61,7 @@ const write = () => iwVisible.value = true;
     margin-top: -48px;
 
     .line1 {
-      color: var(--color-text-1);
+      color: var(--td-text-color-primary);
       font-size: 2rem;
       font-weight: bold;
       text-align: center;

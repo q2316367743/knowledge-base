@@ -186,7 +186,7 @@ export default defineComponent({
 <style scoped lang="less">
 .logic-flow-panel {
   width: 236px;
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
   padding: 8px;
   border: 1px solid var(--color-border-2);
   border-radius: var(--border-radius-medium);

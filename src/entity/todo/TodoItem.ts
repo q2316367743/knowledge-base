@@ -247,9 +247,9 @@ export function handlePriorityColor(priority: TodoItemPriority): string {
     case TodoItemPriority.FLOOR:
       return 'rgb(var(--arcoblue-6))';
     case TodoItemPriority.NONE:
-      return 'var(--color-text-1)';
+      return 'var(--td-text-color-primary)';
     default:
-      return 'var(--color-text-1)';
+      return 'var(--td-text-color-primary)';
   }
 }
 

@@ -147,11 +147,11 @@ function onInsert(str: string) {
 }
 
 .cherry {
-  background-color: var(--color-bg-1);
-  color: var(--color-text-1);
+  background-color: var(--td-bg-color-container);
+  color: var(--td-text-color-primary);
 
   .cherry-previewer {
-    background-color: var(--color-bg-1) !important;
+    background-color: var(--td-bg-color-container) !important;
 
     &.cherry-preview--full {
       border: none;

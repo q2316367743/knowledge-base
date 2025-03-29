@@ -45,7 +45,7 @@ const itemId = computed(() => useTodoWrapStore().itemId);
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
 const handleColor = (item: TodoItemIndex): string => {
   if (item.status === TodoItemStatus.COMPLETE || item.status === TodoItemStatus.ABANDON) {
-    return 'var(--color-text-1)';
+    return 'var(--td-text-color-primary)';
   }
   return handlePriorityColor(item.priority);
 };

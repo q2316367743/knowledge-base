@@ -56,7 +56,7 @@ function onSubmit() {
 </script>
 <style scoped lang="less">
 .kb-note {
-  background-color: var(--color-bg-1);
+  background-color: var(--td-bg-color-container);
 
   .option {
     display: flex;

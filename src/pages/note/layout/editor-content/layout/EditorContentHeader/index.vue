@@ -55,7 +55,7 @@ function onContextmenu(e: MouseEvent, article: ArticleIndex) {
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,
-    theme: useGlobalStore().isDark ? "default-dark" : "default",
+    theme: useGlobalStore().isDark ? "default dark" : "default",
     zIndex: 200,
     items: [{
       label: '关闭',
