@@ -39,7 +39,6 @@ import AiInput from "@/pages/home/components/AiInput.vue";
 import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
 import ArticleInterpretation from "@/pages/home/modal/ArticleInterpretation.vue";
 import IntelligentWriting from "@/pages/home/modal/IntelligentWriting.vue";
-import ChatLoading from "@/pages/home/chat/components/ChatLoading.vue";
 
 const aiVisible = ref(false);
 const iwVisible = ref(false);
@@ -95,7 +94,8 @@ const write = () => iwVisible.value = true;
         .module-item-icon {
           padding: 16px;
           border-radius: 50%;
-          background-color: var(--color-fill-3);
+          color: var(--td-brand-color);
+          background-color: var(--td-brand-color-light);
         }
 
         .module-item-name {
