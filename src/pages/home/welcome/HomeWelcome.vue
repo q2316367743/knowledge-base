@@ -67,7 +67,7 @@ const write = () => iwVisible.value = true;
     }
 
     .line2 {
-      color: var(--color-text-2);
+      color: var(--td-text-color-secondary);
       text-align: center;
       margin-top: 16px;
     }

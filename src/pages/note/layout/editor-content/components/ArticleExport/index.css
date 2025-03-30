@@ -58,5 +58,5 @@
     background-color: rgb(var(--primary-6));
 }
 .custom-radio-card-desc {
-    color: var(--color-text-2)
+    color: var(--td-text-color-secondary)
 }

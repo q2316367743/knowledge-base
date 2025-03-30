@@ -28,6 +28,7 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {windowConfig} from "@/global/WindowConfig";
 import {ArticleIndex} from "@/entity/article";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
+import {addSimpleNote} from "@/utils/component/AddNoteUtil";
 import AppSide from "@/components/app-side/index.vue";
 
 
@@ -144,8 +145,7 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
       router.push('/todo');
     } else if (preload === 'add') {
       useUmami.track("feature", "新增笔记");
-      useArticleStore().addSimple(extra)
-        .then(({id}) => useHomeEditorStore().openArticle(id));
+      addSimpleNote(extra).then((a) => useHomeEditorStore().openArticle(a));
     }
   } else if (operate === 'window') {
     const config = windowConfig[preload];

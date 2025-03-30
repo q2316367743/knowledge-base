@@ -26,7 +26,6 @@
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
-    "@he-tree/vue": "^2.9.4",
     "@imengyu/vue3-context-menu": "^1.4.4",
     "@logicflow/core": "^2.0.10",
     "@logicflow/extension": "^2.0.14",

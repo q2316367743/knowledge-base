@@ -8,7 +8,7 @@ import {versionLess} from "@/utils/lang/FieldUtil";
 const DEFAULT_AI_SERVICES: Array<AiService> = [{
   id: '1',
   createBy: 1,
-  name: 'deepseek',
+  name: 'uTools服务',
   type: AiServiceType.U_TOOLS,
   url: '',
   key: '',

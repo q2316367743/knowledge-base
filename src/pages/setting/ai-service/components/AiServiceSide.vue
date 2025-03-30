@@ -1,12 +1,12 @@
 <template>
   <t-layout class="h-full" style="background-color: var(--td-bg-color-container);">
     <t-content style="overflow: auto;" @click="close">
-      <div class="ai-service-item w-full flex justify-between items-center ml-3px mb-4px" v-for="s in aiServices" :key="s.id"
-           :class="{checked:s.id===currentId}" @click.stop="currentId = s.id">
+      <div class="ai-service-item w-full flex justify-between items-center ml-3px mb-4px" v-for="s in aiServices"
+           :key="s.id" :class="{checked:s.id===currentId}" @click.stop="currentId = s.id">
         <div class="ellipsis">{{ s.name }}</div>
         <t-tag v-if="s.type === AiServiceType.U_TOOLS" theme="success" size="small" variant="outline">uTools</t-tag>
         <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)" v-else>
-          <t-button theme="primary" variant="text" shape="square" size="small" status="danger" @click.stop>
+          <t-button theme="danger" variant="text" shape="square" size="small" @click.stop>
             <template #icon>
               <icon-delete/>
             </template>

@@ -65,7 +65,7 @@ export default defineComponent({
     height: 32px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--color-text-2);
+    color: var(--td-text-color-secondary);
     cursor: pointer;
 
     &:hover {

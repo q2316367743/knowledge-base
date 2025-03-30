@@ -1,5 +1,4 @@
 import {useUmami} from "@/plugin/umami";
-import {h, ref, shallowRef} from "vue";
 import {
   IconBook,
   IconBranch,
@@ -9,9 +8,8 @@ import {
   IconNav,
   IconRefresh
 } from "@arco-design/web-vue/es/icon";
-import {Button, Form, FormItem, Input, Modal, Radio, RadioGroup, TreeSelect} from "@arco-design/web-vue";
+import {Button, DialogPlugin, Form, FormItem, Input, Radio, RadioGroup, TreeSelect} from "tdesign-vue-next";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 // 存储
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {buildArticleName, useBaseSettingStore} from "@/store/setting/BaseSettingStore";
@@ -30,13 +28,11 @@ import FileCode from '@/components/KbIcon/FileCode.vue';
 import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
 import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 import FileLct from "@/components/KbIcon/FileLct.vue";
-import NotificationUtil from "@/utils/modal/NotificationUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {buildMindMapData} from "@/editor/MindMapEditor/constant";
 import {buildLogicFlowData} from "@/editor/LogicFlow/constants";
 import {StickyNoteIcon} from "tdesign-icons-vue-next";
 import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
-import {checkPower} from "@/store";
+import {addNote} from "@/utils/component/AddNoteUtil";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -90,7 +86,7 @@ export const articleTypes: Array<ArticleTypeList> = [
     icon: shallowRef(IconBranch),
     lock: FileLct
   }];
-const articleTypeMap = map(articleTypes, 'key');
+export const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
   const icon = articleTypeMap.get(type);
@@ -106,7 +102,7 @@ export function renderArticleType(type: ArticleTypeEnum): string {
   return "未知类型";
 }
 
-async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<any> {
+export async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<any> {
   switch (type) {
     case ArticleTypeEnum.MIND_MAP:
       return buildMindMapData()
@@ -147,59 +143,6 @@ async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise
   }
 }
 
-/**
- * 新增一篇笔记
- * @param pid 父ID
- * @param item 笔记类型
- */
-export function addArticle(pid: number, item: ArticleTypeList) {
-  const {key, vip} = item;
-  (async () => {
-    if (vip) {
-      await checkPower('note');
-    }
-    return _addArticle(pid, key)
-  })().then(article => {
-    MessageUtil.success("新增成功");
-    useHomeEditorStore().openArticle(article);
-    // 新建笔记
-    useUmami.track(`/新建/笔记/${renderArticleType(key)}`);
-  })
-    .catch(e => MessageUtil.error("新增失败", e));
-}
-
-export async function _addArticle(pid: number, type: ArticleTypeEnum, content?: string) {
-  const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
-  let name: string;
-  if (newArticleAutoName) {
-    name = buildArticleName(type, newArticleTemplateByName, codeExtraName, pid);
-  } else {
-    name = await MessageBoxUtil.prompt("请输入笔记名称", "新建笔记");
-  }
-  NotificationUtil.warningClose(
-    "检测到您创建代码笔记未设置文件后缀，设置文件后缀后可以实现代码高亮。",
-    "新建笔记",
-    LocalNameEnum.TIP_ARTICLE_ADD,
-    () => {
-      if (type !== ArticleTypeEnum.CODE) {
-        // 不是代码笔记跳过
-        return false;
-      }
-      // 没有后缀
-      return name.indexOf('.') === -1
-    }
-  )
-  if (!content) {
-    content = await buildDefaultContent(name, type);
-  }
-
-  return useArticleStore().add(getDefaultArticleIndex({
-    name,
-    folder: pid,
-    type,
-  }), getDefaultArticleBase(), content);
-}
-
 export function addArticleModal() {
   const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
   const type = ref(ArticleTypeEnum.MARKDOWN);
@@ -216,44 +159,45 @@ export function addArticleModal() {
     refreshFileName();
   }
 
-  Modal.open({
-    title: '新增笔记',
-    titleAlign: 'start',
+  const plugin = DialogPlugin({
+    header: '新增笔记',
+    placement: 'center',
     draggable: true,
-    okText: '新增',
-    content: () => <Form model={{}} layout={'vertical'}>
-      <FormItem label={'笔记类型'} required>
+    confirmBtn: '新增',
+    default: () => <Form data={{}} layout={'vertical'}>
+      <FormItem label={'笔记类型'} status={'validating'} labelAlign={'top'}>
         <RadioGroup v-model={type.value}>
           {articleTypes.map(item => <Radio key={item.key} value={item.key}>{item.name}</Radio>)}
         </RadioGroup>
       </FormItem>
-      <FormItem label={'所在文件夹'} required>
+      <FormItem label={'所在文件夹'} labelAlign={'top'}>
         <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
       </FormItem>
-      <FormItem label={'笔记名称'} required>
-        <Input v-model={name.value} class={'arco-input'} placeholder={'请输入笔记名称'} allowClear>
+      <FormItem label={'笔记名称'} labelAlign={'top'}>
+        <Input v-model={name.value} class={'arco-input'} placeholder={'请输入笔记名称'} clearable={true}>
           {{
-            suffix: () => newArticleAutoName && <Button type={'text'} onClick={refreshFileName}>
-              {{
-                icon: () => <IconRefresh/>
-              }}
-            </Button>
+            suffix: () =>
+              <Button variant={'text'} theme={'primary'} shape={'square'} onClick={refreshFileName}>
+                {{
+                  icon: () => <IconRefresh/>
+                }}
+              </Button>
           }}
         </Input>
       </FormItem>
     </Form>,
-    async onBeforeOk() {
+    async onConfirm() {
       if (name.value.trim() === '') {
         MessageUtil.warning("请输入笔记名称")
         return Promise.resolve(false);
       }
-      const content = buildDefaultContent(name.value, type.value);
-      const article = await useArticleStore().add(getDefaultArticleIndex({
-        name: name.value,
-        folder: folder.value,
+      const article = await addNote({
+        pid: folder.value,
         type: type.value,
-      }), getDefaultArticleBase(), content);
+        name: name.value
+      })
       useHomeEditorStore().openArticle(article);
+      plugin.destroy();
       return Promise.resolve(true);
     }
   })

@@ -63,11 +63,6 @@ export const useArticleStore = defineStore('article', {
     async _sync() {
       this.rev = await saveListByAsync(LocalNameEnum.ARTICLE, this.value, this.rev);
     },
-    addSimple(content: string, title?: string): Promise<ArticleIndex> {
-      return this.add(getDefaultArticleIndex({
-        name: title || ('导入笔记' + new Date().getTime()),
-      }), getDefaultArticleBase({source: "快捷导入"}), content);
-    },
     async add(
       article: Omit<ArticleIndex, 'id' | 'createTime' | 'updateTime'>,
       base: ArticleBase,

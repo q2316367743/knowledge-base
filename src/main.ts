@@ -11,18 +11,14 @@ import '@arco-design/web-vue/es/drawer/style/css.js'
 import '@arco-design/web-vue/es/modal/style/css.js'
 import '@arco-design/web-vue/es/notification/style/css.js'
 import 'tdesign-vue-next/es/style/index.css';
-import '@/assets/style/theme.css';
-import '@/assets/style/global.less';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'virtual:uno.css'
 import 'handsontable/dist/handsontable.full.min.css';
 import '@wangeditor/editor/dist/css/style.css';
 import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
-import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css';
 import 'nprogress/nprogress.css';
-import '@he-tree/vue/style/default.css'
-import '@he-tree/vue/style/material-design.css'
+import '@/assets/style/global.less';
 // 代码编辑器
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'

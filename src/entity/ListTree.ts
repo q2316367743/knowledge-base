@@ -28,12 +28,14 @@ export function listToTree(list: Array<ListTree>, topName: string): Array<TreeOp
     .map(c => ({
       value: c.id,
       label: c.name,
+      text: c.name,
       children: []
     }));
   base.forEach(item => _listToTree(item, item.value as number, list));
   return [{
     value: 0,
     label: topName,
+    text: topName,
     children: base
   }];
 }
@@ -59,6 +61,7 @@ function _listToTree(tree: TreeOptionData, pid: number, categories: Array<ListTr
     .map(c => ({
       value: c.id,
       label: c.name,
+      text: c.name,
       children: []
     } as TreeOptionData));
   tree.children.forEach(item => _listToTree(item, item.value as number, categories));

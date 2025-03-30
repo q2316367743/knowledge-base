@@ -4,12 +4,12 @@
     <t-dropdown-menu>
       <t-dropdown-item v-if="folder">
         <template #prefix-icon>
-          <plus-icon />
+          <plus-icon/>
         </template>
         新增笔记
         <t-dropdown-menu>
           <t-dropdown-item v-for="articleType in articleTypes" :key="articleType.key"
-                           @click="addArticle(id, articleType)">
+                           @click="addNoteFunc({pid: id, type: articleType.key})">
             <template #prefix-icon>
               <component :is="articleType.icon"/>
             </template>
@@ -22,38 +22,38 @@
       </t-dropdown-item>
       <t-dropdown-item v-if="folder" @click="addFolder(id)">
         <template #prefix-icon>
-          <folder-add1-icon />
+          <folder-add1-icon/>
         </template>
         新建文件夹
       </t-dropdown-item>
       <t-dropdown-item v-if="folder && more">
         <template #prefix-icon>
-          <app-icon />
+          <app-icon/>
         </template>
         更多操作
         <t-dropdown-menu>
           <t-dropdown-item @click="$emit('multi',id)">
             <template #prefix-icon>
-              <check-rectangle-icon />
+              <check-rectangle-icon/>
             </template>
             多选
           </t-dropdown-item>
           <t-dropdown-item @click="rename(id, name, !folder)">
             <template #prefix-icon>
-              <edit2-icon />
+              <edit2-icon/>
             </template>
             重命名
           </t-dropdown-item>
           <t-dropdown-item @click="remove(id, name, !folder)"
                            style="color: red;">
             <template #prefix-icon>
-              <delete-icon />
+              <delete-icon/>
             </template>
             删除
           </t-dropdown-item>
           <t-dropdown-item @click="moveTo(id, name, !folder)">
             <template #prefix-icon>
-              <gesture-right-icon />
+              <gesture-right-icon/>
             </template>
             移动到
           </t-dropdown-item>
@@ -62,38 +62,38 @@
       <t-dropdown-item v-if="!folder"
                        @click="rename(id, name, !folder)">
         <template #prefix-icon>
-          <edit2-icon />
+          <edit2-icon/>
         </template>
         重命名
       </t-dropdown-item>
       <t-dropdown-item v-if="!folder">
         <template #prefix-icon>
-          <app-icon />
+          <app-icon/>
         </template>
         更多操作
         <t-dropdown-menu>
           <t-dropdown-item @click="rename(id, name, !folder)">
             <template #prefix-icon>
-              <fill-color1-icon />
+              <fill-color1-icon/>
             </template>
             设置颜色
           </t-dropdown-item>
           <t-dropdown-item @click="remove(id, name, !folder)"
                            style="color: red;">
             <template #prefix-icon>
-              <delete-icon />
+              <delete-icon/>
             </template>
             删除
           </t-dropdown-item>
           <t-dropdown-item @click="moveTo(id, name, !folder)">
             <template #prefix-icon>
-              <gesture-right-icon />
+              <gesture-right-icon/>
             </template>
             移动到
           </t-dropdown-item>
           <t-dropdown-item @click="$emit('multi',id)">
             <template #prefix-icon>
-              <check-rectangle-icon />
+              <check-rectangle-icon/>
             </template>
             多选
           </t-dropdown-item>
@@ -101,7 +101,7 @@
       </t-dropdown-item>
       <t-dropdown-item v-if="folder">
         <template #prefix-icon>
-          <file-import-icon />
+          <file-import-icon/>
         </template>
         笔记导入
         <t-dropdown-menu>
@@ -112,7 +112,7 @@
       </t-dropdown-item>
       <t-dropdown-item v-if="folder">
         <template #prefix-icon>
-          <file-export-icon />
+          <file-export-icon/>
         </template>
         笔记导出
         <t-dropdown-menu>
@@ -125,7 +125,7 @@
   </t-dropdown>
 </template>
 <script lang="ts">
-import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
+import {addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
@@ -146,6 +146,7 @@ import {
   GestureRightIcon,
   PlusIcon
 } from "tdesign-icons-vue-next";
+import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 
 export default defineComponent({
   name: 'EditorTreeMenu',
@@ -153,7 +154,8 @@ export default defineComponent({
     FileExportIcon,
     FileImportIcon,
     FillColor1Icon,
-    GestureRightIcon, DeleteIcon, Edit2Icon, CheckRectangleIcon, AppIcon, FolderAdd1Icon, PlusIcon, VipIcon},
+    GestureRightIcon, DeleteIcon, Edit2Icon, CheckRectangleIcon, AppIcon, FolderAdd1Icon, PlusIcon, VipIcon
+  },
   props: {
     id: {
       type: Number,
@@ -180,9 +182,10 @@ export default defineComponent({
     ...mapState(useVipStore, ['noteNoVip'])
   },
   methods: {
+    addNoteFunc,
     exportForEpub,
     exportToMd, exportToUTools,
-    showArticleImportModal, remove, rename, addFolder, addArticle,
+    showArticleImportModal, remove, rename, addFolder,
     moveTo(id: number, name: string, article: boolean) {
       let folderId: number | undefined = undefined;
       if (article) {

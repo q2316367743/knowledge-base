@@ -49,6 +49,7 @@ import {openArticleImport} from "@/modules/ArticleImport";
       .module-item-icon {
         padding: 16px;
         border-radius: 50%;
+        color: var(--td-brand-color);
         background-color: var(--td-bg-color-component);
       }
 

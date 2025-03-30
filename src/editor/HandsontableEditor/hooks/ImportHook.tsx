@@ -56,7 +56,7 @@ function openImportModal(): Promise<string> {
                 <Upload accept={types.join(',')} showFileList={false}
                         customRequest={customRequest}/>
                 <div
-                    style={{color: 'var(--color-text-2)', marginTop: '7px'}}>支持{types ? types.join("，") : '任意类型'}文件
+                    style={{color: 'var(--td-text-color-secondary)', marginTop: '7px'}}>支持{types ? types.join("，") : '任意类型'}文件
                 </div>
             </Space>,
             okText: '导入',

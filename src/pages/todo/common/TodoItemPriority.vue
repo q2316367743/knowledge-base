@@ -68,7 +68,7 @@ const todoItems = computed(() => props.priorityView?.children || []);
 
 
       .todo-item-priority__header-handle {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
 
         :deep(.arco-icon) {
           transition: 0.3s;
@@ -82,7 +82,7 @@ const todoItems = computed(() => props.priorityView?.children || []);
       }
 
       .todo-item-priority__header-count {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
       }
     }
 

@@ -64,7 +64,7 @@ const items = computed(() => {
 
 
       .todo-item-complete__header-handle {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
 
         :deep(.arco-icon) {
           transition: 0.3s;
@@ -78,7 +78,7 @@ const items = computed(() => {
       }
 
       .todo-item-complete__header-count {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
       }
     }
 

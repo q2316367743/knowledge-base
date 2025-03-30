@@ -3,12 +3,11 @@ import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {DialogPlugin, Form, FormItem, Input, Switch, TreeSelect} from "tdesign-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {isNotEmptyString} from "@/utils/lang/FieldUtil";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {addNote} from "@/utils/component/AddNoteUtil";
 
 export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
   const {folderTree} = useFolderStore();
@@ -45,12 +44,15 @@ export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
       }
       content += message.a;
       try {
-        const article = await useArticleStore().add(getDefaultArticleIndex({
+        const article = await addNote({
           name: name.value,
-          folder: folder.value,
+          pid: folder.value,
           type: ArticleTypeEnum.MARKDOWN,
-          preview: true
-        }), getDefaultArticleBase(), content);
+          content,
+          extra: {
+            preview: true
+          }
+        });
         useHomeEditorStore().openArticle(article);
         // 跳转
         onSuccess();

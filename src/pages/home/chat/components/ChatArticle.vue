@@ -19,38 +19,41 @@
       <t-divider v-if="message.id === lastId">
         <icon-loading spin/>
       </t-divider>
-      <template v-else>
-        <div class="chat-article__option" :class="{last: message.id === lastId}">
-          <t-space size="small">
-            <t-tooltip content="记笔记">
-              <t-button variant="text" theme="primary" shape="square" @click="add">
-                <template #icon>
-                  <edit-icon/>
-                </template>
-              </t-button>
-            </t-tooltip>
-            <t-tooltip content="复制">
-              <t-button variant="text" theme="primary" shape="square" @click="copy()">
-                <template #icon>
-                  <copy-icon/>
-                </template>
-              </t-button>
-            </t-tooltip>
-          </t-space>
-        </div>
-      </template>
+      <div class="chat-article__option" :class="{last: message.id === lastId}" v-else>
+        <t-space size="small">
+          <t-tooltip content="重新提问">
+            <t-button variant="text" theme="primary" shape="square">
+              <template #icon>
+                <refresh-icon/>
+              </template>
+            </t-button>
+          </t-tooltip>
+          <t-tooltip content="记笔记">
+            <t-button variant="text" theme="primary" shape="square" @click="add">
+              <template #icon>
+                <edit-icon/>
+              </template>
+            </t-button>
+          </t-tooltip>
+          <t-tooltip content="复制">
+            <t-button variant="text" theme="primary" shape="square" @click="copy()">
+              <template #icon>
+                <copy-icon/>
+              </template>
+            </t-button>
+          </t-tooltip>
+        </t-space>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import {CopyIcon, EditIcon} from "tdesign-icons-vue-next";
+import {CopyIcon, EditIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {ChatMessage} from "@/types/Chat";
 import {useAiAssistantStore, useChatStore} from "@/store";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {copyText} from "@/utils/utools/NativeUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
-import ChatContent from "@/components/ChatContent/ChatContent.vue";
-import ChatReasoning from "@/pages/home/chat/components/ChatReasoning.vue";
 
 const router = useRouter();
 
@@ -59,9 +62,11 @@ const props = defineProps({
     type: Object as PropType<ChatMessage>,
     default: () => ({
       id: Date.now(),
-      q: '',
-      a: '',
       assistantId: '',
+      q: '',
+      t: '',
+      a: '',
+      isThinking: false,
     })
   },
 });
@@ -94,7 +99,7 @@ function add() {
   }
 
   &__time {
-    color: var(--color-text-2);
+    color: var(--td-text-color-secondary);
     margin-top: 24px;
     font-size: 0.9rem;
   }

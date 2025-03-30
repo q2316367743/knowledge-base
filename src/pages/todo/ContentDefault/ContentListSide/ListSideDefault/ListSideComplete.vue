@@ -52,7 +52,7 @@ const toggleVisible = useToggle(visible);
 
 
       .content-default-complete__header-handle {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
 
         :deep(.arco-icon) {
           transition: 0.3s;
@@ -66,7 +66,7 @@ const toggleVisible = useToggle(visible);
       }
 
       .content-default-complete__header-count {
-        color: var(--color-text-2);
+        color: var(--td-text-color-secondary);
       }
     }
 

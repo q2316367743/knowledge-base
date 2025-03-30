@@ -13,9 +13,10 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {exportToUTools, exportForEpub} from "@/components/ArticleExport";
 import VipIcon from "@/components/KbIcon/VipIcon.vue";
-import {addArticle, addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
+import {addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {exportToMd} from "@/pages/note/components/EditorExport";
+import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -106,7 +107,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         </div>,
         icon: () => <type.icon/>,
         onClick: () => {
-          addArticle(node.value, type);
+          addNoteFunc({pid: node.value, type});
         }
       }))
     }, {

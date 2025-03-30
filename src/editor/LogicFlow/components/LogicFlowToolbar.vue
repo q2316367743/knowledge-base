@@ -145,7 +145,7 @@ export default defineComponent({
     float: left;
     margin: 12px 4px;
     cursor: pointer;
-    color: var(--color-text-2);
+    color: var(--td-text-color-secondary);
 
     &.disabled {
       color: var(--color-text-4);

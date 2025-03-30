@@ -94,10 +94,6 @@ export const useChatStore = defineStore('chat', () => {
     (async () => {
 
       // 获取笔记
-      // {
-      //   role: 'system',
-      //     content: `根据以下文件内容回答问题：\n${typeof content.record === 'object' ? JSON.stringify(content.record) : content.record}`
-      // }
       const articles = new Array<ChatMessageParam>();
       if (isNotEmptyArray(articleIds.value)) {
         const {getContent} = useArticleStore()
@@ -146,6 +142,7 @@ export const useChatStore = defineStore('chat', () => {
             appendTo(now, "\n\n请求被手动终止！");
           }
         } else {
+          appendTo(now, "\n\n请求出现错误！");
           MessageUtil.error("获取结果失败", e);
         }
       })

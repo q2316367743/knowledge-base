@@ -1,17 +1,17 @@
 export interface CustomerFileNameSetting {
 
-    id: number;
+  id: number;
 
-    folderId: number;
+  folderId: number;
 
-    script: string;
+  script: string;
 
 }
 
 export function createCustomerFileNameSetting(): CustomerFileNameSetting {
-    return {
-        id: new Date().getTime(),
-        folderId: 0,
-        script: '',
-    }
+  return {
+    id: new Date().getTime(),
+    folderId: 0,
+    script: '',
+  }
 }

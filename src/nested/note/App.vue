@@ -22,10 +22,10 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useFolderStore} from "@/store/db/FolderStore";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {_addArticle} from "@/pages/note/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {addNote} from "@/utils/component/AddNoteUtil";
 
 const editorRef = ref();
 
@@ -42,7 +42,7 @@ const folderTree = computed(() => useFolderStore().folderTree);
 
 function onSubmit() {
   loading.value = true;
-  _addArticle(folder.value, ArticleTypeEnum.RICH_TEXT, content.value)
+  addNote({pid: folder.value, type: ArticleTypeEnum.RICH_TEXT, content: content.value})
     .then(() => {
       MessageUtil.success("新建成功");
       content.value = '';
