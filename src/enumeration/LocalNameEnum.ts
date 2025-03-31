@@ -131,6 +131,11 @@ enum LocalNameEnum {
   KEY_APP_THEME = '/key/app/theme',
 
   /**
+   * 应用主题颜色
+   */
+  KEY_APP_COLOR = '/key/app/color',
+
+  /**
    * 待办导出脚本
    */
   KEY_TODO_SCRIPT = '/key/todo/script',

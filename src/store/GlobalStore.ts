@@ -1,12 +1,15 @@
 import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 
 export enum GlobalType {
   DARK = 1,
   LIGHT = 2,
   AUTO = 3
 }
+
+export const themeColor = useUtoolsDbStorage<string>(LocalNameEnum.KEY_APP_COLOR, 'ghibli');
 
 export const useGlobalStore = defineStore('global', () => {
   const isDark = ref(utools.isDarkColors());
@@ -59,20 +62,5 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
 });
-
-export const useAppCollapse = createGlobalState(() => {
-  const collapse = ref(false) as Ref<boolean>;
-  const toggleCollapse = (val?: boolean) => {
-    if (val === undefined) {
-      collapse.value = !collapse.value;
-    } else {
-      collapse.value = val;
-    }
-  };
-
-  return {collapse, toggleCollapse};
-});
-
-
 
 

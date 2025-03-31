@@ -1,14 +1,18 @@
 <template>
   <div class="more-setting-theme">
     <t-form :model="instance">
+      <t-form-item label="主题颜色" label-align="top">
+        <t-radio-group v-model="themeColor" :options="ThemeColors"/>
+      </t-form-item>
       <t-form-item label="主题" label-align="top">
-        <t-select v-model="instance.theme" placeholder="请选择主题" allow-clear allow-search>
+        <t-select v-model="instance.theme" placeholder="请选择主题" :clearable="true" :filterable="true"
+                  :disabled="true">
           <t-option :key="0" :value="0">不设置</t-option>
           <t-option v-for="theme in themes" :key="theme.id" :value="theme.id">{{ theme.name }}</t-option>
         </t-select>
       </t-form-item>
       <t-form-item label="markdown菜单" label-align="top">
-        <t-checkbox-group v-model="instance.markdownMenus">
+        <t-checkbox-group v-model="instance.markdownMenus" :disabled="true">
           <t-checkbox v-for="menu in markdownMenus" :key="menu.id" :value="menu.id">{{
               menu.name
             }}
@@ -16,7 +20,7 @@
         </t-checkbox-group>
       </t-form-item>
       <t-form-item label="markdown语法" label-align="top">
-        <t-checkbox-group v-model="instance.markdownSyntaxes">
+        <t-checkbox-group v-model="instance.markdownSyntaxes" :disabled="true">
           <t-checkbox v-for="menu in markdownSyntaxes" :key="menu.id" :value="menu.id">{{
               menu.name
             }}
@@ -25,8 +29,8 @@
       </t-form-item>
       <t-form-item label-align="top">
         <t-space>
-          <t-button theme="primary" @click="save()">保存</t-button>
-          <t-button variant="text" @click="reference()">刷新主题</t-button>
+          <t-button theme="primary" @click="save()" :disabled="true">保存</t-button>
+          <t-button variant="text" @click="reference()" :disabled="true">刷新主题</t-button>
         </t-space>
       </t-form-item>
     </t-form>
@@ -39,6 +43,8 @@ import {clone} from "@/utils/lang/ObjectUtil";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
+import {themeColor} from "@/store";
+import {ThemeColors} from "@/global/theme";
 
 const emits = defineEmits(['save']);
 

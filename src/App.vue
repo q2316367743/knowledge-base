@@ -12,6 +12,7 @@
     </t-loading>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
     <update-check/>
+    <link :href="`/theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -20,7 +21,7 @@ import {useUmami} from "@/plugin/umami";
 import {createServer} from "@/plugin/server";
 import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
-import {useGlobalStore} from "@/store/GlobalStore";
+import {themeColor, useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";

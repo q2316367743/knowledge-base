@@ -45,7 +45,10 @@ import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,
-  preview: Boolean
+  preview: {
+    type: Boolean,
+    default: undefined
+  }
 });
 const emits = defineEmits(['sendToChat']);
 defineExpose({insertToArticle});
@@ -58,6 +61,7 @@ let contentRev: string | undefined = undefined;
 const mdEditor = ref();
 
 function buildPreview(): boolean {
+  console.log(props, typeof props.preview !== 'undefined')
   if (typeof props.preview !== 'undefined') {
     return props.preview;
   }

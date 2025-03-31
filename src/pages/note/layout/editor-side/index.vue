@@ -18,14 +18,12 @@
             :actived="selectedKeys" v-model="checkKeys" v-model:expanded="expandedKeys"
             @drop="onDrop($event)">
       <template #label="{ node }">
-        <div class="flex justify-between w-full" :class="{active: homeEditorId===node.value}"
+        <div class="flex" :class="{active: homeEditorId===node.value}"
              @contextmenu="onContextmenu(node, $event)" @click="onSelect(node.value)">
-          <div class="flex items-center">
-            <div :class="{'pt-6px': node.data.preview}">
-              <component :is="node.data.icon"/>
-            </div>
-            <span class="mtl-ml p-3px" :style="{color: node.data.color}">{{ node.label }}</span>
+          <div :class="{'pt-3px': node.data.preview}">
+            <component :is="node.data.icon"/>
           </div>
+          <div class="pl-4px overflow-hidden text-ellipsis" :style="{color: node.data.color}">{{ node.label }}</div>
         </div>
       </template>
       <template #operations="{ node }">
