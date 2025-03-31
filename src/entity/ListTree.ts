@@ -15,8 +15,6 @@ export interface ListTree {
 
   name: string;
 
-  [key: string]: string;
-
 }
 
 
@@ -25,14 +23,14 @@ export interface ListTree {
  * @param list 列表
  * @param topName 顶部名称
  */
-export function listToTree(list: Array<ListTree>, topName: string): Array<TreeOptionData> {
+export function listToTree(list: Array<ListTree & { fontColor?: string }>, topName: string): Array<TreeOptionData> {
   const base: Array<TreeOptionData> = list.filter(c => c.pid === 0 || !c.pid)
     .map(c => ({
       value: c.id,
       label: c.name,
       text: c.name,
       children: [],
-      fontColor: c.fontColor
+      fontColor: c?.fontColor
     }));
   base.forEach(item => _listToTree(item, item.value as number, list));
   return [{
