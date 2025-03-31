@@ -83,6 +83,9 @@ enum LocalNameEnum {
 
   AI_SERVICE = '/ai/service',
 
+  // uTools提供的模型缓存
+  AI_U_TOOLS_MODELS = '/ai/uTools/models',
+
   AI_ASSISTANT = '/ai/assistant',
 
   // ========================== 键值存储 ==========================
@@ -170,6 +173,9 @@ enum LocalNameEnum {
   KEY_WIDGET_CHAT_ASSISTANT = '/key/widget/chat/assistant',
 
   KEY_NEWS_CONTENT_SCALE = '/key/news/content/scale',
+
+  // 组件-uTools模型更新
+  KEY_COMPONENT_U_TOOLS_MODEL_UPDATE = '/key/component/uTools/model/update',
 
   // ========================== 窗口 ==========================
 

@@ -54,7 +54,7 @@ const pluginTree = computed(() => usePluginSettingStore().pluginTree);
 const virtualHeight = computed(() => (size.height.value - 14) + 'px');
 
 function onSelect(context: {node: any}) {
-  const selectKey = context.node.value as number;
+  const selectKey = context.node.value as string;
   if (contains(PLUGIN_FOLDER_KEYS, selectKey)) {
     emits('select');
   } else {

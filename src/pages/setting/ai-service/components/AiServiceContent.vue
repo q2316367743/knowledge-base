@@ -7,21 +7,21 @@
           <t-form-item label="服务名称" label-align="top">
             <t-input allow-clear v-model="form.name" :disabled="disabled"/>
           </t-form-item>
-          <t-form-item label="服务类型" label-align="top">
-            <t-radio-group v-model="form.type" :disabled="disabled">
+          <t-form-item label="服务类型" label-align="top" v-if="!disabled">
+            <t-radio-group v-model="form.type">
               <t-radio :value="AiServiceType.OPENAI">OpenAI</t-radio>
             </t-radio-group>
           </t-form-item>
-          <t-form-item label="API 地址" label-align="top" help="注意，OpenAI的地址，结尾要加上/v1/">
-            <t-input allow-clear v-model="form.url" :disabled="disabled"/>
+          <t-form-item label="API 地址" label-align="top" help="注意，OpenAI的地址，结尾要加上/v1/" v-if="!disabled">
+            <t-input allow-clear v-model="form.url"/>
           </t-form-item>
-          <t-form-item label="API 密钥" label-align="top">
-            <t-input type="password" allow-clear v-model="form.key" :disabled="disabled"/>
+          <t-form-item label="API 密钥" label-align="top" v-if="!disabled">
+            <t-input type="password" allow-clear v-model="form.key"/>
           </t-form-item>
           <!--      <t-form-item label="模型版本">-->
           <!--        <t-input allow-clear v-model="form.modelVersion" />-->
           <!--      </t-form-item>-->
-          <t-form-item label="模型" label-align="top" help="上面填写完成后注意刷新模型">
+          <t-form-item label="模型" label-align="top" :help="disabled?'':'上面填写完成后注意刷新模型'">
             <t-card class="w-full" :header-bordered="true">
               <template #header v-if="!disabled">
                 <t-space>
@@ -41,7 +41,13 @@
               </template>
               <t-list :split="true" class="max-h-350px">
                 <t-list-item v-for="(item, index) in form.models" :key="index">
-                  {{ item }}
+                  {{ typeof item === 'string' ? item : item.name }}
+                  <template #action v-if="typeof item !== 'string'">
+                    <t-tag theme="success">
+                      <span>{{ item.point }}</span>
+                      <span class="ml-4px">能量</span>
+                    </t-tag>
+                  </template>
                 </t-list-item>
               </t-list>
             </t-card>
@@ -63,12 +69,11 @@
 <script lang="ts" setup>
 import OpenAI from "openai";
 import {clone} from "radash";
+import {useAiServiceStore} from "@/store";
 import EmptyResult from "@/components/Result/EmptyResult.vue";
-import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import {AiServiceType, buildAiService} from "@/entity/ai/AiService";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
-
 
 const props = defineProps({
   currentId: {

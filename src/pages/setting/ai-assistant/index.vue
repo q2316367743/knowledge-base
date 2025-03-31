@@ -13,15 +13,15 @@
           </template>
         </t-list-item-meta>
         <template #action>
-          <t-button variant="text" theme="primary" shape="square" @click="editAiAssistant(a)" >
+          <t-button variant="text" theme="primary" shape="square" @click="editAiAssistant(a)">
             <template #icon>
-              <icon-edit/>
+              <edit2-icon/>
             </template>
           </t-button>
           <t-popconfirm content="确定要删除此助手？" ok-text="删除" @ok="handleRemove(a.id)">
             <t-button variant="text" theme="danger" shape="square">
               <template #icon>
-                <icon-delete/>
+                <delete-icon/>
               </template>
             </t-button>
           </t-popconfirm>
@@ -34,6 +34,7 @@
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import {addAiAssistant, editAiAssistant} from "@/pages/setting/ai-assistant/modal";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {DeleteIcon, Edit2Icon} from "tdesign-icons-vue-next";
 
 const assistants = computed(() => useAiAssistantStore().aiAssistants);
 

@@ -6,12 +6,20 @@ export enum AiServiceType {
   U_TOOLS = 'uTools'
 }
 
+export interface AiServiceModel {
+  id: string;
+  name: string;
+  // 消耗点数，uTools才有
+  point: number;
+}
+
 /**
  * AI服务
  */
 export interface AiService {
   id: string;
   createBy: number;
+  updateBy?: number;
   name: string;
   type: AiServiceType;
 
@@ -22,7 +30,7 @@ export interface AiService {
   // 模型版本
   modelVersion: string;
   // 模型、启用的模型
-  models: Array<string>;
+  models: Array<string | AiServiceModel>;
 }
 
 export const buildAiService = (): AiService => ({
