@@ -20,4 +20,9 @@ export interface Folder extends ListTree {
    */
   fontColor?: string;
 
+  /**
+   * 文字颜色是否扩散到目录下文章
+   */
+  diffusion?: boolean;
+
 }

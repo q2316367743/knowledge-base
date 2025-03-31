@@ -3,7 +3,7 @@ import {
   AppIcon,
   CheckRectangleIcon,
   DeleteIcon,
-  Edit2Icon, FileExportIcon, FileImportIcon,
+  Edit2Icon, FileExportIcon, FileImportIcon, FillColor1Icon,
   FolderAdd1Icon,
   GestureRightIcon,
   PlusIcon, RoundIcon
@@ -18,6 +18,7 @@ import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal
 import {exportToMd} from "@/pages/note/components/EditorExport";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
+import {setColor} from "@/pages/note/components/HeExtraContext";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -77,6 +78,12 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       label: '更多操作',
       icon: () => <AppIcon/>,
       children: [{
+        label: '设置颜色',
+        icon: () => <FillColor1Icon/>,
+        onClick: () => {
+          setColor(node.value, node.leaf);
+        }
+      }, {
         label: '多选',
         icon: () => <CheckRectangleIcon/>,
         onClick: () => {
@@ -123,6 +130,12 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         label: '更多操作',
         icon: () => <AppIcon/>,
         children: [{
+          label: '设置颜色',
+          icon: () => <FillColor1Icon/>,
+          onClick: () => {
+            setColor(node.value, node.leaf);
+          }
+        }, {
           label: '多选',
           icon: () => <CheckRectangleIcon/>,
           onClick: () => {

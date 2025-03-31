@@ -1,6 +1,13 @@
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {articleTypeMap, buildDefaultContent} from "@/pages/note/components/he-context";
-import {buildArticleName, checkPower, useArticleStore, useBaseSettingStore, useHomeEditorStore} from "@/store";
+import {
+  buildArticleName,
+  checkPower,
+  useArticleStore,
+  useBaseSettingStore,
+  useFolderStore,
+  useHomeEditorStore
+} from "@/store";
 import {ArticleIndex, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {isNotEmptyString} from "@/utils/lang/FieldUtil";
@@ -43,11 +50,14 @@ export async function addNote(props: AddArticleProps) {
   }
   const newName = await buildName(type, pid, name);
   const newContent = await buildContent(type, newName, content);
+  // 获取文件夹规则
+  const folder = useFolderStore().folderMap.get(pid);
   return useArticleStore().add(getDefaultArticleIndex({
     ...(props.extra || {}),
     name: newName,
     folder: pid,
     type,
+    fontColor: folder?.diffusion ? folder?.fontColor : ''
   }), getDefaultArticleBase(), newContent);
 }
 

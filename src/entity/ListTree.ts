@@ -15,6 +15,8 @@ export interface ListTree {
 
   name: string;
 
+  [key: string]: string;
+
 }
 
 
@@ -29,7 +31,8 @@ export function listToTree(list: Array<ListTree>, topName: string): Array<TreeOp
       value: c.id,
       label: c.name,
       text: c.name,
-      children: []
+      children: [],
+      fontColor: c.fontColor
     }));
   base.forEach(item => _listToTree(item, item.value as number, list));
   return [{
@@ -88,7 +91,8 @@ export function treeEach(
       children: [],
       icon: () => h(IconFolder, {}),
       pid: item.pid,
-      preview: item.preview
+      preview: item.preview,
+      color: item.fontColor
     }
 
     if (map) {
@@ -108,7 +112,8 @@ export function treeEach(
         leaf: true,
         icon: () => buildArticleIcon(article.type, article.preview),
         pid: article.folder,
-        preview: article.preview
+        preview: article.preview,
+        color: article.fontColor
       } as TreeOptionData)).forEach(article => {
 
         if (map) {

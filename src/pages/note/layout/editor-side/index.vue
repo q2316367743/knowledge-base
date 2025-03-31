@@ -24,7 +24,7 @@
             <div :class="{'pt-6px': node.data.preview}">
               <component :is="node.data.icon"/>
             </div>
-            <span class="mtl-ml p-3px">{{ node.label }}</span>
+            <span class="mtl-ml p-3px" :style="{color: node.data.color}">{{ node.label }}</span>
           </div>
         </div>
       </template>

@@ -30,6 +30,7 @@ export function useNoteTree(keyword?: Ref<string>, map?: (data: TreeOptionData) 
           icon: () => buildArticleIcon(article.type, article.preview),
           pid: 0,
           preview: article.preview,
+          color: article.fontColor
         })).forEach(article => treeData.push(article));
       }
     })

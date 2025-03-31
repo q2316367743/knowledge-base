@@ -32,6 +32,12 @@
         </template>
         更多操作
         <t-dropdown-menu>
+          <t-dropdown-item @click="setColor(id, !folder)">
+            <template #prefix-icon>
+              <fill-color1-icon/>
+            </template>
+            设置颜色
+          </t-dropdown-item>
           <t-dropdown-item @click="$emit('multi',id)">
             <template #prefix-icon>
               <check-rectangle-icon/>
@@ -72,7 +78,7 @@
         </template>
         更多操作
         <t-dropdown-menu>
-          <t-dropdown-item @click="rename(id, name, !folder)">
+          <t-dropdown-item>
             <template #prefix-icon>
               <fill-color1-icon/>
             </template>
@@ -149,6 +155,7 @@ import {
 } from "tdesign-icons-vue-next";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
+import {setColor} from "@/pages/note/components/HeExtraContext";
 
 export default defineComponent({
   name: 'EditorTreeMenu',
@@ -184,6 +191,7 @@ export default defineComponent({
     ...mapState(useVipStore, ['noteNoVip'])
   },
   methods: {
+    setColor,
     openArticleImportWithUBrowser,
     addNoteFunc,
     exportForEpub,
