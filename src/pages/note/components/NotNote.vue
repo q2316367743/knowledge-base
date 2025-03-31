@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import {FileImportIcon, StickyNoteIcon} from "tdesign-icons-vue-next";
 import {addArticleModal} from "@/pages/note/components/he-context";
-import {openArticleImport} from "@/modules/ArticleImport";
+import {openArticleImport} from "@/modules/NoteImport";
 
 </script>
 <style scoped lang="less">

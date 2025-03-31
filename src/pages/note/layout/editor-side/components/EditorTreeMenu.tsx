@@ -17,6 +17,7 @@ import {addFolder, articleTypes, remove, rename} from "@/pages/note/components/h
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {exportToMd} from "@/pages/note/components/EditorExport";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
+import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -107,7 +108,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         </div>,
         icon: () => <type.icon/>,
         onClick: () => {
-          addNoteFunc({pid: node.value, type});
+          addNoteFunc({pid: node.value, type: type.key});
         }
       }))
     }, {
@@ -156,6 +157,9 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         onClick: () => {
           showArticleImportModal(node.value);
         }
+      }, {
+        label: '粘贴链接',
+        onClick: () => openArticleImportWithUBrowser(node.value)
       }, {
         label: 'Gitee',
         disabled: true,

@@ -34,11 +34,13 @@
   overflow: visible;
   position: absolute;
   background-color: var(--mx-menu-backgroud);
-  border-radius: var(--mx-menu-backgroud-radius);
   padding: 12px 0;
-  box-shadow: 0 10px 40px 10px var(--mx-menu-shadow-color);
   opacity: 1;
-  transition: opacity .2s ease-in-out
+  transition: opacity .2s ease-in-out;
+
+  box-shadow: var(--td-shadow-2);
+  border: 0.5px solid var(--td-component-border);
+  border-radius: var(--td-radius-medium);
 }
 
 .mx-context-menu-items {

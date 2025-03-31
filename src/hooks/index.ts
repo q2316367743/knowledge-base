@@ -1,1 +1,2 @@
-export * from './NoteTree'
+export * from './NoteTree';
+export * from './Loading';

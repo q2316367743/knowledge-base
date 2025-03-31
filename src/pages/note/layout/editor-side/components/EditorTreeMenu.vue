@@ -106,6 +106,7 @@
         笔记导入
         <t-dropdown-menu>
           <t-dropdown-item @click="showArticleImportModal(id)">常规导入</t-dropdown-item>
+          <t-dropdown-item @click="openArticleImportWithUBrowser(id)">粘贴链接</t-dropdown-item>
           <t-dropdown-item :disabled="true">Gitee</t-dropdown-item>
           <t-dropdown-item :disabled="true">GitHub</t-dropdown-item>
         </t-dropdown-menu>
@@ -147,6 +148,7 @@ import {
   PlusIcon
 } from "tdesign-icons-vue-next";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
+import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
 
 export default defineComponent({
   name: 'EditorTreeMenu',
@@ -182,6 +184,7 @@ export default defineComponent({
     ...mapState(useVipStore, ['noteNoVip'])
   },
   methods: {
+    openArticleImportWithUBrowser,
     addNoteFunc,
     exportForEpub,
     exportToMd, exportToUTools,

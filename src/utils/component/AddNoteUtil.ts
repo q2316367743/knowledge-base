@@ -1,6 +1,6 @@
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {articleTypeMap, buildDefaultContent} from "@/pages/note/components/he-context";
-import {buildArticleName, checkPower, useArticleStore, useBaseSettingStore} from "@/store";
+import {buildArticleName, checkPower, useArticleStore, useBaseSettingStore, useHomeEditorStore} from "@/store";
 import {ArticleIndex, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {isNotEmptyString} from "@/utils/lang/FieldUtil";
@@ -16,7 +16,7 @@ interface AddArticleProps {
 
 async function buildName(type: ArticleTypeEnum, pid: number, res?: string): Promise<string> {
   // 如果用户指定,则返回用户指定的文件名
-  if (isNotEmptyString(res)) return res;
+  if (isNotEmptyString(res)) return res!;
   const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
   let name: string;
   if (newArticleAutoName) {
@@ -52,10 +52,12 @@ export async function addNote(props: AddArticleProps) {
 }
 
 export function addNoteFunc(props: AddArticleProps) {
-  return addNote(props).then(() => {
-    MessageUtil.success("添加成功");
+  addNote(props).then(article => {
+    // 自动打开
+    MessageUtil.success("新增笔记成功");
+    useHomeEditorStore().openArticle(article)
   }).catch((e) => {
-    MessageUtil.error(e.message);
+    MessageUtil.error("新增笔记失败", e.message);
   });
 }
 
