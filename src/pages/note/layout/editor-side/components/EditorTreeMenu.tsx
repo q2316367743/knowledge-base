@@ -6,19 +6,20 @@ import {
   Edit2Icon, FileExportIcon, FileImportIcon, FillColor1Icon,
   FolderAdd1Icon,
   GestureRightIcon,
-  PlusIcon, RoundIcon
+  PlusIcon, RoundIcon, TerminalWindowIcon
 } from "tdesign-icons-vue-next";
 import {useArticleStore, useFolderStore, useGlobalStore, useVipStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {exportToUTools, exportForEpub} from "@/components/ArticleExport";
-import VipIcon from "@/components/KbIcon/VipIcon.vue";
 import {addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {exportToMd} from "@/pages/note/components/EditorExport";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
 import {setColor} from "@/pages/note/components/HeExtraContext";
+import VipIcon from "@/components/KbIcon/VipIcon.vue";
+import {openNotePreview} from "@/widget/NotePreview";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -67,6 +68,12 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       icon: () => <RoundIcon/>,
       onClick: () => {
         props.select(node.value);
+      }
+    }, {
+      label: '小窗打开',
+      icon: () => <TerminalWindowIcon/>,
+      onClick: () => {
+        openNotePreview(node.value);
       }
     }, {
       label: '重命名',

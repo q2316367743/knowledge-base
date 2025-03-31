@@ -1,36 +1,35 @@
-import {Button, Notification} from "@arco-design/web-vue";
-import {h} from "vue";
+import {Button, NotifyPlugin} from "tdesign-vue-next";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {getItem, setItem} from "@/utils/utools/DbStorageUtil";
 
 export default {
   success(content: string, title?: string): void {
-    Notification.success({
-      content,
+    NotifyPlugin.success({
+      default: content,
       title,
-      closable: true,
+      closeBtn: true,
       duration: 1000
     })
   },
   info(content: string, title?: string): void {
-    Notification.info({
-      content,
+    NotifyPlugin.info({
+      default: content,
       title,
-      closable: true,
+      closeBtn: true,
     })
   },
   warning(content: string, title?: string): void {
-    Notification.warning({
-      content,
+    NotifyPlugin.warning({
+      default: content,
       title,
-      closable: true
+      closeBtn: true
     })
   },
   error(content: string, title?: string): void {
-    Notification.error({
-      content,
+    NotifyPlugin.error({
+      default: content,
       title,
-      closable: true
+      closeBtn: true
     })
   },
 
@@ -39,32 +38,26 @@ export default {
     cancelButtonText: string,
     duration?: number
   }): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       let flag = true;
-      let notificationReturn = Notification.info({
-        content,
+      let notificationReturn = await NotifyPlugin.info({
+        default: content,
         title,
-        closable: true,
+        closeBtn: true,
         duration: config.duration,
-        footer: () => h('div', [
-          h(Button, {
-            type: 'text',
-            onClick: () => {
-              reject();
-              flag = false;
-              notificationReturn.close();
-            }
-          }, () => (config.cancelButtonText)),
-          h(Button, {
-            type: 'primary',
-            onClick: () => {
-              resolve();
-              flag = false;
-              notificationReturn.close();
-            }
-          }, () => (config.confirmButtonText))
-        ]),
-        onClose() {
+        footer: () => <div>
+          <Button theme={'primary'} variant={'text'} onClick={() => {
+            reject();
+            flag = false;
+            notificationReturn.close();
+          }}>{config.cancelButtonText}</Button>
+          <Button theme={'primary'} onClick={() => {
+            resolve();
+            flag = false;
+            notificationReturn.close();
+          }}></Button>
+        </div>,
+        onCloseBtnClick() {
           if (flag) {
             reject();
           }
@@ -78,18 +71,19 @@ export default {
     duration?: number
   }): Promise<void> {
     const {confirmButtonText, duration} = config;
-    return new Promise<void>(resolve => {
+    return new Promise<void>(async resolve => {
       function onConfirm() {
         resolve();
         notificationReturn.close();
       }
-      const notificationReturn = Notification.info({
-        content,
+
+      const notificationReturn = await NotifyPlugin.info({
+        default: content,
         title,
-        closable: true,
+        closeBtn: true,
         duration: duration,
         footer: () => <div style={{textAlign: 'right'}}>
-          <Button type={'primary'} onClick={onConfirm}>
+          <Button theme={'primary'} onClick={onConfirm}>
             {confirmButtonText}
           </Button>
         </div>,
@@ -106,15 +100,16 @@ export default {
     if (getItem(key)) {
       return;
     }
+
     function onRemove() {
-      Notification.remove(key);
+      promise.then(s => s.close());
       setItem(key, true);
     }
-    Notification.warning({
-      content,
+
+    const promise = NotifyPlugin.warning({
+      default: content,
       title,
-      closable: true,
-      closeIconElement: () => <Button type={'text'} onClick={onRemove}>不再提示</Button>
-    })
+      closeBtn: () => <Button theme={'primary'} variant={'text'} onClick={onRemove}>不再提示</Button>
+    });
   },
 }

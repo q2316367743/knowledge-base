@@ -30,7 +30,7 @@
       </template>
       <template #operations="{ node }">
         <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.data.leaf"
-                          @multi="multiCheckStart">
+                          @multi="multiCheckStart" @select="onSelect">
           <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
             <template #icon>
               <icon-more/>

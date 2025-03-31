@@ -37,6 +37,7 @@ import EditorContentExtra from "@/pages/note/layout/editor-content/layout/Editor
 import {useGlobalStore} from "@/store/GlobalStore";
 import {ArticleIndex} from "@/entity/article";
 import {CloseIcon, LockOnIcon} from "tdesign-icons-vue-next";
+import {openNotePreview} from "@/widget/NotePreview";
 
 const {switchCollapsed, closeArticle, closeOther, closeAll} = useHomeEditorStore();
 
@@ -66,6 +67,11 @@ function onContextmenu(e: MouseEvent, article: ArticleIndex) {
     }, {
       label: '关闭全部标签',
       onClick: () => closeAll()
+    }, {
+      divided: 'self'
+    }, {
+      label: '小窗打开',
+      onClick: () => openNotePreview(article.id)
     }, {
       divided: 'self'
     }, {

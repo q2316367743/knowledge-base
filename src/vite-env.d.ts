@@ -23,9 +23,12 @@ declare interface OpenFileOption {
   securityScopedBookmarks?: boolean
 }
 
+type SubWindowChannel = 'chat' | 'preview';
 class SubWindow {
-  constructor(channel: string);
+  constructor(channel: SubWindowChannel);
+
   receiveMsg<T = any>(callback: (msg: T) => void): void;
+
   sendMsg<T = any>(msg: T): void
 }
 
@@ -73,7 +76,7 @@ declare interface Window {
     ipcRenderer: {
       buildSubWindow(channel): SubWindow;
       receiveMessage(event: string, callback: (msg: string) => void): void;
-      sendMessage<T = any>(id: number, channel: 'chat', message: T): void;
+      sendMessage<T = any>(id: number, channel: SubWindowChannel, message: T): void;
     },
     util: {
       uploadToImagePlus(filePath: string, pluginName: string): Promise<string>;

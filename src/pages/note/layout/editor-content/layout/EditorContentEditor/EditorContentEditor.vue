@@ -18,7 +18,7 @@
     <logic-flow v-else-if="editorType === ArticleTypeEnum.LOGIC_FLOW && load"
                 v-model="content" :read-only="preview" :article-id="articleIndex.id"/>
     <super-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                 v-else-if="editorType === ArticleTypeEnum.SUPER_EDITOR && load"/>
+                  v-else-if="editorType === ArticleTypeEnum.SUPER_EDITOR && load"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -44,7 +44,8 @@ import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
 import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 
 const props = defineProps({
-  articleIndex: Object as PropType<ArticleIndex>
+  articleIndex: Object as PropType<ArticleIndex>,
+  preview: Boolean
 });
 const emits = defineEmits(['sendToChat']);
 defineExpose({insertToArticle});
@@ -57,6 +58,9 @@ let contentRev: string | undefined = undefined;
 const mdEditor = ref();
 
 function buildPreview(): boolean {
+  if (typeof props.preview !== 'undefined') {
+    return props.preview;
+  }
   // 判断是否设置了仅预览
   if (props.articleIndex) {
     const {mdEditorEditMode} = useBaseSettingStore()
@@ -108,12 +112,9 @@ watch(() => content.value, value => {
 
 
 async function initArticle(articleId: number) {
-
   if (articleId == 0) {
     return;
   }
-
-
   const {getContent} = useArticleStore();
   // 内容
   const contentWrap = await getContent(articleId);

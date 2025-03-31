@@ -66,6 +66,20 @@
         </t-dropdown-menu>
       </t-dropdown-item>
       <t-dropdown-item v-if="!folder"
+                       @click="$emit('select', id)">
+        <template #prefix-icon>
+          <round-icon/>
+        </template>
+        打开
+      </t-dropdown-item>
+      <t-dropdown-item v-if="!folder"
+                       @click="openNotePreview(id)">
+        <template #prefix-icon>
+          <terminal-window-icon/>
+        </template>
+        小窗打开
+      </t-dropdown-item>
+      <t-dropdown-item v-if="!folder"
                        @click="rename(id, name, !folder)">
         <template #prefix-icon>
           <edit2-icon/>
@@ -151,15 +165,18 @@ import {
   Edit2Icon, FileExportIcon, FileImportIcon, FillColor1Icon,
   FolderAdd1Icon,
   GestureRightIcon,
-  PlusIcon
+  PlusIcon, RoundIcon, TerminalWindowIcon
 } from "tdesign-icons-vue-next";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
 import {setColor} from "@/pages/note/components/HeExtraContext";
+import {openNotePreview} from "@/widget/NotePreview";
 
 export default defineComponent({
   name: 'EditorTreeMenu',
   components: {
+    TerminalWindowIcon,
+    RoundIcon,
     FileExportIcon,
     FileImportIcon,
     FillColor1Icon,
@@ -183,7 +200,7 @@ export default defineComponent({
       default: true,
     }
   },
-  emits: ['multi'],
+  emits: ['multi', 'select'],
   data: () => ({
     articleTypes
   }),
@@ -191,6 +208,7 @@ export default defineComponent({
     ...mapState(useVipStore, ['noteNoVip'])
   },
   methods: {
+    openNotePreview,
     setColor,
     openArticleImportWithUBrowser,
     addNoteFunc,
