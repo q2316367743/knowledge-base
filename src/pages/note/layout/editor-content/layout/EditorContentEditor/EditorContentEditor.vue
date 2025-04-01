@@ -61,7 +61,6 @@ let contentRev: string | undefined = undefined;
 const mdEditor = ref();
 
 function buildPreview(): boolean {
-  console.log(props, typeof props.preview !== 'undefined')
   if (typeof props.preview !== 'undefined') {
     return props.preview;
   }

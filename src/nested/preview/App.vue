@@ -12,6 +12,7 @@ import EditorContentEditor from "@/pages/note/layout/editor-content/layout/Edito
 
 useGlobalStore().initDarkColors();
 
+const title = useTitle();
 const target = ref<ArticleIndex>();
 
 const preview = ref({
@@ -37,6 +38,7 @@ async function _onInit(id: number) {
   for (const item of items) {
     if (item.id === id) {
       target.value = item;
+      title.value = item.name;
       return Promise.resolve();
     }
   }

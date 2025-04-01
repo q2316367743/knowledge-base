@@ -184,7 +184,7 @@ createServer();
     width: 48px;
     z-index: 50;
     overflow: hidden;
-    border-right: 1px solid var(--td-border-level-1-color);
+    border-right: 1px solid var(--td-border-level-2-color);
   }
 
   .app-content {

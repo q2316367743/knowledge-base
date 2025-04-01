@@ -73,15 +73,15 @@ const onStop = () => useChatStore().stop();
 </script>
 <style scoped lang="less">
 .ai-input {
-  border: 1px solid var(--color-border-2);
-  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--td-border-level-2-color);
+  border-radius: var(--td-radius-default);
   padding: 8px;
   transition: border-color 0.3s;
   background-color: var(--td-bg-color-container);
   min-width: 616px;
 
   &:hover {
-    border: 1px solid var(--color-border-3);
+    border: 1px solid var(--td-border-level-1-color);
   }
 
   :deep(.arco-textarea-wrapper) {

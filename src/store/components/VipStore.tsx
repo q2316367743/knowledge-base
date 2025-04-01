@@ -45,9 +45,10 @@ export const useVipStore = defineStore('vip', () => {
     }
     return new Promise<void>((resolve, reject) => {
       try {
-        utools.openPurchase({
+        utools.openPayment({
           goodsId
         }, () => {
+          console.debug(`购买${type}成功`);
           // 重新初始化
           init();
           resolve();

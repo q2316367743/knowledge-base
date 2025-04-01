@@ -31,7 +31,7 @@ export function openAiChatWidget() {
         ubWindow.show();
         if (dev) {
           ubWindow.webContents.executeJavaScript(`location.href = 'http://localhost:5173/chat.html'`)
-            .then(() => console.log("代码执行成功"))
+            .then(() => console.debug("代码执行成功"))
             .catch((e: any) => console.error("代码执行失败", e));
           ubWindow.webContents.openDevTools();
         } else if (useErrorStore().consoleShow) {

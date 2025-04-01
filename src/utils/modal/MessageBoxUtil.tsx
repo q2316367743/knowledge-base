@@ -121,9 +121,9 @@ export default {
           <Paragraph>{content}</Paragraph>
           <Input autofocus={true} v-model={value.value} clearable={true} onEnter={onKeydown}></Input>
         </div>,
-        top: 'auto',
         header: title,
         draggable: true,
+        placement: 'center',
         confirmBtn: {
           default: confirmButtonText,
         },
