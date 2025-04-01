@@ -6,7 +6,7 @@ import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import '@arco-design/web-vue/dist/arco.css';
 import '@arco-design/web-vue/es/message/style/css.js'
 import 'tdesign-vue-next/es/style/index.css';
-import '@/assets/style/theme.css';
+import '@/assets/style/theme.less';
 import '@/assets/style/global.less';
 import 'virtual:uno.css';
 import 'cherry-markdown/dist/cherry-markdown.min.css';

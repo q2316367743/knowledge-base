@@ -1,5 +1,5 @@
 <template>
-  <div class="content-calendar-main">
+  <div class="content-calendar-main kb-calender">
     <div class="w-full h-full" ref="el"></div>
   </div>
 </template>
