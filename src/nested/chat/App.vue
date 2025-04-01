@@ -1,5 +1,6 @@
 <template>
   <div class="chat">
+    <link :href="`/theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
     <header class="chat-header items-center justify-between pl-8px  pr-8px">
       <t-checkbox v-model="embedArticle" :disabled="editorId === 0">是否包含笔记</t-checkbox>
       <div style="overflow: hidden;">
@@ -49,7 +50,7 @@ import {
   ChatInput as TChatInput,
 } from '@tdesign-vue-next/chat';
 import {AiChatMessage} from "./type";
-import {useGlobalStore} from "@/store/GlobalStore";
+import {themeColor, useGlobalStore} from "@/store/GlobalStore";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 import MessageUtil from "@/utils/modal/MessageUtil";

@@ -12,7 +12,7 @@ import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {_createDataByColumns, _createDataNotColumns} from "@/editor/HandsontableEditor/hooks/ExportHook";
 import {isEmptyObj} from "openai/core";
 import {keys} from "radash";
-import {TreeNodeData} from "@arco-design/web-vue";
+import {TreeOptionData} from "tdesign-vue-next/es/common";
 
 interface EpubItem {
     id: string;
@@ -68,7 +68,7 @@ export async function exportForEpub(folder: number) {
 
     // 获取树
     let treeNodeData = listToTreeSpecial(folders, folder);
-    let treeData = new Array<TreeNodeData>();
+    let treeData = new Array<TreeOptionData>();
     treeEach(treeNodeData, treeData, folderMap);
 
     // 查询全部目录结构

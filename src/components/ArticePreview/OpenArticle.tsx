@@ -1,13 +1,11 @@
-import {ArticleIndex} from "@/entity/article";
-import {Button, Drawer, Space} from "@arco-design/web-vue";
-import {useWindowSize} from "@vueuse/core";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
+import {Drawer} from "@arco-design/web-vue";
+import {Button, Space} from "tdesign-vue-next";
 import {ArticleActionEnum} from "@/entity/setting/BaseSetting";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useArticleStore} from "@/store/db/ArticleStore";
+import {useArticleStore, useBaseSettingStore, useHomeEditorStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {IconEdit, IconLeft} from "@arco-design/web-vue/es/icon";
+import {Edit2Icon, ChevronLeftSIcon} from 'tdesign-icons-vue-next';
 import {usePageJumpEvent} from "@/global/BeanFactory";
+import {ArticleIndex} from "@/entity/article";
 import EditorContentContainer
   from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
 
@@ -23,9 +21,9 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
 
   const open = Drawer.open({
     title: () => <div>
-      <Button type={'text'} onClick={openToArticle}>
+      <Button theme={'primary'} variant={'text'} shape={'square'} onClick={openToArticle}>
         {{
-          icon: () => <IconEdit/>
+          icon: () => <Edit2Icon/>
         }}
       </Button>
       <span style={{marginLeft: '7px'}}>{articleIndex.name}</span>
@@ -94,8 +92,8 @@ export function openArticle(id: number) {
 
   const open = Drawer.open({
       title: () => <Space>
-        <Button shape={'circle'} type={'text'} onClick={open.close}>{{
-          icon: () => <IconLeft/>
+        <Button shape={'circle'} theme={'primary'} variant={'text'} onClick={open.close}>{{
+          icon: () => <ChevronLeftSIcon/>
         }}</Button>
         <span class="arco-page-header-title">{article.name}</span>
       </Space>,

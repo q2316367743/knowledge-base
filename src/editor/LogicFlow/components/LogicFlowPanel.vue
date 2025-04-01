@@ -188,9 +188,9 @@ export default defineComponent({
   width: 236px;
   background-color: var(--td-bg-color-container);
   padding: 8px;
-  border: 1px solid var(--color-border-2);
-  border-radius: var(--border-radius-medium);
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--td-border-level-2-color);
+  border-radius: var(--td-radius-default);
+  box-shadow: var(--td-shadow-2);
 }
 
 .short-styles {

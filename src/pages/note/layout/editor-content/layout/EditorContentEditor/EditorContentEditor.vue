@@ -45,10 +45,6 @@ import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,
-  preview: {
-    type: Boolean,
-    default: undefined
-  }
 });
 const emits = defineEmits(['sendToChat']);
 defineExpose({insertToArticle});
@@ -61,9 +57,6 @@ let contentRev: string | undefined = undefined;
 const mdEditor = ref();
 
 function buildPreview(): boolean {
-  if (typeof props.preview !== 'undefined') {
-    return props.preview;
-  }
   // 判断是否设置了仅预览
   if (props.articleIndex) {
     const {mdEditorEditMode} = useBaseSettingStore()

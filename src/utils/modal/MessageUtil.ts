@@ -1,4 +1,4 @@
-import {Message} from '@arco-design/web-vue';
+import {MessagePlugin} from 'tdesign-vue-next';
 import Optional from "@/utils/Optional";
 
 function render(message: string, e?: any) {
@@ -12,8 +12,8 @@ function render(message: string, e?: any) {
 function success(message: any): void;
 function success(message: any, callback: () => void): void;
 function success(message: any, callback?: () => void): void {
-  Message.success({
-    closable: true,
+  MessagePlugin.success({
+    closeBtn: true,
     content: typeof message === 'string' ? message : JSON.stringify(message)
   });
   callback && callback();
@@ -21,8 +21,8 @@ function success(message: any, callback?: () => void): void {
 
 
 function warning(message: string, e?: any): void {
-  Message.warning({
-    closable: true,
+  MessagePlugin.warning({
+    closeBtn: true,
     content: render(message, e)
   });
   console.error(message, e);
@@ -32,8 +32,8 @@ function error(message: string): void;
 function error(message: string, e: any): void;
 function error(message: string, e: any, callback: () => void): void;
 function error(message: string, e?: any, callback?: () => void): void {
-  Message.error({
-    closable: true,
+  MessagePlugin.error({
+    closeBtn: true,
     content: render(message, e)
   });
   console.error(message, e);
@@ -44,8 +44,8 @@ export default {
 
   success,
   info(message: any) {
-    Message.info({
-      closable: true,
+    MessagePlugin.info({
+      closeBtn: true,
       content: typeof message === 'string' ? message : JSON.stringify(message)
     });
   },

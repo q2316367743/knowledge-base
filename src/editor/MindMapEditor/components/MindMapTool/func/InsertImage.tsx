@@ -1,5 +1,4 @@
-import {Form, FormItem, Modal, Input, Button, InputGroup} from "@arco-design/web-vue";
-import {ref} from "vue";
+import {DialogPlugin, Form, FormItem, Input, Button, InputGroup} from "tdesign-vue-next";
 import {MindMapNode} from "@/editor/MindMapEditor/domain";
 import {getImageSize} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
@@ -41,21 +40,22 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
     })
   }
 
-  Modal.open({
-    title: "图片",
+  const p = DialogPlugin({
+    header: "图片",
+    placement: 'center',
     draggable: true,
-    content: () => <Form model={data.value} layout={'vertical'}>
-      <FormItem label={'图片链接'}>
+    default: () => <Form data={data.value} layout={'vertical'}>
+      <FormItem label={'图片链接'} labelAlign={'top'}>
         <InputGroup style={{width: '100%'}}>
           <Input v-model={data.value.link}/>
-          <Button type={'primary'} onClick={handleImageUpload}>本地上传</Button>
+          <Button theme={'primary'} onClick={handleImageUpload}>本地上传</Button>
         </InputGroup>
       </FormItem>
-      <FormItem label={"图片标题（可选）"}>
+      <FormItem label={"图片标题（可选）"} labelAlign={'top'}>
         <Input v-model={data.value.title}/>
       </FormItem>
     </Form>,
-    onOk() {
+    onConfirm() {
       let show = false;
       const timeout = setTimeout(() => {
         NotificationUtil.info("正在获取图片信息，请稍等...");
@@ -76,6 +76,7 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
             })
           })
         });
+      p.destroy();
     }
   })
 }

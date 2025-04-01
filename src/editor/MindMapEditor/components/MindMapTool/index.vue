@@ -82,7 +82,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, PropType, ref, shallowRef} from "vue";
 import MindMap from "simple-mind-map";
 import {
   openInsertImage

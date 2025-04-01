@@ -1,29 +1,28 @@
 <template>
-    <div class="mind-map-context" v-show="show">
-        <div class="item" v-if="hasNode && hasLink" @click="openLink()">打开链接</div>
-        <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertNode()">插入同级节点</div>
-        <div class="item" v-if="hasNode && !isGeneralization" @click="insertChildNode()">插入子级节点</div>
-        <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertParentNode()">插入父节点</div>
-        <div class="item delete" v-if="hasNode" @click="deleteNode()">删除节点</div>
-        <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertGeneralization()">插入概要</div>
-        <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertAssociativeLine()">插入关联线
-        </div>
-        <div class="item" v-if="hasNode" @click="copy()">复制</div>
-        <div class="item" v-if="hasNode" @click="cut()">剪切</div>
-        <div class="item" v-if="hasNode" @click="paste()">黏贴</div>
-        <div class="item" v-if="!hasNode" @click="expandAll()">展开所有</div>
-        <div class="item" v-if="!hasNode" @click="unExpandAll()">收起所有</div>
-        <div class="item" v-if="!hasNode" @click="resetLayout()">一键整理布局</div>
-
+  <div class="mind-map-context" v-show="show">
+    <div class="item" v-if="hasNode && hasLink" @click="openLink()">打开链接</div>
+    <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertNode()">插入同级节点</div>
+    <div class="item" v-if="hasNode && !isGeneralization" @click="insertChildNode()">插入子级节点</div>
+    <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertParentNode()">插入父节点</div>
+    <div class="item delete" v-if="hasNode" @click="deleteNode()">删除节点</div>
+    <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertGeneralization()">插入概要</div>
+    <div class="item" v-if="hasNode && !isRoot && !isGeneralization" @click="insertAssociativeLine()">插入关联线
     </div>
+    <div class="item" v-if="hasNode" @click="copy()">复制</div>
+    <div class="item" v-if="hasNode" @click="cut()">剪切</div>
+    <div class="item" v-if="hasNode" @click="paste()">黏贴</div>
+    <div class="item" v-if="!hasNode" @click="expandAll()">展开所有</div>
+    <div class="item" v-if="!hasNode" @click="unExpandAll()">收起所有</div>
+    <div class="item" v-if="!hasNode" @click="resetLayout()">一键整理布局</div>
+
+  </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, PropType, ref, shallowRef} from "vue";
 import MindMap from "simple-mind-map";
 import {MindMapNode, MindMapNodeData} from "@/editor/MindMapEditor/domain";
 
 const props = defineProps({
-    mindMap: Object as PropType<MindMap>
+  mindMap: Object as PropType<MindMap>
 });
 // 当前右键点击的类型
 const type = ref<'' | 'node' | 'svg'>('')
@@ -36,199 +35,199 @@ const top = ref('0px')
 const show = ref(false);
 
 const hasNode = computed(() => {
-    if (type.value !== 'node') {
-        return false;
-    }
-    if (!currentNode.value) {
-        return false;
-    }
-    return !!currentNode.value;
+  if (type.value !== 'node') {
+    return false;
+  }
+  if (!currentNode.value) {
+    return false;
+  }
+  return !!currentNode.value;
 });
 const hasLink = computed(() => {
-    if (!hasNode.value || !currentNode.value) {
-        return false;
-    }
-    const nodeData = currentNode.value.nodeData.data as MindMapNodeData
-    return !!nodeData.hyperlink;
+  if (!hasNode.value || !currentNode.value) {
+    return false;
+  }
+  const nodeData = currentNode.value.nodeData.data as MindMapNodeData
+  return !!nodeData.hyperlink;
 });
 const isRoot = computed(() => {
-    if (!hasNode.value || !currentNode.value) {
-        return false;
-    }
-    return currentNode.value.isRoot;
+  if (!hasNode.value || !currentNode.value) {
+    return false;
+  }
+  return currentNode.value.isRoot;
 });
 const isGeneralization = computed(() => {
-    if (!hasNode.value || !currentNode.value) {
-        return false;
-    }
-    return currentNode.value.isGeneralization;
+  if (!hasNode.value || !currentNode.value) {
+    return false;
+  }
+  return currentNode.value.isGeneralization;
 });
 
 const hide = () => {
-    show.value = false
-    left.value = '0px';
-    top.value = '0px';
-    type.value = '';
-    currentNode.value = null;
+  show.value = false
+  left.value = '0px';
+  top.value = '0px';
+  type.value = '';
+  currentNode.value = null;
 }
 
 onMounted(() => {
-    if (!props.mindMap) {
-        return;
-    }
-    props.mindMap.on('node_contextmenu', (e: PointerEvent, node: MindMapNode) => {
-        type.value = 'node'
-        left.value = e.offsetX + 10 + 'px'
-        top.value = e.offsetY + 10 + 'px'
-        show.value = true
-        currentNode.value = node
-    });
-    props.mindMap.on('contextmenu', (e: PointerEvent) => {
-        type.value = 'svg'
-        left.value = e.offsetX + 10 + 'px'
-        top.value = e.offsetY + 10 + 'px'
-        show.value = true;
-        currentNode.value = null;
-    })
+  if (!props.mindMap) {
+    return;
+  }
+  props.mindMap.on('node_contextmenu', (e: PointerEvent, node: MindMapNode) => {
+    type.value = 'node'
+    left.value = e.offsetX + 10 + 'px'
+    top.value = e.offsetY + 10 + 'px'
+    show.value = true
+    currentNode.value = node
+  });
+  props.mindMap.on('contextmenu', (e: PointerEvent) => {
+    type.value = 'svg'
+    left.value = e.offsetX + 10 + 'px'
+    top.value = e.offsetY + 10 + 'px'
+    show.value = true;
+    currentNode.value = null;
+  })
 
-    props.mindMap.on('node_click', hide)
-    props.mindMap.on('draw_click', hide)
-    props.mindMap.on('expand_btn_click', hide)
+  props.mindMap.on('node_click', hide)
+  props.mindMap.on('draw_click', hide)
+  props.mindMap.on('expand_btn_click', hide)
 });
 
 
 function openLink() {
-    if (type.value !== 'node') {
-        return;
-    }
-    if (!currentNode.value) {
-        return;
-    }
-    const nodeData = currentNode.value.nodeData.data as MindMapNodeData;
-    const hyperlink = nodeData.hyperlink;
-    if (!hyperlink) {
-        return;
-    }
-    utools.shellOpenExternal(hyperlink);
-    hide();
+  if (type.value !== 'node') {
+    return;
+  }
+  if (!currentNode.value) {
+    return;
+  }
+  const nodeData = currentNode.value.nodeData.data as MindMapNodeData;
+  const hyperlink = nodeData.hyperlink;
+  if (!hyperlink) {
+    return;
+  }
+  utools.shellOpenExternal(hyperlink);
+  hide();
 }
 
 
 // 插入兄弟节点
 const insertNode = () => {
-    if (hasNode.value && !isRoot.value && !isGeneralization.value) {
-        props.mindMap && props.mindMap.execCommand('INSERT_NODE');
-        hide();
-    }
+  if (hasNode.value && !isRoot.value && !isGeneralization.value) {
+    props.mindMap && props.mindMap.execCommand('INSERT_NODE');
+    hide();
+  }
 }
 
 // 插入子节点
 const insertChildNode = () => {
-    if (hasNode.value && !isGeneralization.value) {
-        props.mindMap && props.mindMap.execCommand('INSERT_CHILD_NODE');
-        hide();
-    }
+  if (hasNode.value && !isGeneralization.value) {
+    props.mindMap && props.mindMap.execCommand('INSERT_CHILD_NODE');
+    hide();
+  }
 }
 
 // 插入兄弟节点
 const insertParentNode = () => {
-    if (hasNode.value && !isRoot.value && !isGeneralization.value) {
-        props.mindMap && props.mindMap.execCommand('INSERT_PARENT_NODE');
-        hide();
-    }
+  if (hasNode.value && !isRoot.value && !isGeneralization.value) {
+    props.mindMap && props.mindMap.execCommand('INSERT_PARENT_NODE');
+    hide();
+  }
 }
 
 // 删除节点
 const deleteNode = () => {
-    if (hasNode.value) {
-        props.mindMap && props.mindMap.execCommand('REMOVE_NODE');
-        hide();
-    }
+  if (hasNode.value) {
+    props.mindMap && props.mindMap.execCommand('REMOVE_NODE');
+    hide();
+  }
 }
 // 插入概要
 const insertGeneralization = () => {
-    if (hasNode.value && !isRoot.value && props.mindMap && !isGeneralization.value) {
-        props.mindMap.execCommand('ADD_GENERALIZATION');
-        hide();
-    }
+  if (hasNode.value && !isRoot.value && props.mindMap && !isGeneralization.value) {
+    props.mindMap.execCommand('ADD_GENERALIZATION');
+    hide();
+  }
 }
 // 插入关联线
 const insertAssociativeLine = () => {
-    if (hasNode.value && !isRoot.value && props.mindMap && !isGeneralization.value) {
-        // @ts-ignore
-        props.mindMap.associativeLine.createLineFromActiveNode();
-        hide();
-    }
+  if (hasNode.value && !isRoot.value && props.mindMap && !isGeneralization.value) {
+    // @ts-ignore
+    props.mindMap.associativeLine.createLineFromActiveNode();
+    hide();
+  }
 }
 
 function copy() {
-    if (hasNode.value && props.mindMap) {
-        props.mindMap.renderer.copy();
-        hide();
-    }
+  if (hasNode.value && props.mindMap) {
+    props.mindMap.renderer.copy();
+    hide();
+  }
 }
 
 function cut() {
-    if (hasNode.value && props.mindMap) {
-        props.mindMap.renderer.cut();
-        hide();
-    }
+  if (hasNode.value && props.mindMap) {
+    props.mindMap.renderer.cut();
+    hide();
+  }
 }
 
 function paste() {
-    if (hasNode.value && props.mindMap) {
-        props.mindMap.renderer.paste();
-        hide();
-    }
+  if (hasNode.value && props.mindMap) {
+    props.mindMap.renderer.paste();
+    hide();
+  }
 }
 
 // 重置布局
 const resetLayout = () => {
-    props.mindMap && props.mindMap.execCommand('RESET_LAYOUT');
-    hide();
+  props.mindMap && props.mindMap.execCommand('RESET_LAYOUT');
+  hide();
 }
 
 // 展开所有
 const expandAll = () => {
-    props.mindMap && props.mindMap.execCommand('EXPAND_ALL');
-    hide();
+  props.mindMap && props.mindMap.execCommand('EXPAND_ALL');
+  hide();
 }
 
 // 收起所有
 const unExpandAll = () => {
-    props.mindMap && props.mindMap.execCommand('UNEXPAND_ALL');
-    hide();
+  props.mindMap && props.mindMap.execCommand('UNEXPAND_ALL');
+  hide();
 }
 </script>
 <style scoped lang="less">
 .mind-map-context {
-    position: absolute;
-    left: v-bind(left);
-    top: v-bind(top);
-    background-color: var(--color-fill-2);
-    color: var(--td-text-color-primary);
-    border: 1px solid var(--color-border-2);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
-    width: 160px;
-    font-size: .8rem;
+  position: absolute;
+  left: v-bind(left);
+  top: v-bind(top);
+  background-color: var(--color-fill-2);
+  color: var(--td-text-color-primary);
+  border: 1px solid var(--color-border-2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  width: 160px;
+  font-size: .8rem;
 
-    .item {
-        padding: 7px 10px;
-        border-bottom: 1px solid var(--color-border-2);
-        cursor: pointer;
+  .item {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--color-border-2);
+    cursor: pointer;
 
-        &:hover {
-            background-color: var(--color-fill-3);
-        }
-
-        &.delete {
-            color: rgb(var(--danger-6));
-        }
-
-        &:last-child {
-            border-bottom: none;
-        }
+    &:hover {
+      background-color: var(--color-fill-3);
     }
+
+    &.delete {
+      color: rgb(var(--danger-6));
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 }
 </style>

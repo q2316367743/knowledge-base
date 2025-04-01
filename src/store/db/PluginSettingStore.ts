@@ -2,10 +2,10 @@ import {defineStore} from "pinia";
 import {TreeOptionData} from 'tdesign-vue-next';
 import {contains, group, map, MapWrap} from "@/utils/lang/ArrayUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
 import {getFromOneByAsync, listRecordByAsync, removeOneByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {PluginSettingContent, PluginSettingIndex, PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
+import {FileIcon, FolderIcon} from 'tdesign-icons-vue-next';
 
 export const PLUGIN_FOLDER_KEYS = ['theme', 'markdown-menu', 'markdown-syntax'];
 
@@ -45,45 +45,45 @@ export const usePluginSettingStore = defineStore(LocalNameEnum.SETTING_PLUGIN, (
       value: 'theme',
       label: '主题',
       leaf: false,
-      icon: () => h(IconFolder),
+      icon: () => h(FolderIcon),
       children: itemMap.getOrDefault(PluginSettingTypeEnum.THEME, []).map(item => ({
         value: item.id,
         label: item.name,
         leaf: true,
-        icon: () => h(IconFile)
+        icon: () => h(FileIcon)
       }))
     }, {
       value: 'markdown-menu',
       label: 'markdown菜单',
       leaf: false,
-      icon: () => h(IconFolder),
+      icon: () => h(FolderIcon),
       children: itemMap.getOrDefault(PluginSettingTypeEnum.MARKDOWN_MENU, []).map(item => ({
         value: item.id,
         label: item.name,
         leaf: true,
-        icon: () => h(IconFile)
+        icon: () => h(FileIcon)
       }))
     }, {
       value: 'markdown-syntax',
       label: 'markdown语法',
       leaf: false,
-      icon: () => h(IconFolder),
+      icon: () => h(FolderIcon),
       children: itemMap.getOrDefault(PluginSettingTypeEnum.MARKDOWN_SYNTAX, []).map(item => ({
         value: item.id,
         label: item.name,
         leaf: true,
-        icon: () => h(IconFile)
+        icon: () => h(FileIcon)
       }))
     }, {
       value: 'markdown-template',
       label: 'markdown模板',
       leaf: false,
-      icon: () => h(IconFolder),
+      icon: () => h(FolderIcon),
       children: itemMap.getOrDefault(PluginSettingTypeEnum.MARKDOWN_TEMPLATE, []).map(item => ({
         value: item.id,
         label: item.name,
         leaf: true,
-        icon: () => h(IconFile)
+        icon: () => h(FileIcon)
       }))
     }];
   })

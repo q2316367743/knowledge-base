@@ -1,11 +1,12 @@
 <template>
   <div class="app kb-preview">
-    <editor-content-editor :article-index="target" :preview="true" v-if="target"/>
+    <link :href="`/theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
+    <editor-content-editor :article-index="target" v-if="target"/>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
   </div>
 </template>
 <script lang="ts" setup>
-import {useArticleStore, useGlobalStore} from "@/store";
+import {themeColor, useArticleStore, useGlobalStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
 import EditorContentEditor from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
@@ -37,7 +38,10 @@ async function _onInit(id: number) {
   const items = await useArticleStore().init();
   for (const item of items) {
     if (item.id === id) {
-      target.value = item;
+      target.value = {
+        ...item,
+        preview: true
+      };
       title.value = item.name;
       return Promise.resolve();
     }

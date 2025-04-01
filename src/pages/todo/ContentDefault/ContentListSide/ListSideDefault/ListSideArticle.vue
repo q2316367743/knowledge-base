@@ -11,14 +11,15 @@
       <div class="extra">
         <t-button variant="text" theme="primary" shape="square" size="small" @click.stop="openAddRelationArticle">
           <template #icon>
-            <edit2-icon />
+            <edit2-icon/>
           </template>
         </t-button>
       </div>
     </div>
     <div v-if="visible" class="content-default-article__content">
-      <div class="content-default-article-item" v-for="article in articles" :key="article.id" @click="toArticleByTodo(article.id)">
-        <component :is="buildArticleIcon(article.type, true)" />
+      <div class="content-default-article-item" v-for="article in articles" :key="article.id"
+           @click="toArticleByTodo(article.id)">
+        <component :is="buildArticleIcon(article.type, true)"/>
         <div class="title">{{ article.name }}</div>
       </div>
     </div>
@@ -100,12 +101,12 @@ const toggleVisible = useToggle(visible);
       flex-direction: row;
       align-items: center;
       padding: 6px 8px;
-      border-bottom: 1px solid var(--color-border-1);
+      border-bottom: 1px solid var(--td-border-level-2-color);
       cursor: pointer;
       transition: color 0.3s;
 
       &:hover {
-        color: rgb(var(--arcoblue-6));
+        color: var(--td-brand-color);
       }
 
       .title {
@@ -113,7 +114,6 @@ const toggleVisible = useToggle(visible);
       }
     }
   }
-
 
 
 }

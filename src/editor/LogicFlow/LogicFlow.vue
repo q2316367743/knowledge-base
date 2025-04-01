@@ -22,7 +22,7 @@
                           :elements-style="properties"
                           @set-style="setStyle" @@set-level="setZIndex"/>
       </div>
-      <!-- 右侧配置面板 -->
+      <!-- 左侧配置面板 -->
       <div class="config" v-if="!readOnly">
         <t-dropdown :options="moreOptions" trigger="click">
           <t-button variant="text" theme="primary">更多</t-button>
@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
 import {LogicFlow} from "@logicflow/core";
-import {BpmnElement, BpmnXmlAdapter, Menu, MiniMap, SelectionSelect, Snapshot,} from '@logicflow/extension';
+import {BpmnElement, BpmnXmlAdapter, MiniMap, SelectionSelect, Snapshot,} from '@logicflow/extension';
 import {useElementSize} from "@vueuse/core";
 import {registerCustomElement} from "@/editor/LogicFlow/node";
 import {DefaultTheme} from "@/editor/LogicFlow/theme";

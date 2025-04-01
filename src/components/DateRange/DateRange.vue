@@ -1,5 +1,5 @@
 <template>
-  <ASpace class="date-range">
+  <t-space class="date-range" size="small">
     <IconCalendar/>
     <span v-if="!hasDate">
       日期
@@ -7,10 +7,9 @@
     </span>
     <span v-else-if="hasSign">{{ props.start }}</span>
     <span v-else>{{ props.start }} - {{ props.end }}</span>
-  </ASpace>
+  </t-space>
 </template>
 <script lang="ts" setup>
-import {Space as ASpace} from '@arco-design/web-vue';
 import {IconCalendar} from '@arco-design/web-vue/es/icon';
 
 const props = defineProps({

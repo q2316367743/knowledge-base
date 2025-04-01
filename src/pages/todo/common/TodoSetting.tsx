@@ -1,4 +1,5 @@
-import {Checkbox, Drawer, Form, FormItem, Radio, RadioGroup, TypographyParagraph} from "@arco-design/web-vue";
+import {Drawer} from "@arco-design/web-vue";
+import {Checkbox, Form, FormItem, Radio, RadioGroup, Paragraph} from "tdesign-vue-next";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
@@ -9,30 +10,29 @@ export function openTodoSetting() {
   if (!todoCategory) {
     return;
   }
-  const hides = ref<Array<string>>([]);
   const config = ref(todoCategory);
   Drawer.open({
     title: '待办设置',
     okText: "保存",
     width: 400,
-    content: () => <Form model={config.value} layout={'vertical'}>
-      <TypographyParagraph>
+    content: () => <Form data={config.value} >
+      <Paragraph>
         <Checkbox v-model={config.value.hideOfCompleteOrAbandon}>
           隐藏已完成/放弃
         </Checkbox>
-      </TypographyParagraph>
-      <TypographyParagraph>
+      </Paragraph>
+      <Paragraph>
         <Checkbox v-model={config.value.hideOfArticle}>
           隐藏关联笔记
         </Checkbox>
-      </TypographyParagraph>
-      <TypographyParagraph>
+      </Paragraph>
+      <Paragraph>
         <Checkbox v-model={config.value.showAddGroupBtn}
                   disabled={config.value.todoListLayout !== TodoListLayoutEnum.CARD}>
           显示新增分组按钮
         </Checkbox>
-      </TypographyParagraph>
-      <FormItem label="布局">
+      </Paragraph>
+      <FormItem label="布局" labelAlign={'top'}>
         <RadioGroup v-model={config.value.todoListLayout} defaultValue={TodoListLayoutEnum.DEFAULT}>
           <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
           <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
