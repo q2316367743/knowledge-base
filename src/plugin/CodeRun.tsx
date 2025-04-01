@@ -4,10 +4,11 @@ import {isEmptyString} from "@/utils/lang/FieldUtil";
 import Constant from "@/global/Constant";
 import {template} from "radash";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {Button, Drawer, Space, Spin, Typography} from "@arco-design/web-vue";
+import {Drawer} from "@arco-design/web-vue";
+import {Button, Space, Loading} from "tdesign-vue-next";
 import {extname} from "@/utils/file/FileUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
-import {IconStop} from "@arco-design/web-vue/es/icon";
+import {StopCircleIcon} from "tdesign-icons-vue-next";
 
 export const codeRunSetting = useUtoolsDbStorage<Record<string, string>>(LocalNameEnum.SETTING_CODE_RUN, {
   '\.js$': "node {{filePath}}",
@@ -69,8 +70,8 @@ export async function codeRun(fileName: string, content: string) {
 
   Drawer.open({
     title: () => <Space>
-      <Button type={'outline'} status={'danger'} onClick={onAbort} disabled={!loading.value}>{{
-        icon: () => <IconStop/>,
+      <Button variant={'outline'} theme={'danger'} shape={'round'} size={'small'} onClick={onAbort} disabled={!loading.value}>{{
+        icon: () => <StopCircleIcon/>,
         default: () => "停止"
       }}</Button>
       <div>「{fileName}」</div>
@@ -80,12 +81,12 @@ export async function codeRun(fileName: string, content: string) {
     placement: 'bottom',
     height: '60vh',
     footer: false,
-    content: () => <Typography style={{width: '100%'}}>
+    content: () => <div class={'w-full'}>
       <pre>{result.value}</pre>
       {loading.value && <div style={{width: '100%', padding: '10px'}}>
-        <Spin loading={loading.value} tip={'正在运行中'} style={{width: '100%'}}></Spin>
+        <Loading loading={loading.value} text={'正在运行中'} class={'w-full'}></Loading>
       </div>}
-    </Typography>
+    </div>
   })
 }
 

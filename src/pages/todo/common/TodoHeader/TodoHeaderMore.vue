@@ -18,7 +18,7 @@
         </template>
         关联笔记
       </t-dropdown-item>
-      <t-dropdown-item :disabled="disabled" @click="todoSearch()">
+      <t-dropdown-item :disabled="disabled" @click="searchTodo()">
         <template #prefix-icon>
           <icon-search/>
         </template>
@@ -40,12 +40,12 @@
   </t-dropdown>
 </template>
 <script lang="ts" setup>
+import {MoreIcon} from "tdesign-icons-vue-next";
 import {openTodoExport} from "@/pages/todo/common/TodoExport";
 import {openAddRelationArticle} from "@/pages/todo/common/AddRelationArticle";
-import {todoSearch} from "@/pages/todo/common/TodoSearch";
+import {searchTodo} from "@/pages/todo/common/SearchTodo";
 import {openTodoSetting} from "@/pages/todo/common/TodoSetting";
 import {openEditTodoGroupFunc} from "@/pages/todo/common/TodoGroupFunc";
-import {MoreIcon} from "tdesign-icons-vue-next";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const disabled = computed(() => useTodoWrapStore().categoryId === 0);

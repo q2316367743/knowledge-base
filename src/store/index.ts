@@ -3,6 +3,7 @@ export * from './ModuleStore';
 export * from './components/VipStore';
 export * from './components/HomeEditorStore';
 export * from './components/ChatStore';
+export * from './components/TodoWrapStore'
 export * from './db/ArticleStore';
 export * from './db/FolderStore';
 export * from './db/CategoryStore';

@@ -1,19 +1,18 @@
-// @ts-nocheck
+import {Drawer} from "@arco-design/web-vue";
 import {
   Button,
   Col,
   DatePicker,
-  Drawer,
   Input,
-  InputTag,
   List,
-  ListItem,
+  ListItem, Loading,
   Option,
   Row,
   Select,
   Space,
-  Tag
-} from "@arco-design/web-vue";
+  Tag,
+  TagInput
+} from 'tdesign-vue-next';
 import dayjs from "dayjs";
 import {
   handlePriorityText,
@@ -25,10 +24,9 @@ import {
   TodoItemPriority,
   TodoItemStatus
 } from "@/entity/todo/TodoItem";
+import {useTodoItemStore, useTodoWrapStore} from "@/store";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {randomColor} from "@/utils/BrowserUtil";
-import {useTodoItemStore} from "@/store/db/TodoItemStore";
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 
 interface FormInterface {
@@ -59,7 +57,7 @@ function tagSearch(sources: Array<string>, targets: Array<string>): boolean {
   return true;
 }
 
-export function todoSearch() {
+export function searchTodo() {
   // 获取全部的待办列表
   const todoList = ref(new Array<ListItemData>());
   const loading = ref(false);
@@ -141,7 +139,6 @@ export function todoSearch() {
         const {completeTime} = attr;
         if (completeTimeStart && completeTimeStart !== '' && completeTime) {
           hasCondition = true;
-          console.log(dayjs(completeTime).isAfter(completeTimeStart, 'day'))
           if (!dayjs(completeTime).isAfter(completeTimeStart, 'day')) {
             continue;
           }
@@ -193,32 +190,32 @@ export function todoSearch() {
     footer: false,
     content: () => <div>
       <Row gutter={[8, 8]}>
-        <Col span={11}>
-          <Input placeholder="搜索待办事项" v-model={form.value.title} allowClear></Input>
+        <Col span={12}>
+          <Input placeholder="搜索待办事项" v-model={form.value.title} clearable={true}></Input>
         </Col>
         <Col span={4}>
           <Select v-model={form.value.status} placeholder="状态">
-            <Option value={0}>全部状态</Option>
-            <Option value={TodoItemStatus.TODO}>待办</Option>
-            <Option value={TodoItemStatus.DOING}>进行中</Option>
-            <Option value={TodoItemStatus.COMPLETE}>已完成</Option>
-            <Option value={TodoItemStatus.ABANDON}>已放弃</Option>
+            <Option value={0} label={'全部状态'}/>
+            <Option value={TodoItemStatus.TODO} label={'待办'}/>
+            <Option value={TodoItemStatus.DOING} label={'进行中'}/>
+            <Option value={TodoItemStatus.COMPLETE} label={'已完成'}/>
+            <Option value={TodoItemStatus.ABANDON} label={'已放弃'}/>
           </Select>
         </Col>
         <Col span={4}>
           <Select v-model={form.value.priority} placeholder="优先级">
-            <Option value={0}>全部优先级</Option>
-            <Option value={TodoItemPriority.NONE}>无</Option>
-            <Option value={TodoItemPriority.FLOOR}>低</Option>
-            <Option value={TodoItemPriority.MIDDLE}>中</Option>
-            <Option value={TodoItemPriority.HIGH}>高</Option>
+            <Option value={0} label={'全部优先级'}/>
+            <Option value={TodoItemPriority.HIGH} label={'高'}/>
+            <Option value={TodoItemPriority.MIDDLE} label={'中'}/>
+            <Option value={TodoItemPriority.FLOOR} label={'低'}/>
+            <Option value={TodoItemPriority.NONE} label={'无'}/>
           </Select>
         </Col>
-        <Col span={3}>
+        <Col span={4}>
           <div style="text-align: right">
-            <Space>
-              <Button type="primary" onClick={handleSearch}>搜索</Button>
-              <Button type="primary" onClick={() => more.value = !more.value}>更多</Button>
+            <Space size={'small'}>
+              <Button theme="primary" onClick={handleSearch}>搜索</Button>
+              <Button theme="default" onClick={() => more.value = !more.value}>更多</Button>
             </Space>
           </div>
         </Col>
@@ -226,14 +223,14 @@ export function todoSearch() {
       {more.value && <div class={'mt-4'}>
         <Row gutter={[8, 8]}>
           <Col span={12}>
-            <InputTag v-model={form.value.tags} placeholder="标签" allowClear></InputTag>
+            <TagInput v-model={form.value.tags} placeholder="标签" clearable={true}></TagInput>
           </Col>
           <Col span={6}>
             <DatePicker
               placeholder="创建时间开始"
               v-model={form.value.createTimeStart}
               style="width: 100%"
-              allowClear
+              clearable={true}
             />
           </Col>
           <Col span={6}>
@@ -241,7 +238,7 @@ export function todoSearch() {
               placeholder="创建时间结束"
               v-model={form.value.createTimeEnd}
               style="width: 100%"
-              allowClear
+              clearable={true}
             />
           </Col>
           <Col span={6}>
@@ -249,7 +246,7 @@ export function todoSearch() {
               placeholder="更新时间开始"
               v-model={form.value.updateTimeStart}
               style="width: 100%"
-              allowClear
+              clearable={true}
             />
           </Col>
           <Col span={6}>
@@ -257,7 +254,7 @@ export function todoSearch() {
               placeholder="更新时间结束"
               v-model={form.value.updateTimeEnd}
               style="width: 100%"
-              allowClear
+              clearable={true}
             />
           </Col>
           <Col span={6}>
@@ -265,7 +262,7 @@ export function todoSearch() {
               placeholder="完成时间开始"
               v-model={form.value.completeTimeStart}
               style="width: 100%"
-              allowClear
+              clearable={true}
             />
           </Col>
           <Col span={6}>
@@ -273,42 +270,43 @@ export function todoSearch() {
               placeholder="完成时间结束"
               v-model={form.value.completeTimeEnd}
               style="width: 100%"
-              allowClear
+              clearable={true}
             />
           </Col>
         </Row>
       </div>}
-      <List loading={loading.value} style="margin-top: 16px"
-            paginationProps={{pageSize: 10, total: todoList.value.length}}>
-        {todoList.value.map(item => (
-          <ListItem key={item.index.id}>{{
-            default: () => <>
-              <div onClick={() => openTodoItemSetting(item.index)}
-                   style={{color: 'rgb(var(--arcoblue-6))', cursor: 'pointer'}}>{item.index.title}</div>
-              <Space class={'mt-8'}>
-                <Tag
-                  color={handleSimplePriorityColor(item.index.priority)}>优先级：{handlePriorityText(item.index.priority)}</Tag>
-                <Tag color={'arcoblue'}>状态：{handleStatusText(item.index.status)}</Tag>
-              </Space>
-              <Space class={'mt-8'}>
-                <Tag
-                  color={'orange'}>创建：{toDateTimeString(item.index.createTime, 'YYYY-MM-DD HH:mm')}</Tag>
-                <Tag
-                  color={'purple'}>更新：{toDateTimeString(item.index.updateTime, 'YYYY-MM-DD HH:mm')}</Tag>
-                {item.index.status === TodoItemStatus.COMPLETE &&
-                  item.attr.completeTime &&
+      <Loading loading={loading.value} text={'搜索中'}>
+        <List style="margin-top: 16px" split={true}>
+          {todoList.value.map(item => (
+            <ListItem key={item.index.id}>{{
+              default: () => <div class={'flex flex-col'}>
+                <div onClick={() => openTodoItemSetting(item.index)}
+                     style={{color: 'rgb(var(--arcoblue-6))', cursor: 'pointer'}}>{item.index.title}</div>
+                <Space class={'mt-8'} size={'small'}>
                   <Tag
-                    color={'green'}>完成：{toDateTimeString(item.attr.completeTime, 'YYYY-MM-DD HH:mm')}</Tag>}
-              </Space>
-              {item.attr.tags.length > 0 && <>
-                <Space wrap style={{marginTop: '8px'}}>
-                  {item.attr.tags.map(tag => <Tag key={tag} color={randomColor(tag)}>{tag}</Tag>)}
+                    color={handleSimplePriorityColor(item.index.priority)}>优先级：{handlePriorityText(item.index.priority)}</Tag>
+                  <Tag color={'arcoblue'}>状态：{handleStatusText(item.index.status)}</Tag>
                 </Space>
-              </>}
-            </>,
-          }}</ListItem>))
-        }
-      </List>
+                <Space class={'mt-8'} size={'small'}>
+                  <Tag
+                    color={'orange'}>创建：{toDateTimeString(item.index.createTime, 'YYYY-MM-DD HH:mm')}</Tag>
+                  <Tag
+                    color={'purple'}>更新：{toDateTimeString(item.index.updateTime || item.index.createTime, 'YYYY-MM-DD HH:mm')}</Tag>
+                  {item.index.status === TodoItemStatus.COMPLETE &&
+                    item.attr.completeTime &&
+                    <Tag
+                      color={'green'}>完成：{toDateTimeString(item.attr.completeTime, 'YYYY-MM-DD HH:mm')}</Tag>}
+                </Space>
+                {item.attr.tags.length > 0 && <>
+                  <Space style={{marginTop: '8px'}} size={'small'}>
+                    {item.attr.tags.map(tag => <Tag key={tag} color={randomColor(tag)}>{tag}</Tag>)}
+                  </Space>
+                </>}
+              </div>,
+            }}</ListItem>))
+          }
+        </List>
+      </Loading>
     </div>
   })
 }

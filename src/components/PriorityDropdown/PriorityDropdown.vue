@@ -28,11 +28,8 @@
 
 </template>
 <script lang="ts" setup>
-import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
-import {computed} from "vue";
-import {Dropdown as ADropdown, Doption as ADoption, Button as AButton} from "@arco-design/web-vue";
-import {IconThunderbolt} from "@arco-design/web-vue/es/icon";
 import {FlagIcon} from "tdesign-icons-vue-next";
+import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 
 const priority = defineModel({
   type: Number as PropType<TodoItemPriority>,
