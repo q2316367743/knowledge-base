@@ -14,6 +14,7 @@ export function openNotePreview(id: number) {
       minWidth: 800,
       minHeight: 600,
       hasShadow: false,
+      alwayOnTop: true,
       backgroundColor: '#00000000',
       webPreferences: {
         preload: 'sub-window.js',

@@ -1,5 +1,13 @@
-import {DatePicker, Form, FormItem, Modal, Radio, RadioGroup, RangePicker, Textarea} from "@arco-design/web-vue";
-import {ref, watch} from "vue";
+import {
+  DatePicker,
+  Form,
+  FormItem,
+  DialogPlugin,
+  RadioGroup,
+  Textarea,
+  RadioButton,
+  DateRangePicker
+} from "tdesign-vue-next";
 import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
@@ -22,57 +30,59 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
     title: '',
     priority: priority || TodoItemPriority.NONE,
   });
-  const range = ref([start || '', end || '']);
+  const range = ref([start || '', end || start || '']);
   const isRange = ref(false);
   watch(() => range.value[0], (newValue) => {
     if (!isRange.value) {
       range.value[1] = newValue;
     }
   });
-  Modal.open({
-    title: '新增待办',
-    content: () => <Form model={record.value} layout={'vertical'}>
-      <FormItem label={'标题'}>
-        <Textarea autoSize={{minRows: 2, maxRows: 8}} v-model={record.value.title}
+  const p = DialogPlugin({
+    header: '新增待办',
+    default: () => <Form data={record.value}>
+      <FormItem label={'标题'} labelAlign={'top'}>
+        <Textarea autosize={{minRows: 2, maxRows: 8}} v-model={record.value.title}
                   placeholder={'请输入待办内容'}/>
       </FormItem>
-      <FormItem label={'优先级'}>
-        <RadioGroup v-model={record.value.priority} type={'button'}>
-          <Radio value={TodoItemPriority.HIGH}
-                 style={{color: handlePriorityColor(TodoItemPriority.HIGH)}}>高优先级</Radio>
-          <Radio value={TodoItemPriority.MIDDLE}
-                 style={{color: handlePriorityColor(TodoItemPriority.MIDDLE)}}>中优先级</Radio>
-          <Radio value={TodoItemPriority.FLOOR}
-                 style={{color: handlePriorityColor(TodoItemPriority.FLOOR)}}>低优先级</Radio>
-          <Radio value={TodoItemPriority.NONE}
-                 style={{color: handlePriorityColor(TodoItemPriority.NONE)}}>无优先级</Radio>
+      <FormItem label={'优先级'} labelAlign={'top'}>
+        <RadioGroup v-model={record.value.priority} variant={"default-filled"}>
+          <RadioButton value={TodoItemPriority.HIGH}
+                       style={{color: handlePriorityColor(TodoItemPriority.HIGH)}}>高优先级</RadioButton>
+          <RadioButton value={TodoItemPriority.MIDDLE}
+                       style={{color: handlePriorityColor(TodoItemPriority.MIDDLE)}}>中优先级</RadioButton>
+          <RadioButton value={TodoItemPriority.FLOOR}
+                       style={{color: handlePriorityColor(TodoItemPriority.FLOOR)}}>低优先级</RadioButton>
+          <RadioButton value={TodoItemPriority.NONE}
+                       style={{color: handlePriorityColor(TodoItemPriority.NONE)}}>无优先级</RadioButton>
         </RadioGroup>
       </FormItem>
-      <FormItem>
+      <FormItem labelAlign={'top'}>
         {{
-          label: () => <RadioGroup v-model={isRange.value} type={'button'}>
-            <Radio value={false}>时间</Radio>
-            <Radio value={true}>时间段</Radio>
+          label: () => <RadioGroup v-model={isRange.value} variant={"default-filled"}>
+            <RadioButton value={false}>时间</RadioButton>
+            <RadioButton value={true}>时间段</RadioButton>
           </RadioGroup>,
           default: () => {
             if (isRange.value) {
-              return <RangePicker v-model={range.value}></RangePicker>
+              return <DateRangePicker allowInput={true} clearable={true} v-model={range.value}
+                                      class={'mt-6px'}></DateRangePicker>
             } else {
-              return <DatePicker v-model={range.value[0]}></DatePicker>
+              return <DatePicker v-model={range.value[0]} class={'mt-6px'}></DatePicker>
             }
           }
         }}
       </FormItem>
     </Form>,
     draggable: true,
-    okText: '新增',
-    async onBeforeOk() {
+    confirmBtn: '新增',
+    async onConfirm() {
       try {
         await useTodoWrapStore().addItem(record.value, {
           start: range.value[0],
           end: range.value[1]
         }, group)
         MessageUtil.success("新增成功");
+        p.destroy();
         return true;
       } catch (e) {
         MessageUtil.error("新增失败", e);

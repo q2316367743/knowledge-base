@@ -12,7 +12,7 @@
       </div>
       <div class="tool-btn-text">前进</div>
     </div>
-    <a-divider direction="vertical"/>
+    <div class="tool-divider" />
     <div class="tool-btn" @click="insertNode()" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
          title="同级节点">
       <div class="tool-btn-icon">
@@ -33,7 +33,7 @@
       </div>
       <div class="tool-btn-text">删除节点</div>
     </div>
-    <a-divider direction="vertical"/>
+    <div class="tool-divider" />
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setImage()" title="图片">
       <div class="tool-btn-icon">
         <image-icon size="18px"/>
@@ -64,7 +64,7 @@
       </div>
       <div class="tool-btn-text">图标</div>
     </div>
-    <a-divider direction="vertical"/>
+    <div class="tool-divider" />
     <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''" title="概要"
          @click="insertGeneralization()">
       <div class="tool-btn-icon">
@@ -277,6 +277,13 @@ const insertAssociativeLine = () => {
       cursor: pointer;
       color: var(--td-text-color-primary);
     }
+  }
+
+  .tool-divider {
+    height: 32px;
+    margin-right: 20px;
+    border-left: 1px solid var(--td-border-level-1-color);
+    margin-top: 4px;
   }
 }
 </style>

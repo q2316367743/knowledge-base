@@ -1,14 +1,10 @@
+import {Drawer, Divider, Trigger} from "@arco-design/web-vue";
+import {
+  Button, Checkbox, DatePicker, DateRangePicker, Input, Popconfirm,
+  RadioButton, RadioGroup, Space
+} from "tdesign-vue-next";
 import {TodoItemAttr, TodoItemIndex} from "@/entity/todo/TodoItem";
 import {useUmami} from "@/plugin/umami";
-import {
-  Button, DatePicker, Divider,
-  Drawer,
-  Input, Popconfirm,
-  Radio,
-  RadioGroup, RangePicker,
-  Space,
-  Trigger
-} from "@arco-design/web-vue";
 import {clone} from "@/utils/lang/ObjectUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -16,9 +12,8 @@ import RichTextEditor from "@/editor/RichTextEditor/index.vue";
 import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
 import PriorityDropdown from "@/components/PriorityDropdown/PriorityDropdown.vue";
 import TagGroup from "@/components/TagGroup/TagGroup.vue";
-import DateRange from "@/components/DateRange/DateRange.vue";
+import DateRange from '@/components/DateRange/DateRange.vue';
 import './model.less';
-import {Checkbox, Switch} from "tdesign-vue-next";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
   if (attr.start === '' && attr.end === '') {
@@ -89,14 +84,14 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
             </Button>,
             content: () => <div class={'todo-item-setting__date'}>
               <div>
-                <RadioGroup v-model={isRange.value} type={'button'}>
-                  <Radio value={false}>时间</Radio>
-                  <Radio value={true}>时间段</Radio>
+                <RadioGroup v-model={isRange.value} variant={"default-filled"}>
+                  <RadioButton value={false}>时间</RadioButton>
+                  <RadioButton value={true}>时间段</RadioButton>
                 </RadioGroup>
               </div>
               <div style={{marginTop: '8px'}}>
-                {isRange.value ? <RangePicker v-model={range.value}></RangePicker> :
-                  <DatePicker v-model={range.value[0]}></DatePicker>}
+                {isRange.value ? <DateRangePicker v-model={range.value} clearable={true}></DateRangePicker> :
+                  <DatePicker v-model={range.value[0]} clearable={true}></DatePicker>}
               </div>
             </div>
           }}</Trigger>
@@ -120,13 +115,14 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
       </div>
     </div>,
     footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>
-      <Popconfirm content={'是否删除此待办，删除后不可恢复'} onOk={onRemove} okText={'删除'}
-                  okButtonProps={{status: 'danger'}}>
-        <Button type={'primary'} status={'danger'}>删除</Button>
+      <Popconfirm content={'是否删除此待办，删除后不可恢复'} onConfirm={onRemove} confirmBtn={{
+        default: '删除', theme: 'danger'
+      }}>
+        <Button theme={'danger'}>删除</Button>
       </Popconfirm>
       <Space>
-        <Button onClick={onClose}>取消</Button>
-        <Button type={'primary'} onClick={onBeforeOk}>保存</Button>
+        <Button theme={'default'} onClick={onClose}>取消</Button>
+        <Button theme={'primary'} onClick={onBeforeOk}>保存</Button>
       </Space>
     </div>
   });
