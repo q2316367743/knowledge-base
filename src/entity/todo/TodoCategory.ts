@@ -143,7 +143,7 @@ function _listToTree(tree: TreeOptionData, pid: number, categories: Array<TodoCa
       value: c.id,
       label: c.name,
       children: [],
-      isLeaf: c.type === TodoCategoryTypeEnum.TODO,
+      leaf: c.type === TodoCategoryTypeEnum.TODO,
     } as TreeOptionData));
   tree.children.forEach(item => _listToTree(item, item.value as number, categories));
 }

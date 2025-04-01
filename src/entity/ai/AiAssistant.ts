@@ -30,7 +30,7 @@ export function buildAiAssistant(): AiAssistant {
     createBy: Date.now(),
     name: '',
     system: '',
-    aiServiceId: '',
+    aiServiceId: '1',
     model: '',
     temperature: 1,
     topP: 1,

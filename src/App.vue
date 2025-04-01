@@ -12,7 +12,7 @@
     </t-loading>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
     <update-check/>
-    <link :href="`/theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
+    <link :href="`./theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
   </div>
 </template>
 <script lang="ts" setup>

@@ -10,7 +10,7 @@ export const useRelationMenu = (editor: ShallowRef<Cherry | undefined>) => {
       const articleId = ref<number>();
       const modalReturn = DialogPlugin({
         header: '请选择笔记',
-        default: () => <Select v-model={articleId.value} allowSearch allowClear>
+        default: () => <Select v-model={articleId.value} clearable={true} filterable={true}>
           {articleIndexes.map(index => <Option value={index.id} label={index.name}>{index.name}</Option>)}
         </Select>,
         onConfirm() {
@@ -27,7 +27,7 @@ export const useRelationMenu = (editor: ShallowRef<Cherry | undefined>) => {
 
       function insert(title: string) {
         editor.value && editor.value.insertValue(`[[${title}]]`);
-        modalReturn.close();
+        modalReturn.destroy();
       }
 
     }

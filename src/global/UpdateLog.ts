@@ -2,6 +2,30 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.5.0',
+    sign: 250,
+    time: '2025-04-01',
+    items: [{
+      label: LogItemEnum.MAJOR,
+      content: '新增买断笔记类型：超级笔记'
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: '优化待办中的日历视图，现在的日历视图更加好看使用'
+    },{
+      label: LogItemEnum.ADD,
+      content: '新增网页剪报功能，可以直接讲网页转为markdown笔记。「需要升级uTools7.0.0体验」'
+    }, {
+      label: LogItemEnum.ADD,
+      content: 'AI服务新增uTools内置AI，无需设置即可使用'
+    }, {
+      label: LogItemEnum.ADD,
+      content: '新增主题设置，内置多种主题选择。「设置-基础设置-主题设置」'
+    }, {
+      label: LogItemEnum.OPTIMIZATION,
+      content: '组件库升级'
+    }]
+  },
+  {
     version: '2.4.2',
     sign: 242,
     time: '2025-03-03',

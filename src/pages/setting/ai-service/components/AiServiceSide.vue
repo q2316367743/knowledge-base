@@ -57,7 +57,7 @@ function handleRemove(id: string) {
 .ai-service-item {
   padding: 4px 8px;
   margin-top: 4px;
-  border: 1px solid var(--td-border-level-1-color);
+  border: 1px solid var(--td-border-level-2-color);
   border-radius: var(--td-radius-medium);
   transition: all 0.3s;
   width: calc(100% - 24px);
@@ -68,8 +68,8 @@ function handleRemove(id: string) {
 
   &.checked {
     background-color: var(--td-bg-color-component-hover);
-    border: 1px solid var(--color-border-3);
-    color: rgb(var(--primary-6));
+    border: 1px solid var(--td-border-level-1-color);
+    color: var(--td-brand-color);
   }
 }
 </style>

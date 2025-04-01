@@ -1,6 +1,6 @@
 <template>
   <div class="chat">
-    <link :href="`/theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
+    <link :href="`./theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
     <header class="chat-header items-center justify-between pl-8px  pr-8px">
       <t-checkbox v-model="embedArticle" :disabled="editorId === 0">是否包含笔记</t-checkbox>
       <div style="overflow: hidden;">

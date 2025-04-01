@@ -39,12 +39,13 @@
                   </t-button>
                 </t-space>
               </template>
-              <t-list :split="true" class="max-h-350px">
+              <t-list :split="true" style="max-height: calc(100vh - 186px);">
                 <t-list-item v-for="(item, index) in form.models" :key="index">
-                  {{ typeof item === 'string' ? item : item.name }}
+                  <div v-if="typeof item === 'string'">{{item}}</div>
+                  <t-list-item-meta v-else :image="item.icon" :title="item.label" :description="item.description" />
                   <template #action v-if="typeof item !== 'string'">
                     <t-tag theme="success">
-                      <span>{{ item.point }}</span>
+                      <span>{{ item.cost }}</span>
                       <span class="ml-4px">能量</span>
                     </t-tag>
                   </template>

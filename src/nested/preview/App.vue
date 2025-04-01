@@ -1,6 +1,6 @@
 <template>
   <div class="app kb-preview">
-    <link :href="`/theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
+    <link :href="`./theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
     <editor-content-editor :article-index="target" v-if="target"/>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
   </div>

@@ -8,9 +8,13 @@ export enum AiServiceType {
 
 export interface AiServiceModel {
   id: string;
-  name: string;
-  // 消耗点数，uTools才有
-  point: number;
+  label: string;
+  // 图标
+  icon: string;
+  // 描述
+  description: string;
+  // 消耗量
+  cost: number;
 }
 
 /**

@@ -38,7 +38,7 @@ function buildForm(form: Ref<AiAssistant>) {
       label: m,
       value: m
     } : {
-      label: m.name,
+      label: m.label,
       value: m.id
     }))
   })));

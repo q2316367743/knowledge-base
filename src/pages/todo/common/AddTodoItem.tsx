@@ -65,9 +65,9 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
           default: () => {
             if (isRange.value) {
               return <DateRangePicker allowInput={true} clearable={true} v-model={range.value}
-                                      class={'mt-6px'}></DateRangePicker>
+                                      style={{marginTop: '6px'}}/>
             } else {
-              return <DatePicker v-model={range.value[0]} class={'mt-6px'}></DatePicker>
+              return <DatePicker v-model={range.value[0]} style={{marginTop: '6px'}}/>
             }
           }
         }}

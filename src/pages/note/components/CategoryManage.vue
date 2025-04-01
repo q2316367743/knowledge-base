@@ -4,20 +4,21 @@
       <t-input :clearable="true" v-model="keyword" placeholder="请输入分类名称"/>
     </div>
     <div class="container">
-      <a-tree :data="treeData" block-node :virtual-list-props="{height: height}" draggable @drop="onDrop($event)">
-        <template #extra="nodeData">
+      <t-tree :data="treeData" :scroll="{type: 'virtual'}" :draggable="true" :line="true" :style="{height: height}"
+              @drop="onDrop($event)">
+        <template #operations="{node}">
           <t-space size="small">
-            <t-button theme="primary" size="small" @click="add(nodeData.key)">
+            <t-button theme="primary" size="small" @click="add(node.value)">
               <template #icon>
                 <icon-plus/>
               </template>
             </t-button>
-            <t-button theme="primary" size="small" @click="update(nodeData.key)">
+            <t-button theme="primary" size="small" @click="update(node.value)">
               <template #icon>
                 <icon-edit/>
               </template>
             </t-button>
-            <t-popconfirm content="确定要删除此分类？" confirm-btn="删除" @confirm="remove(nodeData.key)">
+            <t-popconfirm content="确定要删除此分类？" confirm-btn="删除" @confirm="remove(node.value)">
               <t-button theme="danger" size="small">
                 <template #icon>
                   <icon-delete/>
@@ -26,20 +27,20 @@
             </t-popconfirm>
           </t-space>
         </template>
-      </a-tree>
+      </t-tree>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {TreeNodeData} from "@arco-design/web-vue";
+import {TreeOptionData} from "tdesign-vue-next/es/common";
 
 const size = useWindowSize();
 
 const keyword = ref('');
-const categoryTree = computed<Array<TreeNodeData>>(() => useCategoryStore().categoryTree);
-const height = computed(() => size.height.value - 40 - 7 - 48 - 6);
+const categoryTree = computed<Array<TreeOptionData>>(() => useCategoryStore().categoryTree);
+const height = computed(() => (size.height.value - 40 - 7 - 48 - 6) + 'px');
 
 
 function add(pid: number) {
@@ -64,18 +65,18 @@ function remove(id: number) {
     .catch(e => MessageUtil.error("删除失败", e));
 }
 
-const treeData = computed<Array<TreeNodeData>>(() => {
+const treeData = computed<Array<TreeOptionData>>(() => {
   if (!keyword.value) return categoryTree.value;
   return searchData(keyword.value);
 })
 
 function searchData(keyword: string) {
-  const loop = (data: Array<TreeNodeData>) => {
-    const result: Array<TreeNodeData> = [];
+  const loop = (data: Array<TreeOptionData>) => {
+    const result: Array<TreeOptionData> = [];
     data.forEach(item => {
-      if ((item.title || '').toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+      if ((item.label as string || '').toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
         result.push({...item});
-      } else if (item.children) {
+      } else if (item.children && Array.isArray(item.children)) {
         const filterData = loop(item.children);
         if (filterData.length) {
           result.push({
@@ -91,9 +92,9 @@ function searchData(keyword: string) {
   return loop(categoryTree.value);
 }
 
-function onDrop(data: { e: DragEvent, dragNode: TreeNodeData, dropNode: TreeNodeData }) {
-  if (typeof data.dragNode.key !== 'undefined' && typeof data.dropNode.key !== 'undefined') {
-    useCategoryStore().drop(data.dragNode.key as number, data.dropNode.key as number)
+function onDrop(data: { e: DragEvent, dragNode: TreeOptionData, dropNode: TreeOptionData }) {
+  if (typeof data.dragNode.value !== 'undefined' && typeof data.dropNode.value !== 'undefined') {
+    useCategoryStore().drop(data.dragNode.value as number, data.dropNode.value as number)
       .then(() => MessageUtil.success("移动成功"))
       .catch(e => MessageUtil.error("移动失败", e));
 

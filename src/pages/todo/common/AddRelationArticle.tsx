@@ -17,8 +17,9 @@ export function openAddRelationArticle() {
       suffixIcon: () => <SearchIcon/>
     }}</Input>,
     default: () => <Tree v-model={checkedKeys.value} data={treeNodeData.value}
-                         expandAll={false} checkable={true}
-                         line={true} virtualListProps={{height: size.height.value / 2}}>{{
+                         expandAll={false} checkable={true} style={{height: (size.height.value / 2) + 'px'}}
+                         line={true} scroll={{type: 'virtual'}}>{{
+      // @ts-ignore
       label: ({node}) => <div class={'flex items-center'}>
         <div>
           <node.data.icon/>

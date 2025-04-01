@@ -1,5 +1,5 @@
 <template>
-  <page-layout title="ai服务">
+  <page-layout title="ai服务" class="setting-ai-service">
     <template #extra>
       <div>
         <span>推荐使用</span>
@@ -7,14 +7,14 @@
         <span>，无需科学上网，即可使用。</span>
       </div>
     </template>
-    <t-layout class="h-full">
-      <t-aside style="border-right: 1px solid var(--td-border-level-1-color)">
+    <div class="h-full flex">
+      <div class="setting-ai-service__side">
         <ai-service-side v-model="currentId"/>
-      </t-aside>
-      <t-content style="background-color: var(--td-bg-color-container)">
+      </div>
+      <div class="setting-ai-service__content">
         <ai-service-content :current-id="currentId" @save="handleSave"/>
-      </t-content>
-    </t-layout>
+      </div>
+    </div>
   </page-layout>
 </template>
 <script lang="ts" setup>
@@ -30,5 +30,24 @@ function handleSave(id: string) {
 const toApi = () => utools.shellOpenExternal("https://api.v3.cm/register?aff=6A4f");
 </script>
 <style scoped lang="less">
+.setting-ai-service {
+  position: relative;
 
+  .setting-ai-service__side {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    border-right: 1px solid var(--td-border-level-1-color);
+  }
+
+  .setting-ai-service__content {
+    position: absolute;
+    top: 0;
+    left: 201px;
+    right: 0;
+    bottom: 0;
+  }
+}
 </style>
