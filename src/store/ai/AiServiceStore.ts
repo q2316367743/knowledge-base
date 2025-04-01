@@ -3,9 +3,7 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {AiService, AiServiceModel, AiServiceType} from "@/entity/ai/AiService";
 import {map} from "@/utils/lang/ArrayUtil";
 import {versionLess} from "@/utils/lang/FieldUtil";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import NotificationUtil from "@/utils/modal/NotificationUtil";
-import {getItem, listByAsync, saveListByAsync, setItem} from "@/utils/utools/DbStorageUtil";
+import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 
 interface UToolsModel {
   id: string;
@@ -32,7 +30,6 @@ const DEFAULT_AI_SERVICE: AiService = {
 
 
 export const useAiServiceStore = defineStore('ai-service', () => {
-  const now = Date.now();
 
   const list = ref<Array<AiService>>([]);
   const rev = ref<string>();
