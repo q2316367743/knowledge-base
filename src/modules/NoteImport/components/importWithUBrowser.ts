@@ -21,7 +21,16 @@ export async function importWithUBrowser(url: string, props?: NoteImportRule): P
     }
   }
   // 获取html
-  uBrowser = uBrowser.evaluate(() => document.body.outerHTML);
+  uBrowser = uBrowser.evaluate(() => {
+    // 处理img可能存在的问题，有些图片的链在data-src中
+    document.querySelectorAll('img').forEach(img => {
+      const dataSrc = img.getAttribute('data-src');
+      if (dataSrc) {
+        img.setAttribute('src', dataSrc);
+      }
+    });
+    return document.body.outerHTML
+  });
   uBrowser = uBrowser.markdown(body || 'body');
   const results = await uBrowser.run({
     show: false
