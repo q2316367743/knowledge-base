@@ -3,7 +3,7 @@ import {
   AppIcon,
   CheckRectangleIcon,
   DeleteIcon,
-  Edit2Icon, FileExportIcon, FileImportIcon, FillColor1Icon,
+  Edit2Icon, ExtensionIcon, FileExportIcon, FileImportIcon, FillColor1Icon,
   FolderAdd1Icon,
   GestureRightIcon,
   PlusIcon, RoundIcon, TerminalWindowIcon
@@ -12,7 +12,14 @@ import {useArticleStore, useFolderStore, useGlobalStore, useVipStore} from "@/st
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {exportToUTools, exportForEpub} from "@/components/ArticleExport";
-import {addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
+import {
+  addFolder,
+  articleTypes,
+  extraNoteTypes,
+  mainNoteTypes,
+  remove,
+  rename
+} from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {exportToMd} from "@/pages/note/components/EditorExport";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
@@ -57,6 +64,8 @@ export interface EditorTreeNode {
 }
 
 export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
+  e.preventDefault();
+  e.stopPropagation();
   const {noteNoVip} = useVipStore();
   const {node, more = true, multi} = props;
 
@@ -115,16 +124,32 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     items.push({
       label: '新建笔记',
       icon: () => <PlusIcon/>,
-      children: articleTypes.map(type => ({
-        label: () => <div class={'flex items-center'}>
-          <span>{type.name}</span>
-          {(type.vip && noteNoVip) && <VipIcon class={'ml-8px'}/>}
-        </div>,
-        icon: () => <type.icon/>,
-        onClick: () => {
-          addNoteFunc({pid: node.value, type: type.key});
+      children: [
+        ...mainNoteTypes.map(type => ({
+          label: () => <div class={'flex items-center'}>
+            <span>{type.name}</span>
+            {(type.vip && noteNoVip) && <VipIcon class={'ml-8px'}/>}
+          </div>,
+          icon: () => <type.icon/>,
+          onClick: () => {
+            addNoteFunc({pid: node.value, type: type.key});
+          }
+        })),
+        {
+          label: '更多笔记',
+          icon: () => <ExtensionIcon/>,
+          children: extraNoteTypes.map(type => ({
+            label: () => <div class={'flex items-center'}>
+              <span>{type.name}</span>
+              {(type.vip && noteNoVip) && <VipIcon class={'ml-8px'}/>}
+            </div>,
+            icon: () => <type.icon/>,
+            onClick: () => {
+              addNoteFunc({pid: node.value, type: type.key});
+            }
+          }))
         }
-      }))
+      ]
     }, {
       label: '新建文件夹',
       icon: () => <FolderAdd1Icon/>,

@@ -17,6 +17,7 @@ declare module 'vue' {
     EmptyResult: typeof import('./src/components/Result/EmptyResult.vue')['default']
     FileCode: typeof import('./src/components/KbIcon/FileCode.vue')['default']
     FileDrauu: typeof import('./src/components/KbIcon/FileDrauu.vue')['default']
+    FileEncrypt: typeof import('./src/components/KbIcon/FileEncrypt.vue')['default']
     FileHandsontable: typeof import('./src/components/KbIcon/FileHandsontable.vue')['default']
     FileLct: typeof import('./src/components/KbIcon/FileLct.vue')['default']
     FileMarkdown: typeof import('./src/components/KbIcon/FileMarkdown.vue')['default']

@@ -19,6 +19,8 @@
                 v-model="content" :read-only="preview" :article-id="articleIndex.id"/>
     <super-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                   v-else-if="editorType === ArticleTypeEnum.SUPER_EDITOR && load"/>
+    <encrypt-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                   v-else-if="editorType === ArticleTypeEnum.ENCRYPT_EDITOR && load"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -42,6 +44,7 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
 import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
+import EncryptEditor from "@/editor/EncryptEditor/EncryptEditor.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,

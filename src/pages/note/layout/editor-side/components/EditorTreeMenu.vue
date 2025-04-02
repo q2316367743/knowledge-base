@@ -8,7 +8,7 @@
         </template>
         新增笔记
         <t-dropdown-menu>
-          <t-dropdown-item v-for="articleType in articleTypes" :key="articleType.key"
+          <t-dropdown-item v-for="articleType in mainNoteTypes" :key="articleType.key"
                            @click="addNoteFunc({pid: id, type: articleType.key})">
             <template #prefix-icon>
               <component :is="articleType.icon"/>
@@ -17,6 +17,24 @@
               <div>{{ articleType.name }}</div>
               <vip-icon v-if="articleType.vip && noteNoVip" class="ml-8px"/>
             </div>
+          </t-dropdown-item>
+          <t-dropdown-item>
+            <template #prefix-icon>
+              <extension-icon />
+            </template>
+            更多笔记
+            <t-dropdown-menu>
+              <t-dropdown-item v-for="articleType in extraNoteTypes" :key="articleType.key"
+                               @click="addNoteFunc({pid: id, type: articleType.key})">
+                <template #prefix-icon>
+                  <component :is="articleType.icon"/>
+                </template>
+                <div class="flex items-center">
+                  <div>{{ articleType.name }}</div>
+                  <vip-icon v-if="articleType.vip && noteNoVip" class="ml-8px"/>
+                </div>
+              </t-dropdown-item>
+            </t-dropdown-menu>
           </t-dropdown-item>
         </t-dropdown-menu>
       </t-dropdown-item>
@@ -146,7 +164,7 @@
   </t-dropdown>
 </template>
 <script lang="ts">
-import {addFolder, articleTypes, remove, rename} from "@/pages/note/components/he-context";
+import {addFolder, extraNoteTypes, mainNoteTypes, remove, rename} from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
@@ -162,7 +180,7 @@ import {
   AppIcon,
   CheckRectangleIcon,
   DeleteIcon,
-  Edit2Icon, FileExportIcon, FileImportIcon, FillColor1Icon,
+  Edit2Icon, ExtensionIcon, FileExportIcon, FileImportIcon, FillColor1Icon,
   FolderAdd1Icon,
   GestureRightIcon,
   PlusIcon, RoundIcon, TerminalWindowIcon
@@ -175,6 +193,7 @@ import {openNotePreview} from "@/widget/NotePreview";
 export default defineComponent({
   name: 'EditorTreeMenu',
   components: {
+    ExtensionIcon,
     TerminalWindowIcon,
     RoundIcon,
     FileExportIcon,
@@ -202,7 +221,7 @@ export default defineComponent({
   },
   emits: ['multi', 'select'],
   data: () => ({
-    articleTypes
+    mainNoteTypes, extraNoteTypes
   }),
   computed: {
     ...mapState(useVipStore, ['noteNoVip'])

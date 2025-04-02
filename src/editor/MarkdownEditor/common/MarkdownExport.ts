@@ -13,19 +13,23 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
   createArticleExport(id, [{
     key: 1,
     name: 'markdown',
-    desc: '默认格式'
+    desc: '默认格式',
+    extname: 'md'
   }, {
     key: 2,
     name: 'PDF',
-    desc: '易于打印'
+    desc: '易于打印',
+    extname: 'pdf'
   }, {
     key: 3,
     name: '图片',
-    desc: '易于分享'
+    desc: '易于分享',
+    extname: 'png'
   }, {
     key: 4,
     name: 'html',
-    desc: '易于复制'
+    desc: '易于复制',
+    extname: 'html'
   }]).then(async res => {
     if (res.type === 1) {
       // 导出图片
@@ -109,6 +113,107 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
 <body class="cherry-markdown knowledge-base">
 ${doc.body.innerHTML}
 </body>
+<script>
+// 页面加载完成后生成目录
+document.addEventListener('DOMContentLoaded', function() {
+  // 创建目录容器
+  const tocContainer = document.createElement('div');
+  tocContainer.className = 'toc-container';
+  tocContainer.style.cssText = 'position: fixed; right: 20px; top: 80px; max-width: 250px; max-height: 80vh; overflow-y: auto; background-color: #fff; padding: 15px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;';
+  
+  // 创建目录标题
+  const tocTitle = document.createElement('div');
+  tocTitle.textContent = '目录';
+  tocTitle.style.cssText = 'font-weight: bold; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #eee;';
+  tocContainer.appendChild(tocTitle);
+  
+  // 创建目录列表
+  const tocList = document.createElement('ul');
+  tocList.style.cssText = 'list-style: none; padding: 0; margin: 0;';
+  tocContainer.appendChild(tocList);
+  
+  // 获取所有标题元素
+  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  
+  // 如果没有标题，不显示目录
+  if (headings.length === 0) {
+    return;
+  }
+  
+  // 为每个标题添加ID（如果没有）
+  headings.forEach((heading, index) => {
+    if (!heading.id) {
+      heading.id = 'heading-' + index;
+    }
+  });
+  
+  // 生成目录
+  const tocItems = [];
+  headings.forEach((heading) => {
+    // 获取标题级别
+    const level = parseInt(heading.tagName.substring(1));
+    
+    // 创建目录项
+    const listItem = document.createElement('li');
+    listItem.style.cssText = \`margin: 5px 0; padding-left: \${(level - 1) * 15}px; font-size: \${16 - (level - 1)}px;\`;
+    
+    // 创建链接
+    const link = document.createElement('a');
+    link.textContent = heading.textContent;
+    link.href = '#' + heading.id;
+    link.style.cssText = 'text-decoration: none; color: #333; display: block;';
+    
+    // 添加点击事件
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      heading.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    listItem.appendChild(link);
+    tocList.appendChild(listItem);
+    tocItems.push(listItem);
+  });
+  
+  // 添加目录到页面
+  document.body.appendChild(tocContainer);
+  
+  // 添加滚动监听，高亮当前可见的标题
+  window.addEventListener('scroll', function() {
+    // 获取当前可见的标题
+    let currentHeadingIndex = 0;
+    headings.forEach((heading, index) => {
+      const rect = heading.getBoundingClientRect();
+      if (rect.top <= 100) { // 标题在视口顶部以下100px认为是当前标题
+        currentHeadingIndex = index;
+      }
+    });
+    
+    // 高亮当前标题对应的目录项
+    tocItems.forEach((item, index) => {
+      if (index === currentHeadingIndex) {
+        item.firstChild.style.fontWeight = 'bold';
+        item.firstChild.style.color = '#1e88e5';
+      } else {
+        item.firstChild.style.fontWeight = 'normal';
+        item.firstChild.style.color = '#333';
+      }
+    });
+  });
+  
+  // 添加目录切换按钮
+  const toggleButton = document.createElement('div');
+  toggleButton.textContent = '≡';
+  toggleButton.style.cssText = 'position: fixed; right: 20px; top: 20px; width: 30px; height: 30px; background-color: #1e88e5; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 1001; font-size: 20px;';
+  
+  let tocVisible = true;
+  toggleButton.addEventListener('click', function() {
+    tocVisible = !tocVisible;
+    tocContainer.style.display = tocVisible ? 'block' : 'none';
+  });
+  
+  document.body.appendChild(toggleButton);
+});
+</script>
 </html>
 `, res.title + '.html', 'text/html');
       }

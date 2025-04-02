@@ -129,7 +129,8 @@ function onExport(id: number) {
       createArticleExport(id, [{
         key: 1,
         name: '代码文件',
-        desc: '默认导出'
+        desc: '默认导出',
+        extname: ''
       }]).then(res => {
         download(model.getValue(), res.title, 'text');
       });

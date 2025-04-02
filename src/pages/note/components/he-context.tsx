@@ -28,11 +28,13 @@ import FileCode from '@/components/KbIcon/FileCode.vue';
 import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
 import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 import FileLct from "@/components/KbIcon/FileLct.vue";
+import FileEncrypt from '@/components/KbIcon/FileEncrypt.vue';
 import {buildMindMapData} from "@/editor/MindMapEditor/constant";
 import {buildLogicFlowData} from "@/editor/LogicFlow/constants";
-import {StickyNoteIcon} from "tdesign-icons-vue-next";
+import {LockOnIcon, StickyNoteIcon} from "tdesign-icons-vue-next";
 import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
 import {addNote} from "@/utils/component/AddNoteUtil";
+import {buildEncryptEditorData} from "@/editor/EncryptEditor/EncryptEditorType";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -74,7 +76,7 @@ export const articleTextTypes: Array<ArticleTypeList> = [
     lock: FileMindMap
   }]
 
-export const articleTypes: Array<ArticleTypeList> = [
+export const mainNoteTypes: Array<ArticleTypeList> = [
   ...articleTextTypes, {
     key: ArticleTypeEnum.HANDSONTABLE,
     name: '表格',
@@ -86,6 +88,19 @@ export const articleTypes: Array<ArticleTypeList> = [
     icon: shallowRef(IconBranch),
     lock: FileLct
   }];
+export const extraNoteTypes: Array<ArticleTypeList> = [
+  {
+    key: ArticleTypeEnum.ENCRYPT_EDITOR,
+    name: '加密笔记',
+    icon: shallowRef(LockOnIcon),
+    lock: FileEncrypt
+  }
+]
+
+export const articleTypes: Array<ArticleTypeList> = [
+  ...mainNoteTypes,
+  ...extraNoteTypes
+]
 export const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
@@ -138,6 +153,8 @@ export async function buildDefaultContent(name: string, type: ArticleTypeEnum): 
         time: Date.now(),
         blocks: []
       };
+      case ArticleTypeEnum.ENCRYPT_EDITOR:
+      return buildEncryptEditorData();
     default:
       return "";
   }

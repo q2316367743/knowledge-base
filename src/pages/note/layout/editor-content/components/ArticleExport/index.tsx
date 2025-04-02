@@ -4,7 +4,6 @@ import {
 } from "@arco-design/web-vue";
 import {
   Input,
-  InputGroup,
   DialogPlugin
 } from 'tdesign-vue-next';
 import './index.css';
@@ -15,6 +14,7 @@ export interface ExportItem {
   key: number;
   name: string;
   desc: string;
+  extname: string;
 }
 
 export interface ExportResult {
@@ -27,6 +27,7 @@ export function createArticleExport(id: number, exportItems: Array<ExportItem>):
   const articleIndex = useArticleStore().articleMap.get(id);
   const titleWrap = ref(articleIndex ? articleIndex.name : '');
   const type = ref(1);
+  const extname = computed(() => (`${exportItems.find(e => e.key === type.value)?.extname}`));
   return new Promise(resolve => {
     const plugin = DialogPlugin({
       header: '导出',
@@ -44,12 +45,12 @@ export function createArticleExport(id: number, exportItems: Array<ExportItem>):
         });
         plugin.destroy();
       },
-      default: () => <div>
-        <InputGroup class={'mb-7px items-center'}>
-          <span style="width: 160px">导出文件名称：</span>
-          <Input v-model={titleWrap.value} clearable={true}/>
-        </InputGroup>
-        <br/>
+      default: () => <div class={'mt-8px'}>
+        <div class={'pl-5px pr-20px'}>
+          <Input v-model={titleWrap.value} label={'文件名称：'} align={'right'} placeholder={'请输入文件名'}>{{
+            suffix: () => extname.value ? <div>.{extname.value}</div> : <div></div>
+          }}</Input>
+        </div>
         <RadioGroup v-model={type.value}>
           {exportItems.map(item => <Radio value={item.key}>
             {{

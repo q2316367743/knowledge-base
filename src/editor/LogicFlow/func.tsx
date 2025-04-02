@@ -20,7 +20,8 @@ export function onLogicFlowExport(id: number, articleId: number, lf?: LogicFlow)
   createArticleExport(id, [{
     key: 1,
     name: '图片',
-    desc: '暂不支持'
+    desc: '暂不支持',
+    extname: 'png'
   }]).then(res => {
     if (!lf) {
       MessageUtil.error('请先创建流程图！');

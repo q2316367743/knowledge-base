@@ -94,18 +94,18 @@ function add() {
   padding: 20px 20px 12px;
 
   &__title {
-    font-size: 2rem;
     font-weight: bold;
+    font-size: var(--td-line-height-headline-small);
   }
 
   &__time {
     color: var(--td-text-color-secondary);
     margin-top: 24px;
-    font-size: 0.9rem;
+    font-size: var(--td-font-size-body-medium);
   }
 
   &__content {
-    margin-top: 32px;
+    margin-top: 16px;
   }
 
   &__option {

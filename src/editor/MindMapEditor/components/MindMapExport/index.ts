@@ -5,23 +5,28 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 const items = [{
   key: 1,
   name: '图片',
-  desc: '适合查看分享'
+  desc: '适合查看分享',
+  extname: 'png'
 }, {
   key: 2,
   name: 'SVG',
-  desc: '可缩放矢量图形'
+  desc: '可缩放矢量图形',
+  extname: 'svg'
 }, {
   key: 3,
   name: 'PDF',
-  desc: '适合打印'
+  desc: '适合打印',
+  extname: 'pdf'
 }, {
   key: 4,
   name: 'Markdown',
-  desc: '便于其他软件打开'
+  desc: '便于其他软件打开',
+  extname: 'md'
 }, {
   key: 5,
   name: 'XMind',
-  desc: 'XMind格式'
+  desc: 'XMind格式',
+  extname: 'xmind'
 }]
 
 export function openMindMapExport(mindMap: MindMap, id: number) {

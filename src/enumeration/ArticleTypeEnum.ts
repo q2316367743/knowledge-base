@@ -50,9 +50,14 @@ export enum ArticleTypeEnum {
   LOGIC_FLOW = 9,
 
   /**
-   * 拆机编辑器
+   * 超级编辑器
    */
   SUPER_EDITOR = 10,
+
+  /**
+   * 加密编辑器
+   */
+  ENCRYPT_EDITOR = 11,
 
 }
 
