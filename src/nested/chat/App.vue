@@ -8,14 +8,14 @@
       </div>
     </header>
     <main class="chat-main">
-      <t-chat
+      <chat
         layout="single"
         style="height: calc(100vh - 57px)"
         :clear-history="chatList.length > 0 && !isStreamLoad"
         @clear="clearConfirm"
       >
         <template v-for="(item, index) in chatList" :key="index">
-          <t-chat-item
+          <chat-item
             :name="item.name"
             :role="item.role"
             :content="item.content"
@@ -23,43 +23,35 @@
             :text-loading="index === 0 && loading"
           >
             <template #content>
+              <chat-reasoning v-if="item.reasoning" :text="item.reasoning" :think="item.think"/>
               <chat-content v-if="item.role === 'assistant'" :value="item.content" style="padding: 12px 15px;"/>
-              <t-chat-content v-else :content="item.content" :role="item.role"/>
+              <chat-content v-else :content="item.content" :role="item.role"/>
             </template>
             <template v-if="!isStreamLoad" #actions>
-              <t-chat-action :operation-btn="['replay', 'copy']"
-                             @operation="(type, { e }) => handleOperation(type, { e, index })"
+              <chat-action :operation-btn="['replay', 'copy']"
+                           @operation="(type, { e }) => handleOperation(type, { e, index })"
               />
             </template>
-          </t-chat-item>
+          </chat-item>
         </template>
         <template #footer>
-          <t-chat-input @send="inputEnter" @stop="onStop" :stop-disabled="isStreamLoad"/>
+          <chat-input @send="inputEnter" @stop="onStop" :stop-disabled="isStreamLoad"/>
         </template>
-      </t-chat>
+      </chat>
     </main>
   </div>
 </template>
 <script lang="ts" setup>
-import OpenAI from "openai";
-import {
-  Chat as TChat,
-  ChatAction as TChatAction,
-  ChatItem as TChatItem,
-  ChatContent as TChatContent,
-  ChatInput as TChatInput,
-} from '@tdesign-vue-next/chat';
+import {Chat, ChatAction, ChatInput, ChatItem} from "@tdesign-vue-next/chat";
 import {AiChatMessage} from "./type";
-import {themeColor, useGlobalStore} from "@/store/GlobalStore";
-import {useAiServiceStore} from "@/store/ai/AiServiceStore";
-import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {copyText} from "@/utils/utools/NativeUtil";
-import {buildMessages, getCurrentTime} from "@/nested/chat/util";
+import {ChatMessageParam} from "@/types/Chat";
+import {themeColor, useAiAssistantStore, useAiServiceStore, useArticleStore, useGlobalStore} from "@/store";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {ChatMessageParam} from "@/types/Chat";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {copyText} from "@/utils/utools/NativeUtil";
+import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
+import {buildMessages, getCurrentTime} from "@/nested/chat/util";
 import ChatAssistantSelect from "@/nested/chat/components/ChatAssistantSelect.vue";
 
 useGlobalStore().initDarkColors();
@@ -83,7 +75,7 @@ const chatList = ref<Array<AiChatMessage>>([{
 }]);
 const editorId = ref(0);
 const assistantId = useUtoolsKvStorage(LocalNameEnum.KEY_WIDGET_CHAT_ASSISTANT, "");
-const fetchCancel = shallowRef<AbortController>();
+const fetchCancel = shallowRef<AskToOpenAiAbort>();
 
 let subWindow = window.preload.ipcRenderer.buildSubWindow('chat');
 subWindow.receiveMsg(msg => {
@@ -116,12 +108,6 @@ function inputEnter(value: string) {
   if (!service) {
     return MessageUtil.error("AI 服务未找到");
   }
-
-  const openAi = new OpenAI({
-    baseURL: service.url,
-    apiKey: service.key,
-    dangerouslyAllowBrowser: true
-  })
 
   // 获取上一个
   const oldAssistantId = chatList.value[0]?.assistantId;
@@ -174,20 +160,25 @@ function inputEnter(value: string) {
       }
     }
     messages.push(...buildMessages(chatList.value))
-    const response = await openAi.chat?.completions.create({
-      model: assistant.model,
+
+    await askToAi({
+      service,
+      assistant,
       messages,
-      stream: true,
-      temperature: assistant.temperature,
-      top_p: assistant.topP,
-    });
-    fetchCancel.value = response.controller;
-    // 流式处理结果
-    for await (const chunk of response) {
-      const content = chunk.choices[0]?.delta?.content || '';
-      chatList.value[0].content += content;
-      loading.value = false;
-    }
+      onAppend: (content, t) => {
+        chatList.value[0].think = t;
+        if (t) {
+          chatList.value[0].reasoning += content;
+        } else {
+          chatList.value[0].content += content;
+        }
+        loading.value = false;
+      },
+      onAborted: (abort) => {
+        fetchCancel.value = abort;
+      }
+    })
+
   })()
     .catch(e => { // 注意错误类型是否为中断
       if (e.name === "AbortError") {

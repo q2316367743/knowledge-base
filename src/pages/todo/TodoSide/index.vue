@@ -106,7 +106,7 @@ function onClick(context: {
       // 已展开，关闭
       expanded.value.splice(index, 1);
     } else {
-      expanded.value.push(node.value);
+      expanded.value.push(node.value!);
     }
     return;
   }

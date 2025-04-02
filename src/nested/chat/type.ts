@@ -5,4 +5,6 @@ export interface AiChatMessage {
   datetime?: string;
   content: string;
   assistantId?: string
+  reasoning?: string;
+  think?:boolean
 }

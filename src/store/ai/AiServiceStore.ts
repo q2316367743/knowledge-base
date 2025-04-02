@@ -60,7 +60,6 @@ export const useAiServiceStore = defineStore('ai-service', () => {
     }
     // 初始化uTools模型
     uToolsModels.value = await utools.allAiModels() as Array<UToolsModel>;
-    console.log('uToolsModels', uToolsModels.value)
   }
 
   async function saveOrUpdate(aiService: AiService) {
