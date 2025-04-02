@@ -154,7 +154,7 @@ export default class CodeTool implements BlockTool {
         }
 
         return () => (
-          <>
+          <div class={'ce-code-wrapper'}>
             <div class="ce-code-header flex justify-between p-8px items-center">
               <div class={'flex items-center'}>
                 {edit.value ?
@@ -185,7 +185,7 @@ export default class CodeTool implements BlockTool {
               <MonacoEditor v-model={content.value} readOnly={readOnly} language={language.value}/>
               {!readOnly && <div class="ce-code-resize-handle" onMousedown={onMouseDown}>···</div>}
             </div>
-          </>
+          </div>
         );
       }
     });

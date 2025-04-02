@@ -164,7 +164,7 @@ const onMouseUp = () => {
   min-height: 350px;
   position: relative;
   background-color: var(--td-bg-color-container);
-  margin: 8px 0;
+  padding: 8px 0;
   border: 1px solid var(--td-border-level-1-color);
   border-radius: var(--td-radius-default);
 

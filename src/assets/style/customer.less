@@ -87,65 +87,73 @@ body[arco-theme=dark] {
   background-color: var(--td-bg-color-container);
 
   .cherry-markdown :not(pre) > code {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    color: rgb(var(--red-6)) !important;
+    background-color: var(--td-bg-color-component) !important;
+    color: var(--td-error-color) !important;
     font-family: "JetBrainsMono", "楷体", "宋体", serif;
+    padding: 0 4px;
+    margin: 0 4px;
   }
 
   .cherry-flex-toc {
-    background-color: var(--color-bg-2) !important;
+    background-color: var(--td-bg-color-container) !important;
     color: var(--td-text-color-primary) !important;
+    box-shadow: var(--td-shadow-3);
 
     .cherry-toc-one-a {
       color: var(--td-text-color-primary) !important;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 
       &:hover {
-        color: rgb(var(--arcoblue-5)) !important;
+        color: var(--td-brand-color) !important;
       }
 
       &.current {
-        color: rgb(var(--arcoblue-6)) !important;
+        color: var(--td-brand-color-active) !important;
       }
     }
   }
 
   .cherry-dropdown {
     color: var(--td-text-color-primary) !important;
-    background-color: var(--color-bg-2) !important;
+    background-color: var(--td-bg-color-component) !important;
+
+    .cherry-dropdown-item {
+      &:hover {
+        background-color: var(--td-bg-color-component-hover) !important;
+      }
+    }
 
     .cherry-toolbar-button {
       color: var(--td-text-color-primary) !important;
-      background-color: var(--color-fill-2) !important;
+      background-color: var(--td-bg-color-component-hover) !important;
     }
 
     .cherry-insert-formula-tab {
       &.active {
-        color: var(--color-text-3) !important;
-        border: 1px solid var(--color-text-3) !important;
+        color: var(--td-text-color-placeholder) !important;
+        border: 1px solid var(--td-text-color-placeholder) !important;
       }
     }
 
     .cherry-insert-formula-categary__func {
       color: var(--td-text-color-primary) !important;
-      background-color: var(--color-fill-2) !important;
+      background-color: var(--td-bg-color-component) !important;
     }
 
     .cherry-insert-formula-categary__func-item {
       color: var(--td-text-color-primary) !important;
-      background-color: var(--color-fill-3) !important;
+      background-color: var(--td-bg-color-component) !important;
     }
   }
 }
 
 .cherry-markdown.theme__dark table th, .cherry-markdown.theme__dark .cherry-table th {
-  background-color: var(--color-fill-2) !important;
+  background-color: var(--td-bg-color-component) !important;
 }
 
 .codex-editor {
   .ce-toolbar__plus, .ce-toolbar__settings-btn {
     &:hover {
-      background-color: var(--color-fill-3);
+      background-color: var(--td-bg-color-component-hover);
     }
 
     svg {
@@ -155,26 +163,27 @@ body[arco-theme=dark] {
 
   .ce-block.ce-block--selected {
     .ce-block__content {
-      background-color: var(--color-fill-1);
+      background-color: var(--td-bg-color-component);
     }
   }
 
   .ce-popover__container {
-    background-color: var(--color-bg-2);
+    background-color: var(--td-bg-color-container);
 
     .cdx-search-field {
-      background-color: var(--color-fill-2);
+      background-color: var(--td-bg-color-component-hover);
     }
 
 
     .ce-popover-item {
       &:hover {
-        background-color: var(--color-fill-3);
+        background-color: var(--td-bg-color-component-hover);
       }
 
       &.ce-popover-item--no-focus {
         &:hover {
-          background-color: rgb(var(--danger-6));
+          background-color: var(--td-error-color);
+          color: var(--td-text-color-anti);
         }
       }
 
