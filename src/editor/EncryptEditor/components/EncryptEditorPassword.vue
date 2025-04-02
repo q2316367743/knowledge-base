@@ -196,14 +196,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
 import {LockOffIcon} from "tdesign-icons-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {passwordEqual} from "@/editor/EncryptEditor/EncryptEditorUtil";
 
 const props = defineProps({
   data: {
-    type: Object as PropType<EncryptTextData>
+    type: String,
+    default: ''
   }
 });
 const emit = defineEmits(['unlock']);
@@ -211,8 +211,9 @@ const emit = defineEmits(['unlock']);
 const text = ref('');
 
 function onSubmit() {
-  if (passwordEqual(text.value, props.data?.password)) {
-    emit('unlock');
+  const keyIv = passwordEqual(text.value, props.data);
+  if (keyIv) {
+    emit('unlock', keyIv);
   } else {
     // 提示
     MessageUtil.warning("密码输入错误");

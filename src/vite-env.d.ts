@@ -24,12 +24,18 @@ declare interface OpenFileOption {
 }
 
 type SubWindowChannel = 'chat' | 'preview';
+
 class SubWindow {
   constructor(channel: SubWindowChannel);
 
   receiveMsg<T = any>(callback: (msg: T) => void): void;
 
   sendMsg<T = any>(msg: T): void
+}
+
+interface EncryptKeyIv {
+  key: string;
+  iv: string;
 }
 
 declare interface Window {
@@ -96,6 +102,12 @@ declare interface Window {
       parseBuffer(buffer: Buffer, charset: string): string;
       parseArrayBuffer(arrayBuffer: ArrayBuffer, charset: string): string;
       convertCharset(content: string, fromCharset: string, toCharset?: string): string;
+    },
+    encrypt: {
+      encryptPassword: (password: string) => string;
+      verifyPassword: (password: string, key: string) => EncryptKeyIv | boolean;
+      encryptValue: (keyIv: EncryptKeyIv, data: string) => string;
+      decryptValue: (keyIv: EncryptKeyIv, data: string) => string;
     }
   }
 }

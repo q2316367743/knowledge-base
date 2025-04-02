@@ -1,18 +1,16 @@
 <template>
-  <div class="encrypt-editor-display  h-full">
-    <pre>{{ data?.text }}</pre>
+  <div class="encrypt-editor-display ">
+    {{ data }}
   </div>
 </template>
 <script lang="ts" setup>
 </script>
 <script lang="ts">
-import {EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
-
 export default defineComponent({
   name: 'EncryptEditorDisplay',
   props: {
     data: {
-      type: Object as PropType<EncryptTextData>
+      type: String
     }
   }
 })
@@ -22,9 +20,9 @@ export default defineComponent({
   background-color: var(--td-bg-color-container);
   overflow: auto;
   padding: 16px;
-  pre {
-    padding: 0;
-    margin: 0;
-  }
+  height: calc(100% - 32px);
+  white-space: pre-wrap;
+  word-break: break-all;
+
 }
 </style>
