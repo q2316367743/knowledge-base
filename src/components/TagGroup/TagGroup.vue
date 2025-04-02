@@ -22,8 +22,6 @@
       v-else
       :style="{
         width: '90px',
-        backgroundColor: 'var(--color-fill-2)',
-        border: '1px dashed var(--color-fill-3)',
         cursor: 'pointer',
       }"
       @click="handleEdit"

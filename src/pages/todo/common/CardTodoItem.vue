@@ -121,17 +121,17 @@ function handleDragstart(e: DragEvent) {
   margin: 4px 0;
   cursor: pointer;
   position: relative;
-  border-radius: var(--border-radius-medium);
+  border-radius: var(--td-radius-default);
   background-color: var(--td-bg-color-container);
   transition: background-color 0.3s;
-  border: 1px solid var(--color-border-2);
+  border: 1px solid var(--td-border-level-2-color);
 
   &:hover {
-    background-color: var(--color-fill-1);
+    background-color: var(--td-bg-color-container-hover);
   }
 
   &:active {
-    background-color: var(--color-fill-2);
+    background-color: var(--td-bg-color-container-active);
   }
 
   .todo-item__main {
@@ -139,7 +139,7 @@ function handleDragstart(e: DragEvent) {
     align-items: flex-start;
 
     .todo-item__checkbox {
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     .todo-item__title {
@@ -157,8 +157,8 @@ function handleDragstart(e: DragEvent) {
   }
 
   &.deleted {
-    color: var(--color-text-4);
-    background-color: var(--color-fill-1);
+    color: var(--td-text-color-disabled);
+    background-color: var(--td-bg-color-container-disabled);
 
     .arco-typography {
       color: var(--color-text-4);

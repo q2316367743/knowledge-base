@@ -12,12 +12,12 @@
     </header>
     <t-tree :actived="selectKeys" :data="treeNodeData" :line="true" :activable="true" :draggable="true"
             :style="{margin: '7px',width:' calc(100% - 14px)', height: virtualHeight}" :scroll="{type: 'virtual'}"
-            :allow-drop="checkAllowDrop" @drop="onDrop($event)" @click="onClick">
+            :allow-drop="checkAllowDrop" @drop="onDrop($event)" @click="onClick" v-model:expanded="expanded">
       <template #label="{node}">
         <div class="flex items-center">
           <list-icon v-if="node.data.leaf"/>
           <folder-icon v-else/>
-          <span class="text-ellipsis ml-8px" :title="node.label" >{{ node.label }}</span>
+          <span class="text-ellipsis ml-8px" :title="node.label">{{ node.label }}</span>
         </div>
       </template>
       <template #operations="{node}">
@@ -72,6 +72,8 @@ import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
 import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 interface DropContext {
   e: DragEvent;
@@ -83,8 +85,10 @@ interface DropContext {
 
 const size = useWindowSize();
 
-const selectKeys = computed(() => ([useTodoWrapStore().categoryId]));
 const keyword = ref('')
+const expanded = useUtoolsDbStorage<Array<string | number>>(LocalNameEnum.KEY_TODO_EXPANDED, []);
+
+const selectKeys = computed(() => ([useTodoWrapStore().categoryId]));
 
 const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree);
 const virtualHeight = computed(() => (size.height.value - 56) + 'px');
@@ -94,7 +98,19 @@ function onClick(context: {
   node: TreeNodeModel;
   e: MouseEvent;
 }) {
-  const categoryId = context.node.value as number;
+  const {node} = context;
+  if (!node.data.leaf) {
+    // 文件夹
+    const index = expanded.value.findIndex((item) => item === node.value);
+    if (expanded.value.findIndex((item) => item === node.value) > -1) {
+      // 已展开，关闭
+      expanded.value.splice(index, 1);
+    } else {
+      expanded.value.push(node.value);
+    }
+    return;
+  }
+  const categoryId = node.value as number;
   let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
   if (category && category.type === TodoCategoryTypeEnum.TODO) {
     if (categoryId !== useTodoWrapStore().categoryId) {

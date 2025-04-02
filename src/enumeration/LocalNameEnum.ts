@@ -140,6 +140,8 @@ enum LocalNameEnum {
    */
   KEY_TODO_SCRIPT = '/key/todo/script',
 
+  KEY_TODO_EXPANDED = '/key/todo/expanded',
+
   /**
    * 聊天模型
    */

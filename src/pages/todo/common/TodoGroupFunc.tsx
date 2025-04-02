@@ -1,7 +1,7 @@
-import {Input, Modal, Radio, RadioGroup, Select, Typography, TypographyParagraph} from "@arco-design/web-vue";
+import {Input, DialogPlugin, Radio, RadioGroup, Select, Paragraph} from "tdesign-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import {TodoGroupPriorityView, TodoGroupView} from "@/entity/todo/TodoGroup";
+import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
@@ -12,29 +12,27 @@ import {TodoItemIndex} from "@/entity/todo/TodoItem";
 function openEditTodoGroupFuncWrap(oldId: string, oldName: string, items: Array<TodoItemIndex>) {
   const name = ref(oldName);
   const op = oldId === '0' ? '添加' : '修改';
-  Modal.open({
-    title: op + '分组',
+  const d = DialogPlugin({
+    header: op + '分组',
     width: 400,
-    content: () => <Typography>
-      <TypographyParagraph>请输入分组名称：</TypographyParagraph>
-      <TypographyParagraph>
-        <Input v-model={name.value} allowClear/>
-      </TypographyParagraph>
-    </Typography>,
-    async onBeforeOk(done) {
+    default: () => <div>
+      <Paragraph>请输入分组名称：</Paragraph>
+      <Paragraph>
+        <Input v-model={name.value} clearable={true}/>
+      </Paragraph>
+    </div>,
+    async onConfirm() {
       if (name.value.trim() === '') {
         MessageUtil.error('分组名称不能为空');
-        done(false);
         return;
       }
       try {
         await useTodoWrapStore().postGroup(oldId, name.value,
           items.map(e => e.id))
         MessageUtil.success(op + '分组成功');
-        done(true);
+        d.destroy();
       } catch (e) {
         MessageUtil.error(op + '分组失败', e);
-        done(false);
       }
     }
   })
@@ -57,30 +55,30 @@ export function openDeleteTodoGroupFunc(id: string, name: string) {
     targetGroupId.value = i['0']?.value || ''
     return i;
   })
-  Modal.open({
-    title: '删除分组',
+  const d = DialogPlugin({
+    header: '删除分组',
     width: 400,
-    content: () => <Typography>
-      <TypographyParagraph>确定要删除分组：{name} 吗？</TypographyParagraph>
-      <TypographyParagraph>
-        <RadioGroup v-model={targetType.value} direction={'vertical'}>
-          <Radio value={'-1'}>同时删除分组下的所有待办</Radio>
-          <Radio value={'0'}>仅删除分组</Radio>
-          <Radio value={'1'} disabled={options.value.length === 0}>删除分组，将任务移动到...</Radio>
+    default: () => <div>
+      <Paragraph>确定要删除分组：{name} 吗？</Paragraph>
+      <Paragraph>
+        <RadioGroup v-model={targetType.value}>
+          <Radio value={'-1'} label={'同时删除分组下的所有待办'} class={'mr-auto'}/>
+          <Radio value={'0'} label={'仅删除分组'} class={'mr-auto'}/>
+          <Radio value={'1'} disabled={options.value.length === 0} label={'删除分组，将任务移动到...'}
+                 class={'mr-auto'}/>
         </RadioGroup>
-      </TypographyParagraph>
-      {targetType.value === '1' && <TypographyParagraph>
+      </Paragraph>
+      {targetType.value === '1' && <Paragraph>
         <Select v-model={targetGroupId.value} options={options.value}/>
-      </TypographyParagraph>}
-    </Typography>,
-    async onBeforeOk(done) {
+      </Paragraph>}
+    </div>,
+    async onConfirm() {
       try {
         await useTodoGroupStore().deleteById(id, targetType.value === '1' ? targetGroupId.value : targetType.value);
         MessageUtil.success('删除分组');
-        done(true);
+        d.destroy();
       } catch (e) {
         MessageUtil.error('删除分组失败', e);
-        done(false);
       }
     }
   })
