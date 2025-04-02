@@ -7,16 +7,21 @@ interface ImportNoteResult {
 }
 
 export async function importWithUBrowser(url: string, props?: NoteImportRule): Promise<ImportNoteResult> {
-  const {headers, timeout, wait, title, body} = props || {};
-  let uBrowser = utools.ubrowser.goto(url,
-    headers ? JSON.parse(headers) : undefined, timeout);
+  const {headers, timeout, wait, title, body, userAgent} = props || {};
+  let uBrowser = utools.ubrowser.goto(url, {
+    ...headers as any,
+    userAgent
+  }, timeout);
   if (wait) {
     // 等待元素出现
-    uBrowser = uBrowser.wait(wait);
+    if (typeof wait === 'number') {
+      uBrowser = uBrowser.wait(wait);
+    } else {
+      uBrowser = uBrowser.wait(wait, timeout);
+    }
   }
   // 获取html
   uBrowser = uBrowser.evaluate(() => document.body.outerHTML);
-  // @ts-ignore
   uBrowser = uBrowser.markdown(body || 'body');
   const results = await uBrowser.run({
     show: false

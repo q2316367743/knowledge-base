@@ -53,8 +53,12 @@ export const useAiServiceStore = defineStore('ai-service', () => {
     const res = await listByAsync<AiService>(LocalNameEnum.AI_SERVICE);
     list.value = res.list;
     rev.value = res.rev;
+    let appVersion = utools.getAppVersion();
+    if (versionLess(appVersion, 7)) {
+      // 小于7，不初始化uTools模型
+      return;
+    }
     // 初始化uTools模型
-    // @ts-ignore
     uToolsModels.value = await utools.allAiModels() as Array<UToolsModel>;
     console.log('uToolsModels', uToolsModels.value)
   }

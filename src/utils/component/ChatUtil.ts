@@ -42,15 +42,20 @@ export async function askToOpenAi(props: AskToOpenAiProps): Promise<void> {
 
 export async function askToUTools(props: AskToOpenAiProps): Promise<void> {
   const {messages, service, assistant, onAppend, onAborted} = props;
+  if (!service.models.map(e => typeof e === 'string' ? e : e.id).find(e => e === assistant.model)) {
+    return Promise.reject(new Error("AI助手选择的模型已不支持"));
+  }
 
-  // TODO: 适配新版utools ai接口
-  // @ts-ignore
+  // 适配新版utools ai接口
   const abortPromise = utools.ai({model: assistant.model, messages}, (delta) => {
-    onAppend(delta.reasoning_content || delta.content, !!delta.reasoning_content);
+    const msg = delta.reasoning_content || delta.content;
+    if (msg) {
+      onAppend(msg, !!delta.reasoning_content);
+    }
   })
   onAborted({
-    abort(reason?: any) {
-      abortPromise.abort(reason);
+    abort() {
+      abortPromise.abort();
       // 无奈之举
       onAppend("\n\n请求被手动终止！");
     },

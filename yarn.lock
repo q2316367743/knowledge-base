@@ -4686,10 +4686,10 @@ util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   resolved "https://mirrors.cloud.tencent.com/npm/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-utools-api-types@^5.2.0:
-  version "5.2.0"
-  resolved "https://mirrors.cloud.tencent.com/npm/utools-api-types/-/utools-api-types-5.2.0.tgz#d0cc8778f3932799982d204497ddd4e39301d0bf"
-  integrity sha512-3QfAioW6k1QxBtlpEwvcadpaPz/r6WBF/5s38smy58r372my217K8OmN9mD6aHHfZqeVkBawfr0HIDQ9rz9IEQ==
+utools-api-types@7.0.0:
+  version "7.0.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/utools-api-types/-/utools-api-types-7.0.0.tgz#a576bd4e67fd87b3a3b890b0d79121c4678f81ae"
+  integrity sha512-b2ZVyDabC68X526XUELqYgRiFDuTaqmHOQJOORubuht207ZLFHWWhonsUqCx3LmY+S9O9flG5SSpPpKiPAT3kw==
 
 uuid@^9.0.0:
   version "9.0.1"

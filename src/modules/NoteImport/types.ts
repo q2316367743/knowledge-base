@@ -23,7 +23,7 @@ export interface NoteImportRule extends NoteImportItem {
   /**
    * 等待元素出现，
    */
-  wait?: string;
+  wait?: string | number;
 
   /**
    * 超时时间，单位ms，默认2000ms。超时后，页面不会被终止，并且将被refetch。
@@ -33,7 +33,7 @@ export interface NoteImportRule extends NoteImportItem {
   /**
    * JSON字符串
    */
-  headers?: string;
+  headers?: Record<string, string>;
 
   /**
    * User-Agent

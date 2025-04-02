@@ -1,6 +1,6 @@
 import {NoteImportGroup} from "@/modules/NoteImport/types";
 
-export const NoteImportGroups: Array<NoteImportGroup> =  [{
+export const NoteImportGroups: Array<NoteImportGroup> = [{
   id: '0',
   name: '博客平台',
   items: [{
@@ -10,7 +10,7 @@ export const NoteImportGroups: Array<NoteImportGroup> =  [{
     "title": "#articleContentId",
     "body": "#content_views",
     "timeout": 5000,
-    "headers": "{}",
+    "headers": {},
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
   }, {
     "id": "001",
@@ -18,15 +18,15 @@ export const NoteImportGroups: Array<NoteImportGroup> =  [{
     "regex": /.*www.cnblogs.com.*/,
     "body": "#cnblogs_post_body",
     "timeout": 5000,
-    "headers": "{}",
+    "headers": {},
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
   }, {
     "id": "002",
     "name": "51cto",
-    "regex":/.*blog.51cto.com.*/,
+    "regex": /.*blog.51cto.com.*/,
     "body": "#container",
     "timeout": 5000,
-    "headers": "{}",
+    "headers": {},
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
   }, {
     "id": "003",
@@ -34,7 +34,7 @@ export const NoteImportGroups: Array<NoteImportGroup> =  [{
     "regex": /.*www.yuque.com.*/,
     "body": ".ne-viewer-body",
     "timeout": 5000,
-    "headers": "{}",
+    "headers": {},
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
   }, {
     "id": "004",
@@ -42,20 +42,21 @@ export const NoteImportGroups: Array<NoteImportGroup> =  [{
     "regex": /.*segmentfault.com.*/,
     "body": ".article",
     "timeout": 5000,
-    "headers": "{}",
+    "headers": {},
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
   }]
 }, {
   id: "1",
   name: "微信公众号",
   items: [{
-    "id": "105",
-    "name": "微信公众号",
-    "regex": /.*mp.weixin.qq.com.*/,
-    "wait": "1000",
-    "body": "#js_content",
-    "timeout": 5000,
-    "headers": "{}",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36",
+    id: "105",
+    name: "微信公众号",
+    regex: /.*mp.weixin.qq.com.*/,
+    wait: 1000,
+    title: "#activity-name",
+    body: "#js_content",
+    timeout: 5000,
+    headers: {},
+    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36",
   }]
 }]
