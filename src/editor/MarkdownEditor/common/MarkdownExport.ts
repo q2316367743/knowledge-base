@@ -30,6 +30,11 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
     name: 'html',
     desc: '易于复制',
     extname: 'html'
+  }, {
+    key: 5,
+    name: '微信公众号',
+    desc: '转为微信公众号排版',
+    extname: ''
   }]).then(async res => {
     if (res.type === 1) {
       // 导出图片
@@ -62,8 +67,7 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
           download(content, res.title + '.zip', 'application/zip');
         });
       }
-    }
-    else if (res.type === 4) {
+    } else if (res.type === 4) {
       // html
       const previewer = cherry.wrapperDom.querySelector('.cherry-previewer');
       if (previewer) {
@@ -89,7 +93,7 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
                   resolve(reader.result as string);
                 };
                 reader.onerror = reject;
-                reader.readAsDataURL(new Blob([blob], { type: 'image/png' }));
+                reader.readAsDataURL(new Blob([blob], {type: 'image/png'}));
               });
               img.setAttribute('src', base64);
             }
@@ -222,8 +226,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </html>
 `, res.title + '.html', 'text/html');
       }
-    }
-    else {
+    } else if (res.type === 5) {
+      await utools.ubrowser.goto('https://knowledge-nase.esion.xyz/md/')
+        .wait("#editor")
+        .wait(1000)
+        .evaluate((text) => {
+          // @ts-ignore
+          window.setValue(text);
+        }, cherry.getMarkdown())
+        .run({width: 1200, height: 800})
+    } else {
       cherry.export(renderType(res.type), res.title);
     }
   })

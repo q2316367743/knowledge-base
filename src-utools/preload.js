@@ -49,7 +49,7 @@ function getKeyIv(passphrase) {
   const hash1 = createHash('md5').update(passphrase).digest('hex')
   const hash2 = createHash('md5').update(hash1 + passphrase).digest('hex')
   const hash3 = createHash('md5').update(hash2 + passphrase).digest('hex')
-  return {key: hash2, iv: hash3.substr(16)}
+  return {key: hash2, iv: hash3.substring(0, 16)}
 }
 
 window.preload = {
