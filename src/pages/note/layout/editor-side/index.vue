@@ -16,7 +16,8 @@
             :default-expand-all="false" :allow-drop="checkAllowDrop" :draggable="true" :line="true"
             value-mode="onlyLeaf" style="margin: 0 7px;" :activable="true" :hover="true"
             :actived="selectedKeys" v-model="checkKeys" v-model:expanded="expandedKeys"
-            @drop="onDrop($event)" @contextmenu="onContextmenu({value: 0, data: {value: 0, left: false}}, $event)">
+            @drop="onDrop($event)"
+            @contextmenu="onContextmenu({data: {value: 0, label:'根目录', left: false}}, $event)">
       <template #label="{ node }">
         <div class="flex" :class="{active: homeEditorId===node.value}"
              @contextmenu="onContextmenu(node, $event)" @click="onSelect(node.value)">
@@ -261,7 +262,7 @@ function moveMultiTo() {
   })
 }
 
-function onContextmenu(node: TreeNodeModel, e: MouseEvent) {
+function onContextmenu(node: Pick<TreeNodeModel, 'data'>, e: MouseEvent) {
   openEditorTreeMenu(e, {node: node.data as any, multi: multiCheckStart, select: onSelect})
 }
 </script>

@@ -6,12 +6,17 @@
 </template>
 <script lang="ts" setup>
 import MonacoEditorCore from "@/editor/MonacoEditor/MonacoEditorCore.vue";
+import {useArticleExportEvent, useArticleImportEvent, useArticleStore, useHomeEditorStore} from "@/store";
+import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
+import {download} from "@/utils/BrowserUtil";
+import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
+import {readAsText} from "@/utils/file/FileUtil";
 
 const content = defineModel({
   type: String,
   default: ''
 });
-defineProps({
+const props = defineProps({
   language: {
     type: String as PropType<string>,
     default: 'javascript',
@@ -32,6 +37,37 @@ defineProps({
   }
 });
 const emit = defineEmits(['change', 'editor-mounted']);
+
+
+useArticleExportEvent.on(onExport);
+useArticleImportEvent.on(onImport);
+
+function onExport(id: number) {
+  if (props.articleId === id) {
+    createArticleExport(id, [{
+      key: 1,
+      name: '代码文件',
+      desc: '默认导出',
+      extname: ''
+    }]).then(res => {
+      const {type, title} = res;
+      if (type === 1) {
+        download(content.value, title, 'text');
+      }
+    });
+  }
+}
+
+function onImport(id: number) {
+  if (props.articleId === id) {
+    openArticleImport([]).then(file => readAsText(file).then(text => {
+      content.value = text;
+      useArticleStore().updateIndex(id, {
+        name: file.name
+      }).then(res => useHomeEditorStore().update(id, res));
+    }));
+  }
+}
 </script>
 <style scoped lang="less">
 .monaco-editor {

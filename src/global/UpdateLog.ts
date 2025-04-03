@@ -2,6 +2,37 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.5.1',
+    sign: 251,
+    time: '2025年4月3日',
+    items: [{
+      label: LogItemEnum.MAJOR,
+      content: '新增加密笔记，加密笔记采用bcrypt对您的密码进行加密，使用aes-256-cbc对您的笔记内容进行加密。' +
+        '如果您忘记了您的密码，则无法对笔记内容进行恢复，请一定要记住您的密码，请一定要记住您的密码，请一定要记住您的密码。'
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: '修复了uTools不是7以上，启动插件会报错问题'
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: '修复了AI问答使用uTools的API错误的问题'
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: '修复了微信公众号导入笔记错误的问题'
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "优化开通VIP逻辑，避免开通后没有刷新VIP问题"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "优化了卡片待办的界面样式"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: '优化富文本编辑器样式'
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: '优化markdown的html导出功能，增加目录显示'
+    }]
+  },
+  {
     version: '2.5.0',
     sign: 250,
     time: '2025-04-01',

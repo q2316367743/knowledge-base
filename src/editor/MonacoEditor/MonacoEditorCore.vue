@@ -107,48 +107,7 @@ const init = () => {
   });
 }
 
-
-onBeforeUnmount(() => {
-  editor?.dispose();
-  useArticleExportEvent.off(onExport);
-  useArticleImportEvent.off(onImport);
-})
-
-onMounted(() => {
-  init();
-  useArticleExportEvent.off(onExport);
-  useArticleExportEvent.on(onExport);
-  useArticleImportEvent.off(onImport);
-  useArticleImportEvent.on(onImport);
-})
-
-function onExport(id: number) {
-  if (props.articleId === id && editor) {
-    const model = editor.getModel();
-    if (model) {
-      createArticleExport(id, [{
-        key: 1,
-        name: '代码文件',
-        desc: '默认导出',
-        extname: ''
-      }]).then(res => {
-        download(model.getValue(), res.title, 'text');
-      });
-    }
-  }
-}
-
-function onImport(id: number) {
-  if (props.articleId === id && editor) {
-    openArticleImport([]).then(file => readAsText(file).then(text => {
-      editor && editor.setValue(text);
-      useArticleStore().updateIndex(id, {
-        name: file.name
-      }).then(res => useHomeEditorStore().update(id, res));
-    }));
-  }
-
-}
+onMounted(() => init());
 </script>
 <style lang="less" scoped>
 .codeEditBox {

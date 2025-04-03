@@ -214,6 +214,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.body.appendChild(toggleButton);
 });
 </script>
+<link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/viewerjs/1.10.4/viewer.min.css" type="text/css" rel="stylesheet" />
+<script type="module">
+    import Viewer from 'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/viewerjs/1.10.4/viewer.esm.min.js';
+    const gallery = new Viewer(document.body);
+</script>
 </html>
 `, res.title + '.html', 'text/html');
       }

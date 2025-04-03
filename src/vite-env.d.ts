@@ -59,6 +59,8 @@ declare interface Window {
         folder: string,
         filePath: string
       }>;
+      // 写入blob到文件
+      writeBlobToFile(content: Blob, title: string): Promise<string>;
       checkFileExist(root: string, dir: string, file: string): boolean;
       downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void>;
       /**

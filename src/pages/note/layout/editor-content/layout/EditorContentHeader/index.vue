@@ -101,7 +101,7 @@ function onContextmenu(e: MouseEvent, article: ArticleIndex) {
     border-bottom: 1px solid transparent;
 
     &.border {
-      border-bottom: 1px solid var(--td-border-level-1-color);
+      border-bottom: 1px solid var(--td-component-stroke);
     }
   }
 

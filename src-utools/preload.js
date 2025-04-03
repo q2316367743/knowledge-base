@@ -112,6 +112,32 @@ window.preload = {
         });
       })
     },
+    /**
+     * 写入blob到文件
+     * @param content {Blob} 文件内容
+     * @param title {title} 文件标题
+     * @returns {Promise<string>} 文件路径
+     */
+    async writeBlobToFile(content, title) {
+      const p = utools.showSaveDialog({
+        title,
+        buttonLabel: '保存',
+        properties: ['createDirectory']
+      });
+      if (p) {
+        const bf = await blobToBuffer(content);
+        return new Promise((resolve, reject) => {
+          writeFile(p, bf, (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              utools.shellOpenPath(p);
+              resolve(p);
+            }
+          });
+        })
+      }
+    },
     // 检查文件是否存在
     checkFileExist(root, dir, file) {
       const filePath = join(root, dir, file);
