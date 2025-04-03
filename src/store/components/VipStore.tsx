@@ -3,6 +3,7 @@ import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {DialogPlugin, Paragraph, Text, Title} from "tdesign-vue-next";
 import {JSX} from 'vue/jsx-runtime';
+import {useUmami} from "@/plugin/umami";
 
 export const useVipStore = defineStore('vip', () => {
   const noteVip = ref(false);
@@ -35,20 +36,37 @@ export const useVipStore = defineStore('vip', () => {
   const allNoVip = computed(() => !allVip.value);
 
   async function openVip(type: 'note' | 'todo' | 'all') {
+    // 为避免重复开通，此处再次教研
+    await init();
     let goodsId: string;
     if (type === 'note') {
       goodsId = Constant.goods.note;
+      if (noteVip.value) {
+        MessageUtil.warning("您已开通VIP，请勿重复开通！");
+        return Promise.resolve();
+      }
     } else if (type === 'todo') {
       goodsId = Constant.goods.todo;
+      if (todoVip.value) {
+        MessageUtil.warning("您已开通VIP，请勿重复开通！");
+        return Promise.resolve();
+      }
     } else {
       goodsId = Constant.goods.all;
+      if (allVip.value) {
+        MessageUtil.warning("您已开通VIP，请勿重复开通！");
+        return Promise.resolve();
+      }
     }
     return new Promise<void>((resolve, reject) => {
       try {
+        useUmami.track(`/VIP/准备/${type}`);
         utools.openPayment({
           goodsId
         }, () => {
           console.debug(`购买${type}成功`);
+          useUmami.track(`/VIP/开通/${type}`);
+          MessageUtil.success("开通VIP成功");
           // 重新初始化
           init();
           resolve();
@@ -157,6 +175,7 @@ export async function checkPower(type: 'note' | 'todo' | 'all') {
     return Promise.resolve();
   }
   return new Promise<void>((resolve, reject) => {
+    useUmami.track(`/VIP/查看/${type}`);
     const instance = DialogPlugin({
       header,
       placement: 'center',
@@ -170,8 +189,8 @@ export async function checkPower(type: 'note' | 'todo' | 'all') {
       width: 750,
       onConfirm: () => {
         vipStore.openVip(type).then(() => {
-          resolve();
           instance.destroy();
+          resolve();
         }).catch(reject);
       },
       onCancel: () => {

@@ -93,7 +93,8 @@ export const extraNoteTypes: Array<ArticleTypeList> = [
     key: ArticleTypeEnum.ENCRYPT_EDITOR,
     name: '加密笔记',
     icon: shallowRef(LockOnIcon),
-    lock: FileEncrypt
+    lock: FileEncrypt,
+    vip: true
   }
 ]
 

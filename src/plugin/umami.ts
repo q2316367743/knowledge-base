@@ -1,8 +1,25 @@
 import router from "@/plugin/router";
 import Constants from "@/global/Constant";
 
+interface UmamiPayloadBase {
+  hostname: string;
+  language: string;
+  referrer: string;
+  screen: string;
+  website: string;
 
-function buildBasePayload() {
+}
+
+interface UmamiPayload extends UmamiPayloadBase {
+  title: string;
+  url: string;
+  // 事件名
+  name?: string;
+  // 事件附属数据
+  data?: Record<string, string>;
+}
+
+function buildBasePayload(): UmamiPayloadBase {
   return {
     hostname: "u.tools",
     language: navigator.language,
@@ -12,7 +29,7 @@ function buildBasePayload() {
   }
 }
 
-function buildPayload() {
+function buildPayload(): UmamiPayload {
   const {path, name} = router.currentRoute.value;
   return {
     ...buildBasePayload(),
@@ -21,13 +38,13 @@ function buildPayload() {
   }
 }
 
-const buildPathPayload = (path: string, name?: string) => ({
+const buildPathPayload = (path: string, name?: string): UmamiPayload => ({
   ...buildBasePayload(),
   url: path,
   title: name || document.title,
 })
 
-function sendEvent(payload: Record<string, any>) {
+function sendEvent(payload: UmamiPayload) {
   if (utools.isDev()) {
     console.debug('Umami payload:', payload);
     return;
@@ -46,10 +63,12 @@ function sendEvent(payload: Record<string, any>) {
     .catch(error => console.error('Umami error:', error))
 }
 
+let first = true;
+
 export const useUmami = {
   // TODO: 此处要规范事件名称
   track(event?: string, data?: Record<string, string> | string): void {
-    const payload: Record<string, any> = buildPayload()
+    const payload: UmamiPayload = buildPayload()
     if (event) {
       payload.name = event;
     }
@@ -63,6 +82,23 @@ export const useUmami = {
 
   page(path: string, name?: string): void {
     const payload = buildPathPayload(path, name);
+    if (first) {
+      first = false;
+      let type = '未登录'
+      try {
+        const user = utools.getUser();
+        if (user) {
+          if (user.type === 'member') {
+            type = 'uTools会员'
+          } else {
+            type = 'uTools用户'
+          }
+        }
+      } catch (e) {
+        console.error("获取用户信息失败", e);
+      }
+      payload.name = `/用户/类型/${type}`;
+    }
     sendEvent(payload)
   }
 }
