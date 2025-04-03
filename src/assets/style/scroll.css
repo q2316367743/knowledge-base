@@ -2,7 +2,6 @@
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
-  background-color: var(--td-scroll-track-color);
   transition: background-color 0.3s;
 }
 

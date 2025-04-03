@@ -10,11 +10,10 @@
         查看备份列表
       </t-button>
     </t-space>
-
     <!-- 弹框 -->
-
-    <t-dialog v-model:visible="instance.visible" title="设置备份" ok-text="保存" @ok="save()"
-                   :ok-loading="instance.loading" :draggable="true">
+    <t-dialog v-model:visible="instance.visible" title="设置备份"
+              :confirm-btn="{default: '保存', loading: instance.loading}" placement="center" :draggable="true"
+              @confirm="save()">
       <t-form :model="instance" layout="vertical" style="margin-top: 7px;">
         <t-form-item label="服务器地址">
           <t-input v-model="instance.record.url" allow-clear/>
@@ -27,14 +26,14 @@
         </t-form-item>
       </t-form>
     </t-dialog>
-    <t-drawer title="备份列表" v-model:visible="backup.visible" ok-text="恢复" :width="400"
-              :ok-button-props="{disabled: backup.file === ''}" @ok="restore()">
-      <t-radio-group v-model="backup.file" style="width: 368px;">
-        <t-list>
+    <t-drawer title="备份列表" v-model:visible="backup.visible" size="400px"
+              :confirm-btn="{disabled: backup.file === '', default: '恢复'}" @confirm="restore()">
+      <t-radio-group v-model="backup.file" class="w-full">
+        <t-list class="w-full" :split="true">
           <t-list-item v-for="file in backup.files">
             <t-radio :value="file">{{ file }}</t-radio>
             <template #action>
-              <t-button variant="text" status="danger" @click="deleteFile(file)">删除</t-button>
+              <t-button variant="text" theme="danger" @click="deleteFile(file)">删除</t-button>
             </template>
           </t-list-item>
         </t-list>
@@ -86,7 +85,10 @@ instance.value.record = Object.assign(instance.value.record, backupSetting.value
 function save() {
   instance.value.loading = true;
   useBackupSettingStore().save(instance.value.record)
-    .then(() => MessageUtil.success("保存成功"))
+    .then(() => {
+      MessageUtil.success("保存成功");
+      instance.value.visible = false;
+    })
     .catch(e => MessageUtil.error("保存失败", e))
     .finally(() => instance.value.loading = false);
 }
@@ -150,11 +152,14 @@ async function _execBackup() {
     username: instance.value.record.username,
     password: instance.value.record.password,
   });
-
+  const hasFolder = await client.exists(FOLDER_PATH);
+  if (!hasFolder) {
+    // 如果不存在文件夹
+    await client.createDirectory(FOLDER_PATH);
+  }
   await client.putFileContents(
     urlJoin(FOLDER_PATH, toDateTimeString(new Date(), "YYYY-MM-DD_HH_mm_ss") + ".zip"),
-    content)
-
+    content);
 }
 
 function deleteFile(name: string) {
