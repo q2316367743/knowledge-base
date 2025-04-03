@@ -79,7 +79,9 @@ export enum ArticleActionEnum {
   // 前往笔记
   TO_ARTICLE = 1,
   // 侧边预览
-  DRAWER = 2
+  DRAWER = 2,
+  // 小窗预览
+  WIDGET = 3,
 }
 
 export function getDefaultBaseSetting(): BaseSetting {

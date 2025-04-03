@@ -143,49 +143,50 @@
         <t-dropdown-menu>
           <t-dropdown-item @click="openKeyDrawer()">
             <template #prefix-icon>
-              <icon-to-bottom/>
+              <keyboard-icon />
             </template>
             快捷键
           </t-dropdown-item>
           <t-dropdown-item @click="toDoc()">
             <template #prefix-icon>
-              <icon-question-circle/>
+              <questionnaire-icon />
             </template>
             帮助中心
           </t-dropdown-item>
           <t-dropdown-item @click="toFeedback()">
             <template #prefix-icon>
-              <icon-message/>
+              <chat-message-icon  />
             </template>
             反馈与建议
           </t-dropdown-item>
           <t-dropdown-item @click="toUpdateLog()">
             <template #prefix-icon>
-              <icon-message-banned/>
+              <system-messages-icon />
             </template>
-            查看更新日志
+            更新日志
           </t-dropdown-item>
         </t-dropdown-menu>
       </t-dropdown>
-      <t-button theme="primary" variant="text" shape="square" @click="openShangZan()">
+      <t-button theme="primary" variant="text" shape="square" @click="userVipToggle()">
         <template #icon>
-          <icon-heart/>
+          <user-vip-icon />
         </template>
       </t-button>
     </div>
+    <user-vip-drawer v-model="userVipVisible" />
   </div>
 </template>
 <script lang="ts" setup>
 import {
-  ArticleIcon,
+  ArticleIcon, ChatMessageIcon,
   CheckRectangleIcon, DeleteIcon,
-  Edit2Icon, EllipsisIcon, FileAttachmentIcon, HistoryIcon, InfoCircleIcon,
+  Edit2Icon, EllipsisIcon, FileAttachmentIcon, HistoryIcon, InfoCircleIcon, KeyboardIcon,
   QuestionnaireIcon, RefreshIcon,
-  SearchIcon, SettingIcon, ThumbUpIcon,
-  ToolsIcon
+  SearchIcon, SettingIcon, SystemMessagesIcon, ThumbUpIcon,
+  ToolsIcon, UserVipIcon
 } from "tdesign-icons-vue-next";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
-import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
+import {openKeyDrawer} from "@/components/app-side/func";
 import {toDoc, toFeedback} from "@/global/Constant";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
 
@@ -211,6 +212,9 @@ const toUpdateLog = () => router.push('/more/update')
 function onMenuItemClick(value: string | number) {
   router.push(`${value}`)
 }
+
+const userVipVisible = ref(false);
+const userVipToggle = useToggle(userVipVisible);
 </script>
 <style scoped lang="less">
 .app-side {

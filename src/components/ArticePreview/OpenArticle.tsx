@@ -8,6 +8,7 @@ import {usePageJumpEvent} from "@/global/BeanFactory";
 import {ArticleIndex} from "@/entity/article";
 import EditorContentContainer
   from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
+import {openNotePreview} from "@/widget/NotePreview";
 
 
 function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
@@ -56,6 +57,8 @@ function toArticle(id: number, articleAction: ArticleActionEnum) {
       return;
     }
     _openArticle(article);
+  } else if (articleAction === ArticleActionEnum.WIDGET) {
+    openNotePreview(id)
   }
 }
 

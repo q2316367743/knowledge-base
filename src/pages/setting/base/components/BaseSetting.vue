@@ -88,12 +88,14 @@
         <t-radio-group v-model="instance.todoArticleAction">
           <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往笔记</t-radio>
           <t-radio :value="ArticleActionEnum.DRAWER">侧边预览</t-radio>
+          <t-radio :value="ArticleActionEnum.WIDGET">小部件</t-radio>
         </t-radio-group>
       </t-form-item>
       <t-form-item label="关联笔记动作" label-align="top">
         <t-radio-group v-model="instance.relationArticleAction">
           <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往笔记</t-radio>
           <t-radio :value="ArticleActionEnum.DRAWER">侧边预览</t-radio>
+          <t-radio :value="ArticleActionEnum.WIDGET">小部件</t-radio>
         </t-radio-group>
       </t-form-item>
       <t-form-item label="表格组件初始化表格大小" label-align="top">
