@@ -25,7 +25,7 @@
             <template #content>
               <chat-reasoning v-if="item.reasoning" :text="item.reasoning" :think="item.think"/>
               <chat-content v-if="item.role === 'assistant'" :value="item.content" style="padding: 12px 15px;"/>
-              <chat-content v-else :content="item.content" :role="item.role"/>
+              <t-chat-content v-else :content="item.content" :role="item.role"/>
             </template>
             <template v-if="!isStreamLoad" #actions>
               <chat-action :operation-btn="['replay', 'copy']"
@@ -42,7 +42,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {Chat, ChatAction, ChatInput, ChatItem} from "@tdesign-vue-next/chat";
+import {Chat, ChatAction, ChatInput, ChatItem, ChatContent as TChatContent} from "@tdesign-vue-next/chat";
 import {AiChatMessage} from "./type";
 import {ChatMessageParam} from "@/types/Chat";
 import {themeColor, useAiAssistantStore, useAiServiceStore, useArticleStore, useGlobalStore} from "@/store";
