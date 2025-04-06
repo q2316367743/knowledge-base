@@ -16,6 +16,7 @@ export const NoteImportGroups: Array<NoteImportGroup> = [{
     "id": "001",
     "name": "博客园",
     "regex": /.*www.cnblogs.com.*/,
+    "title": "#cb_post_title_url",
     "body": "#cnblogs_post_body",
     "timeout": 5000,
     "headers": {},

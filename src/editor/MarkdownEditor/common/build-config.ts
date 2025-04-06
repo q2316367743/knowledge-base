@@ -102,7 +102,7 @@ export async function buildConfig(
     value: value,
     previewer: {
       dom: false,
-      enablePreviewerBubble: true,
+      enablePreviewerBubble: false,
     },
     isPreviewOnly: false,
     autoScrollByCursor: true,
