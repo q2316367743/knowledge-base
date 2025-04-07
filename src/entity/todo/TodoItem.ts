@@ -238,17 +238,27 @@ export function handleSimplePriorityColor(priority: TodoItemPriority): string {
   }
 }
 
-export function handlePriorityColor(priority: TodoItemPriority): string {
+export function handlePriorityColor(priority: TodoItemPriority, status = TodoItemStatus.TODO): string {
   switch (priority) {
     case TodoItemPriority.HIGH:
-      return 'rgb(var(--red-6))';
+      if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
+        return '#562c27'
+      }
+      return '#B33327';
     case TodoItemPriority.MIDDLE:
-      return 'rgb(var(--orange-6))';
+      if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
+        return '#6d4f39'
+      }
+      return '#CC7D41';
     case TodoItemPriority.FLOOR:
-      return 'rgb(var(--arcoblue-6))';
-    case TodoItemPriority.NONE:
-      return 'var(--td-text-color-primary)';
+      if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
+        return '#242D48';
+      }
+      return '#364fa1';
     default:
+      if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
+        return 'var(--td-text-color-disabled)'
+      }
       return 'var(--td-text-color-primary)';
   }
 }

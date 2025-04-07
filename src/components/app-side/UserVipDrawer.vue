@@ -82,7 +82,7 @@
             </template>
             快捷键
           </t-button>
-          <t-button @click="openFeedbackWidget">
+          <t-button @click="toFeedback">
             <template #icon>
               <chat-message-icon/>
             </template>
@@ -103,7 +103,7 @@
 import {ChatMessageIcon, HeartIcon, KeyboardIcon} from "tdesign-icons-vue-next";
 import {useVipStore} from "@/store";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
-import {openFeedbackWidget} from "@/widget/Feedback";
+import {toFeedback} from "@/global/Constant";
 
 const visible = defineModel({
   type: Boolean,

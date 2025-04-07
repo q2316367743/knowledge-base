@@ -75,7 +75,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
     maskClosable: true,
     content: () => <div class={'todo-item-setting'}>
       <div class={'todo-item-setting__header'}>
-        <TodoItemCheckbox priority={base.value.priority} status={base.value.status}/>
+        <TodoItemCheckbox priority={base.value.priority} v-model:status={base.value.status}/>
         <div class={'ml-8px'}>
           <Trigger position={isRange.value ? 'bottom' : 'bl'} auto-fit-position trigger="click" showArrow={true}
                    popupTranslate={[0, 10]}>{{

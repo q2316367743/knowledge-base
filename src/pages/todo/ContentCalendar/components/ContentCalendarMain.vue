@@ -11,7 +11,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import {useTodoItemStore} from "@/store";
-import {handlePriorityColor, TodoItemStatus} from "@/entity/todo/TodoItem";
+import {handlePriorityColor} from "@/entity/todo/TodoItem";
 import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
@@ -31,7 +31,7 @@ async function getEvents(): Promise<EventSourceInput> {
         title: todoItem.index.title,
         start: todoItem.attr.start || toDateTimeString(todoItem.index.id, 'YYYY-MM-DD'),
         end: dayjs(todoItem.attr.end || todoItem.attr.start || todoItem.index.id).add(1, 'day').format("YYYY-MM-DD"),
-        backgroundColor: todoItem.index.status === TodoItemStatus.COMPLETE ? '#86909c' : handlePriorityColor(todoItem.index.priority),
+        backgroundColor: handlePriorityColor(todoItem.index.priority, todoItem.index.status),
         editable: true
       });
     } catch (e) {

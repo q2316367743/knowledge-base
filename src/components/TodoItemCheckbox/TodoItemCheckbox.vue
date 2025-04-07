@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-item-checkbox" :title>
+  <div class="todo-item-checkbox" :title @click="handleClick">
     <div class="todo-item-checkbox-hover">
       <div class="todo-item-checkbox-icon" :style>
         <svg aria-hidden="true" focusable="false" v-if="status === TodoItemStatus.COMPLETE"
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {handleStatusText, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
+import {getNextTodoItemStatus, handleStatusText, TodoItemPriority, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {StyleValue} from "vue";
 
 const props = defineProps({
@@ -38,6 +38,7 @@ const props = defineProps({
     default: 1
   }
 });
+const emit = defineEmits(['update:status']);
 
 const style = computed<StyleValue>(() => {
   const s: StyleValue = {};
@@ -60,6 +61,9 @@ const style = computed<StyleValue>(() => {
 });
 const title = computed(() => handleStatusText(props.status));
 
+function handleClick() {
+  emit('update:status', getNextTodoItemStatus(props.status));
+}
 </script>
 <style scoped lang="less">
 .todo-item-checkbox {
