@@ -12,6 +12,8 @@ const Constant = {
   website: 'https://blog.esion.xyz',
   feedback: 'https://feedback.esion.xyz/#/plugin/1894929764697055232/home',
   repo: 'https://gitee.com/qiaoshengda/knowledge-base',
+  feedback_base: 'https://feedback.esion.xyz',
+  feedback_id: '1894929764697055232',
   feature: {
     ADD: 'function:add-article',
     IMPORT: 'function:md-import',

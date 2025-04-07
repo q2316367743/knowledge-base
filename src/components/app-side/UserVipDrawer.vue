@@ -29,7 +29,9 @@
             <div class="feature-item">
               <div class="feature-item-header">待办会员</div>
               <div class="feature-item-content">
-                <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')" :disabled="true">去开通</t-link>
+                <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')" :disabled="true">
+                  去开通
+                </t-link>
                 <div v-else class="feature-item-content__success">永久授权</div>
               </div>
             </div>
@@ -76,13 +78,19 @@
         <t-space size="small">
           <t-button @click="openKeyDrawer">
             <template #icon>
-              <keyboard-icon />
+              <keyboard-icon/>
             </template>
             快捷键
           </t-button>
+          <t-button @click="openFeedbackWidget">
+            <template #icon>
+              <chat-message-icon/>
+            </template>
+            问题反馈
+          </t-button>
           <t-button @click="openShangZan">
             <template #icon>
-              <heart-icon />
+              <heart-icon/>
             </template>
             赏赞
           </t-button>
@@ -92,9 +100,10 @@
   </t-drawer>
 </template>
 <script lang="ts" setup>
+import {ChatMessageIcon, HeartIcon, KeyboardIcon} from "tdesign-icons-vue-next";
 import {useVipStore} from "@/store";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
-import {HeartIcon, KeyboardIcon} from "tdesign-icons-vue-next";
+import {openFeedbackWidget} from "@/widget/Feedback";
 
 const visible = defineModel({
   type: Boolean,

@@ -3,6 +3,7 @@
   width: 6px;
   height: 6px;
   transition: background-color 0.3s;
+  background-color: var(--td-scroll-track-color);
 }
 
 ::-webkit-scrollbar-thumb {

@@ -184,6 +184,11 @@ enum LocalNameEnum {
   // 组件-uTools模型更新
   KEY_COMPONENT_U_TOOLS_MODEL_UPDATE = '/key/component/uTools/model/update',
 
+  // 组件-反馈-token
+  KEY_COMPONENT_FEEDBACK_TOKEN = '/key/component/feedback/token',
+  // 组件-反馈-用户信息
+  KEY_COMPONENT_FEEDBACK_USER_INFO = '/key/component/feedback/user-info',
+
   // ========================== 窗口 ==========================
 
   WINDOW_CANVAS_FOLDER = '/window/canvas/folder',

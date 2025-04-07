@@ -4,7 +4,7 @@
       <t-space size="small" class="page-header__left">
         <t-button theme="primary" variant="text" shape="square" @click="handlerClick">
           <template #icon>
-            <icon-arrow-left />
+            <chevron-left-icon />
           </template>
         </t-button>
         <div class="page-header__title">
@@ -23,6 +23,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {ChevronLeftIcon} from "tdesign-icons-vue-next";
+
 const router = useRouter();
 
 defineProps({
