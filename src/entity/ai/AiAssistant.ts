@@ -22,6 +22,13 @@ export interface AiAssistant {
   topP: number;
   // 上下文数
   maxChats: number;
+
+  // 是否是默认助手
+  default?: false,
+  // 描述
+  description?: string;
+  // 图标
+  icon?: string;
 }
 
 export function buildAiAssistant(): AiAssistant {

@@ -189,6 +189,8 @@ enum LocalNameEnum {
   // 组件-反馈-用户信息
   KEY_COMPONENT_FEEDBACK_USER_INFO = '/key/component/feedback/user-info',
 
+  KEY_SETTING_AI_ASSISTANT_SHOW_U_TOOLS = '/key/setting/ai-assistant/show/u-tools',
+
   // ========================== 窗口 ==========================
 
   WINDOW_CANVAS_FOLDER = '/window/canvas/folder',

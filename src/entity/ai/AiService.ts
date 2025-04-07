@@ -46,4 +46,25 @@ export const buildAiService = (): AiService => ({
   key: '',
   modelVersion: '',
   models: []
-})
+});
+
+export const findModel = (models: Array<string | AiServiceModel>, modelId: string): AiServiceModel | null => {
+  for (const model of models) {
+    if (typeof model === 'string') {
+      if (model === modelId) {
+        return {
+          id: model,
+          label: model,
+          icon: '',
+          description: '',
+          cost: 0
+        };
+      }
+    } else {
+      if (model.id === modelId) {
+        return model;
+      }
+    }
+  }
+  return null;
+}

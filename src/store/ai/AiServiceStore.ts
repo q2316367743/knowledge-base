@@ -5,16 +5,6 @@ import {map} from "@/utils/lang/ArrayUtil";
 import {versionLess} from "@/utils/lang/FieldUtil";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
 
-interface UToolsModel {
-  id: string;
-  label: string;
-  // 图标
-  icon: string;
-  // 描述
-  description: string;
-  // 消耗量
-  cost: number;
-}
 
 const DEFAULT_AI_SERVICE: AiService = {
   id: '1',
@@ -59,7 +49,7 @@ export const useAiServiceStore = defineStore('ai-service', () => {
       return;
     }
     // 初始化uTools模型
-    uToolsModels.value = await utools.allAiModels() as Array<UToolsModel>;
+    uToolsModels.value = await utools.allAiModels();
   }
 
   async function saveOrUpdate(aiService: AiService) {
@@ -85,7 +75,7 @@ export const useAiServiceStore = defineStore('ai-service', () => {
   }
 
   return {
-    aiServices, aiServiceMap,
+    aiServices, aiServiceMap,uToolsModels,
     init, saveOrUpdate, remove,
   }
 

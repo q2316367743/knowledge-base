@@ -1,24 +1,28 @@
 <template>
   <page-layout title="AI 助手">
     <template #extra>
-      <t-button theme="primary" @click="addAiAssistant">
-        新增
-      </t-button>
+      <t-space size="small" class="items-center">
+        <t-checkbox v-model="showUTools" v-if="uToolsModels.length > 0">显示内置助手</t-checkbox>
+        <t-button theme="primary" @click="addAiAssistant">新增</t-button>
+      </t-space>
     </template>
     <t-list :split="true">
       <t-list-item v-for="a in assistants" :key="a.id">
-        <t-list-item-meta :title="a.name">
+        <t-list-item-meta :title="a.name" :image="a.icon">
           <template #description>
-            <div class="ellipsis-3">{{ a.system }}</div>
+            <div class="ellipsis-3">{{ a.system || a.description }}</div>
           </template>
         </t-list-item-meta>
-        <template #action>
+        <template #action v-if="a.default">
+          <t-tag>uTools服务</t-tag>
+        </template>
+        <template #action v-else>
           <t-button variant="text" theme="primary" shape="square" @click="editAiAssistant(a)">
             <template #icon>
               <edit2-icon/>
             </template>
           </t-button>
-          <t-popconfirm content="确定要删除此助手？" ok-text="删除" @ok="handleRemove(a.id)">
+          <t-popconfirm content="确定要删除此助手？" confirm-btn="删除" @confirm="handleRemove(a.id)">
             <t-button variant="text" theme="danger" shape="square">
               <template #icon>
                 <delete-icon/>
@@ -31,12 +35,27 @@
   </page-layout>
 </template>
 <script lang="ts" setup>
-import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
+import {DeleteIcon, Edit2Icon} from "tdesign-icons-vue-next";
 import {addAiAssistant, editAiAssistant} from "@/pages/setting/ai-assistant/modal";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {DeleteIcon, Edit2Icon} from "tdesign-icons-vue-next";
+import {useAiAssistantStore, useAiServiceStore} from "@/store";
+import {AiAssistant} from "@/entity/ai/AiAssistant";
+import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
-const assistants = computed(() => useAiAssistantStore().aiAssistants);
+const showUTools = useUtoolsKvStorage<boolean>(LocalNameEnum.KEY_SETTING_AI_ASSISTANT_SHOW_U_TOOLS, true);
+
+const assistants = computed<Array<AiAssistant>>(() => {
+  const {aiAssistants} = useAiAssistantStore();
+  return aiAssistants.filter(a => {
+    if (!showUTools.value) {
+      // 不显示uTools服务
+      return !a.default;
+    }
+    return true;
+  })
+});
+const uToolsModels = computed(() => useAiServiceStore().uToolsModels);
 
 function handleRemove(id: string) {
   useAiAssistantStore().remove(id)

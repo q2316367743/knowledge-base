@@ -59,6 +59,9 @@ function buildForm(form: Ref<AiAssistant>) {
     }
     return false;
   })
+  watch(() => form.value.aiServiceId, () => {
+    form.value.model = '';
+  })
   return () => <Form data={form.value} layout={'vertical'} rules={RULES}>
     <Tabs defaultValue={'base'}>
       <TabPanel value={'base'} label={'提示词设置'} style={{marginTop: '8px'}}>
