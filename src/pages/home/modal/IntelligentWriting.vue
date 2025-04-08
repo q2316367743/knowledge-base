@@ -6,37 +6,39 @@
         <div>智能写作</div>
       </t-space>
     </template>
-    <t-paragraph>
-      <t-check-tag-group v-model="value" :options="options"/>
-    </t-paragraph>
-    <t-textarea v-model="text" :autosize="{minRows: 5, maxRows: 100}" :autofocus="true"/>
-    <t-paragraph v-if="articles.length > 0">
-      <t-space wrap size="small">
-        <div class="article-item" v-for="article in articles" :key="article.id">
-          <div class="article-item-title ellipsis" :title="article.name">
-            {{ article.name }}
+    <div class="p-4px">
+      <t-paragraph>
+        <t-check-tag-group v-model="value" :options="options"/>
+      </t-paragraph>
+      <t-textarea v-model="text" :autosize="{minRows: 5, maxRows: 100}" :autofocus="true"/>
+      <t-paragraph v-if="articles.length > 0">
+        <t-space wrap size="small">
+          <div class="article-item" v-for="article in articles" :key="article.id">
+            <div class="article-item-title ellipsis" :title="article.name">
+              {{ article.name }}
+            </div>
+            <div class="article-item-type">
+              <t-tag theme="primary" variant="outline">
+                {{ renderArticleType(article.type) }}
+              </t-tag>
+            </div>
+            <div class="article-item-close" @click="onRemove(article.id)">
+              <icon-close/>
+            </div>
           </div>
-          <div class="article-item-type">
-            <t-tag theme="primary" variant="outline">
-              {{ renderArticleType(article.type) }}
-            </t-tag>
-          </div>
-          <div class="article-item-close" @click="onRemove(article.id)">
-            <icon-close/>
-          </div>
+        </t-space>
+      </t-paragraph>
+      <t-paragraph>
+        <div class="w-full flex justify-between">
+          <t-button theme="default" @click="association = true">参考笔记</t-button>
+          <t-button theme="primary" shape="circle" @click="send">
+            <template #icon>
+              <icon-send/>
+            </template>
+          </t-button>
         </div>
-      </t-space>
-    </t-paragraph>
-    <t-paragraph>
-      <div class="w-full flex justify-between">
-        <t-button theme="default" @click="association = true">参考笔记</t-button>
-        <t-button theme="primary" shape="circle" @click="send">
-          <template #icon>
-            <icon-send/>
-          </template>
-        </t-button>
-      </div>
-    </t-paragraph>
+      </t-paragraph>
+    </div>
     <association-article v-model="association" :article-ids="articleIds" @confirm="onConfirm"/>
   </t-dialog>
 </template>

@@ -42,7 +42,8 @@ const assistantOptions = computed<Array<SelectOption>>(() => {
   return aiAssistants.filter(a => a.aiServiceId === serviceId.value).map(a => ({
     content: a.name,
     label: a.name,
-    value: a.id
+    value: a.id,
+    title: a.description || a.system || a.name
   }))
 });
 const serviceOptions = computed<Array<SelectOption>>(() => {
@@ -50,7 +51,7 @@ const serviceOptions = computed<Array<SelectOption>>(() => {
   return aiServices.map(a => ({
     content: a.name,
     label: a.name,
-    value: a.id
+    value: a.id,
   }))
 });
 
