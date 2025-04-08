@@ -10,6 +10,7 @@
           <t-form-item label="服务类型" label-align="top" v-if="!disabled">
             <t-radio-group v-model="form.type">
               <t-radio :value="AiServiceType.OPENAI">OpenAI</t-radio>
+              <t-radio :value="AiServiceType.OLLAMA">Ollama</t-radio>
             </t-radio-group>
           </t-form-item>
           <t-form-item label="API 地址" label-align="top" help="注意，OpenAI的地址，结尾要加上/v1/" v-if="!disabled">
@@ -25,7 +26,7 @@
             <t-card class="w-full" :header-bordered="true">
               <template #header v-if="!disabled">
                 <t-space>
-                  <t-button theme="primary" :loading @click="getAllModules">
+                  <t-button theme="primary" :loading @click="fetchModules">
                     <template #icon>
                       <icon-refresh/>
                     </template>
@@ -68,13 +69,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import OpenAI from "openai";
 import {clone} from "radash";
 import {useAiServiceStore} from "@/store";
 import EmptyResult from "@/components/Result/EmptyResult.vue";
 import {AiServiceType, buildAiService} from "@/entity/ai/AiService";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
+import {getAllModules} from "@/utils/component/AiModuleUtil";
 
 const props = defineProps({
   currentId: {
@@ -105,25 +106,13 @@ watch(() => props.currentId, val => {
   }
 })
 
-function getAllModules() {
+function fetchModules() {
   if (isEmptyString(form.value.url)) return MessageUtil.warning("请输入API 地址");
   if (isEmptyString(form.value.key)) return MessageUtil.warning("请输入API 密钥");
   (async () => {
     loading.value = true;
-    const openAi = new OpenAI({
-      baseURL: form.value.url,
-      apiKey: form.value.key,
-      dangerouslyAllowBrowser: true
-    })
     try {
-      const res = await openAi.models.list();
-      const items = new Array<string>();
-      items.push(...res.data.map(e => e.id));
-      while (res.hasNextPage()) {
-        await res.getNextPage();
-        items.push(...res.data.map(e => e.id));
-      }
-      form.value.models = items;
+      form.value.models = await getAllModules(form.value);
       MessageUtil.success("获取成功");
     } catch (e) {
       MessageUtil.error("获取失败", e);

@@ -3,7 +3,9 @@ import {useSnowflake} from "@/hooks/Snowflake";
 export enum AiServiceType {
   OPENAI = 'openai',
   // uTools提供
-  U_TOOLS = 'uTools'
+  U_TOOLS = 'uTools',
+  // Ollama
+  OLLAMA = 'Ollama'
 }
 
 export interface AiServiceModel {
@@ -16,6 +18,8 @@ export interface AiServiceModel {
   // 消耗量
   cost: number;
 }
+
+export type AiServiceModelType = string | AiServiceModel;
 
 /**
  * AI服务
@@ -34,7 +38,7 @@ export interface AiService {
   // 模型版本
   modelVersion: string;
   // 模型、启用的模型
-  models: Array<string | AiServiceModel>;
+  models: Array<AiServiceModelType>;
 }
 
 export const buildAiService = (): AiService => ({
