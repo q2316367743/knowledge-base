@@ -1,7 +1,7 @@
 <template>
   <div class="news-list-item">
     <header class="page-header">
-      <div size="small" class="page-header__left">
+      <div class="page-header__left">
         <div class="page-header__title">{{ idx?.name }}</div>
       </div>
       <div class="page-header__right flex mr-8px items-center">

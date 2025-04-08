@@ -8,7 +8,7 @@ export interface NoteImportItem {
   regex: RegExp;
 }
 
-export interface NoteImportRule extends NoteImportItem {
+export interface NoteImportRule  {
 
   /**
    * 标题选择起
@@ -26,7 +26,7 @@ export interface NoteImportRule extends NoteImportItem {
   wait?: string | number;
 
   /**
-   * 超时时间，单位ms，默认2000ms。超时后，页面不会被终止，并且将被refetch。
+   * 超时时间，单位ms，默认5000ms。超时后，页面不会被终止，并且将被refetch。
    */
   timeout?: number;
 
@@ -41,8 +41,11 @@ export interface NoteImportRule extends NoteImportItem {
   userAgent?: string;
 }
 
+export interface NoteImportInstance extends NoteImportItem, NoteImportRule {
+}
+
 export interface NoteImportGroup {
   id: string;
   name: string;
-  items: NoteImportRule[];
+  items: NoteImportInstance[];
 }

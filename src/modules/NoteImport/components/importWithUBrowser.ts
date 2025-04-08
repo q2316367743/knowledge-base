@@ -1,6 +1,6 @@
 import {NoteImportRule} from "@/modules/NoteImport/types";
 
-interface ImportNoteResult {
+export interface ImportNoteResult {
   title: string;
   html: string;
   markdown: string;
@@ -24,9 +24,22 @@ export async function importWithUBrowser(url: string, props?: NoteImportRule): P
   uBrowser = uBrowser.evaluate(() => {
     // 处理img可能存在的问题，有些图片的链在data-src中
     document.querySelectorAll('img').forEach(img => {
-      const dataSrc = img.getAttribute('data-src');
-      if (dataSrc) {
-        img.setAttribute('src', dataSrc);
+      const src = img.getAttribute("src");
+      if (!src || !/^https?:\/\//.test(src)) {
+        // 错误的链接
+        for (let i = 0; i < img.attributes.length; i++) {
+          const attribute = img.attributes[i]
+          if (/^https?:\/\//.test(attribute.value)) {
+            const match = attribute.value.match(/(https?:\/\/\S+)/g);
+            if (match) {
+              const value = match[0];
+              if (value) {
+                img.setAttribute('src', value);
+                return;
+              }
+            }
+          }
+        }
       }
     });
     return document.body.outerHTML

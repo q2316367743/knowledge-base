@@ -32,39 +32,40 @@
         </t-space>
       </div>
     </header>
-    <div class="page-container">
+    <main class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
-        <iframe ref="iframeRef" frameborder="none" :src="url" class="w-full h-full"/>
+        <div class="page-container-content">
+          <chat-content :value="article?.markdown"/>
+        </div>
       </t-loading>
-    </div>
+    </main>
+    <t-back-top container=".page-container"/>
   </div>
 </template>
 <script lang="ts" setup>
 import {ArrowLeftIcon, LinkIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {NewsArticle} from "@/entity/news";
-import {getNewsArticle} from "@/algorithm/rule";
 import {useNewsStore} from "@/store/db/NewsStore";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useIntervalComputer} from "@/hooks/IntervalComputer";
+import {getNewsArticle} from "@/modules/NoteNews";
 
 const route = useRoute();
 const router = useRouter();
 
 const id = route.params.id as string;
-const title = route.query.title as string;
+const title = ref(route.query.title as string);
 
 const article = ref<NewsArticle>();
 const loading = ref(true);
-const url = ref('');
 const scale = useUtoolsDbStorage<number>(`${LocalNameEnum.KEY_NEWS_CONTENT_SCALE}/${id}`, 100);
-const iframeRef = ref<HTMLIFrameElement>();
 
-const updateTime = useIntervalComputer(() => article.value ? prettyDate(article.value.date) : '', 1000)
+const updateTime = useIntervalComputer(() => article.value ? prettyDate(article.value.date) : '', 1000);
 
-
+const fontSize = computed(() => `${scale.value}%`);
 
 const init = async () => {
   try {
@@ -75,57 +76,9 @@ const init = async () => {
       return Promise.reject(new Error("资讯规则不存在"));
     }
     article.value = await getNewsArticle(route.query.link as string, rule);
-    url.value = URL.createObjectURL(new Blob([`<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="referrer" content="never">
-  <title>${title}</title>
-  <style>
-    html {
-      font-size: ${scale.value}%;
+    if (article.value.title) {
+      title.value = article.value.title;
     }
-    body {
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-    #app {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 16px;
-    }
-  </style>
-</head>
-<body>
-<div id="app">${article.value.html}</div>
-</body>
-</html>`], {type: 'text/html'}));
-
-    // 监听iframe加载完成事件
-    iframeRef.value?.addEventListener('load', () => {
-      const doc = iframeRef.value?.contentDocument;
-      if (doc) {
-        // 为所有a标签添加点击事件监听
-        doc.querySelectorAll('a').forEach(link => {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const href = link.getAttribute('href');
-            if (href && !href.startsWith('javascript:')) {
-              // 使用URL对象处理相对路径
-              const baseUrl = new URL(route.query.link as string);
-              const absoluteUrl = new URL(href, baseUrl.href).href;
-              utools.shellOpenExternal(absoluteUrl);
-            }
-          });
-        });
-      }
-    });
   } catch (e) {
     MessageUtil.error("获取内容失败", e);
   } finally {
@@ -134,12 +87,6 @@ const init = async () => {
 };
 
 onMounted(init);
-
-onUnmounted(() => {
-  if (url.value) {
-    URL.revokeObjectURL(url.value);
-  }
-})
 
 function handlerClick() {
   router.back();
@@ -150,14 +97,6 @@ function openLink() {
   utools.shellOpenExternal(route.query.link as string);
 }
 
-watch(scale, (newScale) => {
-  if (iframeRef.value) {
-    const doc = iframeRef.value.contentDocument;
-    if (doc && doc.documentElement) {
-      doc.documentElement.style.fontSize = `${newScale}%`;
-    }
-  }
-});
 </script>
 <style scoped lang="less">
 .news-content {
@@ -195,7 +134,15 @@ watch(scale, (newScale) => {
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: hidden;
+    overflow: auto;
+
+    :deep(p) {
+      font-size: v-bind(fontSize) !important;
+    }
+
+    .page-container-content {
+      padding: 8px 16px;
+    }
   }
 
   .empty {

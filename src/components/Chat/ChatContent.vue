@@ -6,6 +6,7 @@
 <script lang="ts" setup>
 import Cherry from 'cherry-markdown';
 import {useGlobalStore} from "@/store/GlobalStore";
+import {onClickPreview} from "@/editor/MarkdownEditor/common/event";
 
 const props = defineProps({
   value: {
@@ -50,6 +51,9 @@ onMounted(() => {
       enablePreviewerBubble: false,
     },
     isPreviewOnly: true,
+    callback: {
+      onClickPreview
+    }
   });
   current.value.setTheme(useGlobalStore().isDark ? 'dark' : 'default')
 });

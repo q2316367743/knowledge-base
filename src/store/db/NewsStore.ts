@@ -9,10 +9,10 @@ import {
   saveOneByAsync
 } from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {getNewsList} from "@/algorithm/rule";
 import {debounce} from "radash";
 import {download} from "@/utils/BrowserUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
+import {getNewsList} from "@/modules/NoteNews";
 
 // 当前新闻的选择项
 export const newsActiveKey = ref('');
@@ -89,7 +89,6 @@ export const useNewsStore = defineStore('news', () => {
         id: res.id,
         name: res.name,
         icon: res.icon,
-        type: res.type,
         createTime: Date.now()
       });
     } else {
@@ -97,7 +96,6 @@ export const useNewsStore = defineStore('news', () => {
         ...news.value[index],
         name: res.name,
         icon: res.icon,
-        type: res.type,
       }
       const old = await getFromOneByAsync<NewsRule>(`${LocalNameEnum.NEWS_RULE}/${res.id}`);
       rev = old.rev;
@@ -105,15 +103,12 @@ export const useNewsStore = defineStore('news', () => {
     await saveOneByAsync<NewsRule>(`${LocalNameEnum.NEWS_RULE}/${res.id}`, {
       id: res.id,
       url: res.url,
-      list: res.list,
-      title: res.title,
-      author: res.author,
-      description: res.description,
-      image: res.image,
-      link: res.link,
-      webview: res.webview,
       wait: res.wait,
-      content: res.content,
+      title: res.title,
+      body: res.body,
+      timeout: res.timeout,
+      headers: res.headers,
+      userAgent: res.userAgent,
     }, rev);
     await sync();
   }

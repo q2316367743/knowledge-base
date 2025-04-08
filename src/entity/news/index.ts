@@ -1,72 +1,22 @@
 import {useSnowflake} from "@/hooks/Snowflake";
-
-export enum NewsTypeEnum {
-  RSS = 1,
-  CUSTOMER = 2
-}
+import {NoteImportRule} from "@/modules/NoteImport/types";
+import {ImportNoteResult} from "@/modules/NoteImport/components/importWithUBrowser";
 
 export interface NewsIndex {
   id: string;
   createTime: number;
   icon: string;
   name: string;
-  type: NewsTypeEnum
 }
 
-export interface NewsRule {
+export interface NewsRule extends NoteImportRule {
+
   id: string;
 
   /**
-   * 目标链接，支持js，支持模板引擎，支持分页
-   *
-   * 模板引擎：https://text.com/article/{page}@js:`${result}/v1`
+   * 目标链接
    */
   url: string;
-
-  /**
-   * 列表规则
-   */
-  list: string;
-
-  /**
-   * 标题规则
-   */
-  title: string;
-
-  /**
-   * 作者规则
-   */
-  author: string;
-
-  /**
-   * 描述规则
-   */
-  description: string;
-
-  /**
-   * 图片规则
-   */
-  image: string;
-
-  /**
-   * 链接规则
-   */
-  link: string;
-
-  /**
-   * 是否使用uBrowser
-   */
-  webview: boolean;
-
-  /**
-   * 等待时间 | 等待元素
-   */
-  wait: string;
-
-  /**
-   * 内容规则
-   */
-  content: string;
 
 }
 
@@ -118,8 +68,7 @@ export interface NewsInstanceCache {
 export interface NewsContent extends NewsIndex, NewsRule {
 }
 
-export interface NewsArticle {
-  html: string;
+export interface NewsArticle extends ImportNoteResult{
   date: number;
 }
 
@@ -129,16 +78,10 @@ export function buildNewsContent(): NewsContent {
     createTime: Date.now(),
     icon: '',
     name: '',
-    type: NewsTypeEnum.RSS,
+
     url: '',
-    list: '',
+
     title: '',
-    author: '',
-    description: '',
-    image: '',
-    link: '',
-    webview: false,
-    wait: '',
-    content: '// 此处返回html字符串，默认返回body\nreturn root.toInnerHTML();'
+    body: ''
   }
 }

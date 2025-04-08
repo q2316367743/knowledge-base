@@ -12,7 +12,6 @@ import 'handsontable/dist/handsontable.full.min.css';
 import '@wangeditor/editor/dist/css/style.css';
 import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
-import 'nprogress/nprogress.css';
 import '@/assets/style/global.less';
 
 

@@ -1,7 +1,7 @@
 <template>
   <t-layout class="news-list w-full h-full">
     <t-aside
-      class="news-list-aside"
+      :class="{'news-list-aside': true, 'collapse': newsSideCollapse}"
       :width="newsSideCollapse ? '0px' : '232px'"
     >
       <t-header class="news-list__header flex p-4 justify-between h-32px">
@@ -217,6 +217,10 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
   .news-list-aside {
     border-right: 1px solid var(--td-border-level-1-color);
     overflow: hidden;
+
+    &.collapse {
+      border-right-color: transparent;
+    }
 
     .news-list__header {
       border-bottom: 1px solid var(--td-border-level-1-color);
