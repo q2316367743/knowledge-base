@@ -2,6 +2,26 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.5.2',
+    sign: 252,
+    time: '2025年4月1日',
+    items: [{
+      label: LogItemEnum.REPAIR,
+      content: "修复了WebDAV无法是用的问题"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "新增了Markdown到处为微信公众号"
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: "修复了问一问没有将文章代入的问题"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "新增了对Ollama AI的支持,但处于beta版,不确保能用"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "加密笔记可以选择笔记类型: 纯文本/markdown/富文本"
+    }]
+  }, {
     version: '2.5.1',
     sign: 251,
     time: '2025年4月3日',
@@ -42,7 +62,7 @@ export default [
     }, {
       label: LogItemEnum.UPDATE,
       content: '优化待办中的日历视图，现在的日历视图更加好看使用'
-    },{
+    }, {
       label: LogItemEnum.ADD,
       content: '新增网页剪报功能，可以直接讲网页转为markdown笔记。「需要升级uTools7.0.0体验」'
     }, {
