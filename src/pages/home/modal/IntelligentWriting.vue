@@ -64,7 +64,7 @@ const value = ref([0]);
 const text = ref('');
 const association = ref(false);
 
-const articleIds = computed(() => useChatStore().articleIds);
+const articleIds = ref(new Array<number>());
 const articles = computed(() => {
   const {articleMap} = useArticleStore();
   const list = new Array<ArticleIndex>()
@@ -104,15 +104,15 @@ watch(value, val => onChange(val[0]), {immediate: true});
 watch(visible, val => val && onChange(value.value[0]));
 
 function onConfirm(ids: Array<number>) {
-  useChatStore().changeArticleIds(ids);
+  articleIds.value = ids;
 }
 
 function onRemove(id: number) {
-  useChatStore().changeArticleIds(articleIds.value.filter(e => e !== id));
+  articleIds.value = articleIds.value.filter(e => e !== id);
 }
 
 const send = () => useChatStore()
-  .ask(text.value)
+  .ask(text.value, articleIds.value)
   .catch((e) => {
     MessageUtil.error("提问失败", e);
   });
@@ -131,6 +131,7 @@ const send = () => useChatStore()
   &:hover {
     background-color: var(--td-bg-color-component-hover);
     border: 1px solid var(--td-border-level-2-color);
+
     .article-item-close {
       opacity: 1;
     }

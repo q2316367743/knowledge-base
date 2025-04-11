@@ -8,7 +8,7 @@
     </template>
     <t-input v-model="keyword" @change="inputChange" placeholder="请输入笔记标题进行搜索"/>
     <t-tree v-model="checkedKeys" :data="treeData" :expand-all="false" :checkable="true" max-height="50vh"
-            :allow-fold-node-on-filter="true" :keys="keys" style="margin-top: 8px" :filter="filterFunc">
+            :allow-fold-node-on-filter="true" style="margin-top: 8px" :filter="filterFunc">
       <template #label="{node}">
         <div class="flex justify-between w-full">
           <div class="flex items-center">
@@ -42,13 +42,11 @@ const visible = defineModel({
   default: false
 });
 
-const keys = {label: 'title', value: 'key'};
 
 const keyword = ref('');
-const checkedKeys = ref<Array<number>>(useChatStore().articleIds);
+const checkedKeys = ref<Array<number>>([]);
 const filterFunc = ref<TreeProps['filter']>();
 
-watch(checkedKeys, val => useChatStore().changeArticleIds(val));
 
 const {treeData} = useNoteTree();
 const inputChange: InputProps['onChange'] = () => {
@@ -61,10 +59,10 @@ const inputChange: InputProps['onChange'] = () => {
 
 // 总结内容
 const summary = () => useChatStore()
-  .ask("总结内容")
-  .catch((e) => {
-    MessageUtil.error("提问失败", e);
-  });
+  .ask("总结内容", checkedKeys.value)
+  .then(() => checkedKeys.value = [])
+  .catch((e) => MessageUtil.error("提问失败", e));
+
 </script>
 <style scoped lang="less">
 

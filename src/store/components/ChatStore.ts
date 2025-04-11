@@ -16,8 +16,6 @@ export const assistantId = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_ASS
 watch(serviceId, () => assistantId.value = '');
 
 export const useChatStore = defineStore('chat', () => {
-  // 引用的笔记
-  const articleIds = ref(new Array<number>());
   // 消息
   const messages = ref(new Array<ChatMessage>());
   // 最后的一个消息
@@ -74,9 +72,7 @@ export const useChatStore = defineStore('chat', () => {
       return Promise.reject(new Error("AI 服务未找到"));
     }
 
-    if (res) {
-      articleIds.value = res;
-    }
+    const articleIds: Array<number> = res || [];
 
     const now = Date.now();
     const oldMessages = buildMessage();
@@ -95,10 +91,10 @@ export const useChatStore = defineStore('chat', () => {
 
       // 获取笔记
       const articles = new Array<ChatMessageParam>();
-      if (isNotEmptyArray(articleIds.value)) {
+      if (isNotEmptyArray(articleIds)) {
         const {getContent} = useArticleStore()
         const contents = new Array<string>()
-        for (const articleId of articleIds.value) {
+        for (const articleId of articleIds) {
           const c = await getContent(articleId);
           if (c.record) {
             contents.push(typeof c.record === 'object' ? JSON.stringify(c.record) : c.record)
@@ -162,15 +158,11 @@ export const useChatStore = defineStore('chat', () => {
     // 再清空
     messages.value = [];
     lastId.value = 0;
-    articleIds.value = [];
   }
 
-  function changeArticleIds(res: Array<number>) {
-    articleIds.value = res;
-  }
 
   return {
-    messages, steamLoading, empty, lastId, assistantId, loading, articleIds,
-    ask, stop, clear, changeArticleIds
+    messages, steamLoading, empty, lastId, assistantId, loading,
+    ask, stop, clear
   }
 })

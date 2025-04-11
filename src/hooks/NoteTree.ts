@@ -24,8 +24,8 @@ export function useNoteTree(keyword?: Ref<string>, map?: (data: TreeOptionData) 
       const articles = folderMap.get(folderId);
       if (articles && articles.length > 0) {
         articles.map(article => ({
-          key: article.id,
-          title: article.name,
+          value: article.id,
+          label: article.name,
           leaf: true,
           icon: () => buildArticleIcon(article.type, article.preview),
           pid: 0,

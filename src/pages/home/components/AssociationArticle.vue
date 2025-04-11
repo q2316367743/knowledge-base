@@ -8,7 +8,7 @@
     </template>
     <t-input v-model="keyword" @change="inputChange" placeholder="请输入笔记标题进行搜索"/>
     <t-tree v-model="checkedKeys" :data="treeData" :expand-all="false" :checkable="true" max-height="70vh"
-            :allow-fold-node-on-filter="true" :keys="keys" style="margin-top: 8px" :filter="filterFunc">
+            :allow-fold-node-on-filter="true" style="margin-top: 8px" :filter="filterFunc">
       <template #label="{ node }">
         <div class="flex" :class="{active: homeEditorId===node.value}">
           <div :class="{'pt-3px': node.data.preview}">
@@ -38,8 +38,6 @@ const props = defineProps({
   }
 });
 const emit = defineEmits(['confirm']);
-
-const keys = {label: 'title', value: 'key'};
 
 const keyword = ref('');
 const checkedKeys = ref<Array<number>>([]);
