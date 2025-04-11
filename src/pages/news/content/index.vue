@@ -130,7 +130,7 @@ function openLink() {
 
   .page-container {
     position: absolute;
-    top: 51px;
+    top: 50px;
     left: 0;
     right: 0;
     bottom: 0;

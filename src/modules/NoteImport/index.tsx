@@ -26,7 +26,7 @@ export function openArticleImportWithUBrowser(pid?: number) {
     header: '文章导入',
     placement: 'center',
     width: 500,
-    default: () => <div>
+    default: () => <div class={'pl-4px pr-4px'}>
       <FormItem label={'请输入文章链接：'} labelAlign={'top'}>
         <Textarea v-model={url.value} autosize={{minRows: 3, maxRows: 9}} autofocus={true} maxlength={255}
                   placeholder={'文章链接'}/>

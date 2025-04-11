@@ -24,9 +24,7 @@
           <news-list-item v-for="item in (cache?.data||[])" :index="idx" :item="item"/>
         </div>
         <div class="empty" v-else>
-          <div class="empty-c">
-            <t-empty title="暂无内容" description="可以尝试刷新重试"/>
-          </div>
+          <empty-result  title="暂无内容" tip="请前往设置中选择资讯源"/>
         </div>
       </t-loading>
     </div>
@@ -42,7 +40,6 @@ import {prettyDate} from "@/utils/lang/FormatUtil";
 import NewsListItem from "@/pages/news/components/NewsListItem.vue";
 
 const route = useRoute();
-const router = useRouter();
 
 const id = computed(() => route.params.id as string);
 

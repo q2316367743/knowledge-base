@@ -14,6 +14,7 @@
           class="shrink-0 ml-4px"
           :options="options"
           v-if="!newsSideCollapse"
+          trigger="click"
         >
           <t-button theme="primary" shape="square">
             <template #icon>
@@ -51,12 +52,7 @@
     <t-content class="news-list-content">
       <router-view v-if="show"/>
       <div class="empty" v-else>
-        <div class="empty-c">
-          <t-empty
-            title="请在左侧选择资讯"
-            description="前往资讯广场订阅资讯"
-          />
-        </div>
+        <empty-result title="请在左侧选择资讯" tip="前往资讯广场订阅资讯"/>
       </div>
       <div :class="{ collapse: newsSideCollapse, 'news-list-collapse': true }">
         <t-button
@@ -93,8 +89,9 @@ import {
   useNewsStore,
 } from "@/store/db/NewsStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {isEmptyArray, isNotEmptyString} from "@/utils/lang/FieldUtil";
+import {isNotEmptyString} from "@/utils/lang/FieldUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {openRssBackground} from "@/global/Constant";
 
 const router = useRouter();
 
@@ -104,34 +101,8 @@ const options = [
     onClick: () => postNews(),
   }, {
     content: "广场",
-    onClick: () => MessageUtil.warning("暂未实现")
-  }, {
-    content: "导入",
-    onClick: () => {
-      window.preload.customer.openFile({
-        title: "选择资讯导出文件",
-        filters: [{name: "JSON", extensions: ["json"]}],
-        properties: ["openFile"],
-        buttonLabel: "选择文件"
-      }).then(files => {
-        if (isEmptyArray(files)) return;
-        const target = files[0];
-        // 将file对象转为字符串
-        const re = new FileReader();
-        re.onload = () => {
-          useNewsStore().importNews(re.result as string);
-        }
-        re.readAsText(target);
-      })
-    }
-  }, {
-    content: "导出",
-    onClick: () => {
-      useNewsStore().exportNews()
-        .then(() => MessageUtil.success("导出成功"))
-        .catch(e => MessageUtil.error("导出失败", e));
-    }
-  },
+    onClick: () => openRssBackground()
+  }
 ];
 
 const el = ref();
@@ -214,6 +185,8 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
 }
 
 .news-list {
+  position: relative;
+
   .news-list-aside {
     border-right: 1px solid var(--td-border-level-1-color);
     overflow: hidden;
@@ -237,7 +210,6 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
       position: absolute;
       top: 35%;
       transform: translateX(50%) translateY(-50%);
-      z-index: 200;
       left: -32px;
 
       &.collapse {

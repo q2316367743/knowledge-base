@@ -7,7 +7,7 @@
         </template>
         问一问
       </t-menu-item>
-      <t-menu-item value="/news" v-if="moduleForNews">
+      <t-menu-item value="/news" v-if="moduleForNews && !disabledForModule">
         <template #icon>
           <article-icon/>
         </template>
@@ -189,6 +189,7 @@ import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {openKeyDrawer} from "@/components/app-side/func";
 import {toDoc, toFeedback} from "@/global/Constant";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
+import {disabledForModule} from '@/global/Constant';
 
 const route = useRoute();
 const router = useRouter();

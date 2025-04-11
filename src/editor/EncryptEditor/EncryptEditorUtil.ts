@@ -1,3 +1,5 @@
+import {isEmptyString} from "@/utils/lang/FieldUtil";
+
 /**
  * 判断密码是否正确
  * @param text 输入的文本
@@ -31,5 +33,8 @@ export function encryptText(text: string, keyIv: EncryptKeyIv) {
  * @param keyIv 密码
  */
 export function decryptText(text: string, keyIv: EncryptKeyIv) {
+  if (isEmptyString(keyIv.key) && isEmptyString(keyIv.iv)) {
+    return text;
+  }
   return window.preload.encrypt.decryptValue(keyIv, text);
 }

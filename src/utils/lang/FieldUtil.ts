@@ -95,23 +95,27 @@ export function getValueBetween(value: number, min: number, max: number): number
 }
 
 /**
- * 版本是否大于指定大版本
+ * 版本是否小于指定版本
  * @param version 版本
- * @param level 指定大版本
+ * @param levels 指定版本
  */
-export function versionGreaterEqual(version: string, level: number): boolean {
-  const v = version.split('.')[0];
-  if (!v) return false;
-  return parseInt(v) >= level;
+export function versionLess(version: string, ...levels: Array<number>): boolean {
+  const v = version.split('.');
+  if (!v.length) return false;
+  for (let i = 0; i < levels.length; i++) {
+    if (parseInt(v[i] || '0') < levels[i]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
- * 版本是否小于指定大版本
+ * 版本是否大于等于指定版本
  * @param version 版本
- * @param level 指定大版本
+ * @param levels 指定版本
  */
-export function versionLess(version: string, level: number): boolean {
-  const v = version.split('.')[0];
-  if (!v) return false;
-  return parseInt(v) < level;
+export function versionGreaterEqual(version: string, ...levels: Array<number>): boolean {
+  return !versionLess(version, ...levels);
 }
+

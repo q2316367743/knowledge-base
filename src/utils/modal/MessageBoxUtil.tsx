@@ -1,9 +1,5 @@
 import {
-  Modal,
-  ModalReturn,
-} from "@arco-design/web-vue";
-import {
-  Button, DialogPlugin, Empty, Input, Paragraph, Space, Typography
+  Button, DialogPlugin, Empty, Input, Paragraph, Space, Textarea, Typography
 } from "tdesign-vue-next";
 import {LoadingIcon} from "tdesign-icons-vue-next";
 
@@ -43,16 +39,17 @@ export default {
 
   confirmMulti(content: string, title: string, buttons: Array<{ name: string, action: () => void }>): Promise<void> {
     return new Promise<void>(resolve => {
-      const modalReturn = Modal.confirm({
-        content,
-        title,
+      const dp = DialogPlugin({
+        default: content,
+        header: title,
+        placement: "center",
         draggable: true,
         footer: () => <Space>
-          <Button theme={'default'} onClick={modalReturn.close}>取消</Button>
+          <Button theme={'default'} onClick={dp.destroy}>取消</Button>
           {buttons.map(btn => <Button theme={'primary'} onClick={() => {
             btn.action();
             resolve();
-            modalReturn.close();
+            dp.destroy();
           }}>{btn.name}</Button>)}
         </Space>
       });
@@ -117,9 +114,65 @@ export default {
       }
 
       const res = DialogPlugin({
-        default: () => <div>
+        default: () => <div class={'pl-4px pr-4px'}>
           <Paragraph>{content}</Paragraph>
           <Input autofocus={true} v-model={value.value} clearable={true} onEnter={onKeydown}></Input>
+        </div>,
+        header: title,
+        draggable: true,
+        placement: 'center',
+        confirmBtn: {
+          default: confirmButtonText,
+        },
+        cancelBtn: {
+          default: cancelButtonText
+        },
+        onConfirm: () => {
+          resolve(value.value);
+          res.destroy();
+        },
+        onCancel() {
+          res.destroy();
+        },
+        onClose() {
+          res.destroy();
+          onClose && onClose()
+        }
+      })
+    })
+  },
+
+
+  textarea(content: string, title?: string, config?: {
+    confirmButtonText?: string,
+    cancelButtonText?: string,
+    inputPattern?: RegExp,
+    inputErrorMessage?: string,
+    inputValue?: string,
+    onClose?: () => void
+  }): Promise<string> {
+    const {
+      inputValue = '',
+      confirmButtonText = '确认',
+      cancelButtonText = '取消',
+      onClose
+    } = config || {};
+    return new Promise<string>(resolve => {
+      let value = ref(inputValue);
+
+      function onKeydown(value: string | number, context: {
+        e: KeyboardEvent;
+      }) {
+        if (context.e.code === 'Enter') {
+          resolve(`${value}`);
+          res.destroy();
+        }
+      }
+
+      const res = DialogPlugin({
+        default: () => <div class={'pl-4px pr-4px'}>
+          <Paragraph>{content}</Paragraph>
+          <Textarea autofocus={true} v-model={value.value} onKeydown={onKeydown}></Textarea>
         </div>,
         header: title,
         draggable: true,
@@ -148,9 +201,10 @@ export default {
   loading(content: string, title?: string): MessageBoxLoadingReturn {
     const body = ref(content);
     const lines = ref(new Array<LineContent>());
-    const res = Modal.open({
-      title: title || '加载中',
-      content: () => <Empty title={content} type={'empty'}>
+    const res = DialogPlugin({
+      header: title || '加载中',
+      placement: "center",
+      default: () => <Empty title={content} type={'empty'}>
         {{
           icon: () => <LoadingIcon/>,
           subtitle: () => {
@@ -165,14 +219,14 @@ export default {
           }
         }}
       </Empty>,
+      closeOnOverlayClick: false,
+      closeOnEscKeydown: false,
+      closeBtn: false,
       draggable: true,
-      closable: false,
       footer: false,
-      escToClose: false,
-      maskClosable: false
     });
     return {
-      ...res,
+      close: () => res.destroy(),
       setContent(content: string) {
         body.value = content;
       },
@@ -184,7 +238,10 @@ export default {
 
 }
 
-export interface MessageBoxLoadingReturn extends ModalReturn {
+export interface MessageBoxLoadingReturn {
+
+  close: () => void;
+
   setContent(content: string): void;
 
   append(line: string, status?: LineContentStatus): void;

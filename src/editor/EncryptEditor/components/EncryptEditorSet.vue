@@ -309,14 +309,16 @@ const onCancel = () => emit('cancel');
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 999999;
   background-color: var(--td-bg-color-container);
   display: grid;
-  place-items: center; /* 使内容在水平和垂直方向上都居中 */
-  //height: 100%; /* 使容器占满整个视口高度 */
+  place-items: center;
+
   .encrypt-editor-set-img {
     // 缩放80%
     transform: scale(0.8);
   }
+
   .encrypt-editor-set-form {
     margin-left: 16px;
     display: grid;

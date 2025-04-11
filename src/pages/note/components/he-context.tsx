@@ -51,28 +51,28 @@ export const articleTextTypes: Array<ArticleTypeList> = [
   {
     key: ArticleTypeEnum.SUPER_EDITOR,
     name: '超级笔记',
-    icon: shallowRef(StickyNoteIcon),
+    icon: StickyNoteIcon,
     lock: FileSuperNote,
     vip: true
   }, {
     key: ArticleTypeEnum.RICH_TEXT,
     name: '富文本',
-    icon: shallowRef(IconBook),
+    icon: IconBook,
     lock: IconRichText
   }, {
     key: ArticleTypeEnum.MARKDOWN,
     name: 'markdown',
-    icon: shallowRef(IconFile),
+    icon: IconFile,
     lock: FileMarkdown
   }, {
     key: ArticleTypeEnum.CODE,
     name: '代码',
-    icon: shallowRef(IconCode),
+    icon: IconCode,
     lock: FileCode
   }, {
     key: ArticleTypeEnum.MIND_MAP,
     name: '思维导图',
-    icon: shallowRef(IconMindMapping),
+    icon: IconMindMapping,
     lock: FileMindMap
   }]
 
@@ -80,19 +80,19 @@ export const mainNoteTypes: Array<ArticleTypeList> = [
   ...articleTextTypes, {
     key: ArticleTypeEnum.HANDSONTABLE,
     name: '表格',
-    icon: shallowRef(IconNav),
+    icon: IconNav,
     lock: FileHandsontable
   }, {
     key: ArticleTypeEnum.LOGIC_FLOW,
     name: '流程图',
-    icon: shallowRef(IconBranch),
+    icon: IconBranch,
     lock: FileLct
   }];
 export const extraNoteTypes: Array<ArticleTypeList> = [
   {
     key: ArticleTypeEnum.ENCRYPT_EDITOR,
     name: '加密笔记',
-    icon: shallowRef(LockOnIcon),
+    icon: LockOnIcon,
     lock: FileEncrypt,
     vip: true
   }
@@ -106,7 +106,7 @@ export const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
   const icon = articleTypeMap.get(type);
-  return h(icon ? (readonly ? icon.lock : icon.icon.value) : IconFile, {})
+  return icon ? (readonly ? icon.lock : icon.icon) : IconFile
 }
 
 export function renderArticleType(type: ArticleTypeEnum): string {

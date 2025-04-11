@@ -87,7 +87,7 @@ export function treeEach(
       value: item.value,
       label: item.label,
       children: [],
-      icon: () => h(IconFolder, {}),
+      icon: IconFolder,
       pid: item.pid,
       preview: item.preview,
       color: item.fontColor
@@ -108,7 +108,7 @@ export function treeEach(
         value: article.id,
         label: article.name,
         leaf: true,
-        icon: () => buildArticleIcon(article.type, article.preview),
+        icon: buildArticleIcon(article.type, article.preview),
         pid: article.folder,
         preview: article.preview,
         color: article.fontColor

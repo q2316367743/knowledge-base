@@ -29,8 +29,10 @@
         </t-space>
       </div>
     </div>
-    <div class="encrypt-editor-display-content">
-      <MonacoEditorCore v-model="content" language="markdown" :read-only="false" :mini-map="false"/>
+    <div class="encrypt-editor-display-content" v-show="!setPsd">
+      <markdown-editor v-if="type === 'markdown'" v-model="text" :preview="false"/>
+      <rich-text-editor v-else-if="type === 'rich-text'" v-model="text" :read-only="false"/>
+      <MonacoEditorCore v-else v-model="text" language="markdown" :read-only="false" :mini-map="false"/>
     </div>
     <encrypt-text-set v-if="setPsd" @submit="onSubmit" @cancel="onCancel"/>
   </div>
@@ -39,20 +41,27 @@
 import {LockOffIcon, LockOnIcon, SaveIcon} from "tdesign-icons-vue-next";
 import EncryptTextSet from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextSet.vue";
 import MonacoEditorCore from "@/editor/MonacoEditor/MonacoEditorCore.vue";
+import MarkdownEditor from '@/editor/MarkdownEditor/index.vue';
+import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 
-const content = defineModel({
-  type: String,
-  default: ''
-});
 const props = defineProps({
+  content: {
+    type: String,
+    default: ''
+  },
   notPassword: {
     type: Boolean,
     default: false
   },
+  type: {
+    type: String,
+    default: ''
+  }
 });
 const emit = defineEmits(['lock', 'save', 'setPassword']);
 
 const setPsd = ref(false);
+const text = ref(props.content);
 
 function onAction() {
   if (props.notPassword) {
@@ -71,7 +80,7 @@ const onSubmit = (psd: string) => {
 }
 const onCancel = () => setPsd.value = false;
 
-const onSave = () => emit('save');
+const onSave = () => emit('save', text.value);
 </script>
 <style scoped lang="less">
 .encrypt-editor-display {

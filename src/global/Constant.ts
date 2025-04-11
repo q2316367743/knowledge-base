@@ -1,5 +1,6 @@
 import UpdateLog from "@/global/UpdateLog";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {versionLess} from "@/utils/lang/FieldUtil";
 
 const Constant = {
   uid: 'zdllh16g',
@@ -32,6 +33,9 @@ const Constant = {
     all: '6ruxx1z1o72gonrpwponq4gonwi1v2ix',
     note: '5v6oq0mkukbzcjdc0y5mitz4pkglwl1q',
     todo: 'nu9lc6yed8zx80dc6ry5fruyjblrwh7s'
+  },
+  background: {
+    rss: 'https://knowledge-nase.esion.xyz/article/rss.html'
   }
 }
 
@@ -78,3 +82,11 @@ export function toFeedback() {
 }
 
 export const BASE64_PREFIX: string = 'data:image/png;base64,';
+
+export const disabledForModule = versionLess(utools.getAppVersion(), 7);
+
+export function openRssBackground() {
+  utools.ubrowser
+    .goto(Constant.background.rss)
+    .run({width: 1200, height: 800})
+}
