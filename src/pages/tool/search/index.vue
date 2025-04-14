@@ -26,7 +26,7 @@
           <t-col flex="32px">
             <t-button theme="danger" :disabled="!loading" @click="stop">
               <template #icon>
-                <t-icon name="close"/>
+                <close-icon />
               </template>
             </t-button>
           </t-col>
@@ -57,7 +57,7 @@
               >
                 {{ item.title }}
                 <t-tooltip content="打开预览">
-                  <t-icon name="preview"/>
+                  <round-icon />
                 </t-tooltip>
               </t-link>
             </template>
@@ -69,7 +69,7 @@
             <t-tooltip content="跳转到编辑器">
               <t-button variant="text" shape="square" @click="jumpToArticle(item.value)">
                 <template #icon>
-                  <icon-edit/>
+                  <edit2-icon />
                 </template>
               </t-button>
             </t-tooltip>
@@ -82,11 +82,8 @@
 </template>
 
 <script lang="ts" setup>
-import {useWindowSize} from "@vueuse/core";
-import {computed, onBeforeUnmount, ref} from "vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useRouter} from "vue-router";
 import {
   _searchContent,
   SearchContentItem,
@@ -98,6 +95,7 @@ import {
 } from "@/pages/note/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {openArticle} from "@/components/ArticePreview/OpenArticle";
+import {CloseIcon, Edit2Icon, RoundIcon} from "tdesign-icons-vue-next";
 
 const size = useWindowSize();
 const router = useRouter();

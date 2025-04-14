@@ -9,11 +9,14 @@ export default [
       label: LogItemEnum.REPAIR,
       content: "修复了WebDAV无法是用的问题"
     }, {
-      label: LogItemEnum.ADD,
-      content: "新增了Markdown到处为微信公众号"
-    }, {
       label: LogItemEnum.REPAIR,
       content: "修复了问一问没有将文章代入的问题"
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: "修复待办无法放弃的问题，卡片布局待办新增右键菜单"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "新增了Markdown到处为微信公众号"
     }, {
       label: LogItemEnum.ADD,
       content: "新增了对Ollama AI的支持,但处于beta版,不确保能用"

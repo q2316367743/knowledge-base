@@ -13,7 +13,7 @@
       <div class="line4">
         <div class="module-item" @click="article">
           <div class="module-item-icon">
-            <icon-file :size="24"/>
+            <file-word-icon size="24px"/>
           </div>
           <div class="module-item-name">
             文档解读
@@ -21,7 +21,7 @@
         </div>
         <div class="module-item" @click="write">
           <div class="module-item-icon">
-            <icon-file :size="24"/>
+            <edit2-icon size="24px"/>
           </div>
           <div class="module-item-name">
             智能写作
@@ -35,6 +35,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {Edit2Icon, FileWordIcon} from "tdesign-icons-vue-next";
 import AiInput from "@/pages/home/components/AiInput.vue";
 import WelcomeGuide from "@/pages/home/welcome/WelcomeGuide.vue";
 import ArticleInterpretation from "@/pages/home/modal/ArticleInterpretation.vue";
@@ -100,7 +101,7 @@ const write = () => iwVisible.value = true;
 
         .module-item-name {
           text-align: center;
-          margin-top: 8px;
+          margin-top: 12px;
         }
       }
     }

@@ -10,18 +10,18 @@
           <t-space size="small">
             <t-button theme="primary" size="small" @click="add(node.value)">
               <template #icon>
-                <icon-plus/>
+                <plus-icon/>
               </template>
             </t-button>
             <t-button theme="primary" size="small" @click="update(node.value)">
               <template #icon>
-                <icon-edit/>
+                <edit2-icon/>
               </template>
             </t-button>
             <t-popconfirm content="确定要删除此分类？" confirm-btn="删除" @confirm="remove(node.value)">
               <t-button theme="danger" size="small">
                 <template #icon>
-                  <icon-delete/>
+                  <delete-icon/>
                 </template>
               </t-button>
             </t-popconfirm>
@@ -31,10 +31,11 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts" setup>;
+import {TreeOptionData} from "tdesign-vue-next";
+import {DeleteIcon, Edit2Icon, PlusIcon} from "tdesign-icons-vue-next";
 import {useCategoryStore} from "@/store/db/CategoryStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {TreeOptionData} from "tdesign-vue-next/es/common";
+import MessageUtil from "@/utils/modal/MessageUtil"
 
 const size = useWindowSize();
 

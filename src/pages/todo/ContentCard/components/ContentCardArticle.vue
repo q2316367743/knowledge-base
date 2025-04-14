@@ -8,20 +8,22 @@
       <div class="extra">
         <t-button variant="text" theme="primary" shape="square" @click="openAddRelationArticle">
           <template #icon>
-            <icon-edit/>
+            <edit2-icon/>
           </template>
         </t-button>
       </div>
     </header>
     <div class="content-card-article__content">
-      <div class="content-card-article-item" v-for="article in articles" :key="article.id" @click="toArticleByTodo(article.id)">
-        <component :is="buildArticleIcon(article.type, true)" />
+      <div class="content-card-article-item" v-for="article in articles" :key="article.id"
+           @click="toArticleByTodo(article.id)">
+        <component :is="buildArticleIcon(article.type, true)"/>
         <div class="title">{{ article.name }}</div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import {Edit2Icon} from "tdesign-icons-vue-next";
 import {ArticleIndex} from "@/entity/article";
 import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
@@ -74,24 +76,24 @@ const count = computed(() => articles.value.length);
     margin-top: 8px;
     // TODO: 此处要滚动
 
-      .content-card-article-item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 6px 8px;
-        border-bottom: 1px solid var(--color-border-1);
-        cursor: pointer;
-        transition: color 0.3s;
+    .content-card-article-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--color-border-1);
+      cursor: pointer;
+      transition: color 0.3s;
 
-        &:hover {
-          color: rgb(var(--arcoblue-6));
-        }
+      &:hover {
+        color: rgb(var(--arcoblue-6));
+      }
 
-        .title {
-          margin-left: 4px;
-        }
+      .title {
+        margin-left: 4px;
+      }
     }
-    
+
   }
 }
 </style>

@@ -30,7 +30,7 @@
       </t-dropdown-item>
       <t-dropdown-item value="option-2-2" trigger="hover">
         <template #prefix-icon>
-          <icon-sort/>
+          <filter-sort-icon />
         </template>
         排序
         <t-dropdown-menu>

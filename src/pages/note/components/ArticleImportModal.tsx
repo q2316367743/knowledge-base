@@ -1,11 +1,5 @@
 import {useUmami} from "@/plugin/umami";
-import {
-  Drawer,
-  InputGroup,
-  RequestOption,
-  Upload,
-  UploadRequest
-} from "@arco-design/web-vue";
+import {Drawer} from "@arco-design/web-vue";
 import {
   Alert,
   Button,
@@ -14,23 +8,23 @@ import {
   Space,
   TreeSelect
 } from 'tdesign-vue-next';
-import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
+import {DeleteIcon} from "tdesign-icons-vue-next";
 import {useFolderStore} from "@/store";
-import {IconDelete} from "@arco-design/web-vue/es/icon";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {zipToFiles} from "@/utils/file/ConvertUtil";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {readAsText} from "@/utils/file/FileUtil";
 import {group} from '@/utils/lang/ArrayUtil';
 import {addNote} from "@/utils/component/AddNoteUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+
+type OptionItemType = 'markdown' | 'code';
 
 interface FileItem {
   file: File;
   name: string;
   type: OptionItemType;
 }
-
-type OptionItemType = 'markdown' | 'code';
 
 
 export function showArticleImportModal(id: number) {
@@ -44,24 +38,19 @@ export function showArticleImportModal(id: number) {
 
   const height = computed(() => size.height.value - 65 - 48 - 24 - 165 - 7 - (zipLoading.value ? 47 : 0));
 
-  function customRequest(request: RequestOption): UploadRequest {
-    const file = request.fileItem.file;
-    if (file) {
-      if (file.name.endsWith('zip')) {
+  const customRequest = async (file: File) => {
+    if (file.name.endsWith('zip')) {
+      try {
         zipLoading.value = true;
-        zipToFiles(file)
-          .then(items => items.forEach(f => {
-            files.value.push(renderFileItem(f))
-          }))
-          .catch(e => MessageUtil.error("压缩包解析失败", e))
-          .finally(() => zipLoading.value = false);
-      } else {
-        files.value.push(renderFileItem(file))
+        const items = await zipToFiles(file);
+        items.forEach(f => {
+          files.value.push(renderFileItem(f))
+        });
+      } finally {
+        zipLoading.value = false;
       }
-    }
-    return {
-      abort() {
-      }
+    } else {
+      files.value.push(renderFileItem(file))
     }
   }
 
@@ -69,11 +58,90 @@ export function showArticleImportModal(id: number) {
     files.value.splice(index, 1);
   }
 
+  // 处理文件拖拽和选择
+  const fileInputRef = ref<HTMLInputElement | null>(null);
+  const isDragging = ref(false);
+
+  // 处理点击上传区域
+  const handleClickUpload = () => {
+    fileInputRef.value?.click();
+  };
+
+  // 处理文件选择
+  const handleFileChange = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      Array.from(target.files).forEach(file => {
+        customRequest(file);
+      });
+      // 清空input，以便于下次选择同一文件时也能触发change事件
+      target.value = '';
+    }
+  };
+
+  // 处理拖拽事件
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault();
+    isDragging.value = true;
+  };
+
+  const handleDragLeave = (e: DragEvent) => {
+    e.preventDefault();
+    isDragging.value = false;
+  };
+
+  const handleDrop = (e: DragEvent) => {
+    e.preventDefault();
+    isDragging.value = false;
+
+    if (e.dataTransfer?.files) {
+      Array.from(e.dataTransfer.files).forEach(file => {
+        customRequest(file);
+      });
+    }
+  };
+
   const modalReturn = Drawer.open({
     title: () => <div>笔记导入<span style={{fontSize: '0.8rem'}}>（仅支持markdown、富文本和代码笔记）</span></div>,
     width: 600,
     content: () => <div>
-      <Upload draggable multiple showFileList={false} customRequest={customRequest} disabled={zipLoading.value}/>
+      <div
+        class="upload-area"
+        style={{
+          border: '1px dashed var(--td-component-stroke)',
+          borderRadius: '3px',
+          padding: '20px',
+          textAlign: 'center',
+          cursor: 'pointer',
+          backgroundColor: isDragging.value ? 'var(--td-bg-color-container-hover)' : 'var(--td-bg-color-container)',
+          transition: 'background-color 0.3s'
+        }}
+        onClick={handleClickUpload}
+        onDragover={handleDragOver}
+        onDragleave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          style={{display: 'none'}}
+          onChange={handleFileChange}
+        />
+        <div style={{marginBottom: '8px'}}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 13V19H5V13H3V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V13H19Z"
+                  fill="var(--td-text-color-secondary)"/>
+            <path d="M11 11.5V17H13V11.5H16L12 7.5L8 11.5H11Z" fill="var(--td-text-color-secondary)"/>
+          </svg>
+        </div>
+        <div style={{color: 'var(--td-text-color-secondary)'}}>
+          点击或拖拽文件到此区域上传
+        </div>
+        <div style={{color: 'var(--td-text-color-placeholder)', fontSize: '12px', marginTop: '4px'}}>
+          支持所有文件类型，支持批量上传
+        </div>
+      </div>
       {zipLoading.value && <Alert style={{marginTop: '7px'}}>压缩包解析中</Alert>}
       {files.value.length > 0 &&
         <List style={{marginTop: '7px', maxHeight: height.value}}>
@@ -82,17 +150,17 @@ export function showArticleImportModal(id: number) {
               default: () => <div>{file.name}</div>,
               actions: () => <Button variant={'text'} theme={'danger'} shape={'square'}
                                      onClick={() => removeFile(index)}>{{
-                icon: () => <IconDelete/>
+                icon: () => <DeleteIcon/>
               }}</Button>
             }}
           </ListItem>)}
         </List>}
     </div>,
     footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>
-      <InputGroup>
+      <div class={'flex items-center'}>
         <span style={{width: '120px', marginRight: '7px', color: 'var(--td-text-color-primary)'}}>导入至：</span>
         <TreeSelect data={folderTree} v-model={folderId.value}/>
-      </InputGroup>
+      </div>
       <Space>
         <Button onClick={modalReturn.close}>取消</Button>
         <Button theme={'primary'} onClick={() => {

@@ -19,7 +19,7 @@
       <t-button variant="outline" style="margin-left: 8px;" theme="danger" shape="circle" v-if="loading"
                 @click="onStop">
         <template #icon>
-          <icon-stop/>
+          <stop-icon/>
         </template>
       </t-button>
     </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import {SendIcon} from "tdesign-icons-vue-next";
+import {SendIcon, StopIcon} from "tdesign-icons-vue-next";
 import {TextareaValue} from "tdesign-vue-next";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {useChatStore} from "@/store/components/ChatStore";

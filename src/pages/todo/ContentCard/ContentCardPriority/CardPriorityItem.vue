@@ -8,7 +8,7 @@
       <div class="extra">
         <t-button variant="text" theme="primary" shape="square" @click="openAddTodoItem({priority: priority.value})">
           <template #icon>
-            <icon-plus/>
+            <plus-icon/>
           </template>
         </t-button>
       </div>
@@ -25,6 +25,7 @@ import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 import CardTodoItem from "@/pages/todo/ContentCard/components/CardTodoItem.vue";
 import ContentCardComplete from "@/pages/todo/ContentCard/components/ContentCardComplete.vue";
+import {PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   priority: {

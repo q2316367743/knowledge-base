@@ -3,7 +3,7 @@
     <div class="todo-item-priority__header" @click="toggleVisible()">
       <div class="todo-item-priority__header-left">
         <div class="todo-item-priority__header-handle">
-          <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
+          <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
         <div class="todo-item-priority__header-title">{{ label }}</div>
         <div class="todo-item-priority__header-count">{{ todoItems.length }}</div>
@@ -26,7 +26,7 @@
 import {TodoGroupPriorityView, TodoGroupView} from "@/entity/todo/TodoGroup";
 import CardTodoItem from "@/pages/todo/ContentCard/components/CardTodoItem.vue";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
-import {PlusIcon} from "tdesign-icons-vue-next";
+import {ChevronDownIcon, PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   priorityView: {

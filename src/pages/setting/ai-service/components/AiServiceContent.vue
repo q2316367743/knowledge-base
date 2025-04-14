@@ -28,13 +28,13 @@
                 <t-space>
                   <t-button theme="primary" :loading @click="fetchModules">
                     <template #icon>
-                      <icon-refresh/>
+                      <refresh-icon/>
                     </template>
                     刷新
                   </t-button>
                   <t-button theme="default" :loading>
                     <template #icon>
-                      <icon-plus/>
+                      <plus-icon/>
                     </template>
                     添加
                   </t-button>
@@ -42,8 +42,8 @@
               </template>
               <t-list :split="true" style="max-height: calc(100vh - 186px);">
                 <t-list-item v-for="(item, index) in form.models" :key="index">
-                  <div v-if="typeof item === 'string'">{{item}}</div>
-                  <t-list-item-meta v-else :image="item.icon" :title="item.label" :description="item.description" />
+                  <div v-if="typeof item === 'string'">{{ item }}</div>
+                  <t-list-item-meta v-else :image="item.icon" :title="item.label" :description="item.description"/>
                   <template #action v-if="typeof item !== 'string'">
                     <t-tag theme="success">
                       <span>{{ item.cost }}</span>
@@ -70,6 +70,7 @@
 </template>
 <script lang="ts" setup>
 import {clone} from "radash";
+import {PlusIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {useAiServiceStore} from "@/store";
 import EmptyResult from "@/components/Result/EmptyResult.vue";
 import {AiServiceType, buildAiService} from "@/entity/ai/AiService";

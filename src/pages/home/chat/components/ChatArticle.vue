@@ -17,7 +17,7 @@
         <chat-content :value="message.a"/>
       </template>
       <t-divider v-if="message.id === lastId">
-        <icon-loading spin/>
+        <loading-icon/>
       </t-divider>
       <div class="chat-article__option" :class="{last: message.id === lastId}" v-else>
         <t-space size="small">
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {CopyIcon, EditIcon, RefreshIcon} from "tdesign-icons-vue-next";
+import {CopyIcon, EditIcon, LoadingIcon, RefreshIcon} from "tdesign-icons-vue-next";
 import {ChatMessage} from "@/types/Chat";
 import {useAiAssistantStore, useChatStore} from "@/store";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";

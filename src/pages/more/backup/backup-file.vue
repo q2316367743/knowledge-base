@@ -10,13 +10,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
+import {NotifyPlugin} from "tdesign-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import Constant from "@/global/Constant";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
-import {Notification} from "@arco-design/web-vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
 
@@ -47,11 +46,15 @@ function restoreByFile() {
   _restoreByFile()
     .then(() => {
       if (utools.getWindowType() === 'main') {
-        Notification.success({
+        NotifyPlugin.success({
           title: "恢复成功",
           content: "恢复成功，3s后自动关闭插件",
           duration: 3000,
-          onClose: () => {
+          onCloseBtnClick: () => {
+            utools.hideMainWindow();
+            utools.outPlugin(true);
+          },
+          onDurationEnd: () => {
             utools.hideMainWindow();
             utools.outPlugin(true);
           }

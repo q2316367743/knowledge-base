@@ -13,7 +13,7 @@
                 :style="{color: item.top ? 'var(--td-warning-color)' : 'var(--td-font-gray-4)'}"
                 @click="toggleTop(item.id, !item.top)">
         <template #icon>
-          <icon-arrow-rise/>
+          <arrow-triangle-up-icon/>
         </template>
       </t-button>
     </t-tooltip>
@@ -27,6 +27,7 @@ import {
 } from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {onContextMenuForTodo, updateStatus, toggleTop} from "@/pages/todo/common/ContextMenuForTodo";
+import {ArrowTriangleUpIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   item: {

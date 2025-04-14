@@ -3,7 +3,7 @@
     <div class="content-default-group__header" @click.stop="toggleVisible()">
       <div class="content-default-group__header-left">
         <div class="content-default-group__header-handle">
-          <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
+          <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
         <div class="content-default-group__header-title">{{ group.name }}</div>
         <div class="content-default-group__header-count">{{ count }}</div>
@@ -29,13 +29,13 @@
             </t-dropdown-item>
             <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 0)">
               <template #prefix-icon>
-                <icon-rotate-left/>
+                <arrow-left-up-icon/>
               </template>
               在上侧添加分组
             </t-dropdown-item>
             <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 1)">
               <template #prefix-icon>
-                <icon-rotate-right/>
+                <arrow-left-down-icon/>
               </template>
               在下侧添加分组
             </t-dropdown-item>
@@ -63,7 +63,15 @@ import {
 } from "@/pages/todo/common/TodoGroupFunc";
 import ListSideGroupList
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideGroupList.vue";
-import {DeleteIcon, Edit2Icon, EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
+import {
+  ArrowLeftDownIcon,
+  ArrowLeftUpIcon,
+  ChevronDownIcon,
+  DeleteIcon,
+  Edit2Icon,
+  EllipsisIcon,
+  PlusIcon
+} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   group: {

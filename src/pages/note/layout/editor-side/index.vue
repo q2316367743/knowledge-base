@@ -6,7 +6,7 @@
         <editor-tree-menu :id="0" :more="false" @multi="multiCheckStart">
           <t-button theme="primary" shape="square">
             <template #icon>
-              <icon-more-vertical/>
+              <ellipsis-icon/>
             </template>
           </t-button>
         </editor-tree-menu>
@@ -32,7 +32,7 @@
                           @multi="multiCheckStart" @select="onSelect">
           <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
             <template #icon>
-              <icon-more/>
+              <more-icon/>
             </template>
           </t-button>
         </editor-tree-menu>
@@ -50,14 +50,14 @@
         <t-tooltip content="移动到">
           <t-button theme="primary" variant="text" shape="square" @click="moveMultiTo()">
             <template #icon>
-              <icon-to-right/>
+              <arrow-right-icon/>
             </template>
           </t-button>
         </t-tooltip>
         <t-tooltip content="全选">
           <t-button theme="primary" variant="text" shape="square" @click="selectAll()">
             <template #icon>
-              <icon-select-all/>
+              <check-rectangle-icon />
             </template>
           </t-button>
         </t-tooltip>
@@ -72,7 +72,7 @@
 </template>
 <script lang="ts" setup>
 import {TreeNodeModel, TypeTreeProps} from 'tdesign-vue-next';
-import {CloseIcon, DeleteIcon} from "tdesign-icons-vue-next";
+import {ArrowRightIcon, CheckRectangleIcon, CloseIcon, DeleteIcon, EllipsisIcon, MoreIcon} from "tdesign-icons-vue-next";
 import {
   useGlobalStore,
   useArticleStore,

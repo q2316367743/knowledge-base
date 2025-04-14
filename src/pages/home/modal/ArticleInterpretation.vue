@@ -2,7 +2,7 @@
   <t-dialog placement="center" v-model:visible="visible" width="700px">
     <template #header>
       <t-space size="small">
-        <icon-book/>
+        <file-word-icon/>
         <div>笔记解读</div>
       </t-space>
     </template>
@@ -36,6 +36,7 @@ import {useNoteTree} from "@/hooks/NoteTree";
 import {useChatStore} from "@/store/components/ChatStore";
 import AiInput from "@/pages/home/components/AiInput.vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {BookIcon, FileWordIcon} from "tdesign-icons-vue-next";
 
 const visible = defineModel({
   type: Boolean,

@@ -5,7 +5,7 @@
         <t-input style="width: 233px;" v-model="keyword" allow-clear placeholder="请输入清单名称"/>
         <t-button theme="primary" shape="square" @click="add(0)">
           <template #icon>
-            <icon-plus/>
+            <plus-icon/>
           </template>
         </t-button>
       </t-input-group>
@@ -24,7 +24,7 @@
         <t-dropdown trigger="click">
           <t-button variant="text" theme="primary" shape="square" @click.stop>
             <template #icon>
-              <icon-more/>
+              <more-icon/>
             </template>
           </t-button>
           <t-dropdown-menu>
@@ -61,7 +61,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {DeleteIcon, Edit2Icon, FolderIcon, ListIcon, PlusIcon, StarFilledIcon, StarIcon} from "tdesign-icons-vue-next";
+import {
+  DeleteIcon,
+  Edit2Icon,
+  FolderIcon,
+  ListIcon,
+  MoreIcon,
+  PlusIcon,
+  StarFilledIcon,
+  StarIcon
+} from "tdesign-icons-vue-next";
 import {TreeNodeModel} from "tdesign-vue-next";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";

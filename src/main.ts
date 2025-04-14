@@ -2,8 +2,6 @@ import {useUmami} from "@/plugin/umami";
 import {createPinia} from 'pinia';
 import App from './App.vue'
 import router from './plugin/router';
-// 额外引入图标库
-import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 // 样式
 import '@arco-design/web-vue/dist/arco.css';
 import '@arco-design/web-vue/es/drawer/style/css.js'
@@ -57,7 +55,6 @@ Boot.registerModule(markdownModule);
 createApp(App)
   .use(createPinia())
   .use(router)
-  .use(ArcoVueIcon)
   .mount('#app');
 
 function getKey(e: KeyboardEvent) {

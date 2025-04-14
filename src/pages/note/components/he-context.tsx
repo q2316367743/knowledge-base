@@ -1,13 +1,4 @@
 import {useUmami} from "@/plugin/umami";
-import {
-  IconBook,
-  IconBranch,
-  IconCode,
-  IconFile,
-  IconMindMapping,
-  IconNav,
-  IconRefresh
-} from "@arco-design/web-vue/es/icon";
 import {Button, DialogPlugin, Form, FormItem, Input, Radio, RadioGroup, TreeSelect} from "tdesign-vue-next";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 // 存储
@@ -31,7 +22,16 @@ import FileLct from "@/components/KbIcon/FileLct.vue";
 import FileEncrypt from '@/components/KbIcon/FileEncrypt.vue';
 import {buildMindMapData} from "@/editor/MindMapEditor/constant";
 import {buildLogicFlowData} from "@/editor/LogicFlow/constants";
-import {LockOnIcon, StickyNoteIcon} from "tdesign-icons-vue-next";
+import {
+  BookIcon,
+  CodeIcon,
+  FileIcon,
+  GitBranchIcon,
+  LockOnIcon, RefreshIcon,
+  SitemapIcon,
+  StickyNoteIcon,
+  TableIcon
+} from "tdesign-icons-vue-next";
 import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
 import {addNote} from "@/utils/component/AddNoteUtil";
 import {buildEncryptEditorData} from "@/editor/EncryptEditor/EncryptEditorType";
@@ -57,22 +57,22 @@ export const articleTextTypes: Array<ArticleTypeList> = [
   }, {
     key: ArticleTypeEnum.RICH_TEXT,
     name: '富文本',
-    icon: IconBook,
+    icon: BookIcon,
     lock: IconRichText
   }, {
     key: ArticleTypeEnum.MARKDOWN,
     name: 'markdown',
-    icon: IconFile,
+    icon: FileIcon,
     lock: FileMarkdown
   }, {
     key: ArticleTypeEnum.CODE,
     name: '代码',
-    icon: IconCode,
+    icon: CodeIcon,
     lock: FileCode
   }, {
     key: ArticleTypeEnum.MIND_MAP,
     name: '思维导图',
-    icon: IconMindMapping,
+    icon: SitemapIcon,
     lock: FileMindMap
   }]
 
@@ -80,12 +80,12 @@ export const mainNoteTypes: Array<ArticleTypeList> = [
   ...articleTextTypes, {
     key: ArticleTypeEnum.HANDSONTABLE,
     name: '表格',
-    icon: IconNav,
+    icon: TableIcon,
     lock: FileHandsontable
   }, {
     key: ArticleTypeEnum.LOGIC_FLOW,
     name: '流程图',
-    icon: IconBranch,
+    icon: GitBranchIcon,
     lock: FileLct
   }];
 export const extraNoteTypes: Array<ArticleTypeList> = [
@@ -106,7 +106,7 @@ export const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
   const icon = articleTypeMap.get(type);
-  return icon ? (readonly ? icon.lock : icon.icon) : IconFile
+  return icon ? (readonly ? icon.lock : icon.icon) : FileIcon
 }
 
 export function renderArticleType(type: ArticleTypeEnum): string {
@@ -197,7 +197,7 @@ export function addArticleModal() {
             suffix: () =>
               <Button variant={'text'} theme={'primary'} shape={'square'} onClick={refreshFileName}>
                 {{
-                  icon: () => <IconRefresh/>
+                  icon: () => <RefreshIcon/>
                 }}
               </Button>
           }}

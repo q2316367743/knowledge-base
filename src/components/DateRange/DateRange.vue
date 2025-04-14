@@ -1,6 +1,6 @@
 <template>
   <t-space class="date-range" size="small">
-    <IconCalendar/>
+    <CalendarIcon />
     <span v-if="!hasDate">
       日期
       <del>与提醒</del>
@@ -10,7 +10,7 @@
   </t-space>
 </template>
 <script lang="ts" setup>
-import {IconCalendar} from '@arco-design/web-vue/es/icon';
+import {CalendarIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   start: String,

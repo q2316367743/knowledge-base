@@ -7,7 +7,7 @@ import {
   Link, Space,
   Title, Paragraph, Popup
 } from "tdesign-vue-next";
-import {IconCaretDown} from "@arco-design/web-vue/es/icon";
+import {ChevronDownIcon} from "tdesign-icons-vue-next";
 
 function openUrl() {
   utools.shellOpenExternal("https://hyperformula.handsontable.com/guide/built-in-functions.html#list-of-available-functions")
@@ -20,9 +20,9 @@ export function openFormulaDrawer() {
         <div>支持的数学公式</div>
         <Popup trigger={'click'}>
           {{
-            default: () => <Button variant={'text'} theme={'primary'}>
+            default: () => <Button variant={'text'} theme={'primary'} size={'small'}>
               {{
-                icon: () => <IconCaretDown/>,
+                icon: () => <ChevronDownIcon/>,
                 default: () => <span>目录</span>
               }}
             </Button>,
@@ -49,7 +49,7 @@ export function openFormulaDrawer() {
     width: 800,
     footer: false,
     content: () => <div>
-      <Alert>更多信息请参考：<Link onClick={openUrl}>可用的方法</Link></Alert>
+      <Alert>更多信息请参考：<Link onClick={openUrl} theme={'primary'}>可用的方法</Link></Alert>
       <Title level={'h1'} style="text-align: start;">内置函数</Title>
       <Title level={'h2'} style="text-align: start;">使用方法</Title>
       <Paragraph>

@@ -3,7 +3,7 @@
     <div class="todo-item-complete__header" @click="toggleVisible()">
       <div class="todo-item-complete__header-left">
         <div class="todo-item-complete__header-handle">
-          <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
+          <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
         <div class="todo-item-complete__header-title">已完成 & 已放弃</div>
         <div class="todo-item-complete__header-count">{{ completes.length }}</div>
@@ -21,6 +21,7 @@
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import CardTodoItem from "@/pages/todo/ContentCard/components/CardTodoItem.vue";
 import {toSorted} from "@/utils/lang/ArrayUtil";
+import {ChevronDownIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   completes: {

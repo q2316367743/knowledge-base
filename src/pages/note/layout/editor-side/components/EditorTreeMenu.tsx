@@ -199,9 +199,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       icon: () => <FileImportIcon/>,
       children: [{
         label: '常规导入',
-        onClick: () => {
-          showArticleImportModal(node.value);
-        }
+        onClick: () => showArticleImportModal(node.value)
       }, {
         label: '粘贴链接',
         onClick: () => openArticleImportWithUBrowser(node.value)

@@ -3,7 +3,7 @@
     <div class="content-default-complete__header" @click.stop="toggleVisible()">
       <div class="content-default-complete__header-left">
         <div class="content-default-complete__header-handle">
-          <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
+          <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
         <div class="content-default-complete__header-title">已完成 & 已放弃</div>
         <div class="content-default-complete__header-count">{{ count }}</div>
@@ -18,6 +18,7 @@
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import ListSideCompleteList
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideCompleteList.vue";
+import {ChevronDownIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   groups: {

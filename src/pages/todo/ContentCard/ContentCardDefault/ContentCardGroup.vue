@@ -28,13 +28,13 @@
             </t-dropdown-item>
             <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 0)">
               <template #prefix-icon>
-                <icon-rotate-left/>
+                <arrow-left-down-icon/>
               </template>
               在左侧添加分组
             </t-dropdown-item>
             <t-dropdown-item @click="openAddTodoGroupFunc(group.id, 1)">
               <template #prefix-icon>
-                <icon-rotate-right/>
+                <arrow-right-down-icon/>
               </template>
               在右侧添加分组
             </t-dropdown-item>
@@ -50,7 +50,7 @@
     </header>
     <div class="content-card-group__content">
       <content-card-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
-                          :group="group" :group-id="group.id"/>
+                             :group="group" :group-id="group.id"/>
       <content-card-complete :completes="group.complete" v-if="!hideOfCompleteOrAbandon"/>
     </div>
   </div>
@@ -67,7 +67,14 @@ import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import ContentCardPriority from "@/pages/todo/ContentCard/ContentCardDefault/ContentCardPriority.vue";
 import ContentCardComplete from "@/pages/todo/ContentCard/components/ContentCardComplete.vue";
-import {DeleteIcon, Edit2Icon, EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
+import {
+  ArrowLeftDownIcon,
+  ArrowRightDownIcon,
+  DeleteIcon,
+  Edit2Icon,
+  EllipsisIcon,
+  PlusIcon
+} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   group: {

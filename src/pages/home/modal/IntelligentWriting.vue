@@ -2,7 +2,7 @@
   <t-dialog placement="center" v-model:visible="visible" width="700px" :footer="false">
     <template #header>
       <t-space size="small">
-        <icon-edit/>
+        <edit2-icon />
         <div>智能写作</div>
       </t-space>
     </template>
@@ -23,7 +23,7 @@
               </t-tag>
             </div>
             <div class="article-item-close" @click="onRemove(article.id)">
-              <icon-close/>
+              <close-icon />
             </div>
           </div>
         </t-space>
@@ -33,7 +33,7 @@
           <t-button theme="default" @click="association = true">参考笔记</t-button>
           <t-button theme="primary" shape="circle" @click="send">
             <template #icon>
-              <icon-send/>
+              <send-icon />
             </template>
           </t-button>
         </div>
@@ -50,6 +50,7 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleIndex} from "@/entity/article";
 import {renderArticleType} from "@/pages/note/components/he-context";
 import AssociationArticle from "@/pages/home/components/AssociationArticle.vue";
+import {CloseIcon, Edit2Icon, SendIcon} from "tdesign-icons-vue-next";
 
 const visible = defineModel({
   type: Boolean,

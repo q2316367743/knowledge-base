@@ -8,31 +8,31 @@
     <t-dropdown-menu>
       <t-dropdown-item :disabled="disabled" @click="openTodoExport()">
         <template #prefix-icon>
-          <icon-export/>
+          <file-export-icon/>
         </template>
         导出
       </t-dropdown-item>
       <t-dropdown-item :disabled="disabled" @click="openAddRelationArticle()">
         <template #prefix-icon>
-          <icon-relation/>
+          <relation-icon/>
         </template>
         关联笔记
       </t-dropdown-item>
       <t-dropdown-item :disabled="disabled" @click="searchTodo()">
         <template #prefix-icon>
-          <icon-search/>
+          <search-icon/>
         </template>
         搜索
       </t-dropdown-item>
       <t-dropdown-item :disabled="disabled" @click="openTodoSetting()" :divider="true">
         <template #prefix-icon>
-          <icon-settings/>
+          <setting-icon/>
         </template>
         设置
       </t-dropdown-item>
       <t-dropdown-item :disabled="disabled" @click="openEditTodoGroupFunc()">
         <template #prefix-icon>
-          <icon-plus/>
+          <plus-icon/>
         </template>
         添加分组
       </t-dropdown-item>
@@ -40,7 +40,7 @@
   </t-dropdown>
 </template>
 <script lang="ts" setup>
-import {MoreIcon} from "tdesign-icons-vue-next";
+import {FileExportIcon, MoreIcon, PlusIcon, RelationIcon, SearchIcon, SettingIcon} from "tdesign-icons-vue-next";
 import {openTodoExport} from "@/pages/todo/common/TodoExport";
 import {openAddRelationArticle} from "@/pages/todo/common/AddRelationArticle";
 import {searchTodo} from "@/pages/todo/common/SearchTodo";

@@ -52,7 +52,6 @@ const percent = computed(() => {
   }
   const all = items.length;
   const value = items.filter(e => e.status === TodoItemStatus.ABANDON || e.status === TodoItemStatus.COMPLETE).length;
-  console.log(value, all)
   return Math.round(value / all * 100)
 });
 

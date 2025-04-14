@@ -2,8 +2,8 @@ import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {parseType, renderType} from "@/pages/tool/plugin/components/func";
-import {TreeNodeData} from "@arco-design/web-vue";
 import {PluginSettingTypeEnum} from "@/entity/setting/PluginSetting";
+import {TreeOptionData} from "tdesign-vue-next";
 
 
 export function createPlugin(key: string | number) {
@@ -22,11 +22,11 @@ export function createPlugin(key: string | number) {
         .catch(e => MessageUtil.error("新建失败", e)));
 }
 
-export function editPlugin(node: TreeNodeData) {
+export function editPlugin(node: TreeOptionData) {
     MessageBoxUtil.prompt('请输入新的名称', '重命名', {
         confirmButtonText: '新建',
-        inputValue: node.title,
-    }).then(name => usePluginSettingStore().rename(node.key as number, name)
+        inputValue: node.label as string,
+    }).then(name => usePluginSettingStore().rename(node.value as number, name)
         .then(() => MessageUtil.success("新建成功"))
         .catch(e => MessageUtil.error("新建失败", e)));
 }

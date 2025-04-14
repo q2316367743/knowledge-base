@@ -13,7 +13,7 @@
     <div v-if="hasAttr" class="todo-item__sub">
       <t-tag theme="primary" size="small" variant="outline">
         <template #icon>
-          <icon-clock-circle/>
+          <calendar-icon/>
         </template>
         {{ start }}{{ end ? ' · ' + end : '' }}
       </t-tag>
@@ -25,7 +25,7 @@
     </div>
     <t-tooltip content="置顶" v-if="index.top && index.status === TodoItemStatus.TODO">
       <div class="top">
-        <icon-arrow-up />
+        <caret-up-small-icon size="20px" class="icon"/>
       </div>
     </t-tooltip>
   </div>
@@ -43,6 +43,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {randomColor} from "@/utils/BrowserUtil";
 import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
+import {ArrowTriangleUpIcon, CalendarIcon, CaretUpSmallIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   item: {
@@ -178,10 +179,10 @@ function handleDragstart(e: DragEvent) {
     height: 25px;
     text-align: right;
 
-    .arco-icon {
+    .icon {
       position: absolute;
-      top: 2px;
-      right: 0;
+      top: -2px;
+      right: -2px;
     }
   }
 

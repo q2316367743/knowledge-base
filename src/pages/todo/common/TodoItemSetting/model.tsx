@@ -1,6 +1,6 @@
-import {Drawer, Divider, Trigger} from "@arco-design/web-vue";
+import {Drawer, Divider} from "@arco-design/web-vue";
 import {
-  Button, Checkbox, DatePicker, DateRangePicker, Input, Popconfirm,
+  Button, Checkbox, DatePicker, DateRangePicker, Input, Popconfirm, Popup,
   RadioButton, RadioGroup, Space
 } from "tdesign-vue-next";
 import {TodoItemAttr, TodoItemIndex} from "@/entity/todo/TodoItem";
@@ -77,8 +77,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
       <div class={'todo-item-setting__header'}>
         <TodoItemCheckbox priority={base.value.priority} v-model:status={base.value.status}/>
         <div class={'ml-8px'}>
-          <Trigger position={isRange.value ? 'bottom' : 'bl'} auto-fit-position trigger="click" showArrow={true}
-                   popupTranslate={[0, 10]}>{{
+          <Popup placement={'bottom'} trigger={"click"} showArrow={true}>{{
             default: () => <Button size={'small'}>
               <DateRange start={range.value[0]} end={range.value[1]}/>
             </Button>,
@@ -94,7 +93,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
                   <DatePicker v-model={range.value[0]} clearable={true}></DatePicker>}
               </div>
             </div>
-          }}</Trigger>
+          }}</Popup>
         </div>
         <div class={'ml-8px'}>
           <Checkbox v-model={base.value.top}>置顶</Checkbox>

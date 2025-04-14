@@ -1,8 +1,8 @@
-import {IconFolder} from "@arco-design/web-vue/es/icon";
 import {ArticleIndex} from "@/entity/article";
 import {pathJoin} from "@/utils/file/FileUtil";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {TreeOptionData} from "tdesign-vue-next/es/common";
+import {FolderIcon} from "tdesign-icons-vue-next";
 
 /**
  * 基础列表树
@@ -87,7 +87,7 @@ export function treeEach(
       value: item.value,
       label: item.label,
       children: [],
-      icon: IconFolder,
+      icon: FolderIcon,
       pid: item.pid,
       preview: item.preview,
       color: item.fontColor

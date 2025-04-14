@@ -10,7 +10,7 @@
             <t-dropdown trigger="click" placement="bottom-right">
               <t-button shape="square">
                 <template #icon>
-                  <icon-settings/>
+                  <setting-icon/>
                 </template>
               </t-button>
               <template #dropdown>
@@ -20,21 +20,21 @@
             <t-tooltip content="导入" placement="left">
               <t-button shape="square" @click="onImport()">
                 <template #icon>
-                  <icon-import/>
+                  <file-import-icon/>
                 </template>
               </t-button>
             </t-tooltip>
             <t-tooltip content="导出" placement="left">
               <t-button shape="square" @click="onExport()">
                 <template #icon>
-                  <icon-export/>
+                  <file-export-icon/>
                 </template>
               </t-button>
             </t-tooltip>
             <t-tooltip content="支持的数学公式" placement="left">
               <t-button shape="square" @click="openFormulaDrawer()">
                 <template #icon>
-                  <icon-formula/>
+                  <code1-icon />
                 </template>
               </t-button>
             </t-tooltip>
@@ -45,14 +45,14 @@
   </t-layout>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref, shallowRef, watch} from "vue";
-import {clone} from "@/utils/lang/ObjectUtil";
 import Handsontable from 'handsontable';
 import {HyperFormula} from "hyperformula";
 import {registerLanguageDictionary, zhCN} from 'handsontable/i18n';
+import {Code1Icon, FileExportIcon, FileImportIcon, SettingIcon} from "tdesign-icons-vue-next";
+import {clone} from "@/utils/lang/ObjectUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {updateColumns} from "@/editor/HandsontableEditor/drawer/ColumnDrawer";
 import {useHandsontableImport} from "@/editor/HandsontableEditor/hooks/ImportHook";
-import MessageUtil from "@/utils/modal/MessageUtil";
 import {
   handsontableExport,
   useHandsontableExport

@@ -1,35 +1,30 @@
-import { useUmami } from "@/plugin/umami";
+import {useUmami} from "@/plugin/umami";
 import {
   Alert,
   Button,
   Col,
+  DialogPlugin,
   Input,
   Link,
   List,
   ListItem,
   ListItemMeta,
-  Modal,
   Option,
   Row,
   Select,
   Tag,
-} from "@arco-design/web-vue";
-import { Ref, ref } from "vue";
-import { useWindowSize } from "@vueuse/core";
+} from 'tdesign-vue-next';
+import {CloseIcon, Edit2Icon, SearchIcon} from "tdesign-icons-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import { useArticleStore } from "@/store/db/ArticleStore";
-import { ArticleTypeEnum, TEXT_TYPE_LIST } from "@/enumeration/ArticleTypeEnum";
-import { getFromOneWithDefaultByAsync } from "@/utils/utools/DbStorageUtil";
-import { ArticleContent } from "@/entity/article/ArticleContent";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import { useHomeEditorStore } from "@/store/components/HomeEditorStore";
-import { IconClose, IconEdit, IconSearch } from "@arco-design/web-vue/es/icon";
-import { findKeyword, MindMapTreeNode } from "@/editor/MindMapEditor/domain";
+import {useArticleStore} from "@/store/db/ArticleStore";
+import {ArticleTypeEnum, TEXT_TYPE_LIST} from "@/enumeration/ArticleTypeEnum";
+import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {findKeyword, MindMapTreeNode} from "@/editor/MindMapEditor/domain";
 import {
   articleTextTypes,
   renderArticleType,
 } from "@/pages/note/components/he-context";
-import { openArticle } from "@/components/ArticePreview/OpenArticle";
+import {openArticle} from "@/components/ArticePreview/OpenArticle";
 
 export interface SearchContentItem {
   title: string;
@@ -37,6 +32,7 @@ export interface SearchContentItem {
   value: number;
   type: ArticleTypeEnum;
 }
+
 export interface SearchContentOption {
   ignoreCase?: boolean;
   wholeWord?: boolean;
@@ -171,12 +167,12 @@ export function openSearchContent() {
 
   function toArticle(id: number) {
     useHomeEditorStore().openArticle(id);
-    modalReturn.close();
+    modalReturn.destroy();
   }
 
-  const modalReturn = Modal.open({
-    title: () => (
-      <Row gutter={8} style={{ width: "80%" }}>
+  const modalReturn = DialogPlugin({
+    header: () => (
+      <Row gutter={8} style={{width: "80%"}}>
         <Col flex={"120px"}>
           <Select v-model={type.value}>
             <Option value={0}>全部</Option>
@@ -189,48 +185,42 @@ export function openSearchContent() {
           <Input
             v-model={keyword.value}
             placeholder={SearchContentPlaceholder}
-            onPressEnter={searchContent}
-            allowClear={true}
-            onVnodeMounted={(e) => {
-              const htmlInputElement = (e.el as HTMLSpanElement).querySelector(
-                "input"
-              );
-              htmlInputElement && htmlInputElement.focus();
-            }}
+            onEnter={searchContent}
+            clearable={true}
+            autofocus={true}
           />
         </Col>
         <Col flex={"32px"}>
           <Button
-            type={"primary"}
+            theme={"primary"}
             disabled={keyword.value.trim() === ""}
             onClick={searchContent}
           >
             {{
-              icon: () => <IconSearch />,
+              icon: () => <SearchIcon/>,
             }}
           </Button>
         </Col>
         <Col flex={"32px"}>
           <Button
-            type={"primary"}
-            status={"danger"}
+            theme={'danger'} variant={"text"} shape={'square'}
             disabled={!loading.value}
             onClick={stop}
           >
             {{
-              icon: () => <IconClose />,
+              icon: () => <CloseIcon/>,
             }}
           </Button>
         </Col>
       </Row>
     ),
-    titleAlign: "start",
+    placement: "center",
     width: "80%",
     footer: false,
-    content: () => (
-      <div style={{ height: size.height.value - 250 + "px" }}>
+    default: () => (
+      <div style={{height: size.height.value - 250 + "px"}}>
         {loading.value && <Alert>{text.value}</Alert>}
-        <List bordered={false}>
+        <List split={true}>
           {items.value.map((item) => (
             <ListItem>
               {{
@@ -252,11 +242,9 @@ export function openSearchContent() {
                   </ListItemMeta>
                 ),
                 actions: () => (
-                  <Button type={"text"} onClick={() => toArticle(item.value)}>
-                    {{
-                      icon: () => <IconEdit />,
-                    }}
-                  </Button>
+                  <Button theme={'primary'} variant={"text"} shape={'square'} onClick={() => toArticle(item.value)}>{{
+                    icon: () => <Edit2Icon/>,
+                  }}</Button>
                 ),
               }}
             </ListItem>

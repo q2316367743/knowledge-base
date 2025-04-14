@@ -3,7 +3,8 @@
     <div :style="{padding: '4px'}" :class="{menu: true, border: homeEditorArticles.length > 0}">
       <t-button variant="text" theme="primary" shape="square" @click="switchCollapsed()">
         <template #icon>
-          <icon-menu/>
+          <menu-fold-icon v-if="collapsed"/>
+          <menu-unfold-icon v-else/>
         </template>
       </t-button>
     </div>
@@ -28,18 +29,20 @@
 </template>
 <script lang="ts" setup>
 import ContextMenu from "@imengyu/vue3-context-menu";
+import {CloseIcon, LockOnIcon, MenuFoldIcon, MenuUnfoldIcon} from "tdesign-icons-vue-next";
 import {
   editorType, useArticlePreviewEvent, useHomeEditorStore, homeEditorId, homeEditorArticles
 } from "@/store/components/HomeEditorStore";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {remove, rename} from "@/pages/note/components/he-context";
-import EditorContentExtra from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {ArticleIndex} from "@/entity/article";
-import {CloseIcon, LockOnIcon} from "tdesign-icons-vue-next";
 import {openNotePreview} from "@/widget/NotePreview";
+import EditorContentExtra from "@/pages/note/layout/editor-content/layout/EditorContentHeader/EditorContentExtra.vue";
 
 const {switchCollapsed, closeArticle, closeOther, closeAll} = useHomeEditorStore();
+
+const collapsed = computed(() => useHomeEditorStore().collapsed);
 
 function close(ev: { e: Event }, id: any) {
   ev.e.stopPropagation();

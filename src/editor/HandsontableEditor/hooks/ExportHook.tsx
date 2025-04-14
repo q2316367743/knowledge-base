@@ -57,7 +57,7 @@ export function handsontableExport(data: Ref<Array<Array<string>>>, columns: Ref
     footer: false,
     width: 530,
     content: () => <Space direction="vertical">
-      <Alert>此功能需要插件【<Link>Json & Excel</Link>】，将Json内容转为Excel。</Alert>
+      <Alert>此功能需要插件【<Link theme={'primary'}>Json & Excel</Link>】，将Json内容转为Excel。</Alert>
       <Alert>仅支持单个sheet，请不要一次性传入多个sheet；传入多个sheet，只会导入第一个sheet。</Alert>
       <Space size={'small'}>
         <Button theme={'primary'} onClick={onPaste}>复制数据</Button>

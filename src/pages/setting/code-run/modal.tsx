@@ -1,7 +1,8 @@
-import {Form, FormItem, Input, Modal, Space, Textarea, Tooltip} from "@arco-design/web-vue";
+import {DialogPlugin, Form, FormItem, Input, Space, Textarea, Tooltip} from "tdesign-vue-next";
+import {QuestionnaireIcon} from "tdesign-icons-vue-next";
 import {codeRunSetting} from "@/plugin/CodeRun";
-import {IconQuestionCircle} from "@arco-design/web-vue/es/icon";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
 export function addCodeRunCommand() {
   const model = ref({
@@ -16,37 +17,38 @@ export function addCodeRunCommand() {
     return undefined
   });
   const help = '{{filePath}}为文件的实际路径，例如执行js文件：node {{filePath}}'
-  Modal.open({
-    title: '添加代码运行命令',
+  const dp = DialogPlugin({
+    header: '添加代码运行命令',
     width: 600,
-    content: () => <Form model={model.value} layout={'vertical'}>
-      <FormItem validateStatus={validateStatus.value}>{{
+    placement: "center",
+    default: () => <Form data={model.value}>
+      <FormItem status={validateStatus.value} labelAlign={'top'}>{{
         label: () => <Space>
           <div>文件名匹配规则</div>
           <Tooltip content={'支持正则表达式，符合正则表达式的代码文件会使用该命令'}>
-            <IconQuestionCircle/>
+            <QuestionnaireIcon/>
           </Tooltip>
         </Space>,
         default: () => <Input v-model={model.value.key} placeholder={'请输入文件名匹配规则'}/>,
         help: () => <span>{validateStatus.value === 'error' ? '该规则已存在' : ''}</span>
       }}</FormItem>
-      <FormItem label="命令内容">{{
-        default: () => <Textarea v-model={model.value.value} placeholder={'请输入命令内容'} maxLength={255} allowClear showWordLimit/>,
+      <FormItem label="命令内容" labelAlign={'top'}>{{
+        default: () => <Textarea v-model={model.value.value} placeholder={'请输入命令内容'} maxlength={255}/>,
         help: () => <span>{help}</span>
       }}</FormItem>
     </Form>,
-    okText: '添加',
-    onBeforeOk() {
+    confirmBtn: '添加',
+    onConfirm() {
       if (model.value.key.trim() === '') {
         MessageUtil.warning("请输入文件名匹配规则");
-        return false;
+        return;
       }
       if (model.value.value.trim() === '') {
         MessageUtil.warning("请输入命令内容");
-        return false;
+        return;
       }
       codeRunSetting.value[model.value.key] = model.value.value;
-      return true
+      dp.destroy();
     }
   })
 }
@@ -57,33 +59,31 @@ export function updateCodeRunCommand(key: string, value: string) {
     value: value
   });
   const help = '{{filePath}}为文件的实际路径，例如执行js文件：node {{filePath}}'
-  Modal.open({
-    title: '修改代码运行命令',
+  const dp = DialogPlugin({
+    header: '修改代码运行命令',
+    placement: "center",
     width: 600,
-    content: () => <Form model={model.value} layout={'vertical'}>
-      <FormItem label="命令内容">{{
-        default: () => <Textarea v-model={model.value.value} placeholder={'请输入命令内容'} maxLength={255} allowClear showWordLimit />,
+    default: () => <Form data={model.value}>
+      <FormItem label="命令内容" labelAlign={'top'}>{{
+        default: () => <Textarea v-model={model.value.value} placeholder={'请输入命令内容'} maxlength={255}/>,
         help: () => <span>{help}</span>
       }}</FormItem>
     </Form>,
-    okText: '修改',
+    confirmBtn: '修改',
     onBeforeOk() {
       if (model.value.value.trim() === '') {
         MessageUtil.warning("请输入命令内容");
-        return false;
+        return;
       }
       codeRunSetting.value[key] = model.value.value;
-      return true
+      dp.destroy();
     }
   })
 }
 
 export function deleteCodeRunCommand(key: string) {
-  Modal.confirm({
-    title: '删除代码运行命令',
-    content: '确定要删除该代码运行命令吗？',
-    onOk() {
+  MessageBoxUtil.confirm('确定要删除该代码运行命令吗？', '删除代码运行命令')
+    .then(() => {
       delete codeRunSetting.value[key];
-    }
-  })
+    })
 }

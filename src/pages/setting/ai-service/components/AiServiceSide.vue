@@ -8,7 +8,7 @@
         <t-popconfirm content="确认删除此AI服务" @confirm="handleRemove(s.id)" v-else>
           <t-button theme="danger" variant="text" shape="square" size="small" @click.stop>
             <template #icon>
-              <icon-delete/>
+              <delete-icon />
             </template>
           </t-button>
         </t-popconfirm>
@@ -21,6 +21,7 @@
   </t-layout>
 </template>
 <script lang="ts" setup>
+import {DeleteIcon} from "tdesign-icons-vue-next";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {AiServiceType} from "@/entity/ai/AiService";

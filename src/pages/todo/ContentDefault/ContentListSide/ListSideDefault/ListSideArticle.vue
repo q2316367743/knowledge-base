@@ -3,7 +3,7 @@
     <div class="content-default-article__header" @click.stop="toggleVisible()">
       <div class="content-default-article__header-left">
         <div class="content-default-article__header-handle">
-          <icon-down :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
+          <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>
         <div class="content-default-article__header-title">关联的笔记</div>
         <div class="content-default-article__header-count">{{ count }}</div>
@@ -32,7 +32,7 @@ import {openAddRelationArticle} from "@/pages/todo/common/AddRelationArticle";
 import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {ArticleIndex} from "@/entity/article";
-import {Edit2Icon} from "tdesign-icons-vue-next";
+import {ChevronDownIcon, Edit2Icon} from "tdesign-icons-vue-next";
 
 const items = computed<Array<number>>(() => useTodoArticleStore().items);
 const articles = computed<Array<ArticleIndex>>(() => {

@@ -1,14 +1,17 @@
 import {useUmami} from "@/plugin/umami";
 import {
-  Button, Descriptions, DescriptionsItem, Drawer,
+  Button, DateRangePicker, Descriptions, DescriptionsItem, DialogPlugin,
   Form,
   FormItem, Link,
-  Modal, Option,
-  Radio,
+  PresetRange,
+  RadioButton,
   RadioGroup,
-  RangePicker, Select,
-  ShortcutType,
-  Switch, Textarea
+  Select,
+  Switch, Textarea,
+  SelectOption
+} from "tdesign-vue-next";
+import {
+  Drawer,
 } from "@arco-design/web-vue";
 import dayjs from "dayjs";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -21,7 +24,6 @@ import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
-import {AiAssistant} from "@/entity/ai/AiAssistant";
 
 enum ExportFileTypeEnum {
   TEXT = 1,
@@ -41,16 +43,10 @@ interface Config {
   question?: string
 }
 
-const shortcuts: ShortcutType[] = [
-  {
-    label: '上一周',
-    value: () => [dayjs(), dayjs().add(-1, 'week')] as any[],
-  },
-  {
-    label: '上个月',
-    value: () => [dayjs(), dayjs().add(-1, 'month')],
-  }
-];
+const presets: PresetRange = {
+  '上一周': () => [dayjs().toDate(), dayjs().add(-1, 'week').toDate()],
+  '上个月': () => [dayjs().toDate(), dayjs().add(-1, 'month').toDate()],
+};
 
 function exportTodo(config: Config, close: () => void) {
   let ext = '';
@@ -241,65 +237,66 @@ export function openTodoExport() {
     includeContent: false,
     script: getItemByDefault(LocalNameEnum.KEY_TODO_SCRIPT, ""),
   });
-  const aiAssistants = computed<Array<AiAssistant>>(() => useAiAssistantStore().aiAssistants);
+  const options = computed<Array<SelectOption>>(() => {
+    const {aiAssistants} = useAiAssistantStore();
+    return aiAssistants.map(e => ({
+      label: e.name,
+      value: e.id
+    }))
+  });
 
   watch(() => config.value.script, value => setItem(LocalNameEnum.KEY_TODO_SCRIPT, value));
 
 
   function close() {
-    modalReturn.close()
+    modalReturn.destroy()
   }
 
 
-  const modalReturn = Modal.open({
-    title: '待办导出',
-    content: () => <Form model={config.value} layout={'vertical'}>
-      <FormItem label="时间范围">
-        <RangePicker v-model={config.value.rangeValue} shortcuts={shortcuts}/>
+  const modalReturn = DialogPlugin({
+    header: '待办导出',
+    placement: 'center',
+    default: () => <Form data={config.value} class={'pl-4px pr-4px'}>
+      <FormItem label="时间范围" labelAlign={'top'}>
+        <DateRangePicker v-model={config.value.rangeValue} clearable={true} presets={presets}/>
       </FormItem>
-      <FormItem label="文件类型">
-        <RadioGroup type="button" v-model={config.value.type}>
-          <Radio value={ExportFileTypeEnum.TEXT}>纯文本</Radio>
-          <Radio value={ExportFileTypeEnum.MARKDOWN}>Markdown</Radio>
-          <Radio value={ExportFileTypeEnum.HTML}>网页</Radio>
-          <Radio value={ExportFileTypeEnum.CUSTOMER}>自定义</Radio>
-          <Radio value={ExportFileTypeEnum.AI} disabled={true}>AI总结</Radio>
+      <FormItem label="文件类型" labelAlign={'top'}>
+        <RadioGroup v-model={config.value.type} variant="default-filled">
+          <RadioButton value={ExportFileTypeEnum.TEXT}>纯文本</RadioButton>
+          <RadioButton value={ExportFileTypeEnum.MARKDOWN}>Markdown</RadioButton>
+          <RadioButton value={ExportFileTypeEnum.HTML}>网页</RadioButton>
+          <RadioButton value={ExportFileTypeEnum.CUSTOMER}>自定义</RadioButton>
+          <RadioButton value={ExportFileTypeEnum.AI}>AI总结</RadioButton>
         </RadioGroup>
       </FormItem>
-      {config.value.type !== ExportFileTypeEnum.CUSTOMER && <FormItem label="是否包含日期">
-        <Switch v-model={config.value.includeTime} type="round"/>
+      {config.value.type !== ExportFileTypeEnum.CUSTOMER && <FormItem label="是否包含日期" labelAlign={'top'}>
+        <Switch v-model={config.value.includeTime}/>
       </FormItem>}
       {(config.value.type !== ExportFileTypeEnum.TEXT && config.value.type !== ExportFileTypeEnum.CUSTOMER) &&
-        <FormItem label="是否包含内容">
-          <Switch v-model={config.value.includeContent} type="round"/>
+        <FormItem label="是否包含内容" labelAlign={'top'}>
+          <Switch v-model={config.value.includeContent}/>
         </FormItem>}
-      {config.value.type === ExportFileTypeEnum.CUSTOMER && <FormItem label={"自定义脚本"}>
+      {config.value.type === ExportFileTypeEnum.CUSTOMER && <FormItem label={"自定义脚本"} labelAlign={'top'}>
         {{
-          default: () => <Textarea v-model={config.value.script} autoSize={{minRows: 3, maxRows: 8}}
-                                   allowClear placeholder={'return `title:${item.index.title}`'}/>,
+          default: () => <Textarea v-model={config.value.script} autosize={{minRows: 3, maxRows: 8}}
+                                   placeholder={'return `title:${item.index.title}`'}/>,
           help: () => <div><Link onClick={openArgs}>点此</Link>查看变量</div>
         }}
       </FormItem>}
       {config.value.type === ExportFileTypeEnum.AI && <>
-        <FormItem label={'AI 助手'}>
-          <Select v-model={config.value.aiAssistantId} placeholder={'请选择 AI 助手'}>
-            {{
-              default: () => <>
-                {aiAssistants.value.map(assistant => <Option key={assistant.id} value={assistant.id}>{assistant.name}</Option>)}
-              </>
-            }}
-          </Select>
+        <FormItem label={'AI 助手'} labelAlign={'top'}>
+          <Select v-model={config.value.aiAssistantId} placeholder={'请选择 AI 助手'} options={options.value}/>
         </FormItem>
-        <FormItem label={'AI 助手问题'}>
-          <Textarea v-model={config.value.question} autoSize={{minRows: 3, maxRows: 8}}
-                    allowClear placeholder={'比如：请帮我写一篇周报'}/>
+        <FormItem label={'AI 助手问题'} labelAlign={'top'}>
+          <Textarea v-model={config.value.question} autosize={{minRows: 3, maxRows: 8}}
+                    placeholder={'比如：请帮我写一篇周报'}/>
         </FormItem>
       </>}
     </Form>,
     footer: () => <>
-      <Button onClick={close}>取消</Button>
-      <Button type="primary" onClick={() => copyToClipboard(config.value, close)}>复制到剪切板</Button>
-      <Button type="primary" onClick={() => exportTodo(config.value, close)}>导出</Button>
+      <Button theme={'default'} onClick={close}>取消</Button>
+      <Button theme="primary" onClick={() => copyToClipboard(config.value, close)}>复制到剪切板</Button>
+      <Button theme="primary" onClick={() => exportTodo(config.value, close)}>导出</Button>
     </>
   });
 }

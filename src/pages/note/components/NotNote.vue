@@ -9,14 +9,16 @@
           新建笔记
         </div>
       </div>
-      <div class="module-item" @click="openArticleImport">
-        <div class="module-item-icon">
-          <file-import-icon size="36px"/>
+      <t-dropdown :options="options" trigger="click">
+        <div class="module-item">
+          <div class="module-item-icon">
+            <file-import-icon size="36px"/>
+          </div>
+          <div class="module-item-name">
+            笔记导入
+          </div>
         </div>
-        <div class="module-item-name">
-          笔记导入
-        </div>
-      </div>
+      </t-dropdown>
     </div>
   </div>
 </template>
@@ -24,6 +26,15 @@
 import {FileImportIcon, StickyNoteIcon} from "tdesign-icons-vue-next";
 import {addArticleModal} from "@/pages/note/components/he-context";
 import {openArticleImport} from "@/modules/NoteImport";
+import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
+
+const options = [{
+  content: '常规导入',
+  onClick: () => showArticleImportModal(0)
+}, {
+  content: '链接导入',
+  onClick: () => openArticleImport()
+}]
 
 </script>
 <style scoped lang="less">

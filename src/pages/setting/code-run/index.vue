@@ -4,12 +4,12 @@
       <t-space>
         <t-button variant="text" theme="primary" shape="square" @click="addCodeRunCommand">
           <template #icon>
-            <icon-plus/>
+            <plus-icon/>
           </template>
         </t-button>
         <t-button variant="text" theme="success" shape="square" @click="infoVisible = true">
           <template #icon>
-            <icon-question-circle/>
+            <questionnaire-icon/>
           </template>
         </t-button>
       </t-space>
@@ -20,12 +20,12 @@
         <template #action>
           <t-button variant="text" theme="primary" shape="square" @click="updateCodeRunCommand(item.key, item.value)">
             <template #icon>
-              <icon-edit/>
+              <edit2-icon/>
             </template>
           </t-button>
           <t-button variant="text" theme="danger" shape="square" @click="deleteCodeRunCommand(item.key)">
             <template #icon>
-              <icon-delete/>
+              <delete-icon/>
             </template>
           </t-button>
         </template>
@@ -39,6 +39,7 @@ import {listify} from "radash";
 import {codeRunSetting} from "@/plugin/CodeRun";
 import {addCodeRunCommand, deleteCodeRunCommand, updateCodeRunCommand} from "@/pages/setting/code-run/modal";
 import CodeRunInfo from "@/pages/setting/code-run/CodeRunInfo.vue";
+import {DeleteIcon, Edit2Icon, PlusIcon, QuestionnaireIcon} from "tdesign-icons-vue-next";
 
 interface CodeRunItem {
   key: string;

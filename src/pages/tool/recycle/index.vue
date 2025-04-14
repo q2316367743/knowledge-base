@@ -3,7 +3,7 @@
     <header class="header">
       <t-input v-model="keyword" placeholder="请输入笔记标题" style="width: 50%" :clearable="true">
         <template #prefix-icon>
-          <icon-search/>
+          <search-icon/>
         </template>
       </t-input>
       <t-popconfirm content="是否清空回收站，此操作不可逆" @confirm="clearAll" confirm-btn="清空"
@@ -45,6 +45,7 @@ import {useFuse} from "@vueuse/integrations/useFuse";
 import {ArticleIndex} from "@/entity/article";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {SearchIcon} from "tdesign-icons-vue-next";
 
 const size = useWindowSize();
 

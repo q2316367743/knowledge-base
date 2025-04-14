@@ -5,9 +5,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {useArticleStore, useCategoryStore} from "@/store";
 import {TreeNodeModel, TreeOptionData} from 'tdesign-vue-next';
-import {IconFile, IconFolder} from "@arco-design/web-vue/es/icon";
+import {FileIcon, FolderIcon} from "tdesign-icons-vue-next";
+import {useArticleStore, useCategoryStore} from "@/store";
 import {useWindowSize} from "@vueuse/core";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
@@ -29,12 +29,12 @@ const treeData = computed<Array<TreeOptionData>>(() => {
       value: -1,
       label: '未分类笔记',
       isLeaf: false,
-      icon: () => h(IconFolder, {}),
+      icon: () => h(FolderIcon, {}),
       children: articles.map(article => ({
         key: article.id,
         title: article.name,
         isLeaf: true,
-        icon: () => h(IconFile, {}),
+        icon: () => h(FileIcon, {}),
       }))
     })
   }
