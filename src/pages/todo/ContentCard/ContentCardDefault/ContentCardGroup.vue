@@ -49,9 +49,9 @@
       </div>
     </header>
     <div class="content-card-group__content">
-      <todo-item-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
+      <content-card-priority v-for="priority in group.children" :key="priority.value" :priority-view="priority"
                           :group="group" :group-id="group.id"/>
-      <todo-item-complete :completes="group.complete" v-if="!hideOfCompleteOrAbandon"/>
+      <content-card-complete :completes="group.complete" v-if="!hideOfCompleteOrAbandon"/>
     </div>
   </div>
 </template>
@@ -65,8 +65,8 @@ import {
 } from "@/pages/todo/common/TodoGroupFunc";
 import {useTodoGroupStore} from "@/store/db/TodoGroupStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import TodoItemPriority from "@/pages/todo/common/TodoItemPriority.vue";
-import TodoItemComplete from "@/pages/todo/common/TodoItemComplete.vue";
+import ContentCardPriority from "@/pages/todo/ContentCard/ContentCardDefault/ContentCardPriority.vue";
+import ContentCardComplete from "@/pages/todo/ContentCard/components/ContentCardComplete.vue";
 import {DeleteIcon, Edit2Icon, EllipsisIcon, PlusIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({

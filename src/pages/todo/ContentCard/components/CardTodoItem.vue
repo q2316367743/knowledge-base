@@ -1,7 +1,7 @@
 <template>
   <div class="card-todo-item" :data-id="index.id" :draggable="!!groupId" @dragstart="handleDragstart"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
-       @click="_openTodoItemSetting($event)">
+       @click="_openTodoItemSetting($event)" @contextmenu="onContextMenuForTodo($event, item)">
     <div class="todo-item__main">
       <div class="todo-item__checkbox">
         <todo-item-checkbox :priority="index.priority" :status="index.status" @click.stop="onCheck(index)"/>
@@ -42,6 +42,7 @@ import {handleDate, toDateTimeString} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {randomColor} from "@/utils/BrowserUtil";
+import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
 
 const props = defineProps({
   item: {

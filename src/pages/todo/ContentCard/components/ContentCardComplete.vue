@@ -19,7 +19,7 @@
 </template>
 <script lang="ts" setup>
 import {TodoItemIndex} from "@/entity/todo/TodoItem";
-import CardTodoItem from "@/pages/todo/common/CardTodoItem.vue";
+import CardTodoItem from "@/pages/todo/ContentCard/components/CardTodoItem.vue";
 import {toSorted} from "@/utils/lang/ArrayUtil";
 
 const props = defineProps({

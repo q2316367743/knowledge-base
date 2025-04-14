@@ -15,7 +15,7 @@
     </header>
     <div class="card-priority-item__content">
       <card-todo-item v-for="item in items" :key="item.id" :item="item" :data-id="item.id"/>
-      <todo-item-complete :completes="priority.complete" v-if="!hideOfCompleteOrAbandon"/>
+      <content-card-complete :completes="priority.complete" v-if="!hideOfCompleteOrAbandon"/>
     </div>
   </div>
 </template>
@@ -23,8 +23,8 @@
 import {TodoPriorityView} from "@/entity/todo/TodoGroup";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
-import CardTodoItem from "@/pages/todo/common/CardTodoItem.vue";
-import TodoItemComplete from "@/pages/todo/common/TodoItemComplete.vue";
+import CardTodoItem from "@/pages/todo/ContentCard/components/CardTodoItem.vue";
+import ContentCardComplete from "@/pages/todo/ContentCard/components/ContentCardComplete.vue";
 
 const props = defineProps({
   priority: {

@@ -44,7 +44,7 @@ export async function postNews(old?: NewsIndex) {
   }
 
   const plugin = DialogPlugin({
-    header: action + '插件',
+    header: action + '资讯',
     placement: 'center',
     draggable: true,
     width: 600,
@@ -60,7 +60,7 @@ export async function postNews(old?: NewsIndex) {
           <FormItem label={'图标'} name={'icon'} labelAlign={'top'}>
             <Input v-model={form.value.icon} clearable={true}/>
           </FormItem>
-          <FormItem label={'链接'} name={'url'} labelAlign={'top'}>
+          <FormItem label={'链接'} name={'url'} labelAlign={'top'} help={'网站的RSS链接'}>
             <InputGroup class={'w-full'}>
               <Input v-model={form.value.url} clearable={true}/>
               <Button theme={'primary'} disabled={isEmptyString(form.value.url)} onClick={getLogo}>获取图标</Button>

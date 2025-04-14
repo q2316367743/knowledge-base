@@ -170,9 +170,6 @@ export function getNextTodoItemStatus(status: TodoItemStatus): TodoItemStatus {
       return TodoItemStatus.DOING;
     case TodoItemStatus.DOING:
       return TodoItemStatus.COMPLETE;
-    case TodoItemStatus.COMPLETE:
-    case TodoItemStatus.ABANDON:
-      return TodoItemStatus.TODO;
     default:
       return TodoItemStatus.TODO;
   }

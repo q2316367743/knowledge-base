@@ -101,6 +101,7 @@ const options = [
     onClick: () => postNews(),
   }, {
     content: "广场",
+    disabled: true,
     onClick: () => openRssBackground()
   }
 ];

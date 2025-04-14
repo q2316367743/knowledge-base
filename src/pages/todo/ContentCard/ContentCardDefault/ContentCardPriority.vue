@@ -24,7 +24,7 @@
 </template>
 <script lang="ts" setup>
 import {TodoGroupPriorityView, TodoGroupView} from "@/entity/todo/TodoGroup";
-import CardTodoItem from "@/pages/todo/common/CardTodoItem.vue";
+import CardTodoItem from "@/pages/todo/ContentCard/components/CardTodoItem.vue";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 import {PlusIcon} from "tdesign-icons-vue-next";
 
