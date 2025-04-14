@@ -12,7 +12,7 @@
       </div>
       <div class="todo-header__right">
         <div class="todo-header__progress" v-if="!side">
-          <t-progress :percent="percent"/>
+          <t-progress :percentage="percent"/>
         </div>
         <div class="flex">
           <!-- 排序 -->
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="todo-header__bottom" v-if="side">
-      <t-progress :percent="percent"/>
+      <t-progress :percentage="percent"/>
     </div>
   </header>
 </template>
@@ -52,7 +52,8 @@ const percent = computed(() => {
   }
   const all = items.length;
   const value = items.filter(e => e.status === TodoItemStatus.ABANDON || e.status === TodoItemStatus.COMPLETE).length;
-  return parseFloat((value / all).toFixed(4))
+  console.log(value, all)
+  return Math.round(value / all * 100)
 });
 
 const switchCollapsed = () => useTodoWrapStore().switchCollapsed();
