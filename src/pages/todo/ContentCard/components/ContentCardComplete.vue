@@ -11,7 +11,7 @@
     </div>
     <div class="todo-item-complete__content" v-if="visible">
       <card-todo-item v-for="item in items" :key="item.id" :item="item" :data-id="item.id" attr/>
-      <div class="todo-item-complete__content-footer" v-if="items.length > 5">
+      <div class="todo-item-complete__content-footer" v-if="source.length > 5">
         <span class="text" @click="toggleAll()">{{ all ? '折叠' : '展开' }}</span>
       </div>
     </div>

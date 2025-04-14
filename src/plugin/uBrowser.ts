@@ -1,6 +1,5 @@
 import {HttpRequest} from "@/types/HttpRequest";
 import HttpResponse from "@/types/HttpResponse";
-import {buildUrl} from "@/algorithm/ParserEngine/bookUtil";
 
 export default function uBrowser<T = string, D = any>(config: HttpRequest<D>): Promise<HttpResponse<T>> {
   const now = Date.now();
@@ -10,7 +9,7 @@ export default function uBrowser<T = string, D = any>(config: HttpRequest<D>): P
   }
 
   return new Promise((resolve, reject) => {
-    const url = buildUrl(config.baseURL || '', config.url);
+    const url = new URL(config.url || '', config.baseURL).toString();
     const uBrowser = utools.ubrowser
       .goto(url, config.headers as any, config.timeout);
     if (config.wait) {

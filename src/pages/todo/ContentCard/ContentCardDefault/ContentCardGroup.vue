@@ -147,7 +147,8 @@ function handleDrop(e: DragEvent) {
   .content-card-group__content {
     margin-top: 8px;
     height: calc(100% - 54px);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 </style>

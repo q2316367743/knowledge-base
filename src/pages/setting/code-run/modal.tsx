@@ -70,7 +70,7 @@ export function updateCodeRunCommand(key: string, value: string) {
       }}</FormItem>
     </Form>,
     confirmBtn: '修改',
-    onBeforeOk() {
+    onConfirm() {
       if (model.value.value.trim() === '') {
         MessageUtil.warning("请输入命令内容");
         return;

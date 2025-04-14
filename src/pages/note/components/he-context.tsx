@@ -25,7 +25,7 @@ import {buildLogicFlowData} from "@/editor/LogicFlow/constants";
 import {
   BookIcon,
   CodeIcon,
-  FileIcon,
+  FileIcon, FileOnenoteIcon,
   GitBranchIcon,
   LockOnIcon, RefreshIcon,
   SitemapIcon,
@@ -62,7 +62,7 @@ export const articleTextTypes: Array<ArticleTypeList> = [
   }, {
     key: ArticleTypeEnum.MARKDOWN,
     name: 'markdown',
-    icon: FileIcon,
+    icon: FileOnenoteIcon,
     lock: FileMarkdown
   }, {
     key: ArticleTypeEnum.CODE,
@@ -105,7 +105,8 @@ export const articleTypes: Array<ArticleTypeList> = [
 export const articleTypeMap = map(articleTypes, 'key');
 
 export function buildArticleIcon(type: ArticleTypeEnum, readonly = false) {
-  const icon = articleTypeMap.get(type);
+  // 默认是markdown
+  const icon = articleTypeMap.get(type) || articleTypeMap.get(ArticleTypeEnum.MARKDOWN);
   return icon ? (readonly ? icon.lock : icon.icon) : FileIcon
 }
 
