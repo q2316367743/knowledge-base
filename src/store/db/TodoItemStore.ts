@@ -1,7 +1,7 @@
 import {
   DbRecord,
   getFromOneWithDefaultByAsync,
-  listByAsync, listRecordByAsync,
+  listByAsync, listRecordByAsync, removeOneByAsync,
   saveListByAsync,
   saveOneByAsync
 } from "@/utils/utools/DbStorageUtil";
@@ -22,6 +22,9 @@ export const useTodoItemStore = defineStore('todoItem', () => {
   const rev = ref<string>();
   let key = '';
 
+  const todoItemAttrMap = new Map<number, TodoItemAttr>();
+  const todoItemContentMap = new Map<number, DbRecord<TodoItemContent>>();
+
 
   async function init(id: number) {
     key = LocalNameEnum.TODO_CATEGORY + id;
@@ -33,6 +36,8 @@ export const useTodoItemStore = defineStore('todoItem', () => {
       const res = await listByAsync<TodoItemIndex>(key);
       items.value = res.list;
       rev.value = res.rev;
+      todoItemAttrMap.clear();
+      todoItemContentMap.clear();
     } catch (e) {
       console.error('初始化待办项失败', e);
     }
@@ -50,12 +55,28 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     }
     items.value.splice(index, 1);
     // 同步
-    await _sync()
+    await _sync();
+    // 删除属性
+    await removeOneByAsync(LocalNameEnum.TODO_ATTR + id, true);
+    // 删除内容
+    await removeOneByAsync(LocalNameEnum.TODO_ITEM + id, true);
+    // 移除缓存
+    todoItemAttrMap.delete(id);
+    todoItemContentMap.delete(id);
   }
 
   async function deleteByBatchId(ids: Array<number>) {
     items.value = items.value.filter(e => !ids.includes(e.id));
     await _sync();
+    for (let id of ids) {
+      // 删除属性
+      await removeOneByAsync(LocalNameEnum.TODO_ATTR + id, true);
+      // 删除内容
+      await removeOneByAsync(LocalNameEnum.TODO_ITEM + id, true);
+      // 移除缓存
+      todoItemAttrMap.delete(id);
+      todoItemContentMap.delete(id);
+    }
   }
 
   // ------------------------------- 更新相关 -------------------------------
@@ -74,11 +95,13 @@ export const useTodoItemStore = defineStore('todoItem', () => {
         ...(attr || {})
       }
       if (record.status === TodoItemStatus.COMPLETE) {
+        // 记录完成时间
         target.completeTime = new Date()
       }
 
-      // 记录完成时间
       await saveOneByAsync<TodoItemAttr>(LocalNameEnum.TODO_ATTR + id, target, old.rev);
+      // 重置缓存
+      todoItemAttrMap.set(id, target);
     }
 
     items.value[index] = {
@@ -92,6 +115,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
   }
 
   async function saveContent(id: number, content: TodoItemContent, rev?: string): Promise<string | undefined> {
+    todoItemContentMap.delete(id);
     return saveOneByAsync(LocalNameEnum.TODO_ITEM + id, content, rev)
   }
 
@@ -134,6 +158,8 @@ export const useTodoItemStore = defineStore('todoItem', () => {
   // ------------------------------- 查询相关 -------------------------------
 
   async function getTodoItemAttr(id: number): Promise<TodoItemAttr> {
+    const attr = todoItemAttrMap.get(id);
+    if (attr) return attr;
     if (id === 0) {
       return Promise.reject("待办项不存在");
     }
@@ -142,12 +168,28 @@ export const useTodoItemStore = defineStore('todoItem', () => {
       return Promise.reject("待办项不存在");
     }
     let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ATTR + id, getDefaultTodoItemAttr(id));
+    todoItemAttrMap.set(id, attrDbRecord.record);
     return Promise.resolve(attrDbRecord.record);
   }
 
 
   async function getMultiTodoItemAttr(ids: Array<number>): Promise<Array<DbRecord<TodoItemAttr>>> {
     return listRecordByAsync(ids.map(id => LocalNameEnum.TODO_ATTR + id))
+  }
+
+  async function getTodoItemContent(id: number): Promise<DbRecord<TodoItemContent>> {
+    const content = todoItemContentMap.get(id);
+    if (content) return Promise.resolve(content);
+    if (id === 0) {
+      return Promise.reject("待办项不存在");
+    }
+    const index = items.value.findIndex(e => e.id === id);
+    if (index === -1) {
+      return Promise.reject("待办项不存在");
+    }
+    let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
+    todoItemContentMap.set(id, attrDbRecord);
+    return Promise.resolve(attrDbRecord);
   }
 
   async function getTodoItem(id: number): Promise<TodoItem> {
@@ -159,27 +201,12 @@ export const useTodoItemStore = defineStore('todoItem', () => {
       return Promise.reject("待办项不存在");
     }
     const todoItem = items.value[index];
-    const content = await getFromOneWithDefaultByAsync(
-      LocalNameEnum.TODO_ITEM + todoItem.id,
-      getDefaultTodoItemContent(todoItem.id));
     // 内容备份
     return Promise.resolve({
       index: clone(todoItem),
-      content: content,
+      content: await getTodoItemContent(id),
       attr: await getTodoItemAttr(id)
     });
-  }
-
-  async function getTodoItemContent(id: number): Promise<DbRecord<TodoItemContent>> {
-    if (id === 0) {
-      return Promise.reject("待办项不存在");
-    }
-    const index = items.value.findIndex(e => e.id === id);
-    if (index === -1) {
-      return Promise.reject("待办项不存在");
-    }
-    let attrDbRecord = await getFromOneWithDefaultByAsync(LocalNameEnum.TODO_ITEM + id, getDefaultTodoItemContent(id));
-    return Promise.resolve(attrDbRecord);
   }
 
   return {
