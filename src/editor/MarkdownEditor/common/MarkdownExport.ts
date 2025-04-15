@@ -3,6 +3,7 @@ import Cherry from "cherry-markdown";
 import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
 import {download} from "@/utils/BrowserUtil";
 import cherryMarkdownCss from 'cherry-markdown/dist/cherry-markdown.markdown.min.css?raw';
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 interface ImageItem {
   key: string;
@@ -57,7 +58,7 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
         jsZip.file('index.md', replacedStr);
         // 附件导出
         for (let image of images) {
-          const data = utools.db.getAttachment(image.path);
+          const data = InjectionUtil.db.getAttachment(image.path);
           if (data) {
             const blob = new Blob([data]);
             jsZip.file(`image/${image.key}.png`, blob);
@@ -227,14 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 `, res.title + '.html', 'text/html');
       }
     } else if (res.type === 5) {
-      await utools.ubrowser.goto('https://knowledge-nase.esion.xyz/md/')
-        .wait("#editor")
-        .wait(1000)
-        .evaluate((text) => {
-          // @ts-ignore
-          window.setValue(text);
-        }, cherry.getMarkdown())
-        .run({width: 1200, height: 800})
+      await InjectionUtil.browser.openMd(cherry.getMarkdown());
     } else {
       cherry.export(renderType(res.type), res.title);
     }

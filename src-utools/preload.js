@@ -36,7 +36,36 @@ function receiveMessage(event, callback) {
   })
 }
 
-const pipPath = path.join(utools.getPath('userData'), '.pip');
+const getPath = (() => {
+  if ('utools' in window) {
+    return utools.getPath;
+  } else if ('focusany' in window) {
+    return focusany.getPath;
+  } else {
+    return () => ''
+  }
+})();
+const showSaveDialog = (() => {
+  if ('utools' in window) {
+    return utools.showSaveDialog;
+  } else if ('focusany' in window) {
+    return focusany.showSaveDialog;
+  } else {
+    return () => undefined;
+  }
+})();
+const shellOpenPath = (() => {
+  if ('utools' in window) {
+    return utools.shellOpenPath;
+  } else if ('focusany' in window) {
+    return focusany.shellOpenPath;
+  } else {
+    return () => {
+    };
+  }
+})();
+
+const pipPath = path.join(getPath('userData'), '.pip');
 
 let client = null;
 
@@ -119,7 +148,7 @@ window.preload = {
      * @returns {Promise<string>} 文件路径
      */
     async writeBlobToFile(content, title) {
-      const p = utools.showSaveDialog({
+      const p = showSaveDialog({
         title,
         buttonLabel: '保存',
         properties: ['createDirectory']
@@ -131,7 +160,7 @@ window.preload = {
             if (err) {
               reject(err);
             } else {
-              utools.shellOpenPath(p);
+              shellOpenPath(p);
               resolve(p);
             }
           });

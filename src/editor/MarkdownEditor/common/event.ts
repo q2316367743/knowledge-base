@@ -1,4 +1,5 @@
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const DEV_URL = "http://localhost:5173/#";
 
@@ -38,7 +39,7 @@ export function onClickPreview(event: MouseEvent) {
         }
         return;
       }
-      utools.shellOpenExternal(href);
+      InjectionUtil.shellOpenExternal(href);
     } else if (aEle.tagName === 'IMG' || aEle.tagName === 'IMAGE') {
       const src = (aEle as HTMLImageElement).src;
       // @ts-ignore

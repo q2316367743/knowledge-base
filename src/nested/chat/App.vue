@@ -49,10 +49,10 @@ import {themeColor, useAiAssistantStore, useAiServiceStore, useArticleStore, use
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {copyText} from "@/utils/utools/NativeUtil";
 import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
 import {buildMessages, getCurrentTime} from "@/nested/chat/util";
 import ChatAssistantSelect from "@/nested/chat/components/ChatAssistantSelect.vue";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 useGlobalStore().initDarkColors();
 useAiServiceStore().init();
@@ -127,7 +127,7 @@ function inputEnter(value: string) {
   chatList.value.unshift({
     role: 'user',
     content: value,
-    name: utools.getUser()?.nickname || '用户',
+    name: InjectionUtil.getUser()?.nickname || '用户',
     datetime: getCurrentTime(),
     assistantId: assistantId.value
   });
@@ -209,7 +209,7 @@ function onStop() {
 
 function handleOperation(type: string, e: { e: Error, index: number }) {
   if (type === 'copy') {
-    copyText(chatList.value[e.index].content);
+    InjectionUtil.copyText(chatList.value[e.index].content);
   } else if (type === 'replay') {
     if (isStreamLoad.value) return MessageUtil.error("正在回答中，请稍候");
     chatList.value.shift();

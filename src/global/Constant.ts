@@ -1,6 +1,7 @@
 import UpdateLog from "@/global/UpdateLog";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {versionLess} from "@/utils/lang/FieldUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const Constant = {
   uid: 'zdllh16g',
@@ -43,15 +44,11 @@ export default Constant;
 const toFeedbackWebsite = (redirect: string) => {
   const url = `https://feedback.esion.xyz/#/auth?redirect=${encodeURIComponent(redirect)}&type=utools&pluginId=1894929764697055232`;
   // 获取uTools的服务token
-  utools.fetchUserServerTemporaryToken().then((ret) => {
+  InjectionUtil.fetchUserServerTemporaryToken().then((ret) => {
     // 使用uTools自带的uBrowser打开登录链接
-    utools.ubrowser
-      .goto(`${url}&accessToken=` + ret.token)
-      .run({width: 1200, height: 800})
+    InjectionUtil.browser.openUrl(`${url}&accessToken=` + ret.token);
   }).catch(e => {
-    utools.ubrowser
-      .goto(url)
-      .run({width: 1200, height: 800})
+    InjectionUtil.browser.openUrl(url)
     console.error(e);
   });
 };
@@ -70,11 +67,11 @@ export function toFeedback() {
   // 构造参数
   const params = encodeURIComponent(JSON.stringify({f1896795064271175680}));
   // 获取uTools的服务token
-  utools.fetchUserServerTemporaryToken().then((ret) => {
+  InjectionUtil.fetchUserServerTemporaryToken().then((ret) => {
     // 使用uTools自带的uBrowser打开登录链接
-    utools.ubrowser
-      .goto(`https://feedback.esion.xyz/#/auth?params=${params}&type=utools&pluginId=1894929764697055232&accessToken=` + ret.token)
-      .run({width: 1200, height: 800})
+    InjectionUtil.browser.openUrl(
+      `https://feedback.esion.xyz/#/auth?params=${params}&type=utools&pluginId=1894929764697055232&accessToken=` + ret.token
+    )
   }).catch(e => {
     MessageUtil.error('请先登录');
     console.error(e);
@@ -83,10 +80,6 @@ export function toFeedback() {
 
 export const BASE64_PREFIX: string = 'data:image/png;base64,';
 
-export const disabledForModule = versionLess(utools.getAppVersion(), 7);
-
 export function openRssBackground() {
-  utools.ubrowser
-    .goto(Constant.background.rss)
-    .run({width: 1200, height: 800})
+  InjectionUtil.browser.openUrl(Constant.background.rss);
 }

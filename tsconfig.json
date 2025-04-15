@@ -24,6 +24,7 @@
     "noEmit": true,
     "types": [
       "utools-api-types",
+      "focusany-sdk"
     ]
   },
   "include": [

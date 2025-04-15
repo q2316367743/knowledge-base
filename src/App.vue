@@ -26,11 +26,11 @@ import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 // 组件
-import {windowConfig} from "@/global/WindowConfig";
 import {ArticleIndex} from "@/entity/article";
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import {addSimpleNote} from "@/utils/component/AddNoteUtil";
 import AppSide from "@/components/app-side/index.vue";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -46,7 +46,7 @@ const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
 
 // 插件进入
-utools.onPluginEnter(action => {
+InjectionUtil.event.onPluginEnter(action => {
   const code = action.code as string;
   const items = code.split(":");
   if (items.length == 2) {
@@ -74,7 +74,7 @@ window.jumpToArticle = (title: string) => {
 }
 
 // 适配新版，快速启动，推送数据到主程序
-utools.onMainPush(action => {
+InjectionUtil.event.onMainPush(action => {
   useGlobalStore().initDarkColors();
   if (action.code !== "function:search") {
     return [];
@@ -148,18 +148,6 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
       useUmami.track("feature", "新增笔记");
       addSimpleNote(extra).then((a) => useHomeEditorStore().openArticle(a));
     }
-  } else if (operate === 'window') {
-    const config = windowConfig[preload];
-    useUmami.track('打开窗口：' + config['title']);
-    // @ts-ignore
-    utools.createBrowserWindow(`dist/${preload}.html`, {
-      width: 800,
-      height: 600,
-      ...config
-    }, () => {
-      utools.hideMainWindow();
-      utools.outPlugin()
-    })
   }
 }
 

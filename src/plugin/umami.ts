@@ -1,5 +1,6 @@
 import router from "@/plugin/router";
 import Constants from "@/global/Constant";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 interface UmamiPayloadBase {
   hostname: string;
@@ -45,7 +46,7 @@ const buildPathPayload = (path: string, name?: string): UmamiPayload => ({
 })
 
 function sendEvent(payload: UmamiPayload) {
-  if (utools.isDev()) {
+  if (InjectionUtil.isDev()) {
     console.debug('Umami payload:', payload);
     return;
   }
@@ -86,7 +87,7 @@ export const useUmami = {
       first = false;
       let type = '未登录'
       try {
-        const user = utools.getUser();
+        const user = InjectionUtil.getUser();
         if (user) {
           if (user.type === 'member') {
             type = 'uTools会员'

@@ -10,6 +10,7 @@ import {
 import {useArticleImportEvent} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {isObject} from "radash";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 function openImportModal(): Promise<string> {
 
@@ -17,7 +18,7 @@ function openImportModal(): Promise<string> {
   const data = ref('');
 
   function jumpToExcelToJson() {
-    utools.redirect(['Excel转Json', 'Excel2Json'], '');
+    InjectionUtil.redirect(['Excel转Json', 'Excel2Json'], '');
   }
 
   return new Promise(resolve => {

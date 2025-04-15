@@ -1,41 +1,24 @@
 import {defineStore} from "pinia";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {AiService, AiServiceModel, AiServiceType} from "@/entity/ai/AiService";
+import {AiService, InnerAiService} from "@/entity/ai/AiService";
 import {map} from "@/utils/lang/ArrayUtil";
-import {versionLess} from "@/utils/lang/FieldUtil";
 import {listByAsync, saveListByAsync} from "@/utils/utools/DbStorageUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 
-const DEFAULT_AI_SERVICE: AiService = {
-  id: '1',
-  createBy: 0,
-  updateBy: 0,
-  name: 'uTools服务',
-  type: AiServiceType.U_TOOLS,
-  url: '',
-  key: '',
-  modelVersion: '',
-  models: [],
-}
 
 
 export const useAiServiceStore = defineStore('ai-service', () => {
 
   const list = ref<Array<AiService>>([]);
   const rev = ref<string>();
-  const uToolsModels = ref<Array<AiServiceModel>>([]);
+  const innerAiService = ref<InnerAiService | null>(null);
 
   const aiServices = computed<Array<AiService>>(() => {
-    let appVersion = utools.getAppVersion();
-    if (versionLess(appVersion, 7)) {
+    if (!innerAiService.value) {
       return list.value;
     }
-    // 大于7.0才可以
-    return [{
-      ...DEFAULT_AI_SERVICE,
-      updateBy: Date.now(),
-      models: uToolsModels.value
-    }, ...list.value]
+    return [innerAiService.value, ...list.value]
   });
   const aiServiceMap = computed(() => map(aiServices.value, 'id'));
 
@@ -43,13 +26,8 @@ export const useAiServiceStore = defineStore('ai-service', () => {
     const res = await listByAsync<AiService>(LocalNameEnum.AI_SERVICE);
     list.value = res.list;
     rev.value = res.rev;
-    let appVersion = utools.getAppVersion();
-    if (versionLess(appVersion, 7)) {
-      // 小于7，不初始化uTools模型
-      return;
-    }
-    // 初始化uTools模型
-    uToolsModels.value = await utools.allAiModels();
+    // 初始化内置模型
+    innerAiService.value = await InjectionUtil.ai.service();
   }
 
   async function saveOrUpdate(aiService: AiService) {
@@ -75,7 +53,7 @@ export const useAiServiceStore = defineStore('ai-service', () => {
   }
 
   return {
-    aiServices, aiServiceMap,uToolsModels,
+    aiServices, aiServiceMap, innerAiService,
     init, saveOrUpdate, remove,
   }
 

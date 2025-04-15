@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import {ChatMessageParam} from "@/types/Chat";
 import {AiService, AiServiceType} from "@/entity/ai/AiService";
 import {AiAssistant} from "@/entity/ai/AiAssistant";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export interface AskToOpenAiAbort {
   abort: (reason?: string) => void;
@@ -47,7 +48,7 @@ async function askToUTools(props: AskToOpenAiProps): Promise<void> {
   }
 
   // 适配新版utools ai接口
-  const abortPromise = utools.ai({model: assistant.model, messages}, (delta) => {
+  const abortPromise = InjectionUtil.ai.chat({model: assistant.model, messages}, (delta) => {
     const msg = delta.reasoning_content || delta.content;
     if (msg) {
       onAppend(msg, !!delta.reasoning_content);

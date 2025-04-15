@@ -23,6 +23,7 @@ import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {listRecordByAsync, removeOneByAsync} from "@/utils/utools/DbStorageUtil";
 import {renderAttachmentUrl} from "@/plugin/server";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const attachments = ref(new Array<string>());
 
@@ -37,12 +38,12 @@ function fetchAttachment() {
 fetchAttachment();
 
 function copyMarkdown(item: string) {
-  utools.copyText(`![image.png#100%](attachment:${item})`);
+  InjectionUtil.copyText(`![image.png#100%](attachment:${item})`);
   MessageUtil.success("成功复制到剪切板");
 }
 
 function copyHtml(item: string) {
-  utools.copyText(renderAttachmentUrl(item));
+  InjectionUtil.copyText(renderAttachmentUrl(item));
   MessageUtil.success("成功复制到剪切板");
 }
 

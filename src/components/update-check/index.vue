@@ -27,6 +27,7 @@ import updateCheck from "@/components/update-check/UpdateCheck";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const router = useRouter();
 
@@ -45,7 +46,7 @@ import('@/global/BeanFactory').then(data => {
         .finally(() => useGlobalStore().closeLoading()))
 });
 
-const toBlog = () => utools.shellOpenExternal(Constant.website)
+const toBlog = () => InjectionUtil.shellOpenExternal(Constant.website)
 const toUpdateLog = () => router.push('/more/update');
 
 </script>

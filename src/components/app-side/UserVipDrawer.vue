@@ -104,13 +104,14 @@ import {ChatMessageIcon, HeartIcon, KeyboardIcon} from "tdesign-icons-vue-next";
 import {useVipStore} from "@/store";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {toFeedback} from "@/global/Constant";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const visible = defineModel({
   type: Boolean,
   default: false
 });
 
-const user = utools.getUser();
+const user = InjectionUtil.getUser();
 const noteNoVip = computed(() => useVipStore().noteNoVip);
 const todoNoVip = computed(() => useVipStore().todoNoVip);
 

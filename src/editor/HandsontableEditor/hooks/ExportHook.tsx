@@ -3,6 +3,7 @@ import {Drawer} from "@arco-design/web-vue";
 import {Alert, Button, Link, Space} from "tdesign-vue-next";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {copy} from "@/utils/BrowserUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export function _createDataByColumns(data: Array<Array<string>>, columns: Array<Handsontable.ColumnSettings> | null): Array<Record<string, string>> {
   if (!columns) {
@@ -42,7 +43,7 @@ export function createDataNotColumns(data: Array<Array<string>>): string {
 export function handsontableExport(data: Ref<Array<Array<string>>>, columns: Ref<Array<Handsontable.ColumnSettings> | null>) {
 
   function conversionAndPaste() {
-    utools.redirect(['Json & Excel', '转换成Excel'], {
+    InjectionUtil.redirect(['Json & Excel', '转换成Excel'], {
       type: 'text',
       data: columns.value ? createDataByColumns(data.value, columns.value) : createDataNotColumns(data.value)
     })

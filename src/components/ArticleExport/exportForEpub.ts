@@ -13,6 +13,7 @@ import {_createDataByColumns, _createDataNotColumns} from "@/editor/Handsontable
 import {isEmptyObj} from "openai/core";
 import {keys} from "radash";
 import {TreeOptionData} from "tdesign-vue-next/es/common";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 interface EpubItem {
     id: string;
@@ -191,7 +192,7 @@ export async function exportForEpub(folder: number) {
   <metadata>
     <dc:title>知识库</dc:title>
     <dc:language>zh-CN</dc:language>
-    <dc:creator>${utools.getUser()?.nickname || "匿名"}</dc:creator>
+    <dc:creator>${InjectionUtil.getUser()?.nickname || "匿名"}</dc:creator>
     <dc:identifier id="bookid">urn:uuid${uuid}</dc:identifier>
     <dc:date>${toDateTimeString(new Date(), "YYYY-MM-DD")}</dc:date>
     <dc:contributor>知识库 [https://u.tools/plugins/detail/%E7%9F%A5%E8%AF%86%E5%BA%93/]</dc:contributor>

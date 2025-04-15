@@ -1,3 +1,5 @@
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+
 /**
  * 解析文件名字，去除拓展名
  * @param fileName 文件名字
@@ -13,7 +15,7 @@ export function parseFileName(fileName: string): string {
 
 
 export function pathJoin(...paths: string[]): string {
-    return paths.join(utools.isWindows() ? '\\' : '/');
+    return paths.join(InjectionUtil.isWindows() ? '\\' : '/');
 }
 
 export function urlJoin(...paths: string[]): string {

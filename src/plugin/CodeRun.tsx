@@ -9,6 +9,7 @@ import {Button, Space, Loading} from "tdesign-vue-next";
 import {extname} from "@/utils/file/FileUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {StopCircleIcon} from "tdesign-icons-vue-next";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export const codeRunSetting = useUtoolsDbStorage<Record<string, string>>(LocalNameEnum.SETTING_CODE_RUN, {
   '\.js$': "node {{filePath}}",
@@ -37,7 +38,7 @@ export async function codeRun(fileName: string, content: string) {
   const name = `${useSnowflake().nextId()}${ext ? '.' + ext : ''}`;
   // 保存到临时目录
   const {filePath, folder} = await window.preload.customer.writeStrToFile(
-    Constant.id, name, content, utools.getPath('temp'));
+    Constant.id, name, content, InjectionUtil.getPath('temp'));
   let command = template(commandTemplate as string, {
     filePath,
     fileDir: folder,

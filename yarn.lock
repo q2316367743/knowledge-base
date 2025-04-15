@@ -2644,6 +2644,11 @@ fill-range@^7.1.1:
   dependencies:
     to-regex-range "^5.0.1"
 
+focusany-sdk@^0.2.5:
+  version "0.2.5"
+  resolved "https://mirrors.cloud.tencent.com/npm/focusany-sdk/-/focusany-sdk-0.2.5.tgz#5d78086ebeada44960752d84d9f342088124e4be"
+  integrity sha512-lGGRqKOH6cgGuCnQDHXtShJVsPJkj3FurVIHNxbcPUAPdfbzEZU5JgK9LYsZVUUx1LFzemRIFpsYtXbq/6WOxw==
+
 follow-redirects@^1.15.6:
   version "1.15.9"
   resolved "https://mirrors.cloud.tencent.com/npm/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"

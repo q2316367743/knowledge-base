@@ -1,14 +1,14 @@
 import {DialogPlugin, FormItem, Link, Space, TabPanel, Tabs, Tag, Text, Textarea} from "tdesign-vue-next";
-import {versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {NoteImportGroups} from "@/modules/NoteImport/data";
 import {importWithUBrowser} from "@/modules/NoteImport/components/importWithUBrowser";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {useLoading} from "@/hooks";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export function openArticleImport() {
-  if (versionGreaterEqual(utools.getAppVersion(), 7)) {
+  if (InjectionUtil.version.isSupportMarkdown()) {
     openArticleImportWithUBrowser();
   } else {
     openArticleImportWithPlugin();
@@ -16,7 +16,7 @@ export function openArticleImport() {
 }
 
 export function openArticleImportWithPlugin() {
-  utools.redirect(["网页剪报", "网页剪报"], "");
+  InjectionUtil.redirect(["网页剪报", "网页剪报"], "");
 }
 
 

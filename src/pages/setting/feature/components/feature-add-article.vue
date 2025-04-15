@@ -18,8 +18,8 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import Constant from "@/global/Constant";
-import {getFeatureOne, removeFeatureOne, setFeatureOneSimple} from "@/utils/utools/FeatureUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 
 const instance = ref({
@@ -28,7 +28,7 @@ const instance = ref({
   enable: false
 });
 
-const feature = getFeatureOne(Constant.feature.ADD);
+const feature = InjectionUtil.getFeatureOne(Constant.feature.ADD);
 if (feature) {
   const cmd = feature.cmds[0];
   instance.value = {
@@ -39,7 +39,7 @@ if (feature) {
 }
 
 function open() {
-  const res = setFeatureOneSimple(Constant.feature.ADD, {
+  const res = InjectionUtil.setFeatureOneSimple(Constant.feature.ADD, {
     type: "over",
     label: "新增笔记",
     minLength: instance.value.minLength,
@@ -53,7 +53,7 @@ function open() {
 }
 
 function close() {
-  const res = removeFeatureOne(Constant.feature.ADD);
+  const res = InjectionUtil.removeFeatureOne(Constant.feature.ADD);
   if (res) {
     MessageUtil.success("移除关键字成功");
     instance.value.enable = false;

@@ -12,7 +12,9 @@
 </template>
 <script lang="ts" setup>
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
-import {disabledForModule} from '@/global/Constant';
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+
+const disabledForModule = !InjectionUtil.version.isSupportMarkdown();
 </script>
 <style scoped lang="less">
 

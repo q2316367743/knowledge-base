@@ -30,6 +30,7 @@
 import {defineComponent, PropType} from "vue";
 import {Log, LogItemEnum} from "@/components/update-check/domain";
 import Constant from "@/global/Constant";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export default defineComponent({
   name: 'update-item',
@@ -78,7 +79,7 @@ export default defineComponent({
     },
     open(url?: string) {
       if (url) {
-        utools.shellOpenExternal(url);
+        InjectionUtil.shellOpenExternal(url);
       }
     }
   }

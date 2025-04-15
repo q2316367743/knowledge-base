@@ -4,6 +4,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {DialogPlugin, Paragraph, Text, Title} from "tdesign-vue-next";
 import {JSX} from 'vue/jsx-runtime';
 import {useUmami} from "@/plugin/umami";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export const useVipStore = defineStore('vip', () => {
   const noteVip = ref(false);
@@ -14,7 +15,7 @@ export const useVipStore = defineStore('vip', () => {
     noteVip.value = false;
     todoVip.value = false;
     allVip.value = false;
-    const payments = await utools.fetchUserPayments();
+    const payments = await InjectionUtil.payment.fetch();
     for (const payment of payments) {
       if (payment.goods_id === Constant.goods.note) {
         noteVip.value = true;
@@ -61,7 +62,7 @@ export const useVipStore = defineStore('vip', () => {
     return new Promise<void>((resolve, reject) => {
       try {
         useUmami.track(`/VIP/准备/${type}`);
-        utools.openPayment({
+        InjectionUtil.payment.open({
           goodsId
         }, () => {
           console.debug(`购买${type}成功`);

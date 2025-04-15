@@ -5,16 +5,16 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {map} from "@/utils/lang/ArrayUtil";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {useAiServiceStore} from "@/store";
-import {findModel} from "@/entity/ai/AiService";
+import {findModel, InnerAiService} from "@/entity/ai/AiService";
 
 export const useAiAssistantStore = defineStore('ai-assistant', () => {
   const list = ref<Array<AiAssistant>>([])
   const rev = ref<string>();
 
   const aiAssistants = computed<Array<AiAssistant>>(() => {
-    const {uToolsModels} = useAiServiceStore();
+    const {innerAiService} = useAiServiceStore();
     return [
-      ...uToolsModels.map(e => ({
+      ...(innerAiService as (InnerAiService | null))?.models.map(e => ({
         id: e.id,
         createBy: 0,
         name: e.label,
@@ -27,7 +27,7 @@ export const useAiAssistantStore = defineStore('ai-assistant', () => {
         default: true,
         description: e.description,
         icon: e.icon
-      })),
+      })) || [],
       ...list.value
     ] as Array<AiAssistant>
   });

@@ -52,6 +52,7 @@ import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useIntervalComputer} from "@/hooks/IntervalComputer";
 import {getNewsArticle} from "@/modules/NoteNews";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const route = useRoute();
 const router = useRouter();
@@ -94,7 +95,7 @@ function handlerClick() {
 
 
 function openLink() {
-  utools.shellOpenExternal(route.query.link as string);
+  InjectionUtil.shellOpenExternal(route.query.link as string);
 }
 
 </script>

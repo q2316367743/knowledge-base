@@ -110,6 +110,7 @@ declare interface Window {
       verifyPassword: (password: string, key: string) => EncryptKeyIv | boolean;
       encryptValue: (keyIv: EncryptKeyIv, data: string) => string;
       decryptValue: (keyIv: EncryptKeyIv, data: string) => string;
-    }
+    },
+    api: UToolsApi
   }
 }

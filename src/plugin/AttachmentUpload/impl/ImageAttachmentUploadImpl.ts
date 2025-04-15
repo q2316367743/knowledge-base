@@ -2,6 +2,7 @@ import {isUtools} from "@/global/BeanFactory";
 import {blobToBase64} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export async function useAttachmentUploadByImage(data: Blob | File | string): Promise<string> {
   if (!isUtools) {
@@ -15,7 +16,7 @@ export async function useAttachmentUploadByImage(data: Blob | File | string): Pr
     data = await blobToBase64(data);
   }
   // 使用图床插件
-  utools.redirect(['图床', '上传到图床'], {
+  InjectionUtil.redirect(['图床', '上传到图床'], {
     type: 'img',
     data: data
   });

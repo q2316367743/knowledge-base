@@ -1,7 +1,8 @@
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {getAttachmentBySync} from "@/utils/utools/DbStorageUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
-const port = utools.isDev() ? 11010 : 11000;
+const port = InjectionUtil.isDev() ? 11010 : 11000;
 let run = true;
 
 export function renderAttachmentBaseUrl() {

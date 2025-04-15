@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 import MindMap from "simple-mind-map";
 import {MindMapNode, MindMapNodeData} from "@/editor/MindMapEditor/domain";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const props = defineProps({
   mindMap: Object as PropType<MindMap>
@@ -108,7 +109,7 @@ function openLink() {
   if (!hyperlink) {
     return;
   }
-  utools.shellOpenExternal(hyperlink);
+  InjectionUtil.shellOpenExternal(hyperlink);
   hide();
 }
 

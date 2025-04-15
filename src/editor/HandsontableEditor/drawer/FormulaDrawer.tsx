@@ -8,9 +8,10 @@ import {
   Title, Paragraph, Popup
 } from "tdesign-vue-next";
 import {ChevronDownIcon} from "tdesign-icons-vue-next";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 function openUrl() {
-  utools.shellOpenExternal("https://hyperformula.handsontable.com/guide/built-in-functions.html#list-of-available-functions")
+  InjectionUtil.shellOpenExternal("https://hyperformula.handsontable.com/guide/built-in-functions.html#list-of-available-functions")
 }
 
 export function openFormulaDrawer() {

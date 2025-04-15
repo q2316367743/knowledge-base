@@ -46,13 +46,14 @@ import {PluginSettingIndex} from "@/entity/setting/PluginSetting";
 import SettingPluginSide from "@/pages/tool/plugin/layout/SettingPluginSide.vue";
 import SettingPluginContent from "@/pages/tool/plugin/layout/SettingPluginContent.vue";
 import {QuestionnaireIcon, SettingIcon} from "tdesign-icons-vue-next";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const router = useRouter();
 
 const plugin = ref<PluginSettingIndex>();
 const load = ref(false);
 
-const toHelp = () => utools.shellOpenExternal(Constant.help.plugin);
+const toHelp = () => InjectionUtil.shellOpenExternal(Constant.help.plugin);
 const toSetting = () => router.push({
   path: '/setting/base',
   query: {

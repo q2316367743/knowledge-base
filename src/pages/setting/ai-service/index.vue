@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 import AiServiceSide from "@/pages/setting/ai-service/components/AiServiceSide.vue";
 import AiServiceContent from "@/pages/setting/ai-service/components/AiServiceContent.vue";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const currentId = ref('');
 
@@ -27,7 +28,7 @@ function handleSave(id: string) {
   currentId.value = id;
 }
 
-const toApi = () => utools.shellOpenExternal("https://api.v3.cm/register?aff=6A4f");
+const toApi = () => InjectionUtil.shellOpenExternal("https://api.v3.cm/register?aff=6A4f");
 </script>
 <style scoped lang="less">
 .setting-ai-service {

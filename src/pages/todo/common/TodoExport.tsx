@@ -24,6 +24,7 @@ import {htmlToMarkdown} from "@/utils/file/ConvertUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 enum ExportFileTypeEnum {
   TEXT = 1,
@@ -72,7 +73,7 @@ function exportTodo(config: Config, close: () => void) {
 
 function copyToClipboard(config: Config, close: () => void) {
   exportTo(config).then(text => {
-    utools.copyText(text);
+    InjectionUtil.copyText(text);
     MessageUtil.success("已成功复制到剪切板");
     close();
   }).catch(e => MessageUtil.error("导出失败", e));

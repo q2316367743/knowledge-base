@@ -3,6 +3,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {ShallowRef} from "vue";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 /**
  * 截屏菜单
@@ -12,9 +13,9 @@ export const useScreenShotMenu = (editor: ShallowRef<Cherry | undefined>) => {
     name: '截图',
     onClick: function () {
       if (editor.value) {
-        utools.hideMainWindow()
-        utools.screenCapture(base64 => {
-          utools.showMainWindow()
+        InjectionUtil.hideMainWindow()
+        InjectionUtil.screenCapture(base64 => {
+          InjectionUtil.showMainWindow()
           useGlobalStore().startLoading("开始文件上传");
           useAttachmentUpload.upload(base64, true, "image/png")
             .then(url => editor.value && editor.value.insert('\n![截屏#100%](' + url + ')'))

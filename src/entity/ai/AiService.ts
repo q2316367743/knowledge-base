@@ -41,6 +41,10 @@ export interface AiService {
   models: Array<AiServiceModelType>;
 }
 
+export interface InnerAiService extends AiService {
+  models: Array<AiServiceModel>
+}
+
 export const buildAiService = (): AiService => ({
   id: useSnowflake().nextId(),
   createBy: Date.now(),

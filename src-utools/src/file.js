@@ -13,6 +13,16 @@ function readFileAsync(path) {
   })
 }
 
+const showOpenDialog = (() => {
+  if ('utools' in window) {
+    return utools.showOpenDialog;
+  } else if ('focusany' in window) {
+    return focusany.showOpenDialog;
+  } else {
+    return () => []
+  }
+})();
+
 /**
  * 获取一个文件
  * @param options {options: {
@@ -27,7 +37,7 @@ function readFileAsync(path) {
  * @return {Promise<Array<File>>} 返回文件对象
  */
 async function openFile(options) {
-  const paths = utools.showOpenDialog(options);
+  const paths = showOpenDialog(options);
   const files = [];
   for (const path of paths) {
     const data = await readFileAsync(path);

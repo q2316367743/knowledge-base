@@ -1,11 +1,12 @@
 import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export function openNotePreview(id: number) {
   // 打开笔记预览
 
-  const dev = utools.isDev();
-  const ubWindow = utools.createBrowserWindow(
+  const dev = InjectionUtil.isDev();
+  const ubWindow = InjectionUtil.createBrowserWindow(
     dev ? 'test.html' : `dist/preview.html`, {
       // @ts-ignore
       useContentSize: true,

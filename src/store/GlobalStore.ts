@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export enum GlobalType {
   DARK = 1,
@@ -12,14 +13,14 @@ export enum GlobalType {
 export const themeColor = useUtoolsDbStorage<string>(LocalNameEnum.KEY_APP_COLOR, 'ghibli');
 
 export const useGlobalStore = defineStore('global', () => {
-  const isDark = ref(utools.isDarkColors());
+  const isDark = ref(InjectionUtil.isDarkColors());
   const loading = ref(false);
   const loadingText = ref('');
   const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
 
   function renderTheme(): boolean {
     if (globalType.value === GlobalType.AUTO) {
-      return utools.isDarkColors();
+      return InjectionUtil.isDarkColors();
     } else if (globalType.value === GlobalType.DARK) {
       return true;
     } else if (globalType.value === GlobalType.LIGHT) {

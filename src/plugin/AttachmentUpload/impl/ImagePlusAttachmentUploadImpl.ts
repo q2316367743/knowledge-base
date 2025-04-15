@@ -1,6 +1,7 @@
 import {base64toBlob} from "@/utils/BrowserUtil";
 import Constant, {BASE64_PREFIX} from "@/global/Constant";
 import {useSnowflake} from "@/hooks/Snowflake";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export async function useAttachmentUploadByImagePlus(data: Blob | File | string): Promise<string> {
   if (typeof data === 'string') {
@@ -11,7 +12,7 @@ export async function useAttachmentUploadByImagePlus(data: Blob | File | string)
     Constant.id,
     useSnowflake().nextId() + '.png',
     data,
-    utools.getPath('temp')
+    InjectionUtil.getPath('temp')
   );
   return window.preload.util.uploadToImagePlus(path, Constant.name);
 }

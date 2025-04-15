@@ -88,15 +88,16 @@ import CardNote  from '@/assets/logo/card-note.png';
 import Dmgj from '@/assets/logo/dmgj.png';
 import UToolsMusic from '@/assets/logo/rain-graph.png';
 import EsClient from '@/assets/logo/es-client.png';
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 // TODO: 此处需要样式优化
 function openLink(url: string) {
-  utools.shellOpenExternal(url);
+  InjectionUtil.shellOpenExternal(url);
 }
 
 function toApp(name: string) {
   useUmami.track(`/推荐/${name}`);
-  utools.redirect([name, name], '');
+  InjectionUtil.redirect([name, name], '');
 }
 </script>
 <style lang="less">

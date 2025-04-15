@@ -1,5 +1,6 @@
 import {toRaw} from "vue";
 import {clone} from "@/utils/lang/ObjectUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 
 // 对象
@@ -9,7 +10,7 @@ import {clone} from "@/utils/lang/ObjectUtil";
  * @param key 键
  */
 export function getItem<T>(key: string): T | null {
-    let value = utools.dbStorage.getItem(key);
+    let value = InjectionUtil.dbStorage.getItem(key);
     if (typeof value === 'undefined' || value == null) {
         return null;
     }
@@ -22,7 +23,7 @@ export function getItem<T>(key: string): T | null {
  * @param defaultValue 默认值
  */
 export function getItemByDefault<T>(key: string, defaultValue: T): T {
-    let value = utools.dbStorage.getItem(key);
+    let value = InjectionUtil.dbStorage.getItem(key);
     if (typeof value === 'undefined' || value == null) {
         return defaultValue;
     }
@@ -35,7 +36,7 @@ export function getItemByDefault<T>(key: string, defaultValue: T): T {
  * @param value 值
  */
 export function setItem<T = any>(key: string, value: T) {
-    utools.dbStorage.setItem(key, toRaw(value));
+  InjectionUtil.dbStorage.setItem(key, toRaw(value));
 }
 
 /**
@@ -43,7 +44,7 @@ export function setItem<T = any>(key: string, value: T) {
  * @param key 键
  */
 export function removeItem(key: string) {
-  utools.dbStorage.removeItem(key);
+  InjectionUtil.dbStorage.removeItem(key);
 }
 
 // --------------------------------------- 基础对象 ---------------------------------------
@@ -75,7 +76,7 @@ export interface DbRecord<T> {
  * @param key 键
  */
 export async function listByAsync<T = any>(key: string): Promise<DbList<T>> {
-    const res = await utools.db.promises.get(key);
+    const res = await InjectionUtil.db.get(key);
     if (res) {
         return {
             list: res.value || new Array<T>(),
@@ -93,7 +94,7 @@ export async function listByAsync<T = any>(key: string): Promise<DbList<T>> {
  */
 export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: string): Promise<undefined | string> {
     try {
-        const res = await utools.db.promises.put({
+        const res = await InjectionUtil.db.put({
             _id: key,
             _rev: rev,
             value: toRaw(records)
@@ -101,7 +102,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
         if (res.error) {
             if (res.message === "Document update conflict") {
                 // 查询后更新
-                const res = await utools.db.promises.get(key);
+                const res = await InjectionUtil.db.get(key);
                 return await saveListByAsync(key, records, res ? res._rev : undefined);
             } else if (res.message === 'An object could not be cloned.') {
                 return await saveListByAsync(key, clone(records, true), rev);
@@ -130,7 +131,7 @@ export async function saveListByAsync<T>(key: string, records: Array<T>, rev?: s
  */
 export async function listRecordByAsync<T>(key?: string | string[]): Promise<Array<DbRecord<T>>> {
     // @ts-ignore
-    const items = await utools.db.promises.allDocs(key);
+    const items = await InjectionUtil.db.allDocs(key);
     return items.filter(e => !!e).map(item => ({
         id: item._id,
         record: item.value,
@@ -146,7 +147,7 @@ export async function listRecordByAsync<T>(key?: string | string[]): Promise<Arr
  * @param defaultValue 默认值
  */
 export async function getFromOneWithDefaultByAsync<T>(key: string, defaultValue: T): Promise<DbRecord<T>> {
-    const res = await utools.db.promises.get(key);
+    const res = await InjectionUtil.db.get(key);
     if (!res) {
         return {record: defaultValue, id: key}
     }
@@ -162,7 +163,7 @@ export async function getFromOneWithDefaultByAsync<T>(key: string, defaultValue:
  * @param key 键
  */
 export async function getFromOneByAsync<T = any>(key: string): Promise<DbRecord<T | null>> {
-    const res = await utools.db.promises.get(key);
+    const res = await InjectionUtil.db.get(key);
     if (!res) {
         return {record: null, id: key}
     }
@@ -182,7 +183,7 @@ export async function getFromOneByAsync<T = any>(key: string): Promise<DbRecord<
  */
 export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err?: (e: Error) => void): Promise<undefined | string> {
     try {
-        const res = await utools.db.promises.put({
+        const res = await InjectionUtil.db.put({
             _id: key,
             _rev: rev,
             value: toRaw(value)
@@ -190,7 +191,7 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err
         if (res.error) {
             if (res.message === "Document update conflict") {
                 // 查询后更新
-                const res = await utools.db.promises.get(key);
+                const res = await InjectionUtil.db.get(key);
                 return await saveOneByAsync(key, value, res ? res._rev : undefined);
             } else if (res.message === "DataCloneError: Failed to execute 'put' on 'IDBObjectStore': #<Object> could not be cloned.") {
                 return await saveOneByAsync(key, clone(value, true), rev);
@@ -222,7 +223,7 @@ export async function saveOneByAsync<T>(key: string, value: T, rev?: string, err
  * @param ignoreError 是否忽略异常
  */
 export async function removeOneByAsync(key: string, ignoreError: boolean = false): Promise<void> {
-    const res = await utools.db.promises.remove(key);
+    const res = await InjectionUtil.db.remove(key);
     if (res.error) {
         if (!ignoreError) {
             return Promise.reject(res.message);
@@ -238,30 +239,10 @@ export async function removeOneByAsync(key: string, ignoreError: boolean = false
  * @param ignoreError 是否忽略异常，默认不忽略
  */
 export async function removeMultiByAsync(key: string, ignoreError: boolean = false): Promise<void> {
-    const items = await utools.db.promises.allDocs(key);
+    const items = await InjectionUtil.db.allDocs(key);
     for (let item of items) {
         await removeOneByAsync(item._id, ignoreError);
     }
-}
-
-
-// --------------------------------------- 临时存储 ---------------------------------------
-
-export function getStrBySession<T>(key: string): T | null {
-    const item = sessionStorage.getItem(key);
-    if (!item) {
-        return null
-    }
-    try {
-        return JSON.parse(item)['value'];
-    } catch (e) {
-        sessionStorage.removeItem(key);
-        return null;
-    }
-}
-
-export function setStrBySession(key: string, value: string) {
-    sessionStorage.setItem(key, value);
 }
 
 // --------------------------------------- 附件 ---------------------------------------
@@ -275,7 +256,7 @@ export function setStrBySession(key: string, value: string) {
  */
 export async function postAttachment(docId: string, attachment: Blob | File, mineType = "application/octet-stream"): Promise<string> {
     const buffer = await attachment.arrayBuffer();
-    const res = await utools.db.promises.postAttachment(docId, new Uint8Array(buffer), mineType);
+    const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), mineType);
     if (res.error) {
         return Promise.reject(res.message);
     }
@@ -288,11 +269,11 @@ export async function postAttachment(docId: string, attachment: Blob | File, min
  * @return 文件链接
  */
 export async function getAttachmentByAsync(docId: string): Promise<Blob | null> {
-    const data = await utools.db.promises.getAttachment(docId);
+    const data = await InjectionUtil.db.getAttachment(docId);
     if (!data) {
         return null;
     }
-    const mimeType = await utools.db.promises.getAttachmentType(docId);
+    const mimeType = await InjectionUtil.db.getAttachmentType(docId);
     return new Blob([data], {type: mimeType || 'application/octet-stream'});
 }
 
@@ -301,11 +282,11 @@ export async function getAttachmentByAsync(docId: string): Promise<Blob | null> 
  * @param docId 文档ID
  */
 export function getAttachmentBySync(docId: string): string {
-    const data = utools.db.getAttachment(docId);
+    const data = InjectionUtil.db.getAttachment(docId);
     if (!data) {
         return "./logo.png";
     }
     const blob = new Blob([data]);
-    return window.URL.createObjectURL(blob);
+    return URL.createObjectURL(blob);
 
 }

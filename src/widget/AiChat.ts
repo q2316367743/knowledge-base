@@ -1,5 +1,6 @@
 import {homeEditorId} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useErrorStore} from "@/store/components/ErrorStore";
 
@@ -7,9 +8,9 @@ import {useErrorStore} from "@/store/components/ErrorStore";
  * 打开AI聊天小部件
  */
 export function openAiChatWidget() {
-  const dev = utools.isDev();
-  const {x, y} = utools.getCursorScreenPoint();
-  const ubWindow = utools.createBrowserWindow(
+  const dev = InjectionUtil.isDev();
+  const {x, y} = InjectionUtil.getCursorScreenPoint();
+  const ubWindow = InjectionUtil.createBrowserWindow(
     dev ? 'test.html' : `dist/chat.html`, {
       // @ts-ignore
       useContentSize: true,

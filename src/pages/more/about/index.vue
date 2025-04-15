@@ -35,12 +35,13 @@
 import Constant, {toFeedback, toUpdateLog} from "@/global/Constant";
 import {useErrorStore} from "@/store/components/ErrorStore";
 import {openPrivacy} from "@/pages/more/about/components/privacy";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const consoleShow = computed(() => useErrorStore().consoleShow);
 const changeConsole = () => useErrorStore().changeConsole();
 
 function openUrl(url: string) {
-  utools.shellOpenExternal(url);
+  InjectionUtil.shellOpenExternal(url);
 }
 
 

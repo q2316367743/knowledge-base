@@ -52,8 +52,8 @@ import {CopyIcon, EditIcon, LoadingIcon, RefreshIcon} from "tdesign-icons-vue-ne
 import {ChatMessage} from "@/types/Chat";
 import {useAiAssistantStore, useChatStore} from "@/store";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
-import {copyText} from "@/utils/utools/NativeUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const router = useRouter();
 
@@ -78,7 +78,7 @@ const assistant = computed(() => {
 })
 
 function copy() {
-  copyText(props.message.a);
+  InjectionUtil.copyText(props.message.a);
 }
 
 function add() {

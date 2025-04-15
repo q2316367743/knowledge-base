@@ -4,6 +4,7 @@ import {getImageSize} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export function openInsertImage(activeNodes: MindMapNode[]) {
   if (activeNodes.length === 0) {
@@ -19,7 +20,7 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
     window.preload.customer.openFile({
       title: '选择图片',
       buttonLabel: '选择',
-      defaultPath: utools.getPath('pictures'),
+      defaultPath: InjectionUtil.getPath('pictures'),
       filters: [{
         name: 'Images',
         extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp']

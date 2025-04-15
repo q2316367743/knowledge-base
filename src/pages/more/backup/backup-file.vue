@@ -17,6 +17,7 @@ import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import Constant from "@/global/Constant";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 
 const FOLDER = Constant.id;
@@ -45,18 +46,16 @@ function restoreByFile() {
   loading.value.load = true;
   _restoreByFile()
     .then(() => {
-      if (utools.getWindowType() === 'main') {
+      if (InjectionUtil.getWindowType() === 'main') {
         NotifyPlugin.success({
           title: "恢复成功",
           content: "恢复成功，3s后自动关闭插件",
           duration: 3000,
           onCloseBtnClick: () => {
-            utools.hideMainWindow();
-            utools.outPlugin(true);
+            InjectionUtil.outPlugin(true);
           },
           onDurationEnd: () => {
-            utools.hideMainWindow();
-            utools.outPlugin(true);
+            InjectionUtil.outPlugin(true);
           }
         })
       } else {

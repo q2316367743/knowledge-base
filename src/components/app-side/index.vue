@@ -189,10 +189,11 @@ import {openKeyDrawer} from "@/components/app-side/func";
 import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
 import {toDoc, toFeedback} from "@/global/Constant";
-import {disabledForModule} from '@/global/Constant';
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const route = useRoute();
 const router = useRouter();
+const disabledForModule = !InjectionUtil.version.isSupportMarkdown();
 
 const selectedKey = ref('/note');
 
