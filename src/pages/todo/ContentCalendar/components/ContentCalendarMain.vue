@@ -39,9 +39,12 @@
             'current-month': day.currentMonth,
             'other-month': !day.currentMonth,
             'today': day.isToday,
-            'selected': selectedDate && isSameDay(day.date, selectedDate)
+            'selected': selectedDates.includes(day.day)
           }"
-          @click="handleDayClick(day)"
+          @mousedown="handleMouseDown(day)"
+          @mousemove="handleMouseMove(day)"
+          @mouseup="handleMouseUp(day)"
+          @mouseleave="handleMouseUp()"
           @contextmenu="openContextMenuForDay($event, day.date)"
         >
           <div class="day-header">
@@ -61,6 +64,7 @@
               class="todo-item"
               :class="{ 'multi-day': todo.isMultiDay }"
               @click.stop="openTodoItemSetting(todo.index, () => toUpdate())"
+              @mousedown.stop
               @contextmenu.stop="onContextMenuForTodo($event, todo.index, () => toUpdate())"
               :style="{borderColor: handleSimplePriorityColor(todo.index.priority)}"
             >
@@ -86,6 +90,7 @@ import {toDateTimeString} from "@/utils/lang/FormatUtil";
 
 interface CalendarDay {
   date: Date;
+  day: string;
   dayOfMonth: number;
   currentMonth: boolean;
   isToday: boolean;
@@ -134,8 +139,10 @@ const calendarDays = computed<CalendarDay[]>(() => {
   const prevMonthDays = firstDay.getDay();
   const prevMonth = new Date(year, month, 0);
   for (let i = prevMonthDays - 1; i >= 0; i--) {
+    const date = new Date(year, month - 1, prevMonth.getDate() - i);
     days.push({
-      date: new Date(year, month - 1, prevMonth.getDate() - i),
+      date,
+      day: dayjs(date).format("YYYY-MM-DD"),
       dayOfMonth: prevMonth.getDate() - i,
       currentMonth: false,
       isToday: false,
@@ -145,8 +152,10 @@ const calendarDays = computed<CalendarDay[]>(() => {
 
   // 添加当前月的日期
   for (let i = 1; i <= lastDay.getDate(); i++) {
+    const date = new Date(year, month, i);
     days.push({
-      date: new Date(year, month, i),
+      date,
+      day: dayjs(date).format("YYYY-MM-DD"),
       dayOfMonth: i,
       currentMonth: true,
       isToday: isSameDay(new Date(year, month, i), new Date()),
@@ -157,8 +166,10 @@ const calendarDays = computed<CalendarDay[]>(() => {
   // 添加下个月的日期
   const remainingDays = 42 - days.length; // 6行7列的日历格子
   for (let i = 1; i <= remainingDays; i++) {
+    const date = new Date(year, month + 1, i);
     days.push({
-      date: new Date(year, month + 1, i),
+      date,
+      day: dayjs(date).format("YYYY-MM-DD"),
       dayOfMonth: i,
       currentMonth: false,
       isToday: false,
@@ -210,12 +221,52 @@ const isCurrentMonth = computed(() => {
     currentDate.value.getMonth() === now.getMonth();
 });
 
-const selectedDate = ref<Date | null>(null);
+const isSelecting = ref(false);
+const startSelectDate = ref<Date[]>([]);
 
-const handleDayClick = (day: CalendarDay) => {
-  selectedDate.value = day.date;
+const selectedDates = computed<Array<string>>(() => {
+  if (startSelectDate.value.length === 0) return [];
+  const start = startSelectDate.value[0];
+  const end = startSelectDate.value[1] || startSelectDate.value[0];
+  // 返回开始日期到结束日期中间的日期
+  const dates = new Array<string>();
+
+  // 确保开始日期在结束日期之前
+  const [minDate, maxDate] = start <= end ? [start, end] : [end, start];
+
+  // 生成从开始到结束的所有日期
+  let currentDate = dayjs(minDate);
+  while (currentDate.isBefore(maxDate) || currentDate.isSame(maxDate)) {
+    dates.push(currentDate.format("YYYY-MM-DD"));
+    currentDate = currentDate.add(1, 'day');
+  }
+
+
+  return dates;
+});
+
+const handleMouseDown = (day: CalendarDay) => {
+  startSelectDate.value = [day.date];
+  isSelecting.value = true;
 };
 
+const handleMouseMove = (day: CalendarDay) => {
+  if (!isSelecting.value) return;
+
+  // 在鼠标移动时只记录当前日期，但不更新选择范围
+  // 这样可以在视觉上提供反馈，但实际选择只在鼠标抬起时确定
+  startSelectDate.value[1] = day.date;
+};
+
+const handleMouseUp = (day?: CalendarDay) => {
+  if (isSelecting.value) {
+    if (day) {
+      startSelectDate.value[1] = day.date;
+      isSelecting.value = false;
+      console.log(startSelectDate.value)
+    }
+  }
+}
 const handleAdd = () => openAddTodoItem({onAdd: () => toUpdate(), start: toDateTimeString(Date.now())})
 </script>
 
