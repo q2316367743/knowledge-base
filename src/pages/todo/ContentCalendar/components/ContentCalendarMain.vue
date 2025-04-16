@@ -2,25 +2,25 @@
   <div class="content-calendar-main">
     <div class="calendar-header">
       <div class="header-left">
-        <t-space>
-          <t-button @click="prevMonth" variant="outline">
-            上一月
-          </t-button>
-          <t-button @click="nextMonth" variant="outline">
-            下一月
-          </t-button>
-        </t-space>
-      </div>
-      <div class="header-center">
         <span class="current-date">{{ currentYearMonth }}</span>
       </div>
       <div class="header-right">
-        <t-space>
+        <t-space size="small">
           <t-button variant="outline" @click="handleAdd()">
             新建日程
           </t-button>
           <t-button @click="backToToday" variant="outline" :disabled="isCurrentMonth">
-            返回今天
+            回到本月
+          </t-button>
+          <t-button @click="prevMonth" variant="outline" shape="square">
+            <template #icon>
+              <chevron-left-icon/>
+            </template>
+          </t-button>
+          <t-button @click="nextMonth" variant="outline" shape="square">
+            <template #icon>
+              <chevron-right-icon/>
+            </template>
           </t-button>
         </t-space>
       </div>
@@ -42,16 +42,27 @@
             'selected': selectedDate && isSameDay(day.date, selectedDate)
           }"
           @click="handleDayClick(day)"
+          @contextmenu="openContextMenuForDay($event, day.date)"
         >
-          <div class="day-header">{{ day.dayOfMonth }}</div>
-          <div class="todo-items">
+          <div class="day-header">
+            <div class="day-number">{{ day.dayOfMonth }}</div>
+            <t-tooltip content="查看更多" v-if="day.todoItems.length > 2">
+              <t-button theme="primary" variant="text" shape="square" size="small" @click.stop>
+                <template #icon>
+                  <more-icon/>
+                </template>
+              </t-button>
+            </t-tooltip>
+          </div>
+          <div class="todo-items" v-if="day.todoItems.length>0">
             <div
-              v-for="todo in day.todoItems"
+              v-for="todo in day.todoItems.slice(0, Math.min(2, day.todoItems.length))"
               :key="todo.index.id"
               class="todo-item"
               :class="{ 'multi-day': todo.isMultiDay }"
-              @click.stop="openTodoItemSetting(todo.index)"
-              @contextmenu="onContextMenuForTodo($event, todo.index)"
+              @click.stop="openTodoItemSetting(todo.index, () => toUpdate())"
+              @contextmenu.stop="onContextMenuForTodo($event, todo.index, () => toUpdate())"
+              :style="{borderColor: handleSimplePriorityColor(todo.index.priority)}"
             >
               {{ todo.index.title }}
             </div>
@@ -63,10 +74,15 @@
 </template>
 <script lang="ts" setup>
 import {useTodoItemStore} from "@/store";
-import {TodoItem} from "@/entity/todo/TodoItem";
+import {handleSimplePriorityColor, TodoItem} from "@/entity/todo/TodoItem";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
-import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
+import {openContextMenuForDay} from "@/pages/todo/ContentCalendar/components/ContextMenuForDay";
+import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
+import {ChevronLeftIcon, ChevronRightIcon, MoreIcon} from "tdesign-icons-vue-next";
+import dayjs from "dayjs";
+import {toDayOfBegin, toDayOfEnd} from "@/utils/lang/FieldUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
 
 interface CalendarDay {
   date: Date;
@@ -101,9 +117,10 @@ const currentYearMonth = computed(() => {
 });
 const todoItems = ref<TodoItem[]>([]);
 
-onMounted(async () => {
-  todoItems.value = await getRecords();
-});
+
+const toUpdate = async () => todoItems.value = await getRecords();
+
+onMounted(toUpdate);
 
 const calendarDays = computed<CalendarDay[]>(() => {
   const year = currentDate.value.getFullYear();
@@ -151,17 +168,15 @@ const calendarDays = computed<CalendarDay[]>(() => {
 
   // 将待办事项添加到对应的日期
   for (const item of todoItems.value) {
-    if (item.attr?.start) {
-      const startDate = new Date(item.attr.start);
-      const endDate = item.attr.end ? new Date(item.attr.end) : startDate;
+    const startDate = toDayOfBegin(dayjs(new Date(item.attr.start || item.index.id)));
+    const endDate = toDayOfEnd(dayjs(item.attr.end ? new Date(item.attr.end) : startDate));
 
-      for (const day of days) {
-        if (day.date >= startDate && day.date <= endDate) {
-          day.todoItems.push({
-            ...item,
-            isMultiDay: !!item.attr.end && item.attr.start !== item.attr.end
-          });
-        }
+    for (const day of days) {
+      if ((startDate.isBefore(day.date) || startDate.isSame(day.date)) && (endDate.isAfter(day.date) || endDate.isSame(day.date))) {
+        day.todoItems.push({
+          ...item,
+          isMultiDay: !!item.attr.end && item.attr.start !== item.attr.end
+        });
       }
     }
   }
@@ -195,13 +210,13 @@ const isCurrentMonth = computed(() => {
     currentDate.value.getMonth() === now.getMonth();
 });
 
-const handleAdd = () => openAddTodoItem()
-
 const selectedDate = ref<Date | null>(null);
 
 const handleDayClick = (day: CalendarDay) => {
   selectedDate.value = day.date;
 };
+
+const handleAdd = () => openAddTodoItem({onAdd: () => toUpdate(), start: toDateTimeString(Date.now())})
 </script>
 
 <style scoped lang="less">
@@ -209,36 +224,34 @@ const handleDayClick = (day: CalendarDay) => {
   height: calc(100% - 54px);
   display: flex;
   flex-direction: column;
-  padding: 0 8px 8px;
+  user-select: none;
 
   .calendar-header {
-    padding: 16px 0;
+    padding: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .header-center {
-      flex: 1;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
 
-      .current-date {
-        font-size: var(--td-font-size-headline-medium);
-        font-weight: bold;
-      }
+    .current-date {
+      font-size: var(--td-font-size-title-medium);
+      font-weight: bold;
     }
   }
 
   .calendar-grid {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    position: absolute;
+    top: 56px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+
+
     border: 1px solid var(--td-component-border);
     border-radius: var(--td-radius-medium);
 
     .calendar-weekdays {
+
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
@@ -251,6 +264,13 @@ const handleDayClick = (day: CalendarDay) => {
     }
 
     .calendar-days {
+      position: absolute;
+      top: 39px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+
       flex: 1;
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -279,15 +299,19 @@ const handleDayClick = (day: CalendarDay) => {
           color: var(--td-text-color-disabled);
         }
 
+        .day-header {
+          display: flex;
+          justify-content: space-between;
+        }
+
 
         &.today {
-          .day-header {
+          .day-number {
             width: 24px;
             height: 24px;
             border-radius: 50%;
             color: var(--td-text-color-anti);
-            border: 2px solid var(--td-text-color-primary);
-            background-color: var(--td-text-color-primary);
+            background-color: #367fb5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -307,6 +331,9 @@ const handleDayClick = (day: CalendarDay) => {
   .day {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    min-height: 80px;
+
 
     .day-header {
       margin-bottom: 4px;
@@ -314,24 +341,54 @@ const handleDayClick = (day: CalendarDay) => {
 
     .todo-items {
       flex: 1;
-      overflow-y: auto;
+      overflow-y: hidden;
+      max-height: 80px;
+      scrollbar-width: thin;
+
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--td-component-border);
+        border-radius: 4px;
+      }
 
       .todo-item {
+        position: relative;
         font-size: 12px;
         padding: 2px 4px;
         margin-bottom: 2px;
-        background-color: var(--td-brand-color-active);
-        border-radius: 2px;
+        background-color: #7da9ca;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
+        transition: background-color 0.3s;
+        border-left: 6px solid var(--td-border-level-2-color);
+        border-radius: 4px 2px 2px 4px;
+        color: var(--td-text-color-anti);
 
-        &.multi-day {
-          background-color: var(--td-brand-color-2);
+
+        &:hover {
+          background-color: #367fb5;
         }
       }
     }
+  }
+}
+
+.todo-card {
+
+  .todo-card__header {
+    font-size: var(--td-font-size-title-medium);
+    font-weight: bold;
+    padding: 8px;
+  }
+
+  .todo-card__content {
+    border-top: 1px solid var(--td-border-level-2-color);
+    padding-top: 8px;
   }
 }
 </style>

@@ -36,6 +36,8 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   const showAddGroupBtn = ref(false);
   const groupType = ref(TodoCategoryGroupEnum.DEFAULT);
 
+  const loading = ref(false);
+
   // 待办
   const todoGroupView = computed<Array<TodoGroupView>>(
     () => {
@@ -58,60 +60,66 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   });
 
   async function init(id: number) {
-    // 清空
-    categoryId.value = id;
-    itemId.value = 0;
-    sort.value = TodoListSortEnum.PRIORITY;
-    layout.value = TodoListLayoutEnum.DEFAULT;
-    hideOfCompleteOrAbandon.value = false;
-    hideOfArticle.value = false;
-    showAddGroupBtn.value = false;
-    groupType.value = TodoCategoryGroupEnum.DEFAULT;
-    if (id === 0) {
-      return;
-    }
-
-    // 获取当前分组信息
-    const todoCategory = map(useTodoCategoryStore().value, 'id').get(id);
-    if (!todoCategory) {
-      MessageUtil.error("待办分类不存在，请刷新页面重试");
-      categoryId.value = 0;
-      return;
-    }
-    if (todoCategory.type !== TodoCategoryTypeEnum.TODO) {
-      categoryId.value = 0;
-      return;
-    }
-    // 只要ID大于0，这几项就要刷新
-    sort.value = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
-    layout.value = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;
-    hideOfCompleteOrAbandon.value = todoCategory.hideOfCompleteOrAbandon || false;
-    hideOfArticle.value = todoCategory.hideOfArticle || false;
-    showAddGroupBtn.value = todoCategory.showAddGroupBtn || false;
-    groupType.value = todoCategory.groupType || TodoCategoryGroupEnum.DEFAULT;
-    // 事件
-    useUmami.track(`/待办/布局/${renderTodoListLayout(layout.value)}`)
-
     try {
-      // 获取分组
-      await useTodoGroupStore().init(id);
-    } catch (e) {
-      console.error("获取待办分组失败", e);
-    }
+      loading.value = true;
+      // 清空
+      categoryId.value = id;
+      itemId.value = 0;
+      sort.value = TodoListSortEnum.PRIORITY;
+      layout.value = TodoListLayoutEnum.DEFAULT;
+      hideOfCompleteOrAbandon.value = false;
+      hideOfArticle.value = false;
+      showAddGroupBtn.value = false;
+      groupType.value = TodoCategoryGroupEnum.DEFAULT;
+      if (id === 0) {
+        return;
+      }
 
-    try {
-      // 获取待办项
-      await useTodoItemStore().init(id)
-    } catch (e) {
-      console.error("获取待办项失败", e);
-    }
-    try {
-      // 获取待办关联笔记
-      await useTodoArticleStore().init(id);
-    } catch (e) {
-      console.error("获取待办项失败", e);
-    }
+      // 获取当前分组信息
+      const todoCategory = map(useTodoCategoryStore().value, 'id').get(id);
+      if (!todoCategory) {
+        MessageUtil.error("待办分类不存在，请刷新页面重试");
+        categoryId.value = 0;
+        return;
+      }
+      if (todoCategory.type !== TodoCategoryTypeEnum.TODO) {
+        categoryId.value = 0;
+        return;
+      }
+      // 只要ID大于0，这几项就要刷新
+      sort.value = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
+      layout.value = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;
+      hideOfCompleteOrAbandon.value = todoCategory.hideOfCompleteOrAbandon || false;
+      hideOfArticle.value = todoCategory.hideOfArticle || false;
+      showAddGroupBtn.value = todoCategory.showAddGroupBtn || false;
+      groupType.value = todoCategory.groupType || TodoCategoryGroupEnum.DEFAULT;
+      // 事件
+      useUmami.track(`/待办/布局/${renderTodoListLayout(layout.value)}`)
 
+      try {
+        // 获取分组
+        await useTodoGroupStore().init(id);
+      } catch (e) {
+        console.error("获取待办分组失败", e);
+      }
+
+      try {
+        // 获取待办项
+        await useTodoItemStore().init(id)
+      } catch (e) {
+        console.error("获取待办项失败", e);
+      }
+      try {
+        // 获取待办关联笔记
+        await useTodoArticleStore().init(id);
+      } catch (e) {
+        console.error("获取待办项失败", e);
+      }
+    } catch (e) {
+      console.error("初始化待办失败", e);
+    } finally {
+      loading.value = false;
+    }
   }
 
   function setItemId(id: number) {
@@ -143,8 +151,8 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
   }
 
   return {
-    categoryId, itemId, currentCategory, sort, layout, collapsed,groupType,
-    todoGroupView, hideOfCompleteOrAbandon, hideOfArticle, showAddGroupBtn,
+    categoryId, itemId, currentCategory, sort, layout, collapsed, groupType,
+    todoGroupView, hideOfCompleteOrAbandon, hideOfArticle, showAddGroupBtn, loading,
     init, setItemId, switchCollapsed,
     postGroup, deleteGroup, addGroupTo,
     addItem

@@ -231,7 +231,7 @@ export function handleSimplePriorityColor(priority: TodoItemPriority): string {
     case TodoItemPriority.FLOOR:
       return 'blue';
     default:
-      return 'purple';
+      return '#474545';
   }
 }
 

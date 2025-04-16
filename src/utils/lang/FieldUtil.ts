@@ -1,3 +1,5 @@
+import {Dayjs} from "dayjs";
+
 export function isJSON(str: string) {
   return /^[\],:{}\s]*$/.test(str
     .replace(/\\["\\\/bfnrtu]/g, '@')
@@ -119,3 +121,9 @@ export function versionGreaterEqual(version: string, ...levels: Array<number>): 
   return !versionLess(version, ...levels);
 }
 
+export function toDayOfBegin(day: Dayjs): Dayjs{
+  return day.set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+}
+export function toDayOfEnd(day: Dayjs): Dayjs{
+  return day.set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).add(1, 'day').subtract(1, 'second');
+}

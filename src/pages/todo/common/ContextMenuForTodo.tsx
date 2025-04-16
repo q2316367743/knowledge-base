@@ -1,5 +1,5 @@
 import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu';
-import {CheckIcon, DeleteIcon, FlagIcon, RollbackIcon, ThumbDownIcon} from "tdesign-icons-vue-next";
+import {CheckIcon, DeleteIcon, EditIcon, FlagIcon, RollbackIcon, ThumbDownIcon} from "tdesign-icons-vue-next";
 import {useGlobalStore} from "@/store";
 import {
   getNextTodoItemStatus,
@@ -12,6 +12,7 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useUmami} from "@/plugin/umami";
+import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 
 /**
  * 更新优先级
@@ -19,11 +20,16 @@ import {useUmami} from "@/plugin/umami";
  * @param priority 优先级
  */
 function updatePriority(id: number, priority: TodoItemPriority) {
-  useGlobalStore().startLoading("开始更新待办项");
-  useTodoItemStore().updateById(id, {priority})
-    .then(() => MessageUtil.success("更新成功"))
-    .catch(e => MessageUtil.error("更新失败", e))
-    .finally(() => useGlobalStore().closeLoading());
+  return new Promise<void>(resolve => {
+    useGlobalStore().startLoading("开始更新待办项");
+    useTodoItemStore().updateById(id, {priority})
+      .then(() => {
+        MessageUtil.success("更新成功");
+        resolve();
+      })
+      .catch(e => MessageUtil.error("更新失败", e))
+      .finally(() => useGlobalStore().closeLoading());
+  })
 }
 
 /**
@@ -32,16 +38,19 @@ function updatePriority(id: number, priority: TodoItemPriority) {
  * @param status 当前的状态
  */
 export function updateStatus(itemId: number, status: TodoItemStatus) {
-  useTodoItemStore().updateById(itemId, {status: getNextTodoItemStatus(status)})
-    .then(record => {
-      if (record.status === TodoItemStatus.COMPLETE) {
-        MessageUtil.success(`【${record.title}】已完成`);
-        useUmami.track('/待办/状态/完成');
-      } else if (record.status === TodoItemStatus.ABANDON) {
-        useUmami.track('待办/状态/放弃');
-      }
-    })
-    .catch(e => MessageUtil.error("更新失败", e));
+  return new Promise<void>(resolve => {
+    useTodoItemStore().updateById(itemId, {status: getNextTodoItemStatus(status)})
+      .then(record => {
+        if (record.status === TodoItemStatus.COMPLETE) {
+          MessageUtil.success(`【${record.title}】已完成`);
+          useUmami.track('/待办/状态/完成');
+        } else if (record.status === TodoItemStatus.ABANDON) {
+          useUmami.track('待办/状态/放弃');
+        }
+        resolve();
+      })
+      .catch(e => MessageUtil.error("更新失败", e));
+  })
 }
 
 async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
@@ -62,9 +71,14 @@ async function _updateStatusToAbandon(itemId: number): Promise<TodoItemIndex> {
  * @param itemId 待办ID
  */
 function updateStatusToAbandon(itemId: number) {
-  _updateStatusToAbandon(itemId)
-    .then(record => MessageUtil.success(`【${record.title}】已放弃`))
-    .catch(e => MessageUtil.error("更新失败", e))
+  return new Promise<void>(resolve => {
+    _updateStatusToAbandon(itemId)
+      .then(record => {
+        MessageUtil.success(`【${record.title}】已放弃`);
+        resolve();
+      })
+      .catch(e => MessageUtil.error("更新失败", e))
+  });
 }
 
 /**
@@ -72,15 +86,20 @@ function updateStatusToAbandon(itemId: number) {
  * @param id 待办ID
  */
 function removeById(id: number) {
-  MessageBoxUtil.confirm("是否删除该待办项？", "删除提示", {
-    confirmButtonText: "删除"
-  }).then(() => {
-    useGlobalStore().startLoading("开始删除待办项");
-    useTodoItemStore().deleteById(id)
-      .then(() => MessageUtil.success("删除成功"))
-      .catch(e => MessageUtil.error("删除失败", e))
-      .finally(() => useGlobalStore().closeLoading());
-  })
+  return new Promise<void>(resolve => {
+    MessageBoxUtil.confirm("是否删除该待办项？", "删除提示", {
+      confirmButtonText: "删除"
+    }).then(() => {
+      useGlobalStore().startLoading("开始删除待办项");
+      useTodoItemStore().deleteById(id)
+        .then(() => {
+          MessageUtil.success("删除成功");
+          resolve();
+        })
+        .catch(e => MessageUtil.error("删除失败", e))
+        .finally(() => useGlobalStore().closeLoading());
+    })
+  });
 }
 
 /**
@@ -96,32 +115,37 @@ export const toggleTop = (id: number, top: boolean) => useTodoItemStore().update
  * 右键菜单
  * @param e 事件
  * @param item 待办项
+ * @param toUpdate 更新成功回调
  */
-export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex) {
+export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
   const items = new Array<MenuItem>();
   items.push({
+    label: '编辑',
+    icon: () => <EditIcon/>,
+    onClick: () => openTodoItemSetting(item, toUpdate)
+  }, {
     label: '优先级',
     icon: () => <FlagIcon/>,
     children: [{
       label: () => <div style={{color: handlePriorityColor(TodoItemPriority.HIGH)}}>高优先级</div>,
       icon: () => item.priority === TodoItemPriority.HIGH ?
         <CheckIcon style={{color: handlePriorityColor(TodoItemPriority.HIGH)}}/> : <div></div>,
-      onClick: () => updatePriority(item.id, TodoItemPriority.HIGH)
+      onClick: () => updatePriority(item.id, TodoItemPriority.HIGH).then(() => toUpdate && toUpdate(item))
     }, {
       label: () => <div style={{color: handlePriorityColor(TodoItemPriority.MIDDLE)}}>中优先级</div>,
       icon: () => item.priority === TodoItemPriority.MIDDLE ?
         <CheckIcon style={{color: handlePriorityColor(TodoItemPriority.MIDDLE)}}/> : <div></div>,
-      onClick: () => updatePriority(item.id, TodoItemPriority.MIDDLE)
+      onClick: () => updatePriority(item.id, TodoItemPriority.MIDDLE).then(() => toUpdate && toUpdate(item))
     }, {
       label: () => <div style={{color: handlePriorityColor(TodoItemPriority.FLOOR)}}>低优先级</div>,
       icon: () => item.priority === TodoItemPriority.FLOOR ?
         <CheckIcon style={{color: handlePriorityColor(TodoItemPriority.FLOOR)}}/> : <div></div>,
-      onClick: () => updatePriority(item.id, TodoItemPriority.FLOOR)
+      onClick: () => updatePriority(item.id, TodoItemPriority.FLOOR).then(() => toUpdate && toUpdate(item))
     }, {
       label: () => <div style={{color: handlePriorityColor(TodoItemPriority.NONE)}}>无优先级</div>,
       icon: () => item.priority === TodoItemPriority.NONE ?
         <CheckIcon style={{color: handlePriorityColor(TodoItemPriority.NONE)}}/> : <div></div>,
-      onClick: () => updatePriority(item.id, TodoItemPriority.NONE)
+      onClick: () => updatePriority(item.id, TodoItemPriority.NONE).then(() => toUpdate && toUpdate(item))
     }]
   });
   if (item.status !== TodoItemStatus.COMPLETE) {
@@ -129,20 +153,20 @@ export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex) {
       label: () => <div
         style={{color: 'var(--td-warning-color)'}}>{item.status === TodoItemStatus.ABANDON ? '取消' : ''}放弃</div>,
       icon: () => <ThumbDownIcon style={{color: 'var(--td-warning-color)'}}/>,
-      onClick: () => updateStatusToAbandon(item.id)
+      onClick: () => updateStatusToAbandon(item.id).then(() => toUpdate && toUpdate(item))
     });
-  }else {
+  } else {
     items.push({
       label: () => <div>重新开始</div>,
       icon: () => <RollbackIcon/>,
-      onClick: () => updateStatus(item.id, TodoItemStatus.COMPLETE)
+      onClick: () => updateStatus(item.id, TodoItemStatus.COMPLETE).then(() => toUpdate && toUpdate(item))
     });
   }
 
   items.push({
     label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
     icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
-    onClick: () => removeById(item.id)
+    onClick: () => removeById(item.id).then(() => toUpdate && toUpdate(item))
   })
 
 

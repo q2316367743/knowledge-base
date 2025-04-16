@@ -18,6 +18,7 @@ interface AddTodoItemProps {
   priority?: TodoItemPriority;
   start?: string;
   end?: string;
+  onAdd: () => void
 }
 
 /**
@@ -25,7 +26,7 @@ interface AddTodoItemProps {
  * @param props 参数
  */
 export function openAddTodoItem(props?: AddTodoItemProps) {
-  const {group, priority, start, end} = props || {};
+  const {group, priority, start, end, onAdd} = props || {};
   const record = ref({
     title: '',
     priority: priority || TodoItemPriority.NONE,
@@ -39,7 +40,7 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
   });
   const p = DialogPlugin({
     header: '新增待办',
-    default: () => <Form data={record.value}>
+    default: () => <Form data={record.value} class={'pl-4px pr-4px'}>
       <FormItem label={'标题'} labelAlign={'top'}>
         <Textarea autosize={{minRows: 2, maxRows: 8}} v-model={record.value.title}
                   placeholder={'请输入待办内容'}/>
@@ -83,10 +84,9 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
         }, group)
         MessageUtil.success("新增成功");
         p.destroy();
-        return true;
+        onAdd && onAdd()
       } catch (e) {
         MessageUtil.error("新增失败", e);
-        return false;
       }
 
     }
