@@ -54,9 +54,9 @@
               </t-button>
             </t-tooltip>
           </div>
-          <div class="todo-items" v-if="day.todoItems.length>0">
+          <div class="todo-items">
             <div
-              v-for="todo in day.todoItems.slice(0, Math.min(2, day.todoItems.length))"
+              v-for="todo in day.todoItems"
               :key="todo.index.id"
               class="todo-item"
               :class="{ 'multi-day': todo.isMultiDay }"
