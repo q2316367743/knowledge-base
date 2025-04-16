@@ -1,14 +1,21 @@
 <template>
   <div class="content-calendar-main">
     <div class="calendar-header">
-      <div class="header-left">
+      <div class="header-center">
         <span class="current-date">{{ currentYearMonth }}</span>
+      </div>
+      <div class="header-left">
+        <t-button variant="outline" @click="handleAdd()">
+          新建日程
+        </t-button>
       </div>
       <div class="header-right">
         <t-space size="small">
-          <t-button variant="outline" @click="handleAdd()">
-            新建日程
-          </t-button>
+          <t-dropdown trigger="click" :options="options">
+            <t-button variant="outline">
+              批量操作
+            </t-button>
+          </t-dropdown>
           <t-button @click="backToToday" variant="outline" :disabled="isCurrentMonth">
             回到本月
           </t-button>
@@ -87,6 +94,7 @@ import {ChevronLeftIcon, ChevronRightIcon, MoreIcon} from "tdesign-icons-vue-nex
 import dayjs from "dayjs";
 import {toDayOfBegin, toDayOfEnd} from "@/utils/lang/FieldUtil";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
+import {buildCalendarOptions} from "@/pages/todo/ContentCalendar/components/CalendarOptions";
 
 interface CalendarDay {
   date: Date;
@@ -121,7 +129,6 @@ const currentYearMonth = computed(() => {
   return `${year}年${month}月`;
 });
 const todoItems = ref<TodoItem[]>([]);
-
 
 const toUpdate = async () => todoItems.value = await getRecords();
 
@@ -245,6 +252,8 @@ const selectedDates = computed<Array<string>>(() => {
   return dates;
 });
 
+const options = computed(() => buildCalendarOptions(selectedDates.value.length, () => startSelectDate.value = []))
+
 const handleMouseDown = (day: CalendarDay) => {
   startSelectDate.value = [day.date];
   isSelecting.value = true;
@@ -263,7 +272,6 @@ const handleMouseUp = (day?: CalendarDay) => {
     if (day) {
       startSelectDate.value[1] = day.date;
       isSelecting.value = false;
-      console.log(startSelectDate.value)
     }
   }
 }
@@ -287,6 +295,18 @@ const handleAdd = () => openAddTodoItem({onAdd: () => toUpdate(), start: toDateT
     .current-date {
       font-size: var(--td-font-size-title-medium);
       font-weight: bold;
+    }
+
+
+    .header-center {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      align-items: center;
+      text-align: center;
+      line-height: 48px;
     }
   }
 
