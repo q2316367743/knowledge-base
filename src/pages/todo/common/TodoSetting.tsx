@@ -15,7 +15,7 @@ export function openTodoSetting() {
     title: '待办设置',
     okText: "保存",
     width: 400,
-    content: () => <Form data={config.value} >
+    content: () => <Form data={config.value}>
       <Paragraph>
         <Checkbox v-model={config.value.hideOfCompleteOrAbandon}>
           隐藏已完成/放弃
@@ -37,6 +37,7 @@ export function openTodoSetting() {
           <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
           <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
           <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>
+          <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
         </RadioGroup>
       </FormItem>
     </Form>,

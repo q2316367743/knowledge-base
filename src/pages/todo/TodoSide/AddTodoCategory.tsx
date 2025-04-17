@@ -31,6 +31,7 @@ function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
         <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
         <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
         <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>
+        <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
       </RadioGroup>
     </FormItem>}
   </Form>;

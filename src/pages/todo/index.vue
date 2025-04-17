@@ -9,18 +9,20 @@
       <content-default v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
       <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD"/>
       <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
+      <content-four-quadrants v-else-if="!empty && layout === TodoListLayoutEnum.FOUR_QUADRANTS"/>
     </t-content>
   </t-layout>
 </template>
 <script lang="ts" setup>
 import {computed} from "vue";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 import TodoSide from "@/pages/todo/TodoSide/index.vue";
 import ContentDefault from "@/pages/todo/ContentDefault/index.vue";
 import ContentCard from "@/pages/todo/ContentCard/index.vue";
 import ContentCalendar from "@/pages/todo/ContentCalendar/index.vue";
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import ContentFourQuadrants from "@/pages/todo/ContentFourQuadrants/index.vue";
 
 const collapsed = computed(() => useTodoWrapStore().collapsed);
 const layout = computed(() => useTodoWrapStore().layout);

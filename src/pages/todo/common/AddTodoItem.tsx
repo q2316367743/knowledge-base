@@ -12,13 +12,14 @@ import {handlePriorityColor, TodoItemPriority} from "@/entity/todo/TodoItem";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import dayjs from "dayjs";
 
 interface AddTodoItemProps {
   group?: TodoGroupView;
   priority?: TodoItemPriority;
   start?: string;
   end?: string;
-  onAdd: () => void
+  onAdd?: () => void
 }
 
 /**
@@ -31,7 +32,8 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
     title: '',
     priority: priority || TodoItemPriority.NONE,
   });
-  const range = ref([start || '', end || start || '']);
+  let startDate = dayjs(start).format('YYYY-MM-DD');
+  const range = ref([startDate || '', end || startDate || '']);
   const isRange = ref(false);
   watch(() => range.value[0], (newValue) => {
     if (!isRange.value) {

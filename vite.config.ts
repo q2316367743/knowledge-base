@@ -45,6 +45,7 @@ export default defineConfig({
         main: _resolve('index.html'),
         chat: _resolve('chat.html'),
         preview: _resolve('preview.html'),
+        todo: _resolve('todo.html'),
       },
     },
   },

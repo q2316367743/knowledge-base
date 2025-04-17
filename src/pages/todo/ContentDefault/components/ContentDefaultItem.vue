@@ -11,9 +11,10 @@
     <t-tooltip :content="(item.top? '取消': '') + '置顶'" placement="right">
       <t-button theme="primary" variant="text" shape="square"
                 :style="{color: item.top ? 'var(--td-warning-color)' : 'var(--td-font-gray-4)'}"
-                @click="toggleTop(item.id, !item.top)">
+                @click.stop="toggleTop(item.id, !item.top)">
         <template #icon>
-          <arrow-triangle-up-icon/>
+          <arrow-triangle-up-filled-icon v-if="item.top"/>
+          <arrow-triangle-up-icon v-else/>
         </template>
       </t-button>
     </t-tooltip>
@@ -27,7 +28,7 @@ import {
 } from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {onContextMenuForTodo, updateStatus, toggleTop} from "@/pages/todo/common/ContextMenuForTodo";
-import {ArrowTriangleUpIcon} from "tdesign-icons-vue-next";
+import {ArrowTriangleUpFilledIcon, ArrowTriangleUpIcon} from "tdesign-icons-vue-next";
 
 defineProps({
   item: {

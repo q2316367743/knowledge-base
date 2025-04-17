@@ -83,7 +83,12 @@ export enum TodoListLayoutEnum {
   /**
    * 日历布局
    */
-  CALENDAR = 3
+  CALENDAR = 3,
+
+  /**
+   * 四象限
+   */
+  FOUR_QUADRANTS = 4
 
 }
 
@@ -93,6 +98,8 @@ export function renderTodoListLayout(layout: TodoListLayoutEnum): string {
       return "日历布局";
     case TodoListLayoutEnum.CARD:
       return "卡片布局";
+    case TodoListLayoutEnum.FOUR_QUADRANTS:
+      return "四象限";
     default:
       return "默认布局";
   }
