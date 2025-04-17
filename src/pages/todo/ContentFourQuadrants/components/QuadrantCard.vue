@@ -33,8 +33,7 @@
           @context-menu="onContextMenuForTodo($event, item)"
           @drag-start="onDragStart($event, item)" 
           @drag-end="onDragEnd"
-          @check="onCheck"
-          @toggle-top="toggleTop"/>
+          @check="onCheck"/>
       </collapsible-panel>
 
       <!-- 普通活动待办项 -->
@@ -54,8 +53,7 @@
           @context-menu="onContextMenuForTodo($event, item)"
           @drag-start="onDragStart($event, item)" 
           @drag-end="onDragEnd"
-          @check="onCheck"
-          @toggle-top="toggleTop"/>
+          @check="onCheck"/>
       </collapsible-panel>
 
       <!-- 当没有置顶项和已完成项时直接显示普通待办项 -->
@@ -68,8 +66,7 @@
           @context-menu="onContextMenuForTodo($event, item)"
           @drag-start="onDragStart($event, item)" 
           @drag-end="onDragEnd"
-          @check="onCheck"
-          @toggle-top="toggleTop"/>
+          @check="onCheck"/>
       </div>
 
       <!-- 已完成和已放弃的待办项折叠面板 -->
@@ -95,12 +92,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
 import { TodoItemIndex, TodoItemPriority, TodoItemStatus, getNextTodoItemStatus } from "@/entity/todo/TodoItem";
 import { PlusIcon } from "tdesign-icons-vue-next";
 import { openTodoItemSetting } from "@/pages/todo/common/TodoItemSetting/model";
 import { openAddTodoItem } from "@/pages/todo/common/AddTodoItem";
-import { onContextMenuForTodo, toggleTop } from "@/pages/todo/common/ContextMenuForTodo";
+import { onContextMenuForTodo } from "@/pages/todo/common/ContextMenuForTodo";
 import { useTodoItemStore } from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import TodoItem from "./TodoItem.vue";

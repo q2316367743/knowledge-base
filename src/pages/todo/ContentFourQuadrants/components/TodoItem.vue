@@ -10,18 +10,6 @@
         {{ item.title }}
       </div>
     </div>
-    <t-tooltip v-if="showTopButton" :content="item.top ? '取消置顶' : '置顶'">
-      <div class="top">
-        <t-button theme="primary" variant="text" shape="square"
-                  :style="{color: item.top ? 'var(--td-warning-color)' : 'var(--td-font-gray-4)'}"
-                  @click.stop="$emit('toggle-top', item.id, !item.top)">
-          <template #icon>
-            <arrow-triangle-up-filled-icon v-if="item.top"/>
-            <arrow-triangle-up-icon v-else/>
-          </template>
-        </t-button>
-      </div>
-    </t-tooltip>
   </div>
 </template>
 
@@ -29,7 +17,6 @@
 import { computed } from 'vue';
 import { TodoItemIndex, TodoItemStatus } from "@/entity/todo/TodoItem";
 import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
-import { ArrowTriangleUpIcon, ArrowTriangleUpFilledIcon } from "tdesign-icons-vue-next";
 
 interface Props {
   item: TodoItemIndex;
@@ -51,7 +38,6 @@ defineEmits<{
   (e: 'drag-start', event: DragEvent, item: TodoItemIndex): void;
   (e: 'drag-end', event: DragEvent): void;
   (e: 'check', item: TodoItemIndex): void;
-  (e: 'toggle-top', id: number, isTop: boolean): void;
 }>();
 </script>
 

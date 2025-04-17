@@ -76,6 +76,7 @@ declare module 'vue' {
     TText: typeof import('tdesign-vue-next')['Text']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
     TTree: typeof import('tdesign-vue-next')['Tree']
+    UnTopIcon: typeof import('./src/components/KbIcon/UnTopIcon.vue')['default']
     UpdateCheck: typeof import('./src/components/update-check/index.vue')['default']
     UserVipDrawer: typeof import('./src/components/app-side/UserVipDrawer.vue')['default']
     VipIcon: typeof import('./src/components/KbIcon/VipIcon.vue')['default']

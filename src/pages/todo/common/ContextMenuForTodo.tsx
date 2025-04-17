@@ -1,5 +1,13 @@
 import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu';
-import {CheckIcon, DeleteIcon, EditIcon, FlagIcon, RollbackIcon, ThumbDownIcon} from "tdesign-icons-vue-next";
+import {
+  BacktopIcon,
+  CheckIcon,
+  DeleteIcon,
+  EditIcon,
+  FlagIcon,
+  RollbackIcon,
+  ThumbDownIcon
+} from "tdesign-icons-vue-next";
 import {useGlobalStore} from "@/store";
 import {
   getNextTodoItemStatus,
@@ -13,6 +21,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useUmami} from "@/plugin/umami";
 import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
+import UnTopIcon from "@/components/KbIcon/UnTopIcon.vue";
 
 /**
  * 更新优先级
@@ -147,6 +156,10 @@ export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex, toUpdat
         <CheckIcon style={{color: handlePriorityColor(TodoItemPriority.NONE)}}/> : <div></div>,
       onClick: () => updatePriority(item.id, TodoItemPriority.NONE).then(() => toUpdate && toUpdate(item))
     }]
+  }, {
+    label: (item.top ? '取消' : '') + '置顶',
+    icon: () => item.top ? <UnTopIcon /> : <BacktopIcon/>,
+    onClick: () => openTodoItemSetting(item, toUpdate)
   });
   if (item.status !== TodoItemStatus.COMPLETE) {
     items.push({
