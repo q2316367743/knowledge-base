@@ -170,7 +170,7 @@ createServer();
     left: 0;
     bottom: 0;
     width: 48px;
-    z-index: 50;
+    z-index: 1;
     overflow: hidden;
     border-right: 1px solid var(--td-border-level-2-color);
   }
