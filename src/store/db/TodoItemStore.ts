@@ -43,6 +43,12 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     }
   }
 
+  function destroy() {
+    items.value = []
+    rev.value = undefined;
+    key = '';
+  }
+
   async function _sync() {
     rev.value = await saveListByAsync(key, items.value, rev.value);
   }
@@ -211,7 +217,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
 
   return {
     items,
-    init,
+    init, destroy,
     addSimple,
     updateById, saveContent,
     deleteById, deleteByBatchId,

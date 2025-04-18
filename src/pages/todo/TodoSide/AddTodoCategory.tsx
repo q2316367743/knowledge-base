@@ -4,7 +4,7 @@ import {DialogPlugin, Form, FormItem, Input, Radio, RadioGroup} from "tdesign-vu
 import {
   getDefaultTodoCategory,
   renderTodoCategoryType,
-  TodoCategoryGroupEnum,
+  TodoCategoryGroupEnum, TodoCategoryOpenTypeEnum,
   TodoCategoryRecord,
   TodoCategoryTypeEnum,
   TodoListLayoutEnum
@@ -13,12 +13,16 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {clone} from "@/utils/lang/ObjectUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import VipIcon from "@/components/KbIcon/VipIcon.vue";
+import {checkPower, useVipStore} from "@/store";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
 
 function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
+  const {todoNoVip} = useVipStore()
   return () => <Form data={record.value}>
     <FormItem label="名称" labelAlign={'top'}>
-      <Input v-model={record.value.name} clearable={true} autofocus />
+      <Input v-model={record.value.name} clearable={true} autofocus/>
     </FormItem>
     {allowType && <FormItem label="类型" labelAlign={'top'}>
       <RadioGroup v-model={record.value.type}>
@@ -26,29 +30,34 @@ function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
         <Radio value={TodoCategoryTypeEnum.TODO}>清单</Radio>
       </RadioGroup>
     </FormItem>}
-    {record.value.type === TodoCategoryTypeEnum.TODO && <FormItem label="布局" labelAlign={'top'}>
-      <RadioGroup v-model={record.value.todoListLayout}>
-        <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
-        <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
-        <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>
-        <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
-      </RadioGroup>
-    </FormItem>}
+    {record.value.type === TodoCategoryTypeEnum.TODO && <>
+      <FormItem label="布局" labelAlign={'top'}>
+        <RadioGroup v-model={record.value.todoListLayout}>
+          <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
+          <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
+          <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>
+          <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="默认打开方式" labelAlign={'top'}>
+        <RadioGroup v-model={record.value.openType} defaultValue={TodoCategoryOpenTypeEnum.PLUGIN}>
+          <Radio value={TodoCategoryOpenTypeEnum.PLUGIN}>插件内</Radio>
+          <Radio value={TodoCategoryOpenTypeEnum.WIDGET}>
+            <div class={'flex items-center'}>
+              <div>小部件</div>
+              {todoNoVip && <VipIcon style={{marginLeft: '4px'}}/>}
+            </div>
+          </Radio>
+        </RadioGroup>
+      </FormItem>
+    </>}
   </Form>;
 }
 
 export function openAddTodoCategory(pid: number) {
-  const record = ref<TodoCategoryRecord>({
-    name: '',
+  const record = ref<TodoCategoryRecord>(getDefaultTodoCategory({
     pid: pid,
-    type: TodoCategoryTypeEnum.FOLDER,
-    todoListSort: TodoListSortEnum.PRIORITY,
-    todoListLayout: TodoListLayoutEnum.DEFAULT,
-    hideOfArticle: false,
-    groupType: TodoCategoryGroupEnum.DEFAULT,
-    hideOfCompleteOrAbandon: false,
-    showAddGroupBtn: true
-  });
+  }));
 
   const instance = DialogPlugin({
     header: "新增待办分类",
@@ -58,6 +67,9 @@ export function openAddTodoCategory(pid: number) {
     default: renderContent(record, true),
     async onConfirm() {
       try {
+        if (record.value.openType === TodoCategoryOpenTypeEnum.WIDGET) {
+          await checkPower('todo');
+        }
         await useTodoCategoryStore().add(record.value);
         MessageUtil.success("新增成功");
         useUmami.track(`/待办/新增/${renderTodoCategoryType(record.value.type)}`);
@@ -89,6 +101,9 @@ export function openUpdateTodoCategory(id: number) {
     default: renderContent(record, false),
     async onConfirm() {
       try {
+        if (record.value.openType === TodoCategoryOpenTypeEnum.WIDGET) {
+          await checkPower('todo');
+        }
         await useTodoCategoryStore().update(id, record.value);
         if (id === useTodoWrapStore().categoryId) {
           await useTodoWrapStore().init(id);
@@ -102,5 +117,13 @@ export function openUpdateTodoCategory(id: number) {
       }
     }
   })
+}
 
+export function openDeleteTodoCategory(id: number, title: string) {
+  MessageBoxUtil.confirm("确认删除清单【" + title + '】吗，删除时会将清单下全部待办一并删除', "删除", {
+    confirmButtonText: "删除",
+    cancelButtonText: "取消"
+  }).then(() => useTodoCategoryStore().remove(id)
+    .then(() => MessageUtil.success("删除成功"))
+    .catch(e => MessageUtil.error("删除失败", e)));
 }

@@ -20,6 +20,8 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useUmami} from "@/plugin/umami";
 import {renderGroupViews} from "@/utils/component/TodoUtil";
 import {useTodoArticleStore} from "@/store/db/TodoArticleStore";
+import {useTodoWidgetStore} from "@/store/components/TodoWidgetStore";
+import {checkPower} from "@/store";
 
 // 此store只负责展示，不负责增删改
 export const useTodoWrapStore = defineStore('todo-item', () => {
@@ -59,7 +61,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
     return undefined;
   });
 
-  async function init(id: number) {
+  async function init(id: number, widget = false) {
     try {
       loading.value = true;
       // 清空
@@ -71,7 +73,20 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
       hideOfArticle.value = false;
       showAddGroupBtn.value = false;
       groupType.value = TodoCategoryGroupEnum.DEFAULT;
-      if (id === 0) {
+      if (id === 0 || widget) {
+        // 销毁内存数据
+        useTodoGroupStore().destroy();
+        useTodoItemStore().destroy();
+        useTodoArticleStore().destroy();
+        // 打开小部件
+        if (widget) {
+          try {
+            await useTodoWidgetStore().openWidget(id)
+          }catch (e) {
+            categoryId.value = 0;
+            MessageUtil.error("打开小部件失败", e);
+          }
+        }
         return;
       }
 

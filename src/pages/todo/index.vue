@@ -4,8 +4,15 @@
       <todo-side/>
     </t-aside>
     <t-content style="position: relative;background-color: var(--td-bg-color-container)">
-      <loading-result v-if="loading" title="正在初始化清单"/>
-      <empty-result v-else-if="empty" title="未选择清单" tip="请在左侧选择清单"/>
+      <empty-todo v-if="loading">
+        <loading-result title="正在初始化清单"/>
+      </empty-todo>
+      <empty-todo v-else-if="isWidget">
+        <info-result title="当前清单正在使用小部件" tip="请在小部件中使用"/>
+      </empty-todo>
+      <empty-todo v-else-if="empty">
+        <empty-result title="未选择清单" tip="请在左侧选择清单"/>
+      </empty-todo>
       <content-default v-else-if="!empty && layout === TodoListLayoutEnum.DEFAULT"/>
       <content-card v-else-if="!empty && layout === TodoListLayoutEnum.CARD"/>
       <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
@@ -17,17 +24,25 @@
 import {computed} from "vue";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {useTodoWidgetStore} from "@/store/components/TodoWidgetStore";
 
 import TodoSide from "@/pages/todo/TodoSide/index.vue";
 import ContentDefault from "@/pages/todo/ContentDefault/index.vue";
 import ContentCard from "@/pages/todo/ContentCard/index.vue";
 import ContentCalendar from "@/pages/todo/ContentCalendar/index.vue";
 import ContentFourQuadrants from "@/pages/todo/ContentFourQuadrants/index.vue";
+import EmptyTodo from "@/pages/todo/common/EmptyTodo.vue";
 
 const collapsed = computed(() => useTodoWrapStore().collapsed);
 const layout = computed(() => useTodoWrapStore().layout);
 const loading = computed(() => useTodoWrapStore().loading);
 const empty = computed(() => useTodoWrapStore().categoryId === 0);
+
+const isWidget = computed(() => {
+  const {todoIds} = useTodoWidgetStore();
+  const {categoryId} = useTodoWrapStore();
+  return todoIds.has(categoryId);
+})
 
 </script>
 <style scoped>

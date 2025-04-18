@@ -12,7 +12,7 @@
       </div>
       <div class="tool-btn-text">前进</div>
     </div>
-    <div class="tool-divider" />
+    <div class="tool-divider"/>
     <div class="tool-btn" @click="insertNode()" :class="available && !isRoot && !isGeneralization ? 'active' : ''"
          title="同级节点">
       <div class="tool-btn-icon">
@@ -33,7 +33,7 @@
       </div>
       <div class="tool-btn-text">删除节点</div>
     </div>
-    <div class="tool-divider" />
+    <div class="tool-divider"/>
     <div class="tool-btn" :class="available ? 'active' : ''" @click="setImage()" title="图片">
       <div class="tool-btn-icon">
         <image-icon size="18px"/>
@@ -64,7 +64,7 @@
       </div>
       <div class="tool-btn-text">图标</div>
     </div>
-    <div class="tool-divider" />
+    <div class="tool-divider"/>
     <div class="tool-btn" :class="available && !isRoot && !isGeneralization ? 'active' : ''" title="概要"
          @click="insertGeneralization()">
       <div class="tool-btn-icon">
@@ -235,11 +235,11 @@ const insertAssociativeLine = () => {
   top: 10px;
 
   display: flex;
-  background-color: var(--color-fill-2);
+  background-color: var(--td-bg-color-container);
   padding: 10px 20px;
   border-radius: 2px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--color-border-2);
+  box-shadow: var(--td-shadow-1);
+  border: 1px solid var(--td-border-level-2-color);
   flex-shrink: 0;
 
   &.hide-title {
@@ -256,7 +256,7 @@ const insertAssociativeLine = () => {
     height: 40px;
     margin-right: 20px;
     cursor: no-drop;
-    color: var(--color-neutral-4);
+    color: var(--td-text-color-disabled);
     user-select: none;
 
     &:last-child {

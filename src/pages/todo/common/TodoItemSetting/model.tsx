@@ -70,7 +70,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
 
   const open = Drawer.open({
     title: '待办详情',
-    width: '59vw',
+    width: window.innerWidth < 600 ? '100vw' : '59vw',
     header: false,
     maskClosable: true,
     content: () => <div class={'todo-item-setting'}>

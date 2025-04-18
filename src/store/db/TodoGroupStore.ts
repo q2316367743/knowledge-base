@@ -28,6 +28,12 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
     }
   }
 
+  function destroy() {
+    items.value = [];
+    rev.value = undefined;
+    key = ''
+  }
+
   // 同步
   async function _sync() {
     rev.value = await saveListByAsync(key, items.value, rev.value);
@@ -165,7 +171,7 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
 
   return {
     items,
-    init,
+    init, destroy,
     saveOrUpdate, addOneTo,
     deleteById, sort,
     pushTo, popFrom, moveTo

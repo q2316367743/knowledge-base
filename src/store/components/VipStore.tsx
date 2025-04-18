@@ -19,7 +19,7 @@ export const useVipStore = defineStore('vip', () => {
     for (const payment of payments) {
       if (payment.goods_id === Constant.goods.note) {
         noteVip.value = true;
-      } else if (payment.goods_id === Constant.goods.note) {
+      } else if (payment.goods_id === Constant.goods.todo) {
         todoVip.value = true;
       } else if (payment.goods_id === Constant.goods.all) {
         allVip.value = true;

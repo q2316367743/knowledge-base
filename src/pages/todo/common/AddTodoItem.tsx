@@ -42,6 +42,7 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
   });
   const p = DialogPlugin({
     header: '新增待办',
+    mode: window.innerWidth < 600 ? 'full-screen' : undefined,
     default: () => <Form data={record.value} class={'pl-4px pr-4px'}>
       <FormItem label={'标题'} labelAlign={'top'}>
         <Textarea autosize={{minRows: 2, maxRows: 8}} v-model={record.value.title}

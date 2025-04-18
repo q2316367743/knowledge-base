@@ -159,7 +159,7 @@ export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex, toUpdat
   }, {
     label: (item.top ? '取消' : '') + '置顶',
     icon: () => item.top ? <UnTopIcon /> : <BacktopIcon/>,
-    onClick: () => openTodoItemSetting(item, toUpdate)
+    onClick: () => toggleTop(item.id, !item.top).then(() => toUpdate && toUpdate(item))
   });
   if (item.status !== TodoItemStatus.COMPLETE) {
     items.push({

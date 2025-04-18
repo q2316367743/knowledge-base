@@ -23,6 +23,7 @@ declare module 'vue' {
     FileMindMap: typeof import('./src/components/KbIcon/FileMindMap.vue')['default']
     FileRichText: typeof import('./src/components/KbIcon/FileRichText.vue')['default']
     FileSuperNote: typeof import('./src/components/KbIcon/FileSuperNote.vue')['default']
+    InfoResult: typeof import('./src/components/Result/InfoResult.vue')['default']
     Item: typeof import('./src/components/update-check/item.vue')['default']
     KbAlert: typeof import('./src/components/KbAlert/KbAlert.vue')['default']
     LoadingResult: typeof import('./src/components/Result/LoadingResult.vue')['default']

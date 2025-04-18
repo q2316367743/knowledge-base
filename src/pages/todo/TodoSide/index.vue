@@ -14,7 +14,7 @@
             :style="{margin: '7px',width:' calc(100% - 14px)', height: virtualHeight}" :scroll="{type: 'virtual'}"
             :allow-drop="checkAllowDrop" @drop="onDrop($event)" @click="onClick" v-model:expanded="expanded">
       <template #label="{node}">
-        <div class="flex items-center">
+        <div class="flex items-center w-full" @contextmenu="onContextmenu(node, $event)">
           <list-icon v-if="node.data.leaf"/>
           <folder-icon v-else/>
           <span class="text-ellipsis ml-8px" :title="node.label">{{ node.label }}</span>
@@ -76,13 +76,18 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
+import {TodoCategory, TodoCategoryOpenTypeEnum, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import {searchData} from "@/entity/ListTree";
 import Constant from "@/global/Constant";
-import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
+import {
+  openAddTodoCategory,
+  openDeleteTodoCategory,
+  openUpdateTodoCategory
+} from "@/pages/todo/TodoSide/AddTodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {onContextmenuForTodo} from "@/pages/todo/TodoSide/ContextmenuForTodo";
 
 interface DropContext {
   e: DragEvent;
@@ -103,6 +108,15 @@ const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree)
 const virtualHeight = computed(() => (size.height.value - 56) + 'px');
 const treeNodeData = computed(() => searchData(keyword.value, todoCategoryTree.value));
 
+function onOpen(categoryId: number, category: TodoCategory, widget = false) {
+  if (categoryId !== useTodoWrapStore().categoryId || widget) {
+    useTodoWrapStore().init(categoryId, widget || category.openType === TodoCategoryOpenTypeEnum.WIDGET);
+  }
+  if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
+    useTodoWrapStore().switchCollapsed();
+  }
+}
+
 function onClick(context: {
   node: TreeNodeModel;
   e: MouseEvent;
@@ -122,16 +136,31 @@ function onClick(context: {
   const categoryId = node.value as number;
   let category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
   if (category && category.type === TodoCategoryTypeEnum.TODO) {
-    if (categoryId !== useTodoWrapStore().categoryId) {
-      useTodoWrapStore().init(categoryId);
-    }
-    if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
-      useTodoWrapStore().switchCollapsed();
-    }
+    onOpen(categoryId, category)
   } else {
     useTodoWrapStore().init(0);
   }
 
+}
+
+function onContextmenu(node: TreeNodeModel, e: MouseEvent) {
+  const categoryId = node.value as number;
+  const category = useTodoCategoryStore().todoCategoryMap.get(categoryId);
+  if (!category) {
+    return;
+  }
+  const children = node.getChildren(false);
+  let childLength = 0;
+  if (Array.isArray(children)) {
+    childLength = children.length;
+  }
+  onContextmenuForTodo({
+    e,
+    childLength,
+    id: categoryId,
+    onOpen: () => onOpen(categoryId, category),
+    onOpenWidget: () => onOpen(categoryId, category, true)
+  })
 }
 
 const hasFeature = (id: number) => useTodoCategoryStore().hasFeature(id);
@@ -156,13 +185,7 @@ function update(id: number) {
 }
 
 function remove(id: number, title: string) {
-  MessageBoxUtil.confirm("确认删除清单【" + title + '】吗，删除时会将清单下全部待办一并删除', "删除", {
-    confirmButtonText: "删除",
-    cancelButtonText: "取消"
-  }).then(() => useTodoCategoryStore().remove(id)
-    .then(() => MessageUtil.success("删除成功"))
-    .catch(e => MessageUtil.error("删除失败", e)));
-
+  openDeleteTodoCategory(id, title);
 }
 
 /**

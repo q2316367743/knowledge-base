@@ -27,6 +27,13 @@ export const useTodoArticleStore = defineStore('todo-article', () => {
     }
   }
 
+  function destroy() {
+    items.value = [];
+    rev.value = undefined;
+    key.value = '';
+  }
+
+
   async function associationArticle(ids: Array<number>) {
     if (isEmptyString(key.value)) {
       return;
@@ -39,6 +46,6 @@ export const useTodoArticleStore = defineStore('todo-article', () => {
   }
 
   return {
-    items, init, associationArticle
+    items, init, destroy, associationArticle
   }
 })

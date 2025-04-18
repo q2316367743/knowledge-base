@@ -23,7 +23,7 @@ declare interface OpenFileOption {
   securityScopedBookmarks?: boolean
 }
 
-type SubWindowChannel = 'chat' | 'preview';
+type SubWindowChannel = 'chat' | 'preview' | 'todo';
 
 class SubWindow {
   constructor(channel: SubWindowChannel);

@@ -1,6 +1,6 @@
 <template>
-  <div class="result-container">
-    <div class="result-bg-img">
+  <div class="empty-result-container">
+    <div class="empty-result-bg-img">
       <svg width="200" height="140" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g mask="url(#mask0_16559_24301)">
           <path d="M30 62H118V122H30V62Z" fill="#97A3B7"/>
@@ -39,9 +39,9 @@
           fill="black"/>
       </svg>
     </div>
-    <div class="result-title">{{ title }}</div>
-    <div class="result-tip">{{ tip }}</div>
-    <div class="result-default">
+    <div class="empty-result-title">{{ title }}</div>
+    <div class="empty-result-tip">{{ tip }}</div>
+    <div class="empty-result-default">
       <slot/>
     </div>
   </div>
@@ -56,7 +56,7 @@ export default defineComponent({
 })
 </script>
 <style lang="less" scoped>
-.result {
+.empty-result {
 
   &-container {
     min-height: 400px;

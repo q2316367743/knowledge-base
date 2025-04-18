@@ -2,6 +2,11 @@ import {ListTree} from "@/entity/ListTree";
 import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {TreeOptionData} from "tdesign-vue-next";
 
+export enum TodoCategoryOpenTypeEnum {
+  PLUGIN = 1,
+  WIDGET = 2
+}
+
 /**
  * 待办分类
  */
@@ -47,7 +52,12 @@ export interface TodoCategory extends ListTree {
   /**
    * 分组类型
    */
-  groupType: TodoCategoryGroupEnum
+  groupType: TodoCategoryGroupEnum;
+
+  /**
+   * 打开方式
+   */
+  openType?: TodoCategoryOpenTypeEnum;
 
 }
 
@@ -126,7 +136,8 @@ export function getDefaultTodoCategory(source: Partial<TodoCategory>): TodoCateg
     hideOfCompleteOrAbandon: false,
     hideOfArticle: false,
     showAddGroupBtn: false,
-    groupType: TodoCategoryGroupEnum.DEFAULT
+    groupType: TodoCategoryGroupEnum.DEFAULT,
+    openType: TodoCategoryOpenTypeEnum.PLUGIN
   }, source);
 }
 
