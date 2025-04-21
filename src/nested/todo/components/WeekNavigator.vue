@@ -33,55 +33,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import dayjs from "dayjs";
+import {nextWeek, prevWeek, selectDay, weekDays, currentDay} from "@/nested/todo/store"
 import {ChevronLeftIcon, ChevronRightIcon} from "tdesign-icons-vue-next";
-import {WeekDayItem} from "@/nested/todo/types";
-
-const currentDay = defineModel({
-  type: String,
-  default: () => dayjs().format('YYYY-MM-DD')
-});
-
-const props = defineProps({
-  weekDaysHasTodo: {
-    type: Object as PropType<Record<string, boolean>>,
-    default: () => ({})
-  }
-});
-
-const emit = defineEmits(['update']);
-
-const weekStart = ref(dayjs().startOf('week'));
-
-// 生成一周的日期
-const weekDays = computed<WeekDayItem[]>(() => {
-  const days: WeekDayItem[] = [];
-  for (let i = 0; i < 7; i++) {
-    const day = weekStart.value.add(i, 'day');
-    const date = day.format('YYYY-MM-DD');
-    days.push({
-      date,
-      weekday: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][day.day()],
-      dateStr: day.format('MM-DD'),
-      hasTodo: props.weekDaysHasTodo[date] || false
-    });
-  }
-  return days;
-});
-
-function prevWeek() {
-  weekStart.value = weekStart.value.subtract(7, 'day');
-  emit('update');
-}
-
-function nextWeek() {
-  weekStart.value = weekStart.value.add(7, 'day');
-  emit('update');
-}
-
-function selectDay(date: string) {
-  currentDay.value = date;
-}
 </script>
 <style scoped lang="less">
 .week-navigator {

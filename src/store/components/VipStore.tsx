@@ -90,12 +90,15 @@ export const useVipStore = defineStore('vip', () => {
 function noteHeader() {
   return () => <Paragraph>
     <Text strong class={'text-lg'}>开通笔记会员</Text>
-    <Text theme={'secondary'}> ——— 解锁「超级笔记」的无限可能</Text>
+    <Text theme={'secondary'}> ——— 解锁「笔记」的无限可能</Text>
   </Paragraph>
 }
 
 function todoHeader() {
-  return () => <Text strong>开通待办会员</Text>
+  return () => <Paragraph>
+    <Text strong class={'text-lg'}>开通待办会员</Text>
+    <Text theme={'secondary'}> ——— 赋予桌面小部件魔法，待办随心编辑，邂逅灵活有序新日常</Text>
+  </Paragraph>
 }
 
 function allHeader() {
@@ -105,9 +108,12 @@ function allHeader() {
 function noteVip() {
   return () => <div>
     <Paragraph>
-      作为「知识库」笔记会员的专属权益，「超级笔记」突破传统笔记的局限，将记录、创作与协作提升至全新维度。
+      在信息爆炸的时代，高效记录和安全存储信息变得至关重要。笔记会员服务应运而生，旨在为用户提供一个功能丰富、安全可靠的笔记平台，满足您多样化的记录需求。
     </Paragraph>
-    <Title level={'h3'}>主要功能亮点</Title>
+    <Title level={'h3'}>超级笔记</Title>
+    <Paragraph>
+      超级笔记是笔记会员服务的核心功能之一，它为用户提供了一个强大而便捷的笔记创作与管理空间。无论您是学生记录课堂知识、职场人士整理工作思路，还是创作者捕捉灵感，超级笔记都能满足您的需求。
+    </Paragraph>
     <Paragraph>
       <ul>
         <li><Text strong>富文本增强</Text>：支持三级标题、字体样式、高亮标注、项目列表等，轻松打造结构化文档。</li>
@@ -121,29 +127,31 @@ function noteVip() {
         <li><Text strong>加密文本模块</Text>：设置密码后，只有通过解锁才可查看，保障隐私安全。</li>
       </ul>
     </Paragraph>
-    <Title level={'h3'}>未来功能</Title>
+    <Title level={'h3'}>加密笔记</Title>
+    <Paragraph>
+      在当今数字化时代，信息安全尤为重要。加密笔记功能为您的敏感信息提供了可靠的保护。
+    </Paragraph>
     <Paragraph>
       <ul>
-        <li><Text strong>关联笔记网络</Text>：支持嵌套插入现有笔记，自动生成目录索引，构建知识图谱。</li>
-        <li><Text strong>多媒体嵌入</Text>：视频（支持腾讯、哔哩哔哩外链）、音频模块可边播放边标注重点，学习效率倍增。</li>
-        <li><Text strong>智能表格升级</Text>：支持数据自动统计、进度条可视化，表格内可嵌入录音、附件或关联笔记，灵活呈现复杂信息。
+        <li><Text strong>高强度加密算法</Text>：采用先进的加密技术，对您的笔记内容进行加密处理。只有输入正确的密码，才能查看和编辑加密笔记，确保您的隐私不被泄露。
         </li>
-        <li><Text strong>AI能力强化升级</Text>：随着uTools对插件AI能力的有力支持，AI助手将迎来全方位的显著增强，并与超级笔记实现深度融合。融合后的功能极为强大，不仅能够对内容进行智能摘要、高效生成各类模板、精准翻译文本，还支持基于笔记内容的智能问答交互，极大地提升了笔记应用的智能化水平与使用体验
-          。
+        <li>
+          <Text strong>灵活的编辑器选择</Text>：支持富文本、Markdown等编辑模式，让您自由选择最适合的编辑方式。
         </li>
       </ul>
-    </Paragraph>
-    <Paragraph>
-      立即升级，开启智能记录时代
-    </Paragraph>
-    <Paragraph>
-      超级笔记不仅是工具，更是知识创造的引擎。无论是个人学习、团队协作还是专业创作，超级笔记将助您释放创造力，高效管理信息资产。
     </Paragraph>
   </div>
 }
 
 function todoVip() {
-  return () => <div>待办会员</div>
+  return () => <div>
+    <Paragraph>
+      成为待办会员，解锁高效生活新方式。专属桌面小部件，让待办管理一步到位。无需进入应用，直接在桌面编辑、查看待办事项，操作随心。
+    </Paragraph>
+    <Paragraph>
+      灵活的使用体验，帮你快速记录、调整安排，无论何时何地，都能轻松把控任务进度，提升效率。
+    </Paragraph>
+  </div>
 }
 
 function allVip() {

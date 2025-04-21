@@ -7,7 +7,7 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
-    "@xiaou66/interconnect-client": "^0.0.5",
+    "@xiaou66/interconnect-client": "0.0.14",
     "axios": "^1.8.2",
     "iconv-lite": "^0.6.3"
   }

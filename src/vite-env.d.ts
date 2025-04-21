@@ -23,7 +23,7 @@ declare interface OpenFileOption {
   securityScopedBookmarks?: boolean
 }
 
-type SubWindowChannel = 'chat' | 'preview' | 'todo';
+type SubWindowChannel = 'chat' | 'preview' | 'todo:to' | 'todo:from';
 
 class SubWindow {
   constructor(channel: SubWindowChannel);
@@ -82,8 +82,8 @@ declare interface Window {
       join(...paths: string[]): string;
     },
     ipcRenderer: {
-      buildSubWindow(channel): SubWindow;
-      receiveMessage(event: string, callback: (msg: string) => void): void;
+      buildSubWindow(channel: SubWindowChannel): SubWindow;
+      receiveMessage(channel: SubWindowChannel, callback: (msg: string) => void): void;
       sendMessage<T = any>(id: number, channel: SubWindowChannel, message: T): void;
     },
     util: {

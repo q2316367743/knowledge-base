@@ -105,7 +105,7 @@ window.preload = {
       }
       // blob转buffer
       return blobToBuffer(content).then(buffer => {
-        const filePath = join(dir, name);
+        const filePath = join(folder, name);
         writeFileSync(filePath, buffer);
         return filePath;
       });

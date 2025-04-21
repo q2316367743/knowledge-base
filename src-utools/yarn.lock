@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@xiaou66/interconnect-client@^0.0.5":
-  version "0.0.5"
-  resolved "https://mirrors.cloud.tencent.com/npm/@xiaou66/interconnect-client/-/interconnect-client-0.0.5.tgz#8fb1e5589d3570b627c556b1324b2f65ebfbd4d0"
-  integrity sha512-rQV+qk9ewE/rUezlD9cOV5E6dB9VMXzvmizvY4trmTjUCz4Sdpugh6cRtjM3KN3wU3oQP1NVbfb/ZhEeSqZqUA==
+"@xiaou66/interconnect-client@0.0.14":
+  version "0.0.14"
+  resolved "https://mirrors.cloud.tencent.com/npm/@xiaou66/interconnect-client/-/interconnect-client-0.0.14.tgz#eef88b8412622a41f9ab1ad5b20124a850d63ea7"
+  integrity sha512-P1iRfPhE7GfgouEUNxa3oUKk81LIFxzQAE5RmVDB2z4BqvBwsJJEpP0RUzmKwdoPJcXqOzE3XZ1adVQuvZvvSw==
 
 asynckit@^0.4.0:
   version "0.4.0"

@@ -1,7 +1,7 @@
 import {Drawer} from "@arco-design/web-vue";
 import {Checkbox, Form, FormItem, Radio, RadioGroup, Paragraph} from "tdesign-vue-next";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
-import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
+import {TodoCategoryOpenTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
@@ -38,6 +38,12 @@ export function openTodoSetting() {
           <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
           <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>
           <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="默认打开方式" labelAlign={'top'}>
+        <RadioGroup v-model={config.value.openType} defaultValue={TodoCategoryOpenTypeEnum.PLUGIN}>
+          <Radio value={TodoCategoryOpenTypeEnum.PLUGIN}>插件内</Radio>
+          <Radio value={TodoCategoryOpenTypeEnum.WIDGET}>小部件</Radio>
         </RadioGroup>
       </FormItem>
     </Form>,

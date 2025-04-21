@@ -16,7 +16,7 @@
           <div class="todo-title">{{ item.index.title }}</div>
         </div>
         <div class="top-indicator" v-if="item.index.top">
-          <arrow-triangle-up-filled-icon />
+          <arrow-triangle-up-filled-icon/>
         </div>
       </div>
     </template>
@@ -35,22 +35,15 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TodoItemStatus, TodoItem, TodoItemIndex, getNextTodoItemStatus} from "@/entity/todo/TodoItem";
+import {TodoItemStatus, TodoItemIndex, getNextTodoItemStatus} from "@/entity/todo/TodoItem";
 import {ArrowTriangleUpFilledIcon, PlusIcon} from "tdesign-icons-vue-next";
 import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
 import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
 import {useTodoItemStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
+import {currentDay, refresh, todayItems, updateTodayItems} from "@/nested/todo/store";
 
-defineProps({
-  todayItems: {
-    type: Object as PropType<Array<TodoItem>>,
-    default: () => ([])
-  }
-});
-
-const emit = defineEmits(['update']);
 
 function onCheck(item: TodoItemIndex) {
   const nextStatus = getNextTodoItemStatus(item.status);
@@ -60,21 +53,20 @@ function onCheck(item: TodoItemIndex) {
         MessageUtil.success('恭喜你完成了一项任务！');
       }
       // 成功后刷新今日状态
-      emit('update');
+      updateTodayItems()
     });
 }
 
 const onContextMenu = (e: MouseEvent, item: TodoItemIndex) => {
-  onContextMenuForTodo(e, item, () => emit('update'));
+  onContextMenuForTodo(e, item, refresh);
 }
 
 
 // 添加待办
 function addTodo() {
   openAddTodoItem({
-    onAdd: async () => {
-      emit('update');
-    }
+    start: currentDay.value,
+    onAdd: refresh
   });
 }
 
