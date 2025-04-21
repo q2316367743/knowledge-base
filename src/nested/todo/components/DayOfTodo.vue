@@ -37,12 +37,12 @@
 <script lang="ts" setup>
 import {TodoItemStatus, TodoItemIndex, getNextTodoItemStatus} from "@/entity/todo/TodoItem";
 import {ArrowTriangleUpFilledIcon, PlusIcon} from "tdesign-icons-vue-next";
-import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
 import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
 import {useTodoItemStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 import {currentDay, refresh, todayItems, updateTodayItems} from "@/nested/todo/store";
+import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
 
 
 function onCheck(item: TodoItemIndex) {
