@@ -1,5 +1,5 @@
 <template>
-  <t-drawer v-model:visible="visible" :footer="false" :header="false" size="400px">
+  <t-drawer v-model:visible="visible" :footer="false" :header="false" size="400px" attach="body">
     <div class="user-vip-drawer">
       <t-card>
         <div v-if="user" class="user-info">
