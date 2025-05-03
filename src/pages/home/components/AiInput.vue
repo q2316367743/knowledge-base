@@ -33,10 +33,14 @@ import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {useChatStore} from "@/store/components/ChatStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
-defineProps({
+const props = defineProps({
   placeholder: {
     type: String,
     default: "提出你的问题，回车提问"
+  },
+  checkedKeys: {
+    type: Object as PropType<Array<number>>,
+    default: () => []
   }
 });
 
@@ -68,13 +72,9 @@ function ask() {
     return;
   }
   useChatStore()
-    .ask(question.value)
-    .then(() => {
-      question.value = "";
-    })
-    .catch((e) => {
-      MessageUtil.error("提问失败", e);
-    });
+    .ask(question.value, props.checkedKeys)
+    .then(() => question.value = "")
+    .catch((e) => MessageUtil.error("提问失败", e));
 }
 
 const onStop = () => useChatStore().stop();

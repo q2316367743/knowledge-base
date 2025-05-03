@@ -25,7 +25,7 @@
         <div class="w-full mb-8px flex flex-justify-items-start" v-if="checkedKeys.length > 0">
           <t-button class="mr-8px" size="small" theme="primary" variant="outline" @click="summary">总结内容</t-button>
         </div>
-        <ai-input placeholder="询问关于该笔记的任何问题"/>
+        <ai-input placeholder="询问关于该笔记的任何问题" :checked-keys="checkedKeys"/>
       </div>
     </template>
   </t-dialog>
@@ -36,7 +36,7 @@ import {useNoteTree} from "@/hooks/NoteTree";
 import {useChatStore} from "@/store/components/ChatStore";
 import AiInput from "@/pages/home/components/AiInput.vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {BookIcon, FileWordIcon} from "tdesign-icons-vue-next";
+import {FileWordIcon} from "tdesign-icons-vue-next";
 
 const visible = defineModel({
   type: Boolean,
