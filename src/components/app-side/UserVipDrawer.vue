@@ -59,17 +59,22 @@
               <li>流程图：简单易用的流程图绘制工具</li>
             </ul>
           </t-collapse-panel>
-          <t-collapse-panel header="🍿 付费笔记">
-            <ul class="pl-24px m-0">
-              <li>超级笔记：个笔记即可整合富文本、Markdown、代码、表格、思维导图、流程图六大模式，打破创作边界</li>
-              <li>加密笔记：通过aes-256-cbc进行加密，保护您的数据安全</li>
-            </ul>
-          </t-collapse-panel>
           <t-collapse-panel header="✅ 待办功能">
             <ul class="pl-24px m-0">
               <li>支持多种布局：默认列表、看板（Kanban）、日历视图</li>
               <li>简洁高效：快速添加、编辑任务，支持任务状态标记</li>
               <li>智能提醒：重要事项不再遗漏</li>
+            </ul>
+          </t-collapse-panel>
+          <t-collapse-panel header="🍿 笔记会员">
+            <ul class="pl-24px m-0">
+              <li>超级笔记：个笔记即可整合富文本、Markdown、代码、表格、思维导图、流程图六大模式，打破创作边界</li>
+              <li>加密笔记：通过aes-256-cbc进行加密，保护您的数据安全</li>
+            </ul>
+          </t-collapse-panel>
+          <t-collapse-panel header="🚀 待办会员">
+            <ul class="pl-24px m-0">
+              <li>待办小部件：随时查看待办任务</li>
             </ul>
           </t-collapse-panel>
         </t-collapse>
