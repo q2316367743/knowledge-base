@@ -21,7 +21,6 @@
   </t-layout>
 </template>
 <script lang="ts" setup>
-import {computed} from "vue";
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoWidgetStore} from "@/store/components/TodoWidgetStore";
@@ -42,7 +41,10 @@ const isWidget = computed(() => {
   const {todoIds} = useTodoWidgetStore();
   const {categoryId} = useTodoWrapStore();
   return todoIds.has(categoryId);
-})
+});
+
+// 每次进来都检查一下窗口
+useTodoWidgetStore().checkWidget();
 
 </script>
 <style scoped>
