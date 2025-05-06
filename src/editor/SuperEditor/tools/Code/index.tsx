@@ -38,11 +38,13 @@ export default class CodeTool implements BlockTool {
 
   private wrapper?: HTMLDivElement;
 
+  public static readonly DEFAULT_HEIGHT = '250px';
+
   /**
    * Notify core that read-only mode is supported
    */
   public static readonly isReadOnlySupported = true;
-  public static readonly isLineBreaksEnabled = true;
+  public static readonly isLineBreaksEnabled = false;
   /**
    * 自动消毒配置
    */
@@ -73,7 +75,7 @@ export default class CodeTool implements BlockTool {
     };
 
     this.content = ref(data.html || '');
-    this.height = ref(data.height || '250px');
+    this.height = ref(data.height || CodeTool.DEFAULT_HEIGHT);
     this.filename = ref(data.filename || '');
 
   }
@@ -206,6 +208,24 @@ export default class CodeTool implements BlockTool {
       html: this.content.value,
       height: this.height.value,
       filename: this.filename.value,
+    };
+  }
+
+  /**
+   * Allow Alert to be converted to/from other blocks
+   */
+  static get conversionConfig() {
+    return {
+      // export Alert's message for other blocks
+      export: (data: CodeData) => data.html,
+      // fill Alert's message from other block's export string
+      import: (string: string): CodeData => {
+        return {
+          html: string,
+          height: this.DEFAULT_HEIGHT,
+          filename: '',
+        };
+      },
     };
   }
 
