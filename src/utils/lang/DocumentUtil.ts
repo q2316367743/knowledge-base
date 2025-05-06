@@ -5,7 +5,10 @@
  * @param classNames - 要添加的 CSS 类列表
  * @param attributes - 具有要添加的属性对象
  */
-export function makeElement<T extends keyof HTMLElementTagNameMap, K extends keyof HTMLElementTagNameMap[T]>(tagName: T, classNames?: string | string[], attributes?: Record<K, string>): HTMLElementTagNameMap[T] {
+export function makeElement<T extends keyof HTMLElementTagNameMap, K extends keyof HTMLElementTagNameMap[T]>(
+  tagName: T,
+  classNames: string | string[] | null = null,
+  attributes:  { [key:string]: any } = {}): HTMLElementTagNameMap[T] {
   const el = document.createElement(tagName);
 
   if (Array.isArray(classNames)) {
@@ -15,8 +18,7 @@ export function makeElement<T extends keyof HTMLElementTagNameMap, K extends key
   }
 
   for (const attrName in attributes) {
-    // @ts-ignore
-    el[attrName] = attributes[attrName];
+    (el as any)[attrName] = attributes[attrName];
   }
 
   return el;

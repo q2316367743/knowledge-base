@@ -108,16 +108,14 @@ function init() {
 
 }
 
+useArticleExportEvent.on(onExport);
 
 onMounted(() => {
   // 初始化
   init();
-  useArticleExportEvent.off(onExport);
-  useArticleExportEvent.on(onExport);
 });
 
 onBeforeUnmount(() => {
-  useArticleExportEvent.off(onExport);
   toolbarRef.value?.destroy();
   editorRef.value?.destroy();
 })

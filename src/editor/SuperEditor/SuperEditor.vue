@@ -24,6 +24,8 @@ import MindMapTool from './tools/MindMapTool';
 import LogicFlowTool from './tools/LogicFlowTool';
 import KanbanTool from './tools/KanbanTool';
 import EncryptText from './tools/EncryptTextTool';
+import WarningTool from "@/editor/SuperEditor/tools/WarningTool";
+import QuoteTool from "@/editor/SuperEditor/tools/QuoteTool";
 
 
 const content = defineModel({
@@ -124,6 +126,20 @@ onMounted(() => {
       alert: {
         class: AlertTool as any,
         inlineToolbar: true,
+      },
+      warning: {
+        class: WarningTool,
+        inlineToolbar: true,
+        shortcut: 'CMD+SHIFT+W'
+      },
+      quote: {
+        class: QuoteTool,
+        inlineToolbar: true,
+        shortcut: 'CMD+SHIFT+O',
+        config: {
+          quotePlaceholder: '输入引用',
+          captionPlaceholder: '引用的作者',
+        },
       },
       list: {
         class: List as any,

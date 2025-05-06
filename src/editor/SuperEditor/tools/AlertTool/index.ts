@@ -37,7 +37,7 @@ export default class AlertTool implements BlockTool {
 
   public static readonly toolbox = {
     icon: ToolboxIcon,
-    title: '警告',
+    title: '颜色块',
   }
   /**
    * Allow to press Enter inside the Alert block
