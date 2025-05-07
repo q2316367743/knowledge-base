@@ -40,6 +40,8 @@ const instance = shallowRef<Cherry>();
 const id = 'markdown-editor-' + props.articleId;
 const size = useWindowSize();
 
+useArticleExportEvent.on(onExport);
+useArticleImportEvent.on(onImport);
 
 onMounted(() => {
   buildConfig(
@@ -52,17 +54,9 @@ onMounted(() => {
   ).then(config => {
     instance.value = new Cherry(config);
     handleTheme();
-    useArticleExportEvent.off(onExport);
-    useArticleExportEvent.on(onExport);
-    useArticleImportEvent.off(onImport);
-    useArticleImportEvent.on(onImport);
   }).catch(e => MessageUtil.error("编辑器初始化失败", e))
 });
 
-onBeforeUnmount(() => {
-  useArticleExportEvent.off(onExport);
-  useArticleImportEvent.off(onImport);
-});
 
 watch(() => props.preview, handleToolbar);
 watch(() => size.width.value, value => {

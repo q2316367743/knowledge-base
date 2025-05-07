@@ -113,6 +113,22 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
       width:  1200px;
       margin: 16px auto;
     }
+    .copy-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 3px;
+    }
+    .copy-btn.disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body class="cherry-markdown knowledge-base">
@@ -217,6 +233,40 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   document.body.appendChild(toggleButton);
+  
+  // 给每一个pre标签右上角都加入复制按钮
+  document.querySelectorAll('pre').forEach(pre => {
+    const copyButton = document.createElement('button');
+    copyButton.className = 'copy-btn';
+    copyButton.textContent = '复制';
+
+    copyButton.addEventListener('click', () => {
+      if (copyButton.classList.contains('disabled')) return;
+
+      // 创建一个临时的 textarea 元素
+      const tempTextarea = document.createElement('textarea');
+      tempTextarea.value = pre.querySelector('code').innerText;
+      document.body.appendChild(tempTextarea);
+
+      // 选择并复制文本
+      tempTextarea.select();
+      document.execCommand('copy');
+
+      // 移除临时的 textarea 元素
+      document.body.removeChild(tempTextarea);
+
+      copyButton.textContent = '复制成功';
+      copyButton.classList.add('disabled');
+
+      setTimeout(() => {
+        copyButton.textContent = '复制';
+        copyButton.classList.remove('disabled');
+      }, 2000);
+    });
+
+    pre.style.position = 'relative';
+    pre.appendChild(copyButton);
+  });
 });
 </script>
 <link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/viewerjs/1.10.4/viewer.min.css" type="text/css" rel="stylesheet" />
