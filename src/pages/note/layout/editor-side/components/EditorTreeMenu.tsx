@@ -87,8 +87,15 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     }, {
       label: '重命名',
       icon: () => <Edit2Icon/>,
+      divided: 'up',
       onClick: () => {
         rename(node.value, node.label, node.leaf);
+      }
+    }, {
+      label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
+      icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
+      onClick: () => {
+        remove(node.value, node.label, node.leaf);
       }
     }, {
       label: '更多操作',
@@ -104,12 +111,6 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         icon: () => <CheckRectangleIcon/>,
         onClick: () => {
           multi(node.value);
-        }
-      }, {
-        label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
-        icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
-        onClick: () => {
-          remove(node.value, node.label, node.leaf);
         }
       }, {
         label: '移动到',
@@ -153,14 +154,28 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     }, {
       label: '新建文件夹',
       icon: () => <FolderAdd1Icon/>,
+      divided: 'down',
       onClick: () => {
         addFolder(node.value);
       }
     });
-    if (more) {
+    if (more && node.value !== 0) {
       items.push({
+        label: '重命名',
+        icon: () => <Edit2Icon/>,
+        onClick: () => {
+          rename(node.value, node.label, node.leaf);
+        }
+      }, {
+        label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
+        icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
+        onClick: () => {
+          remove(node.value, node.label, node.leaf);
+        }
+      }, {
         label: '更多操作',
         icon: () => <AppIcon/>,
+        divided: 'down',
         children: [{
           label: '设置颜色',
           icon: () => <FillColor1Icon/>,
@@ -172,18 +187,6 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
           icon: () => <CheckRectangleIcon/>,
           onClick: () => {
             multi(node.value);
-          }
-        }, {
-          label: '重命名',
-          icon: () => <Edit2Icon/>,
-          onClick: () => {
-            rename(node.value, node.label, node.leaf);
-          }
-        }, {
-          label: () => <div style={{color: 'var(--td-error-color)'}}>删除</div>,
-          icon: () => <DeleteIcon style={{color: 'var(--td-error-color)'}}/>,
-          onClick: () => {
-            remove(node.value, node.label, node.leaf);
           }
         }, {
           label: '移动到',

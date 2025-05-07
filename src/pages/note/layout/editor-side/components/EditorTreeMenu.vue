@@ -20,7 +20,7 @@
           </t-dropdown-item>
           <t-dropdown-item>
             <template #prefix-icon>
-              <extension-icon />
+              <extension-icon/>
             </template>
             更多笔记
             <t-dropdown-menu>
@@ -38,13 +38,26 @@
           </t-dropdown-item>
         </t-dropdown-menu>
       </t-dropdown-item>
-      <t-dropdown-item v-if="folder" @click="addFolder(id)">
+      <t-dropdown-item v-if="folder" @click="addFolder(id)" :divider="true">
         <template #prefix-icon>
           <folder-add1-icon/>
         </template>
         新建文件夹
       </t-dropdown-item>
-      <t-dropdown-item v-if="folder && more">
+      <t-dropdown-item v-if="folder && more" @click="rename(id, name, !folder)">
+        <template #prefix-icon>
+          <edit2-icon/>
+        </template>
+        重命名
+      </t-dropdown-item>
+      <t-dropdown-item v-if="folder && more" @click="remove(id, name, !folder)"
+                       style="color: red;">
+        <template #prefix-icon>
+          <delete-icon/>
+        </template>
+        删除
+      </t-dropdown-item>
+      <t-dropdown-item v-if="folder && more" :divider="true">
         <template #prefix-icon>
           <app-icon/>
         </template>
@@ -62,19 +75,6 @@
             </template>
             多选
           </t-dropdown-item>
-          <t-dropdown-item @click="rename(id, name, !folder)">
-            <template #prefix-icon>
-              <edit2-icon/>
-            </template>
-            重命名
-          </t-dropdown-item>
-          <t-dropdown-item @click="remove(id, name, !folder)"
-                           style="color: red;">
-            <template #prefix-icon>
-              <delete-icon/>
-            </template>
-            删除
-          </t-dropdown-item>
           <t-dropdown-item @click="moveTo(id, name, !folder)">
             <template #prefix-icon>
               <gesture-right-icon/>
@@ -90,7 +90,7 @@
         </template>
         打开
       </t-dropdown-item>
-      <t-dropdown-item v-if="!folder"
+      <t-dropdown-item v-if="!folder" :divider="true"
                        @click="openNotePreview(id)">
         <template #prefix-icon>
           <terminal-window-icon/>
@@ -104,6 +104,13 @@
         </template>
         重命名
       </t-dropdown-item>
+      <t-dropdown-item v-if="!folder" @click="remove(id, name, !folder)"
+                       style="color: red;">
+        <template #prefix-icon>
+          <delete-icon/>
+        </template>
+        删除
+      </t-dropdown-item>
       <t-dropdown-item v-if="!folder">
         <template #prefix-icon>
           <app-icon/>
@@ -115,13 +122,6 @@
               <fill-color1-icon/>
             </template>
             设置颜色
-          </t-dropdown-item>
-          <t-dropdown-item @click="remove(id, name, !folder)"
-                           style="color: red;">
-            <template #prefix-icon>
-              <delete-icon/>
-            </template>
-            删除
           </t-dropdown-item>
           <t-dropdown-item @click="moveTo(id, name, !folder)">
             <template #prefix-icon>
