@@ -19,7 +19,7 @@
 </template>
 <script lang="ts" setup>
 import {SettingIcon} from "tdesign-icons-vue-next";
-import {IKanbanInstance, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {IKanbanInstance, KanbanInstance} from "@/editor/SuperEditor/block/KanbanTool/types";
 
 const instance = inject<IKanbanInstance>(KanbanInstance);
 

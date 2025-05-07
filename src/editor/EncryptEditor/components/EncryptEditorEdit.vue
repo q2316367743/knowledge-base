@@ -39,7 +39,7 @@
 </template>
 <script lang="ts" setup>
 import {LockOffIcon, LockOnIcon, SaveIcon} from "tdesign-icons-vue-next";
-import EncryptTextSet from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextSet.vue";
+import EncryptTextSet from "@/editor/SuperEditor/block/EncryptTextTool/components/EncryptTextSet.vue";
 import MonacoEditorCore from "@/editor/MonacoEditor/MonacoEditorCore.vue";
 import MarkdownEditor from '@/editor/MarkdownEditor/index.vue';
 import RichTextEditor from '@/editor/RichTextEditor/index.vue';

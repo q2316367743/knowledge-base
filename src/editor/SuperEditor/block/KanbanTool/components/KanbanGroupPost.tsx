@@ -1,4 +1,4 @@
-import {buildKanbanGroup, IKanbanInstance, KanbanDataGroup} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {buildKanbanGroup, IKanbanInstance, KanbanDataGroup} from "@/editor/SuperEditor/block/KanbanTool/types";
 import {ColorPicker, DialogPlugin, Form, FormItem, Input} from "tdesign-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";

@@ -5,8 +5,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {IKanbanInstance, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
-import KanbanNode from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanNode.vue";
+import {IKanbanInstance, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/block/KanbanTool/types";
+import KanbanNode from "@/editor/SuperEditor/block/KanbanTool/components/KanbanNode.vue";
 import {useSortable} from "@vueuse/integrations/useSortable";
 
 const props = defineProps({

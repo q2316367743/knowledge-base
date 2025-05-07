@@ -196,7 +196,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
+import {EncryptTextData} from "@/editor/SuperEditor/block/EncryptTextTool/types";
 import {LockOffIcon} from "tdesign-icons-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
 

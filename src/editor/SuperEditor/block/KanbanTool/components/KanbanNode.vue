@@ -11,10 +11,10 @@
 <script lang="tsx" setup>
 import ContextMenu from '@imengyu/vue3-context-menu';
 import {ArrowDownIcon, ArrowUpIcon, DeleteIcon, EditIcon, InfoCircleIcon} from 'tdesign-icons-vue-next';
-import {IKanbanInstance, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {IKanbanInstance, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/block/KanbanTool/types";
 import {useGlobalStore} from "@/store/GlobalStore";
-import {openKanbanNodePost} from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanNodePost";
-import {openKanbanNodeInfo} from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanNodeInfo";
+import {openKanbanNodePost} from "@/editor/SuperEditor/block/KanbanTool/components/KanbanNodePost";
+import {openKanbanNodeInfo} from "@/editor/SuperEditor/block/KanbanTool/components/KanbanNodeInfo";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 

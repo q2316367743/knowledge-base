@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
+import {EncryptTextData} from "@/editor/SuperEditor/block/EncryptTextTool/types";
 
 defineProps({
   data: {

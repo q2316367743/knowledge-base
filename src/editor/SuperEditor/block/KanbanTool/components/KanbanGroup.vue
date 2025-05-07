@@ -25,11 +25,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {IKanbanInstance, KanbanDataGroup, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {IKanbanInstance, KanbanDataGroup, KanbanInstance} from "@/editor/SuperEditor/block/KanbanTool/types";
 import {MoreIcon, PlusIcon} from "tdesign-icons-vue-next";
-import KanbanGroupContainer from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroupContainer.vue";
-import {openKanbanNodePost} from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanNodePost";
-import {deleteGroup, postGroup} from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroupPost";
+import KanbanGroupContainer from "@/editor/SuperEditor/block/KanbanTool/components/KanbanGroupContainer.vue";
+import {openKanbanNodePost} from "@/editor/SuperEditor/block/KanbanTool/components/KanbanNodePost";
+import {deleteGroup, postGroup} from "@/editor/SuperEditor/block/KanbanTool/components/KanbanGroupPost";
 
 const props = defineProps({
   group: {

@@ -17,11 +17,11 @@
 </template>
 <script lang="ts" setup>
 import {API} from '@editorjs/editorjs';
-import {buildKanbanData, KanbanData, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
-import KanbanCore from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanCore.vue";
-import KanbanToolFs from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanToolFs.vue";
-import KanbanToolTitle from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanToolTitle.vue";
-import KanbanToolSetting from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanToolSetting.vue";
+import {buildKanbanData, KanbanData, KanbanDataNode, KanbanInstance} from "@/editor/SuperEditor/block/KanbanTool/types";
+import KanbanCore from "@/editor/SuperEditor/block/KanbanTool/components/KanbanCore.vue";
+import KanbanToolFs from "@/editor/SuperEditor/block/KanbanTool/components/KanbanToolFs.vue";
+import KanbanToolTitle from "@/editor/SuperEditor/block/KanbanTool/components/KanbanToolTitle.vue";
+import KanbanToolSetting from "@/editor/SuperEditor/block/KanbanTool/components/KanbanToolSetting.vue";
 
 const content = defineModel({
   type: Object as PropType<KanbanData>,

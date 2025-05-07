@@ -25,9 +25,9 @@
 </template>
 <script lang="ts" setup>
 import {LockOffIcon, LockOnIcon} from "tdesign-icons-vue-next";
-import {buildEncryptTextData, EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
+import {buildEncryptTextData, EncryptTextData} from "@/editor/SuperEditor/block/EncryptTextTool/types";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
-import EncryptTextSet from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextSet.vue";
+import EncryptTextSet from "@/editor/SuperEditor/block/EncryptTextTool/components/EncryptTextSet.vue";
 
 const content = defineModel({
   type: Object as PropType<EncryptTextData>,

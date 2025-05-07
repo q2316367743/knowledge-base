@@ -6,10 +6,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {KanbanDataGroup} from "@/editor/SuperEditor/tools/KanbanTool/types";
-import KanbanGroup from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroup.vue";
+import {KanbanDataGroup} from "@/editor/SuperEditor/block/KanbanTool/types";
+import KanbanGroup from "@/editor/SuperEditor/block/KanbanTool/components/KanbanGroup.vue";
 import {useSortable} from "@vueuse/integrations/useSortable";
-import KanbanGroupAdd from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroupAdd.vue";
+import KanbanGroupAdd from "@/editor/SuperEditor/block/KanbanTool/components/KanbanGroupAdd.vue";
 
 const groups = defineModel({
   type: Object as PropType<Array<KanbanDataGroup>>,

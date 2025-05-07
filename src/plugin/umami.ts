@@ -22,7 +22,7 @@ interface UmamiPayload extends UmamiPayloadBase {
 
 function buildBasePayload(): UmamiPayloadBase {
   return {
-    hostname: "u.tools",
+    hostname: "u.block",
     language: navigator.language,
     referrer: "https://u.tools",
     screen: `${window.screen.width}x${window.screen.height}`,

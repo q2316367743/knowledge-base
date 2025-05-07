@@ -1,7 +1,7 @@
 import {API, BlockTool, BlockToolConstructorOptions} from "@editorjs/editorjs";
 import {makeElement} from "@/utils/lang/DocumentUtil";
-import EncryptTextTool from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextTool.vue";
-import {buildEncryptTextData, EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
+import EncryptTextTool from "@/editor/SuperEditor/block/EncryptTextTool/components/EncryptTextTool.vue";
+import {buildEncryptTextData, EncryptTextData} from "@/editor/SuperEditor/block/EncryptTextTool/types";
 
 
 export default class EncryptText implements BlockTool {

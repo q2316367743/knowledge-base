@@ -1,4 +1,4 @@
-import {KanbanDataNode} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {KanbanDataNode} from "@/editor/SuperEditor/block/KanbanTool/types";
 import {DialogPlugin} from "tdesign-vue-next";
 
 

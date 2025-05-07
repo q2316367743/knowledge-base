@@ -323,6 +323,11 @@
   optionalDependencies:
     node-fetch "^3.3.0"
 
+"@codexteam/icons@0.3.2":
+  version "0.3.2"
+  resolved "https://mirrors.cloud.tencent.com/npm/@codexteam/icons/-/icons-0.3.2.tgz#b7aed0ba7b344e07953101f5476cded570d4f150"
+  integrity sha512-P1ep2fHoy0tv4wx85eic+uee5plDnZQ1Qa6gDfv7eHPkCXorMtVqJhzMb75o1izogh6G7380PqmFDXV3bW3Pig==
+
 "@codexteam/icons@^0.0.5":
   version "0.0.5"
   resolved "https://registry.npmmirror.com/@codexteam/icons/-/icons-0.0.5.tgz#d17f39b6a0497c6439f57dd42711817a3dd3679c"
@@ -345,18 +350,15 @@
   dependencies:
     "@codexteam/icons" "^0.3.2"
 
-"@editorjs/editorjs@^2.29.1", "@editorjs/editorjs@^2.30.8":
+"@editorjs/editorjs@2.30.6":
+  version "2.30.6"
+  resolved "https://mirrors.cloud.tencent.com/npm/@editorjs/editorjs/-/editorjs-2.30.6.tgz#a77292da7433bc912e4beaf359b13812cab89c4d"
+  integrity sha512-6eQMc4Di3Hz9p4o+NGRgKaCeAF7eAk106m+bsDLc4eo94VGYO1M163OiGFdmanE+w503qTmXOzycWff5blEOAQ==
+
+"@editorjs/editorjs@^2.30.8":
   version "2.30.8"
   resolved "https://registry.npmmirror.com/@editorjs/editorjs/-/editorjs-2.30.8.tgz#e88773622b656f002d6aac31a4b09a04ddea554b"
   integrity sha512-ClFuxI1qZTfXPJTacQfsJtOUP6bKoIe6BQNdAvGsDTDVwMnZEzoaSOwvUpdZEE56xppVfQueNK/1MElV9SJKHg==
-
-"@editorjs/header@^2.8.8":
-  version "2.8.8"
-  resolved "https://registry.npmmirror.com/@editorjs/header/-/header-2.8.8.tgz#43cff7949c44866da7716fdb562d68116d0a806a"
-  integrity sha512-bsMSs34u2hoi0UBuRoc5EGWXIFzJiwYgkFUYQGVm63y5FU+s8zPBmVx5Ip2sw1xgs0fqfDROqmteMvvmbCy62w==
-  dependencies:
-    "@codexteam/icons" "^0.0.5"
-    "@editorjs/editorjs" "^2.29.1"
 
 "@editorjs/inline-code@^1.5.1":
   version "1.5.1"
@@ -2383,6 +2385,14 @@ duplexer@^0.1.2:
   version "0.1.2"
   resolved "https://mirrors.cloud.tencent.com/npm/duplexer/-/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
+
+editorjs-color-picker@^1.0.7:
+  version "1.0.7"
+  resolved "https://mirrors.cloud.tencent.com/npm/editorjs-color-picker/-/editorjs-color-picker-1.0.7.tgz#e6f85855ca47c2b35f98d2d3e40b17d3c0357758"
+  integrity sha512-FybFkSypptzShEt94VZAFfn2veYvwXKx4ziWCbYyXA85ZVZZVD50Y/rkM4wcsOGvWShU+Z8OD3iBtMUyemJ8qw==
+  dependencies:
+    "@codexteam/icons" "0.3.2"
+    "@editorjs/editorjs" "2.30.6"
 
 electron-to-chromium@^1.5.73:
   version "1.5.96"

@@ -6,8 +6,8 @@
 </template>
 <script lang="ts" setup>
 import {PlusIcon} from "tdesign-icons-vue-next";
-import {postGroup} from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanGroupPost";
-import {IKanbanInstance, KanbanInstance} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {postGroup} from "@/editor/SuperEditor/block/KanbanTool/components/KanbanGroupPost";
+import {IKanbanInstance, KanbanInstance} from "@/editor/SuperEditor/block/KanbanTool/types";
 
 const instance = inject<IKanbanInstance>(KanbanInstance);
 

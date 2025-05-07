@@ -8,12 +8,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {buildEncryptTextData, EncryptTextData} from "@/editor/SuperEditor/tools/EncryptTextTool/types";
+import {buildEncryptTextData, EncryptTextData} from "@/editor/SuperEditor/block/EncryptTextTool/types";
 import {API} from "@editorjs/editorjs";
 import {isNotEmptyString} from "@/utils/lang/FieldUtil";
-import EncryptTextPassword from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextPassword.vue";
-import EncryptTextEdit from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextEdit.vue";
-import EncryptTextDisplay from "@/editor/SuperEditor/tools/EncryptTextTool/components/EncryptTextDisplay.vue";
+import EncryptTextPassword from "@/editor/SuperEditor/block/EncryptTextTool/components/EncryptTextPassword.vue";
+import EncryptTextEdit from "@/editor/SuperEditor/block/EncryptTextTool/components/EncryptTextEdit.vue";
+import EncryptTextDisplay from "@/editor/SuperEditor/block/EncryptTextTool/components/EncryptTextDisplay.vue";
 
 const content = defineModel({
   type: Object as PropType<EncryptTextData>,

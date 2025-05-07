@@ -1,6 +1,6 @@
 import {clone} from "radash";
 import {DialogPlugin, Form, FormItem, Input} from 'tdesign-vue-next';
-import {buildKanbanNode, IKanbanInstance, KanbanDataNode} from "@/editor/SuperEditor/tools/KanbanTool/types";
+import {buildKanbanNode, IKanbanInstance, KanbanDataNode} from "@/editor/SuperEditor/block/KanbanTool/types";
 import RichTextEditor from '@/editor/RichTextEditor/index.vue';
 import MessageUtil from "@/utils/modal/MessageUtil";
 

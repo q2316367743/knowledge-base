@@ -11,21 +11,23 @@ import EditorJS, {OutputData} from "@editorjs/editorjs";
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
 import Underline from '@editorjs/underline';
+import ColorPicker from 'editorjs-color-picker';
 // 块工具
-import Header from '@editorjs/header';
 import Table from '@editorjs/table';
 import Delimiter from '@editorjs/delimiter';
-import LinkTool from "./tools/LinkTool";
-import CodeTool from "./tools/Code";
-import List from './tools/List';
-import SimpleImage from './tools/SimpleImage';
-import AlertTool from './tools/AlertTool';
-import MindMapTool from './tools/MindMapTool';
-import LogicFlowTool from './tools/LogicFlowTool';
-import KanbanTool from './tools/KanbanTool';
-import EncryptText from './tools/EncryptTextTool';
-import WarningTool from "@/editor/SuperEditor/tools/WarningTool";
-import QuoteTool from "@/editor/SuperEditor/tools/QuoteTool";
+import LinkTool from "@/editor/SuperEditor/block/LinkTool";
+import CodeTool from "@/editor/SuperEditor/block/Code";
+import List from '@/editor/SuperEditor/block/List';
+import SimpleImage from '@/editor/SuperEditor/block/SimpleImage';
+import AlertTool from '@/editor/SuperEditor/block/AlertTool';
+import MindMapTool from '@/editor/SuperEditor/block/MindMapTool';
+import LogicFlowTool from '@/editor/SuperEditor/block/LogicFlowTool';
+import KanbanTool from '@/editor/SuperEditor/block/KanbanTool';
+import EncryptText from '@/editor/SuperEditor/block/EncryptTextTool';
+import WarningTool from "@/editor/SuperEditor/block/WarningTool";
+import QuoteTool from "@/editor/SuperEditor/block/QuoteTool";
+import {Paragraph} from "@/editor/SuperEditor/block/paragraph-with-alignment";
+import {Header} from '@/editor/SuperEditor/block/header-with-alignment';
 
 
 const content = defineModel({
@@ -116,7 +118,17 @@ onMounted(() => {
       })
     },
     tools: {
-      Header, SimpleImage,
+      header: {
+        class: Header,
+        config: {
+          placeholder: '输入一个标题',
+          defaultAlignment: 'left'
+        }
+      },
+      paragraph: {
+        class: Paragraph,
+        inlineToolbar: true,
+      }, SimpleImage,
       linkTool: {
         class: LinkTool,
         config: {
@@ -162,6 +174,10 @@ onMounted(() => {
         class: InlineCode,
         shortcut: 'CMD+SHIFT+C',
       },
+      ColorPicker: {
+        // @ts-ignore
+        class: ColorPicker,
+      }
     }
   });
   watch(() => props.readOnly, val => {

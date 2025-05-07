@@ -1,7 +1,7 @@
 import {API, BlockTool, BlockToolConstructorOptions} from "@editorjs/editorjs";
 import {makeElement} from "@/utils/lang/DocumentUtil";
-import {buildKanbanData, KanbanData} from "@/editor/SuperEditor/tools/KanbanTool/types";
-import KanbanTool from "@/editor/SuperEditor/tools/KanbanTool/components/KanbanTool.vue";
+import {buildKanbanData, KanbanData} from "@/editor/SuperEditor/block/KanbanTool/types";
+import KanbanTool from "@/editor/SuperEditor/block/KanbanTool/components/KanbanTool.vue";
 
 
 export default class Kanban implements BlockTool {
