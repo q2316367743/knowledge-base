@@ -71,7 +71,8 @@ onMounted(() => {
           'Underline': '下划线',
           'Marker': '标记',
           'InlineCode': '内联代码',
-          'Delimiter': '分割线'
+          'Delimiter': '分割线',
+          'Color': '颜色'
         },
         tools: {
           'Table': {
@@ -96,7 +97,7 @@ onMounted(() => {
             'Left': '左对齐',
             'Center': '居中对齐',
             'Right': '右对齐'
-          }
+          },
         },
         blockTunes: {
           "delete": {
