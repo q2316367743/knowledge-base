@@ -1,5 +1,6 @@
 <template>
   <div class="list-side-default" @click="setItemId(0)" ref="el">
+    <list-side-top :items="top"/>
     <template v-if="groups.length > 0">
       <list-side-one v-if="groups.length === 1 && groups[0].id === '-1'" :group="groups[0]"/>
       <template v-else>
@@ -21,11 +22,12 @@ import ListSideComplete
 import ListSideArticle
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideArticle.vue";
 import ListSideOne from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideOne.vue";
+import ListSideTop from "@/pages/todo/ContentDefault/components/ListSideTop.vue";
 
 const groups = computed(() => useTodoWrapStore().todoGroupView);
+const top = computed(() => groups.value.flatMap(e => e.top));
 const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
 const hideOfCompleteOrAbandon = computed(() => useTodoWrapStore().hideOfCompleteOrAbandon);
-
 
 const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
 

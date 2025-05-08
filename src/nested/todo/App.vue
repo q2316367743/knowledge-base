@@ -18,8 +18,8 @@ function onInit(id: number) {
 // 子窗口通信
 const subWindow = window.preload.ipcRenderer.buildSubWindow('todo:to');
 subWindow.receiveMsg(msg => {
-  const {type, data} = msg;
-  if (type === '/todo/init/id') {
+  const {event, data} = msg;
+  if (event === '/todo/init/id') {
     onInit(data.id);
   }
 });

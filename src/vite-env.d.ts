@@ -28,9 +28,14 @@ type SubWindowChannel = 'chat' | 'preview' | 'todo:to' | 'todo:from';
 class SubWindow {
   constructor(channel: SubWindowChannel);
 
-  receiveMsg<T = any>(callback: (msg: T) => void): void;
+  receiveMsg<T = any>(callback: (msg: IpcEvent<T>) => void): void;
 
-  sendMsg<T = any>(msg: T): void
+  sendMsg<T = any>(msg: IpcEvent<T>): void
+}
+
+interface IpcEvent<T = any> {
+  event: string;
+  data: T
 }
 
 interface EncryptKeyIv {
@@ -83,8 +88,8 @@ declare interface Window {
     },
     ipcRenderer: {
       buildSubWindow(channel: SubWindowChannel): SubWindow;
-      receiveMessage(channel: SubWindowChannel, callback: (msg: string) => void): void;
-      sendMessage<T = any>(id: number, channel: SubWindowChannel, message: T): void;
+      receiveMessage<T = any>(channel: SubWindowChannel, callback: (msg: IpcEvent<T>) => void): void;
+      sendMessage<T = any>(id: number, channel: SubWindowChannel, message: IpcEvent<T>): void;
     },
     util: {
       uploadToImagePlus(filePath: string, pluginName: string): Promise<string>;

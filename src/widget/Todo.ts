@@ -33,7 +33,7 @@ export function openTodoWidget(id: number, onSuccess: (instance: BrowserWindow.W
           ubWindow.webContents.openDevTools();
         }
         window.preload.ipcRenderer.sendMessage(ubWindow.webContents.id, 'todo:to', {
-          type: '/todo/init/id',
+          event: '/todo/init/id',
           data: {
             id: id
           },

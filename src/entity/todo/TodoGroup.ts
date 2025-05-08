@@ -41,10 +41,14 @@ export interface TodoGroupPriorityView {
  */
 export interface TodoGroupView extends TodoGroup {
 
+  // 优先级
   children: Array<TodoGroupPriorityView>;
 
   // 已完成 & 已放弃
   complete: Array<TodoItemIndex>;
+
+  // 已置顶
+  top: Array<TodoItemIndex>;
 
 }
 

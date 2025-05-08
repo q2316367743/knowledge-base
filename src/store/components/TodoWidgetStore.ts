@@ -8,8 +8,22 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   const widgets = ref(new Map<number, BrowserWindow.WindowInstance>());
   // 打开的窗口
   const todoIds = computed(() => new Set(widgets.value.keys()));
-  // 是否是空的待办窗口
+  // 是否是空地待办窗口
   const emptyTodoWidget = computed(() => widgets.value.size === 0);
+
+  // 初始化后监听事件
+  window.preload.ipcRenderer.receiveMessage('todo:from', (msg) => {
+    const {event, data} = msg;
+    if (event === 'toggleTop') {
+      const {id} = data;
+      if (widgets.value.has(id)) {
+        const widget = widgets.value.get(id);
+        if (widget) {
+          widget.setAlwaysOnTop(!widget.isAlwaysOnTop());
+        }
+      }
+    }
+  })
 
   // 检测小部件是否都有效
   const checkWidget = () => {
@@ -45,9 +59,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
       return;
     }
     // 打开小部件
-    openTodoWidget(id, (instance) => {
-      widgets.value.set(id, instance);
-    });
+    openTodoWidget(id, (instance) => widgets.value.set(id, instance));
   }
 
   // 删除一个小部件

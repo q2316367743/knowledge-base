@@ -28,7 +28,8 @@ function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemInde
   const view: TodoGroupView = {
     ...todoGroup,
     children: [],
-    complete: []
+    complete: [],
+    top: []
   }
   const filter = todoGroup.items
     .map(itemId => {
@@ -54,7 +55,13 @@ function renderGroupView(todoGroup: TodoGroup, itemMap: Map<number, TodoItemInde
     view.children.push({
       label: option.label,
       value: option.value,
-      children: toSorted((items || []), (a, b) => sortTodoIndex(a, b, sort))
+      children: toSorted((items || []).filter(e => {
+        if (e.top) {
+          view.top.push(e);
+          return false;
+        }
+        return true;
+      }), (a, b) => sortTodoIndex(a, b, sort))
     });
   }
   if (priorityMap.size > 0) {
