@@ -241,15 +241,15 @@ export function handlePriorityColor(priority: TodoItemPriority, status = TodoIte
       if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
         return '#562c27'
       }
-      return '#B33327';
+      return '#b33327';
     case TodoItemPriority.MIDDLE:
       if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
         return '#6d4f39'
       }
-      return '#CC7D41';
+      return '#cc7d41';
     case TodoItemPriority.FLOOR:
       if (status === TodoItemStatus.COMPLETE || status === TodoItemStatus.ABANDON) {
-        return '#242D48';
+        return '#242d48';
       }
       return '#364fa1';
     default:
@@ -291,4 +291,11 @@ export function handleStatusText(status: TodoItemStatus): string {
       return '无状态';
   }
 
+}
+
+export function handleTodoTitleColor(item: TodoItemIndex): string {
+  if (item.status === TodoItemStatus.COMPLETE || item.status === TodoItemStatus.ABANDON) {
+    return 'var(--td-text-color-primary)';
+  }
+  return handlePriorityColor(item.priority);
 }
