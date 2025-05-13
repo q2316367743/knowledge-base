@@ -15,8 +15,7 @@ defineProps({
 <style scoped lang="less">
 .encrypt-text-display {
   background-color: var(--td-bg-color-container);
-  overflow: auto;
-  padding: 16px;
+  padding: 8px;
   pre {
     padding: 0;
     margin: 0;

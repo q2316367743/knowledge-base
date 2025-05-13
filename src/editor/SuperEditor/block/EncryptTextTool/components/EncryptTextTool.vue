@@ -79,7 +79,7 @@ const onMouseUp = () => {
 .encrypt-text-tool {
   width: 100%;
   min-height: 300px;
-  padding: 8px 0;
+  overflow: auto;
 
   position: relative;
   background-color: var(--td-bg-color-container);
