@@ -225,7 +225,16 @@ enum LocalNameEnum {
   // ========================== 嵌入模块 ==========================
 
   // 嵌入/待办/专注时间
-  NESTED_TODO_FOCUS_TIME = '/nested/todo/focus-time'
+  NESTED_TODO_FOCUS_TIME = '/nested/todo/focus-time',
+
+  // 嵌入/待办/提醒事项
+  NESTED_TODO_REMINDER_ENABLE = '/nested/todo/reminder-enable',
+
+  // 嵌入/待办/提醒事项
+  NESTED_TODO_REMINDER_TEXT = '/nested/todo/reminder-text',
+
+  // 嵌入/待办/提醒时间
+  NESTED_TODO_REMINDER_TIME = '/nested/todo/reminder-time'
 }
 
 export default LocalNameEnum;
