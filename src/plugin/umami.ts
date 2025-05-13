@@ -8,7 +8,7 @@ interface UmamiPayloadBase {
   referrer: string;
   screen: string;
   website: string;
-
+  id: string|undefined;
 }
 
 interface UmamiPayload extends UmamiPayloadBase {
@@ -27,6 +27,7 @@ function buildBasePayload(): UmamiPayloadBase {
     referrer: "https://u.tools",
     screen: `${window.screen.width}x${window.screen.height}`,
     website: Constants.umami.id,
+    id: utools.getUser()?.nickname,
   }
 }
 
