@@ -1,6 +1,6 @@
 <template>
   <div class="app-toolbar">
-    <t-button :block="true">开始专注</t-button>
+    <todo-focus />
     <t-button :block="true">添加提醒</t-button>
     <t-dropdown :options="options" trigger="click">
       <t-button theme="primary" variant="text" shape="square" >
@@ -15,6 +15,7 @@
 import {HomeIcon, InfoCircleIcon, SettingIcon} from "tdesign-icons-vue-next";
 import {DropdownOption} from "tdesign-vue-next";
 import {backToToday} from "@/nested/todo/store";
+import TodoFocus from "@/nested/todo/components/TodoFocus/TodoFocus.vue";
 
 
 const options: Array<DropdownOption> = [

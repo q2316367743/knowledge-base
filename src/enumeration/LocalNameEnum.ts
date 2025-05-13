@@ -221,6 +221,11 @@ enum LocalNameEnum {
 
   // 新闻模块
   MODULE_NEWS = '/module/news',
+
+  // ========================== 嵌入模块 ==========================
+
+  // 嵌入/待办/专注时间
+  NESTED_TODO_FOCUS_TIME = '/nested/todo/focus-time'
 }
 
 export default LocalNameEnum;

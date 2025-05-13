@@ -10,12 +10,13 @@
         {{ item.title }}
       </div>
     </div>
+    <todo-date :item="item"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { TodoItemIndex, TodoItemStatus } from "@/entity/todo/TodoItem";
+import {computed} from 'vue';
+import {TodoItemIndex, TodoItemStatus} from "@/entity/todo/TodoItem";
 import TodoItemCheckbox from "@/components/TodoItemCheckbox/TodoItemCheckbox.vue";
 
 interface Props {
@@ -28,8 +29,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const isCompleted = computed(() => {
-  return props.item.status === TodoItemStatus.COMPLETE || 
-         props.item.status === TodoItemStatus.ABANDON;
+  return props.item.status === TodoItemStatus.COMPLETE ||
+    props.item.status === TodoItemStatus.ABANDON;
 });
 
 defineEmits<{
@@ -51,11 +52,13 @@ defineEmits<{
   cursor: pointer;
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
+  display: flex;
+  justify-content: space-between;
 
   &:hover {
     background-color: var(--td-bg-color-container-active);
   }
-  
+
   &.dragging {
     opacity: 0.5;
     transform: scale(0.98);

@@ -32,7 +32,8 @@ function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
     </FormItem>}
     {record.value.type === TodoCategoryTypeEnum.TODO && <>
       <FormItem label="布局" labelAlign={'top'}>
-        <RadioGroup v-model={record.value.todoListLayout}>
+        <RadioGroup v-model={record.value.todoListLayout}
+                    disabled={record.value.openType === TodoCategoryOpenTypeEnum.WIDGET}>
           <Radio value={TodoListLayoutEnum.DEFAULT}>默认布局</Radio>
           <Radio value={TodoListLayoutEnum.CARD}>卡片布局</Radio>
           <Radio value={TodoListLayoutEnum.CALENDAR}>日历布局</Radio>

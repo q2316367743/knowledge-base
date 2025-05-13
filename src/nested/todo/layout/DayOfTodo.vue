@@ -83,10 +83,15 @@ function addTodo() {
 
   .todo-item {
     display: flex;
-    padding: 12px;
+    padding: 12px 8px 8px;
     border-bottom: 1px solid var(--td-border-level-1-color);
     align-items: center;
     position: relative;
+    transition: background-color 0.3s;
+
+    &:hover{
+      background-color: var(--td-bg-color-component-hover);
+    }
 
     &.completed {
       opacity: 0.6;

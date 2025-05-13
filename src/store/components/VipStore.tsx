@@ -61,12 +61,12 @@ export const useVipStore = defineStore('vip', () => {
     }
     return new Promise<void>((resolve, reject) => {
       try {
-        useUmami.track(`/VIP/准备/${type}`);
+        useUmami.track(`/VIP/${type}/准备`);
         InjectionUtil.payment.open({
           goodsId
         }, () => {
           console.debug(`购买${type}成功`);
-          useUmami.track(`/VIP/开通/${type}`);
+          useUmami.track(`/VIP/${type}/开通`);
           MessageUtil.success("开通VIP成功");
           // 重新初始化
           init();
@@ -184,7 +184,7 @@ export async function checkPower(type: 'note' | 'todo' | 'all') {
     return Promise.resolve();
   }
   return new Promise<void>((resolve, reject) => {
-    useUmami.track(`/VIP/查看/${type}`);
+    useUmami.track(`/VIP/${type}/查看`);
     const instance = DialogPlugin({
       header,
       placement: 'center',

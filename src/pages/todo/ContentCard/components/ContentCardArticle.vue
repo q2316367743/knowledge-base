@@ -17,7 +17,7 @@
       <div class="content-card-article-item" v-for="article in articles" :key="article.id"
            @click="toArticleByTodo(article.id)">
         <component :is="buildArticleIcon(article.type, true)"/>
-        <div class="title">{{ article.name }}</div>
+        <div class="title ellipsis ml-4px" :title="article.name">{{ article.name }}</div>
       </div>
     </div>
   </div>

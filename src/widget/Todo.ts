@@ -9,9 +9,9 @@ export function openTodoWidget(id: number, onSuccess: (instance: BrowserWindow.W
     dev ? 'test.html' : `dist/todo.html`, {
       // @ts-ignore
       useContentSize: true,
-      width: 448,
+      width: 460,
       height: 600,
-      minWidth: 448,
+      minWidth: 460,
       minHeight: 600,
       hasShadow: false,
       alwayOnTop: true,

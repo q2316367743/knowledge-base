@@ -1,7 +1,7 @@
 <template>
   <div class="card-todo-item" :data-id="index.id" :draggable="!!groupId" @dragstart="handleDragstart"
        :class="{deleted: (index.status !== TodoItemStatus.TODO && index.status !== TodoItemStatus.DOING)}"
-       @click="_openTodoItemSetting($event)" @contextmenu="onContextMenuForTodo($event, item!)">
+       @click="_openTodoItemSetting($event)" @contextmenu="onContextMenuForTodo($event, item!, onUpdate)">
     <div class="todo-item__main">
       <div class="todo-item__checkbox">
         <todo-item-checkbox :priority="index.priority" :status="index.status" @click.stop="onCheck(index)"/>
@@ -10,14 +10,7 @@
         {{ index.title }}
       </div>
     </div>
-    <div v-if="hasAttr" class="todo-item__sub">
-      <t-tag theme="primary" size="small" variant="outline">
-        <template #icon>
-          <calendar-icon/>
-        </template>
-        {{ start }}{{ end ? ' · ' + end : '' }}
-      </t-tag>
-    </div>
+    <todo-date :item class="todo-item__sub" />
     <div class="todo-item__tag" v-if="attr.tags.length > 0">
       <t-space size="small">
         <t-tag v-for="t in attr.tags" :key="t" :color="randomColor(t)" variant="outline">{{ t }}</t-tag>
@@ -43,7 +36,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {randomColor} from "@/utils/BrowserUtil";
 import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
-import {CalendarIcon, CaretUpSmallIcon} from "tdesign-icons-vue-next";
+import {CaretUpSmallIcon} from "tdesign-icons-vue-next";
 
 const props = defineProps({
   item: {
@@ -61,6 +54,7 @@ const attr = ref(getDefaultTodoItemAttr());
 const hasAttr = ref(false);
 const start = ref('');
 const end = ref('');
+
 
 function _openTodoItemSetting(e: Event) {
   e.preventDefault();
@@ -90,9 +84,7 @@ function initAttr(id: number) {
         end.value = toDateTimeString(attr.value.end, "YYYY-MM-DD");
         hasAttr.value = true;
       }
-
     })
-
 }
 
 if (index.value) {

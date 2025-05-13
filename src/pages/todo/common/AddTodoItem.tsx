@@ -32,7 +32,10 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
     title: '',
     priority: priority || TodoItemPriority.NONE,
   });
-  let startDate = dayjs(start).format('YYYY-MM-DD');
+  let startDate = undefined;
+  if (start) {
+    startDate = dayjs(start).format('YYYY-MM-DD');
+  }
   const range = ref([startDate || '', end || startDate || '']);
   const isRange = ref(false);
   watch(() => range.value[0], (newValue) => {
@@ -42,7 +45,9 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
   });
   const p = DialogPlugin({
     header: '新增待办',
+    placement: 'center',
     mode: window.innerWidth < 600 ? 'full-screen' : undefined,
+    closeOnEscKeydown: false,
     default: () => <Form data={record.value} class={'pl-4px pr-4px'}>
       <FormItem label={'标题'} labelAlign={'top'}>
         <Textarea autosize={{minRows: 2, maxRows: 8}} v-model={record.value.title}

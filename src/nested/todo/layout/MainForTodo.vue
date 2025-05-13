@@ -15,9 +15,9 @@
 <script lang="ts" setup>
 import {themeColor} from "@/store";
 import {initTodo, loading} from "@/nested/todo/store";
-import WeekNavigator from "@/nested/todo/components/WeekNavigator.vue";
-import DayOfTodo from "@/nested/todo/components/DayOfTodo.vue";
-import AppToolbar from "@/nested/todo/components/AppToolbar.vue";
+import WeekNavigator from "@/nested/todo/layout/WeekNavigator.vue";
+import DayOfTodo from "@/nested/todo/layout/DayOfTodo.vue";
+import AppToolbar from "@/nested/todo/layout/AppToolbar.vue";
 
 const props = defineProps({
   todoId: {

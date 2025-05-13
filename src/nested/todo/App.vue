@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import {themeColor} from "@/store";
-import MainForTodo from "@/nested/todo/components/MainForTodo.vue";
+import MainForTodo from "@/nested/todo/layout/MainForTodo.vue";
 
 const targetId = ref(0);
 
