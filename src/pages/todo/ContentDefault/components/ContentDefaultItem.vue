@@ -7,10 +7,11 @@
     <div class="title" @click="setItemId(item.id)" :style="{color: handleTodoTitleColor(item)}">
       {{ item.title }}
     </div>
-    <div v-if="date.status > 0" class="date"
-         :style="{color: date.status === 1 ? 'var(--td-brand-color)' :  'var(--td-error-color)'}">
-      {{ date.text }}
-    </div>
+    <t-tooltip v-if="date.status > 0" :content="date.status === 1 ? '进行中' : date.status === 2 ? '进行中' : '已过期'">
+      <div class="date" :style="{color: date.status === 1 ? 'var(--td-brand-color)' :  'var(--td-error-color)'}">
+        {{ date.text }}
+      </div>
+    </t-tooltip>
   </div>
 </template>
 <script lang="ts" setup>
@@ -31,11 +32,11 @@ const props = defineProps({
 
 interface TodoDate {
   text: string;
-  status: 0 | 1 | 2
+  // 0,1:未开始,2:进行中,3:已过期
+  status: 0 | 1 | 2 | 3
 }
 
 const date = ref<TodoDate>({
-  // 0,1,2:过期
   status: 0,
   text: ''
 });
@@ -62,12 +63,16 @@ function onUpdate() {
     const now = dayjs();
     const start = dayjs(res.start);
     const end = dayjs(res.end || res.start);
-    if (now.diff(start, 'day') === 0) {
+    let startDiff = now.diff(start, 'day');
+    if (startDiff === 0) {
       // 就是今天
-      date.value = {status: 1, text: '今天'};
+      date.value = {status: 2, text: '今天'};
     } else if (now.isBefore(start, 'day')) {
+      if (startDiff === 1) {
+        date.value = {status: 1, text: '明天'};
+      }
       // 判断开始时间是不是今天之后
-      if (now.diff(start, 'week') === 1) {
+      else if (now.diff(start, 'week') === 1) {
         // 如果是下周，则显示下周几，需要加上这已经过去的天数
         date.value = {status: 1, text: start.format('ddd')};
       } else if (now.diff(start, 'year') === 0) {
@@ -79,20 +84,25 @@ function onUpdate() {
       }
     } else {
       if (end.isBefore(now, 'day')) {
-        // 结束时间在今天之前，已过期
-        date.value = {status: 2, text: start.format('MM-DD')};
-      } else {
         const endDiff = end.diff(now, 'day');
+        if (endDiff === 1) {
+          date.value = {status: 3, text: '昨天'};
+        } else {
+          // 结束时间在今天之前，已过期
+          date.value = {status: 3, text: start.format('MM-DD')};
+        }
+      } else {
+        const endDiff = now.diff(end, 'day');
         if (endDiff === 0) {
-          date.value = {status: 1, text: '今天'};
+          date.value = {status: 2, text: '今天'};
         } else if (endDiff === 1) {
-          date.value = {status: 1, text: '昨天'};
+          date.value = {status: 2, text: '明天'};
         } else if (now.diff(start, 'year') === 0) {
           // 今年内
-          date.value = {status: 1, text: start.format('MM-DD')};
+          date.value = {status: 2, text: start.format('MM-DD')};
         } else {
           // 如果是明年以后则直接显示日期
-          date.value = {status: 1, text: start.format('YYYY-MM-DD')};
+          date.value = {status: 2, text: start.format('YYYY-MM-DD')};
         }
       }
     }
