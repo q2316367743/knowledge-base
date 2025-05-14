@@ -124,7 +124,7 @@ function handleDrop(e: DragEvent) {
   padding: 0 4px;
 
   &.drag {
-    border-color: rgb(var(--arcoblue-4));
+    border-color: var(--td-brand-color);
   }
 
   .content-card-group__header {

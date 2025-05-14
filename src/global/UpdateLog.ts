@@ -2,10 +2,49 @@ import {Log, LogItemEnum} from "@/components/update-check/domain";
 
 export default [
   {
+    version: '2.6.0',
+    sign: 260,
+    time: '2025年5月14日',
+    items: [{
+      label: LogItemEnum.MAJOR,
+      content: "待办布局新增四象限"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "新增待办小部件"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "超级笔记新增警告和引用"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "markdown笔记导出为html中，新增代码块复制功能"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "重构了日历组件"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "调整笔记列表右键菜单的顺序及显示逻辑"
+    }, {
+      label: LogItemEnum.UPDATE,
+      content: "调整笔记列表右键菜单的顺序及显示逻辑"
+    }, {
+      label: LogItemEnum.REPAIR,
+      content: "修复了问一问中，没有将笔记加入上下文的问题1"
+    }]
+  },
+  {
     version: '2.5.2',
     sign: 252,
-    time: '2025年4月1日',
+    time: '2025年4月14日',
     items: [{
+      label: LogItemEnum.ADD,
+      content: "新增了Markdown到处为微信公众号"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "新增了对Ollama AI的支持,但处于beta版,不确保能用"
+    }, {
+      label: LogItemEnum.ADD,
+      content: "待办默认布局和卡片布局新增时间显示"
+    }, {
       label: LogItemEnum.REPAIR,
       content: "修复了WebDAV无法是用的问题"
     }, {
@@ -15,16 +54,11 @@ export default [
       label: LogItemEnum.REPAIR,
       content: "修复待办无法放弃的问题，卡片布局待办新增右键菜单"
     }, {
-      label: LogItemEnum.ADD,
-      content: "新增了Markdown到处为微信公众号"
-    }, {
-      label: LogItemEnum.ADD,
-      content: "新增了对Ollama AI的支持,但处于beta版,不确保能用"
-    }, {
       label: LogItemEnum.UPDATE,
       content: "加密笔记可以选择笔记类型: 纯文本/markdown/富文本"
     }]
-  }, {
+  },
+  {
     version: '2.5.1',
     sign: 251,
     time: '2025年4月3日',

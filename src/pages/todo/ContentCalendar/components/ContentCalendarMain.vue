@@ -11,11 +11,9 @@
       </div>
       <div class="header-right">
         <t-space size="small">
-          <t-dropdown trigger="click" :options="options">
-            <t-button variant="outline">
-              批量操作
-            </t-button>
-          </t-dropdown>
+          <t-button variant="outline" @click="onCancel" v-if="selectedDates.length > 0">
+            取消选择
+          </t-button>
           <t-button @click="backToToday" variant="outline" :disabled="isCurrentMonth">
             回到本月
           </t-button>
@@ -69,11 +67,15 @@
               v-for="todo in day.todoItems"
               :key="todo.index.id"
               class="todo-item"
-              :class="{ 'multi-day': todo.isMultiDay }"
+              :class="{
+                'multi-day': todo.isMultiDay,
+                'complete': todo.index.status === TodoItemStatus.COMPLETE,
+                'abandon': todo.index.status === TodoItemStatus.ABANDON
+              }"
               @click.stop="openTodoItemSetting(todo.index, () => toUpdate())"
               @mousedown.stop
               @contextmenu.stop="onContextMenuForTodo($event, todo.index, () => toUpdate())"
-              :style="{borderColor: handleSimplePriorityColor(todo.index.priority)}"
+              :style="{borderColor: handlePriorityColor(todo.index.priority, todo.index.status)}"
             >
               {{ todo.index.title }}
             </div>
@@ -85,7 +87,7 @@
 </template>
 <script lang="ts" setup>
 import {useTodoItemStore} from "@/store";
-import {handleSimplePriorityColor, TodoItem} from "@/entity/todo/TodoItem";
+import {handlePriorityColor, TodoItem, TodoItemStatus, todoItemStatusSort} from "@/entity/todo/TodoItem";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
 import {openContextMenuForDay} from "@/pages/todo/ContentCalendar/components/ContextMenuForDay";
@@ -94,7 +96,6 @@ import {ChevronLeftIcon, ChevronRightIcon, MoreIcon} from "tdesign-icons-vue-nex
 import dayjs from "dayjs";
 import {toDayOfBegin, toDayOfEnd} from "@/utils/lang/FieldUtil";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
-import {buildCalendarOptions} from "@/pages/todo/ContentCalendar/components/CalendarOptions";
 
 interface CalendarDay {
   date: Date;
@@ -198,6 +199,9 @@ const calendarDays = computed<CalendarDay[]>(() => {
       }
     }
   }
+  days.forEach(day => {
+    day.todoItems.sort((a, b) => todoItemStatusSort(a.index.status, b.index.status));
+  })
 
   return days;
 });
@@ -252,7 +256,7 @@ const selectedDates = computed<Array<string>>(() => {
   return dates;
 });
 
-const options = computed(() => buildCalendarOptions(selectedDates.value.length, () => startSelectDate.value = []))
+const onCancel = () => (startSelectDate.value = []);
 
 const handleMouseDown = (day: CalendarDay) => {
   startSelectDate.value = [day.date];
@@ -277,7 +281,6 @@ const handleMouseUp = (day?: CalendarDay) => {
 }
 const handleAdd = () => openAddTodoItem({onAdd: () => toUpdate(), start: toDateTimeString(Date.now())})
 </script>
-
 <style scoped lang="less">
 .content-calendar-main {
   height: calc(100% - 54px);
@@ -412,7 +415,7 @@ const handleAdd = () => openAddTodoItem({onAdd: () => toUpdate(), start: toDateT
 
     .todo-items {
       flex: 1;
-      overflow-y: hidden;
+      overflow-y: auto;
       max-height: 80px;
       scrollbar-width: thin;
 
@@ -439,6 +442,16 @@ const handleAdd = () => openAddTodoItem({onAdd: () => toUpdate(), start: toDateT
         border-left: 6px solid var(--td-border-level-2-color);
         border-radius: 4px 2px 2px 4px;
         color: var(--td-text-color-anti);
+
+        &.complete, &.abandon {
+          background-color: var(--td-bg-color-component-disabled);
+          color: var(--td-text-color-disabled);
+          text-decoration: line-through;
+
+          &:hover {
+            background-color: var(--td-bg-color-component-disabled);
+          }
+        }
 
 
         &:hover {

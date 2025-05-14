@@ -148,6 +148,11 @@ export enum TodoItemStatus {
   TODO = 1,
 
   /**
+   * 进行中
+   */
+  DOING = 4,
+
+  /**
    * 已完成
    */
   COMPLETE = 2,
@@ -155,13 +160,42 @@ export enum TodoItemStatus {
   /**
    * 放弃
    */
-  ABANDON = 3,
+  ABANDON = 3
 
-  /**
-   * 进行中
-   */
-  DOING = 4
+}
 
+export function todoItemStatusSort(a: TodoItemStatus, b: TodoItemStatus): number {
+  let aS: number = a;
+  let bS: number = b;
+  switch (a) {
+    case TodoItemStatus.TODO:
+      aS = 1;
+      break;
+    case TodoItemStatus.DOING:
+      aS = 2;
+      break;
+    case TodoItemStatus.COMPLETE:
+      aS = 3;
+      break;
+    case TodoItemStatus.ABANDON:
+      aS = 4;
+      break;
+  }
+  switch (b) {
+    case TodoItemStatus.TODO:
+      bS = 1;
+      break;
+    case TodoItemStatus.DOING:
+      bS = 2;
+      break;
+    case TodoItemStatus.COMPLETE:
+      bS = 3;
+      break;
+    case TodoItemStatus.ABANDON:
+      bS = 4;
+      break;
+  }
+  return aS - bS;
 }
 
 export function getNextTodoItemStatus(status: TodoItemStatus): TodoItemStatus {
