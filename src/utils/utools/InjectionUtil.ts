@@ -113,13 +113,31 @@ interface PaymentOrder {
 }
 
 export const InjectionUtil = {
-  getPlatform(): 'uTools'|'FocusAny'|'unknown' {
+  getPlatform(): 'uTools'|'FocusAny'|'web' {
     if ('utools' in window) {
       return 'uTools';
     } else if ('focusany' in window) {
       return 'FocusAny';
     } else {
-      return 'unknown';
+      return 'web';
+    }
+  },
+  getUser(): { avatar: string, nickname: string, type: string } | null {
+    if ('utools' in window) {
+      return utools.getUser();
+    } else if ('focusany' in window) {
+      const user = focusany.getUser();
+      if (user.isLogin) {
+        return {
+          avatar: user.avatar,
+          nickname: user.nickname,
+          type: user.vipFlag
+        }
+      }else {
+        return null;
+      }
+    } else {
+      return null;
     }
   },
   isDev() {
@@ -132,20 +150,22 @@ export const InjectionUtil = {
     }
   },
   copyText(text: string) {
-    const r = (() => {
+    (async () => {
       if ('utools' in window) {
         return utools.copyText(text)
       } else if ('focusany' in window) {
         return focusany.copyText(text);
       } else {
+        await navigator.clipboard.writeText(text);
         return false
       }
-    })();
-    if (r) {
-      MessageUtil.success("已复制到剪切板");
-    } else {
-      MessageUtil.error("复制失败");
-    }
+    })().then(r => {
+      if (r) {
+        MessageUtil.success("已复制到剪切板");
+      } else {
+        MessageUtil.error("复制失败");
+      }
+    });
   },
   shellOpenExternal(url: string): void {
     if ('utools' in window) {
@@ -483,20 +503,6 @@ export const InjectionUtil = {
       return true;
     } else {
       return false;
-    }
-  },
-  getUser(): { avatar: string, nickname: string, type: string } | null {
-    if ('utools' in window) {
-      return utools.getUser();
-    } else if ('focusany' in window) {
-      const u = focusany.getUser();
-      return {
-        avatar: u.avatar,
-        nickname: u.nickname,
-        type: u.vipFlag
-      }
-    } else {
-      return null;
     }
   },
   getPath(name: PathName): string {

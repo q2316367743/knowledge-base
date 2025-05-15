@@ -83,9 +83,6 @@ declare interface Window {
       openFile(options: OpenFileOption): Promise<Array<File>>
     },
 
-    path: {
-      join(...paths: string[]): string;
-    },
     ipcRenderer: {
       buildSubWindow(channel: SubWindowChannel): SubWindow;
       receiveMessage<T = any>(channel: SubWindowChannel, callback: (msg: IpcEvent<T>) => void): void;
@@ -116,6 +113,5 @@ declare interface Window {
       encryptValue: (keyIv: EncryptKeyIv, data: string) => string;
       decryptValue: (keyIv: EncryptKeyIv, data: string) => string;
     },
-    api: UToolsApi
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="encrypt-text-password w-full h-full">
+  <div class="encrypt-text-password w-full">
     <div class="encrypt-text-password-c">
       <div class="encrypt-text-password-i">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12048 8977" height="250" width="250">
@@ -222,6 +222,8 @@ function onSubmit() {
 .encrypt-text-password {
   display: grid;
   place-items: center; /* 使内容在水平和垂直方向上都居中 */
+  height: calc(100% - 6px);
+  overflow: hidden;
 
   .encrypt-text-password-c {
     margin-top: -16px;

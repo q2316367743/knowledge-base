@@ -79,7 +79,7 @@ const onMouseUp = () => {
 .encrypt-text-tool {
   width: 100%;
   min-height: 300px;
-  overflow: auto;
+  overflow: hidden;
 
   position: relative;
   background-color: var(--td-bg-color-container);
@@ -87,12 +87,12 @@ const onMouseUp = () => {
   border-radius: var(--td-radius-default);
 
   .encrypt-text-tool-resize-handle {
-    width: 100%;
-    height: 6px;
-    cursor: ns-resize;
     position: absolute;
     bottom: -3px;
     left: 0;
+    width: 100%;
+    height: 6px;
+    cursor: ns-resize;
     background: transparent;
     transition: background-color 0.1s ease-in-out;
     text-align: center;

@@ -75,6 +75,7 @@ const onCancel = () => setPsd.value = false;
   .encrypt-text-edit-header {
     padding: 4px 8px 4px 16px;
     height: 32px;
+    border-bottom: 1px solid var(--td-border-level-2-color);
 
     .encrypt-text-edit-header-title-tip {
       margin-left: 12px;

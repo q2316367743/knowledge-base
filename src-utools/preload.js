@@ -3,25 +3,12 @@ const {join} = require('node:path');
 const http = require('node:http');
 const https = require('node:https');
 const {ipcRenderer} = require('electron');
-const {ServiceClient} = require('@xiaou66/interconnect-client');
-const path = require('node:path');
-const {spawn} = require('node:child_process');
-const {createCipheriv, createDecipheriv, createHash} = require("node:crypto")
-const axios = require('axios');
 const {createServer} = require('./src/server');
 const {openFile} = require('./src/file');
 const {parseBuffer, parseArrayBuffer, convertCharset} = require('./src/iconv');
-const {hashSync, compareSync, genSaltSync} = require('./src/bcrypt/bcrypt');
-
-
-/**
- * Blob转Buffer
- * @param blob {Blob} 内容
- * @return {Promise<Buffer>}
- */
-const blobToBuffer = async (blob) => {
-  return blob.arrayBuffer().then(buffer => Buffer.from(buffer));
-};
+const {encryptPassword, verifyPassword, encryptValue, decryptValue} = require('./src/encrypt');
+const {uploadToImagePlus, runCommand, axios} = require('./src/terminal');
+const {blobToBuffer, showSaveDialog, shellOpenPath} = require('./src/common');
 
 /**
  * 接收消息发过来的消息
@@ -34,51 +21,6 @@ function receiveMessage(event, callback) {
       callback(res);
     }
   })
-}
-
-const getPath = (() => {
-  if ('utools' in window) {
-    return utools.getPath;
-  } else if ('focusany' in window) {
-    return focusany.getPath;
-  } else {
-    return () => ''
-  }
-})();
-const showSaveDialog = (() => {
-  if ('utools' in window) {
-    return utools.showSaveDialog;
-  } else if ('focusany' in window) {
-    return focusany.showSaveDialog;
-  } else {
-    return () => undefined;
-  }
-})();
-const shellOpenPath = (() => {
-  if ('utools' in window) {
-    return utools.shellOpenPath;
-  } else if ('focusany' in window) {
-    return focusany.shellOpenPath;
-  } else {
-    return () => {
-    };
-  }
-})();
-
-const pipPath = path.join(getPath('userData'), '.pip');
-
-let client = null;
-
-/**
- * 获取密钥和偏移量
- * @param passphrase
- * @return {{key: string, iv: string}}
- */
-function getKeyIv(passphrase) {
-  const hash1 = createHash('md5').update(passphrase).digest('hex')
-  const hash2 = createHash('md5').update(hash1 + passphrase).digest('hex')
-  const hash3 = createHash('md5').update(hash2 + passphrase).digest('hex')
-  return {key: hash2, iv: hash3.substring(0, 16)}
 }
 
 window.preload = {
@@ -200,121 +142,15 @@ window.preload = {
     },
     createServer, openFile
   },
-  path: {
-    join: join
-  },
   ipcRenderer: {
     receiveMessage,
     sendMessage(id, channel, message) {
       ipcRenderer.sendTo(id, channel, message);
     }
   },
-  util: {
-    async uploadToImagePlus(filePath, pluginName) {
-      try {
-        if (!client) {
-          client = new ServiceClient(require('net'),
-            path.join(pipPath, 'picture-bed-plus'),
-            pluginName);
-        }
-        const res = await client
-          .callServiceMethod('service.upload.file.async', {
-            filePath: filePath
-          });
-        return res.url
-      } catch (e) {
-        // 链接失败, 可以做出提醒或者使用跳转「图床 Plus」插件上传
-        return Promise.reject(e);
-      }
-
-    },
-    /**
-     * 运行命令
-     * @param command {string} 命令
-     * @param options {{onProgress: (e: string) => void, onSuccess: () => void, onError: (e: string) => void}} 参数
-     */
-    runCommand(command, options) {
-      const {onProgress, onSuccess, onError} = options;
-
-      const controller = new AbortController();
-      const {signal} = controller;
-
-      const child = spawn(command, {
-        shell: true,
-        signal
-      });
-      child.stdout.on('data', (data) => {
-        onProgress(data.toString());
-      });
-      child.stderr.on('data', (data) => {
-        onError(data.toString());
-      });
-      child.on('close', (code) => {
-        if (!code) {
-          onSuccess();
-        } else {
-          onError(`命令执行失败，错误码：${code}`);
-        }
-      });
-      return {
-        abort: () => controller.abort(),
-      }
-    },
-
-    axios: axios.create({
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false
-      }),
-      adapter: 'http',
-      timeout: '30000'
-    }),
-  },
+  util: {uploadToImagePlus, runCommand, axios},
   iconv: {parseBuffer, parseArrayBuffer, convertCharset},
-  encrypt: {
-    /**
-     * 加密密码
-     * @param password  {string} 密码
-     * @return {string} 加密后的值
-     */
-    encryptPassword: (password) => {
-      if (!password) return "";
-      return hashSync(password, genSaltSync())
-    },
-    /**
-     * 验证密码是否正确
-     * @param password 密码
-     * @param key key
-     * @return {{key: string, iv: string}|boolean}
-     */
-    verifyPassword: (password, key) => {
-      if (compareSync(password, key)) {
-        return getKeyIv(password)
-      }
-      return false
-    },
-    /**
-     * 加密字符串
-     * @param keyIv {{key: string, iv: string}}
-     * @param data {string} 数据
-     * @return {string} 加密后的值
-     */
-    encryptValue: (keyIv, data) => {
-      if (!data) return ''
-      const cipher = createCipheriv('aes-256-cbc', keyIv.key, keyIv.iv)
-      return cipher.update(data, 'utf8', 'hex') + cipher.final('hex')
-    },
-    /**
-     * 解密值
-     * @param keyIv {{key: string, iv: string}}
-     * @param data {string} 数据
-     * @return {string}
-     */
-    decryptValue: (keyIv, data) => {
-      if (!data) return ''
-      const decipher = createDecipheriv('aes-256-cbc', keyIv.key, keyIv.iv)
-      return decipher.update(data, 'hex', 'utf8') + decipher.final('utf8')
-    },
-  }
+  encrypt: {encryptPassword, verifyPassword, encryptValue, decryptValue}
 };
 
 

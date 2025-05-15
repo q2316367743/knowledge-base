@@ -27,7 +27,7 @@ function buildBasePayload(): UmamiPayloadBase {
     referrer: "https://u.tools",
     screen: `${window.screen.width}x${window.screen.height}`,
     website: Constants.umami.id,
-    id: utools.getUser()?.nickname,
+    id: InjectionUtil.getUser()?.nickname,
   }
 }
 
