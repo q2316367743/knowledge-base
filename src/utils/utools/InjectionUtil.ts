@@ -650,7 +650,7 @@ export const InjectionUtil = {
       }
     },
     openMd(text: string) {
-      return utools.ubrowser.goto('https://knowledge-nase.esion.xyz/md/')
+      return utools.ubrowser.goto('https://knowledge-base.esion.xyz/md/')
         .wait("#editor")
         .wait(1000)
         .evaluate((text) => {

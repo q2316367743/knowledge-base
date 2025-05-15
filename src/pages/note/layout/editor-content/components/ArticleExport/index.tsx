@@ -33,7 +33,7 @@ export function createArticleExport(id: number, exportItems: Array<ExportItem>):
       header: '导出',
       placement: 'center',
       draggable: true,
-      width: 600,
+      width: 624,
       onConfirm() {
         if (titleWrap.value.trim() === '') {
           MessageUtil.warning("请输入文件名");

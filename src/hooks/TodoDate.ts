@@ -5,7 +5,8 @@ import dayjs from "dayjs";
 interface UseTodoDateValue {
   text: string;
   // 0,1:未开始,2:进行中,3:已过期
-  status: 0 | 1 | 2 | 3
+  status: 0 | 1 | 2 | 3,
+  tooltip?: string;
 }
 
 interface UseTodoDateResult {
@@ -46,7 +47,6 @@ export function useTodoDate(item?: TodoItemIndex): UseTodoDateResult {
     const start = dayjs(res.start);
     const end = dayjs(res.end || res.start);
     const startDiff = start.diff(now, 'day');
-    console.log('startDiff:', startDiff)
     if (startDiff === 0) {
       if (start.day() === now.day()) {
         // 就是今天
@@ -71,26 +71,27 @@ export function useTodoDate(item?: TodoItemIndex): UseTodoDateResult {
     } else {
       if (end.isBefore(now, 'day')) {
         const endDiff = end.diff(now, 'day');
-        console.log('endDiff:', endDiff)
         if (endDiff === -1) {
           date.value = {status: 3, text: '昨天'};
         } else {
           // 结束时间在今天之前，已过期
-          date.value = {status: 3, text: start.format('MM-DD')};
+          date.value = {status: 3, text: end.format('MM-DD')};
         }
       } else {
+        let tooltip: string | undefined;
         const endDiff = now.diff(end, 'day');
         if (endDiff === 0) {
-          date.value = {status: 2, text: '今天'};
+          tooltip = undefined;
         } else if (endDiff === 1) {
-          date.value = {status: 2, text: '明天'};
-        } else if (now.diff(start, 'year') === 0) {
+          tooltip = '明天结束';
+        } else if (now.diff(end, 'year') === 0) {
           // 今年内
-          date.value = {status: 2, text: start.format('MM-DD')};
+          tooltip = `${start.format('MM-DD')} 到 ${end.format('MM-DD')}`;
         } else {
           // 如果是明年以后则直接显示日期
-          date.value = {status: 2, text: start.format('YYYY-MM-DD')};
+          tooltip = `${start.format('YYYY-MM-DD')} 到 ${end.format('YYYY-MM-DD')}`;
         }
+        date.value = {status: 2, text: '今天', tooltip};
       }
     }
   }

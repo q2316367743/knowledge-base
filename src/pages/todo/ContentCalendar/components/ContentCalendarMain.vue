@@ -54,13 +54,13 @@
         >
           <div class="day-header">
             <div class="day-number">{{ day.dayOfMonth }}</div>
-            <t-tooltip content="查看更多" v-if="day.todoItems.length > 2">
-              <t-button theme="primary" variant="text" shape="square" size="small" @click.stop>
-                <template #icon>
-                  <more-icon/>
-                </template>
-              </t-button>
-            </t-tooltip>
+<!--            <t-tooltip content="查看更多" v-if="day.todoItems.length > 2">-->
+<!--              <t-button theme="primary" variant="text" shape="square" size="small" @click.stop @mousedown.stop>-->
+<!--                <template #icon>-->
+<!--                  <more-icon/>-->
+<!--                </template>-->
+<!--              </t-button>-->
+<!--            </t-tooltip>-->
           </div>
           <div class="todo-items">
             <div
@@ -76,6 +76,7 @@
               @mousedown.stop
               @contextmenu.stop="onContextMenuForTodo($event, todo.index, () => toUpdate())"
               :style="{borderColor: handlePriorityColor(todo.index.priority, todo.index.status)}"
+              :title="todo.index.title"
             >
               {{ todo.index.title }}
             </div>

@@ -1,5 +1,5 @@
 <template>
-  <t-tooltip v-if="date.status > 0" :content="date.status === 1 ? '未开始' : date.status === 2 ? '进行中' : '已过期'">
+  <t-tooltip v-if="date.status > 0" :content="tooltip">
     <div class="todo-date ellipsis" :class="[`status-${date.status}`]">
       {{ date.text }}
     </div>
@@ -17,6 +17,14 @@ const props = defineProps({
 
 const {onUpdate, date} = useTodoDate(props.item);
 
+const tooltip = computed(() => {
+  if (date.value.tooltip) return date.value.tooltip;
+  if (date.value.status === 1) return '未开始';
+  else if (date.value.status === 2) return '进行中';
+  else if (date.value.status === 3) return '已过期';
+  else return '';
+})
+
 watch(() => props.item, () => onUpdate(), {immediate: true, deep: true});
 </script>
 <script lang="ts">
@@ -32,7 +40,7 @@ export default defineComponent({
   text-align: right;
 
   &.status-1 {
-    color: var(--td-text-color-placeholder);
+    color: var(--td-text-color-secondary);
   }
 
   &.status-2 {
@@ -40,7 +48,7 @@ export default defineComponent({
   }
 
   &.status-3 {
-    color: var(--td-error-color);
+    color: var(--td-text-color-placeholder);
   }
 }
 </style>

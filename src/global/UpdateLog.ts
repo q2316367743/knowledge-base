@@ -28,7 +28,7 @@ export default [
       content: "调整笔记列表右键菜单的顺序及显示逻辑"
     }, {
       label: LogItemEnum.REPAIR,
-      content: "修复了问一问中，没有将笔记加入上下文的问题1"
+      content: "修复了问一问中，没有将笔记加入上下文的问题"
     }]
   },
   {
