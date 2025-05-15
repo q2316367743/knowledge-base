@@ -213,11 +213,11 @@ onUnmounted(() => {
     padding-top: 4px;
   }
 
-  .focus-time-popup {
-    padding: 6px;
-    width: 120px;
-  }
+}
 
+.focus-time-popup {
+  padding: 6px;
+  width: 120px;
 }
 
 

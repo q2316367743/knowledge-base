@@ -35,6 +35,7 @@
     "fuse.js": "6.6.2",
     "handsontable": "^14.6.1",
     "hyperformula": "^2.7.1",
+    "idb-keyval": "^6",
     "jszip": "^3.10.1",
     "less": "^4.2.2",
     "less-loader": "^11.1.4",
