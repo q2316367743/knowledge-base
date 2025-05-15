@@ -83,3 +83,6 @@ export const BASE64_PREFIX: string = 'data:image/png;base64,';
 export function openRssBackground() {
   InjectionUtil.browser.openUrl(Constant.background.rss);
 }
+
+export const openNoteVipWebsite = () => InjectionUtil.shellOpenExternal('https://blog.esion.xyz/archives/knowledge-base-note-vip');
+export const openTodoVipWebsite = () => InjectionUtil.shellOpenExternal('https://blog.esion.xyz/archives/knowledge-base-todo-vip');

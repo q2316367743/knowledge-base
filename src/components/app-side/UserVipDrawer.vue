@@ -20,14 +20,26 @@
               </div>
             </div>
             <div class="feature-item">
-              <div class="feature-item-header">笔记会员</div>
-              <div class="feature-item-content">
-                <t-link v-if="noteNoVip" class="feature-item-content__error" @click="openVip('note')">去开通</t-link>
+              <div class="feature-item-header">
+                <span>笔记会员</span>
+                <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                        @click="openNoteVipWebsite">
+                  <questionnaire-icon/>
+                </t-link>
+              </div>
+              <div class="feature-item-content" @click="openVip('note')">
+                <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
                 <div v-else class="feature-item-content__success">永久授权</div>
               </div>
             </div>
             <div class="feature-item">
-              <div class="feature-item-header">待办会员</div>
+              <div class="feature-item-header">
+                <span>待办会员</span>
+                <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                        @click="openTodoVipWebsite">
+                  <questionnaire-icon/>
+                </t-link>
+              </div>
               <div class="feature-item-content">
                 <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')" :disabled="true">
                   去开通
@@ -105,10 +117,10 @@
   </t-drawer>
 </template>
 <script lang="ts" setup>
-import {ChatMessageIcon, HeartIcon, KeyboardIcon} from "tdesign-icons-vue-next";
+import {ChatMessageIcon, HeartIcon, KeyboardIcon, QuestionnaireIcon} from "tdesign-icons-vue-next";
 import {useVipStore} from "@/store";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
-import {toFeedback} from "@/global/Constant";
+import {openNoteVipWebsite, openTodoVipWebsite, toFeedback} from "@/global/Constant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const visible = defineModel({

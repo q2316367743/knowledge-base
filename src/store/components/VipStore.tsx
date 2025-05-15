@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
-import Constant from "@/global/Constant";
+import Constant, {openNoteVipWebsite, openTodoVipWebsite} from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {DialogPlugin, Paragraph, Text, Title} from "tdesign-vue-next";
+import {DialogPlugin, Link, Paragraph, Text, Title} from "tdesign-vue-next";
 import {JSX} from 'vue/jsx-runtime';
 import {useUmami} from "@/plugin/umami";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
@@ -140,6 +140,9 @@ function noteVip() {
         </li>
       </ul>
     </Paragraph>
+    <Paragraph>
+      详细内容可查看：<Link theme={'primary'} onClick={openNoteVipWebsite}>知识库 - 笔记会员</Link>
+    </Paragraph>
   </div>
 }
 
@@ -150,6 +153,9 @@ function todoVip() {
     </Paragraph>
     <Paragraph>
       灵活的使用体验，帮你快速记录、调整安排，无论何时何地，都能轻松把控任务进度，提升效率。
+    </Paragraph>
+    <Paragraph>
+      详细内容可查看：<Link theme={'primary'} onClick={openTodoVipWebsite}>知识库 - 待办会员</Link>
     </Paragraph>
   </div>
 }
