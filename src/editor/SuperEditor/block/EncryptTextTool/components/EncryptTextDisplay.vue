@@ -18,6 +18,7 @@ defineProps({
   padding: 8px;
   overflow: auto;
   height: calc(100% - 16px);
+
   pre {
     padding: 0;
     margin: 0;
