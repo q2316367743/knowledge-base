@@ -1,27 +1,26 @@
 <template>
-  <a-split class="todo-content-default" default-size="300px" min="220px" :max="max">
-    <template #first>
+  <splitpanes class="default-theme todo-content-default">
+    <pane :size="30" class="relative">
       <content-default-side/>
-    </template>
-    <template #second>
+    </pane>
+    <pane :size="70" class="relative">
       <div class="info">
         <empty-result v-if="itemId === 0" title="未选择待办项" tip="请选择待办项"/>
         <loading-result title="正在加载中" v-else-if="!show && itemId > 0"/>
         <content-default-main v-else-if="show"/>
       </div>
-    </template>
-  </a-split>
+    </pane>
+  </splitpanes>
 </template>
 <script lang="ts" setup>
+import {Splitpanes, Pane} from 'splitpanes'
 import './index.less';
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import ContentDefaultMain from "@/pages/todo/ContentDefault/ContentDefaultMain/index.vue";
 import ContentDefaultSide from "@/pages/todo/ContentDefault/ContentListSide/ContentDefaultSide.vue";
 
-const size = useWindowSize();
 const show = ref(true);
 
-const max = computed(() => (size.width.value - 200) + 'px');
 const itemId = computed(() => useTodoWrapStore().itemId);
 
 watch(() => itemId.value, value => {

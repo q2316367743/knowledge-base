@@ -1,43 +1,28 @@
 <template>
-  <a-split class="home-editor" v-model:size="size" :min="min" :max="max" :disabled="disabled">
-    <template #first>
+  <splitpanes class="default-theme home-editor" @resize="onResize" :class="{collapsed: noteSplitLeft===0}">
+    <pane :size="noteSplitLeft" class="relative">
       <editor-side/>
-    </template>
-    <template #second>
+    </pane>
+    <pane :size="noteSplitRight" class="relative">
       <editor-content/>
-    </template>
-  </a-split>
+    </pane>
+  </splitpanes>
+
 </template>
 <script lang="ts" setup>
+import {Splitpanes, Pane} from 'splitpanes'
 import {useSearchContentEvent} from "@/global/BeanFactory";
-import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
+import {noteSplitWidth, noteSplitLeft, noteSplitRight} from "@/store/components/HomeEditorStore";
 import {useCustomerFileNameStore} from "@/store/setting/CustomerFileNameStore";
 import {openSearchContent} from "@/pages/note/components/SearchContent";
 import EditorSide from '@/pages/note/layout/editor-side/index.vue';
 import EditorContent from "@/pages/note/layout/editor-content/index.vue";
 
-const windowSize = useWindowSize();
 
-const size = ref(useHomeEditorStore().width);
-const min = computed(() => useHomeEditorStore().collapsed ? "0px" : "270px");
-const max = computed(() => (windowSize.width.value - 350) + 'px');
-const disabled = computed(() => size.value === '0px');
+const onResize = (data: any) => noteSplitWidth.value = data.prevPane.size;
 
-watch(() => size.value, value => useHomeEditorStore().setWidth(value));
-watch(() => useHomeEditorStore().width, value => {
-  if (value !== size.value) {
-    size.value = value;
-  }
-});
 
-onMounted(() => {
-  useSearchContentEvent.off(openSearchContent);
-  useSearchContentEvent.on(openSearchContent);
-});
-
-onUnmounted(() => {
-  useSearchContentEvent.off(openSearchContent);
-});
+useSearchContentEvent.on(openSearchContent);
 
 useCustomerFileNameStore().init();
 
@@ -50,10 +35,14 @@ useCustomerFileNameStore().init();
   right: 0;
   bottom: 0;
 
-  .arco-split-pane {
+  .splitpanes__pane {
     position: relative;
-    width: 100%;
-    height: 100%;
+  }
+
+  &.collapsed {
+    .splitpanes__splitter {
+      display: none;
+    }
   }
 }
 </style>

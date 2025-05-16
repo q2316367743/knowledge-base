@@ -18,5 +18,7 @@ import ListSideDefault
 const groupType = computed(() => useTodoWrapStore().groupType);
 </script>
 <style scoped lang="less">
-
+.list {
+  background-color: var(--td-bg-color-container);
+}
 </style>

@@ -5,7 +5,7 @@
     <div class="flex">
       <todo-item-checkbox :priority="item.priority" :status="item.status"
                           @click.stop="updateStatus(item.id, item.status)"/>
-      <div class="title" @click="setItemId(item.id)" :style="{color: handleTodoTitleColor(item)}">
+      <div class="title ellipsis" @click="setItemId(item.id)" :style="{color: handleTodoTitleColor(item)}">
         {{ item.title }}
       </div>
     </div>
@@ -42,6 +42,7 @@ const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
   transition: background-color 0.3s;
   display: flex;
   justify-content: space-between;
+  overflow: hidden;
 
   &:last-child {
     border-bottom: 1px solid transparent;

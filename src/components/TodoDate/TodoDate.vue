@@ -35,7 +35,7 @@ export default defineComponent({
 <style scoped lang="less">
 .todo-date {
   width: fit-content;
-  overflow: auto;
+  overflow: hidden;
   font-size: var(--td-font-size-body-small);
   text-align: right;
 

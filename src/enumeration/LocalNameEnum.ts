@@ -106,6 +106,11 @@ enum LocalNameEnum {
   KEY_HOME_WIDTH = '/key/home/width',
 
   /**
+   * 笔记宽度
+   */
+  KEY_NOTE_WIDTH = '/key/note/width',
+
+  /**
    * 首页排序
    */
   KEY_HOME_SORT = '/key/home/sort',

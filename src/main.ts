@@ -13,6 +13,7 @@ import '@wangeditor/editor/dist/css/style.css';
 import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
 import '@/assets/style/global.less';
+import 'splitpanes/dist/splitpanes.css'
 // 代码编辑器
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'

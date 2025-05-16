@@ -9,6 +9,7 @@ import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import {getValueBetween} from "@/utils/lang/FieldUtil";
 
 
 // 当前打开的编辑器
@@ -62,6 +63,15 @@ export const getTextCount = ref<() => number>(() => 0);
 export const getLineLength = ref<() => number>(() => 0);
 export const getToc = ref<() => TocItem[]>(() => []);
 
+
+export const noteSplitWidth = useUtoolsKvStorage<number>(LocalNameEnum.KEY_NOTE_WIDTH, 30);
+
+const paneSize = computed(() => useHomeEditorStore().collapsed ? 0 : noteSplitWidth.value);
+export const noteSplitLeft = computed(() => getValueBetween(0, paneSize.value, 100))
+export const noteSplitRight = computed(() => getValueBetween(0, 100 - paneSize.value, 100));
+
+watch(noteSplitWidth, val => useHomeEditorStore().switchCollapsed(val === 0))
+
 export const useHomeEditorStore = defineStore('home-editor', () => {
 
   // 打开的笔记
@@ -81,12 +91,15 @@ export const useHomeEditorStore = defineStore('home-editor', () => {
   async function init() {
     collapsed.value = widthWrap.value === '0px';
 
-   await useArticleStore().init();
+    await useArticleStore().init();
 
   }
 
   function switchCollapsed(res?: boolean) {
     collapsed.value = typeof res === 'undefined' ? !collapsed.value : res;
+    if (!collapsed.value && noteSplitWidth.value === 0) {
+      noteSplitWidth.value = 30;
+    }
   }
 
 
