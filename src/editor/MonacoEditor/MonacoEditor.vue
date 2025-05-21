@@ -38,9 +38,17 @@ const props = defineProps({
 });
 const emit = defineEmits(['change', 'editor-mounted']);
 
+onMounted(() => {
+  useArticleExportEvent.off(onExport);
+  useArticleImportEvent.off(onImport);
+  useArticleExportEvent.on(onExport);
+  useArticleImportEvent.on(onImport);
+});
+onUnmounted(() => {
+  useArticleExportEvent.off(onExport);
+  useArticleImportEvent.off(onImport);
+})
 
-useArticleExportEvent.on(onExport);
-useArticleImportEvent.on(onImport);
 
 function onExport(id: number) {
   if (props.articleId === id) {

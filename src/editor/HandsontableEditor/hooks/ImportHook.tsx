@@ -1,7 +1,7 @@
 import Handsontable from "handsontable";
-import {Drawer} from "@arco-design/web-vue";
 import {
   Alert,
+  DrawerPlugin,
   Link,
   Space,
   Textarea,
@@ -46,9 +46,9 @@ function openImportModal(): Promise<string> {
       })
     }
 
-    Drawer.open({
-      title: '导入',
-      content: () => <Space direction="vertical">
+    const dp = DrawerPlugin({
+      header: '导入',
+      default: () => <Space direction="vertical">
         <Alert>请前往插件【<Link
           onClick={jumpToExcelToJson}>Excel转Json</Link>】，将Excel转为json后，点击上传或写入。</Alert>
         <Alert>仅支持单个sheet，请不要一次性传入多个sheet；传入多个sheet，只会导入第一个sheet。</Alert>
@@ -61,10 +61,11 @@ function openImportModal(): Promise<string> {
           style={{color: 'var(--td-text-color-secondary)', marginTop: '7px'}}>支持{types ? types.join("，") : '任意类型'}文件
         </div>
       </Space>,
-      okText: '导入',
-      width: 530,
-      onOk() {
+      confirmBtn: '导入',
+      size: '530px',
+      onConfirm() {
         resolve(data.value);
+        dp.destroy?.();
       }
     });
   });

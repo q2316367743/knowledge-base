@@ -1,13 +1,12 @@
-import {Drawer} from "@arco-design/web-vue";
-import {Descriptions, DescriptionsItem} from "tdesign-vue-next";
+import {Descriptions, DescriptionsItem, DrawerPlugin} from "tdesign-vue-next";
 
 
 export function openLogicFlowKeyboard() {
-  Drawer.open({
-    title: '快捷键',
+  DrawerPlugin({
+    header: '快捷键',
     footer: false,
-    width: 400,
-    content: () => <Descriptions title="节点操作" column={1} bordered>
+    size: '400px',
+    default: () => <Descriptions title="节点操作" column={1} bordered>
       <DescriptionsItem label="保存">Ctrl + s</DescriptionsItem>
       <DescriptionsItem label="复制">Ctrl + c</DescriptionsItem>
       <DescriptionsItem label="粘贴">Ctrl + v</DescriptionsItem>

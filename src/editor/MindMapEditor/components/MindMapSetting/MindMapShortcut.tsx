@@ -1,12 +1,11 @@
-import {Drawer} from "@arco-design/web-vue";
-import {Descriptions, DescriptionsItem} from 'tdesign-vue-next';
+import {Descriptions, DescriptionsItem, DrawerPlugin} from 'tdesign-vue-next';
 
 export function openMindMapShortcut() {
-  Drawer.open({
-    width: 400,
-    title: '快捷键',
+  DrawerPlugin({
+    size: '400px',
+    header: '快捷键',
     footer: false,
-    content: () => <>
+    default: () => <>
       <Descriptions column={1} title={'节点操作'} bordered>
         <DescriptionsItem label={'插入下级节点'}>Tab</DescriptionsItem>
         <DescriptionsItem label={'插入同级节点'}>Enter</DescriptionsItem>

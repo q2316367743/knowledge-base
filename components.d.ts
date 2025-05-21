@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppSide: typeof import('./src/components/app-side/index.vue')['default']
-    ASplit: typeof import('@arco-design/web-vue')['Split']
     ChatContent: typeof import('./src/components/Chat/ChatContent.vue')['default']
     ChatLoading: typeof import('./src/components/Chat/ChatLoading.vue')['default']
     ChatReasoning: typeof import('./src/components/Chat/ChatReasoning.vue')['default']

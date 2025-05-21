@@ -1,8 +1,8 @@
 import {useUmami} from "@/plugin/umami";
-import {Drawer} from "@arco-design/web-vue";
 import {
   Alert,
   Button,
+  DrawerPlugin,
   List,
   ListItem,
   Space,
@@ -101,10 +101,10 @@ export function showArticleImportModal(id: number) {
     }
   };
 
-  const modalReturn = Drawer.open({
-    title: () => <div>笔记导入<span style={{fontSize: '0.8rem'}}>（仅支持markdown、富文本和代码笔记）</span></div>,
-    width: 600,
-    content: () => <div>
+  const modalReturn = DrawerPlugin({
+    header: () => <div>笔记导入<span style={{fontSize: '0.8rem'}}>（仅支持markdown、富文本和代码笔记）</span></div>,
+    size: '600px',
+    default: () => <div>
       <div
         class="upload-area"
         style={{
@@ -162,9 +162,9 @@ export function showArticleImportModal(id: number) {
         <TreeSelect data={folderTree} v-model={folderId.value}/>
       </div>
       <Space>
-        <Button onClick={modalReturn.close}>取消</Button>
+        <Button onClick={() => modalReturn.destroy?.()}>取消</Button>
         <Button theme={'primary'} onClick={() => {
-          modalReturn.close();
+          modalReturn.destroy?.();
           onImport(files.value, folderId.value).then(() => console.debug("导入完成"));
         }}>导入</Button>
       </Space>

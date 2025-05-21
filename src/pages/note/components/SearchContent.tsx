@@ -175,9 +175,9 @@ export function openSearchContent() {
       <Row gutter={8} style={{width: "80%"}}>
         <Col flex={"120px"}>
           <Select v-model={type.value}>
-            <Option value={0}>全部</Option>
+            <Option value={0} label={'全部'}/>
             {articleTextTypes.map((articleType) => (
-              <Option value={articleType.key}>{articleType.name}</Option>
+              <Option value={articleType.key} label={articleType.name}/>
             ))}
           </Select>
         </Col>
@@ -186,13 +186,12 @@ export function openSearchContent() {
             v-model={keyword.value}
             placeholder={SearchContentPlaceholder}
             onEnter={searchContent}
-            clearable={true}
             autofocus={true}
           />
         </Col>
         <Col flex={"32px"}>
           <Button
-            theme={"primary"}
+            theme={"primary"} shape={'square'}
             disabled={keyword.value.trim() === ""}
             onClick={searchContent}
           >
@@ -232,7 +231,7 @@ export function openSearchContent() {
                           <Tag color={"blue"}>
                             {renderArticleType(item.type)}
                           </Tag>
-                          <Link onClick={() => openArticle(item.value)}>
+                          <Link onClick={() => openArticle(item.value)} theme={'primary'} class={'ml-4px'}>
                             {item.title}
                           </Link>
                         </>

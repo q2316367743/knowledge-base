@@ -1,14 +1,12 @@
-import {Ref} from "vue";
 import {IEditConfigType} from "@logicflow/core/src/model/EditConfigModel";
-import {Drawer} from "@arco-design/web-vue";
-import {Paragraph, Checkbox} from "tdesign-vue-next";
+import {DrawerPlugin, Paragraph, Checkbox} from "tdesign-vue-next";
 
 
 export function updateLogicFlowEditConfig(editConfig: Ref<IEditConfigType>, onSave: () => void) {
-  Drawer.open({
-    title: '编辑配置',
-    width: 400,
-    content: () => <div>
+  const dp = DrawerPlugin({
+    header: '编辑配置',
+    size: '400px',
+    default: () => <div>
       <Paragraph>
         <Checkbox v-model={editConfig.value.stopZoomGraph}>禁止缩放画布</Checkbox>
       </Paragraph>
@@ -55,9 +53,10 @@ export function updateLogicFlowEditConfig(editConfig: Ref<IEditConfigType>, onSa
         <Checkbox v-model={editConfig.value.textEdit}>允许文本编辑</Checkbox>
       </Paragraph>
     </div>,
-    okText: '保存',
-    onOk: () => {
-      onSave()
+    confirmBtn: '保存',
+    onConfirm: () => {
+      onSave();
+      dp.destroy?.();
     },
   })
 }

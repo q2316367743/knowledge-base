@@ -3,8 +3,6 @@ import {createPinia} from 'pinia';
 import App from './App.vue'
 import router from './plugin/router';
 // 样式
-import '@arco-design/web-vue/dist/arco.css';
-import '@arco-design/web-vue/es/drawer/style/css.js'
 import 'tdesign-vue-next/es/style/index.css';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'virtual:uno.css'

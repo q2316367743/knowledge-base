@@ -1,5 +1,4 @@
-import {Drawer} from "@arco-design/web-vue";
-import {Checkbox, Form, FormItem, Radio, RadioGroup, Paragraph} from "tdesign-vue-next";
+import {Checkbox, DrawerPlugin, Form, FormItem, Radio, RadioGroup, Paragraph} from "tdesign-vue-next";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoCategoryOpenTypeEnum, TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
@@ -11,11 +10,11 @@ export function openTodoSetting() {
     return;
   }
   const config = ref(todoCategory);
-  Drawer.open({
-    title: '待办设置',
-    okText: "保存",
-    width: 400,
-    content: () => <Form data={config.value}>
+  const dp = DrawerPlugin({
+    header: '待办设置',
+    confirmBtn: "保存",
+    size: '400px',
+    default: () => <Form data={config.value}>
       <Paragraph>
         <Checkbox v-model={config.value.hideOfCompleteOrAbandon}>
           隐藏已完成/放弃
@@ -47,12 +46,15 @@ export function openTodoSetting() {
         </RadioGroup>
       </FormItem>
     </Form>,
-    onOk() {
+    onConfirm() {
       useTodoCategoryStore().update(todoCategory.id, {
         hideOfCompleteOrAbandon: config.value.hideOfCompleteOrAbandon,
         hideOfArticle: config.value.hideOfArticle,
         todoListLayout: config.value.todoListLayout
-      }).then(() => useTodoWrapStore().init(todoCategory.id).catch(e => MessageUtil.error("重新初始化错误", e)))
+      }).then(() => {
+        useTodoWrapStore().init(todoCategory.id).catch(e => MessageUtil.error("重新初始化错误", e));
+        dp.destroy?.();
+      })
         .catch(e => MessageUtil.error("更新待办分组错误", e))
     }
   })

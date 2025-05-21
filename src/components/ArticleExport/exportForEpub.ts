@@ -246,20 +246,10 @@ export async function exportForEpub(folder: number) {
 <div class="cherry-markdown">
 <h1>关于</h1>
 <p>知识库插件由<a href="https://u.tools/">uTools</a>开发，基于<a href="https://github.com/markdown-it/markdown-it">markdown-it</a>和<a href="https://github.com/handsontable/handsontable">handsontable</a>实现。</p>
-<p>感谢<a href="https://github.com/arco-design/arco-design-vue">Arco Design Vue</a>的开源组件库，让我可以快速实现功能。</p>
+<p>感谢<a href="https://github.com/Tencent/tdesign-vue-next">TDesign</a>的开源组件库，让我可以快速实现功能。</p>
 <p>感谢<a href="https://www.jetbrains.com/zh-cn/lp/mono/">JetBrains Mono</a>字体，让我可以快速实现代码高亮。</p>
 <p>感谢<a href="https://www.iconfont.cn/">iconfont</a>的图标库，让我可以快速实现图标。</p>
 <p>感谢<a href="https://www.markdownguide.org/">markdown guide</a>的文档，让我可以快速学习markdown语法。</p>
-<p>感谢<a href="https://github.com/jgm/pandoc">pandoc</a>的文档，让我可以快速实现富文本转markdown。</p>
-<p>感谢<a href="https://github.com/openai/CLIP">CLIP</a>的文档，让我可以快速实现文本生成。</p>
-<p>感谢<a href="https://github.com/jgraph/drawio">drawio</a>的文档，让我可以快速实现流程图、思维导图等图形。</p>
-<p>感谢<a href="https://github.com/mermaid-js/mermaid">mermaid</a>的文档，让我可以快速实现流程图、思维导图等图形。</p>
-<p>感谢<a href="https://github.com/antvis/G2">G2</a>的文档，让我可以快速实现图表。</p>
-<p>感谢<a href="https://github.com/antvis/X6">X6</a>的文档，让我可以快速实现流程图、思维导图等图形。</p>
-<p>感谢<a href="https://github.com/antvis/G6">G6</a>的文档，让我可以快速实现流程图、思维导图等图形。</p>
-<p>感谢<a href="https://github.com/antvis/F2">F2</a>的文档，让我可以快速实现图表。</p>
-<p>感谢<a href="https://github.com/antvis/G2Plot">G2Plot</a>的文档，让我可以快速实现图表。</p>
-<p>感谢<a href="https://github.com/antvis/G2">G2</a>的文档，让我可以快速实现图表。</p>
 </div>
 </body>
 <script src="../assets/theme.js"></script>

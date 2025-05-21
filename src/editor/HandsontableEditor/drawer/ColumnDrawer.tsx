@@ -1,7 +1,7 @@
 import {
   Alert,
   Button,
-  DialogPlugin,
+  DialogPlugin, DrawerPlugin,
   Form, FormItem,
   Input,
   Paragraph, Radio, RadioGroup,
@@ -9,7 +9,6 @@ import {
   Space,
   BaseTable, BaseTableCol, TagInput
 } from "tdesign-vue-next";
-import {Drawer} from '@arco-design/web-vue';
 import {clone} from "@/utils/lang/ObjectUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import Handsontable from "handsontable";
@@ -91,11 +90,11 @@ export function updateColumns(columns: Array<Handsontable.ColumnSettings>): Prom
   }
 
   return new Promise<Array<Handsontable.ColumnSettings>>(resolve => {
-    Drawer.open({
-      title: '修改列设置',
-      width: '50%',
-      okText: '保存',
-      content: () => <div>
+    const dp = DrawerPlugin({
+      header: '修改列设置',
+      size: '50%',
+      confirmBtn: '保存',
+      default: () => <div>
         <Paragraph>
           <Alert>请注意，新增、删除列，并不会影响数据变化，只会影响表头</Alert>
           {columnsWrap.value.length === 0 && <blockquote
@@ -114,8 +113,9 @@ export function updateColumns(columns: Array<Handsontable.ColumnSettings>): Prom
         </div>
         <BaseTable data={columnsWrap.value} columns={columnHeads} rowKey={'title'}/>
       </div>,
-      onOk() {
+      onConfirm() {
         resolve(columnsWrap.value as Array<Handsontable.ColumnSettings>);
+        dp.destroy?.();
       },
     });
   })

@@ -1,6 +1,5 @@
 import Handsontable from "handsontable";
-import {Drawer} from "@arco-design/web-vue";
-import {Alert, Button, Link, Space} from "tdesign-vue-next";
+import {Alert, Button, DrawerPlugin, Link, Space} from "tdesign-vue-next";
 import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
 import {copy} from "@/utils/BrowserUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
@@ -53,11 +52,11 @@ export function handsontableExport(data: Ref<Array<Array<string>>>, columns: Ref
     copy(columns.value ? createDataByColumns(data.value, columns.value) : createDataNotColumns(data.value));
   }
 
-  Drawer.open({
-    title: '导出',
+  DrawerPlugin({
+    header: '导出',
     footer: false,
-    width: 530,
-    content: () => <Space direction="vertical">
+    size: '530px',
+    default: () => <Space direction="vertical">
       <Alert>此功能需要插件【<Link theme={'primary'}>Json & Excel</Link>】，将Json内容转为Excel。</Alert>
       <Alert>仅支持单个sheet，请不要一次性传入多个sheet；传入多个sheet，只会导入第一个sheet。</Alert>
       <Space size={'small'}>

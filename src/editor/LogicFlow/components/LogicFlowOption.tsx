@@ -1,6 +1,4 @@
-import {Ref} from "vue";
-import {Drawer} from "@arco-design/web-vue";
-import {ColorPicker, Form, FormItem, InputNumber, Radio, RadioGroup, Switch} from "tdesign-vue-next";
+import {ColorPicker, DrawerPlugin, Form, FormItem, InputNumber, Radio, RadioGroup, Switch} from "tdesign-vue-next";
 
 export interface LogicFlowOption {
   miniMap: boolean,
@@ -26,10 +24,10 @@ export interface LogicFlowOption {
 }
 
 export function updateLogicFlowOption(option: Ref<LogicFlowOption>, onSave: () => void) {
-  Drawer.open({
-    title: '参数修改',
-    width: 400,
-    content: () => <Form data={option.value} class={'h-full overflow-auto'}>
+  const dp = DrawerPlugin({
+    header: '参数修改',
+    size: '400px',
+    default: () => <Form data={option.value} class={'h-full overflow-auto'}>
       <FormItem label={'是否显示小地图'} labelAlign={'top'}>
         <Switch v-model={option.value.miniMap}/>
       </FormItem>
@@ -58,9 +56,11 @@ export function updateLogicFlowOption(option: Ref<LogicFlowOption>, onSave: () =
         }}</FormItem>
       </>}
     </Form>,
-    footer: false,
-    onClose: () => {
-      onSave()
+    closeBtn: true,
+    confirmBtn: '保存',
+    onConfirm: () => {
+      onSave();
+      dp.destroy?.();
     },
   })
 }

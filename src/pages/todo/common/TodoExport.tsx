@@ -1,6 +1,7 @@
 import {useUmami} from "@/plugin/umami";
 import {
-  Button, DateRangePicker, Descriptions, DescriptionsItem, DialogPlugin,
+  Button, DateRangePicker,
+  Descriptions, DescriptionsItem, DialogPlugin, DrawerPlugin,
   Form,
   FormItem, Link,
   PresetRange,
@@ -10,9 +11,6 @@ import {
   Switch, Textarea,
   SelectOption
 } from "tdesign-vue-next";
-import {
-  Drawer,
-} from "@arco-design/web-vue";
 import dayjs from "dayjs";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {download} from "@/utils/BrowserUtil";
@@ -204,10 +202,11 @@ async function exportToCustomer(items: Array<TodoItemIndex>, config: Config): Pr
 
 
 function openArgs() {
-  Drawer.open({
-    title: "可用变量",
-    width: 500,
-    content: () => <>
+  DrawerPlugin({
+    header: "可用变量",
+    size: '500px',
+    zIndex: 2501,
+    default: () => <>
       <Descriptions column={1} title={'变量'}>
         <DescriptionsItem label={'标题'}>item.index.title: string</DescriptionsItem>
         <DescriptionsItem label={'创建时间'}>item.index.createTime: string</DescriptionsItem>
@@ -277,11 +276,11 @@ export function openTodoExport() {
         <FormItem label="是否包含内容" labelAlign={'top'}>
           <Switch v-model={config.value.includeContent}/>
         </FormItem>}
-      {config.value.type === ExportFileTypeEnum.CUSTOMER && <FormItem label={"自定义脚本"} labelAlign={'top'}>
+      {config.value.type === ExportFileTypeEnum.CUSTOMER && <FormItem labelAlign={'top'}>
         {{
+          label: () => <div>自定义脚本「<Link onClick={openArgs} theme={'primary'}>点此</Link>查看变量」</div>,
           default: () => <Textarea v-model={config.value.script} autosize={{minRows: 3, maxRows: 8}}
                                    placeholder={'return `title:${item.index.title}`'}/>,
-          help: () => <div><Link onClick={openArgs}>点此</Link>查看变量</div>
         }}
       </FormItem>}
       {config.value.type === ExportFileTypeEnum.AI && <>

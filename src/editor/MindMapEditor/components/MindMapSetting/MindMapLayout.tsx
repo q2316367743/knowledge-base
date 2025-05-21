@@ -1,6 +1,5 @@
 import MindMap from "simple-mind-map";
-import {Drawer} from "@arco-design/web-vue";
-import {List, ListItem, ListItemMeta} from "tdesign-vue-next";
+import {DrawerPlugin, List, ListItem, ListItemMeta} from "tdesign-vue-next";
 import {layoutList} from "../../constant";
 
 export function openMindMapLayout(mindMap: MindMap) {
@@ -10,11 +9,11 @@ export function openMindMapLayout(mindMap: MindMap) {
     mindMap.emit('data_change');
   }
 
-  Drawer.open({
-    title: "布局设置",
-    width: 400,
+  DrawerPlugin({
+    header: "布局设置",
+    size: '400px',
     footer: false,
-    content: () => <List split={true}>
+    default: () => <List split={true}>
       {layoutList.map(layout =>
         <ListItem>
           <ListItemMeta>{{

@@ -1,11 +1,10 @@
 import {
-  Anchor, AnchorLink,
-  Drawer,
-} from "@arco-design/web-vue";
-import {
-  Alert, Button,
-  Link, Space,
-  Title, Paragraph, Popup
+  Alert, Button, DrawerPlugin,
+  Link,
+  Menu, MenuItem,
+  Paragraph, Popup,
+  Space,
+  Title
 } from "tdesign-vue-next";
 import {ChevronDownIcon} from "tdesign-icons-vue-next";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
@@ -15,8 +14,13 @@ function openUrl() {
 }
 
 export function openFormulaDrawer() {
-  Drawer.open({
-    title: () => <div>
+  const onChange = (value: any) => {
+    document.querySelector(`${value}`)?.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+  DrawerPlugin({
+    header: () => <div>
       <Space>
         <div>支持的数学公式</div>
         <Popup trigger={'click'}>
@@ -28,28 +32,28 @@ export function openFormulaDrawer() {
               }}
             </Button>,
             content: () => <div class={'handsontable-formula-toc'}>
-              <Anchor line-less change-hash={false}>
-                <AnchorLink href={'#array'}>数组操作</AnchorLink>
-                <AnchorLink href={'#date'}>日期和时间</AnchorLink>
-                <AnchorLink href={'#engineering'}>工程</AnchorLink>
-                <AnchorLink href={'#info'}>信息</AnchorLink>
-                <AnchorLink href={'#finance'}>金融</AnchorLink>
-                <AnchorLink href={'#logical'}>逻辑</AnchorLink>
-                <AnchorLink href={'#lookup-and-reference'}>参考文献</AnchorLink>
-                <AnchorLink href={'#math-and-trigonometry'}>数学和三角学</AnchorLink>
-                <AnchorLink href={'#matrix-functions'}>矩阵函数</AnchorLink>
-                <AnchorLink href={'#operator'}>操作者</AnchorLink>
-                <AnchorLink href={'#statistical'}>统计</AnchorLink>
-                <AnchorLink href={'#text'}>文本</AnchorLink>
-              </Anchor>
+              <Menu onChange={onChange}>
+                <MenuItem value={'#array'}>数组操作</MenuItem>
+                <MenuItem value={'#date'}>日期和时间</MenuItem>
+                <MenuItem value={'#engineering'}>工程</MenuItem>
+                <MenuItem value={'#info'}>信息</MenuItem>
+                <MenuItem value={'#finance'}>金融</MenuItem>
+                <MenuItem value={'#logical'}>逻辑</MenuItem>
+                <MenuItem value={'#lookup-and-reference'}>参考文献</MenuItem>
+                <MenuItem value={'#math-and-trigonometry'}>数学和三角学</MenuItem>
+                <MenuItem value={'#matrix-functions'}>矩阵函数</MenuItem>
+                <MenuItem value={'#operator'}>操作者</MenuItem>
+                <MenuItem value={'#statistical'}>统计</MenuItem>
+                <MenuItem value={'#text'}>文本</MenuItem>
+              </Menu>
             </div>
           }}
         </Popup>
       </Space>
     </div>,
-    width: 800,
+    size: '800px',
     footer: false,
-    content: () => <div>
+    default: () => <div>
       <Alert>更多信息请参考：<Link onClick={openUrl} theme={'primary'}>可用的方法</Link></Alert>
       <Title level={'h1'} style="text-align: start;">内置函数</Title>
       <Title level={'h2'} style="text-align: start;">使用方法</Title>

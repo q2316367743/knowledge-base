@@ -1,6 +1,5 @@
 import MindMap from "simple-mind-map";
-import {Drawer} from "@arco-design/web-vue";
-import {List, ListItem, ListItemMeta, RadioButton, RadioGroup} from "tdesign-vue-next";
+import {DrawerPlugin, List, ListItem, ListItemMeta, RadioButton, RadioGroup} from "tdesign-vue-next";
 import {themeList} from '../../constant'
 import {useGlobalStore} from "@/store/GlobalStore";
 
@@ -13,14 +12,14 @@ export function openMindMapTheme(mindMap: MindMap) {
     mindMap.emit('data_change');
   }
 
-  Drawer.open({
-    title: () => <RadioGroup variant={'primary-filled'} v-model={isDark.value}>
+  DrawerPlugin({
+    header: () => <RadioGroup variant={'primary-filled'} v-model={isDark.value}>
       <RadioButton value={false}>白天</RadioButton>
       <RadioButton value={true}>黑夜</RadioButton>
     </RadioGroup>,
-    width: 400,
+    size: '400px',
     footer: false,
-    content: () => <List split={true}>
+    default: () => <List split={true}>
       {themes.value.map(theme =>
         <ListItem>
           <ListItemMeta>{{

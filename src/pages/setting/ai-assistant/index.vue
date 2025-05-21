@@ -55,7 +55,7 @@ const assistants = computed<Array<AiAssistant>>(() => {
     return true;
   })
 });
-const uToolsModels = computed(() => useAiServiceStore().uToolsModels);
+const uToolsModels = computed(() => useAiServiceStore().innerAiService?.models || []);
 
 function handleRemove(id: string) {
   useAiAssistantStore().remove(id)

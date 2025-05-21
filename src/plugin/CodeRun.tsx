@@ -4,8 +4,7 @@ import {isEmptyString} from "@/utils/lang/FieldUtil";
 import Constant from "@/global/Constant";
 import {template} from "radash";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {Drawer} from "@arco-design/web-vue";
-import {Button, Space, Loading} from "tdesign-vue-next";
+import {Button,DrawerPlugin, Space, Loading} from "tdesign-vue-next";
 import {extname} from "@/utils/file/FileUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {StopCircleIcon} from "tdesign-icons-vue-next";
@@ -69,8 +68,8 @@ export async function codeRun(fileName: string, content: string) {
     }
   }
 
-  Drawer.open({
-    title: () => <Space>
+  DrawerPlugin({
+    header: () => <Space>
       <Button variant={'outline'} theme={'danger'} shape={'round'} size={'small'} onClick={onAbort} disabled={!loading.value}>{{
         icon: () => <StopCircleIcon/>,
         default: () => "停止"
@@ -78,11 +77,12 @@ export async function codeRun(fileName: string, content: string) {
       <div>「{fileName}」</div>
       <div>{loading.value ? '正在运行中...' : '运行完成'}</div>
     </Space>,
-    maskClosable: false,
+    closeOnOverlayClick: false,
     placement: 'bottom',
-    height: '60vh',
+    size: '60vh',
+    closeBtn: true,
     footer: false,
-    content: () => <div class={'w-full'}>
+    default: () => <div class={'w-full px-8px'}>
       <pre>{result.value}</pre>
       {loading.value && <div style={{width: '100%', padding: '10px'}}>
         <Loading loading={loading.value} text={'正在运行中'} class={'w-full'}></Loading>

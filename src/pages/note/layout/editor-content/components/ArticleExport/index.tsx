@@ -1,8 +1,6 @@
 import {
   Radio,
-  RadioGroup
-} from "@arco-design/web-vue";
-import {
+  RadioGroup,
   Input,
   DialogPlugin
 } from 'tdesign-vue-next';
@@ -52,27 +50,16 @@ export function createArticleExport(id: number, exportItems: Array<ExportItem>):
           }}</Input>
         </div>
         <RadioGroup v-model={type.value}>
-          {exportItems.map(item => <Radio value={item.key}>
-            {{
-              radio: (data: { checked: boolean }) => {
-                return <div
-                  class={data.checked ? 'custom-radio-card custom-radio-card-checked' : 'custom-radio-card'}
-                >
-                  <div class="custom-radio-card-top">
-                    <div class="custom-radio-card-mask">
-                      <div class="custom-radio-card-mask-dot"/>
-                    </div>
-                    <div class="custom-radio-card-title">
-                      {item.name}
-                    </div>
-                  </div>
-                  <div class="custom-radio-card-desc">
-                    {item.desc}
-                  </div>
-                </div>
-              }
-            }}
-          </Radio>)}
+          {exportItems.map(item => <div
+            class={type.value === item.key ? 'custom-radio-card custom-radio-card-checked' : 'custom-radio-card'}
+          >
+            <div class="custom-radio-card-top">
+              <Radio value={item.key} label={item.name}></Radio>
+            </div>
+            <div class="custom-radio-card-desc">
+              {item.desc}
+            </div>
+          </div>)}
         </RadioGroup>
       </div>
     })

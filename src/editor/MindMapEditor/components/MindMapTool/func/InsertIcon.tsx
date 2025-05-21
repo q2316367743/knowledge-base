@@ -1,5 +1,4 @@
-import {Drawer} from "@arco-design/web-vue";
-import {Checkbox, CheckboxGroup, Divider} from "tdesign-vue-next";
+import {Checkbox, CheckboxGroup, Divider, DrawerPlugin} from "tdesign-vue-next";
 import {nodeIconList} from "@/editor/MindMapEditor/config/icons";
 import {MindMapNode} from "@/editor/MindMapEditor/domain";
 
@@ -20,11 +19,11 @@ export function openInsertIcon(activeNodes: MindMapNode[]) {
     return /^<svg/.test(icon) ? icon : `<img src="${icon}" alt="图标"/>`
   }
 
-  Drawer.open({
-    title: '图标',
-    width: 400,
+  DrawerPlugin({
+    header: '图标',
+    size: '400px',
     footer: false,
-    content: () =>
+    default: () =>
       <div>
         {nodeIconList.map(g => <div style={{
           display: "flex",

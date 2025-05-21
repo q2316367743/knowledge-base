@@ -1,62 +1,63 @@
 .custom-radio-card {
-    padding: 10px 16px;
-    border: 1px solid var(--td-border-level-2-color);
-    border-radius: 4px;
-    width: 161px;
-    box-sizing: border-box;
-    margin-top: 7px;
-    user-select: none;
+  padding: 10px 16px;
+  border: 1px solid var(--td-border-level-2-color);
+  border-radius: 4px;
+  width: 161px;
+  box-sizing: border-box;
+  user-select: none;
+  margin: 7px;
 }
 
 .custom-radio-card-top {
-    display: flex;
+  display: flex;
 }
 
 .custom-radio-card-mask {
-    height: 14px;
-    width: 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 100%;
-    border: 1px solid var(--td-border-level-2-color);
-    box-sizing: border-box;
-    margin-top: 8px;
+  height: 14px;
+  width: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  border: 1px solid var(--td-border-level-2-color);
+  box-sizing: border-box;
+  margin-top: 8px;
 }
 
 .custom-radio-card-mask-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 100%;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
 }
 
 .custom-radio-card-title {
-    color: var(--td-text-color-primary);
-    font-size: 14px;
-    font-weight: bold;
-    margin-left: 7px;
-    line-height: 30px;
+  color: var(--td-text-color-primary);
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 7px;
+  line-height: 30px;
 }
 
 .custom-radio-card:hover,
 .custom-radio-card-checked,
 .custom-radio-card:hover .custom-radio-card-mask,
-.custom-radio-card-checked  .custom-radio-card-mask{
-    border-color: var(--td-border-level-1-color);
+.custom-radio-card-checked .custom-radio-card-mask {
+  border-color: var(--td-border-level-1-color);
 }
 
 .custom-radio-card-checked {
-    background-color: var(--td-bg-color-component);
+  background-color: var(--td-bg-color-component);
 }
 
 .custom-radio-card:hover .custom-radio-card-title,
 .custom-radio-card-checked .custom-radio-card-title {
-    color: var(--td-brand-color);
+  color: var(--td-brand-color);
 }
 
 .custom-radio-card-checked .custom-radio-card-mask-dot {
-    background-color: var(--td-brand-color-hover);
+  background-color: var(--td-brand-color-hover);
 }
+
 .custom-radio-card-desc {
-    color: var(--td-text-color-secondary)
+  color: var(--td-text-color-secondary)
 }

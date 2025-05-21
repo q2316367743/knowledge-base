@@ -1,5 +1,4 @@
-import {Drawer} from "@arco-design/web-vue";
-import {Button, Space} from "tdesign-vue-next";
+import {Button, DrawerPlugin, Space} from "tdesign-vue-next";
 import {ArticleActionEnum} from "@/entity/setting/BaseSetting";
 import {useArticleStore, useBaseSettingStore, useHomeEditorStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -12,16 +11,8 @@ import {openNotePreview} from "@/widget/NotePreview";
 
 
 function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
-  const size = useWindowSize();
-
-  function openToArticle() {
-    useHomeEditorStore().openArticle(articleIndex.id);
-    usePageJumpEvent.emit('/note');
-    open.close();
-  }
-
-  const open = Drawer.open({
-    title: () => <div>
+  const dp = DrawerPlugin({
+    header: () => <div>
       <Button theme={'primary'} variant={'text'} shape={'square'} onClick={openToArticle}>
         {{
           icon: () => <Edit2Icon/>
@@ -29,16 +20,22 @@ function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
       </Button>
       <span style={{marginLeft: '7px'}}>{articleIndex.name}</span>
     </div>,
-    width: width,
+    size: width,
     footer: false,
-    closable: false,
-    content: () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
+    closeBtn: false,
+    default: () => <div style={{position: 'absolute', top: '0', left: '0', right: '0', bottom: '0'}}>
       <EditorContentContainer articleIndex={{
         ...articleIndex,
         preview: true
       }}/>
     </div>
   });
+
+  function openToArticle() {
+    useHomeEditorStore().openArticle(articleIndex.id);
+    usePageJumpEvent.emit('/note');
+    dp.destroy?.();
+  }
 }
 
 /**
@@ -93,20 +90,18 @@ export function openArticle(id: number) {
   const size = useWindowSize();
 
 
-  const open = Drawer.open({
-      title: () => <Space>
-        <Button shape={'circle'} theme={'primary'} variant={'text'} onClick={open.close}>{{
+  const open = DrawerPlugin({
+      header: () => <Space>
+        <Button shape={'circle'} theme={'primary'} variant={'text'} onClick={() => open.destroy?.()}>{{
           icon: () => <ChevronLeftSIcon/>
         }}</Button>
         <span class="arco-page-header-title">{article.name}</span>
       </Space>,
-      width: '100%',
-      footer:
-        false,
-      closable:
-        false,
-      content:
-        () => <div style={{height: (size.height.value - 72) + 'px', width: '100%'}}>
+      size: '100%',
+      footer: false,
+      closeBtn: false,
+      default:
+        () => <div style={{position: 'absolute', top: '0', left: '0', right: '0', bottom: '0'}}>
           <EditorContentContainer articleIndex={{
             ...article,
             preview: true

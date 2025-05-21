@@ -11,7 +11,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.56.3",
     "@codexteam/icons": "^0.3.3",
     "@editorjs/delimiter": "^1.4.2",
     "@editorjs/editorjs": "^2.30.8",
@@ -49,7 +48,7 @@
     "sortablejs": "^1.15.6",
     "splitpanes": "^4.0.3",
     "tdesign-icons-vue-next": "^0.3.4",
-    "tdesign-vue-next": "^1.10.7",
+    "tdesign-vue-next": "1.13.0",
     "vconsole": "^3.15.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",

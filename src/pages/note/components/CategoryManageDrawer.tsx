@@ -1,11 +1,11 @@
-import {Drawer} from "@arco-design/web-vue";
+import {DrawerPlugin} from 'tdesign-vue-next';
 import CategoryManage from "@/pages/note/components/CategoryManage.vue";
 
 export function openCategoryManageDrawer() {
-  Drawer.open({
-    title: '分类管理',
-    width: 400,
+  DrawerPlugin({
+    header: '分类管理',
+    size: '400px',
     footer: false,
-    content: () => <CategoryManage/>
+    default: () => <CategoryManage/>
   })
 }

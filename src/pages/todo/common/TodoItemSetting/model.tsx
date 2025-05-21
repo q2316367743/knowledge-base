@@ -1,6 +1,7 @@
-import {Drawer, Divider} from "@arco-design/web-vue";
 import {
-  Button, Checkbox, DatePicker, DateRangePicker, Input, Popconfirm, Popup,
+  Button, Checkbox,
+  DatePicker, DateRangePicker, DrawerPlugin,
+  Input, Popconfirm, Popup,
   RadioButton, RadioGroup, Space
 } from "tdesign-vue-next";
 import {TodoItemAttr, TodoItemIndex} from "@/entity/todo/TodoItem";
@@ -40,7 +41,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
   })
 
   function onClose() {
-    open.close();
+    open.destroy?.();
   }
 
   async function onBeforeOk() {
@@ -68,12 +69,11 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
       .catch(e => MessageUtil.error("删除失败", e));
   }
 
-  const open = Drawer.open({
-    title: '待办详情',
-    width: window.innerWidth < 600 ? '100vw' : '59vw',
+  const open = DrawerPlugin({
     header: false,
-    maskClosable: true,
-    content: () => <div class={'todo-item-setting'}>
+    size: window.innerWidth < 600 ? '100vw' : '59vw',
+    closeOnOverlayClick: true,
+    default: () => <div class={'todo-item-setting'}>
       <div class={'todo-item-setting__header'}>
         <TodoItemCheckbox priority={base.value.priority} v-model:status={base.value.status}/>
         <div class={'ml-8px'}>
@@ -102,7 +102,6 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
           <PriorityDropdown v-model={base.value.priority}/>
         </div>
       </div>
-      <Divider margin={2}/>
       <div class={'todo-item-setting__input'}>
         <Input v-model={base.value.title}/>
       </div>

@@ -14,11 +14,13 @@
         </template>
       </t-button>
     </t-tooltip>
-    <t-button theme="primary" variant="text" size="small" @click="miniMap = !miniMap">
-      <template #icon>
-        <map-icon/>
-      </template>
-    </t-button>
+    <t-tooltip content="小地图">
+      <t-button theme="primary" variant="text" size="small" @click="miniMap = !miniMap">
+        <template #icon>
+          <map-icon/>
+        </template>
+      </t-button>
+    </t-tooltip>
     <t-tooltip content="快捷键">
       <t-button theme="primary" variant="text" size="small" @click="openMindMapShortcut()">
         <template #icon>

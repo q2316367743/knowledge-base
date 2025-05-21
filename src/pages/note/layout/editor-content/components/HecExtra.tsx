@@ -5,8 +5,7 @@ import {homeEditorId} from "@/store/components/HomeEditorStore";
 import {useCategoryStore} from "@/store/db/CategoryStore";
 import {getFromOneWithDefaultByAsync} from "@/utils/utools/DbStorageUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {Drawer} from "@arco-design/web-vue";
-import {Button, Form, FormItem, Input, TagInput, Textarea, TreeSelect} from "tdesign-vue-next";
+import {Button, DrawerPlugin, Form, FormItem, Input, TagInput, Textarea, TreeSelect} from "tdesign-vue-next";
 import {openCategoryManageDrawer} from "@/pages/note/components/CategoryManageDrawer";
 
 export async function openHeExtra(id: number) {
@@ -27,11 +26,11 @@ export async function openHeExtra(id: number) {
     base.value = res.record;
     rev = res.rev;
   }
-  Drawer.open({
-    title: '信息',
-    width: 400,
-    okText: '保存',
-    content: () => <Form data={base.value} layout="vertical">
+  const dp = DrawerPlugin({
+    header: '信息',
+    size: '400px',
+    confirmBtn: '保存',
+    default: () => <Form data={base.value} layout="vertical">
       <FormItem label="来源" labelAlign={'top'}>
         {{
           default: () => <Input v-model={base.value.source} maxlength={32}/>,
@@ -41,9 +40,9 @@ export async function openHeExtra(id: number) {
       <FormItem label="来源链接" labelAlign={'top'}>
         <Input v-model={base.value.sourceUrl} maxlength={255}/>
       </FormItem>
-      <FormItem label={'分类'} labelAlign={'top'}>
+      <FormItem labelAlign={'top'}>
         {{
-          label: () => <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          label: () => <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
             <div>分类</div>
             <Button variant={'text'} theme={'primary'} size={'small'} onClick={openCategoryManageDrawer}>管理</Button>
           </div>,
@@ -63,11 +62,14 @@ export async function openHeExtra(id: number) {
                   placeholder="请输入描述，不能超过64个字" maxlength={64}/>
       </FormItem>
     </Form>,
-    onOk: () => {
+    onConfirm: () => {
       useArticleStore().updateBase(homeEditorId.value, {
         categoryId: categoryId.value
       }, base.value, rev)
-        .then(() => MessageUtil.success("保存成功"))
+        .then(() => {
+          MessageUtil.success("保存成功");
+          dp.destroy?.();
+        })
         .catch(e => MessageUtil.error("保存失败", e));
     }
   })

@@ -1,8 +1,8 @@
-import {Drawer} from "@arco-design/web-vue";
 import {
   Button,
   Col,
   DatePicker,
+  DrawerPlugin,
   Input,
   List,
   ListItem, Loading,
@@ -184,11 +184,11 @@ export function searchTodo() {
     }
   }
 
-  Drawer.open({
-    title: '搜索待办事项',
-    width: 700,
+  DrawerPlugin({
+    header: '搜索待办事项',
+    size: '700px',
     footer: false,
-    content: () => <div>
+    default: () => <div>
       <Row gutter={[8, 8]}>
         <Col span={12}>
           <Input placeholder="搜索待办事项" v-model={form.value.title} clearable={true}></Input>
@@ -285,7 +285,7 @@ export function searchTodo() {
                 <Space class={'mt-8'} size={'small'}>
                   <Tag
                     color={handleSimplePriorityColor(item.index.priority)}>优先级：{handlePriorityText(item.index.priority)}</Tag>
-                  <Tag color={'arcoblue'}>状态：{handleStatusText(item.index.status)}</Tag>
+                  <Tag color={'blue'}>状态：{handleStatusText(item.index.status)}</Tag>
                 </Space>
                 <Space class={'mt-8'} size={'small'}>
                   <Tag
@@ -307,6 +307,6 @@ export function searchTodo() {
           }
         </List>
       </Loading>
-    </div>
+    </div >
   })
 }
