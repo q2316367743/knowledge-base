@@ -3,13 +3,11 @@
     <header class="m-2">
       <t-input-group style="width: 100%">
         <t-input style="width: calc(100% - 32px);" v-model="keyword" :clearable="true" placeholder="请输入文件名"/>
-        <editor-tree-menu :id="0" :more="false" @multi="multiCheckStart">
-          <t-button theme="primary" shape="square">
-            <template #icon>
-              <ellipsis-icon/>
-            </template>
-          </t-button>
-        </editor-tree-menu>
+        <t-button theme="primary" shape="square" @click.stop="onRootClick($event)">
+          <template #icon>
+            <ellipsis-icon/>
+          </template>
+        </t-button>
       </t-input-group>
     </header>
     <t-tree :data="treeNodeData" :scroll="scroll" :height="virtualHeight" :checkable="checkKeys.length > 0"
@@ -28,14 +26,12 @@
         </div>
       </template>
       <template #operations="{ node }">
-        <editor-tree-menu :id="node.value" :name="node.label" :folder="!node.data.leaf"
-                          @multi="multiCheckStart" @select="onSelect">
-          <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small" @click.stop>
-            <template #icon>
-              <more-icon/>
-            </template>
-          </t-button>
-        </editor-tree-menu>
+        <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small"
+                  @click.stop="onContextmenu(node, $event)">
+          <template #icon>
+            <more-icon/>
+          </template>
+        </t-button>
       </template>
     </t-tree>
     <div class="option" v-if="checkKeys.length > 0">
@@ -57,7 +53,7 @@
         <t-tooltip content="全选">
           <t-button theme="primary" variant="text" shape="square" @click="selectAll()">
             <template #icon>
-              <check-rectangle-icon />
+              <check-rectangle-icon/>
             </template>
           </t-button>
         </t-tooltip>
@@ -72,7 +68,14 @@
 </template>
 <script lang="ts" setup>
 import {TreeNodeModel, TypeTreeProps} from 'tdesign-vue-next';
-import {ArrowRightIcon, CheckRectangleIcon, CloseIcon, DeleteIcon, EllipsisIcon, MoreIcon} from "tdesign-icons-vue-next";
+import {
+  ArrowRightIcon,
+  CheckRectangleIcon,
+  CloseIcon,
+  DeleteIcon,
+  EllipsisIcon,
+  MoreIcon
+} from "tdesign-icons-vue-next";
 import {
   useGlobalStore,
   useArticleStore,
@@ -87,7 +90,6 @@ import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import EditorTreeMenu from "@/pages/note/layout/editor-side/components/EditorTreeMenu.vue";
 import {openEditorTreeMenu} from "@/pages/note/layout/editor-side/components/EditorTreeMenu";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 
@@ -264,6 +266,16 @@ function moveMultiTo() {
 
 function onContextmenu(node: Pick<TreeNodeModel, 'data'>, e: MouseEvent) {
   openEditorTreeMenu(e, {node: node.data as any, multi: multiCheckStart, select: onSelect})
+}
+
+function onRootClick(e: MouseEvent) {
+  openEditorTreeMenu(e, {
+    node: {
+      value: 0,
+      label: '根目录',
+      leaf: false
+    }, multi: multiCheckStart, select: onSelect
+  })
 }
 </script>
 <style lang="less">

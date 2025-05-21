@@ -21,41 +21,11 @@
         </div>
       </template>
       <template #operations="{node}">
-        <t-dropdown trigger="click">
-          <t-button variant="text" theme="primary" shape="square" @click.stop>
-            <template #icon>
-              <more-icon/>
-            </template>
-          </t-button>
-          <t-dropdown-menu>
-            <t-dropdown-item v-if="!node.data.leaf" @click="add(node.value)">
-              <template #prefix-icon>
-                <plus-icon/>
-              </template>
-              新增
-            </t-dropdown-item>
-            <t-dropdown-item @click="update(node.value)">
-              <template #prefix-icon>
-                <edit2-icon/>
-              </template>
-              修改
-            </t-dropdown-item>
-            <t-dropdown-item v-if="!node.children || node.children.length === 0"
-                             @click="remove(node.value, node.label)" style="color: red;">
-              <template #prefix-icon>
-                <delete-icon/>
-              </template>
-              删除
-            </t-dropdown-item>
-            <t-dropdown-item v-if="node.leaf" @click="switchFeature(node.value)">
-              <template #prefix-icon>
-                <star-filled-icon v-if="hasFeature(node.value)"/>
-                <star-icon v-else/>
-              </template>
-              快速启动
-            </t-dropdown-item>
-          </t-dropdown-menu>
-        </t-dropdown>
+        <t-button variant="text" theme="primary" shape="square" @click.stop="onContextmenu(node, $event)">
+          <template #icon>
+            <more-icon/>
+          </template>
+        </t-button>
       </template>
     </t-tree>
   </div>
