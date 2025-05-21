@@ -14,12 +14,35 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   // 初始化后监听事件
   window.preload.ipcRenderer.receiveMessage('todo:from', (msg) => {
     const {event, data} = msg;
-    if (event === 'toggleTop') {
+    if (event === '/todo/operator/toggleTop') {
       const {id} = data;
       if (widgets.value.has(id)) {
         const widget = widgets.value.get(id);
         if (widget) {
           widget.setAlwaysOnTop(!widget.isAlwaysOnTop());
+          window.preload.ipcRenderer.sendMessage(widget.webContents.id, 'todo:to', {
+            event: '/todo/status/alwaysOnTop',
+            data: {
+              alwaysOnTop: widget.isAlwaysOnTop()
+            },
+          });
+        }
+      }
+    } else if (event === '/todo/operator/close') {
+      const {id} = data;
+      if (widgets.value.has(id)) {
+        const widget = widgets.value.get(id);
+        if (widget) {
+          widget.close();
+          widgets.value.delete(id);
+        }
+      }
+    } else if (event === '/todo/operator/minimize') {
+      const {id} = data;
+      if (widgets.value.has(id)) {
+        const widget = widgets.value.get(id);
+        if (widget) {
+          widget.minimize();
         }
       }
     }
@@ -49,8 +72,9 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   /**
    * 新增一个小部件
    * @param id 待办清单ID
+   * @param name 待办清单名称
    */
-  const openWidget = async (id: number) => {
+  const openWidget = async (id: number, name: string) => {
     await checkPower('todo')
     // 先去检查所有的小部件存活状态
     checkWidget();
@@ -59,7 +83,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
       return;
     }
     // 打开小部件
-    openTodoWidget(id, (instance) => widgets.value.set(id, instance));
+    openTodoWidget(id, name, (instance) => widgets.value.set(id, instance));
   }
 
   // 删除一个小部件

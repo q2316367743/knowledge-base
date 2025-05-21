@@ -66,7 +66,8 @@ const onContextMenu = (e: MouseEvent, item: TodoItemIndex) => {
 function addTodo() {
   openAddTodoItem({
     start: currentDay.value,
-    onAdd: refresh
+    onAdd: refresh,
+    attach: '.todo-container'
   });
 }
 

@@ -113,29 +113,12 @@ interface PaymentOrder {
 }
 
 export const InjectionUtil = {
-  getPlatform(): 'uTools'|'FocusAny'|'web' {
-    if ('utools' in window) {
-      return 'uTools';
-    } else if ('focusany' in window) {
-      return 'FocusAny';
-    } else {
-      return 'web';
-    }
+  getPlatform(): 'uTools' | 'FocusAny' | 'web' {
+    return 'uTools';
   },
   getUser(): { avatar: string, nickname: string, type: string } | null {
     if ('utools' in window) {
       return utools.getUser();
-    } else if ('focusany' in window) {
-      const user = focusany.getUser();
-      if (user.isLogin) {
-        return {
-          avatar: user.avatar,
-          nickname: user.nickname,
-          type: user.vipFlag
-        }
-      }else {
-        return null;
-      }
     } else {
       return null;
     }
@@ -143,8 +126,6 @@ export const InjectionUtil = {
   isDev() {
     if ('utools' in window) {
       return utools.isDev()
-    } else if ('focusany' in window) {
-      return focusany.getPluginEnv() === 'dev';
     } else {
       return import.meta.env.DEV;
     }
@@ -153,8 +134,6 @@ export const InjectionUtil = {
     (async () => {
       if ('utools' in window) {
         return utools.copyText(text)
-      } else if ('focusany' in window) {
-        return focusany.copyText(text);
       } else {
         await navigator.clipboard.writeText(text);
         return false
@@ -170,15 +149,13 @@ export const InjectionUtil = {
   shellOpenExternal(url: string): void {
     if ('utools' in window) {
       return utools.shellOpenExternal(url);
-    } else if ('focusany' in window) {
-      return focusany.shellOpenExternal(url);
+    } else {
+      window.open(url);
     }
   },
   showMainWindow() {
     if ('utools' in window) {
       return utools.showMainWindow();
-    } else if ('focusany' in window) {
-      return focusany.showMainWindow();
     } else {
       return false;
     }
@@ -186,8 +163,6 @@ export const InjectionUtil = {
   hideMainWindow() {
     if ('utools' in window) {
       return utools.hideMainWindow();
-    } else if ('focusany' in window) {
-      return focusany.hideMainWindow();
     } else {
       return false;
     }
@@ -196,9 +171,6 @@ export const InjectionUtil = {
     if ('utools' in window) {
       utools.hideMainWindow();
       return utools.outPlugin(isKill);
-    } else if ('focusany' in window) {
-      focusany.hideMainWindow();
-      return focusany.outPlugin();
     } else {
       return false;
     }
@@ -212,20 +184,25 @@ export const InjectionUtil = {
     setItem(key: string, value: any): void {
       if ('utools' in window) {
         return utools.dbStorage.setItem(key, value);
-      } else if ('focusany' in window) {
-        return focusany.dbStorage.setItem(key, value);
+      } else {
+        localStorage.setItem(key, JSON.stringify({
+          value
+        }));
       }
     },
     /**
      * 获取键名对应的值
      */
-    getItem<T = any>(key: string): T {
+    getItem<T = any>(key: string): T | null {
       if ('utools' in window) {
         return utools.dbStorage.getItem<T>(key);
-      } else if ('focusany' in window) {
-        return focusany.dbStorage.getItem<T>(key);
       } else {
-        return null as T;
+        const item = localStorage.getItem(key);
+        if (item) {
+          return JSON.parse(item).value;
+        } else {
+          return null;
+        }
       }
 
     },
@@ -235,8 +212,8 @@ export const InjectionUtil = {
     removeItem(key: string): void {
       if ('utools' in window) {
         return utools.dbStorage.removeItem(key);
-      } else if ('focusany' in window) {
-        return focusany.dbStorage.removeItem(key);
+      } else {
+        localStorage.removeItem(key);
       }
     }
   },
@@ -244,8 +221,6 @@ export const InjectionUtil = {
     async put(doc: InjectionDbDoc): Promise<InjectionDbReturn> {
       if ('utools' in window) {
         return utools.db.promises.put(doc);
-      } else if ('focusany' in window) {
-        return Promise.resolve(focusany.db.put(doc));
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
@@ -253,8 +228,6 @@ export const InjectionUtil = {
     async get(id: string): Promise<InjectionDbDoc | null> {
       if ('utools' in window) {
         return utools.db.promises.get(id);
-      } else if ('focusany' in window) {
-        return Promise.resolve(focusany.db.get(id));
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
@@ -262,8 +235,6 @@ export const InjectionUtil = {
     async remove(doc: string | InjectionDbDoc): Promise<InjectionDbReturn> {
       if ('utools' in window) {
         return utools.db.promises.remove(doc);
-      } else if ('focusany' in window) {
-        return Promise.resolve(focusany.db.remove(doc));
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
@@ -271,8 +242,6 @@ export const InjectionUtil = {
     async allDocs(key?: string): Promise<InjectionDbDoc[]> {
       if ('utools' in window) {
         return utools.db.promises.allDocs(key);
-      } else if ('focusany' in window) {
-        return Promise.resolve(focusany.db.allDocs(key));
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
@@ -281,8 +250,6 @@ export const InjectionUtil = {
     async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<InjectionDbReturn> {
       if ('utools' in window) {
         return utools.db.promises.postAttachment(docId, attachment, type);
-      } else if ('focusany' in window) {
-        return Promise.resolve(focusany.db.postAttachment(docId, attachment, type));
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
@@ -290,8 +257,6 @@ export const InjectionUtil = {
     getAttachment(docId: string): Uint8Array | null {
       if ('utools' in window) {
         return utools.db.getAttachment(docId);
-      } else if ('focusany' in window) {
-        return focusany.db.getAttachment(docId);
       } else {
         throw new Error("系统环境异常");
       }
@@ -299,8 +264,6 @@ export const InjectionUtil = {
     async getAttachmentType(docId: string): Promise<string | null> {
       if ('utools' in window) {
         return utools.db.promises.getAttachmentType(docId);
-      } else if ('focusany' in window) {
-        return Promise.resolve(focusany.db.getAttachmentType(docId));
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
@@ -309,8 +272,6 @@ export const InjectionUtil = {
   getCursorScreenPoint(): { x: number, y: number } {
     if ('utools' in window) {
       return utools.getCursorScreenPoint();
-    } else if ('focusany' in window) {
-      return focusany.getCursorScreenPoint();
     } else {
       return {x: 0, y: 0};
     }
@@ -318,8 +279,6 @@ export const InjectionUtil = {
   createBrowserWindow(url: string, options: BrowserWindow.InitOptions, callback?: () => void): BrowserWindow.WindowInstance {
     if ('utools' in window) {
       return utools.createBrowserWindow(url, options, callback);
-    } else if ('focusany' in window) {
-      return focusany.createBrowserWindow(url, options, callback);
     } else {
       throw new Error("环境异常");
     }
@@ -337,40 +296,6 @@ export const InjectionUtil = {
         ],
         cmds: [cmd]
       });
-    } else if ('focusany' in window) {
-      let action: any | null = null;
-      if (typeof cmd === 'string') {
-        action = {
-          type: 'key',
-          key: cmd
-        };
-      } else if (cmd.type === 'files') {
-        action = {
-          type: 'file',
-          title: cmd.label,
-          minCount: cmd.minLength,
-          maxCount: cmd.maxLength,
-          fileType: cmd.fileType,
-        }
-      } else if (cmd.type === 'over') {
-        action = {
-          type: 'over',
-          title: cmd.label,
-          minLength: cmd.minLength,
-          maxLength: cmd.maxLength
-        }
-      }
-      if (!action) {
-        return false;
-      }
-      return focusany.setAction({
-        name: code,
-        title: Constant.name,
-        icon: "public/logo.png",
-        platform: ['osx', 'win', 'linux'],
-        type: 'command',
-        matches: [action]
-      })
     } else {
       return false
     }
@@ -388,49 +313,6 @@ export const InjectionUtil = {
         }
       }
       return null;
-    } else if ('focusany' in window) {
-      const actions = focusany.getActions([code]);
-      if (actions.length === 0) {
-        return null
-      }
-      for (let action of actions) {
-        if (action.name === code) {
-          const cmds = new Array<string | FeatureCmd>();
-          if (action.matches.length > 0) {
-            for (let match of action.matches) {
-              if (match.type === 'key') {
-                cmds.push((match as ActionMatchKey).key);
-              } else if (match.type === 'file') {
-                const m = match as ActionMatchFile;
-                cmds.push({
-                  type: 'files',
-                  label: m.title!,
-                  fileType: m.filterFileType,
-                  minLength: m.minCount,
-                  maxLength: m.maxCount
-                })
-              } else if (match.type === 'text') {
-                const m = match as ActionMatchText;
-                cmds.push({
-                  type: 'over',
-                  label: m.name!,
-                  match: m.text,
-                  minLength: m.minLength,
-                  maxLength: m.maxLength
-                })
-              }
-            }
-          }
-          return {
-            code: action.name,
-            explain: action.title,
-            platform: ['darwin', 'win32', 'linux'],
-            icon: action.icon,
-            cmds
-          }
-        }
-      }
-      return null;
     } else {
       return null
     }
@@ -438,8 +320,6 @@ export const InjectionUtil = {
   removeFeatureOne(code: string): boolean {
     if ('utools' in window) {
       return utools.removeFeature(code)
-    } else if ('focusany' in window) {
-      return focusany.removeAction(code);
     } else {
       return false;
     }
@@ -457,19 +337,6 @@ export const InjectionUtil = {
         features = utools.getFeatures(prefix);
       }
       return features.map(feature => feature.code);
-    } else if ('focusany' in window) {
-      let features: Array<PluginAction>;
-      if (typeof prefix === 'string') {
-        if (keys) {
-          features = focusany.getActions(keys.map(key => prefix + key));
-        } else {
-          features = focusany.getActions([prefix]);
-        }
-      } else {
-        features = focusany.getActions(prefix);
-      }
-      return features.map(feature => feature.name);
-
     } else {
       return [];
     }
@@ -477,39 +344,31 @@ export const InjectionUtil = {
   screenCapture(callback: (imgBase64: string) => void): void {
     if ('utools' in window) {
       utools.screenCapture(callback);
-    } else if ('focusany' in window) {
-      focusany.screenCapture(callback);
+    } else {
+      throw new Error("环境异常");
     }
   },
   isWindows(): boolean {
-    return 'utools' in window ? utools.isWindows() : 'focusany' in window ? focusany.isWindows() : false;
+    // 判断当前操作系统是不是Windows
+    return 'utools' in window ? utools.isWindows() : (navigator.userAgent.indexOf('Windows') !== -1);
   },
   getWindowType(): 'main' | 'detach' | 'browser' {
     return 'utools' in window ? utools.getWindowType() : 'detach';
   },
   isDarkColors(): boolean {
-    return 'utools' in window ? utools.isDarkColors() : 'focusany' in window ? focusany.isDarkColors() : false;
+    return 'utools' in window ? utools.isDarkColors() : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   },
   redirect(label: string | string[], payload: string | { type: 'text' | 'img' | 'files', data: any }): boolean {
     if ('utools' in window) {
       return utools.redirect(label, payload);
-    } else if ('focusany' in window) {
-      focusany.redirect(label, {
-        keywords: typeof payload === 'string' ? payload : payload.data,
-        currentText: typeof payload === 'string' ? payload : undefined,
-        currentFiles: typeof payload !== 'string' && payload.type === 'files' ? payload.data : undefined,
-        currentImage: typeof payload !== 'string' && payload.type === 'img' ? payload.data : undefined,
-      });
-      return true;
     } else {
-      return false;
+      window.open(`utools://${label[0]}/${label[1]}?${payload}`);
+      return true;
     }
   },
   getPath(name: PathName): string {
     if ('utools' in window) {
       return utools.getPath(name);
-    } else if ('focusany' in window) {
-      return focusany.getPath(name);
     } else {
       return '';
     }
@@ -517,8 +376,28 @@ export const InjectionUtil = {
   showNotification(body: string, featureName?: string): void {
     if ('utools' in window) {
       utools.showNotification(body, featureName);
-    } else if ('focusany' in window) {
-      focusany.showNotification(body, featureName);
+    } else {
+      // 检查浏览器是否支持通知
+      if ("Notification" in window) {
+        // 请求通知权限
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            // 创建并发送通知
+            const notification = new Notification("通知标题", {
+              body: body,
+            });
+
+            // 可选：处理通知点击事件
+            notification.onclick = function () {
+              window.focus();
+            };
+          } else {
+            console.error("通知权限被拒绝");
+          }
+        });
+      } else {
+        console.error("浏览器不支持通知");
+      }
     }
   },
   version: {
@@ -561,12 +440,6 @@ export const InjectionUtil = {
   async fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
     if ('utools' in window) {
       return utools.fetchUserServerTemporaryToken();
-    } else if ('focusany' in window) {
-      const result = await focusany.getUserAccessToken();
-      return {
-        token: result.token,
-        expiredAt: result.expireAt
-      }
     } else {
       return Promise.reject(new Error('不支持的平台'));
     }
@@ -575,10 +448,6 @@ export const InjectionUtil = {
     open(options: OpenPaymentOptions, callback?: () => void): void {
       if ('utools' in window) {
         utools.openPayment(options, callback);
-      } else if ('focusany' in window) {
-        focusany.openGoodsPayment(options).then((e) => {
-          if (e.paySuccess) callback && callback();
-        });
       } else {
         throw new Error('不支持的平台');
       }
@@ -586,22 +455,6 @@ export const InjectionUtil = {
     async fetch(): Promise<Array<PaymentOrder>> {
       if ('utools' in window) {
         return utools.fetchUserPayments();
-      } else if ('focusany' in window) {
-        const results = new Array<PaymentOrder>();
-        const rsp = await focusany.queryGoodsOrders({});
-        for (const record of rsp.records) {
-          if (record.status !== 'Paid') continue;
-          results.push({
-            order_id: record.id,
-            total_fee: 0,
-            body: '',
-            attach: '',
-            goods_id: record.goodsId,
-            out_order_id: '',
-            paid_at: ''
-          })
-        }
-        return results;
       } else {
         return Promise.reject(new Error('不支持的平台'));
       }
@@ -617,15 +470,6 @@ export const InjectionUtil = {
     }) => void): void {
       if ('utools' in window) {
         utools.onPluginEnter(callback);
-      } else if ('focusany' in window) {
-        focusany.onPluginReady(e => {
-          callback({
-            code: e.actionName,
-            type: e.actionMatch?.type || 'text',
-            payload: (e.actionMatch?.type === 'text' ? `${(e.actionMatch as ActionMatchText).text}` : '') as T,
-            option: {} as any
-          })
-        });
       }
     },
     onMainPush<T = any>(callback: (action: {
@@ -649,10 +493,8 @@ export const InjectionUtil = {
         utools.ubrowser
           .goto(url)
           .run({width: width || 1200, height: height || 800})
-      } else if ('focusany' in window) {
-        focusany.shellOpenExternal(url);
       } else {
-        throw new Error("未知平台，无法打开链接");
+        window.open(url);
       }
     },
     openMd(text: string) {
@@ -665,5 +507,8 @@ export const InjectionUtil = {
         }, text)
         .run({width: 1200, height: 800})
     },
+  },
+  sendToParent(channel: string, ...params: any[]): void {
+    utools.sendToParent(channel, ...params);
   }
 }

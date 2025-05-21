@@ -73,23 +73,6 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
       hideOfArticle.value = false;
       showAddGroupBtn.value = false;
       groupType.value = TodoCategoryGroupEnum.DEFAULT;
-      if (id === 0 || widget) {
-        // 销毁内存数据
-        useTodoGroupStore().destroy();
-        useTodoItemStore().destroy();
-        useTodoArticleStore().destroy();
-        // 打开小部件
-        if (widget) {
-          try {
-            await useTodoWidgetStore().openWidget(id)
-          }catch (e) {
-            categoryId.value = 0;
-            MessageUtil.error("打开小部件失败", e);
-          }
-        }
-        return;
-      }
-
       // 获取当前分组信息
       const todoCategory = map(useTodoCategoryStore().value, 'id').get(id);
       if (!todoCategory) {
@@ -98,9 +81,27 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
         return;
       }
       if (todoCategory.type !== TodoCategoryTypeEnum.TODO) {
+        MessageUtil.error("待办分类类型错误，请刷新页面重试");
         categoryId.value = 0;
         return;
       }
+      if (id === 0 || widget) {
+        // 销毁内存数据
+        useTodoGroupStore().destroy();
+        useTodoItemStore().destroy();
+        useTodoArticleStore().destroy();
+        // 打开小部件
+        if (widget) {
+          try {
+            await useTodoWidgetStore().openWidget(id, todoCategory.name)
+          } catch (e) {
+            categoryId.value = 0;
+            MessageUtil.error("打开小部件失败", e);
+          }
+        }
+        return;
+      }
+
       // 只要ID大于0，这几项就要刷新
       sort.value = todoCategory.todoListSort || TodoListSortEnum.PRIORITY;
       layout.value = todoCategory.todoListLayout || TodoListLayoutEnum.DEFAULT;

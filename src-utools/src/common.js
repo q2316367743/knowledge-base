@@ -1,31 +1,6 @@
-const getPath = (() => {
-  if ('utools' in window) {
-    return utools.getPath;
-  } else if ('focusany' in window) {
-    return focusany.getPath;
-  } else {
-    return () => ''
-  }
-})();
-const showSaveDialog = (() => {
-  if ('utools' in window) {
-    return utools.showSaveDialog;
-  } else if ('focusany' in window) {
-    return focusany.showSaveDialog;
-  } else {
-    return () => undefined;
-  }
-})();
-const shellOpenPath = (() => {
-  if ('utools' in window) {
-    return utools.shellOpenPath;
-  } else if ('focusany' in window) {
-    return focusany.shellOpenPath;
-  } else {
-    return () => {
-    };
-  }
-})();
+const getPath = utools.getPath;
+const showSaveDialog = utools.showSaveDialog;
+const shellOpenPath = utools.shellOpenPath;
 
 /**
  * Blob转Buffer

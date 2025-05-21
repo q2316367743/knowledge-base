@@ -13,13 +13,15 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {TodoGroupView} from "@/entity/todo/TodoGroup";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import dayjs from "dayjs";
+import {DialogOptions} from "tdesign-vue-next/es/dialog/type";
 
 interface AddTodoItemProps {
   group?: TodoGroupView;
   priority?: TodoItemPriority;
   start?: string;
   end?: string;
-  onAdd?: () => void
+  onAdd?: () => void;
+  attach?: DialogOptions['attach']
 }
 
 /**
@@ -27,7 +29,7 @@ interface AddTodoItemProps {
  * @param props 参数
  */
 export function openAddTodoItem(props?: AddTodoItemProps) {
-  const {group, priority, start, end, onAdd} = props || {};
+  const {group, priority, start, end, onAdd, attach} = props || {};
   const record = ref({
     title: '',
     priority: priority || TodoItemPriority.NONE,
@@ -46,6 +48,7 @@ export function openAddTodoItem(props?: AddTodoItemProps) {
   const p = DialogPlugin({
     header: '新增待办',
     placement: 'center',
+    attach,
     mode: window.innerWidth < 600 ? 'full-screen' : undefined,
     closeOnEscKeydown: false,
     default: () => <Form data={record.value} class={'pl-4px pr-4px'}>

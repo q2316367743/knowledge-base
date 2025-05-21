@@ -37,9 +37,10 @@ onMounted(() => initTodo(props.todoId));
 .todo-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100% - 32px);
   background-color: var(--td-bg-color-container);
   padding: var(--td-comp-paddingTB-s);
+  transform: translate(0, 0);
 }
 
 .todo-header {

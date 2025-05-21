@@ -2,7 +2,7 @@ import {useErrorStore} from "@/store/components/ErrorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
-export function openTodoWidget(id: number, onSuccess: (instance: BrowserWindow.WindowInstance) => void) {
+export function openTodoWidget(id: number, name: string, onSuccess: (instance: BrowserWindow.WindowInstance) => void) {
   // 打开笔记预览
   const dev = InjectionUtil.isDev();
   const ubWindow = InjectionUtil.createBrowserWindow(
@@ -15,6 +15,8 @@ export function openTodoWidget(id: number, onSuccess: (instance: BrowserWindow.W
       minHeight: 600,
       hasShadow: false,
       alwayOnTop: true,
+      frame: false,
+      transparent: true,
       backgroundColor: '#00000000',
       webPreferences: {
         preload: 'sub-window.js',
@@ -25,7 +27,7 @@ export function openTodoWidget(id: number, onSuccess: (instance: BrowserWindow.W
       try {
         ubWindow.show();
         if (dev) {
-          ubWindow.webContents.executeJavaScript(`location.href = 'http://localhost:5173/todo.html?todo-id=${id}'`)
+          ubWindow.webContents.executeJavaScript(`location.href = 'http://localhost:5173/todo.html?todo-id=${id}&todo-name=${encodeURIComponent(name)}'`)
             .then(() => console.debug("代码执行成功"))
             .catch((e: any) => console.error("代码执行失败", e));
           ubWindow.webContents.openDevTools();
@@ -35,7 +37,8 @@ export function openTodoWidget(id: number, onSuccess: (instance: BrowserWindow.W
         window.preload.ipcRenderer.sendMessage(ubWindow.webContents.id, 'todo:to', {
           event: '/todo/init/id',
           data: {
-            id: id
+            id: id,
+            name: name
           },
         });
         onSuccess(ubWindow);
