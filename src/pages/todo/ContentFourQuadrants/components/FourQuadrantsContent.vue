@@ -46,12 +46,12 @@ const priorityMap = computed(() => {
   return result;
 });
 
-// 假设优先级顺序为：1-重要且紧急，2-重要不紧急，3-不紧急但重要，4-不重要不紧急
+// 假设优先级顺序为：1-重要且紧急，2-重要不紧急，3-不重要但紧急，4-不重要不紧急
 const quadrants = computed<Array<Quadrant>>(() => {
   const quadrantsData = [
     { title: '重要且紧急', priority: TodoItemPriority.HIGH, color: handleSimplePriorityColor(TodoItemPriority.HIGH) },
     { title: '重要不紧急', priority: TodoItemPriority.MIDDLE, color: handleSimplePriorityColor(TodoItemPriority.MIDDLE) },
-    { title: '不紧急但重要', priority: TodoItemPriority.FLOOR, color: handleSimplePriorityColor(TodoItemPriority.FLOOR) },
+    { title: '不重要但紧急', priority: TodoItemPriority.FLOOR, color: handleSimplePriorityColor(TodoItemPriority.FLOOR) },
     { title: '不重要不紧急', priority: TodoItemPriority.NONE, color: handleSimplePriorityColor(TodoItemPriority.NONE) },
   ];
 
