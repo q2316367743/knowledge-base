@@ -1,9 +1,5 @@
 .todo-item-setting {
-  position: absolute;
-  top: 4px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
+  padding: 8px;
 
   .todo-item-setting__header {
     width: 100%;
@@ -19,8 +15,12 @@
 
   .todo-item-setting__content {
     margin-top: 8px;
-    height: calc(100vh - 220px);
+    height: calc(100vh - 200px);
     position: relative;
+
+    &.browser {
+      height: calc(100vh - 235px);
+    }
   }
 
   .todo-item-setting__tag {

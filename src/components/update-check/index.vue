@@ -11,7 +11,7 @@
     <div class="entry">
       <div>
         <span>恭喜你成功更新到 </span>
-        <span style="color: rgb(var(--arcoblue-6))">{{ version }}</span>
+        <span style="color: var(--td-brand-color-10)">{{ version }}</span>
       </div>
       <div>本次更新如下：</div>
       <update-item :log="log"/>
@@ -20,18 +20,18 @@
 </template>
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";
-import UpdateLog from "@/global/UpdateLog";
-import {ref} from "vue";
+import UpdateLog from "@/global/UpdateLog.json";
 import Constant, {toFeedback} from "@/global/Constant";
 import updateCheck from "@/components/update-check/UpdateCheck";
 import {useGlobalStore} from "@/store/GlobalStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useRouter} from "vue-router";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {Log} from "@/components/update-check/domain";
 
 const router = useRouter();
 
-const log = UpdateLog[0];
+const log = UpdateLog[0] as Log;
 const version = Constant.version;
 const visible = ref(false);
 

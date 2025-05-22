@@ -15,6 +15,8 @@ import PriorityDropdown from "@/components/PriorityDropdown/PriorityDropdown.vue
 import TagGroup from "@/components/TagGroup/TagGroup.vue";
 import DateRange from '@/components/DateRange/DateRange.vue';
 import './model.less';
+import {DrawerOptions} from "tdesign-vue-next/es/drawer/type";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
   if (attr.start === '' && attr.end === '') {
@@ -23,8 +25,18 @@ function renderIsRange(attr: TodoItemAttr): boolean {
   return attr.start !== attr.end;
 
 }
+export function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
+  return openTodoItemInfo({index, toUpdate});
+}
 
-export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
+interface TodoItemInfoProps {
+  index: TodoItemIndex;
+  toUpdate?: (index: TodoItemIndex) => void;
+  attach?: DrawerOptions['attach'];
+}
+
+export async function openTodoItemInfo(props: TodoItemInfoProps) {
+  const {index, attach, toUpdate} = props;
   useUmami.track("/待办/操作/编辑卡片信息")
 
   const base = ref(clone(index, true));
@@ -69,10 +81,14 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
       .catch(e => MessageUtil.error("删除失败", e));
   }
 
+  const windowType = InjectionUtil.getWindowType();
+
   const open = DrawerPlugin({
     header: false,
+    attach,
     size: window.innerWidth < 600 ? '100vw' : '59vw',
     closeOnOverlayClick: true,
+    className: 'abs-drawer',
     default: () => <div class={'todo-item-setting'}>
       <div class={'todo-item-setting__header'}>
         <TodoItemCheckbox priority={base.value.priority} v-model:status={base.value.status}/>
@@ -105,7 +121,7 @@ export async function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (inde
       <div class={'todo-item-setting__input'}>
         <Input v-model={base.value.title}/>
       </div>
-      <div class={'todo-item-setting__content'}>
+      <div class={['todo-item-setting__content', windowType]}>
         <RichTextEditor v-model={content.value.record.content} simple={true}/>
       </div>
       <div class={'todo-item-setting__tag'}>

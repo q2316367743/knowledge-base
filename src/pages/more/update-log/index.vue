@@ -22,7 +22,7 @@
 </template>
 <script lang="ts" setup>
 import UpdateItem from "@/components/update-check/item.vue";
-import UpdateLog from "@/global/UpdateLog";
+import UpdateLog from "@/global/UpdateLog.json";
 import {toFeedback} from "@/global/Constant";
 
 </script>

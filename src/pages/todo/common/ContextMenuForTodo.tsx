@@ -20,8 +20,9 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useUmami} from "@/plugin/umami";
-import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
+import {openTodoItemInfo, openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 import UnTopIcon from "@/components/KbIcon/UnTopIcon.vue";
+import {DrawerOptions} from "tdesign-vue-next/es/drawer/type";
 
 /**
  * 更新优先级
@@ -127,11 +128,27 @@ export const toggleTop = (id: number, top: boolean) => useTodoItemStore().update
  * @param toUpdate 更新成功回调
  */
 export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
+  onTodoContextMenu({e, item, toUpdate});
+}
+
+
+interface ContextMenuForTodoProps {
+  e: MouseEvent;
+  item: TodoItemIndex;
+  toUpdate?: (index: TodoItemIndex) => void;
+  attach?: DrawerOptions['attach'];
+}
+
+/**
+ * 右键菜单
+ */
+export function onTodoContextMenu(props: ContextMenuForTodoProps) {
+  const {e, item, attach, toUpdate} = props;
   const items = new Array<MenuItem>();
   items.push({
     label: '编辑',
     icon: () => <EditIcon/>,
-    onClick: () => openTodoItemSetting(item, toUpdate)
+    onClick: () => openTodoItemInfo({index: item, attach, toUpdate})
   }, {
     label: '优先级',
     icon: () => <FlagIcon/>,
@@ -158,7 +175,7 @@ export function onContextMenuForTodo(e: MouseEvent, item: TodoItemIndex, toUpdat
     }]
   }, {
     label: (item.top ? '取消' : '') + '置顶',
-    icon: () => item.top ? <UnTopIcon /> : <BacktopIcon/>,
+    icon: () => item.top ? <UnTopIcon/> : <BacktopIcon/>,
     onClick: () => toggleTop(item.id, !item.top).then(() => toUpdate && toUpdate(item))
   });
   if (item.status !== TodoItemStatus.COMPLETE) {

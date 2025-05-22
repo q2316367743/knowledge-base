@@ -1,7 +1,8 @@
 import {defineStore} from "pinia";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoWidget} from "@/widget/Todo";
-import {checkPower} from "@/store";
+import {checkPower, useTodoWrapStore} from "@/store";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export const useTodoWidgetStore = defineStore('todo-widget', () => {
   // 待办窗口
@@ -10,6 +11,14 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   const todoIds = computed(() => new Set(widgets.value.keys()));
   // 是否是空地待办窗口
   const emptyTodoWidget = computed(() => widgets.value.size === 0);
+
+  const handleCloseWidget = (id: number) => {
+    if (useTodoWrapStore().categoryId === id) {
+      useTodoWrapStore().init(id, false).catch(e => MessageUtil.error("初始化待办失败", e));
+      // 显示主窗口
+      InjectionUtil.showMainWindow();
+    }
+  }
 
   // 初始化后监听事件
   window.preload.ipcRenderer.receiveMessage('todo:from', (msg) => {
@@ -35,6 +44,8 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
         if (widget) {
           widget.close();
           widgets.value.delete(id);
+          // 如果当前是小部件，则刷新
+          handleCloseWidget(id);
         }
       }
     } else if (event === '/todo/operator/minimize') {
@@ -60,6 +71,8 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
           if (destroyed) {
             // 已销毁
             widgets.value.delete(id);
+            // 如果当前是小部件，则刷新
+            handleCloseWidget(id);
           }
         } catch (e) {
           MessageUtil.error(`待办「${id}」窗口已失效`, e);
@@ -83,7 +96,11 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
       return;
     }
     // 打开小部件
-    openTodoWidget(id, name, (instance) => widgets.value.set(id, instance));
+    openTodoWidget(id, name, (instance) => {
+      widgets.value.set(id, instance);
+      // 隐藏主窗口
+      InjectionUtil.hideMainWindow();
+    });
   }
 
   // 删除一个小部件

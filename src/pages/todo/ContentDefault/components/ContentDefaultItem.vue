@@ -1,11 +1,11 @@
 <template>
   <div v-if="item" class="content-default-item"
        :class="itemId === item.id ? 'active' : ''"
-       :key="item.id" @click.stop @contextmenu="onContextMenuForTodo($event, item)">
+       :key="item.id" @click.stop="setItemId(item.id)" @contextmenu="onContextMenuForTodo($event, item)">
     <div class="flex">
       <todo-item-checkbox :priority="item.priority" :status="item.status"
                           @click.stop="updateStatus(item.id, item.status)"/>
-      <div class="title ellipsis" @click="setItemId(item.id)" :style="{color: handleTodoTitleColor(item)}">
+      <div class="title ellipsis" :style="{color: handleTodoTitleColor(item)}">
         {{ item.title }}
       </div>
     </div>
@@ -43,17 +43,18 @@ const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
   display: flex;
   justify-content: space-between;
   overflow: hidden;
+  width: calc(100% - 14px);
 
   &:last-child {
     border-bottom: 1px solid transparent;
   }
 
   &:hover {
-    background-color: var(--td-bg-color-component-hover);
+    background-color: var(--td-bg-color-container-hover);
   }
 
   &.active {
-    background-color: var(--td-bg-color-component-active);
+    background-color: var(--td-bg-color-container-active);
   }
 
   .delete {

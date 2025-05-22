@@ -1,4 +1,4 @@
-import UpdateLog from "@/global/UpdateLog";
+import UpdateLog from "@/global/UpdateLog.json";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {versionLess} from "@/utils/lang/FieldUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";

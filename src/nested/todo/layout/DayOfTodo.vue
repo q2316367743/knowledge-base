@@ -37,7 +37,7 @@
 <script lang="ts" setup>
 import {TodoItemStatus, TodoItemIndex, getNextTodoItemStatus} from "@/entity/todo/TodoItem";
 import {ArrowTriangleUpFilledIcon, PlusIcon} from "tdesign-icons-vue-next";
-import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
+import {onContextMenuForTodo, onTodoContextMenu} from "@/pages/todo/common/ContextMenuForTodo";
 import {useTodoItemStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
@@ -58,7 +58,7 @@ function onCheck(item: TodoItemIndex) {
 }
 
 const onContextMenu = (e: MouseEvent, item: TodoItemIndex) => {
-  onContextMenuForTodo(e, item, refresh);
+  onTodoContextMenu({e, item, toUpdate: refresh, attach: '.todo-container'});
 }
 
 
@@ -77,7 +77,6 @@ function addTodo() {
   flex: 1;
   background-color: var(--td-bg-color-container);
   border-radius: var(--td-radius-medium);
-  margin-bottom: 16px;
   overflow-y: auto;
   position: relative;
   box-shadow: var(--td-shadow-1);

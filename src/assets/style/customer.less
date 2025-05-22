@@ -13,53 +13,8 @@ pre {
 }
 
 
-.arco-typography {
-  pre {
-    border: 1px solid var(--color-neutral-6);
-    backdrop-filter: blur(8px);
-    padding: 7px;
-    border-radius: 7px;
-    overflow: auto;
-
-    code {
-      color: var(--td-text-color-primary) !important;
-      overflow-x: hidden;
-    }
-  }
-
-  code {
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 1em !important;
-    border: none !important;
-    background-color: transparent !important;
-    color: #c7254e !important;
-    border-radius: 2px;
-    font-family: JetBrainsMono, Console, '微软雅黑', Courier, monospace !important;
-
-    ol {
-      margin: 0;
-      padding: 0 20px;
-    }
-  }
-}
-
 .icon {
   fill: var(--td-text-color-primary);
-}
-
-.arco-menu-light {
-  .arco-menu-item {
-    .icon {
-      fill: var(--color-text-3);
-    }
-
-    &.arco-menu-selected {
-      .icon {
-        fill: rgb(var(--primary-6));
-      }
-    }
-  }
 }
 
 pre code.hljs {
@@ -144,9 +99,11 @@ body[arco-theme=dark] {
       background-color: var(--td-bg-color-component) !important;
     }
   }
-  .cherry-toolbar{
+
+  .cherry-toolbar {
     background-color: var(--td-bg-color-container);
   }
+
   .cherry-editor {
     .CodeMirror {
       background-color: var(--td-bg-color-container);
@@ -212,4 +169,10 @@ body[arco-theme=dark] {
 
 .t-drawer__body {
   position: relative;
+}
+
+.abs-drawer {
+  .t-drawer__body {
+    padding: 0;
+  }
 }

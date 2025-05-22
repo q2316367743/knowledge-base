@@ -31,15 +31,9 @@
         </template>
         <template #title>工具</template>
         <t-menu-item value="/tool/search">
-          <template #icon>
-            <search-icon/>
-          </template>
           搜索内容
         </t-menu-item>
         <t-menu-item value="/tool/recycle">
-          <template #icon>
-            <delete-icon/>
-          </template>
           回收站
         </t-menu-item>
         <t-menu-item value="/tool/category">
@@ -76,33 +70,18 @@
         </template>
         <template #title>更多</template>
         <t-menu-item value="/more/backup">
-          <template #icon>
-            <refresh-icon/>
-          </template>
           备份
         </t-menu-item>
         <t-menu-item value="/more/attachment">
-          <template #icon>
-            <file-attachment-icon/>
-          </template>
           附件
         </t-menu-item>
         <t-menu-item value="/more/recommend">
-          <template #icon>
-            <thumb-up-icon/>
-          </template>
           推荐
         </t-menu-item>
         <t-menu-item value="/more/update">
-          <template #icon>
-            <history-icon/>
-          </template>
           更新
         </t-menu-item>
         <t-menu-item value="/more/about">
-          <template #icon>
-            <info-circle-icon/>
-          </template>
           关于
         </t-menu-item>
       </t-submenu>
@@ -179,10 +158,10 @@
 <script lang="ts" setup>
 import {
   ArticleIcon, ChatMessageIcon,
-  CheckRectangleIcon, DeleteIcon,
-  Edit2Icon, EllipsisIcon, FileAttachmentIcon, FillColorIcon, HistoryIcon, InfoCircleIcon, KeyboardIcon, MoonIcon,
-  QuestionnaireIcon, RefreshIcon,
-  SearchIcon, SettingIcon, SunnyIcon, SystemMessagesIcon, ThumbUpIcon,
+  CheckRectangleIcon,
+  Edit2Icon, EllipsisIcon, FillColorIcon, KeyboardIcon, MoonIcon,
+  QuestionnaireIcon,
+  SettingIcon, SunnyIcon, SystemMessagesIcon,
   ToolsIcon, UserVipIcon
 } from "tdesign-icons-vue-next";
 import {openKeyDrawer} from "@/components/app-side/func";
