@@ -18,72 +18,72 @@
     </header>
     <div class="quadrant-content" :class="{'drag-over': isDragOver}">
       <!-- 置顶待办项折叠面板 -->
-      <collapsible-panel 
-        v-if="topItems.length > 0" 
-        title="已置顶" 
-        :count="topItems.length" 
-        :collapsed="isTopCollapsed" 
+      <collapsible-panel
+        v-if="topItems.length > 0"
+        title="已置顶"
+        :count="topItems.length"
+        :collapsed="isTopCollapsed"
         panel-class="top-panel"
         @toggle="$emit('toggle-top-collapse')">
-        <todo-item 
-          v-for="item in topItems" 
-          :key="item.id" 
+        <todo-item
+          v-for="item in topItems"
+          :key="item.id"
           :item="item"
-          @click="openTodoItemSetting(item)" 
+          @click="openTodoItemSetting(item)"
           @context-menu="onContextMenuForTodo($event, item)"
-          @drag-start="onDragStart($event, item)" 
+          @drag-start="onDragStart($event, item)"
           @drag-end="onDragEnd"
           @check="onCheck"/>
       </collapsible-panel>
 
       <!-- 普通活动待办项 -->
       <!-- 当有置顶项或已完成项时显示折叠面板 -->
-      <collapsible-panel 
-        v-if="normalActiveItems.length > 0 && (topItems.length > 0 || completedItems.length > 0)" 
-        title="待办项" 
-        :count="normalActiveItems.length" 
-        :collapsed="isNormalCollapsed" 
+      <collapsible-panel
+        v-if="normalActiveItems.length > 0 && (topItems.length > 0 || completedItems.length > 0)"
+        title="待办项"
+        :count="normalActiveItems.length"
+        :collapsed="isNormalCollapsed"
         panel-class="normal-panel"
         @toggle="$emit('toggle-normal-collapse')">
-        <todo-item 
-          v-for="item in normalActiveItems" 
-          :key="item.id" 
+        <todo-item
+          v-for="item in normalActiveItems"
+          :key="item.id"
           :item="item"
-          @click="openTodoItemSetting(item)" 
+          @click="openTodoItemSetting(item)"
           @context-menu="onContextMenuForTodo($event, item)"
-          @drag-start="onDragStart($event, item)" 
+          @drag-start="onDragStart($event, item)"
           @drag-end="onDragEnd"
           @check="onCheck"/>
       </collapsible-panel>
 
       <!-- 当没有置顶项和已完成项时直接显示普通待办项 -->
       <div v-if="normalActiveItems.length > 0 && topItems.length === 0 && completedItems.length === 0">
-        <todo-item 
-          v-for="item in normalActiveItems" 
-          :key="item.id" 
+        <todo-item
+          v-for="item in normalActiveItems"
+          :key="item.id"
           :item="item"
-          @click="openTodoItemSetting(item)" 
+          @click="openTodoItemSetting(item)"
           @context-menu="onContextMenuForTodo($event, item)"
-          @drag-start="onDragStart($event, item)" 
+          @drag-start="onDragStart($event, item)"
           @drag-end="onDragEnd"
           @check="onCheck"/>
       </div>
 
       <!-- 已完成和已放弃的待办项折叠面板 -->
-      <collapsible-panel 
-        v-if="completedItems.length > 0" 
-        title="已完成/已放弃" 
-        :count="completedItems.length" 
-        :collapsed="isCollapsed" 
+      <collapsible-panel
+        v-if="completedItems.length > 0"
+        title="已完成/已放弃"
+        :count="completedItems.length"
+        :collapsed="isCollapsed"
         @toggle="$emit('toggle-collapse')">
-        <todo-item 
-          v-for="item in completedItems" 
-          :key="item.id" 
+        <todo-item
+          v-for="item in completedItems"
+          :key="item.id"
           :item="item"
           :show-top-button="false"
-          @click="openTodoItemSetting(item)" 
+          @click="openTodoItemSetting(item)"
           @context-menu="onContextMenuForTodo($event, item)"
-          @drag-start="onDragStart($event, item)" 
+          @drag-start="onDragStart($event, item)"
           @drag-end="onDragEnd"
           @check="onCheck"/>
       </collapsible-panel>
@@ -92,12 +92,12 @@
 </template>
 
 <script lang="ts" setup>
-import { TodoItemIndex, TodoItemPriority, TodoItemStatus, getNextTodoItemStatus } from "@/entity/todo/TodoItem";
-import { PlusIcon } from "tdesign-icons-vue-next";
-import { openTodoItemSetting } from "@/pages/todo/common/TodoItemSetting/model";
-import { openAddTodoItem } from "@/pages/todo/common/AddTodoItem";
-import { onContextMenuForTodo } from "@/pages/todo/common/ContextMenuForTodo";
-import { useTodoItemStore } from "@/store";
+import {TodoItemIndex, TodoItemPriority, TodoItemStatus, getNextTodoItemStatus} from "@/entity/todo/TodoItem";
+import {PlusIcon} from "tdesign-icons-vue-next";
+import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
+import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
+import {onContextMenuForTodo} from "@/pages/todo/common/ContextMenuForTodo";
+import {useTodoItemStore, useTodoWrapStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import TodoItem from "./TodoItem.vue";
 import CollapsiblePanel from "./CollapsiblePanel.vue";
@@ -150,6 +150,8 @@ const normalActiveItems = computed(() => {
 
 // 获取已完成和已放弃的待办项
 const completedItems = computed(() => {
+  const {hideOfCompleteOrAbandon} = useTodoWrapStore();
+  if (hideOfCompleteOrAbandon) return [];
   return props.quadrant.items.filter(item =>
     item.status === TodoItemStatus.COMPLETE ||
     item.status === TodoItemStatus.ABANDON
@@ -175,12 +177,12 @@ function onDragStart(event: DragEvent, item: TodoItemIndex) {
   if (event.dataTransfer) {
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', item.id.toString());
-    
+
     // 添加拖拽时的视觉效果
     if (event.target instanceof HTMLElement) {
       event.target.classList.add('dragging');
     }
-    
+
     emit('drag-start', item);
   }
 }
@@ -251,7 +253,7 @@ function onDrop(event: DragEvent) {
     overflow: auto;
     padding: 6px 8px;
     transition: background-color 0.2s ease;
-    
+
     &.drag-over {
       background-color: var(--td-bg-color-container-select);
     }
