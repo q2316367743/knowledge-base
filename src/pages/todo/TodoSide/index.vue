@@ -1,20 +1,20 @@
 <template>
   <div class="todo-side">
-    <header class="m-2">
-      <t-input-group>
-        <t-input style="width: 233px;" v-model="keyword" allow-clear placeholder="请输入清单名称"/>
-        <t-button theme="primary" shape="square" @click="add(0)">
-          <template #icon>
-            <plus-icon/>
-          </template>
-        </t-button>
-      </t-input-group>
+    <header class="flex justify-between items-center p-4px pl-8px"
+            style="border-bottom: 1px solid var(--td-border-level-2-color)">
+      <div style="font-size: var(--td-font-size-body-large);font-weight: bold;">待办</div>
+      <t-button theme="primary" shape="square" @click="add(0)">
+        <template #icon>
+          <plus-icon/>
+        </template>
+      </t-button>
     </header>
-    <t-tree :actived="selectKeys" :data="treeNodeData" :line="true" :activable="true" :draggable="true"
+    <t-tree :actived="selectKeys" :data="todoCategoryTree" :line="true" :activable="true" :draggable="true"
             :style="{margin: '7px',width:' calc(100% - 14px)', height: virtualHeight}" :scroll="{type: 'virtual'}"
-            :allow-drop="checkAllowDrop" @drop="onDrop($event)" @click="onClick" v-model:expanded="expanded">
+            :allow-drop="checkAllowDrop" @drop="onDrop($event)" v-model:expanded="expanded">
       <template #label="{node}">
-        <div class="flex items-center w-full" @contextmenu="onContextmenu(node, $event)">
+        <div class="flex items-center w-full" @click="onClick({node, e: $event})"
+             @contextmenu="onContextmenu(node, $event)">
           <list-icon v-if="node.data.leaf"/>
           <folder-icon v-else/>
           <span class="text-ellipsis ml-8px" :title="node.label">{{ node.label }}</span>
@@ -32,32 +32,22 @@
 </template>
 <script lang="ts" setup>
 import {
-  DeleteIcon,
-  Edit2Icon,
   FolderIcon,
   ListIcon,
   MoreIcon,
   PlusIcon,
-  StarFilledIcon,
-  StarIcon
 } from "tdesign-icons-vue-next";
 import {TreeNodeModel} from "tdesign-vue-next";
+import Constant from "@/global/Constant";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {TodoCategory, TodoCategoryOpenTypeEnum, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
-import {searchData} from "@/entity/ListTree";
-import Constant from "@/global/Constant";
-import {
-  openAddTodoCategory,
-  openDeleteTodoCategory,
-  openUpdateTodoCategory
-} from "@/pages/todo/TodoSide/AddTodoCategory";
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {openAddTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
 import {onContextmenuForTodo} from "@/pages/todo/TodoSide/ContextmenuForTodo";
+import {TodoCategory, TodoCategoryOpenTypeEnum, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 
 interface DropContext {
   e: DragEvent;
@@ -69,14 +59,12 @@ interface DropContext {
 
 const size = useWindowSize();
 
-const keyword = ref('')
 const expanded = useUtoolsDbStorage<Array<string | number>>(LocalNameEnum.KEY_TODO_EXPANDED, []);
 
 const selectKeys = computed(() => ([useTodoWrapStore().categoryId]));
 
 const todoCategoryTree = computed(() => useTodoCategoryStore().todoCategoryTree);
 const virtualHeight = computed(() => (size.height.value - 56) + 'px');
-const treeNodeData = computed(() => searchData(keyword.value, todoCategoryTree.value));
 
 function onOpen(categoryId: number, category: TodoCategory, widget = false) {
   if (categoryId !== useTodoWrapStore().categoryId || widget) {
@@ -133,29 +121,8 @@ function onContextmenu(node: TreeNodeModel, e: MouseEvent) {
   })
 }
 
-const hasFeature = (id: number) => useTodoCategoryStore().hasFeature(id);
-const addFeature = (id: number) => useTodoCategoryStore().addFeature(id);
-const removeFeature = (id: number) => useTodoCategoryStore().removeFeature(id);
-
-function switchFeature(id: number) {
-  if (hasFeature(id)) {
-    removeFeature(id);
-  } else {
-    addFeature(id);
-  }
-}
-
 function add(pid: number) {
   openAddTodoCategory(pid);
-}
-
-
-function update(id: number) {
-  openUpdateTodoCategory(id);
-}
-
-function remove(id: number, title: string) {
-  openDeleteTodoCategory(id, title);
 }
 
 /**
@@ -193,6 +160,6 @@ function onDrop(data: DropContext) {
   left: 0;
   bottom: 0;
   width: 269px;
-  border-right: 1px solid var(--color-neutral-3);
+  border-right: 1px solid var(--td-border-level-2-color);
 }
 </style>
