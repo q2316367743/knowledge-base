@@ -9,9 +9,7 @@ import {useFolderStore} from "@/store/db/FolderStore";
 // 工具类
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {map, traverseNumber} from "@/utils/lang/ArrayUtil";
-// 组件
-import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
+import {map} from "@/utils/lang/ArrayUtil";
 // 图标
 import FileMarkdown from '@/components/KbIcon/FileMarkdown.vue';
 import IconRichText from '@/components/KbIcon/FileRichText.vue';
@@ -119,49 +117,6 @@ export function renderArticleType(type: ArticleTypeEnum): string {
   return "未知类型";
 }
 
-export async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<any> {
-  switch (type) {
-    case ArticleTypeEnum.MIND_MAP:
-      return buildMindMapData()
-    case ArticleTypeEnum.EXCEL:
-      return {};
-    case ArticleTypeEnum.HANDSONTABLE:
-      const {tableColumnCount, tableColCount} = useBaseSettingStore();
-      return {
-        data: [
-          ...traverseNumber(tableColCount).map(() => {
-            return [...traverseNumber(tableColumnCount).map(() => "")]
-          })
-        ],
-        columns: []
-      };
-    case ArticleTypeEnum.MARKDOWN:
-      // 查看是否有模板
-      const {markdownTemplates} = usePluginSettingStore();
-      for (let markdownTemplate of markdownTemplates) {
-        // 名字匹配
-        if (name.match(markdownTemplate.name)) {
-          // 获取内容
-          const {getContent} = usePluginSettingStore();
-          const res = await getContent(markdownTemplate.id);
-          return res.record ? res.record?.content : '';
-        }
-      }
-      return '';
-    case ArticleTypeEnum.LOGIC_FLOW:
-      return buildLogicFlowData()
-    case ArticleTypeEnum.SUPER_EDITOR:
-      return {
-        time: Date.now(),
-        blocks: []
-      };
-      case ArticleTypeEnum.ENCRYPT_EDITOR:
-      return buildEncryptEditorData();
-    default:
-      return "";
-  }
-}
-
 export function addArticleModal() {
   const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
   const type = ref(ArticleTypeEnum.MARKDOWN);
@@ -184,7 +139,7 @@ export function addArticleModal() {
     draggable: true,
     confirmBtn: '新增',
     default: () => <Form data={{}} layout={'vertical'}>
-      <FormItem label={'笔记类型'} status={'validating'} labelAlign={'top'}>
+      <FormItem label={'笔记类型'} labelAlign={'top'}>
         <RadioGroup v-model={type.value}>
           {articleTypes.map(item => <Radio key={item.key} value={item.key}>{item.name}</Radio>)}
         </RadioGroup>

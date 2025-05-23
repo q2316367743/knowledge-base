@@ -32,13 +32,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
 import {LogicFlow} from "@logicflow/core";
-import {BpmnElement, BpmnXmlAdapter, MiniMap, SelectionSelect, Snapshot,} from '@logicflow/extension';
-import {useElementSize} from "@vueuse/core";
+import {BpmnElement, BpmnXmlAdapter, MiniMap, SelectionSelect, Snapshot, ProximityConnect, Menu } from '@logicflow/extension';
 import {registerCustomElement} from "@/editor/LogicFlow/node";
 import {DefaultTheme} from "@/editor/LogicFlow/theme";
-// 组件
 import LogicFlowSidebar from "@/editor/LogicFlow/components/LogicFlowSidebar.vue";
 import LogicFlowToolbar from "@/editor/LogicFlow/components/LogicFlowToolbar.vue";
 import LogicFlowSave from "@/editor/LogicFlow/components/LogicFlowSave.vue";
@@ -49,9 +46,10 @@ import {assign} from "radash";
 import {LogicFlowOption, updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
 import {updateLogicFlowEditConfig} from "@/editor/LogicFlow/components/LogicFlowEditConfig";
 import {openLogicFlowKeyboard} from "@/editor/LogicFlow/components/LogicFlowKeyboard";
+import {LogicFlowData, LogicFlowDataData} from "@/editor/LogicFlow/constants";
 
 const content = defineModel({
-  type: Object,
+  type: Object as PropType<LogicFlowData>,
   default: {}
 })
 
@@ -118,7 +116,7 @@ onMounted(() => {
   editConfig.value = content.value['editConfig'] || {}
   instance.value = new LogicFlow({
     container: containerRef.value,
-    plugins: [BpmnElement, BpmnXmlAdapter, Snapshot, SelectionSelect, MiniMap],
+    plugins: [BpmnElement, BpmnXmlAdapter, Snapshot, SelectionSelect, MiniMap, ProximityConnect, Menu],
     width: elementSize.width.value,
     height: elementSize.height.value,
     keyboard: {
@@ -128,6 +126,8 @@ onMounted(() => {
     background: {
       backgroundImage: 'var(--td-bg-color-container)'
     },
+    allowResize: true,
+    allowRotate: true,
     ...buildLogicFlowConfigFromOptions(option.value)
   });
   // 初始化赋值
@@ -200,7 +200,7 @@ function onSave() {
   }
   saved.value = true;
   content.value = {
-    data: instance.value.getGraphRawData(),
+    data: instance.value.getGraphRawData() as LogicFlowDataData,
     config: config.value,
     option: option.value,
     editConfig: editConfig.value
@@ -316,11 +316,10 @@ firstUseLogicFlow();
       left: 8px;
       bottom: 8px;
       background-color: var(--td-bg-color-container);
-      border-radius: var(--border-radius-medium);
-      border: 1px solid var(--color-border-2);
+      border-radius: var(--td-radius-medium);
+      border: 1px solid var(--td-border-level-2-color);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);;
     }
-
 
     .save {
       position: absolute;
@@ -341,18 +340,17 @@ firstUseLogicFlow();
   }
 
   .bpmn-pattern {
-    background-color: var(--color-bg-3);
+    background-color: var(--td-bg-color-component);
     color: var(--td-text-color-primary);
   }
 
   .lf-control {
-    background-color: var(--color-bg-3);
+    background-color: var(--td-bg-color-component);
     color: var(--td-text-color-primary);
   }
 
   .lf-control-item:hover {
-    background-color: var(--color-neutral-4);
-
+    background-color: var(--td-bg-color-component-hover);
   }
 
   .lf-menu {
@@ -361,11 +359,11 @@ firstUseLogicFlow();
   }
 
   .lf-menu-item:hover {
-    background-color: var(--color-neutral-4) !important;
+    background-color: var(--td-bg-color-component-hover) !important;
   }
 
   .lf-mini-map {
-    background: var(--color-fill-2) !important;
+    background: var(--td-bg-color-container) !important;
   }
 }
 </style>

@@ -1,3 +1,5 @@
+import {LogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
+
 export const shortStyles = [
     {
         backgroundColor: 'rgb(255, 255, 255)',
@@ -90,11 +92,12 @@ export const originalConfig = {
 
 export interface LogicFlowData {
   data: LogicFlowDataData;
-  option: Record<string, any>;
+  option: LogicFlowOption;
   editConfig: Record<string, any>;
+  config?: Record<string, any>;
 }
 
-interface LogicFlowDataData {
+export interface LogicFlowDataData {
   nodes: LogicFlowDataNode[];
   edges: LogicFlowDataEdge[];
 }

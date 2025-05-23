@@ -31,19 +31,19 @@ export default defineComponent({
 <style scoped lang="less">
 .logic-flow-save {
   padding: 4px 8px 2px;
-  background-color: var(--color-fill-2);
-  border: 1px solid var(--color-border-2);
-  border-radius: var(--border-radius-medium);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  background-color: var(--td-bg-color-component);
+  border: 1px solid var(--td-border-level-2-color);
+  border-radius: var(--td-radius-default);
+  box-shadow: var(--td-shadow-3);
   user-select: none;
   cursor: pointer;
 
   .saved {
-    color: rgb(var(--success-6))
+    color: var(--td-success-color);
   }
 
   .not-saved {
-    color: rgb(var(--danger-6))
+    color: var(--td-error-color);
   }
 }
 </style>

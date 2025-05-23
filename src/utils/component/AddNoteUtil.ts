@@ -1,5 +1,6 @@
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import {articleTypeMap, buildDefaultContent} from "@/pages/note/components/he-context";
+import {articleTypeMap} from "@/pages/note/components/he-context";
+import {buildDefaultContent} from "@/editor/types/EditorData";
 import {
   buildArticleName,
   checkPower,
