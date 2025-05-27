@@ -7,6 +7,7 @@ import {buildLogicFlowData, LogicFlowData} from "@/editor/LogicFlow/constants";
 import {buildEncryptEditorData, EncryptEditorData} from "@/editor/EncryptEditor/EncryptEditorType";
 import {MindMapTreeData} from "@/editor/MindMapEditor/domain";
 import {OutputData} from "@editorjs/editorjs";
+import {buildMemoData, MemoData} from "@/editor/MemoEditor/types";
 
 type EditorData = Record<string, any> |
   // 思维导图
@@ -17,6 +18,8 @@ type EditorData = Record<string, any> |
   EncryptEditorData |
   // 超级笔记
   OutputData |
+  // 闪卡
+  MemoData |
   // 富文本编辑器/markdown编辑器/代码笔记/drauu实现的画板
   // TODO: 此处要逐渐转为对象
   string
@@ -24,7 +27,9 @@ type EditorData = Record<string, any> |
 export async function buildDefaultContent(name: string, type: ArticleTypeEnum): Promise<EditorData> {
   switch (type) {
     case ArticleTypeEnum.MIND_MAP:
-      return buildMindMapData()
+      return buildMindMapData();
+    case ArticleTypeEnum.MEMO:
+      return buildMemoData();
     case ArticleTypeEnum.EXCEL:
       return {};
     case ArticleTypeEnum.HANDSONTABLE:

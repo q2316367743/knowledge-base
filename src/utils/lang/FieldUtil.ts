@@ -127,3 +127,16 @@ export function toDayOfBegin(day: Dayjs): Dayjs{
 export function toDayOfEnd(day: Dayjs): Dayjs{
   return day.set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).add(1, 'day').subtract(1, 'second');
 }
+
+/**
+ * 根据索引获取编号，编号从A开始，26进制，27使用AA表示，以此类推
+ * @param index
+ */
+export function getNo(index: number): string {
+  let result = '';
+  while (index >= 0) {
+    result = String.fromCharCode((index % 26) + 65) + result;
+    index = Math.floor(index / 26) - 1;
+  }
+  return result;
+}

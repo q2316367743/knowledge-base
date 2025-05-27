@@ -10,6 +10,7 @@ import {useFolderStore} from "@/store/db/FolderStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {map} from "@/utils/lang/ArrayUtil";
+import {addNote} from "@/utils/component/AddNoteUtil";
 // 图标
 import FileMarkdown from '@/components/KbIcon/FileMarkdown.vue';
 import IconRichText from '@/components/KbIcon/FileRichText.vue';
@@ -18,8 +19,9 @@ import FileMindMap from '@/components/KbIcon/FileMindMap.vue';
 import FileHandsontable from '@/components/KbIcon/FileHandsontable.vue';
 import FileLct from "@/components/KbIcon/FileLct.vue";
 import FileEncrypt from '@/components/KbIcon/FileEncrypt.vue';
-import {buildMindMapData} from "@/editor/MindMapEditor/constant";
-import {buildLogicFlowData} from "@/editor/LogicFlow/constants";
+import FileMemo from "@/components/KbIcon/FileMemo.vue";
+import FileMemoPreview from "@/components/KbIcon/FileMemoPreview.vue";
+import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
 import {
   BookIcon,
   CodeIcon,
@@ -30,9 +32,6 @@ import {
   StickyNoteIcon,
   TableIcon
 } from "tdesign-icons-vue-next";
-import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
-import {addNote} from "@/utils/component/AddNoteUtil";
-import {buildEncryptEditorData} from "@/editor/EncryptEditor/EncryptEditorType";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 -----------------------------------------------
@@ -92,6 +91,13 @@ export const extraNoteTypes: Array<ArticleTypeList> = [
     name: '加密笔记',
     icon: LockOnIcon,
     lock: FileEncrypt,
+    vip: true
+  },
+  {
+    key: ArticleTypeEnum.MEMO,
+    name: '闪卡',
+    icon: FileMemo,
+    lock: FileMemoPreview,
     vip: true
   }
 ]

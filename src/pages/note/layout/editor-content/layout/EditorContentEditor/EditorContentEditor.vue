@@ -1,26 +1,28 @@
 <template>
   <!-- 编辑区 -->
-  <div class="ec-container-item" v-if="articleIndex">
+  <div class="ec-container-item" v-if="articleIndex && load">
     <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
-                     v-if="editorType === ArticleTypeEnum.MARKDOWN && load" @send-to-chat="sendToChat"/>
+                     v-if="editorType === ArticleTypeEnum.MARKDOWN" @send-to-chat="sendToChat"/>
     <rich-text-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
-                      v-else-if="editorType === ArticleTypeEnum.RICH_TEXT && load"/>
+                      v-else-if="editorType === ArticleTypeEnum.RICH_TEXT"/>
     <monaco-editor v-model="content" :language="language" :read-only="preview" :article-id="articleIndex.id"
-                   v-else-if="editorType === ArticleTypeEnum.CODE && load" :file-name="articleIndex.name"/>
+                   v-else-if="editorType === ArticleTypeEnum.CODE" :file-name="articleIndex.name"/>
     <excel-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                  v-else-if="editorType === ArticleTypeEnum.EXCEL && load"/>
+                  v-else-if="editorType === ArticleTypeEnum.EXCEL"/>
     <mind-map-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                     v-else-if="editorType === ArticleTypeEnum.MIND_MAP && load"/>
+                     v-else-if="editorType === ArticleTypeEnum.MIND_MAP"/>
     <drauu-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                  v-else-if="editorType === ArticleTypeEnum.DRAUU && load"/>
+                  v-else-if="editorType === ArticleTypeEnum.DRAUU"/>
     <handsontable-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                         v-else-if="editorType === ArticleTypeEnum.HANDSONTABLE && load"/>
-    <logic-flow v-else-if="editorType === ArticleTypeEnum.LOGIC_FLOW && load"
+                         v-else-if="editorType === ArticleTypeEnum.HANDSONTABLE"/>
+    <logic-flow v-else-if="editorType === ArticleTypeEnum.LOGIC_FLOW"
                 v-model="content" :read-only="preview" :article-id="articleIndex.id"/>
     <super-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                  v-else-if="editorType === ArticleTypeEnum.SUPER_EDITOR && load"/>
+                  v-else-if="editorType === ArticleTypeEnum.SUPER_EDITOR"/>
     <encrypt-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
-                   v-else-if="editorType === ArticleTypeEnum.ENCRYPT_EDITOR && load"/>
+                    v-else-if="editorType === ArticleTypeEnum.ENCRYPT_EDITOR"/>
+    <memo-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                 v-else-if="editorType === ArticleTypeEnum.MEMO"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -45,6 +47,7 @@ import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
 import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 import EncryptEditor from "@/editor/EncryptEditor/EncryptEditor.vue";
+import MemoEditor from "@/editor/MemoEditor/MemoEditor.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,

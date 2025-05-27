@@ -59,6 +59,11 @@ export enum ArticleTypeEnum {
    */
   ENCRYPT_EDITOR = 11,
 
+  /**
+   * 闪卡
+   */
+  MEMO = 12,
+
 }
 
 // 文本类型

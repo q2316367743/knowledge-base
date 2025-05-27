@@ -1,16 +1,44 @@
+import dayjs from "dayjs";
+
 export interface MemoDataCardText {
   question: string;
   answer: string;
+  // 解析
+  analysis: string;
 }
 
 export interface MemoDataCardBlank {
   answer: string;
 }
 
+export interface MemoDataCardWord {
+  // 单词
+  word: string;
+  // 解释
+  meaning: Array<{
+    // 词性
+    partOfSpeech: string;
+    // 翻译
+    translation: string;
+  }>;
+  // 例句
+  examples: Array<{
+    // 句子
+    sentence: string;
+    // 翻译
+    translation: string;
+  }>;
+}
+
+
 export interface MemoDataCardChoice {
   question: string;
-  options: string[];
-  answer: number;
+  options: Array<{
+    // 选项
+    label: string;
+    // 是否是正确的
+    value: boolean;
+  }>;
   // 解析
   analysis: string;
 }
@@ -22,9 +50,11 @@ export interface MemoDataCardContentMap {
   'BLANK': MemoDataCardBlank;
   // 选择卡：选择题
   'CHOICE': MemoDataCardChoice;
+  // 单词卡
+  'WORD': MemoDataCardWord;
 }
 
-export type MemoDataCardType = keyof MemoDataCardContentMap;
+export type MemoDataCardType = 'TEXT' | 'BLANK' | 'CHOICE' | 'WORD';
 
 export enum MemoDataCardStatusEnum {
   // 未知
@@ -38,9 +68,20 @@ export enum MemoDataCardStatusEnum {
 }
 
 export interface MemoDataCard<T extends MemoDataCardType> {
+  // 类型
   type: T;
-  data: MemoDataCardContentMap[T];
+  // 数据
+  data: Partial<MemoDataCardContentMap[T]>;
+  // 状态
   status: MemoDataCardStatusEnum;
+  // 创建时间
+  createAt: number;
+  // 创建日期，用于分组
+  createDate: string;
+  // 上次学习时间，0为未学习
+  lastLearnedAt: number;
+  // 背景颜色，默认使用主题色
+  bgColor: string;
 }
 
 export interface MemoData {
@@ -48,16 +89,26 @@ export interface MemoData {
   cards: Array<MemoDataCard<MemoDataCardType>>
 }
 
+export function buildMemoDataCard<T extends MemoDataCardType>(type: T, data: Partial<MemoDataCardContentMap[T]>): MemoDataCard<T> {
+  const createAt = Date.now();
+  const createDate = dayjs(createAt).format("YYYY年MM月DD日");
+  return {
+    type,
+    data,
+    status: MemoDataCardStatusEnum.UNKNOWN,
+    createAt,
+    createDate,
+    lastLearnedAt: 0,
+    bgColor: ''
+  }
+}
+
 export function buildMemoData(): MemoData {
   return {
     version: '1.0.0',
-    cards: [{
-      type: 'TEXT',
-      status: MemoDataCardStatusEnum.UNKNOWN,
-      data: {
-        question: '这是默认问题',
-        answer: '这是默认答案'
-      }
-    }]
+    cards: [buildMemoDataCard('TEXT', {
+      question: '这是默认问题',
+      answer: '这是默认答案'
+    })]
   }
 }
