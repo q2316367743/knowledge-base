@@ -1,11 +1,11 @@
 <template>
   <div class="memo-editor">
-    <memo-preview v-if="readOnly"/>
-    <memo-edit v-else :cards="content.cards"/>
+    <memo-preview :cards="content.cards" v-if="readOnly"/>
+    <memo-edit :cards="content.cards" v-else/>
   </div>
 </template>
 <script lang="ts" setup>
-import {MemoData} from "@/editor/MemoEditor/types";
+import {IMemoInstance, MemoData, MemoInstance} from "@/editor/MemoEditor/types";
 import MemoPreview from "@/editor/MemoEditor/layout/MemoPreview/MemoPreview.vue";
 import MemoEdit from "@/editor/MemoEditor/layout/MemoEdit/MemoEdit.vue";
 
@@ -19,6 +19,18 @@ const props = defineProps({
   },
   articleId: Number,
 });
+
+provide<IMemoInstance>(MemoInstance, {
+  onAdd: (card) => {
+    content.value.cards.push(card);
+  },
+  onUpdate: (index, card) => {
+    content.value.cards[index] = card;
+  },
+  onDelete: (index) => {
+    content.value.cards.splice(index, 1);
+  }
+})
 </script>
 <style scoped lang="less">
 .memo-editor {

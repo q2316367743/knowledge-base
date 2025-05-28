@@ -1,10 +1,9 @@
 <template>
   <div class="memo-card-item-for-text" v-if="card">
-    <div class="memo-card-item-for-text__title ellipsis">{{ card.data.question }}</div>
     <div class="memo-card-item-for-text__content">{{ card.data.answer }}</div>
     <div class="memo-card-item-for-text__footer">
       <div class="date">{{ card.createDate }}</div>
-      <t-tag theme="primary" size="small">记忆卡</t-tag>
+      <t-tag theme="primary" size="small">填空卡</t-tag>
     </div>
   </div>
 </template>
@@ -13,22 +12,17 @@ import {MemoDataCard} from "@/editor/MemoEditor/types";
 
 defineProps({
   card: {
-    type: Object as PropType<MemoDataCard<'TEXT'>>,
+    type: Object as PropType<MemoDataCard<'BLANK'>>,
   }
 });
 </script>
 <style scoped lang="less">
+@import "@/assets/style/func";
+
 .memo-card-item-for-text {
   display: flex;
   flex-direction: column;
   height: 100%;
-
-  &__title {
-    font-size: var(--td-font-size-title-medium);
-    font-weight: bold;
-    margin-bottom: 8px;
-    flex: 0 0 21px;
-  }
 
   &__content {
     font-size: var(--td-font-size-body-medium);
@@ -37,6 +31,7 @@ defineProps({
     overflow: auto;
     margin-bottom: 8px;
     word-wrap: anywhere;
+    .ellipsis-line(@line-number: 8);
   }
 
   &__footer {

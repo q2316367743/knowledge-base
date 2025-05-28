@@ -1,10 +1,18 @@
 <template>
   <div class="memo-card-item-for-text" v-if="card">
-    <div class="memo-card-item-for-text__title ellipsis">{{ card.data.question }}</div>
-    <div class="memo-card-item-for-text__content">{{ card.data.answer }}</div>
+    <div class="memo-card-item-for-text__title ellipsis">{{ card.data.word }}</div>
+    <div class="memo-card-item-for-text__content">
+      <div class="meaning">
+        <div v-for="e in card.data.meaning">{{ e.partOfSpeech }} {{ e.translation }}</div>
+      </div>
+      <t-divider v-if="card.data.examples && card.data.examples.length > 0"/>
+      <div class="examples" v-if="card.data.examples && card.data.examples.length > 0">
+        <div class="example" v-for="e in card.data.examples">{{ e.sentence }} {{ e.translation }}</div>
+      </div>
+    </div>
     <div class="memo-card-item-for-text__footer">
       <div class="date">{{ card.createDate }}</div>
-      <t-tag theme="primary" size="small">记忆卡</t-tag>
+      <t-tag theme="primary" size="small">单词卡</t-tag>
     </div>
   </div>
 </template>
@@ -13,7 +21,7 @@ import {MemoDataCard} from "@/editor/MemoEditor/types";
 
 defineProps({
   card: {
-    type: Object as PropType<MemoDataCard<'TEXT'>>,
+    type: Object as PropType<MemoDataCard<'WORD'>>,
   }
 });
 </script>
@@ -37,6 +45,12 @@ defineProps({
     overflow: auto;
     margin-bottom: 8px;
     word-wrap: anywhere;
+
+    .example {
+      padding: 8px;
+      border: 1px solid var(--td-border-level-2-color);
+      border-radius: var(--td-radius-default);
+    }
   }
 
   &__footer {

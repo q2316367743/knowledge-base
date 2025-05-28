@@ -1,8 +1,10 @@
 <template>
   <div class="memo-edit">
-    <memo-card-item v-for="(item, index) in cards" :key="index" :card="item"/>
+    <div class="memo-edit-container">
+      <memo-card-item v-for="(item, index) in cards" :key="index" :card="item" :idx="index"/>
+    </div>
     <div class="add">
-      <t-dropdown :options trigger="click">
+      <t-dropdown :options trigger="click" @click="onAdd">
         <t-button theme="primary" shape="circle" size="large">
           <template #icon>
             <plus-icon/>
@@ -13,9 +15,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TdDropdownItemProps} from "tdesign-vue-next";
 import {PlusIcon} from "tdesign-icons-vue-next";
-import {MemoDataCard, MemoDataCardType} from "@/editor/MemoEditor/types";
+import {TdDropdownItemProps} from "tdesign-vue-next";
+import {IMemoInstance, MemoDataCard, MemoDataCardType, MemoInstance} from "@/editor/MemoEditor/types";
 import {openMemoCardEdit} from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEdit";
 import MemoCardItem from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItem.vue";
 
@@ -25,6 +27,7 @@ defineProps({
     default: () => []
   }
 });
+
 const options = ref<Array<TdDropdownItemProps>>([
   {
     content: '新增记忆卡',
@@ -40,23 +43,33 @@ const options = ref<Array<TdDropdownItemProps>>([
     value: 'WORD'
   }
 ]);
+
+const instance = inject<IMemoInstance>(MemoInstance);
 const onAdd = (item: TdDropdownItemProps) => {
   openMemoCardEdit(item.value as MemoDataCardType).then((card) => {
     // 添加卡片
-    cards.value.push(card);
+    instance?.onAdd(card);
   });
 };
 </script>
 <style scoped lang="less">
 .memo-edit {
-  height: calc(100% - 16px);
-  width: calc(100% - 16px);
-  padding: 8px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 8px;
-  position: relative;
+  height: 100%;
+  width: 100%;
+
+  .memo-edit-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative;
+    overflow: auto;
+    height: calc(100% - 16px);
+    width: calc(100% - 16px);
+    padding: 8px;
+  }
 
   .add {
     position: absolute;

@@ -20,6 +20,9 @@ export function openMemoCardEdit(type: MemoDataCardType, old?: MemoDataCard<Memo
       header: op + '卡片',
       placement: 'right',
       size: 'calc(100vw - 49px)',
+      closeOnEscKeydown: false,
+      closeOnOverlayClick: false,
+      closeBtn: true,
       default: () => <Form data={data.value}>
         {data.value.type === 'TEXT' ? <MemoCardEditForText v-model={data.value.data as MemoDataCardText}/> :
           data.value.type === 'BLANK' ? <MemoCardEditForBlank v-model={data.value.data as MemoDataCardBlank}/> :

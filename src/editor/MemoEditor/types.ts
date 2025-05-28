@@ -56,6 +56,21 @@ export interface MemoDataCardContentMap {
 
 export type MemoDataCardType = 'TEXT' | 'BLANK' | 'CHOICE' | 'WORD';
 
+export const renderMemoDataCardType = (type: MemoDataCardType) => {
+  switch (type) {
+    case 'TEXT':
+      return '记忆卡';
+    case 'BLANK':
+      return '填空卡';
+    case 'WORD':
+      return '单词卡';
+    case 'CHOICE':
+      return '选择卡';
+    default:
+      return '未知卡';
+  }
+}
+
 export enum MemoDataCardStatusEnum {
   // 未知
   UNKNOWN = 0,
@@ -82,6 +97,8 @@ export interface MemoDataCard<T extends MemoDataCardType> {
   lastLearnedAt: number;
   // 背景颜色，默认使用主题色
   bgColor: string;
+  // 是否收藏、重点标记
+  star?: boolean;
 }
 
 export interface MemoData {
@@ -112,3 +129,11 @@ export function buildMemoData(): MemoData {
     })]
   }
 }
+
+export interface IMemoInstance {
+  onAdd: (card: MemoDataCard<MemoDataCardType>) => void;
+  onUpdate: (index: number, card: MemoDataCard<MemoDataCardType>) => void;
+  onDelete: (index: number) => void;
+}
+
+export const MemoInstance = Symbol() as InjectionKey<IMemoInstance>;

@@ -1,6 +1,6 @@
 <template>
   <t-form-item label="" label-align="top">
-    <t-textarea v-model="data.answer" placeholder="请输入填空，练习时会自动隐藏文字" :autosize="{minRows: 3, maxRows: 5}"/>
+    <t-textarea v-model="data.answer" placeholder="请输入填空，练习时会自动隐藏文字" :autosize="{minRows: 3, maxRows: 10}"/>
   </t-form-item>
 </template>
 <script lang="ts" setup>
