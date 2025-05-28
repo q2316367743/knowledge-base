@@ -43,14 +43,14 @@
   </t-dialog>
 </template>
 <script lang="ts" setup>
-import {CheckTagGroupOption} from "tdesign-vue-next/es/tag/type";
+import {CheckTagGroupOption} from "tdesign-vue-next";
+import {CloseIcon, Edit2Icon, SendIcon} from "tdesign-icons-vue-next";
 import {useChatStore} from "@/store/components/ChatStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {ArticleIndex} from "@/entity/article";
 import {renderArticleType} from "@/pages/note/components/he-context";
 import AssociationArticle from "@/pages/home/components/AssociationArticle.vue";
-import {CloseIcon, Edit2Icon, SendIcon} from "tdesign-icons-vue-next";
 
 const visible = defineModel({
   type: Boolean,
