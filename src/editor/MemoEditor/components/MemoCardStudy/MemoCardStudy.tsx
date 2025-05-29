@@ -10,7 +10,7 @@ export function openMemoCardStudy(cards: Array<MemoDataCard<MemoDataCardType>>) 
     footer: false,
     attach: '.memo-editor',
     size: '100%',
-    default: () => <div class={'memo-card-study'}>
+    default: () => <div class={'memo-card-study pos-absolute top-0 left-0 right-0 bottom-0'}>
       <div
         class={'memo-card-study__header flex justify-between items-center pos-absolute top-8px left-8px right-8px height-32px'}>
         <div class={'left flex items-center'}>
