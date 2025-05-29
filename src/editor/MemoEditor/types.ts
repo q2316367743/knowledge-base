@@ -103,6 +103,8 @@ export interface MemoDataCard<T extends MemoDataCardType> {
 
 export interface MemoData {
   version: string;
+  // 上次学习到哪里了
+  index: number;
   cards: Array<MemoDataCard<MemoDataCardType>>
 }
 
@@ -123,6 +125,7 @@ export function buildMemoDataCard<T extends MemoDataCardType>(type: T, data: Par
 export function buildMemoData(): MemoData {
   return {
     version: '1.0.0',
+    index: 0,
     cards: [buildMemoDataCard('TEXT', {
       question: '这是默认问题',
       answer: '这是默认答案'
@@ -134,6 +137,9 @@ export interface IMemoInstance {
   onAdd: (card: MemoDataCard<MemoDataCardType>) => void;
   onUpdate: (index: number, card: MemoDataCard<MemoDataCardType>) => void;
   onDelete: (index: number) => void;
+  onStar: (index: number) => void;
+  getIndex: () => number;
+  setIndex: (index: number) => void;
 }
 
 export const MemoInstance = Symbol() as InjectionKey<IMemoInstance>;

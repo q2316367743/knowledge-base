@@ -29,6 +29,15 @@ provide<IMemoInstance>(MemoInstance, {
   },
   onDelete: (index) => {
     content.value.cards.splice(index, 1);
+  },
+  onStar: (index) => {
+    content.value.cards[index].star = !content.value.cards[index].star;
+  },
+  getIndex: () => {
+    return content.value.index;
+  },
+  setIndex: (index) => {
+    content.value.index = index;
   }
 })
 </script>

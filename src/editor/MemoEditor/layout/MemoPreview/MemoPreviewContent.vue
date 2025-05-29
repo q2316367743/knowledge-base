@@ -21,7 +21,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {MemoDataCard, MemoDataCardType} from "@/editor/MemoEditor/types";
+import {IMemoInstance, MemoDataCard, MemoDataCardType, MemoInstance} from "@/editor/MemoEditor/types";
 import {ChevronLeftIcon, ChevronRightIcon} from "tdesign-icons-vue-next";
 import MemoCardPreview from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreview.vue";
 
@@ -31,8 +31,9 @@ const props = defineProps({
     default: () => []
   }
 });
+const instance = inject<IMemoInstance>(MemoInstance);
 
-const idx = ref(0);
+const idx = ref(instance?.getIndex() || 0);
 const direction = ref('slide-right'); // 默认方向
 const current = computed(() => props.cards[idx.value]);
 const nexCard = () => {
@@ -42,6 +43,7 @@ const nexCard = () => {
   } else {
     idx.value += 1;
   }
+  instance?.setIndex(idx.value);
 }
 const preCard = () => {
   direction.value = 'slide-left'; // 向左滑动（新卡片从左侧进入）
@@ -50,6 +52,7 @@ const preCard = () => {
   } else {
     idx.value -= 1;
   }
+  instance?.setIndex(idx.value);
 }
 </script>
 <style scoped lang="less">
@@ -75,6 +78,7 @@ const preCard = () => {
   }
 
   /* 确保卡片在容器中的位置固定 */
+
   :deep(.memo-card-preview) {
     position: absolute;
     top: 0;

@@ -2,18 +2,12 @@
   <div class="memo-card-preview" v-if="card">
     <div class="memo-card-preview__star">
       <t-tag theme="primary">{{ renderMemoDataCardType(card.type) }}</t-tag>
-      <t-space size="small">
-        <t-button theme="primary" variant="outline" shape="square">
-          <template #icon>
-            <tag-icon />
-          </template>
-        </t-button>
-        <t-button theme="primary" variant="outline" shape="square">
-          <template #icon>
-            <star-icon/>
-          </template>
-        </t-button>
-      </t-space>
+      <t-button theme="primary" variant="outline" shape="square" @click="onStar(idx)">
+        <template #icon>
+          <star-filled-icon v-if="card.star"/>
+          <star-icon v-else/>
+        </template>
+      </t-button>
     </div>
     <div class="memo-card-preview__container">
       <memo-card-preview-for-text v-if="card.type === 'TEXT'" :card="card as MemoDataCard<'TEXT'>"/>
@@ -24,8 +18,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {MemoDataCard, MemoDataCardType, renderMemoDataCardType} from "@/editor/MemoEditor/types";
-import {StarIcon, TagIcon} from "tdesign-icons-vue-next";
+import {
+  IMemoInstance,
+  MemoDataCard,
+  MemoDataCardType,
+  MemoInstance,
+  renderMemoDataCardType
+} from "@/editor/MemoEditor/types";
+import {StarFilledIcon, StarIcon, TagIcon} from "tdesign-icons-vue-next";
 import MemoCardPreviewForText from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewForText.vue";
 import MemoCardPreviewForChoice from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewForChoice.vue";
 import MemoCardPreviewForWord from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewForWord.vue";
@@ -41,6 +41,13 @@ defineProps({
     default: 0,
   }
 });
+
+
+const instance = inject<IMemoInstance>(MemoInstance);
+
+const onStar = (idx: number) => {
+  instance?.onStar(idx);
+}
 </script>
 <style scoped lang="less">
 .memo-card-preview {
