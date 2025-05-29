@@ -34,6 +34,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SimpleCheckbox: typeof import('./src/components/SimpleCheckbox/SimpleCheckbox.vue')['default']
     SubPageLayout: typeof import('./src/components/PageLayout/SubPageLayout.vue')['default']
+    SuccessResult: typeof import('./src/components/Result/SuccessResult.vue')['default']
     TagGroup: typeof import('./src/components/TagGroup/TagGroup.vue')['default']
     TAlert: typeof import('tdesign-vue-next')['Alert']
     TAside: typeof import('tdesign-vue-next')['Aside']

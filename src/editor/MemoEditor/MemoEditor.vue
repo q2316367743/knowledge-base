@@ -5,7 +5,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {IMemoInstance, MemoData, MemoInstance} from "@/editor/MemoEditor/types";
+import {IMemoInstance, MemoData, MemoDataCardStatusEnum, MemoInstance} from "@/editor/MemoEditor/types";
 import MemoPreview from "@/editor/MemoEditor/layout/MemoPreview/MemoPreview.vue";
 import MemoEdit from "@/editor/MemoEditor/layout/MemoEdit/MemoEdit.vue";
 
@@ -38,6 +38,10 @@ provide<IMemoInstance>(MemoInstance, {
   },
   setIndex: (index) => {
     content.value.index = index;
+  },
+  study: (index: number, status: MemoDataCardStatusEnum) => {
+    content.value.cards[index].status = status;
+    content.value.cards[index].lastLearnedAt = Date.now();
   }
 })
 </script>
@@ -45,5 +49,6 @@ provide<IMemoInstance>(MemoInstance, {
 .memo-editor {
   width: 100%;
   height: 100%;
+  transform: translate(0, 0);
 }
 </style>

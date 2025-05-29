@@ -1,11 +1,6 @@
 <template>
   <div class="memo-preview-content">
-    <div class="memo-preview-content__container">
-      <transition-group :name="direction" tag="div" class="card-container">
-        <memo-card-preview v-if="current" :key="idx" :idx="idx" :card="current"/>
-      </transition-group>
-    </div>
-    <div class="memo-preview-content__footer">
+    <div class="memo-preview-content__header">
       <t-button theme="primary" @click="preCard">
         <template #icon>
           <chevron-left-icon/>
@@ -18,11 +13,58 @@
         </template>
       </t-button>
     </div>
+    <div class="memo-preview-content__container">
+      <transition-group :name="direction" tag="div" class="card-container">
+        <memo-card-preview v-if="current" :key="idx" :idx="idx" :card="current"/>
+      </transition-group>
+    </div>
+    <div class="memo-preview-content__footer">
+      <div class="btn" @click="onStudy(MemoDataCardStatusEnum.NOT_REMEMBERED)">
+        <div class="text danger">忘记了</div>
+        <div class="date">3.6小时</div>
+      </div>
+      <div class="btn" @click="onStudy(MemoDataCardStatusEnum.BLUR)">
+        <div class="text warning">模糊</div>
+        <div class="date">7.2小时</div>
+      </div>
+      <div class="btn" @click="onStudy(MemoDataCardStatusEnum.REMEMBERED)">
+        <div class="text success">记住了</div>
+        <div class="date">12小时</div>
+      </div>
+      <t-divider layout="vertical"/>
+      <t-popup trigger="click" placement="top" v-model:visible="moreVisible">
+        <div class="btn">
+          <more-icon/>
+        </div>
+        <template #content>
+          <div class="btn-more">
+            <div class="btn" @click="onStudy(MemoDataCardStatusEnum.COMPLETED)">
+              <div class="text success">完成学习</div>
+              <div class="date">设为完成状态，不在复习</div>
+            </div>
+            <div class="btn" @click="onStudy(MemoDataCardStatusEnum.UNKNOWN)">
+              <div class="text danger">彻底忘记</div>
+              <div class="date">重置计划，重新开始复习</div>
+            </div>
+            <div class="divider"></div>
+            <div class="cancel" @click="moreVisible=false">
+              <div class="text">取消</div>
+            </div>
+          </div>
+        </template>
+      </t-popup>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
-import {IMemoInstance, MemoDataCard, MemoDataCardType, MemoInstance} from "@/editor/MemoEditor/types";
-import {ChevronLeftIcon, ChevronRightIcon} from "tdesign-icons-vue-next";
+import {
+  IMemoInstance,
+  MemoDataCard,
+  MemoDataCardStatusEnum,
+  MemoDataCardType,
+  MemoInstance
+} from "@/editor/MemoEditor/types";
+import {ChevronLeftIcon, ChevronRightIcon, MoreIcon} from "tdesign-icons-vue-next";
 import MemoCardPreview from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreview.vue";
 
 const props = defineProps({
@@ -35,6 +77,8 @@ const instance = inject<IMemoInstance>(MemoInstance);
 
 const idx = ref(instance?.getIndex() || 0);
 const direction = ref('slide-right'); // 默认方向
+const moreVisible = ref(false);
+
 const current = computed(() => props.cards[idx.value]);
 const nexCard = () => {
   direction.value = 'slide-right'; // 向右滑动（新卡片从右侧进入）
@@ -54,6 +98,11 @@ const preCard = () => {
   }
   instance?.setIndex(idx.value);
 }
+
+const onStudy = (status: MemoDataCardStatusEnum) => {
+  instance?.study(idx.value, status);
+  nexCard();
+}
 </script>
 <style scoped lang="less">
 .memo-preview-content {
@@ -61,13 +110,33 @@ const preCard = () => {
   height: 100%;
   position: relative;
 
-  &__container {
+  &__header {
     position: absolute;
+    height: 32px;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 49px;
-    padding: 24px;
+    border-bottom: 1px solid var(--td-border-level-2-color);
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    .progress {
+      font-size: var(--td-font-size-body-large);
+      font-weight: bold;
+      color: var(--td-text-color-secondary);
+    }
+  }
+
+  &__container {
+    position: absolute;
+    top: 49px;
+    left: 0;
+    right: 0;
+    bottom: 67px;
+    padding: 16px;
     overflow: hidden; /* 确保超出容器的内容被隐藏 */
   }
 
@@ -89,7 +158,7 @@ const preCard = () => {
 
   &__footer {
     position: absolute;
-    height: 32px;
+    height: 48px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -100,10 +169,112 @@ const preCard = () => {
     align-items: center;
     gap: 16px;
 
-    .progress {
-      font-size: var(--td-font-size-body-large);
-      font-weight: bold;
+    .btn {
+      height: 35px;
+      padding: 2px 24px;
+      background-color: var(--td-bg-color-component);
+      border-radius: var(--td-radius-medium);
+      transition: background-color 0.3s ease-in-out;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      &:hover {
+        background-color: var(--td-bg-color-component-hover);
+      }
+
+      &:active {
+        background-color: var(--td-bg-color-component-active);
+      }
+
+      .text {
+        width: 100%;
+        text-align: center;
+
+        &.danger {
+          color: var(--td-error-color);
+        }
+
+        &.warning {
+          color: var(--td-warning-color);
+        }
+
+        &.success {
+          color: var(--td-success-color);
+        }
+      }
+
+      .date {
+        font-size: var(--td-font-size-body-small);
+        color: var(--td-text-color-secondary);
+      }
+    }
+  }
+}
+
+.btn-more {
+  .btn {
+    padding: 2px 24px;
+    background-color: var(--td-bg-color-component);
+    border-radius: var(--td-radius-medium);
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    user-select: none;
+    margin-top: 8px;
+
+
+    &:hover {
+      background-color: var(--td-bg-color-component-hover);
+    }
+
+    &:active {
+      background-color: var(--td-bg-color-component-active);
+    }
+
+    .text {
+      width: 100%;
+      text-align: center;
+
+      &.danger {
+        color: var(--td-error-color);
+      }
+
+      &.success {
+        color: var(--td-success-color);
+      }
+
+    }
+
+    .date {
+      font-size: var(--td-font-size-body-small);
       color: var(--td-text-color-secondary);
+    }
+  }
+
+  .divider {
+    margin-top: 8px;
+    border-top: 1px solid var(--td-border-level-2-color);
+    content: "";
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .cancel {
+    padding: 8px 24px;
+    border-radius: var(--td-radius-medium);
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+
+    &:hover {
+      background-color: var(--td-bg-color-component-hover);
+    }
+
+    &:active {
+      background-color: var(--td-bg-color-component-active);
     }
   }
 }

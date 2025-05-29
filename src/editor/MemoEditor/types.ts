@@ -72,14 +72,16 @@ export const renderMemoDataCardType = (type: MemoDataCardType) => {
 }
 
 export enum MemoDataCardStatusEnum {
-  // 未知
+  // 未知、未学习、彻底忘记
   UNKNOWN = 0,
-  // 记住了
+  // 记住了，12小时
   REMEMBERED = 1,
-  // 模糊
+  // 模糊，7.2小时
   BLUR = 2,
-  // 不记得
+  // 不记得，3.6小时
   NOT_REMEMBERED = 3,
+  // 完成学习，不再学习
+  COMPLETED = 4
 }
 
 export interface MemoDataCard<T extends MemoDataCardType> {
@@ -140,6 +142,7 @@ export interface IMemoInstance {
   onStar: (index: number) => void;
   getIndex: () => number;
   setIndex: (index: number) => void;
+  study: (index: number, status: MemoDataCardStatusEnum) => void
 }
 
 export const MemoInstance = Symbol() as InjectionKey<IMemoInstance>;

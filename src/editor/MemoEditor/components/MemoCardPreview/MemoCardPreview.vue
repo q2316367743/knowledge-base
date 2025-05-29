@@ -25,7 +25,7 @@ import {
   MemoInstance,
   renderMemoDataCardType
 } from "@/editor/MemoEditor/types";
-import {StarFilledIcon, StarIcon, TagIcon} from "tdesign-icons-vue-next";
+import {StarFilledIcon, StarIcon} from "tdesign-icons-vue-next";
 import MemoCardPreviewForText from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewForText.vue";
 import MemoCardPreviewForChoice from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewForChoice.vue";
 import MemoCardPreviewForWord from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewForWord.vue";
@@ -55,7 +55,7 @@ const onStar = (idx: number) => {
   height: 100%;
   border-radius: var(--td-radius-large);
   box-shadow: var(--td-shadow-1);
-  background-color: var(--td-bg-color-component);
+  background-color: var(--td-bg-color-container);
   position: relative;
 
   .memo-card-preview__star {
