@@ -103,11 +103,19 @@ export interface MemoDataCard<T extends MemoDataCardType> {
   star?: boolean;
 }
 
+export interface MemoDataSetting {
+  theme?: string;
+  music: boolean;
+}
+
 export interface MemoData {
   version: string;
   // 上次学习到哪里了
   index: number;
-  cards: Array<MemoDataCard<MemoDataCardType>>
+  // 卡片
+  cards: Array<MemoDataCard<MemoDataCardType>>;
+  // 设置
+  setting: MemoDataSetting;
 }
 
 export function buildMemoDataCard<T extends MemoDataCardType>(type: T, data: Partial<MemoDataCardContentMap[T]>): MemoDataCard<T> {
@@ -131,7 +139,10 @@ export function buildMemoData(): MemoData {
     cards: [buildMemoDataCard('TEXT', {
       question: '这是默认问题',
       answer: '这是默认答案'
-    })]
+    })],
+    setting: {
+      music: false
+    }
   }
 }
 
@@ -142,7 +153,8 @@ export interface IMemoInstance {
   onStar: (index: number) => void;
   getIndex: () => number;
   setIndex: (index: number) => void;
-  study: (index: number, status: MemoDataCardStatusEnum) => void
+  study: (index: number, status: MemoDataCardStatusEnum) => void;
+  updateSetting: (setting: MemoDataSetting) => void
 }
 
 export const MemoInstance = Symbol() as InjectionKey<IMemoInstance>;

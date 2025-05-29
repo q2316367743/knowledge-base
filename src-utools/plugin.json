@@ -16,7 +16,7 @@
   },
   "features": [
     {
-      "code": "function:home",
+      "code": "function:note",
       "explain": "知识库",
       "icon": "public/logo.png",
       "platform": [
@@ -25,20 +25,7 @@
         "linux"
       ],
       "cmds": [
-        "知识库"
-      ]
-    },
-    {
-      "code": "function:editor",
-      "explain": "知识库",
-      "icon": "public/logo.png",
-      "platform": [
-        "win32",
-        "darwin",
-        "linux"
-      ],
-      "cmds": [
-        "笔记"
+        "知识库","笔记"
       ]
     },
     {
@@ -53,6 +40,19 @@
       "cmds": [
         "待办",
         "todo"
+      ]
+    },
+    {
+      "code": "function:ai",
+      "explain": "知识库",
+      "icon": "public/logo.png",
+      "platform": [
+        "win32",
+        "darwin",
+        "linux"
+      ],
+      "cmds": [
+        "AI问答", "AI助手"
       ]
     },
     {

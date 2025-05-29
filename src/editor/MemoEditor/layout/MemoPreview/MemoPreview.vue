@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import {MemoDataCard, MemoDataCardType, MemoDataCardStatusEnum} from "@/editor/MemoEditor/types";
 import MemoPreviewContent from "@/editor/MemoEditor/layout/MemoPreview/MemoPreviewContent.vue";
-import {openMemoCardStudy} from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudy";
+import {openMemoCardStudy} from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudyDrawer";
 
 const props = defineProps({
   cards: {

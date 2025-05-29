@@ -138,12 +138,15 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
     useUmami.track("feature", "查看待办");
     toTodo(preload);
   } else if (operate === 'function') {
-    if (preload === 'editor') {
+    if (preload === 'note') {
       useUmami.track("feature", "前往编辑器");
       router.push('/note');
     } else if (preload === 'todo') {
       useUmami.track("feature", "前往待办");
       router.push('/todo');
+    } else if (preload === 'ai') {
+      useUmami.track("feature", "前往AI");
+      router.push('/home');
     } else if (preload === 'add') {
       useUmami.track("feature", "新增笔记");
       addSimpleNote(extra).then((a) => useHomeEditorStore().openArticle(a));
