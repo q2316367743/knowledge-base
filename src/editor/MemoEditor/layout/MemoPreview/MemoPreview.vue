@@ -3,7 +3,7 @@
     <div class="w-full h-full flex ">
       <div class="h-full w-full" style="background-color: var(--td-bg-color-container)">
         <memo-preview-content :cards="data" v-if="data.length > 0"/>
-        <success-result v-else title="今天已经没有要复习的了"/>
+        <success-result v-else title="已完成今日的全部学习内容"/>
       </div>
       <div class="memo-preview__aside">
         <div class="memo-preview__statistics">

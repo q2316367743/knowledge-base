@@ -113,18 +113,18 @@ interface PaymentOrder {
 }
 
 export const InjectionUtil = {
-  getPlatform(): 'uTools' | 'FocusAny' | 'web' {
-    return 'uTools';
+  getPlatform(): 'uTools' | 'web' {
+    return !!window['utools'] ? 'uTools' : 'web';
   },
   getUser(): { avatar: string, nickname: string, type: string } | null {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.getUser();
     } else {
       return null;
     }
   },
   isDev() {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.isDev()
     } else {
       return import.meta.env.DEV;
@@ -132,7 +132,7 @@ export const InjectionUtil = {
   },
   copyText(text: string) {
     (async () => {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.copyText(text)
       } else {
         await navigator.clipboard.writeText(text);
@@ -147,28 +147,28 @@ export const InjectionUtil = {
     });
   },
   shellOpenExternal(url: string): void {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.shellOpenExternal(url);
     } else {
       window.open(url);
     }
   },
   showMainWindow() {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.showMainWindow();
     } else {
       return false;
     }
   },
   hideMainWindow() {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.hideMainWindow();
     } else {
       return false;
     }
   },
   outPlugin(isKill?: boolean): boolean {
-    if ('utools' in window) {
+    if (window['utools']) {
       utools.hideMainWindow();
       return utools.outPlugin(isKill);
     } else {
@@ -182,7 +182,7 @@ export const InjectionUtil = {
      * @param value 键值
      */
     setItem(key: string, value: any): void {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.dbStorage.setItem(key, value);
       } else {
         localStorage.setItem(key, JSON.stringify({
@@ -194,7 +194,7 @@ export const InjectionUtil = {
      * 获取键名对应的值
      */
     getItem<T = any>(key: string): T | null {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.dbStorage.getItem<T>(key);
       } else {
         const item = localStorage.getItem(key);
@@ -210,7 +210,7 @@ export const InjectionUtil = {
      * 删除键值对(删除文档)
      */
     removeItem(key: string): void {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.dbStorage.removeItem(key);
       } else {
         localStorage.removeItem(key);
@@ -219,28 +219,28 @@ export const InjectionUtil = {
   },
   db: {
     async put(doc: InjectionDbDoc): Promise<InjectionDbReturn> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.promises.put(doc);
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
     },
     async get(id: string): Promise<InjectionDbDoc | null> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.promises.get(id);
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
     },
     async remove(doc: string | InjectionDbDoc): Promise<InjectionDbReturn> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.promises.remove(doc);
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
     },
     async allDocs(key?: string): Promise<InjectionDbDoc[]> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.promises.allDocs(key);
       } else {
         return Promise.reject(new Error("系统环境异常"))
@@ -248,21 +248,21 @@ export const InjectionUtil = {
 
     },
     async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<InjectionDbReturn> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.promises.postAttachment(docId, attachment, type);
       } else {
         return Promise.reject(new Error("系统环境异常"))
       }
     },
     getAttachment(docId: string): Uint8Array | null {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.getAttachment(docId);
       } else {
         throw new Error("系统环境异常");
       }
     },
     async getAttachmentType(docId: string): Promise<string | null> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.db.promises.getAttachmentType(docId);
       } else {
         return Promise.reject(new Error("系统环境异常"))
@@ -270,21 +270,21 @@ export const InjectionUtil = {
     }
   },
   getCursorScreenPoint(): { x: number, y: number } {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.getCursorScreenPoint();
     } else {
       return {x: 0, y: 0};
     }
   },
   createBrowserWindow(url: string, options: BrowserWindow.InitOptions, callback?: () => void): BrowserWindow.WindowInstance {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.createBrowserWindow(url, options, callback);
     } else {
       throw new Error("环境异常");
     }
   },
   setFeatureOneSimple(code: string, cmd: FeatureCmd | string): boolean {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.setFeature({
         code: code,
         explain: Constant.name,
@@ -301,7 +301,7 @@ export const InjectionUtil = {
     }
   },
   getFeatureOne(code: string): Feature | null {
-    if ('utools' in window) {
+    if (window['utools']) {
       const features = utools.getFeatures([code]);
       if (features.length === 0) {
         return null;
@@ -318,14 +318,14 @@ export const InjectionUtil = {
     }
   },
   removeFeatureOne(code: string): boolean {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.removeFeature(code)
     } else {
       return false;
     }
   },
   listFeature(prefix: string | string[], keys?: Array<any>): Array<string> {
-    if ('utools' in window) {
+    if (window['utools']) {
       let features;
       if (typeof prefix === 'string') {
         if (keys) {
@@ -342,7 +342,7 @@ export const InjectionUtil = {
     }
   },
   screenCapture(callback: (imgBase64: string) => void): void {
-    if ('utools' in window) {
+    if (window['utools']) {
       utools.screenCapture(callback);
     } else {
       throw new Error("环境异常");
@@ -350,16 +350,16 @@ export const InjectionUtil = {
   },
   isWindows(): boolean {
     // 判断当前操作系统是不是Windows
-    return 'utools' in window ? utools.isWindows() : (navigator.userAgent.indexOf('Windows') !== -1);
+    return window['utools'] ? utools.isWindows() : (navigator.userAgent.indexOf('Windows') !== -1);
   },
   getWindowType(): 'main' | 'detach' | 'browser' {
-    return 'utools' in window ? utools.getWindowType() : 'detach';
+    return window['utools'] ? utools.getWindowType() : 'detach';
   },
   isDarkColors(): boolean {
-    return 'utools' in window ? utools.isDarkColors() : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return window['utools'] ? utools.isDarkColors() : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   },
   redirect(label: string | string[], payload: string | { type: 'text' | 'img' | 'files', data: any }): boolean {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.redirect(label, payload);
     } else {
       window.open(`utools://${label[0]}/${label[1]}?${payload}`);
@@ -367,14 +367,14 @@ export const InjectionUtil = {
     }
   },
   getPath(name: PathName): string {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.getPath(name);
     } else {
       return '';
     }
   },
   showNotification(body: string, featureName?: string): void {
-    if ('utools' in window) {
+    if (window['utools']) {
       utools.showNotification(body, featureName);
     } else {
       // 检查浏览器是否支持通知
@@ -402,14 +402,14 @@ export const InjectionUtil = {
   },
   version: {
     isSupportAi(): boolean {
-      if ('utools' in window) {
+      if (window['utools']) {
         return versionGreaterEqual(utools.getAppVersion(), 7)
       } else {
         return false
       }
     },
     isSupportMarkdown(): boolean {
-      if ('utools' in window) {
+      if (window['utools']) {
         return versionGreaterEqual(utools.getAppVersion(), 7)
       } else {
         return false
@@ -418,7 +418,7 @@ export const InjectionUtil = {
   },
   ai: {
     async service(): Promise<InnerAiService | null> {
-      if ('utools' in window) {
+      if (window['utools']) {
         const models = await utools.allAiModels();
         return {
           ...DEFAULT_AI_SERVICE,
@@ -430,7 +430,7 @@ export const InjectionUtil = {
       }
     },
     chat(option: AiChatOption, streamCallback: (chunk: AiChatMessage) => void): AiChatResult<void> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.ai(option, streamCallback);
       } else {
         throw new Error("不支持内置AI服务");
@@ -438,7 +438,7 @@ export const InjectionUtil = {
     }
   },
   async fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
-    if ('utools' in window) {
+    if (window['utools']) {
       return utools.fetchUserServerTemporaryToken();
     } else {
       return Promise.reject(new Error('不支持的平台'));
@@ -446,14 +446,14 @@ export const InjectionUtil = {
   },
   payment: {
     open(options: OpenPaymentOptions, callback?: () => void): void {
-      if ('utools' in window) {
+      if (window['utools']) {
         utools.openPayment(options, callback);
       } else {
         throw new Error('不支持的平台');
       }
     },
     async fetch(): Promise<Array<PaymentOrder>> {
-      if ('utools' in window) {
+      if (window['utools']) {
         return utools.fetchUserPayments();
       } else {
         return Promise.reject(new Error('不支持的平台'));
@@ -468,7 +468,7 @@ export const InjectionUtil = {
       option: L,
       from?: PluginEnterFrom
     }) => void): void {
-      if ('utools' in window) {
+      if (window['utools']) {
         utools.onPluginEnter(callback);
       }
     },
@@ -482,14 +482,14 @@ export const InjectionUtil = {
       payload: any,
       option: MainPushResult
     }) => void): void {
-      if ('utools' in window) {
+      if (window['utools']) {
         utools.onMainPush(callback, selectCallback);
       }
     }
   },
   browser: {
     openUrl(url: string, width?: number, height?: number) {
-      if ('utools' in window) {
+      if (window['utools']) {
         utools.ubrowser
           .goto(url)
           .run({width: width || 1200, height: height || 800})
