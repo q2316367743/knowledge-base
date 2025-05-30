@@ -5,7 +5,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {IMemoInstance, MemoData, MemoDataCardStatusEnum, MemoDataSetting, MemoInstance} from "@/editor/MemoEditor/types";
+import {
+  IMemoInstance,
+  MemoData,
+  MemoDataCardStatusEnum,
+  MemoDataSetting,
+  MemoInstance
+} from "@/editor/MemoEditor/types";
 import MemoPreview from "@/editor/MemoEditor/layout/MemoPreview/MemoPreview.vue";
 import MemoEdit from "@/editor/MemoEditor/layout/MemoEdit/MemoEdit.vue";
 
@@ -24,14 +30,23 @@ provide<IMemoInstance>(MemoInstance, {
   onAdd: (card) => {
     content.value.cards.push(card);
   },
-  onUpdate: (index, card) => {
-    content.value.cards[index] = card;
+  onUpdate: (id, card) => {
+    const index = content.value.cards.findIndex(e => e.id === id);
+    if (index > -1) {
+      content.value.cards[index] = card;
+    }
   },
-  onDelete: (index) => {
-    content.value.cards.splice(index, 1);
+  onDelete: (id) => {
+    const index = content.value.cards.findIndex(e => e.id === id);
+    if (index > -1) {
+      content.value.cards.splice(index, 1);
+    }
   },
-  onStar: (index) => {
-    content.value.cards[index].star = !content.value.cards[index].star;
+  onStar: (id) => {
+    const index = content.value.cards.findIndex(e => e.id === id);
+    if (index > -1) {
+      content.value.cards[index].star = !content.value.cards[index].star;
+    }
   },
   getIndex: () => {
     return content.value.index;
@@ -39,9 +54,12 @@ provide<IMemoInstance>(MemoInstance, {
   setIndex: (index) => {
     content.value.index = index;
   },
-  study: (index: number, status: MemoDataCardStatusEnum) => {
-    content.value.cards[index].status = status;
-    content.value.cards[index].lastLearnedAt = Date.now();
+  study: (id, status) => {
+    const index = content.value.cards.findIndex(e => e.id === id);
+    if (index > -1) {
+      content.value.cards[index].status = status;
+      content.value.cards[index].lastLearnedAt = Date.now();
+    }
   },
   updateSetting: (setting: MemoDataSetting) => {
     content.value.setting = setting;

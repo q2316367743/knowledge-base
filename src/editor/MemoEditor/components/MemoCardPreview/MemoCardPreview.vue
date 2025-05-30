@@ -2,7 +2,7 @@
   <div class="memo-card-preview" v-if="card">
     <div class="memo-card-preview__star">
       <t-tag theme="primary">{{ renderMemoDataCardType(card.type) }}</t-tag>
-      <t-button theme="primary" variant="outline" shape="square" @click="onStar(idx)">
+      <t-button theme="primary" variant="outline" shape="square" @click="onStar(card)">
         <template #icon>
           <star-filled-icon v-if="card.star"/>
           <star-icon v-else/>
@@ -45,8 +45,8 @@ defineProps({
 
 const instance = inject<IMemoInstance>(MemoInstance);
 
-const onStar = (idx: number) => {
-  instance?.onStar(idx);
+const onStar = (card: MemoDataCard<MemoDataCardType>) => {
+  instance?.onStar(card.id);
 }
 </script>
 <style scoped lang="less">

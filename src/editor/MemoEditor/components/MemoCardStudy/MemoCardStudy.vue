@@ -1,0 +1,64 @@
+<template>
+  <div class="memo-card-preview" v-if="card">
+    <div class="memo-card-preview__star">
+      <t-tag theme="primary">{{ renderMemoDataCardType(card.type) }}</t-tag>
+      <t-button theme="primary" variant="outline" @click="answer = !answer">
+        显示答案
+      </t-button>
+    </div>
+    <div class="memo-card-preview__container">
+      <memo-card-study-for-text v-if="card.type === 'TEXT'" :card="card as MemoDataCard<'TEXT'>" :answer/>
+      <memo-card-study-for-choice v-else-if="card.type === 'CHOICE'" :card="card as MemoDataCard<'CHOICE'>" :answer/>
+      <memo-card-study-for-word v-else-if="card.type === 'WORD'" :card="card as MemoDataCard<'WORD'>" :answer/>
+      <memo-card-study-for-blank v-else-if="card.type === 'BLANK'" :card="card as MemoDataCard<'BLANK'>" :answer/>
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import {
+  MemoDataCard,
+  MemoDataCardType,
+  renderMemoDataCardType
+} from "@/editor/MemoEditor/types";
+import MemoCardStudyForText from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudyForText.vue";
+import MemoCardStudyForChoice from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudyForChoice.vue";
+import MemoCardStudyForWord from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudyForWord.vue";
+import MemoCardStudyForBlank from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudyForBlank.vue";
+
+defineProps({
+  card: {
+    type: Object as PropType<MemoDataCard<MemoDataCardType>>,
+  },
+});
+
+const answer = ref(false);
+
+</script>
+<style scoped lang="less">
+.memo-card-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--td-radius-large);
+  box-shadow: var(--td-shadow-1);
+  background-color: var(--td-bg-color-container);
+  position: relative;
+
+  .memo-card-preview__star {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .memo-card-preview__container {
+    position: absolute;
+    top: 64px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+}
+</style>

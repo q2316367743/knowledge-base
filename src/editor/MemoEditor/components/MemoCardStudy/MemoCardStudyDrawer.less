@@ -1,0 +1,84 @@
+.memo-card-study {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px;
+    padding: 4px;
+    border-bottom: 1px solid var(--td-border-level-2-color);
+
+    .left {
+      display: flex;
+      align-items: center;
+
+      .page {
+        font-weight: bold;
+        margin-left: 8px;
+
+        .index {
+          color: var(--td-success-color);
+        }
+      }
+    }
+  }
+
+  &__content {
+    position: absolute;
+    top: 49px;
+    left: 8px;
+    right: 8px;
+    bottom: 65px;
+    padding: 8px;
+  }
+
+  &__footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    align-items: center;
+    border-top: 1px solid var(--td-border-level-2-color);
+
+    .btn {
+      padding: 0 32px;
+      height: 40px;
+      line-height: 40px;
+      background-color: var(--td-bg-color-component);
+      transition: background-color 0.3s ease-in-out;
+      cursor: pointer;
+      border-radius: var(--td-radius-default);
+      font-weight: bold;
+
+      &:hover {
+        background-color: var(--td-bg-color-component-hover);
+      }
+
+      &:active {
+        background-color: var(--td-bg-color-component-active);
+      }
+
+      &.success {
+        color: var(--td-success-color);
+      }
+
+      &.error {
+        color: var(--td-error-color);
+      }
+    }
+  }
+}

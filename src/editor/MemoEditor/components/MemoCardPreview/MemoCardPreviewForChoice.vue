@@ -1,6 +1,6 @@
 <template>
   <div class="memo-card-preview-for-text" v-if="card">
-    <div class="memo-card-preview-for-text__title ellipsis">{{ card.data.question }}</div>
+    <div class="memo-card-preview-for-text__title">{{ card.data.question }}</div>
     <div class="memo-card-preview-for-text__content">
       <div v-for="(o, i) in card.data.options" :class="{check: o.value}">{{ getNo(i) }}. {{ o.label }}</div>
     </div>

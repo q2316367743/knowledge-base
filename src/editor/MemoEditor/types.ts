@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import {useSnowflake} from "@/hooks/Snowflake";
 
 export interface MemoDataCardText {
   question: string;
@@ -74,17 +75,19 @@ export const renderMemoDataCardType = (type: MemoDataCardType) => {
 export enum MemoDataCardStatusEnum {
   // 未知、未学习、彻底忘记
   UNKNOWN = 0,
-  // 记住了，12小时
-  REMEMBERED = 1,
+  // 不记得，3.6小时
+  NOT_REMEMBERED = 1,
   // 模糊，7.2小时
   BLUR = 2,
-  // 不记得，3.6小时
-  NOT_REMEMBERED = 3,
+  // 记住了，12小时
+  REMEMBERED = 3,
   // 完成学习，不再学习
   COMPLETED = 4
 }
 
 export interface MemoDataCard<T extends MemoDataCardType> {
+  // 卡片ID
+  id: string;
   // 类型
   type: T;
   // 数据
@@ -122,6 +125,7 @@ export function buildMemoDataCard<T extends MemoDataCardType>(type: T, data: Par
   const createAt = Date.now();
   const createDate = dayjs(createAt).format("YYYY年MM月DD日");
   return {
+    id: useSnowflake().nextId(),
     type,
     data,
     status: MemoDataCardStatusEnum.UNKNOWN,
@@ -148,12 +152,12 @@ export function buildMemoData(): MemoData {
 
 export interface IMemoInstance {
   onAdd: (card: MemoDataCard<MemoDataCardType>) => void;
-  onUpdate: (index: number, card: MemoDataCard<MemoDataCardType>) => void;
-  onDelete: (index: number) => void;
-  onStar: (index: number) => void;
+  onUpdate: (id: string, card: MemoDataCard<MemoDataCardType>) => void;
+  onDelete: (id: string) => void;
+  onStar: (id: string) => void;
   getIndex: () => number;
   setIndex: (index: number) => void;
-  study: (index: number, status: MemoDataCardStatusEnum) => void;
+  study: (id: string, status: MemoDataCardStatusEnum) => void;
   updateSetting: (setting: MemoDataSetting) => void
 }
 

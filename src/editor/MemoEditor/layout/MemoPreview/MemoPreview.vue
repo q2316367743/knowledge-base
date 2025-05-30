@@ -14,7 +14,7 @@
         <t-divider align="center">操作</t-divider>
         <t-space direction="vertical" class="w-full" size="small">
           <t-button :block="true" theme="primary" :disabled="ing === 0" @click="onStudy">开始复习</t-button>
-          <t-button :block="true" theme="primary" :disabled="ready === 0">温故知新</t-button>
+          <t-button :block="true" theme="primary" :disabled="ready === 0" @click="onReview">温故知新</t-button>
           <t-button :block="true" theme="primary">自定义学习</t-button>
         </t-space>
       </div>
@@ -22,7 +22,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {MemoDataCard, MemoDataCardType, MemoDataCardStatusEnum} from "@/editor/MemoEditor/types";
+import {
+  MemoDataCard,
+  MemoDataCardType,
+  MemoDataCardStatusEnum,
+  IMemoInstance,
+  MemoInstance
+} from "@/editor/MemoEditor/types";
 import MemoPreviewContent from "@/editor/MemoEditor/layout/MemoPreview/MemoPreviewContent.vue";
 import {openMemoCardStudy} from "@/editor/MemoEditor/components/MemoCardStudy/MemoCardStudyDrawer";
 
@@ -32,6 +38,7 @@ const props = defineProps({
     default: () => ([])
   }
 });
+const instance = inject<IMemoInstance>(MemoInstance);
 
 const not = computed(() => props.cards.filter(e => e.status === MemoDataCardStatusEnum.UNKNOWN).length);
 const ready = computed(() => props.cards.filter(e => e.status === MemoDataCardStatusEnum.COMPLETED).length);
@@ -59,7 +66,13 @@ const data = computed(() => {
 })
 
 const onStudy = () => {
-  openMemoCardStudy(props.cards);
+  if (!instance) return;
+  openMemoCardStudy(props.cards.filter(e => e.status !== MemoDataCardStatusEnum.COMPLETED && e.status !== MemoDataCardStatusEnum.UNKNOWN), instance);
+}
+// 复习
+const onReview = () => {
+  if (!instance) return;
+  openMemoCardStudy(props.cards.filter(e => e.status === MemoDataCardStatusEnum.COMPLETED), instance);
 }
 </script>
 <style scoped lang="less">

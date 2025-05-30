@@ -1,8 +1,10 @@
 <template>
   <div class="memo-card-preview-for-text" v-if="card">
     <div class="memo-card-preview-for-text__title">{{ card.data.question }}</div>
-    <div class="memo-card-preview-for-text__content">{{ card.data.answer }}</div>
-    <template v-if="card.data.analysis">
+    <div class="memo-card-preview-for-text__content">
+      <div v-for="(o, i) in card.data.options" :class="{check: o.value && answer}">{{ getNo(i) }}. {{ o.label }}</div>
+    </div>
+    <template v-if="card.data.analysis && answer">
       <t-divider align="left">解析</t-divider>
       <div>{{ card.data.analysis }}</div>
     </template>
@@ -10,10 +12,15 @@
 </template>
 <script lang="ts" setup>
 import {MemoDataCard} from "@/editor/MemoEditor/types";
+import {getNo} from "@/utils/lang/FieldUtil";
 
 defineProps({
   card: {
-    type: Object as PropType<MemoDataCard<'TEXT'>>,
+    type: Object as PropType<MemoDataCard<'CHOICE'>>,
+  },
+  answer: {
+    type: Boolean,
+    default: false
   }
 });
 </script>
@@ -25,7 +32,7 @@ defineProps({
   overflow: auto;
 
   &__title {
-    font-size: var(--td-font-size-title-large);
+    font-size: var(--td-font-size-title-medium);
     font-weight: bold;
     margin-bottom: 8px;
   }
@@ -35,6 +42,11 @@ defineProps({
     color: var(--td-text-color-placeholder);
     margin-bottom: 8px;
     word-wrap: anywhere;
+    padding-top: 8px;
+
+    .check {
+      color: var(--td-success-color);
+    }
   }
 
 }

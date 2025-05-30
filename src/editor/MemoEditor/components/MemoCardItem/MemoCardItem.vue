@@ -6,12 +6,12 @@
     <memo-card-item-for-blank v-else-if="card.type === 'BLANK'" :card="card as MemoDataCard<'BLANK'>"/>
     <div class="edit">
       <t-space size="small">
-        <t-button theme="primary" shape="square" size="small" @click="onEdit(idx, card)">
+        <t-button theme="primary" shape="square" size="small" @click="onEdit(card)">
           <template #icon>
             <edit-icon/>
           </template>
         </t-button>
-        <t-button theme="danger" shape="square" size="small" @click="onDelete(idx, card)">
+        <t-button theme="danger" shape="square" size="small" @click="onDelete(card)">
           <template #icon>
             <delete-icon />
           </template>
@@ -49,15 +49,15 @@ defineProps({
 
 const instance = inject<IMemoInstance>(MemoInstance);
 
-const onEdit = (idx: number, card: MemoDataCard<MemoDataCardType>) => {
+const onEdit = (card: MemoDataCard<MemoDataCardType>) => {
   openMemoCardEdit(card.type, card).then(n => {
     // 更新卡
-    instance?.onUpdate(idx, n);
+    instance?.onUpdate(card.id, n);
   })
 }
-const onDelete = (idx: number, card: MemoDataCard<MemoDataCardType>) => {
+const onDelete = (card: MemoDataCard<MemoDataCardType>) => {
   MessageBoxUtil.confirm(`是否删除这张${renderMemoDataCardType(card.type)}？`, "删除卡片").then(() => {
-    instance?.onDelete(idx);
+    instance?.onDelete(card.id);
   })
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="memo-card-preview-for-text" v-if="card">
     <div class="memo-card-preview-for-text__title">{{ card.data.question }}</div>
-    <div class="memo-card-preview-for-text__content">{{ card.data.answer }}</div>
-    <template v-if="card.data.analysis">
+    <div class="memo-card-preview-for-text__content" v-if="answer">{{ card.data.answer }}</div>
+    <template v-if="card.data.analysis && answer">
       <t-divider align="left">解析</t-divider>
       <div>{{ card.data.analysis }}</div>
     </template>
@@ -14,6 +14,10 @@ import {MemoDataCard} from "@/editor/MemoEditor/types";
 defineProps({
   card: {
     type: Object as PropType<MemoDataCard<'TEXT'>>,
+  },
+  answer: {
+    type: Boolean,
+    default: false
   }
 });
 </script>
