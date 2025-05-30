@@ -64,4 +64,5 @@ export const useGlobalStore = defineStore('global', () => {
 
 });
 
+export const collapsed = ref(false);
 

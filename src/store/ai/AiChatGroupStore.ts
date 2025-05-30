@@ -1,0 +1,59 @@
+import {defineStore} from "pinia";
+import {AiChatGroup, AiChatGroupItem, AiChatGroupWrap} from "@/entity/ai/AiChat";
+import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {useSnowflake} from "@/hooks/Snowflake";
+
+export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
+  const groups = ref(new Array<AiChatGroup>());
+  const rev = ref<string>();
+
+  const init = async () => {
+    const res = await listByAsync(LocalNameEnum.LIST_AI_GROUP);
+    groups.value = res.list;
+    rev.value = res.rev;
+  }
+
+  init().then(() => console.log("ai chat group init success"))
+    .catch(e => MessageUtil.error("AI分组初始化失败", e));
+
+  const add = async (g: AiChatGroupWrap) => {
+    const id = useSnowflake().nextId();
+    groups.value.push({
+      id,
+      name: g.name
+    });
+    rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_GROUP, groups.value, rev.value);
+    await saveOneByAsync<AiChatGroupItem>(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`, {
+      prompt: g.prompt
+    });
+  }
+
+  const update = async (id: string, g: AiChatGroupWrap) => {
+    const index = groups.value.findIndex(e => e.id === id);
+    if (index === -1)  return Promise.reject(new Error("分组不存在"));
+    groups.value[index] = {
+      id,
+      name: g.name
+    }
+    rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_GROUP, groups.value, rev.value);
+    await removeOneByAsync(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`);
+    await saveOneByAsync<AiChatGroupItem>(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`, {
+      prompt: g.prompt
+    });
+  }
+
+  const remove = async (id: string) => {
+    const index = groups.value.findIndex(e => e.id === id);
+    if (index === -1)  return Promise.reject(new Error("分组不存在"));
+    groups.value.splice(index, 1);
+    rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_GROUP, groups.value, rev.value);
+    await removeOneByAsync(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`);
+  }
+
+  return {
+    groups, add, update, remove
+  }
+
+})

@@ -88,6 +88,14 @@ enum LocalNameEnum {
 
   AI_ASSISTANT = '/ai/assistant',
 
+  LIST_AI_CHAT_ = '/list/ai/chat',
+
+  ITEM_AI_CHAT_ = '/item/ai/chat',
+
+  LIST_AI_GROUP = '/list/ai/group',
+
+  ITEM_AI_GROUP_ = '/item/ai/group',
+
   // ========================== 键值存储 ==========================
 
   /**
