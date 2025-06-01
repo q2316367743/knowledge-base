@@ -10,19 +10,6 @@ const routers: Array<RouteRecordRaw> = [{
   name: "首页",
   path: '/home',
   component: () => import('@/pages/home/index.vue'),
-  children: [{
-    name: '新对话',
-    path: 'welcome',
-    component: () => import('@/pages/home/pages/welcome/welcome.vue')
-  }, {
-    name: '分组',
-    path: 'group/:id',
-    component: () => import('@/pages/home/pages/group/group.vue')
-  }, {
-    name: '分组',
-    path: 'chat/:groupId/:id',
-    component: () => import('@/pages/home/pages/chat/chat.vue')
-  }]
 }, {
   name: "资讯",
   path: '/news',

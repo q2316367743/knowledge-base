@@ -9,7 +9,7 @@ import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {addNote} from "@/utils/component/AddNoteUtil";
 
-export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
+export function addNoteFromAi(message: ChatMessage, onSuccess?: () => void) {
   const {folderTree} = useFolderStore();
   const folder = ref(0);
   const name = ref(message.q);
@@ -55,7 +55,7 @@ export function addNoteFromAi(message: ChatMessage, onSuccess: () => void) {
         });
         useHomeEditorStore().openArticle(article);
         // 跳转
-        onSuccess();
+        onSuccess?.();
         plugin.destroy();
         return true;
       } catch (e) {

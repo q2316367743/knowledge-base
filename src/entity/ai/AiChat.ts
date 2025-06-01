@@ -1,3 +1,6 @@
+import {TdChatItemProps} from "@tdesign-vue-next/chat";
+import {ChatMessageParam} from "@/types/Chat";
+
 /**
  * 聊天分组
  * /list/ai/group
@@ -21,6 +24,14 @@ export interface AiChatGroupWrap {
   prompt: string;
 }
 
+export function buildAiChatGroupWrap() {
+  return {
+    id: '0',
+    name: '默认分组',
+    prompt: ''
+  };
+}
+
 /**
  * ai聊天列表
  * /list/ai/chat/${groupId}
@@ -33,19 +44,50 @@ export interface AiChatList {
   top: boolean;
 }
 
-export interface AiChatItem {
-  role: string;
+export interface AiChatItem extends TdChatItemProps {
+  // 时间
+  time: number;
+  // 内容
   content: string;
-  reason: string;
+  // 思考
+  think?: string;
+
+  // 拓展
   aiServiceId: string;
-  aiModel: string;
+  // 服务名称，冗余
+  service: string;
+  // 模型，冗余
+  model: string;
+}
+
+export function transferAiChatItemToChatMessageParam(items: Array<AiChatItem>): Array<ChatMessageParam> {
+  const p = new Array<ChatMessageParam>();
+  items.forEach(item => {
+    if (item.role === 'system' || item.role === 'user' || item.role === 'assistant') {
+      p.push({
+        role: item.role,
+        content: item.content
+      });
+    }
+  });
+  p.reverse();
+  return p;
 }
 
 /**
  * 聊天项
  * /item/ai/chat/${chatId}
  */
-export interface AiChat {
+export interface AiChatContent {
 
-  items: AiChatItem;
+  // 文章引用
+  references: Array<number>;
+
+  // 聊天内容
+  items: Array<AiChatItem>;
+}
+
+export interface AiChatWrap extends AiChatList, AiChatContent {
+  groupId: string;
+  rev?: string;
 }

@@ -1,6 +1,12 @@
 import {defineStore} from "pinia";
-import {AiChatGroup, AiChatGroupItem, AiChatGroupWrap} from "@/entity/ai/AiChat";
-import {listByAsync, removeOneByAsync, saveListByAsync, saveOneByAsync} from "@/utils/utools/DbStorageUtil";
+import {AiChatGroup, AiChatGroupItem, AiChatGroupWrap, buildAiChatGroupWrap} from "@/entity/ai/AiChat";
+import {
+  getFromOneByAsync,
+  listByAsync,
+  removeOneByAsync,
+  saveListByAsync,
+  saveOneByAsync
+} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
@@ -32,7 +38,7 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
 
   const update = async (id: string, g: AiChatGroupWrap) => {
     const index = groups.value.findIndex(e => e.id === id);
-    if (index === -1)  return Promise.reject(new Error("分组不存在"));
+    if (index === -1) return Promise.reject(new Error("分组不存在"));
     groups.value[index] = {
       id,
       name: g.name
@@ -46,14 +52,25 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
 
   const remove = async (id: string) => {
     const index = groups.value.findIndex(e => e.id === id);
-    if (index === -1)  return Promise.reject(new Error("分组不存在"));
+    if (index === -1) return Promise.reject(new Error("分组不存在"));
     groups.value.splice(index, 1);
     rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_GROUP, groups.value, rev.value);
     await removeOneByAsync(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`);
   }
 
+  const getById = async (id: string): Promise<AiChatGroupWrap> => {
+    if (id === '0') return buildAiChatGroupWrap();
+    const index = groups.value.findIndex(e => e.id === id);
+    if (index === -1) return Promise.reject(new Error("分组不存在"));
+    const c = await getFromOneByAsync<AiChatGroupItem>(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`);
+    return {
+      ...groups.value[index],
+      ...(c.record || {prompt: ''})
+    }
+  }
+
   return {
-    groups, add, update, remove
+    groups, add, update, remove, getById
   }
 
 })

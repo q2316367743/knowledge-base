@@ -180,8 +180,11 @@ enum LocalNameEnum {
   // 首页服务
   KEY_HOME_SERVICE = '/key/home/service',
 
-  // 首页模型
+  // 首页助手
   KEY_HOME_ASSISTANT = '/key/home/assistant',
+
+  // 首页模型
+  KEY_HOME_MODEL = '/key/home/model',
 
   // 保存思考过程
   KEY_HOME_SAVE_THINK = '/key/home/save-think',

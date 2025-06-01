@@ -1,17 +1,27 @@
 import OpenAI from "openai";
 import {ChatMessageParam} from "@/types/Chat";
 import {AiService, AiServiceType} from "@/entity/ai/AiService";
-import {AiAssistant} from "@/entity/ai/AiAssistant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export interface AskToOpenAiAbort {
   abort: (reason?: string) => void;
 }
 
+interface Assistant {
+  // 使用的默认模型
+  model: string;
+  // 模型温度，0-2，一位小数
+  temperature?: number;
+  // Top-P，0-1，二位小数
+  topP?: number;
+  // 上下文数
+  maxChats?: number;
+}
+
 interface AskToOpenAiProps {
   messages: Array<ChatMessageParam>;
   service: AiService;
-  assistant: AiAssistant;
+  assistant: Assistant;
   onAppend: (data: string, t?: boolean) => void;
   onAborted: (a: AskToOpenAiAbort) => void;
 }

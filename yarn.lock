@@ -778,10 +778,10 @@
   resolved "https://mirrors.cloud.tencent.com/npm/@svgdotjs/svg.js/-/svg.js-3.2.4.tgz#4716be92a64c66b29921b63f7235fcfb953fb13a"
   integrity sha512-BjJ/7vWNowlX3Z8O4ywT58DqbNRyYlkk6Yz/D13aB7hGmfQTvGX4Tkgtm/ApYlu9M7lCQi15xUEidqMUmdMYwg==
 
-"@tdesign-vue-next/chat@0.2.4":
-  version "0.2.4"
-  resolved "https://mirrors.cloud.tencent.com/npm/@tdesign-vue-next/chat/-/chat-0.2.4.tgz#4298fea886f3a26a0d0f97f53d09f677ac0d7d9d"
-  integrity sha512-LXIXPp/EqivVDJyWuw+IxCDM61qoJXoSiXPLQP0IShg5O6fPcIjwXO50u3nz+MV64upCuUFm2KunvZWEfDDUHg==
+"@tdesign-vue-next/chat@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.npmmirror.com/@tdesign-vue-next/chat/-/chat-0.3.0.tgz#2e504a3b64f240850d968f263f199fd1fabb8bd2"
+  integrity sha512-XoTX4Jk0braIm2bcTVw+aIn1RzlYJpTifYYOsI/mXcDa/zFxUhviQ6Hn7LP1rWKkhz+1Lqrbqnbg3FUgWJQpnA==
   dependencies:
     "@babel/runtime" "~7.22.6"
     clipboard "^2.0.11"

@@ -185,6 +185,7 @@ createServer();
     right: 0;
     bottom: 0;
     overflow: hidden;
+    transform: translate(0, 0);
   }
 }
 </style>
