@@ -14,7 +14,6 @@ import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import {exportToUTools, exportForEpub} from "@/components/ArticleExport";
 import {
   addFolder,
-  articleTypes,
   extraNoteTypes,
   mainNoteTypes,
   remove,

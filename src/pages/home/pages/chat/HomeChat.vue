@@ -6,6 +6,19 @@
           <menu-fold-icon/>
         </template>
       </t-button>
+      <t-divider layout="vertical" v-if="collapsed"/>
+      <div class="breadcrumb group" v-if="group.id !== '0'">{{ group.name }}</div>
+      <div class="divider" v-if="group.id !== '0'">/</div>
+      <t-dropdown trigger="click">
+        <div class="breadcrumb">
+          <span class="text">{{ instance?.name }}</span>
+          <chevron-down-icon class="icon"/>
+        </div>
+        <t-dropdown-menu>
+          <t-dropdown-item @click="handleUpdate">编辑名称</t-dropdown-item>
+          <t-dropdown-item style="color: var(--td-error-color)" @click="handleRemove">删除对话</t-dropdown-item>
+        </t-dropdown-menu>
+      </t-dropdown>
     </div>
     <chat
       ref="chatRef"
@@ -69,11 +82,16 @@
         <chat-sender
           v-model="text"
           class="chat-sender"
-          :textarea-props="{placeholder: '请输入消息...',}"
+          :textarea-props="{placeholder: '请输入消息...',disabled: isStreamLoad}"
           @send="inputEnter"
         >
           <template #suffix>
-            <t-space size="small">
+            <t-button theme="danger" shape="circle" v-if="isStreamLoad" @click="handleStop">
+              <template #icon>
+                <stop-icon/>
+              </template>
+            </t-button>
+            <t-space size="small" v-else>
               <t-button variant="outline" shape="round" :disabled @click="onClear">
                 <template #icon>
                   <delete-icon/>
@@ -105,12 +123,12 @@ import {
 } from '@tdesign-vue-next/chat';
 import {
   ArrowDownIcon,
-  CheckCircleIcon,
+  CheckCircleIcon, ChevronDownIcon,
   CollectionIcon,
   CopyIcon,
   DeleteIcon,
   MenuFoldIcon,
-  ShareIcon
+  ShareIcon, StopIcon
 } from "tdesign-icons-vue-next";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {activeKey, collapsed, renderModel, toggleCollapsed} from "@/pages/home/model";
@@ -128,6 +146,7 @@ import {useAiServiceStore} from "@/store";
 import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
+import {onRemoveChat, onRenameChat} from "@/pages/home/components/HomeContext";
 
 const router = useRouter();
 
@@ -138,7 +157,7 @@ const text = ref('');
 const model = ref('');
 
 const chatRef = ref<ChatInstanceFunctions>();
-const abort = ref<AskToOpenAiAbort>();
+const abort = shallowRef<AskToOpenAiAbort>();
 
 const loading = ref(false);
 const isStreamLoad = ref(false);
@@ -326,6 +345,23 @@ const handleOperator = (op: string, item: AiChatItem, index: number) => {
       break;
   }
 }
+// 停止
+const handleStop = () => {
+  console.log(isStreamLoad.value, abort.value);
+  if (!isStreamLoad.value) return;
+  if (!abort.value) return;
+  abort.value.abort("用户主动停止");
+}
+const handleUpdate = () => {
+  if (!instance.value) return MessageUtil.error("对话实例不存在");
+  onRenameChat(instance.value.groupId, instance.value, name => {
+    instance.value!.name = name;
+  });
+}
+const handleRemove = () => {
+  if (!instance.value) return MessageUtil.error("对话实例不存在");
+  onRemoveChat(instance.value.groupId, instance.value.id);
+}
 </script>
 <style scoped lang="less">
 .home-chat {
@@ -334,13 +370,42 @@ const handleOperator = (op: string, item: AiChatItem, index: number) => {
   padding: 8px;
 
   .home-chat-collapse {
-    position: absolute;
-    top: 8px;
-    left: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    height: 32px;
+
+    .divider {
+      margin: 0 8px;
+    }
+
+    .breadcrumb {
+      user-select: none;
+      cursor: pointer;
+      border-radius: var(--td-radius-default);
+      transition: background-color 0.3s ease-in-out;
+      padding: 4px 8px;
+
+      &:hover {
+        background-color: var(--td-bg-color-container-hover);
+      }
+
+      &:active {
+        background-color: var(--td-bg-color-container-active);
+      }
+
+      &.group {
+        color: var(--td-text-color-secondary);
+      }
+
+      .icon {
+        margin-left: 4px;
+      }
+    }
   }
 
   .home-chat-content {
-    height: calc(100vh - 16px);
+    height: calc(100vh - 56px);
     width: 100%;
     overflow: hidden;
 

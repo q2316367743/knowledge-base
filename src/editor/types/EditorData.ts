@@ -8,6 +8,7 @@ import {buildEncryptEditorData, EncryptEditorData} from "@/editor/EncryptEditor/
 import {MindMapTreeData} from "@/editor/MindMapEditor/domain";
 import {OutputData} from "@editorjs/editorjs";
 import {buildMemoData, MemoData} from "@/editor/MemoEditor/types";
+import {AiChatWrap} from "@/entity/ai/AiChat";
 
 type EditorData = Record<string, any> |
   // 思维导图
@@ -20,6 +21,8 @@ type EditorData = Record<string, any> |
   OutputData |
   // 闪卡
   MemoData |
+  // AI聊天
+  AiChatWrap |
   // 富文本编辑器/markdown编辑器/代码笔记/drauu实现的画板
   // TODO: 此处要逐渐转为对象
   string

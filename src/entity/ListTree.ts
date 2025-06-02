@@ -24,6 +24,7 @@ export interface ListTree {
  * @param topName 顶部名称
  */
 export function listToTree(list: Array<ListTree & { fontColor?: string }>, topName: string): Array<TreeOptionData> {
+  // TODO: 此处要处理没有父目录的
   const base: Array<TreeOptionData> = list.filter(c => c.pid === 0 || !c.pid)
     .map(c => ({
       value: c.id,

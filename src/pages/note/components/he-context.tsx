@@ -22,6 +22,7 @@ import FileEncrypt from '@/components/KbIcon/FileEncrypt.vue';
 import FileMemo from "@/components/KbIcon/FileMemo.vue";
 import FileMemoPreview from "@/components/KbIcon/FileMemoPreview.vue";
 import FileSuperNote from "@/components/KbIcon/FileSuperNote.vue";
+import ChatIcon from '@/components/KbIcon/ChatIcon.vue';
 import {
   BookIcon,
   CodeIcon,
@@ -34,7 +35,7 @@ import {
 } from "tdesign-icons-vue-next";
 
 // ------------------------------------------------------------------------------------------------------
-// ----------------------------------------------- 全局配置 -----------------------------------------------
+// ----------------------------------------------- 全局配置 ----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
 interface ArticleTypeList {
   key: ArticleTypeEnum;
@@ -42,8 +43,10 @@ interface ArticleTypeList {
   icon: any;
   lock: any;
   vip?: boolean;
+  hidden?: boolean;
 }
 
+// 文字笔记
 export const articleTextTypes: Array<ArticleTypeList> = [
   {
     key: ArticleTypeEnum.SUPER_EDITOR,
@@ -73,6 +76,7 @@ export const articleTextTypes: Array<ArticleTypeList> = [
     lock: FileMindMap
   }]
 
+// 主要笔记类型
 export const mainNoteTypes: Array<ArticleTypeList> = [
   ...articleTextTypes, {
     key: ArticleTypeEnum.HANDSONTABLE,
@@ -85,6 +89,7 @@ export const mainNoteTypes: Array<ArticleTypeList> = [
     icon: GitBranchIcon,
     lock: FileLct
   }];
+// 拓展笔记
 export const extraNoteTypes: Array<ArticleTypeList> = [
   {
     key: ArticleTypeEnum.ENCRYPT_EDITOR,
@@ -101,10 +106,21 @@ export const extraNoteTypes: Array<ArticleTypeList> = [
     vip: true
   }
 ]
+// 隐藏的笔记
+export const hiddenNoteTypes: Array<ArticleTypeList> = [
+  {
+    key: ArticleTypeEnum.AI_CHAT,
+    name: 'AI 聊天',
+    icon: ChatIcon,
+    lock: ChatIcon,
+    hidden: true
+  },
+]
 
 export const articleTypes: Array<ArticleTypeList> = [
   ...mainNoteTypes,
-  ...extraNoteTypes
+  ...extraNoteTypes,
+  ...hiddenNoteTypes
 ]
 export const articleTypeMap = map(articleTypes, 'key');
 
@@ -122,6 +138,10 @@ export function renderArticleType(type: ArticleTypeEnum): string {
   }
   return "未知类型";
 }
+
+// ------------------------------------------------------------------------------------------------------
+// ----------------------------------------------- 相关操作 ----------------------------------------------
+// ------------------------------------------------------------------------------------------------------
 
 export function addArticleModal() {
   const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();

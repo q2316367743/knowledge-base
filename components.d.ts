@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppSide: typeof import('./src/components/app-side/index.vue')['default']
     ChatContent: typeof import('./src/components/Chat/ChatContent.vue')['default']
+    ChatIcon: typeof import('./src/components/KbIcon/ChatIcon.vue')['default']
     ChatLoading: typeof import('./src/components/Chat/ChatLoading.vue')['default']
     ChatReasoning: typeof import('./src/components/Chat/ChatReasoning.vue')['default']
     DateRange: typeof import('./src/components/DateRange/DateRange.vue')['default']
@@ -39,6 +40,8 @@ declare module 'vue' {
     TAlert: typeof import('tdesign-vue-next')['Alert']
     TAside: typeof import('tdesign-vue-next')['Aside']
     TAvatar: typeof import('tdesign-vue-next')['Avatar']
+    TBreadcrumb: typeof import('tdesign-vue-next')['Breadcrumb']
+    TBreadcrumbItem: typeof import('tdesign-vue-next')['BreadcrumbItem']
     TButton: typeof import('tdesign-vue-next')['Button']
     TCard: typeof import('tdesign-vue-next')['Card']
     TCheckbox: typeof import('tdesign-vue-next')['Checkbox']

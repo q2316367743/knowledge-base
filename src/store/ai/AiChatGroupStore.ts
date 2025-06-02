@@ -1,5 +1,11 @@
 import {defineStore} from "pinia";
-import {AiChatGroup, AiChatGroupItem, AiChatGroupWrap, buildAiChatGroupWrap} from "@/entity/ai/AiChat";
+import {
+  AiChatGroup,
+  AiChatGroupItem,
+  AiChatGroupPostWrap,
+  AiChatGroupWrap,
+  buildAiChatGroupWrap
+} from "@/entity/ai/AiChat";
 import {
   getFromOneByAsync,
   listByAsync,
@@ -24,7 +30,7 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
   init().then(() => console.log("ai chat group init success"))
     .catch(e => MessageUtil.error("AI分组初始化失败", e));
 
-  const add = async (g: AiChatGroupWrap) => {
+  const add = async (g: AiChatGroupPostWrap) => {
     const id = useSnowflake().nextId();
     groups.value.push({
       id,
@@ -36,7 +42,7 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
     });
   }
 
-  const update = async (id: string, g: AiChatGroupWrap) => {
+  const update = async (id: string, g: AiChatGroupPostWrap) => {
     const index = groups.value.findIndex(e => e.id === id);
     if (index === -1) return Promise.reject(new Error("分组不存在"));
     groups.value[index] = {
@@ -65,7 +71,8 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
     const c = await getFromOneByAsync<AiChatGroupItem>(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`);
     return {
       ...groups.value[index],
-      ...(c.record || {prompt: ''})
+      ...(c.record || {prompt: ''}),
+      rev: c.rev
     }
   }
 

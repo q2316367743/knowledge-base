@@ -3,7 +3,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
-import {TocItem} from "@/editor/types/TocItem";
 import {useEventBus} from "@vueuse/core";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
@@ -41,7 +40,7 @@ export const preview = computed(() => {
   return false;
 });
 // 当前编辑器类型
-export const editorType = computed(() => {
+export const editorType = computed<ArticleTypeEnum | null>(() => {
   if (homeEditorId.value) {
     const articleIndex = useArticleStore().articleMap.get(homeEditorId.value);
     if (articleIndex) {
@@ -56,12 +55,6 @@ export const useArticleExportEvent = useEventBus<number>('article-export');
 export const useArticleImportEvent = useEventBus<number>('article-import');
 // 切换预览
 export const useArticlePreviewEvent = useEventBus<number>('article-preview');
-
-
-// 一些特殊的方法
-export const getTextCount = ref<() => number>(() => 0);
-export const getLineLength = ref<() => number>(() => 0);
-export const getToc = ref<() => TocItem[]>(() => []);
 
 
 export const noteSplitWidth = useUtoolsKvStorage<number>(LocalNameEnum.KEY_NOTE_WIDTH, 30);

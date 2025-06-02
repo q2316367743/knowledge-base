@@ -4,7 +4,7 @@ export const collapsed = useSessionStorage('/session/home/collapsed', false);
 
 export const toggleCollapsed = useToggle(collapsed);
 
-export const renderActiveKey = (key: string) => {
+export const renderChat = (key: string) => {
   const s = Array.from(key.matchAll(/\d+/g));
   const groupId = s[0][0];
   const chatId = s[1][0];
@@ -17,4 +17,10 @@ export const renderModel = (key: string) => {
     aiServiceId: split[0],
     model: split.slice(1).join("/")
   };
+}
+
+export const renderGroup = (key: string) => {
+  const s = Array.from(key.matchAll(/\d+/g));
+  return s[0][0];
+
 }

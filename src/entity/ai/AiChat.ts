@@ -19,12 +19,15 @@ export interface AiChatGroupItem {
   prompt: string;
 }
 
-export interface AiChatGroupWrap {
+export interface AiChatGroupPostWrap {
   name: string;
   prompt: string;
 }
+export interface AiChatGroupWrap extends AiChatGroup, AiChatGroupItem{
+  rev?: string;
+}
 
-export function buildAiChatGroupWrap() {
+export function buildAiChatGroupWrap(): AiChatGroupWrap {
   return {
     id: '0',
     name: '默认分组',

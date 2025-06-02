@@ -10,7 +10,7 @@ import {
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
-import {renderActiveKey, renderModel} from "@/pages/home/model";
+import {renderChat, renderModel} from "@/pages/home/model";
 import {useAiServiceStore} from "@/store";
 import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
 
@@ -125,7 +125,7 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
   }
 
   const getInstance = async (key: string): Promise<AiChatWrap> => {
-    const {groupId, chatId} = renderActiveKey(key);
+    const {groupId, chatId} = renderChat(key);
     const g = await listByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId);
     const l = g.list.find(l => l.id === chatId);
     if (!l) return Promise.reject(new Error("未找到聊天"));

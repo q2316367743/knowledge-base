@@ -61,9 +61,9 @@
               </template>
             </t-button>
             <t-dropdown-menu>
-              <t-dropdown-item @click="onUpdateChat(i)">编辑名称</t-dropdown-item>
-              <t-dropdown-item @click="onTopChat(i)">取消置顶</t-dropdown-item>
-              <t-dropdown-item style="color: var(--td-error-color)" @click="onRemoveChat(i.id)">删除</t-dropdown-item>
+              <t-dropdown-item @click="onRenameChat('0', i)">编辑名称</t-dropdown-item>
+              <t-dropdown-item @click="onTopChat('0', i)">取消置顶</t-dropdown-item>
+              <t-dropdown-item style="color: var(--td-error-color)" @click="onRemoveChat('0', i.id)">删除</t-dropdown-item>
             </t-dropdown-menu>
           </t-dropdown>
         </div>
@@ -78,9 +78,9 @@
               </template>
             </t-button>
             <t-dropdown-menu>
-              <t-dropdown-item @click="onUpdateChat(i)">编辑名称</t-dropdown-item>
-              <t-dropdown-item @click="onTopChat(i)">置顶</t-dropdown-item>
-              <t-dropdown-item style="color: var(--td-error-color)" @click="onRemoveChat(i.id)">删除</t-dropdown-item>
+              <t-dropdown-item @click="onRenameChat('0', i)">编辑名称</t-dropdown-item>
+              <t-dropdown-item @click="onTopChat('0', i)">置顶</t-dropdown-item>
+              <t-dropdown-item style="color: var(--td-error-color)" @click="onRemoveChat('0', i.id)">删除</t-dropdown-item>
             </t-dropdown-menu>
           </t-dropdown>
         </div>
@@ -109,13 +109,12 @@ import {openAddAiChatGroupDialog} from "@/pages/home/modal/AddAiChatGroup";
 import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
 import {useAiChatListStore} from "@/store/ai/AiChatListStore";
 import {activeKey, collapsed, toggleCollapsed} from './model';
+import {AiChatList} from "@/entity/ai/AiChat";
+import {onRemoveChat, onTopChat, onRenameChat} from "@/pages/home/components/HomeContext";
 import HomeWelcome from "@/pages/home/pages/welcome/HomeWelcome.vue";
 import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {AiChatList} from "@/entity/ai/AiChat";
 
 const show = ref(true);
 
@@ -131,42 +130,6 @@ watch(activeKey, () => {
 })
 
 const onClick = (path: string) => activeKey.value = path;
-
-function onUpdateChat(data: AiChatList) {
-  MessageBoxUtil.prompt("请输入新的对话名称", "编辑对话名称")
-    .then(name => {
-      useAiChatListStore().updateById('0', {
-        id: data.id,
-        name,
-      })
-        .then(() => MessageUtil.success("修改成功"))
-        .catch(e => MessageUtil.error("修改失败", e));
-    })
-}
-
-function onTopChat(data: AiChatList) {
-  useAiChatListStore().updateById('0', {
-    id: data.id,
-    top: !data.top,
-  })
-    .then(() => MessageUtil.success("修改成功"))
-    .catch(e => MessageUtil.error("修改失败", e));
-}
-
-function onRemoveChat(id: string) {
-  MessageBoxUtil.confirm("是否删除此聊天", "删除聊天").then(() => {
-    useAiChatListStore().remove('0', id)
-      .then(() => {
-        MessageUtil.success("删除成功");
-        // 如果是当前
-        if (activeKey.value === `/home/chat/0/${id}`) {
-          // 变为新聊天
-          activeKey.value = '/home/welcome';
-        }
-      })
-      .catch(e => MessageUtil.error("删除失败", e));
-  })
-}
 </script>
 <style scoped lang="less">
 .home {

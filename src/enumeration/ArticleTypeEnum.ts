@@ -64,6 +64,11 @@ export enum ArticleTypeEnum {
    */
   MEMO = 12,
 
+  /**
+   * AI聊天
+   */
+  AI_CHAT = 13
+
 }
 
 // 文本类型
