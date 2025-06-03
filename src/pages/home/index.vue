@@ -131,8 +131,10 @@ watch(activeKey, () => {
 
 const onClick = (path: string) => {
   activeKey.value = path;
-  // 收起
-  collapsed.value = true;
+  if (path !== '/home/welcome' && path !== '/home/temp') {
+    // 收起
+    collapsed.value = true;
+  }
 };
 </script>
 <style scoped lang="less">
