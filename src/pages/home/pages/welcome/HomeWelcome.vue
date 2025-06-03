@@ -24,31 +24,6 @@
         <p>作为AI模型，问一问 提供的答案可能不总是准确的，但我们会尽力提供帮助。</p>
       </div>
 
-      <div class="welcome-features">
-        <div class="feature-item">
-          <chat-icon class="feature-icon"/>
-          <div class="feature-content">
-            <div class="feature-title">帮我写一个快速指南</div>
-            <div class="feature-desc">使用 AI 支持一个快速指南</div>
-          </div>
-        </div>
-
-        <div class="feature-item">
-          <star-icon class="feature-icon"/>
-          <div class="feature-content">
-            <div class="feature-title">你可以帮我做什么？</div>
-            <div class="feature-desc">了解当前AI模型可以为你做的事</div>
-          </div>
-        </div>
-
-        <div class="feature-item">
-          <help-circle-icon class="feature-icon"/>
-          <div class="feature-content">
-            <div class="feature-title">怎么使用项目功能</div>
-            <div class="feature-desc">如何使用全部的功能和项目</div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="welcome-input">

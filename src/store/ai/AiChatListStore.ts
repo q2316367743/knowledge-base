@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {AiChatContent, AiChatItem, AiChatList, AiChatWrap} from "@/entity/ai/AiChat";
 import {
+  DbList,
   getFromOneByAsync,
   listByAsync,
   removeOneByAsync,
@@ -18,9 +19,13 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
   const lists = ref(new Array<AiChatList>());
   const rev = ref<string>();
 
+  const listBy = async (groupId: string): Promise<DbList<AiChatList>> => {
+    return listByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId);
+  }
+
   const init = async () => {
     // 无分组的ai列表
-    const res = await listByAsync(LocalNameEnum.LIST_AI_CHAT_ + '/0');
+    const res = await listBy('0');
     lists.value = res.list;
     rev.value = res.rev;
   }
@@ -85,14 +90,7 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     }
     await saveOneByAsync<AiChatContent>(LocalNameEnum.ITEM_AI_CHAT_ + '/' + id, {
       references,
-      items: [{
-        time,
-        role: 'user',
-        content: question,
-        aiServiceId,
-        service: service.name,
-        model
-      }]
+      items
     });
     return id;
   }
@@ -142,6 +140,6 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     return saveOneByAsync(LocalNameEnum.ITEM_AI_CHAT_ + '/' + id, c, rev);
   }
 
-  return {lists, post, updateById, remove, getInstance, saveContent}
+  return {lists, post, updateById, remove, getInstance, saveContent, listBy}
 
 })

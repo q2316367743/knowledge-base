@@ -89,6 +89,7 @@ const inputEnter = (inputValue: string) => {
   &__content {
     width: 100%;
     flex: 1 1 auto;
+    overflow: auto;
   }
 
   &__footer {

@@ -17,8 +17,7 @@ export function openAddAiChatGroupDialog() {
         color: 'var(--td-text-color-secondary)',
         marginTop: '16px',
         fontSize: 'var(--td-font-size-body-medium)'
-      }}>什么是分组？
-      </div>
+      }}>什么是分组？</div>
       <div
         style={{color: 'var(--td-text-color-placeholder)', marginTop: '8px'}}>分组功能支持对话分类管理，并通过专属指令定制回复，使交流更专注、个性化且持续发展。
       </div>

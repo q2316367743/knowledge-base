@@ -22,12 +22,16 @@ interface AskToOpenAiProps {
   messages: Array<ChatMessageParam>;
   service: AiService;
   assistant: Assistant;
+  // 流式处理回调开始
+  onStart?: () => void;
+  // 流式处理回调
   onAppend: (data: string, t?: boolean) => void;
+  // 流式处理回调结束
   onAborted: (a: AskToOpenAiAbort) => void;
 }
 
 async function askToOpenAi(props: AskToOpenAiProps): Promise<void> {
-  const {messages, service, assistant, onAppend, onAborted} = props;
+  const {messages, service, assistant, onStart, onAppend, onAborted} = props;
   const openAi = new OpenAI({
     baseURL: service.url,
     apiKey: service.key,
@@ -42,6 +46,7 @@ async function askToOpenAi(props: AskToOpenAiProps): Promise<void> {
     top_p: assistant.topP,
     // top_logprobs: assistant.maxChats,
   });
+  onStart?.();
   onAborted(response.controller);
 
   // 流式处理结果
@@ -52,11 +57,12 @@ async function askToOpenAi(props: AskToOpenAiProps): Promise<void> {
 }
 
 async function askToUTools(props: AskToOpenAiProps): Promise<void> {
-  const {messages, service, assistant, onAppend, onAborted} = props;
+  const {messages, service, assistant, onStart, onAppend, onAborted} = props;
   if (!service.models.map(e => typeof e === 'string' ? e : e.id).find(e => e === assistant.model)) {
     return Promise.reject(new Error("AI助手选择的模型已不支持"));
   }
 
+  onStart?.();
   // 适配新版utools ai接口
   const abortPromise = InjectionUtil.ai.chat({model: assistant.model, messages}, (delta) => {
     const msg = delta.reasoning_content || delta.content;
@@ -79,7 +85,7 @@ async function askToUTools(props: AskToOpenAiProps): Promise<void> {
  * @param props 参数
  */
 async function askToOllama(props: AskToOpenAiProps): Promise<void> {
-  const {messages, service, assistant, onAppend, onAborted} = props;
+  const {messages, service, assistant, onStart, onAppend, onAborted} = props;
 
   // 假设 Ollama 的 API 地址和密钥存储在 service 中
   const response = await fetch(`${service.url}/completions`, {
@@ -96,6 +102,8 @@ async function askToOllama(props: AskToOpenAiProps): Promise<void> {
       top_p: assistant.topP,
     }),
   });
+
+  onStart?.();
 
   if (!response.ok) {
     return Promise.reject(new Error(`HTTP error! status: ${response.status}`));

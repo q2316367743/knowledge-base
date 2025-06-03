@@ -76,8 +76,14 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
     }
   }
 
+  const updatePromptById = (id: string, prompt: string, rev?: string): Promise<string | undefined> => {
+    return saveOneByAsync<AiChatGroupItem>(`${LocalNameEnum.ITEM_AI_GROUP_}/${id}`, {
+      prompt
+    }, rev);
+  }
+
   return {
-    groups, add, update, remove, getById
+    groups, add, update, remove, getById, updatePromptById
   }
 
 })

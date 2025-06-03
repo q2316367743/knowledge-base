@@ -1,5 +1,5 @@
-export const activeKey = useSessionStorage('/session/home/active-key', '/home/welcome');
-export const collapsed = useSessionStorage('/session/home/collapsed', false);
+export const activeKey = ref('/home/welcome');
+export const collapsed = ref(false);
 
 
 export const toggleCollapsed = useToggle(collapsed);

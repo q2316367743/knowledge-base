@@ -44,7 +44,7 @@
              @click="onClick(`/home/group/${g.id}`)">
           <folder-icon class="icon"/>
           <div class="text ellipsis">{{ g.name }}</div>
-          <t-button theme="primary" variant="text" shape="square" size="small" class="more">
+          <t-button theme="primary" variant="text" shape="square" size="small" class="more" @click.stop>
             <template #icon>
               <more-icon/>
             </template>
@@ -129,7 +129,11 @@ watch(activeKey, () => {
   })
 })
 
-const onClick = (path: string) => activeKey.value = path;
+const onClick = (path: string) => {
+  activeKey.value = path;
+  // 收起
+  collapsed.value = true;
+};
 </script>
 <style scoped lang="less">
 .home {

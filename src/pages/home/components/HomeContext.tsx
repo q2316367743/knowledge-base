@@ -31,11 +31,12 @@ export function onTopChat(groupId: string, data: AiChatList) {
     .catch(e => MessageUtil.error("修改失败", e));
 }
 
-export function onRemoveChat(groupId: string, id: string) {
+export function onRemoveChat(groupId: string, id: string, onUpdate?: () => void) {
   MessageBoxUtil.confirm("是否删除此聊天", "删除聊天").then(() => {
     useAiChatListStore().remove(groupId, id)
       .then(() => {
         MessageUtil.success("删除成功");
+        onUpdate?.();
         // 如果是当前
         if (activeKey.value === `/home/chat/${groupId}/${id}`) {
           // 变为新聊天

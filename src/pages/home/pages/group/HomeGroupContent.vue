@@ -11,7 +11,7 @@
       </div>
       <div class="home-group-content-title-right">
         <t-space size="small">
-          <t-input placeholder="搜索组内对话">
+          <t-input placeholder="搜索组内对话" v-model="keyword">
             <template #prefix-icon>
               <search-icon/>
             </template>
@@ -32,7 +32,7 @@
     </div>
     <t-row :gutter="16">
       <t-col flex="auto">
-        <div class="home-group-content-prompt" @click="visible = !visible">
+        <div class="home-group-content-prompt" @click="onUpdatePrompt">
           <div class="main">
             <div class="home-group-content-prompt__title">{{ hasPrompt ? "工作指令" : "添加指令" }}</div>
             <div class="home-group-content-prompt__content ellipsis" v-if="hasPrompt">{{ group.prompt }}</div>
@@ -43,34 +43,49 @@
           </div>
         </div>
       </t-col>
-      <t-col flex="72px" v-if="!hasPrompt" class="home-group-content-prompt center">
+      <t-col flex="72px" v-if="!hasPrompt" class="home-group-content-prompt center" @click="onUpdatePrompt1()">
         指令库
       </t-col>
     </t-row>
-    <t-dialog v-model:visible="visible" header="编辑指令" draggable width="500px" confirm-btn="使用"
-              @confirm="onConfirm">
-      <t-textarea v-model="group.prompt" placeholder="请输入指令" :autosize="{minRows: 8, maxRows: 8}"/>
-      <t-space class="mt-16px">
-        <span>指令参考</span>
-        <t-link theme="primary">地道翻译大师</t-link>
-        <t-link theme="primary">占卜师</t-link>
-        <t-link theme="primary">代码专家</t-link>
-        <span> | </span>
-        <t-link theme="primary">
-          <span>更多</span>
-          <template #suffix-icon>
-            <chevron-right-icon/>
-          </template>
-        </t-link>
-      </t-space>
-    </t-dialog>
+    <div class="chat-title">
+      <span>对话 · </span>
+      <span>{{ chats.length }}</span>
+    </div>
+    <div class="chat-list">
+      <div class="chat-item" v-for="{item} in results" :key="item.id" @click="onChatClick(item)"
+           @contextmenu="onChatContextMenuClick(item, $event)">
+        <div class="left">
+          <chat-double-icon size="16px" />
+          <div class="title">{{ item.name }}</div>
+        </div>
+        <div class="right">
+          {{ toDateTimeString(item.createBy) }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
-import {ChevronRightIcon, FolderIcon, MoreIcon, SearchIcon} from "tdesign-icons-vue-next";
-import {buildAiChatGroupWrap} from "@/entity/ai/AiChat";
+import {
+  ChatDoubleIcon,
+  ChevronRightIcon,
+  FolderIcon,
+  MinusIcon,
+  MoreIcon,
+  PlusIcon,
+  SearchIcon
+} from "tdesign-icons-vue-next";
+import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu'
+import {AiChatList, buildAiChatGroupWrap} from "@/entity/ai/AiChat";
 import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {openAiGroupPrompt, openPrompt} from "@/pages/home/modal/AiGroupPrompt";
+import {useAiChatListStore} from "@/store/ai/AiChatListStore";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
+import {useFuse} from "@vueuse/integrations/useFuse";
+import {activeKey} from "@/pages/home/model";
+import {useGlobalStore} from "@/store";
+import {onRemoveChat, onRenameChat} from "@/pages/home/components/HomeContext";
 
 const props = defineProps({
   groupId: {
@@ -79,21 +94,120 @@ const props = defineProps({
   }
 });
 
+const keyword = ref('');
 const group = ref(buildAiChatGroupWrap());
-const visible = ref(false);
+const chats = ref(new Array<AiChatList>());
+const rev = ref<string>();
 
+const {results} = useFuse(keyword, chats, {
+  matchAllWhenSearchEmpty: true,
+  fuseOptions: {
+    keys: ['name', 'prompt'],
+    includeScore: true,
+    threshold: 0.3,
+  }
+})
 
 const hasPrompt = computed(() => !!group.value.prompt);
 
-onMounted(() => {
-  // 获取
+const initGroup = () => {
   useAiChatGroupStore().getById(props.groupId)
     .then(g => group.value = g)
-    .catch(e => MessageUtil.error("获取分组失败", e));
+    .catch(e => MessageUtil.error("获取分组详情失败", e));
+}
+const initChats = () => {
+  useAiChatListStore().listBy(props.groupId)
+    .then(d => {
+      chats.value = d.list;
+      rev.value = d.rev;
+    })
+    .catch(e => MessageUtil.error("获取分组对话失败", e));
+}
+
+onMounted(() => {
+  // 获取分组详情
+  initGroup();
+  // 获取分组对话
+  initChats();
 });
 
-const onConfirm = () => {
+const onUpdatePrompt = () => {
+  openAiGroupPrompt(group.value)
+    .then(prompt => {
+      useAiChatGroupStore().updatePromptById(group.value.id, prompt, group.value.rev)
+        .then(rev => {
+          group.value.rev = rev;
+          group.value.prompt = prompt;
+          MessageUtil.success("更新指令成功");
+        })
+        .catch(e => MessageUtil.error("更新指令失败", e));
+    })
+}
+const onUpdatePrompt1 = () => {
+  openPrompt()
+    .then(prompt => {
+      useAiChatGroupStore().updatePromptById(group.value.id, prompt, group.value.rev)
+        .then(rev => {
+          group.value.rev = rev;
+          group.value.prompt = prompt;
+          MessageUtil.success("更新指令成功");
+        })
+        .catch(e => MessageUtil.error("更新指令失败", e));
+    })
+}
 
+function onChatClick(data: AiChatList) {
+  activeKey.value = `/home/chat/${props.groupId}/${data.id}`
+}
+
+function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
+  const g: Array<MenuItem> = useAiChatGroupStore().groups.filter(e => e.id !== props.groupId).map(e => {
+    return {
+      label: e.name,
+    }
+  });
+  if (g.length > 0) {
+    g.push({
+      divided: true,
+    })
+  }
+  ContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    theme: useGlobalStore().isDark ? "default dark" : "default",
+    zIndex: 200,
+    items: [{
+      label: '移动到',
+      children: [
+        ...g, {
+          label: "移出本组",
+          icon: () => h(MinusIcon)
+        }, {
+          label: '新建分组',
+          icon: () => h(PlusIcon)
+        }]
+    }, {
+      label: '编辑名称',
+      onClick() {
+        onRenameChat(props.groupId,  data, () => {
+          // 重新初始化
+          initChats();
+        })
+      }
+    }, {
+      label: () => h('span', {
+        style: {
+          color: 'var(--td-error-color)'
+        },
+      }, "删除"),
+      onClick() {
+        onRemoveChat(props.groupId, data.id,() => {
+          // 重新初始化
+          initChats();
+        })
+      }
+    }]
+  })
 }
 </script>
 <style scoped lang="less">
@@ -167,5 +281,52 @@ const onConfirm = () => {
       margin-top: 6px;
     }
   }
+
+  .chat-title {
+    color: var(--td-text-color-placeholder);
+    font-size: var(--td-font-size-title-small);
+    margin-top: 24px;
+    margin-left: 12px;
+
+    .number {
+      font-weight: bold;
+    }
+  }
+
+  .chat-list {
+    margin-top: 8px;
+
+    .chat-item {
+      padding: 12px 16px;
+      background-color: var(--td-bg-color-container);
+      border-radius: var(--td-radius-medium);
+      transition: background-color 0.3s ease-in-out;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background-color: var(--td-bg-color-container-hover);
+      }
+
+      .left {
+        display: flex;
+        align-items: center;
+
+        .title {
+          font-weight: bold;
+          margin-left: 8px;
+        }
+      }
+
+    }
+  }
+
 }
 </style>

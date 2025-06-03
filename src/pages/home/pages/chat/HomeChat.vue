@@ -7,7 +7,7 @@
         </template>
       </t-button>
       <t-divider layout="vertical" v-if="collapsed"/>
-      <div class="breadcrumb group" v-if="group.id !== '0'">{{ group.name }}</div>
+      <div class="breadcrumb group" v-if="group.id !== '0'" @click="handleGroup">{{ group.name }}</div>
       <div class="divider" v-if="group.id !== '0'">/</div>
       <t-dropdown trigger="click">
         <div class="breadcrumb">
@@ -29,16 +29,16 @@
       class="home-chat-content"
       @scroll="handleChatScroll"
     >
-      <template #content="{ item }">
-        <chat-reasoning v-if="item.think?.length > 0" expand-icon-placement="right">
+      <template #content="{ item, index }">
+        <chat-reasoning v-if="item.think && item.think.length > 0" expand-icon-placement="right">
           <template #header>
-            <chat-loading v-if="isStreamLoad" text="思考中..."/>
+            <chat-loading v-if="isStreamLoad && index === 0" text="思考中..."/>
             <div v-else style="display: flex; align-items: center">
               <CheckCircleIcon style="color: var(--td-success-color-5); font-size: 20px; margin-right: 8px"/>
               <span>已深度思考</span>
             </div>
           </template>
-          <chat-content v-if="item.think.length > 0" :value="item.think"/>
+          <chat-content :content="item.think"/>
         </chat-reasoning>
         <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]"/>
       </template>
@@ -252,14 +252,6 @@ async function onAsk(item: AiChatItem) {
   const service = useAiServiceStore().aiServiceMap.get(item.aiServiceId);
   if (!service) return Promise.reject(new Error("AI 服务不存在"));
   abort.value = undefined;
-  instance.value.items.unshift({
-    time: Date.now(),
-    role: 'assistant',
-    content: '',
-    aiServiceId: item.aiServiceId,
-    service: item.service,
-    model: item.model
-  })
   try {
     loading.value = true;
     isStreamLoad.value = true;
@@ -269,11 +261,24 @@ async function onAsk(item: AiChatItem) {
       assistant: {
         model: item.model
       },
+      onStart: () => {
+        if (!instance.value) return;
+        instance.value.items.unshift({
+          time: Date.now(),
+          role: 'assistant',
+          content: '',
+          aiServiceId: item.aiServiceId,
+          service: item.service,
+          model: item.model,
+          think: ''
+        });
+      },
       onAppend: (data, t) => {
         loading.value = false;
         if (!instance.value) return;
+        if (!data) return;
         if (t) {
-          instance.value.items[0].think = data;
+          instance.value.items[0].think += data;
         } else {
           instance.value.items[0].content += data;
         }
@@ -362,6 +367,9 @@ const handleRemove = () => {
   if (!instance.value) return MessageUtil.error("对话实例不存在");
   onRemoveChat(instance.value.groupId, instance.value.id);
 }
+const handleGroup = () => {
+  activeKey.value = `/home/group/${group.value.id}`;
+}
 </script>
 <style scoped lang="less">
 .home-chat {
@@ -411,19 +419,20 @@ const handleRemove = () => {
 
     .t-chat__text {
       &.user {
-        border: 1px solid var(--td-border-level-2-color);
-        border-radius: var(--td-radius-extraLarge);
-      }
-
-      &.assistant {
         background-color: var(--td-bg-color-secondarycontainer);
         border-radius: var(--td-radius-extraLarge);
       }
+
 
       &.model-change {
         :deep(span) {
           padding: 0 4px;
           color: var(--td-text-color-link);
+        }
+      }
+      :deep(.t-chat__text__assistant) {
+        p {
+          margin: 0;
         }
       }
     }
