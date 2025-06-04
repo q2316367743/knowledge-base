@@ -5,7 +5,7 @@
         <div class="flex justify-between items-center mb-12px">
           <div style="font-weight: bold;font-size: var(--td-font-size-title-large)">问一问</div>
           <t-space size="small">
-            <t-button theme="primary" variant="text" shape="square">
+            <t-button theme="primary" variant="text" shape="square" @click="toggleVisible()">
               <template #icon>
                 <search-icon/>
               </template>
@@ -85,6 +85,7 @@
       <home-chat v-else-if="activeKey.startsWith('/home/chat') && show"/>
       <empty-result v-else title="未选择项目"/>
     </div>
+    <home-chat-search v-model="visible"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -109,9 +110,11 @@ import HomeWelcome from "@/pages/home/pages/welcome/HomeWelcome.vue";
 import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
+import HomeChatSearch from "@/pages/home/components/HomeChatSearch.vue";
 
 const show = ref(true);
 const groupList = ref<HTMLDivElement>();
+const visible = ref(false);
 
 const groups = computed(() => useAiChatGroupStore().groups);
 const items = computed<Array<AiChatList>>(() => useAiChatListStore().lists.filter(e => !e.top));
@@ -123,6 +126,8 @@ watch(activeKey, () => {
     show.value = true;
   })
 })
+
+const toggleVisible = useToggle(visible);
 
 useSortable(groupList, groups, {
   animation: 300,
@@ -203,6 +208,8 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
     }]
   });
 }
+
+// TODO: 1. 对话框改为tsx，2. 左侧要无线滚动，3. 聊天排序要倒叙
 </script>
 <style scoped lang="less">
 .home {
