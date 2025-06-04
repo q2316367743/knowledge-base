@@ -23,8 +23,8 @@
               </template>
             </t-button>
             <t-dropdown-menu>
-              <t-dropdown-item>编辑名称</t-dropdown-item>
-              <t-dropdown-item style="color: var(--td-error-color)">删除分组</t-dropdown-item>
+              <t-dropdown-item @click="onRenameGroup(group, initGroup)">编辑名称</t-dropdown-item>
+              <t-dropdown-item @click="onDelete" style="color: var(--td-error-color)">删除分组</t-dropdown-item>
             </t-dropdown-menu>
           </t-dropdown>
         </t-space>
@@ -83,7 +83,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {openAiGroupPrompt, openPrompt} from "@/pages/home/modal/AiGroupPrompt";
 import {activeKey} from "@/pages/home/model";
-import {onRemoveChat, onRenameChat} from "@/pages/home/components/HomeContext";
+import {onRemoveChat, onRemoveGroup, onRenameChat, onRenameGroup} from "@/pages/home/components/HomeContext";
 
 const props = defineProps({
   groupId: {
@@ -205,6 +205,12 @@ function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
         })
       }
     }]
+  })
+}
+
+function onDelete() {
+  onRemoveGroup(props.groupId, () => {
+    activeKey.value = "/home/welcome";
   })
 }
 </script>

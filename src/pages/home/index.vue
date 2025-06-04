@@ -5,7 +5,7 @@
         <div class="flex justify-between items-center mb-12px">
           <div style="font-weight: bold;font-size: var(--td-font-size-title-large)">问一问</div>
           <t-space size="small">
-            <t-button theme="primary" variant="text" shape="square" @click="toggleVisible()">
+            <t-button theme="primary" variant="text" shape="square" @click="openHomeChatSearch()">
               <template #icon>
                 <search-icon/>
               </template>
@@ -79,13 +79,11 @@
       </div>
     </div>
     <div class="home-content" :class="{collapsed}">
-      <home-welcome v-if="activeKey === '/home/welcome' && show"/>
-      <home-temp v-else-if="activeKey === '/home/temp' && show"/>
+      <home-temp v-if="activeKey === '/home/temp' && show"/>
       <home-group v-else-if="activeKey.startsWith('/home/group/') && show"/>
       <home-chat v-else-if="activeKey.startsWith('/home/chat') && show"/>
-      <empty-result v-else title="未选择项目"/>
+      <home-welcome v-else/>
     </div>
-    <home-chat-search v-model="visible"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -110,11 +108,10 @@ import HomeWelcome from "@/pages/home/pages/welcome/HomeWelcome.vue";
 import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
-import HomeChatSearch from "@/pages/home/components/HomeChatSearch.vue";
+import {openHomeChatSearch} from "@/pages/home/components/HomeChatSearch";
 
 const show = ref(true);
 const groupList = ref<HTMLDivElement>();
-const visible = ref(false);
 
 const groups = computed(() => useAiChatGroupStore().groups);
 const items = computed<Array<AiChatList>>(() => useAiChatListStore().lists.filter(e => !e.top));
@@ -126,8 +123,6 @@ watch(activeKey, () => {
     show.value = true;
   })
 })
-
-const toggleVisible = useToggle(visible);
 
 useSortable(groupList, groups, {
   animation: 300,
@@ -185,7 +180,9 @@ const onChatMenuClick = (data: AiChatList, e: MouseEvent) => {
           color: 'var(--td-error-color)'
         }
       }, '删除'),
-      onClick: () => onRemoveChat('0', data.id)
+      onClick: () => onRemoveChat('0', data.id, () => {
+        if (activeKey.value === `/home/chat/0/${data.id}`) activeKey.value = '';
+      })
     }]
   })
 }
@@ -204,7 +201,9 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
           color: 'var(--td-error-color)'
         }
       }, '删除'),
-      onClick: () => onRemoveGroup(group.id)
+      onClick: () => onRemoveGroup(group.id, () => {
+        if (activeKey.value === `/home/group/${group.id}`) activeKey.value = '';
+      })
     }]
   });
 }

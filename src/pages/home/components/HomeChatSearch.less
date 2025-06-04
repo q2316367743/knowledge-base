@@ -1,0 +1,31 @@
+.home-chat-search-item {
+  padding: 12px 8px;
+  width: calc(100% - 16px);
+  background-color: var(--td-bg-color-container);
+  border-radius: var(--td-radius-medium);
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background-color: var(--td-bg-color-container-hover);
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+
+    .title {
+      font-weight: bold;
+      margin-left: 8px;
+      color: var(--td-text-color-primary);
+    }
+  }
+
+}
