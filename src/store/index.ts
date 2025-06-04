@@ -11,3 +11,5 @@ export * from './db/TodoItemStore';
 export * from './setting/BaseSettingStore';
 export * from './ai/AiServiceStore';
 export * from './ai/AiAssistantStore';
+export * from './ai/AiChatListStore';
+export * from './ai/AiChatGroupStore';

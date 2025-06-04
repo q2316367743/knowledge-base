@@ -132,7 +132,9 @@ import {
 } from "tdesign-icons-vue-next";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {activeKey, collapsed, renderModel, toggleCollapsed} from "@/pages/home/model";
-import {useAiChatListStore} from "@/store/ai/AiChatListStore";
+import {addNoteFromAi} from "@/pages/home/modal/addNote";
+import {onRemoveChat, onRenameChat} from "@/pages/home/components/HomeContext";
+import {useAiChatGroupStore, useAiChatListStore, useAiServiceStore} from "@/store";
 import {
   AiChatGroupWrap,
   AiChatItem,
@@ -142,11 +144,7 @@ import {
 } from "@/entity/ai/AiChat";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
-import {useAiServiceStore} from "@/store";
-import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
-import {addNoteFromAi} from "@/pages/home/modal/addNote";
-import {onRemoveChat, onRenameChat} from "@/pages/home/components/HomeContext";
 
 const router = useRouter();
 
@@ -281,6 +279,7 @@ async function onAsk(item: AiChatItem) {
           instance.value.items[0].think += data;
         } else {
           instance.value.items[0].content += data;
+          isStreamLoad.value = false;
         }
       },
       onAborted: (a) => {
@@ -430,11 +429,15 @@ const handleGroup = () => {
           color: var(--td-text-color-link);
         }
       }
+
       :deep(.t-chat__text__assistant) {
         p {
           margin: 0;
         }
       }
+    }
+    :deep(.t-chat__inner.system) {
+      display: none;
     }
   }
 

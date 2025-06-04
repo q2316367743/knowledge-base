@@ -14,6 +14,7 @@ import {useSnowflake} from "@/hooks/Snowflake";
 import {renderChat, renderModel} from "@/pages/home/model";
 import {useAiServiceStore} from "@/store";
 import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
+import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
 
 export const useAiChatListStore = defineStore('ai-chat-list', () => {
   const lists = ref(new Array<AiChatList>());
@@ -48,14 +49,14 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     return {l, r}
   }
 
-  const post = async (groupId: string, question: string, modelKey: string, references: Array<number>): Promise<string> => {
+  const post = async (groupId: string, question: string, modelKey: string, references?: Array<number>): Promise<string> => {
     const id = useSnowflake().nextId();
     let {l, r} = await getList(groupId);
     // 添加到列表
     l.push({
       id: id,
       name: question.substring(0, Math.min(10, question.length)),
-      createBy: 0,
+      createBy: Date.now(),
       top: false
     });
     r = await saveListByAsync(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId, l, r);
@@ -76,6 +77,9 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
       service: service.name,
       model
     });
+    if (isNotEmptyArray(references)) {
+      // TODO: 文章引用
+    }
     // 如果有分组
     const group = await useAiChatGroupStore().getById(groupId);
     if (group.prompt.trim() != '') {
@@ -89,7 +93,7 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
       });
     }
     await saveOneByAsync<AiChatContent>(LocalNameEnum.ITEM_AI_CHAT_ + '/' + id, {
-      references,
+      references: references || [],
       items
     });
     return id;

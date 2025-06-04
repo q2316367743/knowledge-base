@@ -120,15 +120,15 @@ import {
 } from "tdesign-icons-vue-next";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {collapsed, renderModel, toggleCollapsed} from "@/pages/home/model";
+import {addNoteFromAi} from "@/pages/home/modal/addNote";
 import {
   AiChatItem,
   transferAiChatItemToChatMessageParam
 } from "@/entity/ai/AiChat";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
-import {useAiServiceStore} from "@/store";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
-import {addNoteFromAi} from "@/pages/home/modal/addNote";
+import {useAiServiceStore} from "@/store";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 

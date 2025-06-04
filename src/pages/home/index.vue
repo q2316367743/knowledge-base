@@ -26,7 +26,8 @@
             <t-tooltip content="进入临时对话">
               <t-button theme="primary" :block="true" shape="square" variant="outline" @click="onClick('/home/temp')">
                 <template #icon>
-                  <chat-icon/>
+                  <chat-checked-icon v-if="activeKey === '/home/temp'"/>
+                  <chat-icon v-else/>
                 </template>
               </t-button>
             </t-tooltip>
@@ -40,49 +41,40 @@
             </template>
           </t-button>
         </div>
-        <div class="item" v-for="g in groups" :key="g.id" :class="{active: activeKey === `/home/group/${g.id}`}"
-             @click="onClick(`/home/group/${g.id}`)">
-          <folder-icon class="icon"/>
-          <div class="text ellipsis">{{ g.name }}</div>
-          <t-button theme="primary" variant="text" shape="square" size="small" class="more" @click.stop>
-            <template #icon>
-              <more-icon/>
-            </template>
-          </t-button>
+        <div class="group-list" ref="groupList">
+          <div class="item" v-for="g in groups" :key="g.id" :class="{active: activeKey === `/home/group/${g.id}`}"
+               @click="onClick(`/home/group/${g.id}`)">
+            <folder-icon class="folder-icon"/>
+            <div class="text ellipsis">{{ g.name }}</div>
+            <t-button theme="primary" variant="text" shape="square" size="small" class="more"
+                      @click.stop="onGroupMenuClick(g, $event)">
+              <template #icon>
+                <more-icon/>
+              </template>
+            </t-button>
+          </div>
         </div>
         <div class="group" v-if="tops.length > 0">置顶</div>
         <div class="item" v-for="i in tops" :key="i.id" :class="{active: activeKey === `/home/chat/0/${i.id}`}"
              @click="onClick(`/home/chat/0/${i.id}`)">
           <div class="text ellipsis">{{ i.name }}</div>
-          <t-dropdown trigger="click">
-            <t-button theme="primary" variant="text" shape="square" size="small" class="more" @click.stop>
-              <template #icon>
-                <more-icon/>
-              </template>
-            </t-button>
-            <t-dropdown-menu>
-              <t-dropdown-item @click="onRenameChat('0', i)">编辑名称</t-dropdown-item>
-              <t-dropdown-item @click="onTopChat('0', i)">取消置顶</t-dropdown-item>
-              <t-dropdown-item style="color: var(--td-error-color)" @click="onRemoveChat('0', i.id)">删除</t-dropdown-item>
-            </t-dropdown-menu>
-          </t-dropdown>
+          <t-button theme="primary" variant="text" shape="square" size="small" class="more"
+                    @click.stop="onChatMenuClick(i, $event)">
+            <template #icon>
+              <more-icon/>
+            </template>
+          </t-button>
         </div>
         <div class="group">聊天</div>
         <div class="item" v-for="i in items" :key="i.id" :class="{active: activeKey === `/home/chat/0/${i.id}`}"
              @click="onClick(`/home/chat/0/${i.id}`)">
           <div class="text ellipsis">{{ i.name }}</div>
-          <t-dropdown trigger="click">
-            <t-button theme="primary" variant="text" shape="square" size="small" class="more" @click.stop>
-              <template #icon>
-                <more-icon/>
-              </template>
-            </t-button>
-            <t-dropdown-menu>
-              <t-dropdown-item @click="onRenameChat('0', i)">编辑名称</t-dropdown-item>
-              <t-dropdown-item @click="onTopChat('0', i)">置顶</t-dropdown-item>
-              <t-dropdown-item style="color: var(--td-error-color)" @click="onRemoveChat('0', i.id)">删除</t-dropdown-item>
-            </t-dropdown-menu>
-          </t-dropdown>
+          <t-button theme="primary" variant="text" shape="square" size="small" class="more"
+                    @click.stop="onChatMenuClick(i, $event)">
+            <template #icon>
+              <more-icon/>
+            </template>
+          </t-button>
         </div>
       </div>
     </div>
@@ -97,6 +89,7 @@
 </template>
 <script lang="ts" setup>
 import {
+  ChatCheckedIcon,
   ChatIcon,
   FolderIcon,
   MenuFoldIcon,
@@ -105,18 +98,20 @@ import {
   PlusIcon,
   SearchIcon
 } from "tdesign-icons-vue-next";
+import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu';
+import {useSortable, moveArrayElement} from "@vueuse/integrations/useSortable";
 import {openAddAiChatGroupDialog} from "@/pages/home/modal/AddAiChatGroup";
-import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
-import {useAiChatListStore} from "@/store/ai/AiChatListStore";
+import {useAiChatGroupStore, useAiChatListStore, useGlobalStore} from "@/store";
 import {activeKey, collapsed, toggleCollapsed} from './model';
-import {AiChatList} from "@/entity/ai/AiChat";
-import {onRemoveChat, onTopChat, onRenameChat} from "@/pages/home/components/HomeContext";
+import {AiChatGroup, AiChatList} from "@/entity/ai/AiChat";
+import {onRemoveChat, onTopChat, onRenameChat, onRenameGroup, onRemoveGroup} from "@/pages/home/components/HomeContext";
 import HomeWelcome from "@/pages/home/pages/welcome/HomeWelcome.vue";
 import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
 
 const show = ref(true);
+const groupList = ref<HTMLDivElement>();
 
 const groups = computed(() => useAiChatGroupStore().groups);
 const items = computed<Array<AiChatList>>(() => useAiChatListStore().lists.filter(e => !e.top));
@@ -129,13 +124,85 @@ watch(activeKey, () => {
   })
 })
 
+useSortable(groupList, groups, {
+  animation: 300,
+  onUpdate: (event) => {
+    const {oldIndex, newIndex} = event;
+    if (typeof oldIndex !== "number" || typeof newIndex !== "number") return;
+    const g = Array.from(groups.value);
+    moveArrayElement(g, oldIndex, newIndex);
+    useAiChatGroupStore().sort(g);
+  }
+})
+
 const onClick = (path: string) => {
   activeKey.value = path;
   if (path !== '/home/welcome' && path !== '/home/temp') {
     // 收起
     collapsed.value = true;
   }
-};
+}
+
+const onChatMenuClick = (data: AiChatList, e: MouseEvent) => {
+  const {groups} = useAiChatGroupStore();
+  const items = new Array<MenuItem>();
+  groups.forEach(group => {
+    items.push({
+      label: group.name,
+    });
+  });
+  if (items.length > 0) {
+    items.push({divided: 'self'});
+  }
+  items.push({
+    label: '新建分组', icon: () => h(PlusIcon, {
+      style: {
+        marginRight: '10px',
+      }
+    })
+  })
+  ContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    theme: useGlobalStore().isDark ? 'default dark' : 'default',
+    items: [{
+      label: '移动到分组',
+      children: items
+    }, {
+      label: '编辑名称',
+      onClick: () => onRenameChat('0', data)
+    }, {
+      label: data.top ? '取消置顶' : '置顶',
+      onClick: () => onTopChat('0', data)
+    }, {
+      label: () => h('span', {
+        style: {
+          color: 'var(--td-error-color)'
+        }
+      }, '删除'),
+      onClick: () => onRemoveChat('0', data.id)
+    }]
+  })
+}
+
+const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
+  ContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    theme: useGlobalStore().isDark ? 'default dark' : 'default',
+    items: [{
+      label: '编辑名称',
+      onClick: () => onRenameGroup(group),
+    }, {
+      label: () => h('span', {
+        style: {
+          color: 'var(--td-error-color)'
+        }
+      }, '删除'),
+      onClick: () => onRemoveGroup(group.id)
+    }]
+  });
+}
 </script>
 <style scoped lang="less">
 .home {

@@ -124,6 +124,7 @@ export default {
         header: title,
         draggable: true,
         placement: 'center',
+        closeOnEscKeydown: false,
         confirmBtn: {
           default: confirmButtonText,
         },

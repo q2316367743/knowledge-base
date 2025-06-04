@@ -56,7 +56,7 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
     });
   }
 
-  const remove = async (id: string) => {
+  const removeById = async (id: string) => {
     const index = groups.value.findIndex(e => e.id === id);
     if (index === -1) return Promise.reject(new Error("分组不存在"));
     groups.value.splice(index, 1);
@@ -82,8 +82,21 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
     }, rev);
   }
 
+  const renameById = async (id: string, name: string) => {
+    if (id === '0') return Promise.resolve();
+    const index = groups.value.findIndex(e => e.id === id);
+    if (index === -1) return Promise.reject(new Error("分组不存在"));
+    groups.value[index].name = name;
+    rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_GROUP, groups.value, rev.value);
+  }
+
+  const sort = async (l: Array<AiChatGroup>) => {
+    groups.value = l;
+    rev.value = await saveListByAsync(LocalNameEnum.LIST_AI_GROUP, groups.value, rev.value);
+  }
+
   return {
-    groups, add, update, remove, getById, updatePromptById
+    groups, add, update, removeById, getById, updatePromptById, renameById, sort
   }
 
 })

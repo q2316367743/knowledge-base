@@ -102,7 +102,7 @@ const inputEnter = (inputValue: string) => {
   height: 100%;
   background-color: var(--td-bg-color-container);
   border-radius: var(--td-radius-medium);
-  padding: 16px;
+  padding: 8px;
   box-sizing: border-box;
 
   .welcome-collapse {

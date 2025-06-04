@@ -75,16 +75,14 @@ import {
   PlusIcon,
   SearchIcon
 } from "tdesign-icons-vue-next";
-import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu'
-import {AiChatList, buildAiChatGroupWrap} from "@/entity/ai/AiChat";
-import {useAiChatGroupStore} from "@/store/ai/AiChatGroupStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {openAiGroupPrompt, openPrompt} from "@/pages/home/modal/AiGroupPrompt";
-import {useAiChatListStore} from "@/store/ai/AiChatListStore";
-import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {useFuse} from "@vueuse/integrations/useFuse";
+import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu'
+import {useAiChatGroupStore, useAiChatListStore, useGlobalStore} from "@/store";
+import {AiChatList, buildAiChatGroupWrap} from "@/entity/ai/AiChat";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {toDateTimeString} from "@/utils/lang/FormatUtil";
+import {openAiGroupPrompt, openPrompt} from "@/pages/home/modal/AiGroupPrompt";
 import {activeKey} from "@/pages/home/model";
-import {useGlobalStore} from "@/store";
 import {onRemoveChat, onRenameChat} from "@/pages/home/components/HomeContext";
 
 const props = defineProps({
