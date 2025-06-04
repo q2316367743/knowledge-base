@@ -12,7 +12,7 @@ export function openAddAiChatGroupDialog() {
     confirmBtn: '创建',
     width: '450px',
     default: () => <div>
-      <Input v-model={name.value} autofocus={true} placeholder={'请输入分组名称'}/>
+      <Input v-model={name.value} autofocus={true} placeholder={'请输入分组名称'} maxlength={8} showLimitNumber={true}/>
       <div style={{
         color: 'var(--td-text-color-secondary)',
         marginTop: '16px',

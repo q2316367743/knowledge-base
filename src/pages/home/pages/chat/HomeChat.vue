@@ -40,7 +40,7 @@
           </template>
           <chat-content :content="item.think"/>
         </chat-reasoning>
-        <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]"/>
+        <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]" class="typo"/>
       </template>
       <template #actions="{ item, index }">
         <t-space size="small" class="mt-8px" style="margin-left: -16px">
@@ -420,6 +420,7 @@ const handleGroup = () => {
       &.user {
         background-color: var(--td-bg-color-secondarycontainer);
         border-radius: var(--td-radius-extraLarge);
+        color: var(--td-text-color-primary);
       }
 
 
@@ -436,6 +437,7 @@ const handleGroup = () => {
         }
       }
     }
+
     :deep(.t-chat__inner.system) {
       display: none;
     }
@@ -445,7 +447,7 @@ const handleGroup = () => {
     position: absolute;
     left: 50%;
     margin-left: -20px;
-    bottom: 210px;
+    bottom: 160px;
     padding: 0;
     border: 0;
     width: 40px;

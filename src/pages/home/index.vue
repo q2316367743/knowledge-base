@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="home-side" :class="{collapsed}">
-      <div class="content">
+      <div class="header">
         <div class="flex justify-between items-center mb-12px">
           <div style="font-weight: bold;font-size: var(--td-font-size-title-large)">问一问</div>
           <t-space size="small">
@@ -33,7 +33,9 @@
             </t-tooltip>
           </t-col>
         </t-row>
-        <div class="group">
+      </div>
+      <div class="content">
+        <div class="group first">
           <div>分组</div>
           <t-button theme="primary" variant="text" shape="square" size="small" @click="openAddAiChatGroupDialog">
             <template #icon>
@@ -218,22 +220,29 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
 
   .home-side {
     height: 100vh;
-    width: 200px;
+    width: 199px;
     overflow-y: auto;
     overflow-x: hidden;
     transition: width 0.2s ease-in-out;
+    border-right: 1px solid var(--td-border-level-2-color);
+
+
+    .header {
+      padding: 8px 8px 0;
+      width: 183px;
+    }
 
     .content {
       width: 183px;
-      height: calc(100% - 16px);
+      height: calc(100% - 100px);
       padding: 8px;
-      border-right: 1px solid var(--td-border-level-2-color);
       overflow: auto;
     }
 
     &.collapsed {
       width: 0;
       padding: 0;
+      border-color: transparent;
     }
 
     .group {
@@ -244,6 +253,9 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
       align-items: center;
       margin: 4px 0;
       padding: 8px 8px 0;
+      &.first {
+        margin-top: 0;
+      }
     }
 
     .item {

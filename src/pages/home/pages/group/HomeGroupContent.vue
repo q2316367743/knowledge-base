@@ -51,11 +51,11 @@
       <span>对话 · </span>
       <span>{{ chats.length }}</span>
     </div>
-    <div class="chat-list">
+    <div class="chat-list" v-if="chats.length > 0">
       <div class="chat-item" v-for="{item} in results" :key="item.id" @click="onChatClick(item)"
            @contextmenu="onChatContextMenuClick(item, $event)">
         <div class="left">
-          <chat-double-icon size="16px" />
+          <chat-double-icon size="16px"/>
           <div class="title">{{ item.name }}</div>
         </div>
         <div class="right">
@@ -63,6 +63,7 @@
         </div>
       </div>
     </div>
+    <t-empty style="margin-top: 5vh" type="empty" v-else description="发送消息新建对话，或将历史对话移入"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -187,7 +188,7 @@ function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
     }, {
       label: '编辑名称',
       onClick() {
-        onRenameChat(props.groupId,  data, () => {
+        onRenameChat(props.groupId, data, () => {
           // 重新初始化
           initChats();
         })
@@ -199,7 +200,7 @@ function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
         },
       }, "删除"),
       onClick() {
-        onRemoveChat(props.groupId, data.id,() => {
+        onRemoveChat(props.groupId, data.id, () => {
           // 重新初始化
           initChats();
         })
@@ -299,6 +300,8 @@ function onDelete() {
 
   .chat-list {
     margin-top: 8px;
+    display: flex;
+    flex-direction: column-reverse;
 
     .chat-item {
       padding: 12px 16px;
