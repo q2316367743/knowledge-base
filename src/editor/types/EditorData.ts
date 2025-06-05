@@ -10,7 +10,7 @@ import {OutputData} from "@editorjs/editorjs";
 import {buildMemoData, MemoData} from "@/editor/MemoEditor/types";
 import {AiChatWrap} from "@/entity/ai/AiChat";
 
-type EditorData = Record<string, any> |
+export type EditorData = Record<string, any> |
   // 思维导图
   MindMapTreeData |
   // 流程图

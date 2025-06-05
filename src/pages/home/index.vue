@@ -111,6 +111,11 @@ import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
 import {openHomeChatSearch} from "@/pages/home/components/HomeChatSearch";
+import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+
+const route = useRoute();
+const router = useRouter();
 
 const show = ref(true);
 const groupList = ref<HTMLDivElement>();
@@ -210,6 +215,20 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
   });
 }
 
+tryOnMounted(async () => {
+  await useAiChatGroupStore().init();
+  await useAiChatListStore().init();
+  if (route.query.preload) {
+    const id = await useAiChatListStore().post(
+      '0',
+      `${route.query.preload}`,
+      // 默认使用豆包
+      getItemByDefault(LocalNameEnum.KEY_HOME_MODEL, "1/doubao-1.5-pro-32k"));
+    activeKey.value = `/home/chat/0/${id}`;
+    await router.replace({query: {}});
+  }
+})
+
 // TODO: 1. 对话框改为tsx，2. 左侧要无线滚动，3. 聊天排序要倒叙
 </script>
 <style scoped lang="less">
@@ -253,6 +272,7 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
       align-items: center;
       margin: 4px 0;
       padding: 8px 8px 0;
+
       &.first {
         margin-top: 0;
       }

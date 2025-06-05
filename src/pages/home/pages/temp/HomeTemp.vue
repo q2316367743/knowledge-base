@@ -119,7 +119,7 @@ import {
   ShareIcon, StopIcon
 } from "tdesign-icons-vue-next";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
-import {collapsed, renderModel, toggleCollapsed} from "@/pages/home/model";
+import {collapsed, renderModel, toggleCollapsed, model} from "@/pages/home/model";
 import {addNoteFromAi} from "@/pages/home/modal/addNote";
 import {
   AiChatItem,
@@ -135,7 +135,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 const router = useRouter()
 
 const text = ref('');
-const model = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_MODEL, '');
 
 const chatRef = ref<ChatInstanceFunctions>();
 const abort = shallowRef<AskToOpenAiAbort>();
@@ -306,13 +305,13 @@ const handleStop = () => {
 .home-chat {
   position: relative;
   background-color: var(--td-bg-color-container);
-  padding: 8px;
 
   .home-chat-collapse {
-    margin-bottom: 8px;
     display: flex;
     align-items: center;
     height: 32px;
+    border-bottom: 1px solid var(--td-border-level-2-color);
+    padding: 4px;
 
     .divider {
       margin: 0 8px;
@@ -344,14 +343,16 @@ const handleStop = () => {
   }
 
   .home-chat-content {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 41px);
     width: 100%;
     overflow: hidden;
+    padding:  8px;
 
     .t-chat__text {
       &.user {
         background-color: var(--td-bg-color-secondarycontainer);
         border-radius: var(--td-radius-extraLarge);
+        color: var(--td-text-color-primary);
       }
 
 
@@ -361,11 +362,16 @@ const handleStop = () => {
           color: var(--td-text-color-link);
         }
       }
+
       :deep(.t-chat__text__assistant) {
         p {
           margin: 0;
         }
       }
+    }
+
+    :deep(.t-chat__inner.system) {
+      display: none;
     }
   }
 
@@ -373,7 +379,7 @@ const handleStop = () => {
     position: absolute;
     left: 50%;
     margin-left: -20px;
-    bottom: 210px;
+    bottom: 160px;
     padding: 0;
     border: 0;
     width: 40px;

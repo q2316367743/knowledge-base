@@ -19,6 +19,12 @@
           <t-dropdown-item style="color: var(--td-error-color)" @click="handleRemove">删除对话</t-dropdown-item>
         </t-dropdown-menu>
       </t-dropdown>
+      <t-button theme="primary" variant="text" shape="square" style="margin-left: auto;margin-right: 4px;"
+                @click="handleSave()">
+        <template #icon>
+          <save-icon/>
+        </template>
+      </t-button>
     </div>
     <chat
       ref="chatRef"
@@ -113,22 +119,18 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {
-  Chat,
-  ChatContent,
-  ChatLoading,
-  ChatReasoning,
-  ChatSender,
-  ChatInstanceFunctions
-} from '@tdesign-vue-next/chat';
+import {Chat, ChatContent, ChatInstanceFunctions, ChatLoading, ChatReasoning, ChatSender} from '@tdesign-vue-next/chat';
 import {
   ArrowDownIcon,
-  CheckCircleIcon, ChevronDownIcon,
+  CheckCircleIcon,
+  ChevronDownIcon,
   CollectionIcon,
   CopyIcon,
   DeleteIcon,
   MenuFoldIcon,
-  ShareIcon, StopIcon
+  SaveIcon,
+  ShareIcon,
+  StopIcon
 } from "tdesign-icons-vue-next";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {activeKey, collapsed, renderModel, toggleCollapsed} from "@/pages/home/model";
@@ -145,6 +147,8 @@ import {
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {addArticleModal} from "@/pages/note/components/he-context";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 
 const router = useRouter();
 
@@ -369,18 +373,30 @@ const handleRemove = () => {
 const handleGroup = () => {
   activeKey.value = `/home/group/${group.value.id}`;
 }
+const handleSave = () => {
+  addArticleModal({
+    sourceName: instance.value?.name,
+    content: instance.value,
+    showTypeRadio: false,
+    defaultType: ArticleTypeEnum.AI_CHAT,
+    onSuccess: () => {
+      MessageUtil.success("新增成功");
+      router.push('/note');
+    }
+  });
+}
 </script>
 <style scoped lang="less">
 .home-chat {
   position: relative;
   background-color: var(--td-bg-color-container);
-  padding: 8px;
 
   .home-chat-collapse {
-    margin-bottom: 8px;
     display: flex;
     align-items: center;
     height: 32px;
+    border-bottom: 1px solid var(--td-border-level-2-color);
+    padding: 4px;
 
     .divider {
       margin: 0 8px;
@@ -412,35 +428,10 @@ const handleGroup = () => {
   }
 
   .home-chat-content {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 41px);
     width: 100%;
     overflow: hidden;
-
-    .t-chat__text {
-      &.user {
-        background-color: var(--td-bg-color-secondarycontainer);
-        border-radius: var(--td-radius-extraLarge);
-        color: var(--td-text-color-primary);
-      }
-
-
-      &.model-change {
-        :deep(span) {
-          padding: 0 4px;
-          color: var(--td-text-color-link);
-        }
-      }
-
-      :deep(.t-chat__text__assistant) {
-        p {
-          margin: 0;
-        }
-      }
-    }
-
-    :deep(.t-chat__inner.system) {
-      display: none;
-    }
+    padding: 8px;
   }
 
   .bottomBtn {

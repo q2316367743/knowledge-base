@@ -1,6 +1,6 @@
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {articleTypeMap} from "@/pages/note/components/he-context";
-import {buildDefaultContent} from "@/editor/types/EditorData";
+import {buildDefaultContent, EditorData} from "@/editor/types/EditorData";
 import {
   buildArticleName,
   checkPower,
@@ -18,7 +18,7 @@ interface AddArticleProps {
   pid: number;
   type: ArticleTypeEnum;
   name?: string;
-  content?: string;
+  content?: EditorData;
   extra?: Partial<ArticleIndex>;
 }
 

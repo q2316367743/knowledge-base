@@ -20,15 +20,15 @@ import {useSnowflake} from "@/hooks/Snowflake";
 export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
   const groups = ref(new Array<AiChatGroup>());
   const rev = ref<string>();
+  let isInit = false;
 
   const init = async () => {
+    if (isInit) return;
+    isInit = true;
     const res = await listByAsync(LocalNameEnum.LIST_AI_GROUP);
     groups.value = res.list;
     rev.value = res.rev;
   }
-
-  init().then(() => console.log("ai chat group init success"))
-    .catch(e => MessageUtil.error("AI分组初始化失败", e));
 
   const add = async (g: AiChatGroupPostWrap) => {
     const id = useSnowflake().nextId();
@@ -96,7 +96,7 @@ export const useAiChatGroupStore = defineStore('ai-chat-group', () => {
   }
 
   return {
-    groups, add, update, removeById, getById, updatePromptById, renameById, sort
+    groups, init, add, update, removeById, getById, updatePromptById, renameById, sort
   }
 
 })

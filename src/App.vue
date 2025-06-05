@@ -146,7 +146,10 @@ function onPluginEnter(operate: string, preload: string, extra: string) {
       router.push('/todo');
     } else if (preload === 'ai') {
       useUmami.track("feature", "前往AI");
-      router.push('/home');
+      router.push({
+        path: '/home',
+        query: {preload: extra}
+      });
     } else if (preload === 'add') {
       useUmami.track("feature", "新增笔记");
       addSimpleNote(extra).then((a) => useHomeEditorStore().openArticle(a));

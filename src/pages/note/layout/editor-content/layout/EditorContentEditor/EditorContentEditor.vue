@@ -23,6 +23,8 @@
                     v-else-if="editorType === ArticleTypeEnum.ENCRYPT_EDITOR"/>
     <memo-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                  v-else-if="editorType === ArticleTypeEnum.MEMO"/>
+    <ai-chat-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
+                    v-else-if="editorType === ArticleTypeEnum.AI_CHAT"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -48,6 +50,7 @@ import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
 import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 import EncryptEditor from "@/editor/EncryptEditor/EncryptEditor.vue";
 import MemoEditor from "@/editor/MemoEditor/MemoEditor.vue";
+import AiChatEditor from "@/editor/AiChatEditor/AiChatEditor.vue";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,

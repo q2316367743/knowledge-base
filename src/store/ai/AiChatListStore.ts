@@ -19,20 +19,20 @@ import {isNotEmptyArray} from "@/utils/lang/FieldUtil";
 export const useAiChatListStore = defineStore('ai-chat-list', () => {
   const lists = ref(new Array<AiChatList>());
   const rev = ref<string>();
+  let isInit = false;
 
   const listBy = async (groupId: string): Promise<DbList<AiChatList>> => {
     return listByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId);
   }
 
   const init = async () => {
+    if (isInit) return;
+    isInit = true;
     // 无分组的ai列表
     const res = await listBy('0');
     lists.value = res.list;
     rev.value = res.rev;
   }
-
-  init().then(() => console.log("ai chat list init success"))
-    .catch(e => MessageUtil.error("AI列表初始化失败", e));
 
   const getList = async (groupId: string) => {
     let l: Array<AiChatList>;
@@ -144,6 +144,6 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     return saveOneByAsync(LocalNameEnum.ITEM_AI_CHAT_ + '/' + id, c, rev);
   }
 
-  return {lists, post, updateById, remove, getInstance, saveContent, listBy}
+  return {lists, init, post, updateById, remove, getInstance, saveContent, listBy}
 
 })

@@ -59,19 +59,15 @@
     </div>
   </div>
 </template>
-
 <script lang="ts" setup>
-import {ChatIcon, DeleteIcon, HelpCircleIcon, LogoGithubIcon, MenuFoldIcon, StarIcon} from "tdesign-icons-vue-next";
+import {DeleteIcon, LogoGithubIcon, MenuFoldIcon} from "tdesign-icons-vue-next";
 import {ChatSender} from '@tdesign-vue-next/chat';
-import {activeKey, collapsed, toggleCollapsed} from "@/pages/home/model";
+import {activeKey, collapsed, toggleCollapsed, model} from "@/pages/home/model";
 import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
-import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useAiChatListStore} from "@/store/ai/AiChatListStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 
 const text = ref('');
-const model = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_MODEL, '');
 
 const disabled = computed(() => text.value.trim() === '');
 

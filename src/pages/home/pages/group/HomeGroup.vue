@@ -36,20 +36,17 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {activeKey, collapsed, renderGroup, toggleCollapsed} from "@/pages/home/model";
 import {DeleteIcon, MenuFoldIcon} from "tdesign-icons-vue-next";
 import {ChatSender} from "@tdesign-vue-next/chat";
-import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
-import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useAiChatListStore} from "@/store/ai/AiChatListStore";
+import {useAiChatListStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {activeKey, collapsed, renderGroup, toggleCollapsed, model} from "@/pages/home/model";
 import HomeGroupContent from "@/pages/home/pages/group/HomeGroupContent.vue";
+import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 
 const groupId = renderGroup(activeKey.value);
 
 const text = ref('');
-const model = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_MODEL, '');
 
 const disabled = computed(() => text.value.trim() === '');
 

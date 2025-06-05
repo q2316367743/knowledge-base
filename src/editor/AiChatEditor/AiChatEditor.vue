@@ -6,7 +6,7 @@
       :clear-history="false"
       :text-loading="false"
       :is-stream-load="false"
-      class="home-chat-content"
+      class="ai-chat-editor-content"
       @scroll="handleChatScroll"
     >
       <template #content="{ item }">
@@ -22,7 +22,7 @@
         <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]"/>
       </template>
       <template #actions="{ item, index }">
-        <t-space size="small" class="mt-8px" style="margin-left: -16px">
+        <t-space size="small" class="mt-8px">
           <t-tooltip content="复制">
             <t-button theme="primary" variant="text" shape="square" size="small"
                       @click="handleOperator('copy', item, index)">
@@ -99,5 +99,17 @@ const handleOperator = (op: string, item: AiChatItem, index: number) => {
 }
 </script>
 <style scoped lang="less">
+.ai-chat-editor {
+  width: 100%;
+  height: 100%;
 
+  .ai-chat-editor-content {
+    height: 100%;
+
+    :deep(.t-chat__list) {
+      padding-right: 8px;
+    }
+
+  }
+}
 </style>

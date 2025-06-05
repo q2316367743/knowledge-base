@@ -52,7 +52,13 @@
         "linux"
       ],
       "cmds": [
-        "AI问答", "AI助手"
+        "AI问答", "AI助手",
+        {
+          "type": "over",
+          "label": "问AI",
+          "minLength": 3,
+          "maxLength": 10000
+        }
       ]
     },
     {

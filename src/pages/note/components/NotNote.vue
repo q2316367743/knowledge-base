@@ -1,7 +1,7 @@
 <template>
   <div class="not-note w-full h-full">
     <div class="not-note-container flex items-center justify-center">
-      <div class="module-item mr-16" @click="addArticleModal">
+      <div class="module-item mr-16" @click="addArticleModal()">
         <div class="module-item-icon">
           <sticky-note-icon size="36px"/>
         </div>

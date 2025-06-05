@@ -33,6 +33,8 @@ import {
   StickyNoteIcon,
   TableIcon
 } from "tdesign-icons-vue-next";
+import {EditorData} from "@/editor/types/EditorData";
+import {useVipStore} from "@/store";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 ----------------------------------------------
@@ -143,11 +145,20 @@ export function renderArticleType(type: ArticleTypeEnum): string {
 // ----------------------------------------------- 相关操作 ----------------------------------------------
 // ------------------------------------------------------------------------------------------------------
 
-export function addArticleModal() {
+interface ArticleModalProps {
+  sourceName?: string;
+  content?: EditorData;
+  showTypeRadio?: boolean;
+  defaultType?: ArticleTypeEnum;
+  onSuccess?: () => void;
+}
+
+export function addArticleModal(props?: ArticleModalProps) {
   const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
-  const type = ref(ArticleTypeEnum.MARKDOWN);
+  const {sourceName, content, showTypeRadio = true, defaultType, onSuccess} = props || {};
+  const type = ref(defaultType || ArticleTypeEnum.MARKDOWN);
   const folder = ref(0);
-  const name = ref('');
+  const name = ref(sourceName || '');
   const {folderTree} = useFolderStore();
 
   function refreshFileName() {
@@ -165,11 +176,11 @@ export function addArticleModal() {
     draggable: true,
     confirmBtn: '新增',
     default: () => <Form data={{}} layout={'vertical'}>
-      <FormItem label={'笔记类型'} labelAlign={'top'}>
+      {showTypeRadio && <FormItem label={'笔记类型'} labelAlign={'top'}>
         <RadioGroup v-model={type.value}>
-          {articleTypes.map(item => <Radio key={item.key} value={item.key}>{item.name}</Radio>)}
+          {articleTypes.filter(e => !e.hidden).map(item => <Radio key={item.key} value={item.key}>{item.name}</Radio>)}
         </RadioGroup>
-      </FormItem>
+      </FormItem>}
       <FormItem label={'所在文件夹'} labelAlign={'top'}>
         <TreeSelect data={folderTree} v-model={folder.value} placeholder={'请选择所在文件夹'}/>
       </FormItem>
@@ -194,11 +205,12 @@ export function addArticleModal() {
       const article = await addNote({
         pid: folder.value,
         type: type.value,
-        name: name.value
+        name: name.value,
+        content
       })
       useHomeEditorStore().openArticle(article);
       plugin.destroy();
-      return Promise.resolve(true);
+      onSuccess?.();
     }
   })
 }

@@ -1,5 +1,5 @@
 @charset "utf-8";
-.typo {
+.t-chat {
   /* 去掉各Table cell 的边距并让其边重合 */
 
   table {
@@ -20,12 +20,52 @@
     caption {
       border-bottom: none;
     }
+
     th, td, caption {
       border: 1px solid var(--td-border-level-2-color);
       padding: 0.5em 1em;
     }
   }
 
+  .t-chat__code-header {
+    border-bottom: 1px solid var(--td-border-level-2-color);
+    padding: 6px 12px;
+
+    .t-chat__copy-btn {
+      transition: color 0.3s ease-in-out;
+
+      &:hover {
+        color: var(--td-text-color-link);
+      }
+    }
+  }
+
+
+  .t-chat__text {
+    &.user {
+      background-color: var(--td-bg-color-secondarycontainer);
+      border-radius: var(--td-radius-extraLarge);
+      color: var(--td-text-color-primary) !important;
+    }
+
+
+    &.model-change {
+      span {
+        padding: 0 4px;
+        color: var(--td-text-color-link);
+      }
+    }
+
+    .t-chat__text__assistant {
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .t-chat__inner.system {
+    display: none;
+  }
 
 }
 
