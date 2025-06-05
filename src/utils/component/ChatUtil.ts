@@ -51,8 +51,10 @@ async function askToOpenAi(props: AskToOpenAiProps): Promise<void> {
 
   // 流式处理结果
   for await (const chunk of response) {
-    const content = chunk.choices[0]?.delta?.content || '';
-    onAppend(content);
+    // @ts-ignore
+    const reasoning_content = chunk.choices[0]?.delta?.reasoning_content;
+    const content = chunk.choices[0]?.delta?.content;
+    onAppend(reasoning_content || content, !!reasoning_content);
   }
 }
 
