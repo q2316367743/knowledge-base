@@ -194,11 +194,9 @@ export function openSearchContent() {
             theme={"primary"} shape={'square'}
             disabled={keyword.value.trim() === ""}
             onClick={searchContent}
-          >
-            {{
-              icon: () => <SearchIcon/>,
-            }}
-          </Button>
+          >{{
+            icon: () => <SearchIcon/>
+          }}</Button>
         </Col>
         <Col flex={"32px"}>
           <Button

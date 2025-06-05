@@ -217,19 +217,13 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       icon: () => <FileExportIcon/>,
       children: [{
         label: 'ZIP',
-        onClick: () => {
-          exportToMd(node.value)
-        }
+        onClick: () => exportToMd(node.value)
       }, {
         label: 'uTools文档插件',
-        onClick: () => {
-          exportToUTools(node.value)
-        }
+        onClick: () => exportToUTools(node.value)
       }, {
         label: 'Epub',
-        onClick: () => {
-          exportForEpub(node.value)
-        }
+        onClick: () => exportForEpub(node.value)
       }]
     });
   }

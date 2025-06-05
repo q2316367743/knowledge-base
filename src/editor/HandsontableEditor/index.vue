@@ -78,10 +78,6 @@ const columnSorting = ref<boolean | Handsontable.plugins.ColumnSorting.Config[]>
 const filters = ref<Array<ColumnConditions>>(props.modelValue ? (props.modelValue.filters || []) : [])
 const mergeCells = ref<Handsontable.plugins.MergeCells.Settings>(props.modelValue ? (props.modelValue.mergeCells || true) : true);
 
-let onImport = () => {
-  MessageUtil.warning("系统初始化中")
-}
-
 function onExport() {
   handsontableExport(data, columns as any);
 }
@@ -248,7 +244,7 @@ onMounted(() => {
       }
     },
   });
-  const useHandsontableImportResult = useHandsontableImport(props.articleId || 0, (records, columnsWrap) => {
+  useHandsontableImport(props.articleId || 0, (records, columnsWrap) => {
     if (hot.value) {
       // 表格赋值
       hot.value.updateData(records);
@@ -262,10 +258,6 @@ onMounted(() => {
     }
   });
   useHandsontableExport(data, columns as any, props.articleId);
-  onImport = () => {
-    useHandsontableImportResult.onImport(props.articleId || 0);
-  }
-
 });
 
 watch(() => props.readOnly, value => hot.value && hot.value.updateSettings({

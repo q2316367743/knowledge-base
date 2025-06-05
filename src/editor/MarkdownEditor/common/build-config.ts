@@ -3,13 +3,11 @@ import {
   CherryOptions,
   CherryToolbarsOptions
 } from "cherry-markdown/types/cherry";
-import {isUtools} from "@/global/BeanFactory";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useScreenShotMenu} from "@/editor/MarkdownEditor/menu/ScreenShotMenu";
 import {usePanGu} from "@/editor/MarkdownEditor/menu/PanGuMenu";
 import {useFanYi} from "@/editor/MarkdownEditor/menu/FanYiMenu";
-import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
@@ -111,7 +109,7 @@ export async function buildConfig(
     themeSettings: {
       toolbarTheme: isDark ? 'dark' : 'light',
       codeBlockTheme: isDark ? 'material-ocean' : 'default',
-      mainTheme:  isDark ? 'dark' : 'light',
+      mainTheme: isDark ? 'dark' : 'light',
       inlineCodeTheme: isDark ? 'black' : 'red',
       themeList: []
     },
@@ -132,15 +130,12 @@ export async function buildConfig(
         urlProcessor: (url: string, srcType: string) => {
           if (srcType === 'image') {
             if (url.startsWith("attachment:")) {
-
-              if (isUtools) {
-                const id = url.replace("attachment:", "");
-                if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
-                  // 直接就是ID
-                  return renderAttachmentUrl(id)
-                } else {
-                  return renderAttachmentUrl(LocalNameEnum.ARTICLE_ATTACHMENT + id)
-                }
+              const id = url.replace("attachment:", "");
+              if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
+                // 直接就是ID
+                return renderAttachmentUrl(id)
+              } else {
+                return renderAttachmentUrl(LocalNameEnum.ARTICLE_ATTACHMENT + id)
               }
             }
           }

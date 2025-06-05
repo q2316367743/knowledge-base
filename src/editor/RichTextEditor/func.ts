@@ -41,6 +41,8 @@ export function onRichTextExport(id: number, articleId?: number, editorRef?: IDo
         MessageUtil.warning('暂不支持导出markdown文档');
       } else if (res.type === 2) {
         const html = editorRef.getHtml();
+        // 增加html基础结构
+
         if (html) {
           // 此处需要将html中图片、视频的src中的链接替换为绝对路径
           const {attachments, content} = parseRichTextForAttachment(html)

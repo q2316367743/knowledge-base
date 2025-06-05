@@ -11,6 +11,7 @@ import {useArticleImportEvent} from "@/store/components/HomeEditorStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {isObject} from "radash";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 function openImportModal(): Promise<string> {
 
@@ -123,12 +124,6 @@ export function useHandsontableImport(articleId: number, success: (records: Arra
     });
   }
 
-  useArticleImportEvent.off(onImport);
-  useArticleImportEvent.on(onImport);
+  useMountEventBus(useArticleImportEvent, onImport)
 
-  onUnmounted(() => {
-    useArticleImportEvent.off(onImport);
-  })
-
-  return {onImport}
 }

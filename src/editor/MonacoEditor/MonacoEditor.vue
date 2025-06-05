@@ -8,9 +8,10 @@
 import MonacoEditorCore from "@/editor/MonacoEditor/MonacoEditorCore.vue";
 import {useArticleExportEvent, useArticleImportEvent, useArticleStore, useHomeEditorStore} from "@/store";
 import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
-import {download} from "@/utils/BrowserUtil";
 import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
+import {download} from "@/utils/BrowserUtil";
 import {readAsText} from "@/utils/file/FileUtil";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 const content = defineModel({
   type: String,
@@ -38,16 +39,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['change', 'editor-mounted']);
 
-onMounted(() => {
-  useArticleExportEvent.off(onExport);
-  useArticleImportEvent.off(onImport);
-  useArticleExportEvent.on(onExport);
-  useArticleImportEvent.on(onImport);
-});
-onUnmounted(() => {
-  useArticleExportEvent.off(onExport);
-  useArticleImportEvent.off(onImport);
-})
+useMountEventBus(useArticleExportEvent, onExport)
+useMountEventBus(useArticleImportEvent, onImport)
 
 
 function onExport(id: number) {

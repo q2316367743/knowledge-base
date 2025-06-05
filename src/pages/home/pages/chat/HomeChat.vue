@@ -49,7 +49,7 @@
         <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]" class="typo"/>
       </template>
       <template #actions="{ item, index }">
-        <t-space size="small" class="mt-8px" style="margin-left: -16px">
+        <t-space size="small" class="mt-8px">
           <t-tooltip content="复制">
             <t-button theme="primary" variant="text" shape="square" size="small"
                       @click="handleOperator('copy', item, index)">
@@ -68,7 +68,7 @@
           </t-tooltip>
           <t-tooltip content="删除">
             <t-button theme="danger" variant="text" shape="square" size="small"
-                      @click="handleOperator('delete', item, index)">
+                      @click="handleOperator('delete', item, index)" disabled>
               <template #icon>
                 <delete-icon/>
               </template>
@@ -76,7 +76,7 @@
           </t-tooltip>
           <t-tooltip content="分享">
             <t-button theme="primary" variant="text" shape="square" size="small"
-                      @click="handleOperator('share', item, index)">
+                      @click="handleOperator('share', item, index)" disabled>
               <template #icon>
                 <share-icon/>
               </template>

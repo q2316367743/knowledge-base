@@ -1,11 +1,10 @@
-import {isUtools} from "@/global/BeanFactory";
 import {blobToBase64} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export async function useAttachmentUploadByImage(data: Blob | File | string): Promise<string> {
-  if (!isUtools) {
+  if (InjectionUtil.getPlatform() === 'web') {
     return Promise.reject("web版不支持调用图床");
   }
   NotificationUtil.warningClose(

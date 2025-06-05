@@ -9,17 +9,11 @@ import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useAiServiceStore} from "@/store/ai/AiServiceStore";
 import {useAiAssistantStore} from "@/store/ai/AiAssistantStore";
 
-// utools注入
-export const isUtools: boolean = true;
-
 export const usePageJumpEvent = useEventBus<string>('page-jump');
 export const useDeleteEvent = useEventBus('delete');
-export const useSearchContentEvent = useEventBus('search-content');
-export const useDbKeyRefreshEvent = useEventBus<string>('db-key-refresh');
 
 // 首页的关键字
 export const keyword = ref('');
-
 
 export async function initData(): Promise<void> {
   // 在进行数据初始化

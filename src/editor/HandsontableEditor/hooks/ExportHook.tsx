@@ -1,8 +1,9 @@
 import Handsontable from "handsontable";
 import {Alert, Button, DrawerPlugin, Link, Space} from "tdesign-vue-next";
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {useArticleExportEvent} from "@/store";
 import {copy} from "@/utils/BrowserUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 export function _createDataByColumns(data: Array<Array<string>>, columns: Array<Handsontable.ColumnSettings> | null): Array<Record<string, string>> {
   if (!columns) {
@@ -78,10 +79,6 @@ export function useHandsontableExport(
     }
   }
 
-  useArticleExportEvent.off(onExport);
-  useArticleExportEvent.on(onExport);
+  useMountEventBus(useArticleExportEvent, onExport)
 
-  onUnmounted(() => {
-    useArticleExportEvent.off(onExport);
-  })
 }

@@ -3,7 +3,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
-import {useEventBus} from "@vueuse/core";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import ArticleSortEnum from "@/enumeration/ArticleSortEnum";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";

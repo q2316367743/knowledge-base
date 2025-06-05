@@ -8,18 +8,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onBeforeUnmount, ref, shallowRef, watch} from "vue";
 import MindMap from "simple-mind-map";
-import {useElementSize} from "@vueuse/core";
 
 // 组件
 import MindMapCount from "@/editor/MindMapEditor/components/MindMapCount.vue";
 import MindMapTool from "@/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
   from "@/editor/MindMapEditor/components/MindMapSetting/index.vue";
-import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
-import {useArticleExportEvent, useArticleImportEvent} from "@/store/components/HomeEditorStore";
-import {openMindMapExport} from "@/editor/MindMapEditor/components/MindMapExport";
 import MindMapContext from "@/editor/MindMapEditor/components/MindMapContext.vue";
 
 // 插件
@@ -32,6 +27,11 @@ import markdown from 'simple-mind-map/src/parse/markdown.js'
 import AssociativeLine from 'simple-mind-map/src/plugins/AssociativeLine.js'
 import Select from 'simple-mind-map/src/plugins/Select.js'
 import Drag from 'simple-mind-map/src/plugins/Drag.js'
+
+import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
+import {useArticleExportEvent, useArticleImportEvent} from "@/store";
+import {openMindMapExport} from "@/editor/MindMapEditor/components/MindMapExport";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 const props = defineProps({
   modelValue: {
@@ -79,11 +79,6 @@ const init = () => {
   mindMap.value.addPlugin(Select, undefined);
   mindMap.value.addPlugin(Drag, undefined);
 
-  useArticleExportEvent.off(onExport);
-  useArticleExportEvent.on(onExport);
-  useArticleImportEvent.off(onImport);
-  useArticleImportEvent.on(onImport);
-
 };
 
 watch([size.width, size.height], value => {
@@ -101,12 +96,13 @@ watch(() => size.height.value, () => mindMap.value && mindMap.value.resize());
 watch(() => props.readOnly, value => mindMap.value && mindMap.value.setMode(value ? 'readonly' : 'edit'))
 
 onBeforeUnmount(() => {
-  useArticleExportEvent.off(onExport);
-  useArticleImportEvent.off(onImport);
   if (mindMap.value) {
     mindMap.value.destroy();
   }
 });
+
+useMountEventBus(useArticleExportEvent, onExport);
+useMountEventBus(useArticleImportEvent, onImport);
 
 function onExport(id: number) {
   if (props.articleId === id && mindMap.value) {

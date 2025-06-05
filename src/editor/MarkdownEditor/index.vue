@@ -5,20 +5,10 @@
 </template>
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
-import {onMounted, onBeforeUnmount, shallowRef, watch} from "vue";
+import {editorProps} from "@/editor/MarkdownEditor/CherryMarkdownOption";
 import {
-  editorProps
-} from "@/editor/MarkdownEditor/CherryMarkdownOption";
-import {useWindowSize} from "@vueuse/core";
-
-import {useGlobalStore} from "@/store/GlobalStore";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {
-  useArticleExportEvent,
-  useArticleImportEvent,
-  useHomeEditorStore
-} from "@/store/components/HomeEditorStore";
+  useArticleExportEvent, useArticleImportEvent, useArticleStore, useBaseSettingStore, useGlobalStore, useHomeEditorStore
+} from "@/store";
 
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {extname, parseFileName, readAsText} from "@/utils/file/FileUtil";
@@ -31,17 +21,17 @@ import {openMarkdownExport} from "./common/MarkdownExport";
 import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
 
 import {buildConfig} from "@/editor/MarkdownEditor/common/build-config";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 const props = defineProps(editorProps);
 const emits = defineEmits(['update:modelValue', 'sendToChat']);
-defineExpose({onInsert})
 
 const instance = shallowRef<Cherry>();
 const id = 'markdown-editor-' + props.articleId;
 const size = useWindowSize();
 
-useArticleExportEvent.on(onExport);
-useArticleImportEvent.on(onImport);
+useMountEventBus(useArticleExportEvent, onExport);
+useMountEventBus(useArticleImportEvent, onImport);
 
 onMounted(() => {
   buildConfig(
@@ -99,7 +89,6 @@ function setValue(text: string, name: string, id: number) {
 }
 
 function onImport(id: number) {
-
   if (props.articleId === id && instance.value) {
     openArticleImport(['.md', '.markdown'])
       .then(file => {
@@ -119,14 +108,6 @@ function onImport(id: number) {
   }
 
 }
-
-function onInsert(str: string) {
-  if (instance.value) {
-    instance.value.setValue(instance.value.getValue() + str);
-  }
-
-}
-
 </script>
 <style lang="less">
 .markdown-editor {

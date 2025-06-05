@@ -33,7 +33,10 @@
 </template>
 <script lang="ts" setup>
 import {LogicFlow} from "@logicflow/core";
+import {assign} from "radash";
 import {BpmnElement, BpmnXmlAdapter, MiniMap, SelectionSelect, Snapshot, ProximityConnect, Menu } from '@logicflow/extension';
+import {useArticleExportEvent} from "@/store";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 import {registerCustomElement} from "@/editor/LogicFlow/node";
 import {DefaultTheme} from "@/editor/LogicFlow/theme";
 import LogicFlowSidebar from "@/editor/LogicFlow/components/LogicFlowSidebar.vue";
@@ -41,8 +44,6 @@ import LogicFlowToolbar from "@/editor/LogicFlow/components/LogicFlowToolbar.vue
 import LogicFlowSave from "@/editor/LogicFlow/components/LogicFlowSave.vue";
 import LogicFlowPanel from "@/editor/LogicFlow/components/LogicFlowPanel.vue";
 import {buildLogicFlowConfigFromOptions, firstUseLogicFlow, onLogicFlowExport} from "@/editor/LogicFlow/func";
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
-import {assign} from "radash";
 import {LogicFlowOption, updateLogicFlowOption} from "@/editor/LogicFlow/components/LogicFlowOption";
 import {updateLogicFlowEditConfig} from "@/editor/LogicFlow/components/LogicFlowEditConfig";
 import {openLogicFlowKeyboard} from "@/editor/LogicFlow/components/LogicFlowKeyboard";
@@ -159,8 +160,6 @@ onMounted(() => {
   });
   // 监听键盘事件
   document.addEventListener('keydown', onKeyboardEvent);
-  useArticleExportEvent.off(onExport);
-  useArticleExportEvent.on(onExport);
   // 观察属性变化
   watch([elementSize.width, elementSize.height], () => {
     instance.value && instance.value.resize(elementSize.width.value, elementSize.height.value);
@@ -175,8 +174,8 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKeyboardEvent);
-  useArticleExportEvent.off(onExport);
 });
+useMountEventBus(useArticleExportEvent, onExport);
 
 function getProperty() {
   // 清空属性面板

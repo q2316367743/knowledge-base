@@ -11,10 +11,8 @@
 </template>
 <script lang="ts" setup>
 import {Splitpanes, Pane} from 'splitpanes'
-import {useSearchContentEvent} from "@/global/BeanFactory";
 import {noteSplitWidth, noteSplitLeft, noteSplitRight} from "@/store/components/HomeEditorStore";
 import {useCustomerFileNameStore} from "@/store/setting/CustomerFileNameStore";
-import {openSearchContent} from "@/pages/note/components/SearchContent";
 import EditorSide from '@/pages/note/layout/editor-side/index.vue';
 import EditorContent from "@/pages/note/layout/editor-content/index.vue";
 
@@ -22,7 +20,6 @@ import EditorContent from "@/pages/note/layout/editor-content/index.vue";
 const onResize = (data: any) => noteSplitWidth.value = data.prevPane.size;
 
 
-useSearchContentEvent.on(openSearchContent);
 
 useCustomerFileNameStore().init();
 

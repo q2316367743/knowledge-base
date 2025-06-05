@@ -25,10 +25,10 @@
                  v-else-if="editorType === ArticleTypeEnum.MEMO"/>
     <ai-chat-editor v-model="content" :read-only="preview" :article-id="articleIndex.id"
                     v-else-if="editorType === ArticleTypeEnum.AI_CHAT"/>
+    <empty-result v-else title="未知的文件类型" tip="请联系管理员反馈"/>
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, onBeforeUnmount, PropType, ref, watch} from "vue";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 // 编辑器
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
@@ -38,19 +38,18 @@ import ExcelEditor from "@/editor/ExcelEditor/index.vue";
 import MindMapEditor from "@/editor/MindMapEditor/index.vue";
 import DrauuEditor from "@/editor/DrauuEditor/index.vue";
 import HandsontableEditor from "@/editor/HandsontableEditor/index.vue";
-
-import {ArticleIndex} from "@/entity/article";
-import {parseFileExtra} from "@/utils/file/FileUtil";
-import MessageUtil from "@/utils/modal/MessageUtil";
-import {useArticleStore} from "@/store/db/ArticleStore";
-import {useArticlePreviewEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import LogicFlow from "@/editor/LogicFlow/LogicFlow.vue";
 import SuperEditor from "@/editor/SuperEditor/SuperEditor.vue";
 import EncryptEditor from "@/editor/EncryptEditor/EncryptEditor.vue";
 import MemoEditor from "@/editor/MemoEditor/MemoEditor.vue";
 import AiChatEditor from "@/editor/AiChatEditor/AiChatEditor.vue";
+
+import {ArticleIndex} from "@/entity/article";
+import {parseFileExtra} from "@/utils/file/FileUtil";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import {useArticlePreviewEvent, useArticleStore, useBaseSettingStore, useHomeEditorStore} from "@/store";
+import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,
@@ -138,14 +137,9 @@ onMounted(() => {
     return;
   }
   initArticle(props.articleIndex.id);
-
-  useArticlePreviewEvent.off(onPreview);
-  useArticlePreviewEvent.on(onPreview);
 });
 
-onBeforeUnmount(() => {
-  useArticlePreviewEvent.off(onPreview);
-});
+useMountEventBus(useArticlePreviewEvent, onPreview);
 
 function onPreview(id: number) {
   if (props.articleIndex) {

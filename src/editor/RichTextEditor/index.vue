@@ -6,10 +6,11 @@
 </template>
 <script lang="ts" setup>
 import {createEditor, createToolbar, IDomEditor, Toolbar, IToolbarConfig} from '@wangeditor/editor'
-import {useArticleExportEvent} from "@/store/components/HomeEditorStore";
+import {useArticleExportEvent} from "@/store";
 import {renderAttachmentUrl} from "@/plugin/server";
 import {onRichTextExport} from "@/editor/RichTextEditor/func";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
+import {useMountEventBus} from "@/hooks/MountEventBus";
 
 type InsertFnType = (url: string, alt: string, href: string) => void
 
@@ -107,7 +108,7 @@ function init() {
 
 }
 
-useArticleExportEvent.on(onExport);
+useMountEventBus(useArticleExportEvent, onExport)
 
 onMounted(() => {
   // 初始化

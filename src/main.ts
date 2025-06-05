@@ -22,7 +22,7 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 // 其他
-import {isUtools, useDeleteEvent, useSearchContentEvent} from '@/global/BeanFactory';
+import {useDeleteEvent} from '@/global/BeanFactory';
 import {
   homeEditorId,
   useArticleExportEvent,
@@ -30,6 +30,7 @@ import {
 } from "@/store/components/HomeEditorStore";
 import {addArticleModal} from "@/pages/note/components/he-context";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {openSearchContent} from "@/pages/note/components/SearchContent";
 
 // 代码编辑器环境注册
 self.MonacoEnvironment = {
@@ -92,8 +93,8 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.code === 'KeyF') {
         // 全局搜索
         e.preventDefault();
-        useSearchContentEvent.emit();
         useUmami.track("使用快捷键", getKey(e));
+        openSearchContent();
       }
     }
   }
@@ -108,7 +109,8 @@ window.open = (url?: string | URL): WindowProxy | null => {
 
 }
 window.addEventListener('click', e => {
-  if (!isUtools) {
+  if (InjectionUtil.getPlatform() === 'web') {
+    // web不需要监听
     return;
   }
   // @ts-ignore
