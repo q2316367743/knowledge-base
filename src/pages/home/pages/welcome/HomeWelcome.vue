@@ -27,12 +27,6 @@
     </div>
 
     <div class="welcome-input">
-      <div class="suggested-questions">
-        <span class="question-tag">最近你在做什么项目？</span>
-        <span class="question-tag">帮我写一个快速指南</span>
-        <span class="question-tag">使用 AI 帮助写作</span>
-      </div>
-
       <div class="input-container">
         <chat-sender
           v-model="text"
@@ -63,9 +57,9 @@
 import {DeleteIcon, LogoGithubIcon, MenuFoldIcon} from "tdesign-icons-vue-next";
 import {ChatSender} from '@tdesign-vue-next/chat';
 import {activeKey, collapsed, toggleCollapsed, model} from "@/pages/home/model";
-import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 import {useAiChatListStore} from "@/store/ai/AiChatListStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import HomeAssistantSelect from "@/pages/home/components/HomeAssistantSelect.vue";
 
 const text = ref('');
 
@@ -199,26 +193,6 @@ const inputEnter = (inputValue: string) => {
 .welcome-input {
   margin-top: auto;
   width: 100%;
-
-  .suggested-questions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-
-    .question-tag {
-      background-color: var(--td-bg-color-container-hover);
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: var(--td-bg-color-container-active);
-      }
-    }
-  }
 
 }
 </style>

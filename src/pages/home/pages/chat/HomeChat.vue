@@ -36,7 +36,8 @@
       @scroll="handleChatScroll"
     >
       <template #content="{ item, index }">
-        <chat-reasoning v-if="item.think && item.think.length > 0" expand-icon-placement="right">
+        <chat-reasoning v-if="item.think && item.think.length > 0 && item.role !== 'system'"
+                        expand-icon-placement="right">
           <template #header>
             <chat-loading v-if="isStreamLoad && index === 0" text="思考中..."/>
             <div v-else style="display: flex; align-items: center">
@@ -46,7 +47,8 @@
           </template>
           <chat-content :content="item.think"/>
         </chat-reasoning>
-        <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]" class="typo"/>
+        <chat-content v-if="item.content.length > 0 && item.role !== 'system'" :content="item.content"
+                      :class="[item.role]" class="typo"/>
       </template>
       <template #actions="{ item, index }">
         <t-space size="small" class="mt-8px">
@@ -66,14 +68,14 @@
               </template>
             </t-button>
           </t-tooltip>
-          <t-tooltip content="删除">
-            <t-button theme="danger" variant="text" shape="square" size="small"
-                      @click="handleOperator('delete', item, index)" disabled>
+          <t-popconfirm content="是否删除此对话，删除后无法恢复" confirm-btn="删除"
+                        @confirm="handleOperator('delete', item, index)">
+            <t-button theme="danger" variant="text" shape="square" size="small">
               <template #icon>
                 <delete-icon/>
               </template>
             </t-button>
-          </t-tooltip>
+          </t-popconfirm>
           <t-tooltip content="分享">
             <t-button theme="primary" variant="text" shape="square" size="small"
                       @click="handleOperator('share', item, index)" disabled>
@@ -88,11 +90,11 @@
         <chat-sender
           v-model="text"
           class="chat-sender"
-          :textarea-props="{placeholder: '请输入消息...',disabled: isStreamLoad}"
+          :textarea-props="{placeholder: '请输入消息...',disabled: isAsked}"
           @send="inputEnter"
         >
           <template #suffix>
-            <t-button theme="danger" shape="circle" v-if="isStreamLoad" @click="handleStop">
+            <t-button theme="danger" shape="circle" v-if="isAsked" @click="handleStop">
               <template #icon>
                 <stop-icon/>
               </template>
@@ -164,6 +166,7 @@ const abort = shallowRef<AskToOpenAiAbort>();
 const loading = ref(false);
 const isStreamLoad = ref(false);
 const isShowToBottom = ref(false);
+const isAsked = ref(false);
 
 onMounted(() => {
   useAiChatListStore().getInstance(activeKey.value)
@@ -257,6 +260,7 @@ async function onAsk(item: AiChatItem) {
   try {
     loading.value = true;
     isStreamLoad.value = true;
+    isAsked.value = true;
     await askToAi({
       messages: transferAiChatItemToChatMessageParam(items.value),
       service,
@@ -303,6 +307,7 @@ async function onAsk(item: AiChatItem) {
   } finally {
     loading.value = false;
     isStreamLoad.value = false;
+    isAsked.value = false;
     // 保存
     await onSaveContent();
   }
@@ -348,6 +353,7 @@ const handleOperator = (op: string, item: AiChatItem, index: number) => {
       })
       break;
     case 'delete':
+      handleDeleteChat(index);
       break;
     case 'share':
       break;
@@ -355,7 +361,6 @@ const handleOperator = (op: string, item: AiChatItem, index: number) => {
 }
 // 停止
 const handleStop = () => {
-  console.log(isStreamLoad.value, abort.value);
   if (!isStreamLoad.value) return;
   if (!abort.value) return;
   abort.value.abort("用户主动停止");
@@ -384,6 +389,19 @@ const handleSave = () => {
       router.push('/note');
     }
   });
+}
+const handleDeleteChat = (index: number) => {
+  if (!instance.value) return;
+  instance.value.items.splice(index, 1);
+  // 删除提问
+  while (true) {
+    const old = items.value[index];
+    if (!old) break;
+    if (old.role === 'assistant') break;
+    // 删除所有非助手回答
+    instance.value.items.splice(index, 1);
+  }
+  onSaveContent().then(() => MessageUtil.success("已删除")).catch(e => MessageUtil.error("删除失败", e));
 }
 </script>
 <style scoped lang="less">
