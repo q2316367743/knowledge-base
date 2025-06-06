@@ -12,6 +12,7 @@ declare module 'simple-mind-map/src/plugins/Drag.js';
 // editor.js
 declare module '@editorjs/marker';
 declare module 'editorjs-tooltip';
+declare module 'vue-virtual-scroller';
 
 declare interface OpenFileOption {
   title?: string,

@@ -34,7 +34,7 @@
           </t-col>
         </t-row>
       </div>
-      <div class="content">
+      <div class="content" ref="contentRef">
         <div class="group first">
           <div>分组</div>
           <t-button theme="primary" variant="text" shape="square" size="small" @click="openAddAiChatGroupDialog">
@@ -56,28 +56,7 @@
             </t-button>
           </div>
         </div>
-        <div class="group" v-if="tops.length > 0">置顶</div>
-        <div class="item" v-for="i in tops" :key="i.id" :class="{active: activeKey === `/home/chat/0/${i.id}`}"
-             @click="onClick(`/home/chat/0/${i.id}`)" @contextmenu="onChatMenuClick(i, $event)">
-          <div class="text ellipsis">{{ i.name }}</div>
-          <t-button theme="primary" variant="text" shape="square" size="small" class="more"
-                    @click.stop="onChatMenuClick(i, $event)">
-            <template #icon>
-              <more-icon/>
-            </template>
-          </t-button>
-        </div>
-        <div class="group">聊天</div>
-        <div class="item" v-for="i in items" :key="i.id" :class="{active: activeKey === `/home/chat/0/${i.id}`}"
-             @click="onClick(`/home/chat/0/${i.id}`)" @contextmenu="onChatMenuClick(i, $event)">
-          <div class="text ellipsis">{{ i.name }}</div>
-          <t-button theme="primary" variant="text" shape="square" size="small" class="more"
-                    @click.stop="onChatMenuClick(i, $event)">
-            <template #icon>
-              <more-icon/>
-            </template>
-          </t-button>
-        </div>
+        <home-chat-list ref="homeChatListRef" />
       </div>
     </div>
     <div class="home-content" :class="{collapsed}">
@@ -99,31 +78,31 @@ import {
   PlusIcon,
   SearchIcon
 } from "tdesign-icons-vue-next";
-import ContextMenu, {MenuItem} from '@imengyu/vue3-context-menu';
+import ContextMenu from '@imengyu/vue3-context-menu';
 import {useSortable, moveArrayElement} from "@vueuse/integrations/useSortable";
 import {openAddAiChatGroupDialog} from "@/pages/home/modal/AddAiChatGroup";
 import {useAiChatGroupStore, useAiChatListStore, useGlobalStore} from "@/store";
 import {activeKey, collapsed, toggleCollapsed} from './model';
-import {AiChatGroup, AiChatList} from "@/entity/ai/AiChat";
-import {onRemoveChat, onTopChat, onRenameChat, onRenameGroup, onRemoveGroup} from "@/pages/home/components/HomeContext";
+import {AiChatGroup} from "@/entity/ai/AiChat";
+import {onRenameGroup, onRemoveGroup} from "@/pages/home/components/HomeContext";
 import {openHomeChatSearch} from "@/pages/home/components/HomeChatSearch";
 import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {chatMove} from "@/pages/home/components/ChatMove";
 import HomeWelcome from "@/pages/home/pages/welcome/HomeWelcome.vue";
 import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
+import HomeChatList from "@/pages/home/components/HomeChatList.vue";
 
 const route = useRoute();
 const router = useRouter();
 
 const show = ref(true);
 const groupList = ref<HTMLDivElement>();
+const contentRef = ref<HTMLDivElement>();
+const homeChatListRef = ref();
 
 const groups = computed(() => useAiChatGroupStore().groups);
-const items = computed<Array<AiChatList>>(() => useAiChatListStore().lists.filter(e => !e.top));
-const tops = computed<Array<AiChatList>>(() => useAiChatListStore().lists.filter(e => e.top));
 
 watch(activeKey, () => {
   show.value = false;
@@ -151,49 +130,6 @@ const onClick = (path: string) => {
   }
 }
 
-const onChatMenuClick = (data: AiChatList, e: MouseEvent) => {
-  const {groups} = useAiChatGroupStore();
-  const items = new Array<MenuItem>();
-  groups.forEach(group => {
-    items.push({
-      label: group.name,
-      icon: () => h(FolderIcon),
-      onClick: () => onMove(data, group.id)
-    });
-  });
-  if (items.length > 0) {
-    items.push({divided: 'self'});
-  }
-  items.push({
-    label: '新建分组', icon: () => h(PlusIcon),
-    onClick: () => openAddAiChatGroupDialog()
-  })
-  ContextMenu.showContextMenu({
-    x: e.x,
-    y: e.y,
-    theme: useGlobalStore().isDark ? 'default dark' : 'default',
-    items: [{
-      label: '移动到分组',
-      children: items
-    }, {
-      label: '编辑名称',
-      onClick: () => onRenameChat('0', data)
-    }, {
-      label: data.top ? '取消置顶' : '置顶',
-      onClick: () => onTopChat('0', data)
-    }, {
-      label: () => h('span', {
-        style: {
-          color: 'var(--td-error-color)'
-        }
-      }, '删除'),
-      onClick: () => onRemoveChat('0', data.id, () => {
-        if (activeKey.value === `/home/chat/0/${data.id}`) activeKey.value = '';
-      })
-    }]
-  })
-}
-
 const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
   ContextMenu.showContextMenu({
     x: e.x,
@@ -215,13 +151,28 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
   });
 }
 
-function onMove(chat: AiChatList, targetGroupId: string) {
-  chatMove({
-    chatId: chat.id,
-    fromGroupId: '0',
-    targetGroupId,
-  })
-}
+// 添加滚动监听
+const handleScroll = (e: Event) => {
+  const target = e.target as HTMLDivElement;
+  const { scrollTop, scrollHeight, clientHeight } = target;
+  
+  // 当滚动到距离底部20px时触发加载
+  if (scrollHeight - scrollTop - clientHeight < 20) {
+    homeChatListRef.value?.loadMore();
+  }
+};
+
+onMounted(() => {
+  if (contentRef.value) {
+    contentRef.value.addEventListener('scroll', handleScroll);
+  }
+})
+
+onUnmounted(() => {
+  if (contentRef.value) {
+    contentRef.value.removeEventListener('scroll', handleScroll);
+  }
+})
 
 tryOnMounted(async () => {
   await useAiChatGroupStore().init();
@@ -237,7 +188,6 @@ tryOnMounted(async () => {
   }
 })
 
-// TODO: 1. 对话框改为tsx，2. 左侧要无线滚动，3. 聊天排序要倒叙
 </script>
 <style scoped lang="less">
 .home {
@@ -272,7 +222,7 @@ tryOnMounted(async () => {
       border-color: transparent;
     }
 
-    .group {
+    :deep(.group) {
       user-select: none;
       color: var(--td-text-color-secondary);
       display: flex;
@@ -286,7 +236,7 @@ tryOnMounted(async () => {
       }
     }
 
-    .item {
+    :deep(.item) {
       user-select: none;
       color: var(--td-text-color-secondary);
       display: flex;

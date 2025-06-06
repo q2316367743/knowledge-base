@@ -20,6 +20,12 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
   const lists = ref(new Array<AiChatList>());
   const rev = ref<string>();
   let isInit = false;
+  
+  // 分页相关
+  const pageSize = 20;
+  const currentPage = ref(1);
+  const hasMore = ref(true);
+  const isLoading = ref(false);
 
   const listBy = async (groupId: string): Promise<DbList<AiChatList>> => {
     return listByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId);
@@ -32,14 +38,40 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
   const reInit = async () => {
     // 无分组的ai列表
     const res = await listBy('0');
-    lists.value = res.list;
+    lists.value = res.list.sort((a, b) => b.createBy - a.createBy);
     rev.value = res.rev;
+    currentPage.value = 1;
+    hasMore.value = lists.value.length >= pageSize;
   }
 
   const init = async () => {
     if (isInit) return;
     isInit = true;
     await reInit();
+  }
+
+  const loadMore = async () => {
+    if (!hasMore.value || isLoading.value) return;
+    
+    isLoading.value = true;
+    try {
+      const res = await listBy('0');
+      const allItems = res.list.sort((a, b) => b.createBy - a.createBy);
+      const start = (currentPage.value - 1) * pageSize;
+      const end = currentPage.value * pageSize;
+      
+      if (start >= allItems.length) {
+        hasMore.value = false;
+        return;
+      }
+      
+      const newItems = allItems.slice(start, end);
+      lists.value = [...lists.value, ...newItems];
+      currentPage.value++;
+      hasMore.value = end < allItems.length;
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   const getList = async (groupId: string) => {
@@ -61,15 +93,17 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     const id = useSnowflake().nextId();
     let {l, r} = await getList(groupId);
     // 添加到列表
-    l.push({
+    const newChat = {
       id: id,
       name: question.substring(0, Math.min(10, question.length)),
       createBy: Date.now(),
       top: false
-    });
+    };
+    l.unshift(newChat); // 添加到开头
     r = await saveListByAsync(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId, l, r);
     if (groupId === '0') {
       rev.value = r;
+      lists.value = [newChat, ...lists.value]; // 更新本地列表
     }
     const {aiServiceId, model} = renderModel(modelKey);
     const service = useAiServiceStore().aiServiceMap.get(aiServiceId);
@@ -118,6 +152,11 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     r = await saveListByAsync(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId, l, r);
     if (groupId === '0') {
       rev.value = r;
+      // 更新本地列表
+      const localIndex = lists.value.findIndex(e => e.id === data.id);
+      if (localIndex !== -1) {
+        lists.value[localIndex] = l[index];
+      }
     }
   }
 
@@ -129,6 +168,11 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     r = await saveListByAsync(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId, l, r);
     if (groupId === '0') {
       rev.value = r;
+      // 更新本地列表
+      const localIndex = lists.value.findIndex(e => e.id === chatId);
+      if (localIndex !== -1) {
+        lists.value.splice(localIndex, 1);
+      }
     }
     // 删除详情
     await removeOneByAsync(LocalNameEnum.ITEM_AI_CHAT_ + '/' + chatId);
@@ -152,6 +196,21 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     return saveOneByAsync(LocalNameEnum.ITEM_AI_CHAT_ + '/' + id, c, rev);
   }
 
-  return {lists,reInit, init, post, updateById, remove, getInstance, saveContent, listBy, saveList}
-
+  return {
+    lists,
+    reInit,
+    init,
+    post,
+    updateById,
+    remove,
+    getInstance,
+    saveContent,
+    listBy,
+    saveList,
+    // 分页相关
+    currentPage,
+    hasMore,
+    isLoading,
+    loadMore
+  }
 })
