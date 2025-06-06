@@ -180,13 +180,18 @@ body[arco-theme=dark] {
   }
 }
 
-.mx-context-menu-item .mx-icon-placeholder.preserve-width {
-  width: unset !important;
-  max-width: 24px;
-  .t-icon {
-    margin-right: 10px;
+.mx-context-menu {
+  .mx-context-menu-item {
+    .preserve-width {
+      width: unset !important;
+      max-width: 24px;
+      .t-icon, .icon {
+        margin-right: 10px;
+      }
+    }
   }
 }
+
 .t-chat__text {
 
 }
