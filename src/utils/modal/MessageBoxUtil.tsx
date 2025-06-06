@@ -118,7 +118,7 @@ export default {
       const res = DialogPlugin({
         default: () => <div class={'pl-4px pr-4px'}>
           <Paragraph>{content}</Paragraph>
-          <Input autofocus={true} v-model={value.value} clearable={true} onEnter={onKeydown}
+          <Input autofocus={true} v-model={value.value} clearable={true}
                  maxlength={maxlength} showLimitNumber={!!maxlength}></Input>
         </div>,
         header: title,
