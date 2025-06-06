@@ -25,13 +25,21 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     return listByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId);
   }
 
-  const init = async () => {
-    if (isInit) return;
-    isInit = true;
+  const saveList = (groupId: string, list: DbList<AiChatList>) => {
+    return saveListByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId, list.list, list.rev);
+  }
+
+  const reInit = async () => {
     // 无分组的ai列表
     const res = await listBy('0');
     lists.value = res.list;
     rev.value = res.rev;
+  }
+
+  const init = async () => {
+    if (isInit) return;
+    isInit = true;
+    await reInit();
   }
 
   const getList = async (groupId: string) => {
@@ -144,6 +152,6 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     return saveOneByAsync(LocalNameEnum.ITEM_AI_CHAT_ + '/' + id, c, rev);
   }
 
-  return {lists, init, post, updateById, remove, getInstance, saveContent, listBy}
+  return {lists,reInit, init, post, updateById, remove, getInstance, saveContent, listBy, saveList}
 
 })

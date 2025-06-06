@@ -16,7 +16,7 @@
               <search-icon/>
             </template>
           </t-input>
-          <t-dropdown trigger="click">
+          <t-dropdown trigger="click" placement="bottom">
             <t-button theme="primary" shape="square">
               <template #icon>
                 <more-icon/>
@@ -85,6 +85,8 @@ import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import {openAiGroupPrompt, openPrompt} from "@/pages/home/modal/AiGroupPrompt";
 import {activeKey} from "@/pages/home/model";
 import {onRemoveChat, onRemoveGroup, onRenameChat, onRenameGroup} from "@/pages/home/components/HomeContext";
+import {chatMove} from "@/pages/home/components/ChatMove";
+import {openAddAiChatGroupDialog} from "@/pages/home/modal/AddAiChatGroup";
 
 const props = defineProps({
   groupId: {
@@ -160,11 +162,12 @@ function onChatClick(data: AiChatList) {
 }
 
 function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
-  const g: Array<MenuItem> = useAiChatGroupStore().groups.filter(e => e.id !== props.groupId).map(e => {
-    return {
+  const g: Array<MenuItem> = useAiChatGroupStore().groups
+    .filter(e => e.id !== props.groupId).map(e => ({
       label: e.name,
-    }
-  });
+      icon: () => h(FolderIcon),
+      onClick: () => onMove(data, e.id)
+    }));
   if (g.length > 0) {
     g.push({
       divided: true,
@@ -180,10 +183,12 @@ function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
       children: [
         ...g, {
           label: "移出本组",
-          icon: () => h(MinusIcon)
+          icon: () => h(MinusIcon),
+          onClick: () => onMove(data, '0')
         }, {
           label: '新建分组',
-          icon: () => h(PlusIcon)
+          icon: () => h(PlusIcon),
+          onClick: () => openAddAiChatGroupDialog()
         }]
     }, {
       label: '编辑名称',
@@ -212,6 +217,18 @@ function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
 function onDelete() {
   onRemoveGroup(props.groupId, () => {
     activeKey.value = "/home/welcome";
+  })
+}
+
+function onMove(chat: AiChatList, targetGroupId: string) {
+  chatMove({
+    chatId: chat.id,
+    fromGroupId: props.groupId,
+    targetGroupId,
+    onSuccess: () => {
+      // 重新初始化
+      initChats();
+    }
   })
 }
 </script>

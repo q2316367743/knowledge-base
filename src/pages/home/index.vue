@@ -45,7 +45,7 @@
         </div>
         <div class="group-list" ref="groupList">
           <div class="item" v-for="g in groups" :key="g.id" :class="{active: activeKey === `/home/group/${g.id}`}"
-               @click="onClick(`/home/group/${g.id}`)">
+               @click="onClick(`/home/group/${g.id}`)" @contextmenu="onGroupMenuClick(g, $event)">
             <folder-icon class="folder-icon"/>
             <div class="text ellipsis">{{ g.name }}</div>
             <t-button theme="primary" variant="text" shape="square" size="small" class="more"
@@ -58,7 +58,7 @@
         </div>
         <div class="group" v-if="tops.length > 0">置顶</div>
         <div class="item" v-for="i in tops" :key="i.id" :class="{active: activeKey === `/home/chat/0/${i.id}`}"
-             @click="onClick(`/home/chat/0/${i.id}`)">
+             @click="onClick(`/home/chat/0/${i.id}`)" @contextmenu="onChatMenuClick(i, $event)">
           <div class="text ellipsis">{{ i.name }}</div>
           <t-button theme="primary" variant="text" shape="square" size="small" class="more"
                     @click.stop="onChatMenuClick(i, $event)">
@@ -69,7 +69,7 @@
         </div>
         <div class="group">聊天</div>
         <div class="item" v-for="i in items" :key="i.id" :class="{active: activeKey === `/home/chat/0/${i.id}`}"
-             @click="onClick(`/home/chat/0/${i.id}`)">
+             @click="onClick(`/home/chat/0/${i.id}`)" @contextmenu="onChatMenuClick(i, $event)">
           <div class="text ellipsis">{{ i.name }}</div>
           <t-button theme="primary" variant="text" shape="square" size="small" class="more"
                     @click.stop="onChatMenuClick(i, $event)">
@@ -106,13 +106,14 @@ import {useAiChatGroupStore, useAiChatListStore, useGlobalStore} from "@/store";
 import {activeKey, collapsed, toggleCollapsed} from './model';
 import {AiChatGroup, AiChatList} from "@/entity/ai/AiChat";
 import {onRemoveChat, onTopChat, onRenameChat, onRenameGroup, onRemoveGroup} from "@/pages/home/components/HomeContext";
+import {openHomeChatSearch} from "@/pages/home/components/HomeChatSearch";
+import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {chatMove} from "@/pages/home/components/ChatMove";
 import HomeWelcome from "@/pages/home/pages/welcome/HomeWelcome.vue";
 import HomeGroup from "@/pages/home/pages/group/HomeGroup.vue";
 import HomeChat from "@/pages/home/pages/chat/HomeChat.vue";
 import HomeTemp from "@/pages/home/pages/temp/HomeTemp.vue";
-import {openHomeChatSearch} from "@/pages/home/components/HomeChatSearch";
-import {getItemByDefault} from "@/utils/utools/DbStorageUtil";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const route = useRoute();
 const router = useRouter();
@@ -156,17 +157,16 @@ const onChatMenuClick = (data: AiChatList, e: MouseEvent) => {
   groups.forEach(group => {
     items.push({
       label: group.name,
+      icon: () => h(FolderIcon),
+      onClick: () => onMove(data, group.id)
     });
   });
   if (items.length > 0) {
     items.push({divided: 'self'});
   }
   items.push({
-    label: '新建分组', icon: () => h(PlusIcon, {
-      style: {
-        marginRight: '10px',
-      }
-    })
+    label: '新建分组', icon: () => h(PlusIcon),
+    onClick: () => openAddAiChatGroupDialog()
   })
   ContextMenu.showContextMenu({
     x: e.x,
@@ -213,6 +213,14 @@ const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
       })
     }]
   });
+}
+
+function onMove(chat: AiChatList, targetGroupId: string) {
+  chatMove({
+    chatId: chat.id,
+    fromGroupId: '0',
+    targetGroupId,
+  })
 }
 
 tryOnMounted(async () => {
