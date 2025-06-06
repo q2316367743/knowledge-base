@@ -46,16 +46,16 @@ function restoreByFile() {
   loading.value.load = true;
   _restoreByFile()
     .then(() => {
-      if (InjectionUtil.getWindowType() === 'main') {
+      if (InjectionUtil.window.getWindowType() === 'main') {
         NotifyPlugin.success({
           title: "恢复成功",
           content: "恢复成功，3s后自动关闭插件",
           duration: 3000,
           onCloseBtnClick: () => {
-            InjectionUtil.outPlugin(true);
+            InjectionUtil.window.outPlugin(true);
           },
           onDurationEnd: () => {
-            InjectionUtil.outPlugin(true);
+            InjectionUtil.window.outPlugin(true);
           }
         })
       } else {

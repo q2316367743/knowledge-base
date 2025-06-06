@@ -12,6 +12,6 @@ export async function removeTodoCode() {
     return;
   }
   const category = useTodoCategoryStore().value[index];
-  InjectionUtil.removeFeatureOne(Constant.feature.TODO_CATEGORY + category.id);
+  InjectionUtil.feature.removeFeatureOne(Constant.feature.TODO_CATEGORY + category.id);
   MessageUtil.success("删除成功")
 }

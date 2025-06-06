@@ -13,9 +13,9 @@ export const useScreenShotMenu = (editor: ShallowRef<Cherry | undefined>) => {
     name: '截图',
     onClick: function () {
       if (editor.value) {
-        InjectionUtil.hideMainWindow()
+        InjectionUtil.window.hideMainWindow()
         InjectionUtil.screenCapture(base64 => {
-          InjectionUtil.showMainWindow()
+          InjectionUtil.window.showMainWindow()
           useGlobalStore().startLoading("开始文件上传");
           useAttachmentUpload.upload(base64, true, "image/png")
             .then(url => editor.value && editor.value.insert('\n![截屏#100%](' + url + ')'))

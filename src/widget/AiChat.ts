@@ -39,8 +39,8 @@ export function openAiChatWidget() {
           ubWindow.webContents.openDevTools();
         }
         window.preload.ipcRenderer.sendMessage(ubWindow.webContents.id, 'chat', {
-          type: 'config',
-          value: {
+          event: 'config',
+          data: {
             id: homeEditorId.value,
             name: useArticleStore().articleMap.get(homeEditorId.value)?.name
           }

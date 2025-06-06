@@ -1,5 +1,5 @@
 import {ArticleIndex} from "@/entity/article";
-import {pathJoin} from "@/utils/file/FileUtil";
+import {urlJoin} from "@/utils/file/FileUtil";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {TreeOptionData} from "tdesign-vue-next/es/common";
 import {FolderIcon} from "tdesign-icons-vue-next";
@@ -180,7 +180,7 @@ function _listToMap(
   const articles = articleListMap.get(pid);
   if (articles) {
     for (let article of articles) {
-      map.set(pathJoin(path, article.name), article.id);
+      map.set(urlJoin(path, article.name), article.id);
     }
   }
 
@@ -188,6 +188,6 @@ function _listToMap(
   let items = list.filter(i => i.pid === pid);
   for (let item of items) {
     // 此目录下的目录
-    _listToMap(list, map, articleListMap, pathJoin(path, item.name), item.id);
+    _listToMap(list, map, articleListMap, urlJoin(path, item.name), item.id);
   }
 }

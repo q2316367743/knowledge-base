@@ -15,13 +15,13 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const enable = ref(false);
 
-const feature = InjectionUtil.getFeatureOne(Constant.feature.IMPORT);
+const feature = InjectionUtil.feature.getFeatureOne(Constant.feature.IMPORT);
 if (feature) {
   enable.value = true;
 }
 
 function open() {
-  const res = InjectionUtil.setFeatureOneSimple(Constant.feature.IMPORT, {
+  const res = InjectionUtil.feature.setFeatureOneSimple(Constant.feature.IMPORT, {
     type: "files",
     label: "从md导入笔记",
     fileType: "file",
@@ -37,7 +37,7 @@ function open() {
 }
 
 function close() {
-  const res = InjectionUtil.removeFeatureOne(Constant.feature.IMPORT);
+  const res = InjectionUtil.feature.removeFeatureOne(Constant.feature.IMPORT);
   if (res) {
     MessageUtil.success("移除关键字成功");
     enable.value = false;

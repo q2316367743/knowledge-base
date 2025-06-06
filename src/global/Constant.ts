@@ -42,15 +42,7 @@ const Constant = {
 
 export default Constant;
 const toFeedbackWebsite = (redirect: string) => {
-  const url = `https://feedback.esion.xyz/#/auth?redirect=${encodeURIComponent(redirect)}&type=utools&pluginId=1894929764697055232`;
-  // 获取uTools的服务token
-  InjectionUtil.fetchUserServerTemporaryToken().then((ret) => {
-    // 使用uTools自带的uBrowser打开登录链接
-    InjectionUtil.browser.openUrl(`${url}&accessToken=` + ret.token);
-  }).catch(e => {
-    InjectionUtil.browser.openUrl(url)
-    console.error(e);
-  });
+  InjectionUtil.browser.feedback({redirect})
 };
 
 export const toDoc = () => {
@@ -67,12 +59,7 @@ export function toFeedback() {
   // 构造参数
   const params = encodeURIComponent(JSON.stringify({f1896795064271175680}));
   // 获取uTools的服务token
-  InjectionUtil.fetchUserServerTemporaryToken().then((ret) => {
-    // 使用uTools自带的uBrowser打开登录链接
-    InjectionUtil.browser.openUrl(
-      `https://feedback.esion.xyz/#/auth?params=${params}&type=utools&pluginId=1894929764697055232&accessToken=` + ret.token
-    )
-  }).catch(e => {
+  InjectionUtil.browser.feedback({params}).catch(e => {
     MessageUtil.error('请先登录');
     console.error(e);
   });

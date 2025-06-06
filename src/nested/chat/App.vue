@@ -79,9 +79,9 @@ const fetchCancel = shallowRef<AskToOpenAiAbort>();
 
 let subWindow = window.preload.ipcRenderer.buildSubWindow('chat');
 subWindow.receiveMsg(msg => {
-  const {type, value} = msg;
-  if (type === 'config') {
-    const {id, name} = value;
+  const {event, data} = msg;
+  if (event === 'config') {
+    const {id, name} = data;
     editorId.value = id;
     title.value = `AI问答「${name}」`;
   }

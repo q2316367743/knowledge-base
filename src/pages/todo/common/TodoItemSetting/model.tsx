@@ -81,7 +81,7 @@ export async function openTodoItemInfo(props: TodoItemInfoProps) {
       .catch(e => MessageUtil.error("删除失败", e));
   }
 
-  const windowType = InjectionUtil.getWindowType();
+  const windowType = InjectionUtil.window.getWindowType();
 
   const open = DrawerPlugin({
     header: false,

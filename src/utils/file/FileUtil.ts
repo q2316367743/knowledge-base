@@ -15,7 +15,7 @@ export function parseFileName(fileName: string): string {
 
 
 export function pathJoin(...paths: string[]): string {
-    return paths.join(InjectionUtil.isWindows() ? '\\' : '/');
+    return paths.join(InjectionUtil.window.isWindows() ? '\\' : '/');
 }
 
 export function urlJoin(...paths: string[]): string {

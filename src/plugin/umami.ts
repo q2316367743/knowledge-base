@@ -8,7 +8,7 @@ interface UmamiPayloadBase {
   referrer: string;
   screen: string;
   website: string;
-  id: string|undefined;
+  id: string | undefined;
 }
 
 interface UmamiPayload extends UmamiPayloadBase {
@@ -21,10 +21,11 @@ interface UmamiPayload extends UmamiPayloadBase {
 }
 
 function buildBasePayload(): UmamiPayloadBase {
+  const hostname = `${InjectionUtil.getPlatform()}.esion.xyz`
   return {
-    hostname: "u.block",
+    hostname,
     language: navigator.language,
-    referrer: "https://u.tools",
+    referrer: `https://${hostname}`,
     screen: `${window.screen.width}x${window.screen.height}`,
     website: Constants.umami.id,
     id: InjectionUtil.getUser()?.nickname,
@@ -68,7 +69,7 @@ function sendEvent(payload: UmamiPayload) {
 let first = true;
 
 export const useUmami = {
-  // TODO: 此处要规范事件名称
+  // 此处要规范事件名称
   track(event?: string, data?: Record<string, string> | string): void {
     const payload: UmamiPayload = buildPayload()
     if (event) {

@@ -153,27 +153,165 @@ export const InjectionUtil = {
       window.open(url);
     }
   },
-  showMainWindow() {
+  getCursorScreenPoint(): { x: number, y: number } {
     if (window['utools']) {
-      return utools.showMainWindow();
+      return utools.getCursorScreenPoint();
     } else {
-      return false;
+      return {x: 0, y: 0};
     }
   },
-  hideMainWindow() {
+  createBrowserWindow(url: string, options: BrowserWindow.InitOptions, callback?: () => void): BrowserWindow.WindowInstance {
     if (window['utools']) {
-      return utools.hideMainWindow();
+      return utools.createBrowserWindow(url, options, callback);
     } else {
-      return false;
+      throw new Error("环境异常");
     }
   },
-  outPlugin(isKill?: boolean): boolean {
+  screenCapture(callback: (imgBase64: string) => void): void {
     if (window['utools']) {
-      utools.hideMainWindow();
-      return utools.outPlugin(isKill);
+      utools.screenCapture(callback);
     } else {
-      return false;
+      throw new Error("环境异常");
     }
+  },
+  isDarkColors(): boolean {
+    return window['utools'] ? utools.isDarkColors() : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  },
+  redirect(label: string | string[], payload: string | { type: 'text' | 'img' | 'files', data: any }): boolean {
+    if (window['utools']) {
+      return utools.redirect(label, payload);
+    } else {
+      window.open(`utools://${label[0]}/${label[1]}?${payload}`);
+      return true;
+    }
+  },
+  getPath(name: PathName): string {
+    if (window['utools']) {
+      return utools.getPath(name);
+    } else {
+      return '';
+    }
+  },
+  showNotification(body: string, featureName?: string): void {
+    if (window['utools']) {
+      utools.showNotification(body, featureName);
+    } else {
+      // 检查浏览器是否支持通知
+      if ("Notification" in window) {
+        // 请求通知权限
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            // 创建并发送通知
+            const notification = new Notification("通知标题", {
+              body: body,
+            });
+
+            // 可选：处理通知点击事件
+            notification.onclick = function () {
+              window.focus();
+            };
+          } else {
+            console.error("通知权限被拒绝");
+          }
+        });
+      } else {
+        console.error("浏览器不支持通知");
+      }
+    }
+  },
+  sendToParent(channel: string, ...params: any[]): void {
+    utools.sendToParent(channel, ...params);
+  },
+  window: {
+    showMainWindow() {
+      if (window['utools']) {
+        return utools.showMainWindow();
+      } else {
+        return false;
+      }
+    },
+    hideMainWindow() {
+      if (window['utools']) {
+        return utools.hideMainWindow();
+      } else {
+        return false;
+      }
+    },
+    getWindowType(): 'main' | 'detach' | 'browser' {
+      return window['utools'] ? utools.getWindowType() : 'detach';
+    },
+    isWindows(): boolean {
+      // 判断当前操作系统是不是Windows
+      return window['utools'] ? utools.isWindows() : (navigator.userAgent.indexOf('Windows') !== -1);
+    },
+    outPlugin(isKill?: boolean): boolean {
+      if (window['utools']) {
+        utools.hideMainWindow();
+        return utools.outPlugin(isKill);
+      } else {
+        return false;
+      }
+    },
+  },
+  feature: {
+    listFeature(prefix: string | string[], keys?: Array<any>): Array<string> {
+      if (window['utools']) {
+        let features;
+        if (typeof prefix === 'string') {
+          if (keys) {
+            features = utools.getFeatures(keys.map(key => prefix + key));
+          } else {
+            features = utools.getFeatures([prefix]);
+          }
+        } else {
+          features = utools.getFeatures(prefix);
+        }
+        return features.map(feature => feature.code);
+      } else {
+        return [];
+      }
+    },
+    setFeatureOneSimple(code: string, cmd: FeatureCmd | string): boolean {
+      if (window['utools']) {
+        return utools.setFeature({
+          code: code,
+          explain: Constant.name,
+          icon: "public/logo.png",
+          platform: [
+            "win32",
+            "darwin",
+            "linux"
+          ],
+          cmds: [cmd]
+        });
+      } else {
+        return false
+      }
+    },
+    getFeatureOne(code: string): Feature | null {
+      if (window['utools']) {
+        const features = utools.getFeatures([code]);
+        if (features.length === 0) {
+          return null;
+        }
+        for (let feature of features) {
+          if (feature.code === code) {
+            // @ts-ignore
+            return feature;
+          }
+        }
+        return null;
+      } else {
+        return null
+      }
+    },
+    removeFeatureOne(code: string): boolean {
+      if (window['utools']) {
+        return utools.removeFeature(code)
+      } else {
+        return false;
+      }
+    },
   },
   dbStorage: {
     /**
@@ -269,137 +407,6 @@ export const InjectionUtil = {
       }
     }
   },
-  getCursorScreenPoint(): { x: number, y: number } {
-    if (window['utools']) {
-      return utools.getCursorScreenPoint();
-    } else {
-      return {x: 0, y: 0};
-    }
-  },
-  createBrowserWindow(url: string, options: BrowserWindow.InitOptions, callback?: () => void): BrowserWindow.WindowInstance {
-    if (window['utools']) {
-      return utools.createBrowserWindow(url, options, callback);
-    } else {
-      throw new Error("环境异常");
-    }
-  },
-  setFeatureOneSimple(code: string, cmd: FeatureCmd | string): boolean {
-    if (window['utools']) {
-      return utools.setFeature({
-        code: code,
-        explain: Constant.name,
-        icon: "public/logo.png",
-        platform: [
-          "win32",
-          "darwin",
-          "linux"
-        ],
-        cmds: [cmd]
-      });
-    } else {
-      return false
-    }
-  },
-  getFeatureOne(code: string): Feature | null {
-    if (window['utools']) {
-      const features = utools.getFeatures([code]);
-      if (features.length === 0) {
-        return null;
-      }
-      for (let feature of features) {
-        if (feature.code === code) {
-          // @ts-ignore
-          return feature;
-        }
-      }
-      return null;
-    } else {
-      return null
-    }
-  },
-  removeFeatureOne(code: string): boolean {
-    if (window['utools']) {
-      return utools.removeFeature(code)
-    } else {
-      return false;
-    }
-  },
-  listFeature(prefix: string | string[], keys?: Array<any>): Array<string> {
-    if (window['utools']) {
-      let features;
-      if (typeof prefix === 'string') {
-        if (keys) {
-          features = utools.getFeatures(keys.map(key => prefix + key));
-        } else {
-          features = utools.getFeatures([prefix]);
-        }
-      } else {
-        features = utools.getFeatures(prefix);
-      }
-      return features.map(feature => feature.code);
-    } else {
-      return [];
-    }
-  },
-  screenCapture(callback: (imgBase64: string) => void): void {
-    if (window['utools']) {
-      utools.screenCapture(callback);
-    } else {
-      throw new Error("环境异常");
-    }
-  },
-  isWindows(): boolean {
-    // 判断当前操作系统是不是Windows
-    return window['utools'] ? utools.isWindows() : (navigator.userAgent.indexOf('Windows') !== -1);
-  },
-  getWindowType(): 'main' | 'detach' | 'browser' {
-    return window['utools'] ? utools.getWindowType() : 'detach';
-  },
-  isDarkColors(): boolean {
-    return window['utools'] ? utools.isDarkColors() : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  },
-  redirect(label: string | string[], payload: string | { type: 'text' | 'img' | 'files', data: any }): boolean {
-    if (window['utools']) {
-      return utools.redirect(label, payload);
-    } else {
-      window.open(`utools://${label[0]}/${label[1]}?${payload}`);
-      return true;
-    }
-  },
-  getPath(name: PathName): string {
-    if (window['utools']) {
-      return utools.getPath(name);
-    } else {
-      return '';
-    }
-  },
-  showNotification(body: string, featureName?: string): void {
-    if (window['utools']) {
-      utools.showNotification(body, featureName);
-    } else {
-      // 检查浏览器是否支持通知
-      if ("Notification" in window) {
-        // 请求通知权限
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            // 创建并发送通知
-            const notification = new Notification("通知标题", {
-              body: body,
-            });
-
-            // 可选：处理通知点击事件
-            notification.onclick = function () {
-              window.focus();
-            };
-          } else {
-            console.error("通知权限被拒绝");
-          }
-        });
-      } else {
-        console.error("浏览器不支持通知");
-      }
-    }
-  },
   version: {
     isSupportAi(): boolean {
       if (window['utools']) {
@@ -435,13 +442,6 @@ export const InjectionUtil = {
       } else {
         throw new Error("不支持内置AI服务");
       }
-    }
-  },
-  async fetchUserServerTemporaryToken(): Promise<{ token: string, expiredAt: number }> {
-    if (window['utools']) {
-      return utools.fetchUserServerTemporaryToken();
-    } else {
-      return Promise.reject(new Error('不支持的平台'));
     }
   },
   payment: {
@@ -507,8 +507,22 @@ export const InjectionUtil = {
         }, text)
         .run({width: 1200, height: 800})
     },
+    async feedback(params?: Record<string, string>) {
+      const query = new URLSearchParams();
+      query.set("type", "utools");
+      query.set("pluginId", "1894929764697055232");
+      if (params) Object.entries(params).forEach(([key, value]) => query.set(key, value));
+      if (window['utools']) {
+        // utools
+        const t = await utools.fetchUserServerTemporaryToken()
+        query.set("accessToken", t.token);
+        return utools.ubrowser.goto(`https://feedback.esion.xyz/#/auth?${query.toString()}`).run({
+          width: 1200,
+          height: 800
+        })
+      } else {
+        window.open(`https://feedback.esion.xyz/#/auth?${query.toString()}`);
+      }
+    }
   },
-  sendToParent(channel: string, ...params: any[]): void {
-    utools.sendToParent(channel, ...params);
-  }
 }

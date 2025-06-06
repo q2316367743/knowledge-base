@@ -16,7 +16,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
     if (useTodoWrapStore().categoryId === id) {
       useTodoWrapStore().init(id, false).catch(e => MessageUtil.error("初始化待办失败", e));
       // 显示主窗口
-      InjectionUtil.showMainWindow();
+      InjectionUtil.window.showMainWindow();
     }
   }
 
@@ -99,7 +99,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
     openTodoWidget(id, name, (instance) => {
       widgets.value.set(id, instance);
       // 隐藏主窗口
-      InjectionUtil.hideMainWindow();
+      InjectionUtil.window.hideMainWindow();
     });
   }
 
