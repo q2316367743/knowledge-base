@@ -23,49 +23,46 @@
           <!--        <t-input allow-clear v-model="form.modelVersion" />-->
           <!--      </t-form-item>-->
           <t-form-item label="模型" label-align="top" :help="disabled?'':'上面填写完成后注意刷新模型'">
-            <t-card class="w-full" :header-bordered="true">
-              <template #header v-if="!disabled">
-                <t-space>
-                  <t-button theme="primary" :loading @click="fetchModules">
-                    <template #icon>
-                      <refresh-icon/>
-                    </template>
-                    刷新
-                  </t-button>
-                  <t-button theme="default" :loading>
-                    <template #icon>
-                      <plus-icon/>
-                    </template>
-                    添加
-                  </t-button>
-                </t-space>
-              </template>
-              <t-list :split="true" style="max-height: calc(100vh - 186px);">
-                <t-list-item v-for="(item, index) in form.models" :key="index">
-                  <div v-if="typeof item === 'string'">{{ item }}</div>
-                  <t-list-item-meta v-else :image="item.icon" :title="item.label" :description="item.description"/>
-                  <template #action v-if="typeof item !== 'string'">
-                    <t-tag theme="success">
-                      <span>{{ item.cost }}</span>
-                      <span class="ml-4px">能量</span>
-                    </t-tag>
-                  </template>
-                </t-list-item>
-              </t-list>
-            </t-card>
+            <t-list :split="true" style="max-height: calc(100vh - 186px);" class="w-full">
+              <t-list-item v-for="(item, index) in form.models" :key="index">
+                <div v-if="typeof item === 'string'">{{ item }}</div>
+                <t-list-item-meta v-else :image="item.icon" :title="item.label" :description="item.description"/>
+                <template #action>
+                  <t-tag theme="success" v-if="typeof item !== 'string' && typeof item.cost === 'number'">
+                    <span>{{ item.cost }}</span>
+                    <span class="ml-4px">能量</span>
+                  </t-tag>
+                </template>
+              </t-list-item>
+            </t-list>
           </t-form-item>
         </t-form>
       </t-content>
-      <t-footer style="padding: 8px 0;border-top: 1px solid var(--color-border-2)" v-if="!disabled">
+      <t-footer
+        style="padding: 4px 8px;border-top: 1px solid var(--td-border-level-2-color);display: flex;justify-content: space-between"
+        v-if="!disabled">
         <t-space>
           <t-button theme="primary" @click="save">保存</t-button>
           <t-popconfirm content="是否立即删除此服务，删除后，此服务创建的 AI 助手将无法使用" @ok="onDelete()">
             <t-button theme="danger" v-if="currentId && currentId !== '0'">删除</t-button>
           </t-popconfirm>
         </t-space>
+        <t-space>
+          <t-button theme="primary" :loading @click="fetchModules">
+            <template #icon>
+              <refresh-icon/>
+            </template>
+            刷新
+          </t-button>
+          <t-button theme="default" :loading @click="onAdd()">
+            <template #icon>
+              <plus-icon/>
+            </template>
+            添加
+          </t-button>
+        </t-space>
       </t-footer>
     </t-layout>
-
   </div>
 </template>
 <script lang="ts" setup>
@@ -77,6 +74,8 @@ import {AiServiceType, buildAiService} from "@/entity/ai/AiService";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {isEmptyString} from "@/utils/lang/FieldUtil";
 import {getAllModules} from "@/utils/component/AiModuleUtil";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {openAddModelDialog} from "@/pages/setting/ai-service/model/AddModel";
 
 const props = defineProps({
   currentId: {
@@ -139,6 +138,8 @@ function onDelete() {
   })
     .catch(e => MessageUtil.error("删除失败", e));
 }
+
+const onAdd = () => openAddModelDialog().then(res => form.value.models.push(res))
 </script>
 <style scoped lang="less">
 </style>

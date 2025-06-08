@@ -12,11 +12,11 @@ export interface AiServiceModel {
   id: string;
   label: string;
   // 图标
-  icon: string;
+  icon?: string;
   // 描述
   description: string;
   // 消耗量
-  cost: number;
+  cost?: number;
 }
 
 export type AiServiceModelType = string | AiServiceModel;

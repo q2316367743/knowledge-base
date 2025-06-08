@@ -12,6 +12,7 @@ async function getAllModulesFromOpenAI(aiService: AiService): Promise<Array<AiSe
     dangerouslyAllowBrowser: true
   })
   const res = await openAi.models.list();
+  console.log(res)
   const items = new Array<string>();
   items.push(...res.data.map(e => e.id));
   while (res.hasNextPage()) {
