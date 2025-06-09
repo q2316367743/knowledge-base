@@ -14,7 +14,7 @@ export class Result<T>{
   }
 
   public static error(msg: string) {
-    return new Result<T>(500, msg, null);
+    return new Result<null>(500, msg, null);
   }
 
   public static errorWithData<T>(msg: string, data: T) {
