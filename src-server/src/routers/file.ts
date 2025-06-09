@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 
 const router = express.Router();
-const baseDir = '/data/knowledge-base/file';
+const baseDir = '/app/knowledge-base/file';
 
 
 // 配置存储目录和文件名

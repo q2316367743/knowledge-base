@@ -3,7 +3,7 @@ import PouchDB from "pouchdb";
 import { Result } from "@/views/Result";
 
 const db = new PouchDB("db", {
-  prefix: "/data/knowledge-base/",
+  prefix: "/app/knowledge-base/",
   auto_compaction: true,
 });
 const router = Router();

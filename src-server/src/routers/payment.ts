@@ -4,7 +4,7 @@ import path from "path";
 import { Result } from "@/views/Result";
 
 const router = Router();
-const dataDir = '/data/knowledge-base/payment';
+const dataDir = '/app/knowledge-base/payment';
 const goodIdsFilePath = path.join(dataDir, 'goodIds.json');
 
 // 确保数据目录存在

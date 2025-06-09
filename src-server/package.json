@@ -2,6 +2,10 @@
   "name": "src-server",
   "module": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/express": "^5.0.3",
