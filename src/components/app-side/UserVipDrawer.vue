@@ -23,8 +23,8 @@
                   <questionnaire-icon/>
                 </t-link>
               </div>
-              <div class="feature-item-content" @click="openVip('note')">
-                <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
+              <div class="feature-item-content">
+                <t-link v-if="noteNoVip" class="feature-item-content__error" @click="openVip('note')">去开通</t-link>
                 <div v-else class="feature-item-content__success">永久授权</div>
               </div>
             </div>
@@ -66,8 +66,8 @@
                 <questionnaire-icon/>
               </t-link>
             </div>
-            <div class="feature-item-content" @click="openVip('note')">
-              <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
+            <div class="feature-item-content">
+              <t-link v-if="noteNoVip" class="feature-item-content__error" @click="openVip('note')">去开通</t-link>
               <div v-else class="feature-item-content__success">永久授权</div>
             </div>
           </div>

@@ -125,7 +125,7 @@ function onSelect(id: number | string) {
   }
   if (useArticleStore().articleMap.has(id)) {
     useHomeEditorStore().openArticle(id);
-    if (useBaseSettingStore().autoCollapsedByEditor && size.width.value < Constant.autoCollapsedWidth) {
+    if (useBaseSettingStore().autoCollapsedByEditor && window.innerWidth < Constant.autoCollapsedWidth) {
       useHomeEditorStore().switchCollapsed();
     }
   } else {

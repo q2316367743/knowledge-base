@@ -3,7 +3,7 @@
     <t-form :model="instance" layout="vertical">
       <t-divider>图床设置</t-divider>
       <t-form-item label="图片上传策略" label-align="top">
-        <t-radio-group v-model="instance.imageStrategy">
+        <t-radio-group v-model="instance.imageStrategy" :disabled="!isUtools">
           <t-radio :value="ImageStrategyEnum.INNER">内部实现</t-radio>
           <t-radio :value="ImageStrategyEnum.IMAGE">插件【图床】</t-radio>
           <t-radio :value="ImageStrategyEnum.LSKY_PRO" :disabled="true">兰空图床</t-radio>
@@ -127,7 +127,9 @@ import Constant from "@/global/Constant";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {ArticleActionEnum} from "@/entity/setting/BaseSetting";
 import {openCustomerFileNameDrawer} from "@/pages/setting/base/drawer/CustomerFileNameDrawer";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
+const isUtools = InjectionUtil.getPlatform() === 'uTools';
 const instance = ref(clone(useBaseSettingStore().baseSetting, true));
 
 function save() {

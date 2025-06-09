@@ -12,7 +12,8 @@
         </template>
         导出
       </t-dropdown-item>
-      <t-dropdown-item :disabled="disabled" @click="openAddRelationArticle()">
+      <t-dropdown-item :disabled="disabled" @click="openAddRelationArticle()"
+                       v-if="layout !== TodoListLayoutEnum.FOUR_QUADRANTS">
         <template #prefix-icon>
           <relation-icon/>
         </template>
@@ -24,13 +25,15 @@
         </template>
         搜索
       </t-dropdown-item>
-      <t-dropdown-item :disabled="disabled" @click="openTodoSetting()" :divider="true">
+      <t-dropdown-item :disabled="disabled" @click="openTodoSetting()"
+                       :divider="layout !== TodoListLayoutEnum.FOUR_QUADRANTS">
         <template #prefix-icon>
           <setting-icon/>
         </template>
         设置
       </t-dropdown-item>
-      <t-dropdown-item :disabled="disabled" @click="openEditTodoGroupFunc()">
+      <t-dropdown-item :disabled="disabled" @click="openEditTodoGroupFunc()"
+                       v-if="layout !== TodoListLayoutEnum.FOUR_QUADRANTS">
         <template #prefix-icon>
           <plus-icon/>
         </template>
@@ -47,8 +50,10 @@ import {searchTodo} from "@/pages/todo/common/SearchTodo";
 import {openTodoSetting} from "@/pages/todo/common/TodoSetting";
 import {openEditTodoGroupFunc} from "@/pages/todo/common/TodoGroupFunc";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
+import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 
 const disabled = computed(() => useTodoWrapStore().categoryId === 0);
+const layout = computed(() => useTodoWrapStore().layout);
 </script>
 <style scoped lang="less">
 

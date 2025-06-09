@@ -1,6 +1,6 @@
 <template>
   <div class="h-32px p-2px">
-    <editor-content-extra-run/>
+    <editor-content-extra-run v-if="isUtools"/>
     <editor-content-extra-ai v-if="isUtools"/>
     <editor-content-extra-preview/>
     <editor-content-extra-more/>

@@ -5,6 +5,7 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
 import VipIcon from "@/components/KbIcon/VipIcon.vue";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 interface ContextmenuForTodo {
   e: MouseEvent;
@@ -35,14 +36,17 @@ export function onContextmenuForTodo(props: ContextmenuForTodo) {
       label: '打开',
       icon: () => <RoundIcon/>,
       onClick: onOpen
-    }, {
-      label: () => <div class={'flex items-center'}>
-        <div>打开小部件</div>
-        {todoNoVip && <VipIcon style={{marginLeft: '4px'}}/>}
-      </div>,
-      icon: () => <TerminalWindowIcon/>,
-      onClick: onOpenWidget
     })
+    if (InjectionUtil.getPlatform() === 'uTools') {
+      items.push({
+        label: () => <div class={'flex items-center'}>
+          <div>打开小部件</div>
+          {todoNoVip && <VipIcon style={{marginLeft: '4px'}}/>}
+        </div>,
+        icon: () => <TerminalWindowIcon/>,
+        onClick: onOpenWidget
+      })
+    }
   }
 
   items.push({

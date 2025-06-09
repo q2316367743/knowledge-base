@@ -12,6 +12,7 @@ import {
 import {useSnowflake} from "@/hooks/Snowflake";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {renderAttachmentUrl} from "@/plugin/server";
+import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
 
 type InjectionDbDoc<T extends {} = Record<string, any>> = {
   _id: string,
@@ -173,7 +174,7 @@ export const InjectionUtil = {
   },
   getUser(): UserProfile | null {
     if (window['utools']) {
-      return utools.getUser();
+      return utools.getUser() as UserProfile;
     } else {
       return null;
     }
@@ -559,14 +560,25 @@ export const InjectionUtil = {
       if (window['utools']) {
         utools.openPayment(options, callback);
       } else {
-        throw new Error('不支持的平台');
+        openPayInGoodFaith().then(() => {
+          http.post('/payment/save', {
+            goodId: options.goodsId
+          }).then(res => {
+            const {data} = res;
+            if (data.code === 200) {
+              callback?.()
+            }
+          })
+        }).catch(() => MessageUtil.warning("取消支付"))
       }
     },
-    async fetch(): Promise<Array<PaymentOrder>> {
+    // 获取全部的订单ID
+    async fetch(): Promise<Array<string>> {
       if (window['utools']) {
-        return utools.fetchUserPayments();
+        return utools.fetchUserPayments().then(res => res.map(e => e.goods_id));
       } else {
-        return Promise.resolve([]);
+        const rsp = await http.get<InjectionDbResult<Array<string>>>('/payment/list');
+        return rsp.data.data;
       }
     }
   },

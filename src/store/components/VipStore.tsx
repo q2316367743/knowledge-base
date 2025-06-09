@@ -15,13 +15,13 @@ export const useVipStore = defineStore('vip', () => {
     noteVip.value = false;
     todoVip.value = false;
     allVip.value = false;
-    const payments = await InjectionUtil.payment.fetch();
-    for (const payment of payments) {
-      if (payment.goods_id === Constant.goods.note) {
+    const goodsIds = await InjectionUtil.payment.fetch();
+    for (const goodsId of goodsIds) {
+      if (goodsId === Constant.goods.note) {
         noteVip.value = true;
-      } else if (payment.goods_id === Constant.goods.todo) {
+      } else if (goodsId === Constant.goods.todo) {
         todoVip.value = true;
-      } else if (payment.goods_id === Constant.goods.all) {
+      } else if (goodsId === Constant.goods.all) {
         allVip.value = true;
         return;
       }

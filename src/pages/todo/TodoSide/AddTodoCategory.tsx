@@ -1,25 +1,24 @@
 import {useUmami} from "@/plugin/umami";
-import TodoListSortEnum from "@/enumeration/TodoListSortEnum";
 import {DialogPlugin, Form, FormItem, Input, Radio, RadioGroup} from "tdesign-vue-next";
 import {
   getDefaultTodoCategory,
   renderTodoCategoryType,
-  TodoCategoryGroupEnum, TodoCategoryOpenTypeEnum,
+  TodoCategoryOpenTypeEnum,
   TodoCategoryRecord,
   TodoCategoryTypeEnum,
   TodoListLayoutEnum
 } from "@/entity/todo/TodoCategory";
-import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
+import VipIcon from "@/components/KbIcon/VipIcon.vue";
+import {checkPower, useTodoCategoryStore, useTodoWrapStore, useVipStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {clone} from "@/utils/lang/ObjectUtil";
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import VipIcon from "@/components/KbIcon/VipIcon.vue";
-import {checkPower, useVipStore} from "@/store";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 
 function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
-  const {todoNoVip} = useVipStore()
+  const {todoNoVip} = useVipStore();
+  const isUtools = InjectionUtil.getPlatform() === 'uTools';
   return () => <Form data={record.value}>
     <FormItem label="名称" labelAlign={'top'}>
       <Input v-model={record.value.name} clearable={true} autofocus/>
@@ -40,7 +39,7 @@ function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
           <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem label="默认打开方式" labelAlign={'top'}>
+      {isUtools && <FormItem label="默认打开方式" labelAlign={'top'}>
         <RadioGroup v-model={record.value.openType} defaultValue={TodoCategoryOpenTypeEnum.PLUGIN}>
           <Radio value={TodoCategoryOpenTypeEnum.PLUGIN}>插件内</Radio>
           <Radio value={TodoCategoryOpenTypeEnum.WIDGET}>
@@ -50,7 +49,7 @@ function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
             </div>
           </Radio>
         </RadioGroup>
-      </FormItem>
+      </FormItem>}
     </>}
   </Form>;
 }
