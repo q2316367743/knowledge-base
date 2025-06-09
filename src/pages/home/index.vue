@@ -198,7 +198,7 @@ tryOnMounted(async () => {
 
   .home-side {
     height: 100vh;
-    width: 199px;
+    width: 249px;
     overflow-y: auto;
     overflow-x: hidden;
     transition: width 0.2s ease-in-out;
@@ -207,11 +207,11 @@ tryOnMounted(async () => {
 
     .header {
       padding: 4px 8px 0 8px;
-      width: 183px;
+      width: 233px;
     }
 
     .content {
-      width: 183px;
+      width: 233px;
       height: calc(100% - 96px);
       padding: 8px;
       overflow: auto;
@@ -281,7 +281,7 @@ tryOnMounted(async () => {
   .home-content {
     position: absolute;
     top: 0;
-    left: 200px;
+    left: 250px;
     right: 0;
     bottom: 0;
     transition: left 0.2s ease-in-out;

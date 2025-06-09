@@ -9,18 +9,15 @@ export const useUserStore = defineStore('user', () => {
     const p = InjectionUtil.getUser();
     if (p) return p;
     return {
-      avatar: '/logo.png',
-      nickname: '未登录',
+      avatar: '/user.png',
+      nickname: '匿名用户',
       type: 'user'
     }
   });
 
-  function update(p: Partial<UserProfile>) {
-    profile.value = {
-      ...profile.value,
-      ...p
-    }
+  function rename(nickname: string) {
+    profile.value.nickname = nickname;
   }
 
-  return {profile, update};
+  return {profile, rename};
 })

@@ -1,53 +1,77 @@
 <template>
   <t-drawer v-model:visible="visible" :footer="false" :header="false" size="400px" attach="body">
     <div class="user-vip-drawer">
-      <t-card>
+      <t-card v-if="isUtools">
         <div class="user-info">
           <t-avatar :image="user.avatar" size="large"/>
           <div class="user-name">{{ user.nickname }}</div>
         </div>
-        <template v-if="isUtools">
-          <t-divider/>
-          <div class="vip-info">
-            <div class="vip-features flex">
-              <div class="feature-item">
-                <div class="feature-item-header">uTools会员</div>
-                <div class="feature-item-content">
-                  <div v-if="user.type === 'member'" class="feature-item-content__success">已开通</div>
-                </div>
+        <t-divider/>
+        <div class="vip-info">
+          <div class="vip-features flex">
+            <div class="feature-item">
+              <div class="feature-item-header">uTools会员</div>
+              <div class="feature-item-content">
+                <div v-if="user.type === 'member'" class="feature-item-content__success">已开通</div>
               </div>
-              <div class="feature-item">
-                <div class="feature-item-header">
-                  <span>笔记会员</span>
-                  <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
-                          @click="openNoteVipWebsite">
-                    <questionnaire-icon/>
-                  </t-link>
-                </div>
-                <div class="feature-item-content" @click="openVip('note')">
-                  <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
-                  <div v-else class="feature-item-content__success">永久授权</div>
-                </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item-header">
+                <span>笔记会员</span>
+                <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                        @click="openNoteVipWebsite">
+                  <questionnaire-icon/>
+                </t-link>
               </div>
-              <div class="feature-item">
-                <div class="feature-item-header">
-                  <span>待办会员</span>
-                  <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
-                          @click="openTodoVipWebsite">
-                    <questionnaire-icon/>
-                  </t-link>
-                </div>
-                <div class="feature-item-content">
-                  <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')"
-                          :disabled="true">
-                    去开通
-                  </t-link>
-                  <div v-else class="feature-item-content__success">永久授权</div>
-                </div>
+              <div class="feature-item-content" @click="openVip('note')">
+                <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
+                <div v-else class="feature-item-content__success">永久授权</div>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item-header">
+                <span>待办会员</span>
+                <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                        @click="openTodoVipWebsite">
+                  <questionnaire-icon/>
+                </t-link>
+              </div>
+              <div class="feature-item-content">
+                <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')"
+                        :disabled="true">
+                  去开通
+                </t-link>
+                <div v-else class="feature-item-content__success">永久授权</div>
               </div>
             </div>
           </div>
-        </template>
+        </div>
+      </t-card>
+      <t-card v-else>
+        <div class="flex justify-between items-center">
+          <div class="web-info">
+            <t-avatar :image="user.avatar" size="56px"/>
+            <div class="web-info-user">
+              <div class="user-name">{{ user.nickname }}</div>
+              <div class="user-rename">
+                <t-button size="small" variant="outline" theme="primary" @click="rename()">重命名</t-button>
+              </div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-header">
+              <span>笔记会员</span>
+              <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                      @click="openNoteVipWebsite">
+                <questionnaire-icon/>
+              </t-link>
+            </div>
+            <div class="feature-item-content" @click="openVip('note')">
+              <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
+              <div v-else class="feature-item-content__success">永久授权</div>
+            </div>
+          </div>
+        </div>
       </t-card>
       <t-card class="help-info">
         <t-collapse :borderless="true" :expand-mutex="true">
@@ -123,6 +147,7 @@ import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {openNoteVipWebsite, openTodoVipWebsite, toFeedback} from "@/global/Constant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useUserStore} from "@/store/components/UserStore";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 
 const visible = defineModel({
   type: Boolean,
@@ -136,6 +161,13 @@ const noteNoVip = computed(() => useVipStore().noteNoVip);
 const todoNoVip = computed(() => useVipStore().todoNoVip);
 
 const {openVip} = useVipStore();
+
+const rename = () => {
+  MessageBoxUtil.prompt("请输入新的昵称", "修改昵称", {
+    inputValue: user.value.nickname
+  })
+    .then(name => useUserStore().rename(name))
+}
 </script>
 <style scoped lang="less">
 .user-vip-drawer {
@@ -156,6 +188,52 @@ const {openVip} = useVipStore();
     }
   }
 
+  .web-info {
+    display: flex;
+
+    .web-info-user {
+      margin-left: 8px;
+
+      .user-name {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--td-brand-color);
+      }
+
+      .user-rename {
+        margin-top: 8px;
+      }
+    }
+  }
+
+  .feature-item {
+    font-size: 14px;
+    text-align: center;
+
+    .feature-item-header {
+      font-weight: 500;
+      font-size: var(--td-font-size-title-small);
+      color: var(--td-text-color-secondary);
+    }
+
+    .feature-item-content {
+      font-size: var(--td-font-size-body-large);
+      margin-top: var(--td-comp-margin-m);
+
+      :deep(.t-link) {
+        font-size: var(--td-font-size-body-large);
+      }
+    }
+
+    .feature-item-content__success {
+      color: var(--td-success-color);
+    }
+
+    .feature-item-content__error {
+      color: var(--td-error-color);
+    }
+  }
+
   .vip-info {
     display: flex;
     flex-direction: column;
@@ -164,34 +242,6 @@ const {openVip} = useVipStore();
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-
-      .feature-item {
-        font-size: 14px;
-        text-align: center;
-
-        .feature-item-header {
-          font-weight: 500;
-          font-size: var(--td-font-size-title-small);
-          color: var(--td-text-color-secondary);
-        }
-
-        .feature-item-content {
-          font-size: var(--td-font-size-body-large);
-          margin-top: var(--td-comp-margin-m);
-
-          :deep(.t-link) {
-            font-size: var(--td-font-size-body-large);
-          }
-        }
-
-        .feature-item-content__success {
-          color: var(--td-success-color);
-        }
-
-        .feature-item-content__error {
-          color: var(--td-error-color);
-        }
-      }
     }
   }
 
