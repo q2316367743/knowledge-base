@@ -2,53 +2,52 @@
   <t-drawer v-model:visible="visible" :footer="false" :header="false" size="400px" attach="body">
     <div class="user-vip-drawer">
       <t-card>
-        <div v-if="user" class="user-info">
+        <div class="user-info">
           <t-avatar :image="user.avatar" size="large"/>
           <div class="user-name">{{ user.nickname }}</div>
         </div>
-        <div v-else class="user-info">
-          <t-avatar size="large"/>
-          <div class="user-name">未登录</div>
-        </div>
-        <t-divider/>
-        <div class="vip-info" v-if="user">
-          <div class="vip-features flex">
-            <div class="feature-item">
-              <div class="feature-item-header">uTools会员</div>
-              <div class="feature-item-content">
-                <div v-if="user.type === 'member'" class="feature-item-content__success">已开通</div>
+        <template v-if="isUtools">
+          <t-divider/>
+          <div class="vip-info">
+            <div class="vip-features flex">
+              <div class="feature-item">
+                <div class="feature-item-header">uTools会员</div>
+                <div class="feature-item-content">
+                  <div v-if="user.type === 'member'" class="feature-item-content__success">已开通</div>
+                </div>
               </div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item-header">
-                <span>笔记会员</span>
-                <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
-                        @click="openNoteVipWebsite">
-                  <questionnaire-icon/>
-                </t-link>
+              <div class="feature-item">
+                <div class="feature-item-header">
+                  <span>笔记会员</span>
+                  <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                          @click="openNoteVipWebsite">
+                    <questionnaire-icon/>
+                  </t-link>
+                </div>
+                <div class="feature-item-content" @click="openVip('note')">
+                  <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
+                  <div v-else class="feature-item-content__success">永久授权</div>
+                </div>
               </div>
-              <div class="feature-item-content" @click="openVip('note')">
-                <t-link v-if="noteNoVip" class="feature-item-content__error">去开通</t-link>
-                <div v-else class="feature-item-content__success">永久授权</div>
-              </div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item-header">
-                <span>待办会员</span>
-                <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
-                        @click="openTodoVipWebsite">
-                  <questionnaire-icon/>
-                </t-link>
-              </div>
-              <div class="feature-item-content">
-                <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')" :disabled="true">
-                  去开通
-                </t-link>
-                <div v-else class="feature-item-content__success">永久授权</div>
+              <div class="feature-item">
+                <div class="feature-item-header">
+                  <span>待办会员</span>
+                  <t-link theme="primary" variant="text" shape="square" class="ml-4px" size="small"
+                          @click="openTodoVipWebsite">
+                    <questionnaire-icon/>
+                  </t-link>
+                </div>
+                <div class="feature-item-content">
+                  <t-link v-if="todoNoVip" class="feature-item-content__error" @click="openVip('todo')"
+                          :disabled="true">
+                    去开通
+                  </t-link>
+                  <div v-else class="feature-item-content__success">永久授权</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </template>
       </t-card>
       <t-card class="help-info">
         <t-collapse :borderless="true" :expand-mutex="true">
@@ -85,7 +84,7 @@
               <li>闪卡：快速记住知识点，你的学习好帮手</li>
             </ul>
           </t-collapse-panel>
-          <t-collapse-panel header="🚀 待办会员">
+          <t-collapse-panel header="🚀 待办会员" v-if="isUtools">
             <ul class="pl-24px m-0">
               <li>待办小部件：随时查看待办任务</li>
             </ul>
@@ -123,13 +122,16 @@ import {useVipStore} from "@/store";
 import {openKeyDrawer, openShangZan} from "@/components/app-side/func";
 import {openNoteVipWebsite, openTodoVipWebsite, toFeedback} from "@/global/Constant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useUserStore} from "@/store/components/UserStore";
 
 const visible = defineModel({
   type: Boolean,
   default: false
 });
+const isUtools = InjectionUtil.getPlatform() === 'uTools';
 
-const user = InjectionUtil.getUser();
+// TODO: 不是uTools的会员功能
+const user = computed(() => useUserStore().profile);
 const noteNoVip = computed(() => useVipStore().noteNoVip);
 const todoNoVip = computed(() => useVipStore().todoNoVip);
 

@@ -149,6 +149,11 @@ enum LocalNameEnum {
   KEY_APP_COLOR = '/key/app/color',
 
   /**
+   * 应用用户
+   */
+  KEY_APP_USER = '/key/app/user',
+
+  /**
    * 待办导出脚本
    */
   KEY_TODO_SCRIPT = '/key/todo/script',

@@ -161,11 +161,17 @@ export interface FileUploadResult {
   url: string;
 }
 
+export interface UserProfile {
+  avatar: string;
+  nickname: string;
+  type: 'member' | 'user';
+}
+
 export const InjectionUtil = {
   getPlatform(): 'uTools' | 'web' {
     return !!window['utools'] ? 'uTools' : 'web';
   },
-  getUser(): { avatar: string, nickname: string, type: string } | null {
+  getUser(): UserProfile | null {
     if (window['utools']) {
       return utools.getUser();
     } else {

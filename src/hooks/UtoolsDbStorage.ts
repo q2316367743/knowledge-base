@@ -10,46 +10,9 @@ export interface UseUtoolsDbOptions {
   onError?(e: any): void;
 }
 
-interface DbStorageLike {
-  setItem(key: string, value: any): void
+type InitialValueFunc<T> = () => T
+type InitialValue<T> = T | InitialValueFunc<T>
 
-  getItem(key: string): any
-
-  removeItem(key: string): void
-}
-
-export const webDbStorage: DbStorageLike = {
-  /**
-   * 键值对存储，如果键名存在，则更新其对应的值
-   * @param key 键名(同时为文档ID)
-   * @param value 键值
-   */
-  setItem(key: string, value: any): void {
-    localStorage.setItem(key, JSON.stringify({
-      value: value
-    }));
-  },
-  /**
-   * 获取键名对应的值
-   */
-  getItem(key: string): any {
-    const value = localStorage.getItem(key);
-    if (!value) {
-      return null;
-    }
-    const val = JSON.parse(value).value;
-    if (typeof val === 'undefined') {
-      return null;
-    }
-    return val;
-  },
-  /**
-   * 删除键值对(删除文档)
-   */
-  removeItem(key: string): void {
-    localStorage.removeItem(key);
-  },
-}
 
 /**
  * 同步对象存储
@@ -60,7 +23,7 @@ export const webDbStorage: DbStorageLike = {
  */
 export function useUtoolsDbStorage<T extends (string | number | boolean | object | null)>(
   key: string,
-  initialValue: T,
+  initial: InitialValue<T>,
   options: UseUtoolsDbOptions = {},
 ): Ref<T> {
   const {
@@ -73,7 +36,8 @@ export function useUtoolsDbStorage<T extends (string | number | boolean | object
   } = options
 
   const sourceValue = getItem(key);
-  const data = (shallow ? shallowRef : ref)((typeof sourceValue === 'undefined' || sourceValue === null) ? initialValue : sourceValue) as Ref<T>;
+  const initialFunc: InitialValueFunc<T> = typeof initial === 'function' ? (initial as InitialValueFunc<T>) : (() => initial);
+  const data = (shallow ? shallowRef : ref)((typeof sourceValue === 'undefined' || sourceValue === null) ? initialFunc() : sourceValue) as Ref<T>;
 
   watch(
     data,
