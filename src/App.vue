@@ -21,7 +21,7 @@ import {useUmami} from "@/plugin/umami";
 import {createServer} from "@/plugin/server";
 import {keyword, usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
-import {themeColor, useGlobalStore} from "@/store/GlobalStore";
+import {useGlobalStore} from "@/store/GlobalStore";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import {useHomeEditorStore} from "@/store/components/HomeEditorStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
@@ -44,6 +44,7 @@ const preview = ref({
 
 const loading = computed(() => useGlobalStore().loading);
 const loadingText = computed(() => useGlobalStore().loadingText);
+const themeColor = computed(() => useGlobalStore().themeColor);
 
 // 插件进入
 InjectionUtil.event.onPluginEnter(action => {

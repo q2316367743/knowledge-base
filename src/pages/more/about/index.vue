@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <div class="container">
+    <div class="about-container">
       <div class="logo">
         <img src="/logo.png" alt="知识库" style="width: 200px" draggable="false"/>
       </div>

@@ -70,9 +70,9 @@ const inputEnter = (inputValue: string) => {
 </script>
 <style scoped lang="less">
 .home-group {
-  padding: 8px;
-  width: calc(100% - 16px);
-  height: calc(100% - 16px);
+  padding: 4px 8px 4px 4px;
+  width: calc(100% - 12px);
+  height: calc(100% - 8px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,7 +91,8 @@ const inputEnter = (inputValue: string) => {
 
   &__footer {
     width: 100%;
-    flex: 0 0 118px;
+    max-width: 800px;
+    margin: 0 auto 4px;
   }
 }
 </style>

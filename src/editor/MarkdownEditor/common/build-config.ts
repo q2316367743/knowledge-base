@@ -3,7 +3,6 @@ import {
   CherryOptions,
   CherryToolbarsOptions
 } from "cherry-markdown/types/cherry";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useScreenShotMenu} from "@/editor/MarkdownEditor/menu/ScreenShotMenu";
 import {usePanGu} from "@/editor/MarkdownEditor/menu/PanGuMenu";
@@ -13,7 +12,6 @@ import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
 import {useMoreItemMenu, useMoreMenu} from "@/editor/MarkdownEditor/menu/MoreMenu";
-import {renderAttachmentUrl} from "@/plugin/server";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {onClickPreview} from "@/editor/MarkdownEditor/common/event";
 
@@ -129,15 +127,7 @@ export async function buildConfig(
       global: {
         urlProcessor: (url: string, srcType: string) => {
           if (srcType === 'image') {
-            if (url.startsWith("attachment:")) {
-              const id = url.replace("attachment:", "");
-              if (id.startsWith(LocalNameEnum.ARTICLE_ATTACHMENT)) {
-                // 直接就是ID
-                return renderAttachmentUrl(id)
-              } else {
-                return renderAttachmentUrl(LocalNameEnum.ARTICLE_ATTACHMENT + id)
-              }
-            }
+            return useAttachmentUpload.render(url)
           }
           return url;
         },
@@ -176,14 +166,14 @@ export async function buildConfig(
       },
       onClickPreview: onClickPreview
     },
-    fileUpload(file: File, callback: (url: string) => void) {
+    fileUpload: (file, callback) => {
       if (instance) {
-        useAttachmentUpload.upload(file, true, file.type)
-          .then(url => {
+        useAttachmentUpload.upload(file, file.name, file.type)
+          .then(({name, key}) => {
             if (instance.value) {
-              instance.value.insertValue(`![图片#100%](${url})`);
+              instance.value.insertValue(`![${name}#100%](${key})`);
             } else {
-              callback(url)
+              callback(key, {name})
             }
           })
           .catch(e => MessageUtil.error("图片上传失败", e))

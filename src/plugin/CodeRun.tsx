@@ -46,7 +46,7 @@ export async function codeRun(fileName: string, content: string) {
   });
   const result = ref('');
   const loading = ref(true);
-  const {abort} = window.preload.util.runCommand(command, {
+  const {abort} = InjectionUtil.native.util.runCommand(command, {
     onSuccess() {
       MessageUtil.success("执行成功");
       loading.value = false;

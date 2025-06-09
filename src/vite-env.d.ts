@@ -26,8 +26,7 @@ declare interface OpenFileOption {
 
 type SubWindowChannel = 'chat' | 'preview' | 'todo:to' | 'todo:from';
 
-class SubWindow {
-  constructor(channel: SubWindowChannel);
+declare interface SubWindow {
 
   receiveMsg<T = any>(callback: (msg: IpcEvent<T>) => void): void;
 

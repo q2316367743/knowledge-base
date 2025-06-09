@@ -31,10 +31,10 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
         MessageUtil.error("未选择图片")
         return;
       }
-      useAttachmentUpload.upload(file, false, "image/png")
-        .then(url => {
+      useAttachmentUpload.upload(file, file.name, "image/png")
+        .then(({name, url}) => {
           data.value = {
-            title: file.name,
+            title: name,
             link: url
           }
         });

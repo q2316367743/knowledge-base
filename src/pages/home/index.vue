@@ -82,7 +82,7 @@ import ContextMenu from '@imengyu/vue3-context-menu';
 import {useSortable, moveArrayElement} from "@vueuse/integrations/useSortable";
 import {openAddAiChatGroupDialog} from "@/pages/home/modal/AddAiChatGroup";
 import {useAiChatGroupStore, useAiChatListStore, useGlobalStore} from "@/store";
-import {activeKey, collapsed, toggleCollapsed} from './model';
+import {activeKey, autoHideCollapsed, collapsed, toggleCollapsed} from './model';
 import {AiChatGroup} from "@/entity/ai/AiChat";
 import {onRenameGroup, onRemoveGroup} from "@/pages/home/components/HomeContext";
 import {openHomeChatSearch} from "@/pages/home/components/HomeChatSearch";
@@ -126,11 +126,12 @@ const onClick = (path: string) => {
   activeKey.value = path;
   if (path !== '/home/welcome' && path !== '/home/temp') {
     // 收起
-    collapsed.value = true;
+    autoHideCollapsed();
   }
 }
 
 const onGroupMenuClick = (group: AiChatGroup, e: MouseEvent) => {
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,
@@ -205,13 +206,13 @@ tryOnMounted(async () => {
 
 
     .header {
-      padding: 8px 8px 0;
+      padding: 4px 8px 0 8px;
       width: 183px;
     }
 
     .content {
       width: 183px;
-      height: calc(100% - 100px);
+      height: calc(100% - 96px);
       padding: 8px;
       overflow: auto;
     }
@@ -225,6 +226,7 @@ tryOnMounted(async () => {
     :deep(.group) {
       user-select: none;
       color: var(--td-text-color-secondary);
+      font-size: var(--td-font-size-body-medium);
       display: flex;
       justify-content: space-between;
       align-items: center;

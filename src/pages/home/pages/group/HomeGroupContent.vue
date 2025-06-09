@@ -173,6 +173,7 @@ function onChatContextMenuClick(data: AiChatList, e: MouseEvent) {
       divided: true,
     })
   }
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,

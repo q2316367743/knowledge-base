@@ -1,9 +1,10 @@
 import {base64toBlob} from "@/utils/BrowserUtil";
 import Constant, {BASE64_PREFIX} from "@/global/Constant";
 import {useSnowflake} from "@/hooks/Snowflake";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
 
-export async function useAttachmentUploadByImagePlus(data: Blob | File | string): Promise<string> {
+// 图床工具plus: https://docs.on-u.cn/picture-bed-plus/Service.html
+export async function useAttachmentUploadByImagePlus(data: Blob | File | string, name: string): Promise<FileUploadResult> {
   if (typeof data === 'string') {
     data = base64toBlob(data.replace(BASE64_PREFIX, ""));
   }
@@ -14,5 +15,6 @@ export async function useAttachmentUploadByImagePlus(data: Blob | File | string)
     data,
     InjectionUtil.getPath('temp')
   );
-  return window.preload.util.uploadToImagePlus(path, Constant.name);
+  const url = await InjectionUtil.native.util.uploadToImagePlus(path, Constant.name);
+  return {url, key: url, name};
 }

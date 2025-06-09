@@ -1,5 +1,3 @@
-// PicGo: https://picgo.github.io/PicGo-Doc/zh/guide/advance.html
-// 图床工具plus: https://docs.on-u.cn/picture-bed-plus/Service.html
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
@@ -8,32 +6,32 @@ import {useAttachmentUploadByPicGo} from "@/plugin/AttachmentUpload/impl/PicGoAt
 import {useAttachmentUploadByImagePlus} from "@/plugin/AttachmentUpload/impl/ImagePlusAttachmentUploadImpl";
 import {useAttachmentUploadByUtools} from "@/plugin/AttachmentUpload/impl/UToolsAttachmentUploadImpl";
 import {renderAttachmentUrl} from "@/plugin/server";
+import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export const useAttachmentUpload = {
-  upload: async (data: Blob | File | string, native = false, mineType?: string): Promise<string> => {
+  upload: async (data: Blob | File | string, name: string, mineType?: string): Promise<FileUploadResult> => {
     const {imageStrategy, baseSetting} = useBaseSettingStore();
-    if (imageStrategy === ImageStrategyEnum.INNER) {
-      const result = await useAttachmentUploadByUtools(data, mineType);
-      if (native) {
-        return "attachment:" + result;
-      }
-      return renderAttachmentUrl(result);
-    } else if (imageStrategy === ImageStrategyEnum.IMAGE) {
+    if (imageStrategy === ImageStrategyEnum.IMAGE) {
       return useAttachmentUploadByImage(data);
     } else if (imageStrategy === ImageStrategyEnum.PIC_GO) {
       if (baseSetting.imagePicGoPort) {
-        return useAttachmentUploadByPicGo(data, baseSetting.imagePicGoPort);
-      } else {
-        NotificationUtil.warning("PicGo端口未设置，无法上传至PicGo", "附件上传");
+        return useAttachmentUploadByPicGo(data, name, baseSetting.imagePicGoPort);
       }
+      return Promise.reject(new Error("PicGo端口未设置，无法上传至PicGo"));
     } else if (imageStrategy === ImageStrategyEnum.IMAGE_PLUS) {
-      return useAttachmentUploadByImagePlus(data)
+      return useAttachmentUploadByImagePlus(data, name)
+    } else {
+      return useAttachmentUploadByUtools(data, name, mineType);
     }
-    return Promise.reject("请在基础设置中选择图片上传策略")
   },
   render: (url: string) => {
-    if (/"$attachment:"/.test(url)) {
+    if (/^attachment:/.test(url)) {
       return renderAttachmentUrl(url.replace(/^attachment:/, ""))
+    }
+    if (InjectionUtil.getPlatform() === 'web') {
+      if (!/http?s:\/\//.test(url)) {
+        return './api/file/static/' + url;
+      }
     }
     return url;
   }

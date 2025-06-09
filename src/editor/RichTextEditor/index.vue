@@ -7,10 +7,10 @@
 <script lang="ts" setup>
 import {createEditor, createToolbar, IDomEditor, Toolbar, IToolbarConfig} from '@wangeditor/editor'
 import {useArticleExportEvent} from "@/store";
-import {renderAttachmentUrl} from "@/plugin/server";
 import {onRichTextExport} from "@/editor/RichTextEditor/func";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {useMountEventBus} from "@/hooks/MountEventBus";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 type InsertFnType = (url: string, alt: string, href: string) => void
 
@@ -59,20 +59,18 @@ function init() {
           server: '/api/upload',
           // 自定义上传
           customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
-            useAttachmentUpload.upload(file, false, 'image/png')
-              .then(key => {
-                insertFn(key, key, '')
-              })
+            useAttachmentUpload.upload(file, file.name, 'image/png')
+              .then(({name, url}) => insertFn(url, name, url))
+              .catch(e => MessageUtil.error("上传失败", e));
           }
         },
         uploadVideo: {
           server: '/api/upload',
           customUpload(file: File, insertFn: InsertFnType) {
             //
-            useAttachmentUpload.upload(file, false, file.type)
-              .then(key => {
-                insertFn(renderAttachmentUrl(key), key, '')
-              })
+            useAttachmentUpload.upload(file, file.name, file.type)
+              .then(({name, url}) => insertFn(url, name, url))
+              .catch(e => MessageUtil.error("上传失败", e));
           }
         }
       }
@@ -152,7 +150,7 @@ function onExport(id: number) {
     flex: 1;
     overflow: hidden;
   }
-  
+
   // 搜索容器样式
   .search-container {
     position: absolute;
@@ -165,12 +163,12 @@ function onExport(id: number) {
     border-radius: var(--td-radius-medium);
     box-shadow: var(--td-shadow-1);
     z-index: 100;
-    
+
     .t-input {
       width: 200px;
       margin-right: 8px;
     }
-    
+
     .search-buttons {
       display: flex;
       gap: 8px;

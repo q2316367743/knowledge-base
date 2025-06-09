@@ -229,6 +229,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
   }
 
   const {isDark} = useGlobalStore();
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,

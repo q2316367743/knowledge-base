@@ -82,6 +82,7 @@
             <ul class="pl-24px m-0">
               <li>超级笔记：个笔记即可整合富文本、Markdown、代码、表格、思维导图、流程图六大模式，打破创作边界</li>
               <li>加密笔记：通过aes-256-cbc进行加密，保护您的数据安全</li>
+              <li>闪卡：快速记住知识点，你的学习好帮手</li>
             </ul>
           </t-collapse-panel>
           <t-collapse-panel header="🚀 待办会员">

@@ -10,13 +10,12 @@ export enum GlobalType {
   AUTO = 3
 }
 
-export const themeColor = useUtoolsDbStorage<string>(LocalNameEnum.KEY_APP_COLOR, 'ghibli');
-
 export const useGlobalStore = defineStore('global', () => {
   const isDark = ref(InjectionUtil.isDarkColors());
   const loading = ref(false);
   const loadingText = ref('');
   const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
+  const themeColor = useUtoolsDbStorage<string>(LocalNameEnum.KEY_APP_COLOR, 'ghibli');
 
   function renderTheme(): boolean {
     if (globalType.value === GlobalType.AUTO) {
@@ -58,7 +57,7 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
   return {
-    isDark, globalType, loading, loadingText,
+    isDark, globalType, loading, loadingText, themeColor,
     initDarkColors, switchDarkColors, startLoading, closeLoading
   }
 

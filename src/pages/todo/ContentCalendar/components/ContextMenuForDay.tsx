@@ -5,6 +5,7 @@ import {openAddTodoItem} from "@/pages/todo/common/AddTodoItem";
 
 export function openContextMenuForDay(e: MouseEvent, day: Date) {
   const now = dayjs(day).format("YYYY-MM-DD");
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.clientX,
     y: e.clientY,

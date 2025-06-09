@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts" setup>
-import {themeColor} from "@/store";
 import MainForTodo from "@/nested/todo/layout/MainForTodo.vue";
 import AppFrame from "@/nested/todo/layout/AppFrame.vue";
+import {useGlobalStore} from "@/store";
 
 const targetId = ref(0);
 const targetName = ref('');
 const alwaysOnTop = ref(false);
+const themeColor = computed(() => useGlobalStore().themeColor);
 
 function onInit(id: number, name: string) {
   targetId.value = id;

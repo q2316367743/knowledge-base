@@ -242,10 +242,10 @@ export default class SimpleImage implements BlockTool {
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
-    const upload = await useAttachmentUpload.upload(file, true, "image/png");
+    const upload = await useAttachmentUpload.upload(file, file.name, "image/png");
     return {
-      key: upload,
-      caption: file.name,
+      key: upload.url,
+      caption: upload.name,
     }
   }
 

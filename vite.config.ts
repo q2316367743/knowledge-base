@@ -59,5 +59,11 @@ export default defineConfig({
       `monaco-editor/esm/vs/editor/editor.worker`
     ],
   },
-  envDir: 'env'
+  envDir: 'env',
+  server: {
+    proxy: {
+      // 字符串简写（等价于对象写法）
+      '/api': 'http://localhost:3000',
+    },
+  },
 });

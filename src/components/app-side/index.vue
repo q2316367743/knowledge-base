@@ -69,10 +69,10 @@
           <ellipsis-icon/>
         </template>
         <template #title>更多</template>
-        <t-menu-item value="/more/backup">
+        <t-menu-item value="/more/backup" v-if="isUtools">
           备份
         </t-menu-item>
-        <t-menu-item value="/more/attachment">
+        <t-menu-item value="/more/attachment" v-if="isUtools">
           附件
         </t-menu-item>
         <t-menu-item value="/more/recommend">
@@ -173,10 +173,11 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 const route = useRoute();
 const router = useRouter();
 const disabledForModule = !InjectionUtil.version.isSupportMarkdown();
+const isUtools = InjectionUtil.getPlatform() === 'uTools';
 
 const selectedKey = ref('/note');
 
-const themeType = computed(() => useGlobalStore().globalType)
+const themeType = computed(() => useGlobalStore().globalType);
 
 watch(() => route.path, path => {
   if (selectedKey.value !== path) {

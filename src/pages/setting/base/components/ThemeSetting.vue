@@ -8,8 +8,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {themeColor} from "@/store";
 import {ThemeColors} from "@/global/theme";
+import {useGlobalStore} from "@/store";
+
+const {themeColor} = toRefs(useGlobalStore());
 </script>
 <style scoped>
 </style>

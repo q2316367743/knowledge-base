@@ -1,18 +1,14 @@
 import {homeEditorId} from "@/store/components/HomeEditorStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
-import {useErrorStore} from "@/store/components/ErrorStore";
 
 /**
  * 打开AI聊天小部件
  */
 export function openAiChatWidget() {
-  const dev = InjectionUtil.isDev();
   const {x, y} = InjectionUtil.getCursorScreenPoint();
   const ubWindow = InjectionUtil.createBrowserWindow(
-    dev ? 'test.html' : `dist/chat.html`, {
-      // @ts-ignore
+    'chat.html', {
       useContentSize: true,
       width: 400,
       height: 700,
@@ -20,33 +16,16 @@ export function openAiChatWidget() {
       minHeight: 600,
       hasShadow: false,
       backgroundColor: '#00000000',
-      webPreferences: {
-        preload: 'sub-window.js',
-        zoomFactor: 0,
-        devTools: dev
-      },
       x: x + 64,
       y: y - 72
-    }, () => {
-      try {
-        ubWindow.show();
-        if (dev) {
-          ubWindow.webContents.executeJavaScript(`location.href = 'http://localhost:5173/chat.html'`)
-            .then(() => console.debug("代码执行成功"))
-            .catch((e: any) => console.error("代码执行失败", e));
-          ubWindow.webContents.openDevTools();
-        } else if (useErrorStore().consoleShow) {
-          ubWindow.webContents.openDevTools();
-        }
-        window.preload.ipcRenderer.sendMessage(ubWindow.webContents.id, 'chat', {
-          event: 'config',
-          data: {
-            id: homeEditorId.value,
-            name: useArticleStore().articleMap.get(homeEditorId.value)?.name
-          }
-        })
-      } catch (e) {
-        MessageUtil.error("打开小窗失败", e);
+    });
+  ubWindow.open((id) => {
+    InjectionUtil.native.ipcRenderer.sendMessage(id, 'chat', {
+      event: 'config',
+      data: {
+        id: homeEditorId.value,
+        name: useArticleStore().articleMap.get(homeEditorId.value)?.name
       }
     })
+  })
 }

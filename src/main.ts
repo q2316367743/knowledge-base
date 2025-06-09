@@ -101,14 +101,6 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
   }
 });
 
-window.open = (url?: string | URL): WindowProxy | null => {
-  if (!url) {
-    return null;
-  }
-  InjectionUtil.shellOpenExternal(typeof url === 'string' ? url : url?.toString());
-  return null;
-
-}
 window.addEventListener('click', e => {
   if (InjectionUtil.getPlatform() === 'web') {
     // web不需要监听

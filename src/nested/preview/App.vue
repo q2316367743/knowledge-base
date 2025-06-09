@@ -6,15 +6,17 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {themeColor, useArticleStore, useGlobalStore} from "@/store";
+import {useArticleStore, useGlobalStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ArticleIndex} from "@/entity/article";
 import EditorContentEditor from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 useGlobalStore().initDarkColors();
 
 const title = useTitle();
 const target = ref<ArticleIndex>();
+const themeColor = computed(() => useGlobalStore().themeColor);
 
 const preview = ref({
   visible: false,
@@ -55,11 +57,14 @@ function onInit(id: number) {
 }
 
 // 子窗口
-const subWindow = window.preload.ipcRenderer.buildSubWindow('preview');
+const subWindow = InjectionUtil.native.ipcRenderer.buildSubWindow('preview');
 subWindow.receiveMsg(msg => {
-  const {id} = msg;
-  if (id) {
-    onInit(id);
+  const {event, data} = msg;
+  if (event === 'config') {
+    const {id} = data;
+    if (id) {
+      onInit(id);
+    }
   }
 });
 

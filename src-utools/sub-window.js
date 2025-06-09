@@ -19,6 +19,11 @@ class SubWindow {
 
   /***  向插件主窗口发送消息  ***/
   sendMsg(msg) {
+    // 优先使用新的API
+    if (utools.sendToParent) {
+      utools.sendToParent(this.channel, msg);
+      return;
+    }
     if (this.parentId) {
       ipcRenderer.sendTo(this.parentId, this.channel, msg);
     }

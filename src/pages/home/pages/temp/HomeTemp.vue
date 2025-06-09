@@ -129,8 +129,6 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useAiServiceStore} from "@/store";
-import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
 
 const router = useRouter()
 
@@ -348,31 +346,17 @@ const handleStop = () => {
     overflow: hidden;
     padding:  8px;
 
-    .t-chat__text {
-      &.user {
-        background-color: var(--td-bg-color-secondarycontainer);
-        border-radius: var(--td-radius-extraLarge);
-        color: var(--td-text-color-primary);
-      }
-
-
-      &.model-change {
-        :deep(span) {
-          padding: 0 4px;
-          color: var(--td-text-color-link);
-        }
-      }
-
-      :deep(.t-chat__text__assistant) {
-        p {
-          margin: 0;
-        }
-      }
+    :deep(.t-chat__inner) {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto var(--td-comp-margin-l);
+    }
+    :deep(.t-chat__footer) {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    :deep(.t-chat__inner.system) {
-      display: none;
-    }
   }
 
   .bottomBtn {

@@ -45,7 +45,7 @@
               <span>已深度思考</span>
             </div>
           </template>
-          <chat-content :content="item.think"/>
+          <chat-content :content="item.think" class="reason"/>
         </chat-reasoning>
         <chat-content v-if="item.content.length > 0 && item.role !== 'system'" :content="item.content"
                       :class="[item.role]" class="typo"/>
@@ -447,9 +447,21 @@ const handleDeleteChat = (index: number) => {
 
   .home-chat-content {
     height: calc(100vh - 41px);
-    width: 100%;
     overflow: hidden;
-    padding: 8px;
+    padding: 8px 0;
+
+    :deep(.t-chat__inner) {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto var(--td-comp-margin-l);
+    }
+
+    :deep(.t-chat__footer) {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
   }
 
   .bottomBtn {

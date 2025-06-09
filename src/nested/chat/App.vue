@@ -45,7 +45,7 @@
 import {Chat, ChatAction, ChatInput, ChatItem, ChatContent as TChatContent} from "@tdesign-vue-next/chat";
 import {AiChatMessage} from "./type";
 import {ChatMessageParam} from "@/types/Chat";
-import {themeColor, useAiAssistantStore, useAiServiceStore, useArticleStore, useGlobalStore} from "@/store";
+import { useAiAssistantStore, useAiServiceStore, useArticleStore, useGlobalStore} from "@/store";
 import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -76,6 +76,7 @@ const chatList = ref<Array<AiChatMessage>>([{
 const editorId = ref(0);
 const assistantId = useUtoolsKvStorage(LocalNameEnum.KEY_WIDGET_CHAT_ASSISTANT, "");
 const fetchCancel = shallowRef<AskToOpenAiAbort>();
+const themeColor = computed(() => useGlobalStore().themeColor);
 
 let subWindow = window.preload.ipcRenderer.buildSubWindow('chat');
 subWindow.receiveMsg(msg => {

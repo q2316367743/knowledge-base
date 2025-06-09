@@ -1,12 +1,11 @@
-import {useErrorStore} from "@/store/components/ErrorStore";
-import MessageUtil from "@/utils/modal/MessageUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {CustomerWindow} from "@/utils/utools/WindowUtil";
 
-export function openTodoWidget(id: number, name: string, onSuccess: (instance: BrowserWindow.WindowInstance) => void) {
+export function openTodoWidget(id: number, name: string, onSuccess: (instance: CustomerWindow) => void) {
   // 打开笔记预览
   const dev = InjectionUtil.isDev();
   const ubWindow = InjectionUtil.createBrowserWindow(
-    dev ? 'test.html' : `dist/todo.html`, {
+    'todo.html', {
       // @ts-ignore
       useContentSize: true,
       width: 460,
@@ -18,32 +17,19 @@ export function openTodoWidget(id: number, name: string, onSuccess: (instance: B
       frame: false,
       transparent: true,
       backgroundColor: '#00000000',
-      webPreferences: {
-        preload: 'sub-window.js',
-        zoomFactor: 0,
-        devTools: dev
-      },
-    }, () => {
-      try {
-        ubWindow.show();
-        if (dev) {
-          ubWindow.webContents.executeJavaScript(`location.href = 'http://localhost:5173/todo.html?todo-id=${id}&todo-name=${encodeURIComponent(name)}'`)
-            .then(() => console.debug("代码执行成功"))
-            .catch((e: any) => console.error("代码执行失败", e));
-          ubWindow.webContents.openDevTools();
-        } else if (useErrorStore().consoleShow) {
-          ubWindow.webContents.openDevTools();
-        }
-        window.preload.ipcRenderer.sendMessage(ubWindow.webContents.id, 'todo:to', {
-          event: '/todo/init/id',
-          data: {
-            id: id,
-            name: name
-          },
-        });
-        onSuccess(ubWindow);
-      } catch (e) {
-        MessageUtil.error("打开小窗失败", e);
+      params: {
+        'todo-id': `${id}`,
+        'todo-name': name
       }
-    })
+    });
+  ubWindow.open(id => {
+    window.preload.ipcRenderer.sendMessage(id, 'todo:to', {
+      event: '/todo/init/id',
+      data: {
+        id: id,
+        name: name
+      },
+    });
+    onSuccess(ubWindow);
+  })
 }

@@ -199,7 +199,7 @@ export function onTodoContextMenu(props: ContextMenuForTodoProps) {
     onClick: () => removeById(item.id).then(() => toUpdate && toUpdate(item))
   })
 
-
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,

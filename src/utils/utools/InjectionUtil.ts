@@ -2,11 +2,27 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";
 import {versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {AiService, AiServiceType, InnerAiService} from "@/entity/ai/AiService";
+import axios from 'axios';
+import {
+  CustomerWindow,
+  CustomerWindowForUTools,
+  CustomerWindowForWeb,
+  CustomerWindowProps
+} from "@/utils/utools/WindowUtil";
+import {useSnowflake} from "@/hooks/Snowflake";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {renderAttachmentUrl} from "@/plugin/server";
 
 type InjectionDbDoc<T extends {} = Record<string, any>> = {
   _id: string,
   _rev?: string,
 } & T
+
+interface InjectionDbResult<T> {
+  code: number;
+  msg: string;
+  data: T;
+}
 
 interface InjectionDbReturn {
   id: string,
@@ -112,6 +128,39 @@ interface PaymentOrder {
   paid_at: string;
 }
 
+class WebSubWindow implements SubWindow {
+  private readonly channel: BroadcastChannel;
+
+  constructor(channelName: SubWindowChannel) {
+    this.channel = new BroadcastChannel(channelName);
+  }
+
+  receiveMsg<T = any>(callback: (msg: IpcEvent<T>) => void): void {
+    this.channel.addEventListener('message', (e) => {
+      const {data} = e;
+      callback(data);
+    })
+  }
+
+  sendMsg<T = any>(msg: IpcEvent<T>): void {
+    this.channel.postMessage(msg);
+  }
+}
+
+const http = axios.create({
+  baseURL: '/api',
+  timeout: 10000,
+});
+
+export interface FileUploadResult {
+  // 文件名
+  name: string;
+  // 文件key，在markdown文档中有效
+  key: string;
+  // 真正的url，全路径
+  url: string;
+}
+
 export const InjectionUtil = {
   getPlatform(): 'uTools' | 'web' {
     return !!window['utools'] ? 'uTools' : 'web';
@@ -150,7 +199,7 @@ export const InjectionUtil = {
     if (window['utools']) {
       return utools.shellOpenExternal(url);
     } else {
-      window.open(url);
+      window.open(url, '_blank');
     }
   },
   getCursorScreenPoint(): { x: number, y: number } {
@@ -160,11 +209,11 @@ export const InjectionUtil = {
       return {x: 0, y: 0};
     }
   },
-  createBrowserWindow(url: string, options: BrowserWindow.InitOptions, callback?: () => void): BrowserWindow.WindowInstance {
+  createBrowserWindow(url: string, options: Partial<CustomerWindowProps>): CustomerWindow {
     if (window['utools']) {
-      return utools.createBrowserWindow(url, options, callback);
+      return new CustomerWindowForUTools(url, options);
     } else {
-      throw new Error("环境异常");
+      return new CustomerWindowForWeb(url, options);
     }
   },
   screenCapture(callback: (imgBase64: string) => void): void {
@@ -360,21 +409,53 @@ export const InjectionUtil = {
       if (window['utools']) {
         return utools.db.promises.put(doc);
       } else {
-        return Promise.reject(new Error("系统环境异常"))
+        return http.post<InjectionDbResult<InjectionDbReturn>>('/db/put', {
+          key: doc._id,
+          value: doc
+        }).then(res => {
+          const {data} = res;
+          if (data.code === 200) {
+            return data.data;
+          } else {
+            throw new Error(data.msg);
+          }
+        });
       }
     },
     async get(id: string): Promise<InjectionDbDoc | null> {
       if (window['utools']) {
         return utools.db.promises.get(id);
       } else {
-        return Promise.reject(new Error("系统环境异常"))
+        return http.get<InjectionDbResult<InjectionDbDoc>>('/db/get', {
+          params: {
+            key: id
+          }
+        }).then(res => {
+          const {data} = res;
+          if (data.code === 200) {
+            return data.data;
+          } else {
+            throw new Error(data.msg);
+          }
+        });
       }
     },
     async remove(doc: string | InjectionDbDoc): Promise<InjectionDbReturn> {
       if (window['utools']) {
         return utools.db.promises.remove(doc);
       } else {
-        return Promise.reject(new Error("系统环境异常"))
+        return http.get<InjectionDbResult<InjectionDbReturn>>('/db/delete', {
+          params: {
+            key: typeof doc === 'string' ? doc : doc._id
+          }
+        }).then(res => {
+          const {data} = res;
+          if (data.code === 200) {
+            return data.data;
+          } else {
+            throw new Error(data.msg);
+          }
+        });
       }
     },
     async allDocs(key?: string): Promise<InjectionDbDoc[]> {
@@ -404,6 +485,29 @@ export const InjectionUtil = {
         return utools.db.promises.getAttachmentType(docId);
       } else {
         return Promise.reject(new Error("系统环境异常"))
+      }
+    },
+    async upload(file: Blob, fileName: string, mineType = "application/octet-stream"): Promise<FileUploadResult> {
+      const id = useSnowflake().nextId();
+      const docId = LocalNameEnum.ARTICLE_ATTACHMENT + id;
+      if (window['utools']) {
+        const buffer = await file.arrayBuffer();
+        const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), mineType);
+        if (res.error) {
+          return Promise.reject(res.message);
+        }
+        return {
+          name: fileName,
+          key: docId,
+          url: renderAttachmentUrl(docId)
+        }
+      } else {
+        // 文件上传
+        const formData = new FormData();
+        formData.append('file', file);
+        const rsp = await http.post('/file/upload', formData);
+        const {data} = rsp;
+        return data
       }
     }
   },
@@ -456,7 +560,7 @@ export const InjectionUtil = {
       if (window['utools']) {
         return utools.fetchUserPayments();
       } else {
-        return Promise.reject(new Error('不支持的平台'));
+        return Promise.resolve([]);
       }
     }
   },
@@ -525,4 +629,146 @@ export const InjectionUtil = {
       }
     }
   },
+  native: {
+    encrypt: {
+      encryptPassword: (password: string) => {
+        if (window.preload) {
+          return window.preload.encrypt.encryptPassword(password);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      verifyPassword: (password: string, key: string): EncryptKeyIv | boolean => {
+        if (window.preload) {
+          return window.preload.encrypt.verifyPassword(password, key);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      encryptValue: (keyIv: EncryptKeyIv, data: string): string => {
+        if (window.preload) {
+          return window.preload.encrypt.encryptValue(keyIv, data);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      decryptValue: (keyIv: EncryptKeyIv, data: string): string => {
+        if (window.preload) {
+          return window.preload.encrypt.decryptValue(keyIv, data);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+    },
+    util: {
+      uploadToImagePlus(filePath: string, pluginName: string): Promise<string> {
+        if (window.preload) {
+          return window.preload.util.uploadToImagePlus(filePath, pluginName);
+        } else
+          throw new Error("系统环境异常")
+      },
+      /**
+       * 运行命令
+       * @param command 命令
+       * @param options 参数
+       */
+      runCommand(command: string, options: {
+        onProgress: (e: string) => void,
+        onSuccess: () => void,
+        onError: (e: string) => void
+      }): { abort: () => void } {
+        if (window.preload) {
+          return window.preload.util.runCommand(command, options);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      axios: {},
+    },
+    ipcRenderer: {
+      buildSubWindow(channel: SubWindowChannel): SubWindow {
+        if (window.preload) {
+          return window.preload.ipcRenderer.buildSubWindow(channel);
+        } else {
+          return new WebSubWindow(channel);
+        }
+      },
+      receiveMessage<T = any>(channelName: SubWindowChannel, callback: (msg: IpcEvent<T>) => void): void {
+        if (window.preload)
+          window.preload.ipcRenderer.receiveMessage(channelName, callback);
+        else {
+          const channel = new BroadcastChannel(channelName);
+          channel.addEventListener('message', e => {
+            const {data} = e;
+            if (data) {
+              callback(data);
+            }
+          });
+        }
+      },
+      sendMessage<T = any>(id: number, channelName: SubWindowChannel, message: IpcEvent<T>): void {
+        if (window.preload)
+          window.preload.ipcRenderer.sendMessage(id, channelName, message);
+        else {
+          const channel = new BroadcastChannel(channelName);
+          channel.postMessage(message);
+          channel.close();
+        }
+      },
+    },
+    customer: {
+      writeToFile: (dir: string, name: string, content: Blob, root?: string): Promise<string> => {
+        if (window.preload) {
+          return window.preload.customer.writeToFile(dir, name, content, root);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      writeStrToFile: (dir: string, name: string, content: string, root?: string): Promise<{
+        folder: string,
+        filePath: string
+      }> => {
+        if (window.preload) {
+          return window.preload.customer.writeStrToFile(dir, name, content, root);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      writeBlobToFile: (content: Blob, title: string): Promise<string> => {
+        if (window.preload) {
+          return window.preload.customer.writeBlobToFile(content, title);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      checkFileExist(root: string, dir: string, file: string): boolean {
+        if (window.preload) {
+          return window.preload.customer.checkFileExist(root, dir, file);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      downloadFile(root: string, dir: string, fileName: string, url: string): Promise<void> {
+        if (window.preload) {
+          return window.preload.customer.downloadFile(root, dir, fileName, url);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+      createServer(port: number, success: () => void, error: (error: Error) => void): void {
+        if (window.preload) {
+          window.preload.customer.createServer(port, success, error);
+        } else {
+          success();
+        }
+      },
+      openFile(options: OpenFileOption): Promise<Array<File>> {
+        if (window.preload) {
+          return window.preload.customer.openFile(options);
+        } else {
+          throw new Error("系统环境异常")
+        }
+      },
+    }
+  }
 }

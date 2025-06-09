@@ -3,10 +3,11 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoWidget} from "@/widget/Todo";
 import {checkPower, useTodoWrapStore} from "@/store";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {CustomerWindow} from "@/utils/utools/WindowUtil";
 
 export const useTodoWidgetStore = defineStore('todo-widget', () => {
   // 待办窗口
-  const widgets = ref(new Map<number, BrowserWindow.WindowInstance>());
+  const widgets = ref(new Map<number, CustomerWindow>());
   // 打开的窗口
   const todoIds = computed(() => new Set(widgets.value.keys()));
   // 是否是空地待办窗口
@@ -21,7 +22,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   }
 
   // 初始化后监听事件
-  window.preload.ipcRenderer.receiveMessage('todo:from', (msg) => {
+  InjectionUtil.native.ipcRenderer.receiveMessage('todo:from', (msg) => {
     const {event, data} = msg;
     if (event === '/todo/operator/toggleTop') {
       const {id} = data;
@@ -29,7 +30,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
         const widget = widgets.value.get(id);
         if (widget) {
           widget.setAlwaysOnTop(!widget.isAlwaysOnTop());
-          window.preload.ipcRenderer.sendMessage(widget.webContents.id, 'todo:to', {
+          InjectionUtil.native.ipcRenderer.sendMessage(widget.getId(), 'todo:to', {
             event: '/todo/status/alwaysOnTop',
             data: {
               alwaysOnTop: widget.isAlwaysOnTop()

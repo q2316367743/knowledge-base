@@ -231,37 +231,7 @@ export async function removeOneByAsync(key: string, ignoreError: boolean = false
   }
 }
 
-// --------------------------------------- 批量操作 ---------------------------------------
-
-/**
- * 批量删除指定key开头的文档
- * @param key ID前缀
- * @param ignoreError 是否忽略异常，默认不忽略
- */
-export async function removeMultiByAsync(key: string, ignoreError: boolean = false): Promise<void> {
-  const items = await InjectionUtil.db.allDocs(key);
-  for (let item of items) {
-    await removeOneByAsync(item._id, ignoreError);
-  }
-}
-
 // --------------------------------------- 附件 ---------------------------------------
-
-/**
- * 存储附件到新文档
- * @param docId 文档ID
- * @param attachment 附件 buffer
- * @param mineType 文件类型
- * @return url
- */
-export async function postAttachment(docId: string, attachment: Blob | File, mineType = "application/octet-stream"): Promise<string> {
-  const buffer = await attachment.arrayBuffer();
-  const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), mineType);
-  if (res.error) {
-    return Promise.reject(res.message);
-  }
-  return Promise.resolve("attachment:" + docId);
-}
 
 /**
  * 异步获取附件
@@ -269,7 +239,7 @@ export async function postAttachment(docId: string, attachment: Blob | File, min
  * @return 文件链接
  */
 export async function getAttachmentByAsync(docId: string): Promise<Blob | null> {
-  const data = await InjectionUtil.db.getAttachment(docId);
+  const data = InjectionUtil.db.getAttachment(docId);
   if (!data) {
     return null;
   }

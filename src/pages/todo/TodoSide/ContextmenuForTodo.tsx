@@ -72,7 +72,7 @@ export function onContextmenuForTodo(props: ContextmenuForTodo) {
   //     }
   //   });
   // }
-
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,

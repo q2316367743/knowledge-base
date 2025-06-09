@@ -1,7 +1,6 @@
 import Cherry from "cherry-markdown";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ShallowRef} from "vue";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
@@ -16,11 +15,10 @@ export const useScreenShotMenu = (editor: ShallowRef<Cherry | undefined>) => {
         InjectionUtil.window.hideMainWindow()
         InjectionUtil.screenCapture(base64 => {
           InjectionUtil.window.showMainWindow()
-          useGlobalStore().startLoading("开始文件上传");
-          useAttachmentUpload.upload(base64, true, "image/png")
-            .then(url => editor.value && editor.value.insert('\n![截屏#100%](' + url + ')'))
+          const name = `截屏-${Date.now()}.png`;
+          useAttachmentUpload.upload(base64, name, "image/png")
+            .then(({name, key}) => editor.value && editor.value.insert(`![${name}#100%](` + key + ')'))
             .catch(e => MessageUtil.error("截图失败", e))
-            .finally(() => useGlobalStore().closeLoading())
         })
       }
       return ''

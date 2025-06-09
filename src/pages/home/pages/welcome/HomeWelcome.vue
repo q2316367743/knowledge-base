@@ -97,8 +97,8 @@ const inputEnter = (inputValue: string) => {
 
   .welcome-collapse {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 4px;
+    left: 4px;
   }
 }
 
@@ -192,7 +192,10 @@ const inputEnter = (inputValue: string) => {
 
 .welcome-input {
   margin-top: auto;
+  max-width: 800px;
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 
 }
 </style>

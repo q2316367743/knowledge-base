@@ -58,7 +58,7 @@ import {
   useAiChatListStore,
   useGlobalStore,
 } from "@/store";
-import { activeKey, collapsed } from "@/pages/home/model";
+import {activeKey, autoHideCollapsed} from "@/pages/home/model";
 import ContextMenu, { MenuItem } from "@imengyu/vue3-context-menu";
 import { openAddAiChatGroupDialog } from "@/pages/home/modal/AddAiChatGroup";
 import {
@@ -129,7 +129,7 @@ const onClick = (path: string) => {
   activeKey.value = path;
   if (path !== "/home/welcome" && path !== "/home/temp") {
     // 收起
-    collapsed.value = true;
+    autoHideCollapsed()
   }
 };
 
@@ -151,6 +151,7 @@ const onChatMenuClick = (data: AiChatList, e: MouseEvent) => {
     icon: () => h(PlusIcon),
     onClick: () => openAddAiChatGroupDialog(),
   });
+  e.preventDefault();
   ContextMenu.showContextMenu({
     x: e.x,
     y: e.y,

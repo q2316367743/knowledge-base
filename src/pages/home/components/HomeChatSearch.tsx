@@ -3,7 +3,7 @@ import {ChatDoubleIcon, SearchIcon} from "tdesign-icons-vue-next";
 import {useFuse} from "@vueuse/integrations/useFuse";
 import {AiChatList} from "@/entity/ai/AiChat";
 import {useAiChatListStore} from "@/store";
-import {activeKey, collapsed} from "@/pages/home/model";
+import {activeKey, autoHideCollapsed} from "@/pages/home/model";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import './HomeChatSearch.less';
 
@@ -21,12 +21,12 @@ export function openHomeChatSearch() {
 
   function onChatClick(data: AiChatList) {
     activeKey.value = `/home/chat/0/${data.id}`;
-    collapsed.value = true;
+    autoHideCollapsed();
     dp.destroy();
   }
   function onChatCreate() {
     activeKey.value = `/home/welcome`;
-    collapsed.value = true;
+    autoHideCollapsed();
     dp.destroy();
   }
 
