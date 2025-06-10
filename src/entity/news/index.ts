@@ -1,6 +1,6 @@
 import {useSnowflake} from "@/hooks/Snowflake";
 import {NoteImportRule} from "@/modules/NoteImport/types";
-import {ImportNoteResult} from "@/modules/NoteImport/components/importWithUBrowser";
+import {CrawlerMarkdownResult} from "@/utils/utools/CrawlerUtil";
 
 export interface NewsIndex {
   id: string;
@@ -21,7 +21,6 @@ export interface NewsRule extends NoteImportRule {
 }
 
 export interface NewsInstance {
-
 
   /**
    * 标题
@@ -68,7 +67,7 @@ export interface NewsInstanceCache {
 export interface NewsContent extends NewsIndex, NewsRule {
 }
 
-export interface NewsArticle extends ImportNoteResult{
+export interface NewsArticle extends CrawlerMarkdownResult{
   date: number;
 }
 

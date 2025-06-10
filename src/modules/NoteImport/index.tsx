@@ -1,11 +1,11 @@
 import {DialogPlugin, FormItem, Link, Space, TabPanel, Tabs, Tag, Text, Textarea} from "tdesign-vue-next";
 import {NoteImportGroups} from "@/modules/NoteImport/data";
-import {importWithUBrowser} from "@/modules/NoteImport/components/importWithUBrowser";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {useLoading} from "@/hooks";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {CrawlerUtil} from "@/utils/utools/CrawlerUtil";
 
 export function openArticleImport() {
   if (InjectionUtil.version.isSupportMarkdown()) {
@@ -44,7 +44,7 @@ export function openArticleImportWithUBrowser(pid?: number) {
     onConfirm: () => {
       const target = NoteImportGroups.flatMap(e => e.items).find(e => e.regex.test(url.value));
       const destroy = useLoading("正在解析中");
-      importWithUBrowser(url.value, target)
+      CrawlerUtil.fetchMarkdown(url.value, target)
         .then(res => {
           // 关闭弹窗
           plugin.destroy();

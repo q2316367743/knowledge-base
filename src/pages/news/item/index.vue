@@ -20,8 +20,24 @@
     <div class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
         <div v-if="(cache && cache.data.length > 0) || loading"
-             class="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 m-4px">
-          <news-list-item v-for="item in (cache?.data||[])" :index="idx" :item="item"/>
+             class="grid-container m-4px">
+          <DynamicScroller
+            class="scroller"
+            :items="cache?.data || []"
+            :min-item-size="188"
+            key-field="link"
+          >
+            <template #default="{ item, index, active }">
+              <DynamicScrollerItem
+                :item="item"
+                :active="active"
+                :data-index="index"
+                :size-dependencies="['image', 'description']"
+              >
+                <news-list-item :index="idx" :item="item"/>
+              </DynamicScrollerItem>
+            </template>
+          </DynamicScroller>
         </div>
         <div class="empty" v-else>
           <empty-result  title="暂无内容" tip="请前往设置中选择资讯源"/>
@@ -38,6 +54,7 @@ import {useNewsStore} from "@/store/db/NewsStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import NewsListItem from "@/pages/news/components/NewsListItem.vue";
+import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller';
 
 const route = useRoute();
 
@@ -111,6 +128,11 @@ function refresh() {
     overflow-y: auto;
     overflow-x: hidden;
   }
+
+  .grid-container {
+    height: calc(100% - 16px);
+  }
+
 
   .empty {
     width: 100%;

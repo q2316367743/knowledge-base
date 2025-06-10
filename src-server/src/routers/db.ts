@@ -20,7 +20,7 @@ router.get("/get", (req, res) => {
       res.send(Result.success(doc));
     })
     .catch((err) => {
-      if (err.message) {
+      if (err.name === "not_found") {
         res.send(Result.success(null));
       } else {
         console.log(err);

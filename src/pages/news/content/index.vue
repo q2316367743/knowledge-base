@@ -141,6 +141,44 @@ function openLink() {
       font-size: v-bind(fontSize) !important;
     }
 
+    :deep(img) {
+      max-width: calc(100% - 32px);
+      margin: 32px 16px;
+    }
+
+    :deep(a) {
+      display: inline-flex;
+      cursor: pointer;
+      align-items: center;
+      position: relative;
+      text-decoration: none;
+      outline: none;
+      padding: 0;
+      transition: all .2s linear;
+      font: var(--td-font-link-medium);
+      color: var(--td-text-color-link);
+
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+        bottom: 0;
+        opacity: 1;
+        border-bottom: 1px solid transparent;
+        transition: all .2s linear
+      }
+
+      &:hover {
+        &:after {
+          border-bottom: 1px solid var(--td-text-color-link);
+        }
+
+      }
+
+    }
+
     .page-container-content {
       padding: 8px 16px;
     }

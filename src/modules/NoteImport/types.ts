@@ -11,7 +11,7 @@ export interface NoteImportItem {
 export interface NoteImportRule  {
 
   /**
-   * 标题选择起
+   * 标题选择器
    */
   title?: string;
 

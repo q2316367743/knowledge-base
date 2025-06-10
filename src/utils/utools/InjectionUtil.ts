@@ -2,7 +2,6 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";
 import {versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {AiService, AiServiceType, InnerAiService} from "@/entity/ai/AiService";
-import axios from 'axios';
 import {
   CustomerWindow,
   CustomerWindowForUTools,
@@ -13,17 +12,12 @@ import {useSnowflake} from "@/hooks/Snowflake";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {renderAttachmentUrl} from "@/plugin/server";
 import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
+import {InjectionWebResult, http} from '@/utils/utools/common';
 
 type InjectionDbDoc<T extends {} = Record<string, any>> = {
   _id: string,
   _rev?: string,
 } & T
-
-interface InjectionDbResult<T> {
-  code: number;
-  msg: string;
-  data: T;
-}
 
 interface InjectionDbReturn {
   id: string,
@@ -119,16 +113,6 @@ interface OpenPaymentOptions {
   attach?: string
 }
 
-interface PaymentOrder {
-  order_id: string;
-  total_fee: number;
-  body: string;
-  attach: string;
-  goods_id: string;
-  out_order_id: string;
-  paid_at: string;
-}
-
 class WebSubWindow implements SubWindow {
   private readonly channel: BroadcastChannel;
 
@@ -148,10 +132,6 @@ class WebSubWindow implements SubWindow {
   }
 }
 
-const http = axios.create({
-  baseURL: '/api',
-  timeout: 10000,
-});
 
 export interface FileUploadResult {
   // 文件名
@@ -416,7 +396,7 @@ export const InjectionUtil = {
       if (window['utools']) {
         return utools.db.promises.put(doc);
       } else {
-        return http.post<InjectionDbResult<InjectionDbReturn>>('/db/put', {
+        return http.post<InjectionWebResult<InjectionDbReturn>>('/db/put', {
           key: doc._id,
           value: doc
         }).then(res => {
@@ -433,7 +413,7 @@ export const InjectionUtil = {
       if (window['utools']) {
         return utools.db.promises.get(id);
       } else {
-        return http.get<InjectionDbResult<InjectionDbDoc>>('/db/get', {
+        return http.get<InjectionWebResult<InjectionDbDoc>>('/db/get', {
           params: {
             key: id
           }
@@ -451,7 +431,7 @@ export const InjectionUtil = {
       if (window['utools']) {
         return utools.db.promises.remove(doc);
       } else {
-        return http.get<InjectionDbResult<InjectionDbReturn>>('/db/delete', {
+        return http.get<InjectionWebResult<InjectionDbReturn>>('/db/delete', {
           params: {
             key: typeof doc === 'string' ? doc : doc._id
           }
@@ -530,7 +510,7 @@ export const InjectionUtil = {
       if (window['utools']) {
         return versionGreaterEqual(utools.getAppVersion(), 7)
       } else {
-        return false
+        return true
       }
     }
   },
@@ -577,7 +557,7 @@ export const InjectionUtil = {
       if (window['utools']) {
         return utools.fetchUserPayments().then(res => res.map(e => e.goods_id));
       } else {
-        const rsp = await http.get<InjectionDbResult<Array<string>>>('/payment/list');
+        const rsp = await http.get<InjectionWebResult<Array<string>>>('/payment/list');
         return rsp.data.data;
       }
     }
@@ -788,5 +768,5 @@ export const InjectionUtil = {
         }
       },
     }
-  }
+  },
 }

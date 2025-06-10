@@ -2,6 +2,7 @@ import express from "express";
 import db from "@/routers/db";
 import file from "@/routers/file";
 import payment from "@/routers/payment";
+import crawler from "@/routers/crawler";
 
 const app = express();
 app.use(express.json());
@@ -12,6 +13,7 @@ app.use(express.static("/app/knowledge-base/public")); // 静态文件服务
 app.use("/api/db", db);
 app.use("/api/file", file);
 app.use("/api/payment", payment);
+app.use("/api/crawler", crawler);
 
 app.listen(3000);
 console.log("serve start at http://localhost:3000");
