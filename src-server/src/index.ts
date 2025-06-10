@@ -6,7 +6,7 @@ import payment from "@/routers/payment";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public")); // 静态文件服务
+app.use(express.static("/app/knowledge-base/public")); // 静态文件服务
 
 // 路由服务
 app.use("/api/db", db);

@@ -4,8 +4,9 @@
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "build": "bun build src/index.ts --target bun --outdir dist --minify"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "bun run src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
