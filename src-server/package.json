@@ -4,8 +4,7 @@
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "build": "bun build src/index.ts --outdir dist --target bun"
+    "start": "bun run src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

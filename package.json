@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:web": "vite build --outDir src-server/public",
     "check": "vue-tsc --noEmit",
     "preview": "vite preview"
   },

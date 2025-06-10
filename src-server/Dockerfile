@@ -4,8 +4,14 @@ FROM oven/bun:1.2.8 AS base
 # 工作目录
 WORKDIR /app/knowledge-base
 
-COPY dist/index.js index.js
-COPY package.json package.json
+COPY package.json runtime/
+COPY bun.lock runtime/
+COPY tsconfig.json runtime/
+COPY src runtime/
+COPY public runtime/
+
+# 安装依赖
+RUN bun install
 
 # 挂载目录
 ## 数据库
