@@ -108,7 +108,7 @@
               <li>闪卡：快速记住知识点，你的学习好帮手</li>
             </ul>
           </t-collapse-panel>
-          <t-collapse-panel header="🚀 待办会员" v-if="isUtools">
+          <t-collapse-panel header="🚀 待办会员" v-if="!isWeb">
             <ul class="pl-24px m-0">
               <li>待办小部件：随时查看待办任务</li>
             </ul>
@@ -153,9 +153,8 @@ const visible = defineModel({
   type: Boolean,
   default: false
 });
-const isUtools = InjectionUtil.getPlatform() === 'uTools';
+const isWeb = InjectionUtil.env.isWeb();
 
-// TODO: 不是uTools的会员功能
 const user = computed(() => useUserStore().profile);
 const noteNoVip = computed(() => useVipStore().noteNoVip);
 const todoNoVip = computed(() => useVipStore().todoNoVip);

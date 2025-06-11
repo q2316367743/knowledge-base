@@ -1,5 +1,6 @@
 // 窗口相关工具
 import {useErrorStore} from "@/store/components/ErrorStore";
+import {getPlatform} from "@/utils/utools/common";
 
 export interface CustomerWindowProps extends BrowserWindow.InitOptions {
   useContentSize: boolean;
@@ -46,9 +47,11 @@ export interface CustomerWindow {
   getId(): number;
   minimize(): void;
 
+
+
 }
 
-export class CustomerWindowForUTools implements CustomerWindow {
+class CustomerWindowForUTools implements CustomerWindow {
   private readonly url: string;
   private readonly props: Partial<CustomerWindowProps>;
   private win: BrowserWindow.WindowInstance | null;
@@ -137,7 +140,7 @@ export class CustomerWindowForUTools implements CustomerWindow {
   }
 }
 
-export class CustomerWindowForWeb implements CustomerWindow {
+class CustomerWindowForWeb implements CustomerWindow {
   private readonly url: string;
   private readonly props: Partial<CustomerWindowProps>;
   private opener: Window | null;
@@ -197,3 +200,101 @@ export class CustomerWindowForWeb implements CustomerWindow {
 
 }
 
+class CustomerWindowForTauri implements CustomerWindow {
+  private readonly url: string;
+  private readonly props: Partial<CustomerWindowProps>;
+  private readonly id: number = Date.now();
+
+  constructor(url: string, props: Partial<CustomerWindowProps>) {
+    this.url = url;
+    this.props = props;
+  }
+
+  close(): void {
+  }
+
+  getId(): number {
+    return 0;
+  }
+
+  hide(): void {
+  }
+
+  isAlwaysOnTop(): boolean {
+    return false;
+  }
+
+  isDestroyed(): boolean {
+    return false;
+  }
+
+  minimize(): void {
+  }
+
+  open(callback: (windowId: number) => void): void {
+  }
+
+  sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): void {
+  }
+
+  setAlwaysOnTop(alwaysOnTop: boolean): void {
+  }
+
+  show(): void {
+  }
+}
+
+
+class WebSubWindow implements SubWindow {
+  private readonly channel: BroadcastChannel;
+
+  constructor(channelName: SubWindowChannel) {
+    this.channel = new BroadcastChannel(channelName);
+  }
+
+  receiveMsg<T = any>(callback: (msg: IpcEvent<T>) => void): void {
+    this.channel.addEventListener('message', (e) => {
+      const {data} = e;
+      callback(data);
+    })
+  }
+
+  sendMsg<T = any>(msg: IpcEvent<T>): void {
+    this.channel.postMessage(msg);
+  }
+}
+
+export const WindowUtil = {
+  createBrowserWindow(url: string, options: Partial<CustomerWindowProps>): CustomerWindow {
+    switch (getPlatform()) {
+      case 'uTools':
+        return new CustomerWindowForUTools(url, options);
+      case 'web':
+        return new CustomerWindowForWeb(url, options);
+      case 'tauri':
+        return new CustomerWindowForTauri(url, options);
+      default:
+        throw new Error('Unknown platform');
+    }
+  },
+  buildSubWindow(channel: SubWindowChannel): SubWindow {
+    if (window.preload) {
+      return window.preload.ipcRenderer.buildSubWindow(channel);
+    } else {
+      return new WebSubWindow(channel);
+    }
+  },
+  receiveMessage<T = any>(channelName: SubWindowChannel, callback: (msg: IpcEvent<T>) => void): void {
+    if (window.preload)
+      window.preload.ipcRenderer.receiveMessage(channelName, callback);
+    else {
+      const channel = new BroadcastChannel(channelName);
+      channel.addEventListener('message', e => {
+        const {data} = e;
+        if (data) {
+          callback(data);
+        }
+      });
+    }
+  },
+}

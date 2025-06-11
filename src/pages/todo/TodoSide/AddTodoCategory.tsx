@@ -18,7 +18,7 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
   const {todoNoVip} = useVipStore();
-  const isUtools = InjectionUtil.getPlatform() === 'uTools';
+  const isWeb = InjectionUtil.env.isWeb();
   return () => <Form data={record.value}>
     <FormItem label="名称" labelAlign={'top'}>
       <Input v-model={record.value.name} clearable={true} autofocus/>
@@ -39,7 +39,7 @@ function renderContent(record: Ref<TodoCategoryRecord>, allowType: boolean) {
           <Radio value={TodoListLayoutEnum.FOUR_QUADRANTS}>四象限</Radio>
         </RadioGroup>
       </FormItem>
-      {isUtools && <FormItem label="默认打开方式" labelAlign={'top'}>
+      {!isWeb && <FormItem label="默认打开方式" labelAlign={'top'}>
         <RadioGroup v-model={record.value.openType} defaultValue={TodoCategoryOpenTypeEnum.PLUGIN}>
           <Radio value={TodoCategoryOpenTypeEnum.PLUGIN}>插件内</Radio>
           <Radio value={TodoCategoryOpenTypeEnum.WIDGET}>

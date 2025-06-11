@@ -71,7 +71,7 @@ export const useNewsStore = defineStore('news', () => {
     return target;
   }
 
-  function getNewsIndex(id: string) {
+  function getNewsIndex(id: string): NewsIndex | undefined {
     return news.value.find(e => e.id === id);
   }
 
@@ -153,7 +153,7 @@ export const useNewsStore = defineStore('news', () => {
         })
       }
     }
-    const text =  JSON.stringify(rules);
+    const text = JSON.stringify(rules);
     download(text, '资讯列表导出.json', 'text/plain');
   }
 

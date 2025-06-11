@@ -8,9 +8,10 @@
 <script lang="ts" setup>
 import {useArticleStore, useGlobalStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {WindowUtil} from "@/utils/utools/WindowUtil";
 import {ArticleIndex} from "@/entity/article";
 import EditorContentEditor from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+
 
 useGlobalStore().initDarkColors();
 
@@ -57,7 +58,7 @@ function onInit(id: number) {
 }
 
 // 子窗口
-const subWindow = InjectionUtil.native.ipcRenderer.buildSubWindow('preview');
+const subWindow = WindowUtil.buildSubWindow('preview');
 subWindow.receiveMsg(msg => {
   const {event, data} = msg;
   if (event === 'config') {

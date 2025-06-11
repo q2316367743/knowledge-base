@@ -8,7 +8,7 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {CrawlerUtil} from "@/utils/utools/CrawlerUtil";
 
 export function openArticleImport() {
-  if (InjectionUtil.version.isSupportMarkdown()) {
+  if (InjectionUtil.env.isSupportMarkdown()) {
     openArticleImportWithUBrowser();
   } else {
     openArticleImportWithPlugin();

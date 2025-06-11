@@ -172,8 +172,8 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const route = useRoute();
 const router = useRouter();
-const disabledForModule = !InjectionUtil.version.isSupportMarkdown();
-const isUtools = InjectionUtil.getPlatform() === 'uTools';
+const disabledForModule = !InjectionUtil.env.isSupportMarkdown();
+const isUtools = InjectionUtil.env.isUtools();
 
 const selectedKey = ref('/note');
 

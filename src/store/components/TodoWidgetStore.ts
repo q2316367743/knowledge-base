@@ -1,9 +1,9 @@
 import {defineStore} from "pinia";
-import MessageUtil from "@/utils/modal/MessageUtil";
 import {openTodoWidget} from "@/widget/Todo";
 import {checkPower, useTodoWrapStore} from "@/store";
+import MessageUtil from "@/utils/modal/MessageUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
-import {CustomerWindow} from "@/utils/utools/WindowUtil";
+import {CustomerWindow, WindowUtil} from "@/utils/utools/WindowUtil";
 
 export const useTodoWidgetStore = defineStore('todo-widget', () => {
   // 待办窗口
@@ -22,7 +22,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   }
 
   // 初始化后监听事件
-  InjectionUtil.native.ipcRenderer.receiveMessage('todo:from', (msg) => {
+  WindowUtil.receiveMessage('todo:from', (msg) => {
     const {event, data} = msg;
     if (event === '/todo/operator/toggleTop') {
       const {id} = data;
@@ -30,7 +30,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
         const widget = widgets.value.get(id);
         if (widget) {
           widget.setAlwaysOnTop(!widget.isAlwaysOnTop());
-          InjectionUtil.native.ipcRenderer.sendMessage(widget.getId(), 'todo:to', {
+          widget.sendMessage('todo:to', {
             event: '/todo/status/alwaysOnTop',
             data: {
               alwaysOnTop: widget.isAlwaysOnTop()

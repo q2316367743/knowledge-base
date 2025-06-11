@@ -14,7 +14,7 @@
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
-const disabledForModule = !InjectionUtil.version.isSupportMarkdown();
+const disabledForModule = !InjectionUtil.env.isSupportMarkdown();
 </script>
 <style scoped lang="less">
 

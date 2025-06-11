@@ -26,11 +26,10 @@ export const useAttachmentUpload = {
   },
   render: (url: string) => {
     if (/^attachment:/.test(url)) {
-      return renderAttachmentUrl(url.replace(/^attachment:/, ""))
-    }
-    if (InjectionUtil.getPlatform() === 'web') {
-      if (!/http?s:\/\//.test(url)) {
-        return './api/file/static/' + url;
+      if (InjectionUtil.env.isWeb()) {
+        return './api/file/static/' + url.replace(/^attachment:/, "");
+      } else {
+        return renderAttachmentUrl(url.replace(/^attachment:/, ""))
       }
     }
     return url;

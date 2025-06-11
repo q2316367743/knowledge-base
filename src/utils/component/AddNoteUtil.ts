@@ -9,7 +9,7 @@ import {
   useFolderStore,
   useHomeEditorStore
 } from "@/store";
-import {ArticleIndex, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
+import {ArticleBase, ArticleIndex, getDefaultArticleBase, getDefaultArticleIndex} from "@/entity/article";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {isNotEmptyString} from "@/utils/lang/FieldUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -20,6 +20,7 @@ interface AddArticleProps {
   name?: string;
   content?: EditorData;
   extra?: Partial<ArticleIndex>;
+  base?: Partial<ArticleBase>;
 }
 
 async function buildName(type: ArticleTypeEnum, pid: number, res?: string): Promise<string> {
@@ -42,7 +43,7 @@ function buildContent(type: ArticleTypeEnum, name: string, content?: any): Promi
 }
 
 export async function addNote(props: AddArticleProps) {
-  const {pid, type, name, content} = props;
+  const {pid, type, name, content, base, extra = {}} = props;
   const at = articleTypeMap.get(type);
   if (!at) return Promise.reject(new Error("文章类型未知"));
   if (at.vip) {
@@ -54,12 +55,12 @@ export async function addNote(props: AddArticleProps) {
   // 获取文件夹规则
   const folder = useFolderStore().folderMap.get(pid);
   return useArticleStore().add(getDefaultArticleIndex({
-    ...(props.extra || {}),
+    ...extra,
     name: newName,
     folder: pid,
     type,
     fontColor: folder?.diffusion ? folder?.fontColor : ''
-  }), getDefaultArticleBase(), newContent);
+  }), getDefaultArticleBase(base), newContent);
 }
 
 export function addNoteFunc(props: AddArticleProps) {

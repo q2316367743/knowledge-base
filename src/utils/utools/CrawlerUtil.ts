@@ -121,9 +121,9 @@ export const CrawlerUtil = {
     }
   },
   rss: async (url: string): Promise<Array<NewsInstance>> => {
-    if (InjectionUtil.getPlatform()==='uTools') {
+    if (InjectionUtil.env.isUtools()) {
       const rss = await parse(url);
-      return  rss.items.map(item => {
+      return rss.items.map(item => {
         return {
           title: item.title,
           description: item.description,
@@ -135,7 +135,7 @@ export const CrawlerUtil = {
           category: item.category || []
         }
       })
-    }else {
+    } else {
       const rsp = await http.get<InjectionWebResult<Array<NewsInstance>>>('/crawler/rss', {
         params: {url}
       });

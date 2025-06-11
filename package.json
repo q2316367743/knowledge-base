@@ -5,11 +5,16 @@
   "type": "module",
   "description": "知识库",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:web": "vite build --outDir src-server/public",
+    "dev": "vite --mode=utools",
+    "dev:web": "vite --mode=web",
+    "dev:tauri": "vite --mode=tauri",
+    "build": "vite build --mode=utools",
+    "build:web": "vite build --outDir=src-server/public --mode=web",
+    "build:tauri": "vite build --outDir=dist --mode=tauri",
     "check": "vue-tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "dependencies": {
     "@codexteam/icons": "^0.3.3",

@@ -2,17 +2,11 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import Constant from "@/global/Constant";
 import {versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {AiService, AiServiceType, InnerAiService} from "@/entity/ai/AiService";
-import {
-  CustomerWindow,
-  CustomerWindowForUTools,
-  CustomerWindowForWeb,
-  CustomerWindowProps
-} from "@/utils/utools/WindowUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {renderAttachmentUrl} from "@/plugin/server";
 import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
-import {InjectionWebResult, http} from '@/utils/utools/common';
+import {InjectionWebResult, http, getPlatform} from '@/utils/utools/common';
 
 type InjectionDbDoc<T extends {} = Record<string, any>> = {
   _id: string,
@@ -113,26 +107,6 @@ interface OpenPaymentOptions {
   attach?: string
 }
 
-class WebSubWindow implements SubWindow {
-  private readonly channel: BroadcastChannel;
-
-  constructor(channelName: SubWindowChannel) {
-    this.channel = new BroadcastChannel(channelName);
-  }
-
-  receiveMsg<T = any>(callback: (msg: IpcEvent<T>) => void): void {
-    this.channel.addEventListener('message', (e) => {
-      const {data} = e;
-      callback(data);
-    })
-  }
-
-  sendMsg<T = any>(msg: IpcEvent<T>): void {
-    this.channel.postMessage(msg);
-  }
-}
-
-
 export interface FileUploadResult {
   // 文件名
   name: string;
@@ -143,21 +117,25 @@ export interface FileUploadResult {
 }
 
 export interface UserProfile {
+  id: string;
   avatar: string;
   nickname: string;
   type: 'member' | 'user';
 }
 
 export const InjectionUtil = {
-  getPlatform(): 'uTools' | 'web' {
-    return !!window['utools'] ? 'uTools' : 'web';
-  },
+  getPlatform: getPlatform,
   getUser(): UserProfile | null {
     if (window['utools']) {
-      return utools.getUser() as UserProfile;
-    } else {
-      return null;
+      const u = utools.getUser();
+      if (u) {
+        return {
+          ...u,
+          id: u.nickname
+        } as UserProfile
+      }
     }
+    return null;
   },
   isDev() {
     if (window['utools']) {
@@ -194,13 +172,6 @@ export const InjectionUtil = {
       return utools.getCursorScreenPoint();
     } else {
       return {x: 0, y: 0};
-    }
-  },
-  createBrowserWindow(url: string, options: Partial<CustomerWindowProps>): CustomerWindow {
-    if (window['utools']) {
-      return new CustomerWindowForUTools(url, options);
-    } else {
-      return new CustomerWindowForWeb(url, options);
     }
   },
   screenCapture(callback: (imgBase64: string) => void): void {
@@ -275,10 +246,6 @@ export const InjectionUtil = {
     },
     getWindowType(): 'main' | 'detach' | 'browser' {
       return window['utools'] ? utools.getWindowType() : 'detach';
-    },
-    isWindows(): boolean {
-      // 判断当前操作系统是不是Windows
-      return window['utools'] ? utools.isWindows() : (navigator.userAgent.indexOf('Windows') !== -1);
     },
     outPlugin(isKill?: boolean): boolean {
       if (window['utools']) {
@@ -498,7 +465,7 @@ export const InjectionUtil = {
       }
     }
   },
-  version: {
+  env: {
     isSupportAi(): boolean {
       if (window['utools']) {
         return versionGreaterEqual(utools.getAppVersion(), 7)
@@ -512,7 +479,10 @@ export const InjectionUtil = {
       } else {
         return true
       }
-    }
+    },
+    isUtools: () => getPlatform() === 'uTools',
+    isWeb: () => getPlatform() === 'web',
+    isTauri: () => getPlatform() === 'tauri',
   },
   ai: {
     async service(): Promise<InnerAiService | null> {
@@ -682,37 +652,6 @@ export const InjectionUtil = {
         }
       },
       axios: {},
-    },
-    ipcRenderer: {
-      buildSubWindow(channel: SubWindowChannel): SubWindow {
-        if (window.preload) {
-          return window.preload.ipcRenderer.buildSubWindow(channel);
-        } else {
-          return new WebSubWindow(channel);
-        }
-      },
-      receiveMessage<T = any>(channelName: SubWindowChannel, callback: (msg: IpcEvent<T>) => void): void {
-        if (window.preload)
-          window.preload.ipcRenderer.receiveMessage(channelName, callback);
-        else {
-          const channel = new BroadcastChannel(channelName);
-          channel.addEventListener('message', e => {
-            const {data} = e;
-            if (data) {
-              callback(data);
-            }
-          });
-        }
-      },
-      sendMessage<T = any>(id: number, channelName: SubWindowChannel, message: IpcEvent<T>): void {
-        if (window.preload)
-          window.preload.ipcRenderer.sendMessage(id, channelName, message);
-        else {
-          const channel = new BroadcastChannel(channelName);
-          channel.postMessage(message);
-          channel.close();
-        }
-      },
     },
     customer: {
       writeToFile: (dir: string, name: string, content: Blob, root?: string): Promise<string> => {

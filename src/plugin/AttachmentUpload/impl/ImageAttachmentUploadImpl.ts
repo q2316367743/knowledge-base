@@ -4,9 +4,6 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 export async function useAttachmentUploadByImage(data: Blob | File | string): Promise<FileUploadResult> {
-  if (InjectionUtil.getPlatform() === 'web') {
-    return Promise.reject("web版不支持调用图床");
-  }
   NotificationUtil.warningClose(
     "建议使用xiaou同学的新作：「图床 Plus」，更加强大好用", "附件上传",
     LocalNameEnum.TIP_IMAGE_TO_IMAGE_PLUGIN)

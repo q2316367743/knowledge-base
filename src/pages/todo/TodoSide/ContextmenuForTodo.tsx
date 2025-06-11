@@ -37,7 +37,7 @@ export function onContextmenuForTodo(props: ContextmenuForTodo) {
       icon: () => <RoundIcon/>,
       onClick: onOpen
     })
-    if (InjectionUtil.getPlatform() === 'uTools') {
+    if (!InjectionUtil.env.isWeb()) {
       items.push({
         label: () => <div class={'flex items-center'}>
           <div>打开小部件</div>

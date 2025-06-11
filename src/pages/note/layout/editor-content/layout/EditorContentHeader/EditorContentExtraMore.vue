@@ -6,7 +6,7 @@
       </template>
     </t-button>
     <t-dropdown-menu>
-      <t-dropdown-item @click="openHeExtra(homeEditorId)" :disabled="preview">
+      <t-dropdown-item @click="openHeExtra(homeEditorId, preview)">
         <template #prefix-icon>
           <setting-icon/>
         </template>

@@ -1,13 +1,14 @@
 import {homeEditorId} from "@/store/components/HomeEditorStore";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useArticleStore} from "@/store/db/ArticleStore";
+import {WindowUtil} from "@/utils/utools/WindowUtil";
 
 /**
  * 打开AI聊天小部件
  */
 export function openAiChatWidget() {
   const {x, y} = InjectionUtil.getCursorScreenPoint();
-  const ubWindow = InjectionUtil.createBrowserWindow(
+  const ubWindow = WindowUtil.createBrowserWindow(
     'chat.html', {
       useContentSize: true,
       width: 400,
@@ -19,8 +20,8 @@ export function openAiChatWidget() {
       x: x + 64,
       y: y - 72
     });
-  ubWindow.open((id) => {
-    InjectionUtil.native.ipcRenderer.sendMessage(id, 'chat', {
+  ubWindow.open(() => {
+    ubWindow.sendMessage('chat', {
       event: 'config',
       data: {
         id: homeEditorId.value,

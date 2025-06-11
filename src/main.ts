@@ -102,7 +102,7 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
 });
 
 window.addEventListener('click', e => {
-  if (InjectionUtil.getPlatform() === 'web') {
+  if (InjectionUtil.env.isWeb()) {
     // web不需要监听
     return;
   }

@@ -55,7 +55,7 @@ export default {
             resolve();
             flag = false;
             notificationReturn.close();
-          }}></Button>
+          }}>{config.confirmButtonText}</Button>
         </div>,
         onCloseBtnClick() {
           if (flag) {

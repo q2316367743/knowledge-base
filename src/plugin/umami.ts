@@ -21,14 +21,15 @@ interface UmamiPayload extends UmamiPayloadBase {
 }
 
 function buildBasePayload(): UmamiPayloadBase {
-  const hostname = `${InjectionUtil.getPlatform()}.esion.xyz`
+  const hostname = `${InjectionUtil.getPlatform()}.esion.xyz`;
+  const isWeb = InjectionUtil.env.isWeb();
   return {
     hostname,
     language: navigator.language,
-    referrer: `https://${hostname}`,
+    referrer: isWeb ? document.referrer : `https://${hostname}`,
     screen: `${window.screen.width}x${window.screen.height}`,
     website: Constants.umami.id,
-    id: InjectionUtil.getUser()?.nickname,
+    id: InjectionUtil.getUser()?.id,
   }
 }
 

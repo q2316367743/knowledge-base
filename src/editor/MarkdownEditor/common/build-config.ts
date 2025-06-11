@@ -171,7 +171,7 @@ export async function buildConfig(
         useAttachmentUpload.upload(file, file.name, file.type)
           .then(({name, key}) => {
             if (instance.value) {
-              instance.value.insertValue(`![${name}#100%](${key})`);
+              instance.value.insertValue(`![${name}#100%](attachment:${key})`);
             } else {
               callback(key, {name})
             }

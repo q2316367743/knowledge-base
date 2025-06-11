@@ -14,7 +14,7 @@ export const autoHideCollapsed = () => {
 }
 
 export const model = useUtoolsKvStorage<string>(LocalNameEnum.KEY_HOME_MODEL, () => {
-  if (InjectionUtil.version.isSupportAi()) {
+  if (InjectionUtil.env.isSupportAi()) {
     return "1/doubao-1.5-pro-32k";
   }
   return "";

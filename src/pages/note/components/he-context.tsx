@@ -35,6 +35,7 @@ import {
 } from "tdesign-icons-vue-next";
 import {EditorData} from "@/editor/types/EditorData";
 import {useVipStore} from "@/store";
+import {ArticleBase, ArticleIndex} from "@/entity/article";
 
 // ------------------------------------------------------------------------------------------------------
 // ----------------------------------------------- 全局配置 ----------------------------------------------
@@ -148,14 +149,26 @@ export function renderArticleType(type: ArticleTypeEnum): string {
 interface ArticleModalProps {
   sourceName?: string;
   content?: EditorData;
+  // 自动打开，默认打开
+  autoOpen?: boolean;
   showTypeRadio?: boolean;
   defaultType?: ArticleTypeEnum;
-  onSuccess?: () => void;
+  extra?: Partial<ArticleIndex>;
+  base?: Partial<ArticleBase>;
+  onSuccess?: (article: ArticleIndex) => void;
 }
 
 export function addArticleModal(props?: ArticleModalProps) {
   const {newArticleAutoName, newArticleTemplateByName, codeExtraName} = useBaseSettingStore();
-  const {sourceName, content, showTypeRadio = true, defaultType, onSuccess} = props || {};
+  const {
+    sourceName,
+    content,
+    showTypeRadio = true,
+    autoOpen = true,
+    defaultType,
+    onSuccess,
+    extra, base
+  } = props || {};
   const type = ref(defaultType || ArticleTypeEnum.MARKDOWN);
   const folder = ref(0);
   const name = ref(sourceName || '');
@@ -206,11 +219,15 @@ export function addArticleModal(props?: ArticleModalProps) {
         pid: folder.value,
         type: type.value,
         name: name.value,
-        content
+        content,
+        extra,
+        base
       })
-      useHomeEditorStore().openArticle(article);
+      if (autoOpen) {
+        useHomeEditorStore().openArticle(article);
+      }
       plugin.destroy();
-      onSuccess?.();
+      onSuccess?.(article);
     }
   })
 }

@@ -115,3 +115,7 @@ declare interface Window {
     },
   }
 }
+
+interface ImportMetaEnv {
+  VITE_PLATFORM: 'uTools' | 'web' | 'tauri';
+}

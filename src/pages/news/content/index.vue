@@ -22,10 +22,17 @@
             <template #suffix>%</template>
           </t-input-number>
           <t-tag v-if="article" theme="primary" size="small">{{ updateTime }}</t-tag>
-          <t-tooltip content="强制刷新" placement="bottom-right">
+          <t-tooltip content="强制刷新" placement="bottom">
             <t-button theme="primary" variant="text" shape="square" @click="init">
               <template #icon>
                 <refresh-icon/>
+              </template>
+            </t-button>
+          </t-tooltip>
+          <t-tooltip content="保存笔记" placement="bottom-right">
+            <t-button theme="primary" variant="text" shape="square" @click="handleSave">
+              <template #icon>
+                <save-icon/>
               </template>
             </t-button>
           </t-tooltip>
@@ -43,8 +50,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ArrowLeftIcon, LinkIcon, RefreshIcon} from "tdesign-icons-vue-next";
-import {NewsArticle} from "@/entity/news";
+import {ArrowLeftIcon, LinkIcon, RefreshIcon, SaveIcon} from "tdesign-icons-vue-next";
+import {NewsArticle, NewsIndex} from "@/entity/news";
 import {useNewsStore} from "@/store/db/NewsStore";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -53,6 +60,10 @@ import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useIntervalComputer} from "@/hooks/IntervalComputer";
 import {getNewsArticle} from "@/modules/NoteNews";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {addArticleModal} from "@/pages/note/components/he-context";
+import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
+import {useHomeEditorStore} from "@/store";
 
 const route = useRoute();
 const router = useRouter();
@@ -62,6 +73,7 @@ const title = ref(route.query.title as string);
 
 const article = ref<NewsArticle>();
 const loading = ref(true);
+const newsIndex = shallowRef<NewsIndex>()
 const scale = useUtoolsDbStorage<number>(`${LocalNameEnum.KEY_NEWS_CONTENT_SCALE}/${id}`, 100);
 
 const updateTime = useIntervalComputer(() => article.value ? prettyDate(article.value.date) : '', 1000);
@@ -71,7 +83,8 @@ const fontSize = computed(() => `${scale.value}%`);
 const init = async () => {
   try {
     loading.value = true;
-    const {getNewsRule} = useNewsStore();
+    const {getNewsRule, getNewsIndex} = useNewsStore();
+    newsIndex.value = getNewsIndex(id);
     const rule = await getNewsRule(id);
     if (!rule) {
       return Promise.reject(new Error("资讯规则不存在"));
@@ -96,6 +109,33 @@ function handlerClick() {
 
 function openLink() {
   InjectionUtil.shellOpenExternal(route.query.link as string);
+}
+
+function handleSave() {
+  if (!article.value) return MessageUtil.warning("文章内容为空")
+  addArticleModal({
+    sourceName: article.value.title ?? "",
+    content: article.value.markdown ?? "",
+    showTypeRadio: false,
+    defaultType: ArticleTypeEnum.MARKDOWN,
+    autoOpen: false,
+    extra: {
+      preview: true,
+    },
+    base: {
+      source: newsIndex.value?.name,
+      sourceUrl: route.query.link as string,
+    },
+    onSuccess: (article) => {
+      NotificationUtil.confirm("保存成功", "保存文章", {
+        confirmButtonText: "立即打开",
+        cancelButtonText: "稍后打开",
+      }).then(() => {
+        useHomeEditorStore().openArticle(article);
+        router.push('/note')
+      })
+    }
+  })
 }
 
 </script>
