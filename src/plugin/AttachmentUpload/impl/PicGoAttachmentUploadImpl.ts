@@ -2,6 +2,7 @@ import Constant, {BASE64_PREFIX} from "@/global/Constant";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {base64toBlob} from "@/utils/BrowserUtil";
 import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 // PicGo: https://picgo.github.io/PicGo-Doc/zh/guide/advance.html
 export async function useAttachmentUploadByPicGo(data: Blob | File | string, name: string, port: number): Promise<FileUploadResult> {
@@ -9,7 +10,7 @@ export async function useAttachmentUploadByPicGo(data: Blob | File | string, nam
     data = base64toBlob(data.replace(BASE64_PREFIX, ""));
   }
   // 先保存到临时目录
-  const path = await window.preload.customer.writeToFile(
+  const path = await NativeUtil.customer.writeToFile(
     Constant.id,
     useSnowflake().nextId() + '.png',
     data,

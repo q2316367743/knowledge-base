@@ -1,5 +1,5 @@
 import {isEmptyString} from "@/utils/lang/FieldUtil";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 /**
  * 判断密码是否正确
@@ -7,7 +7,7 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
  * @param password 密钥
  */
 export function passwordEqual(text: string, password: string) {
-  return InjectionUtil.native.encrypt.verifyPassword(text, password);
+  return NativeUtil.encrypt.verifyPassword(text, password);
 }
 
 /**
@@ -16,7 +16,7 @@ export function passwordEqual(text: string, password: string) {
  * @return 密钥
  */
 export function buildPassword(password: string) {
-  return InjectionUtil.native.encrypt.encryptPassword(password);
+  return NativeUtil.encrypt.encryptPassword(password);
 }
 
 /**
@@ -25,7 +25,7 @@ export function buildPassword(password: string) {
  * @param keyIv 密码
  */
 export function encryptText(text: string, keyIv: EncryptKeyIv) {
-  return InjectionUtil.native.encrypt.encryptValue(keyIv, text);
+  return NativeUtil.encrypt.encryptValue(keyIv, text);
 }
 
 /**
@@ -37,5 +37,5 @@ export function decryptText(text: string, keyIv: EncryptKeyIv) {
   if (isEmptyString(keyIv.key) && isEmptyString(keyIv.iv)) {
     return text;
   }
-  return InjectionUtil.native.encrypt.decryptValue(keyIv, text);
+  return NativeUtil.encrypt.decryptValue(keyIv, text);
 }

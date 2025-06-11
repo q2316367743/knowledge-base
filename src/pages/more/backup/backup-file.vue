@@ -18,6 +18,7 @@ import Constant from "@/global/Constant";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 
 const FOLDER = Constant.id;
@@ -71,7 +72,7 @@ function restoreByFile() {
 }
 
 async function _restoreByFile() {
-  window.preload.customer.openFile({
+  NativeUtil.customer.openFile({
     title: "选择备份文件",
     filters: [{name: "zip", extensions: ["zip"]}],
     properties: ["openFile"],

@@ -22,8 +22,8 @@ export function openTodoWidget(id: number, name: string, onSuccess: (instance: C
         'todo-name': name
       }
     });
-  ubWindow.open(id => {
-    window.preload.ipcRenderer.sendMessage(id, 'todo:to', {
+  ubWindow.open(() => {
+    ubWindow.sendMessage('todo:to', {
       event: '/todo/init/id',
       data: {
         id: id,

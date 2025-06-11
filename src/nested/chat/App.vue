@@ -53,6 +53,7 @@ import {askToAi, AskToOpenAiAbort} from "@/utils/component/ChatUtil";
 import {buildMessages, getCurrentTime} from "@/nested/chat/util";
 import ChatAssistantSelect from "@/nested/chat/components/ChatAssistantSelect.vue";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {WindowUtil} from "@/utils/utools/WindowUtil";
 
 useGlobalStore().initDarkColors();
 useAiServiceStore().init();
@@ -78,7 +79,7 @@ const assistantId = useUtoolsKvStorage(LocalNameEnum.KEY_WIDGET_CHAT_ASSISTANT, 
 const fetchCancel = shallowRef<AskToOpenAiAbort>();
 const themeColor = computed(() => useGlobalStore().themeColor);
 
-let subWindow = window.preload.ipcRenderer.buildSubWindow('chat');
+let subWindow = WindowUtil.buildSubWindow('chat');
 subWindow.receiveMsg(msg => {
   const {event, data} = msg;
   if (event === 'config') {

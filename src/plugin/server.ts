@@ -1,6 +1,7 @@
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {getAttachmentBySync} from "@/utils/utools/DbStorageUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 const port = import.meta.env.DEV ? 11010 : 11000;
 let run = true;
@@ -10,7 +11,7 @@ export function renderAttachmentBaseUrl() {
 }
 
 export function createServer() {
-  InjectionUtil.native.customer.createServer(port, () => {
+  NativeUtil.customer.createServer(port, () => {
     console.log(`图片服务启动成功，端口号：${port}`);
   }, error => {
     MessageUtil.error(`图片服务启动失败，请检查${port}端口是否被占用，这将导致富文本、思维导图图片展示失败。`, error);

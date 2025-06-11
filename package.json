@@ -28,6 +28,7 @@
     "@imengyu/vue3-context-menu": "^1.4.4",
     "@logicflow/core": "^2.0.10",
     "@logicflow/extension": "^2.0.14",
+    "@tauri-apps/plugin-store": "~2",
     "@tdesign-vue-next/chat": "0.3.0",
     "@vueuse/core": "^9.13.0",
     "@vueuse/integrations": "^10.11.1",
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@popperjs/core": "^2.11.8",
+    "@tauri-apps/cli": "^2.5.0",
     "@types/pangu": "^4.0.2",
     "@types/sortablejs": "^1.15.8",
     "@types/splitpanes": "^2.2.6",

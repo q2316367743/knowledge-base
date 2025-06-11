@@ -10,6 +10,7 @@
 import MainForTodo from "@/nested/todo/layout/MainForTodo.vue";
 import AppFrame from "@/nested/todo/layout/AppFrame.vue";
 import {useGlobalStore} from "@/store";
+import {WindowUtil} from "@/utils/utools/WindowUtil";
 
 const targetId = ref(0);
 const targetName = ref('');
@@ -22,7 +23,7 @@ function onInit(id: number, name: string) {
 }
 
 // 子窗口通信
-const subWindow = window.preload.ipcRenderer.buildSubWindow('todo:to');
+const subWindow = WindowUtil.buildSubWindow('todo:to');
 subWindow.receiveMsg(msg => {
   const {event, data} = msg;
   if (event === '/todo/init/id') {

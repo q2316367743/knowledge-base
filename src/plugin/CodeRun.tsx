@@ -9,6 +9,7 @@ import {extname} from "@/utils/file/FileUtil";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {StopCircleIcon} from "tdesign-icons-vue-next";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 export const codeRunSetting = useUtoolsDbStorage<Record<string, string>>(LocalNameEnum.SETTING_CODE_RUN, {
   '\.js$': "node {{filePath}}",
@@ -36,7 +37,7 @@ export async function codeRun(fileName: string, content: string) {
   const ext = extname(fileName);
   const name = `${useSnowflake().nextId()}${ext ? '.' + ext : ''}`;
   // 保存到临时目录
-  const {filePath, folder} = await window.preload.customer.writeStrToFile(
+  const {filePath, folder} = await NativeUtil.customer.writeStrToFile(
     Constant.id, name, content, InjectionUtil.getPath('temp'));
   let command = template(commandTemplate as string, {
     filePath,
@@ -46,7 +47,7 @@ export async function codeRun(fileName: string, content: string) {
   });
   const result = ref('');
   const loading = ref(true);
-  const {abort} = InjectionUtil.native.util.runCommand(command, {
+  const {abort} = NativeUtil.util.runCommand(command, {
     onSuccess() {
       MessageUtil.success("执行成功");
       loading.value = false;

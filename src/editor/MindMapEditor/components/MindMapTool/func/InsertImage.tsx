@@ -5,6 +5,7 @@ import NotificationUtil from "@/utils/modal/NotificationUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 export function openInsertImage(activeNodes: MindMapNode[]) {
   if (activeNodes.length === 0) {
@@ -17,7 +18,7 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
   });
 
   function handleImageUpload() {
-    window.preload.customer.openFile({
+    NativeUtil.customer.openFile({
       title: '选择图片',
       buttonLabel: '选择',
       defaultPath: InjectionUtil.getPath('pictures'),
