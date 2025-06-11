@@ -170,7 +170,7 @@ const inputEnter = async (inputValue: string) => {
         // 模型发生变化
         items.value.unshift({
           time: Date.now(),
-          role: 'model-change',
+          role: 'dialog-change',
           content: `模型由<span>${changeService ? old.service + ' - ' : ''}${old.model}</span>变为<span>${changeService ? item.service + ' - ' : ''}${item.model}</span>`,
           aiServiceId,
           service: service.name,

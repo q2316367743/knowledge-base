@@ -1,54 +1,57 @@
 <template>
-  <page-layout title="ai服务" class="setting-ai-service">
-    <template #extra>
-      <div>
-        <span>推荐使用</span>
-        <t-link @click="toApi()" theme="primary" hover="underline" class="ml-4px">V3 API</t-link>
-        <span>，无需科学上网，即可使用。</span>
-      </div>
-    </template>
-    <div class="h-full flex">
-      <div class="setting-ai-service__side">
-        <ai-service-side v-model="currentId"/>
-      </div>
-      <div class="setting-ai-service__content">
-        <ai-service-content :current-id="currentId" @save="handleSave"/>
-      </div>
+  <div class="setting-ai-service">
+    <t-alert>
+      <span>推荐使用</span>
+      <t-link @click="toApi()" theme="primary" hover="underline" class="ml-4px">V3 API</t-link>
+      <span>，无需科学上网，即可使用。</span>
+      <template #close>
+        <t-button theme="primary" size="small" @click.stop="openAddServiceDrawer()">新增</t-button>
+      </template>
+    </t-alert>
+    <div class="mt-8px">
+      <t-list :split="true">
+        <t-list-item v-for="s in aiServices" :key="s.id">
+          <t-list-item-meta :title="s.name">
+            <template #description>
+              <t-space size="small">
+                <t-tag theme="success">{{ s.type }}</t-tag>
+                <t-tag theme="primary">{{ s.models.length }}个模型</t-tag>
+              </t-space>
+            </template>
+          </t-list-item-meta>
+          <template #action>
+            <t-space size="small">
+              <t-button theme="primary" @click="openAddServiceDrawer(s)">编辑</t-button>
+              <t-popconfirm content="是否立即删除此服务，删除后无法恢复" @confirm="handleRemove(s.id)">
+                <t-button theme="danger">删除</t-button>
+              </t-popconfirm>
+            </t-space>
+          </template>
+        </t-list-item>
+      </t-list>
     </div>
-  </page-layout>
+  </div>
 </template>
 <script lang="ts" setup>
-import AiServiceSide from "@/pages/setting/ai-service/components/AiServiceSide.vue";
-import AiServiceContent from "@/pages/setting/ai-service/components/AiServiceContent.vue";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useAiServiceStore} from "@/store";
+import {openAddServiceDrawer} from "@/pages/setting/ai-service/dialog/AddServiceDrawer";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
-const currentId = ref('');
+const aiServices = computed(() => useAiServiceStore().aiServices);
 
-function handleSave(id: string) {
-  currentId.value = id;
+const toApi = () =>
+  InjectionUtil.shellOpenExternal("https://api.v3.cm/register?aff=6A4f");
+
+const handleRemove = (id: string) => {
+  useAiServiceStore().remove(id)
+    .then(() => MessageUtil.success("删除成功"))
+    .catch(e => MessageUtil.error("删除失败", e));
 }
-
-const toApi = () => InjectionUtil.shellOpenExternal("https://api.v3.cm/register?aff=6A4f");
 </script>
 <style scoped lang="less">
 .setting-ai-service {
   position: relative;
-
-  .setting-ai-service__side {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 200px;
-    border-right: 1px solid var(--td-border-level-1-color);
-  }
-
-  .setting-ai-service__content {
-    position: absolute;
-    top: 0;
-    left: 201px;
-    right: 0;
-    bottom: 0;
-  }
+  height: 100%;
 }
 </style>

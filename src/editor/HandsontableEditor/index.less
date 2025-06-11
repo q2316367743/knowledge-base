@@ -25,71 +25,71 @@
   thead {
     th {
       color: var(--td-text-color-primary);
-      background-color: var(--color-neutral-2);
+      background-color: var(--td-bg-color-component);
     }
   }
 
   tbody {
     th {
       color: var(--td-text-color-primary);
-      background-color: var(--color-neutral-2);
+      background-color: var(--td-bg-color-container);
     }
 
     td, tr {
       color: var(--td-text-color-primary);
-      background-color: var(--color-bg-2);
+      background-color: var(--td-bg-color-container);
     }
   }
 
   tbody th.ht__highlight, thead th.ht__highlight {
     color: var(--td-text-color-primary);
-    background-color: var(--color-neutral-3);
+    background-color: var(--td-bg-color-component);
   }
 }
 
 .htMenu {
   .htCore {
     color: var(--td-text-color-primary);
-    background-color: var(--color-neutral-2);
+    background-color: var(--td-bg-color-component);
 
   }
 
   table tbody tr td {
-    background-color: var(--color-neutral-2);
+    background-color: var(--td-bg-color-secondarycontainer) !important;
 
     &.htDisabled {
-      color: var(--color-text-4);
+      color: var(--td-text-color-disabled);
 
       &:hover {
-        background-color: var(--color-neutral-4);
+        background-color: var(--td-bg-color-secondarycontainer-hover);
       }
     }
 
     &.current {
-      background-color: var(--color-neutral-2) !important;
+      background-color: var(--td-bg-color-secondarycontainer-active) !important;
     }
   }
 
   .handsontable {
     tr {
-      background-color: var(--color-fill-2);
+      background-color: var(--td-bg-color-secondarycomponent);
 
       &:hover {
-        background-color: var(--color-fill-1);
+        background-color: var(--td-bg-color-container);
       }
     }
 
     .htUISelectCaption {
-      background-color: var(--color-fill-2);
+      background-color: var(--td-bg-color-secondarycomponent);
     }
 
     .htFiltersMenuValue .htUIMultipleSelectSearch input {
-      background-color: var(--color-fill-2);
+      background-color: var(--td-bg-color-secondarycomponent);
       color: var(--td-text-color-primary);
     }
 
     .htUIMultipleSelect .handsontable .htCore td:hover {
-      background-color: var(--color-fill-3);
+      background-color: var(--td-bg-color-secondarycontainer);
 
     }
   }
@@ -100,13 +100,11 @@
 }
 
 .htContextMenu table tbody tr td {
-  background-color: var(--color-fill-1) !important;
+  background-color: var(--td-bg-color-component) !important;
 }
 
 .handsontableInput {
   color: var(--td-text-color-primary);
-  background-color: var(--color-fill-2);
+  background-color: var(--td-bg-color-component);
 }
 
-.handsontable-formula-toc {
-}

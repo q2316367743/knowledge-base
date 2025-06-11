@@ -11,13 +11,4 @@ import FeatureAddArticle from "@/pages/setting/feature/components/feature-add-ar
 import FeatureMarkdownImport from "@/pages/setting/feature/components/feature-markdown-import.vue";
 </script>
 <style scoped>
-.feature {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 7px;
-  overflow: auto;
-}
 </style>

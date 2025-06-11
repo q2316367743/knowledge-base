@@ -43,27 +43,12 @@
           主题|插件|模板
         </t-menu-item>
       </t-submenu>
-      <t-submenu value="/setting">
+      <t-menu-item value="/setting">
         <template #icon>
           <setting-icon/>
         </template>
-        <template #title>设置</template>
-        <t-menu-item value="/setting/base">
-          基础设置
-        </t-menu-item>
-        <t-menu-item value="/setting/code-run">
-          代码运行设置
-        </t-menu-item>
-        <t-menu-item value="/setting/ai-service">
-          AI 服务设置
-        </t-menu-item>
-        <t-menu-item value="/setting/ai-assistant">
-          AI 助手设置
-        </t-menu-item>
-        <t-menu-item value="/setting/feature">
-          关键字设置
-        </t-menu-item>
-      </t-submenu>
+        设置
+      </t-menu-item>
       <t-submenu value="/more">
         <template #icon>
           <ellipsis-icon/>
@@ -183,6 +168,8 @@ watch(() => route.path, path => {
   if (selectedKey.value !== path) {
     if (path.startsWith("/news")) {
       selectedKey.value = '/news';
+    }else if (path.startsWith("/setting")) {
+      selectedKey.value = '/setting';
     } else {
       selectedKey.value = path;
     }

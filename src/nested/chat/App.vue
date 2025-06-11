@@ -117,7 +117,7 @@ function inputEnter(value: string) {
     if (oldAssistantId !== assistantId.value) {
       // 加入换模型
       chatList.value.unshift({
-        role: 'model-change',
+        role: 'dialog-change',
         content: `模型由 <span>${aiAssistantMap.get(oldAssistantId)?.name}</span> 变为 <span>${aiAssistantMap.get(assistantId.value)?.name}</span>`,
         datetime: getCurrentTime(),
         assistantId: assistantId.value

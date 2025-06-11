@@ -236,7 +236,7 @@ const insertAssociativeLine = () => {
 
   display: flex;
   background-color: var(--td-bg-color-container);
-  padding: 10px 20px;
+  padding: 2px 20px 10px;
   border-radius: 2px;
   box-shadow: var(--td-shadow-1);
   border: 1px solid var(--td-border-level-2-color);
@@ -268,7 +268,7 @@ const insertAssociativeLine = () => {
     }
 
     .tool-btn-text {
-      margin-top: 7px;
+      margin-top: 2px;
       font-size: 0.8em;
     }
 

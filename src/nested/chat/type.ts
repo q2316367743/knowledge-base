@@ -1,5 +1,5 @@
 export interface AiChatMessage {
-  role: 'user' |  'assistant' | 'error' | 'model-change' | 'system',
+  role: 'user' |  'assistant' | 'error' | 'dialog-change' | 'system',
   avatar?: string;
   name?: string;
   datetime?: string;

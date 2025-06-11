@@ -205,25 +205,25 @@ const unExpandAll = () => {
   position: absolute;
   left: v-bind(left);
   top: v-bind(top);
-  background-color: var(--color-fill-2);
+  background-color: var(--td-bg-color-component);
   color: var(--td-text-color-primary);
-  border: 1px solid var(--color-border-2);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
+  border: 1px solid var(--td-border-level-2-color);
+  border-radius: var(--td-radius-default);
+  box-shadow: var(--td-shadow-3);
   width: 160px;
   font-size: .8rem;
 
   .item {
     padding: 7px 10px;
-    border-bottom: 1px solid var(--color-border-2);
+    border-bottom: 1px solid var(--td-border-level-2-color);
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-fill-3);
+      background-color: var(--td-brand-color-hover);
     }
 
     &.delete {
-      color: rgb(var(--danger-6));
+      color: rgb(var(--td-error-color));
     }
 
     &:last-child {

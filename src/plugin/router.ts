@@ -60,11 +60,24 @@ const routers: Array<RouteRecordRaw> = [{
   name: "设置",
   path: "/setting",
   component: () => import("@/pages/setting/index.vue"),
+  redirect: "/setting/base",
   children: [
     {
       name: "设置-基础",
       path: "base",
-      component: () => import("@/pages/setting/base/index.vue")
+      component: () => import("@/pages/setting/base/components/BaseSetting.vue")
+    }, {
+      name: "设置-模块",
+      path: "module",
+      component: () => import("@/pages/setting/base/components/ModuleSetting.vue")
+    }, {
+      name: "设置-代码笔记",
+      path: "code-editor",
+      component: () => import("@/pages/setting/base/components/CodeEditorSetting.vue")
+    }, {
+      name: "设置-主题",
+      path: "theme",
+      component: () => import("@/pages/setting/base/components/ThemeSetting.vue")
     }, {
       name: "设置-代码运行",
       path: "code-run",
