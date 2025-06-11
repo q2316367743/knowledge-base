@@ -3,6 +3,7 @@ import {urlJoin} from "@/utils/file/FileUtil";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
 import {TreeOptionData} from "tdesign-vue-next/es/common";
 import {FolderIcon} from "tdesign-icons-vue-next";
+import {group, MapWrap} from "@/utils/lang/ArrayUtil";
 
 /**
  * 基础列表树
@@ -17,15 +18,17 @@ export interface ListTree {
 
 }
 
+type TreeNode = ListTree & { fontColor?: string };
 
 /**
  * 将列表转为树
  * @param list 列表
  * @param topName 顶部名称
  */
-export function listToTree(list: Array<ListTree & { fontColor?: string }>, topName: string): Array<TreeOptionData> {
-  // TODO: 此处要处理没有父目录的
-  const base: Array<TreeOptionData> = list.filter(c => c.pid === 0 || !c.pid)
+export function listToTree(list: Array<TreeNode>, topName: string): Array<TreeOptionData> {
+  const folderGroupMap = group(list, 'pid');
+  // 先找0
+  const base: Array<TreeOptionData> = folderGroupMap.getOrDefault(0, [])
     .map(c => ({
       value: c.id,
       label: c.name,
@@ -33,7 +36,21 @@ export function listToTree(list: Array<ListTree & { fontColor?: string }>, topNa
       children: [],
       fontColor: c?.fontColor
     }));
-  base.forEach(item => _listToTree(item, item.value as number, list));
+  // 删除这个
+  folderGroupMap.delete(0)
+  base.forEach(item => _listToTree(item, item.value as number, folderGroupMap));
+  // 如果还有，则加入到根节点
+  if (folderGroupMap.size > 0) {
+    folderGroupMap.forEach(item => {
+      item.forEach(c => base.push({
+        value: c.id,
+        label: c.name,
+        text: c.name,
+        children: [],
+        fontColor: c?.fontColor
+      }))
+    })
+  }
   return [{
     value: 0,
     label: topName,
@@ -48,25 +65,28 @@ export function listToTree(list: Array<ListTree & { fontColor?: string }>, topNa
  * @param pid 基础目录ID
  */
 export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<TreeOptionData> {
-  const base: Array<TreeOptionData> = list.filter(c => c.pid === pid)
+  const folderGroupMap = group(list, 'pid');
+  const base: Array<TreeOptionData> = folderGroupMap.getOrDefault(pid, [])
     .map(c => ({
       value: c.id,
       label: c.name,
       children: []
     }));
-  base.forEach(item => _listToTree(item, item.value as number, list));
+  base.forEach(item => _listToTree(item, item.value as number, folderGroupMap));
   return base;
 }
 
-function _listToTree(tree: TreeOptionData, pid: number, categories: Array<ListTree>) {
-  tree.children = categories.filter(c => c.pid === pid)
+function _listToTree(tree: TreeOptionData, pid: number, folderGroupMap: MapWrap<number, Array<TreeNode>>) {
+  tree.children = folderGroupMap.getOrDefault(pid, [])
     .map(c => ({
       value: c.id,
       label: c.name,
       text: c.name,
-      children: []
+      children: [],
+      fontColor: c?.fontColor
     } as TreeOptionData));
-  tree.children.forEach(item => _listToTree(item, item.value as number, categories));
+  folderGroupMap.delete(pid)
+  tree.children.forEach(item => _listToTree(item, item.value as number, folderGroupMap));
 }
 
 
@@ -128,6 +148,8 @@ export function treeEach(
         }
         temp.children.push(article)
       });
+      // 排序
+      temp.children = (temp.children as  Array<TreeOptionData>).sort((a, b) => (a.label as string).localeCompare(b.label as string));
     }
   });
 }

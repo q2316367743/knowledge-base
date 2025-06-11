@@ -1,5 +1,5 @@
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import {articleTypeMap} from "@/pages/note/components/he-context";
+import {articleTypeMap, renderArticleType} from "@/pages/note/components/he-context";
 import {buildDefaultContent, EditorData} from "@/editor/types/EditorData";
 import {
   buildArticleName,
@@ -31,7 +31,8 @@ async function buildName(type: ArticleTypeEnum, pid: number, res?: string): Prom
   if (newArticleAutoName) {
     name = buildArticleName(type, newArticleTemplateByName, codeExtraName, pid);
   } else {
-    name = await MessageBoxUtil.prompt("请输入笔记名称", "新建笔记");
+    const t = renderArticleType(type);
+    name = await MessageBoxUtil.prompt(`请输入${t}笔记名称`, `新建${t}笔记`);
   }
   return name;
 
