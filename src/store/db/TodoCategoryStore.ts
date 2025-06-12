@@ -7,7 +7,7 @@ import {TodoItemIndex} from "@/entity/todo/TodoItem";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {UToolsUtil} from "@/utils/utools/UToolsUtil";
 
 export const useTodoCategoryStore = defineStore('todo-category', {
   state: () => ({
@@ -24,11 +24,11 @@ export const useTodoCategoryStore = defineStore('todo-category', {
       const res = await listByAsync<TodoCategory>(LocalNameEnum.LOCAL_TODO_CATEGORY);
       this.value = res.list;
       this.rev = res.rev;
-      this.featureKeys = new Set<string>(InjectionUtil.feature.listFeature(Constant.feature.TODO_CATEGORY, this.value.map(r => r.id)));
+      this.featureKeys = new Set<string>(UToolsUtil.feature.listFeature(Constant.feature.TODO_CATEGORY, this.value.map(r => r.id)));
     },
     async _sync() {
       this.rev = await saveListByAsync(LocalNameEnum.LOCAL_TODO_CATEGORY, this.value, this.rev);
-      this.featureKeys = new Set<string>(InjectionUtil.feature.listFeature(Constant.feature.TODO_CATEGORY, this.value.map(r => r.id)));
+      this.featureKeys = new Set<string>(UToolsUtil.feature.listFeature(Constant.feature.TODO_CATEGORY, this.value.map(r => r.id)));
     },
     async add(record: TodoCategoryRecord) {
       const now = new Date();
@@ -109,12 +109,12 @@ export const useTodoCategoryStore = defineStore('todo-category', {
         return;
       }
       const feature = Constant.feature.TODO_CATEGORY + id;
-      InjectionUtil.feature.setFeatureOneSimple(feature, this.value[index].name);
+      UToolsUtil.feature.setFeatureOneSimple(feature, this.value[index].name);
       this.featureKeys.add(feature);
     },
     removeFeature(id: number) {
       const feature = Constant.feature.TODO_CATEGORY + id;
-      InjectionUtil.feature.removeFeatureOne(feature);
+      UToolsUtil.feature.removeFeatureOne(feature);
       this.featureKeys.delete(feature);
     }
   }

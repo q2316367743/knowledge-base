@@ -16,12 +16,12 @@ import {
   EncryptEditorData,
   EncryptEditorDataType
 } from "@/editor/EncryptEditor/EncryptEditorType";
-import {buildPassword, decryptText, encryptText, passwordEqual} from "@/editor/EncryptEditor/EncryptEditorUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import EncryptEditorPassword from "@/editor/EncryptEditor/components/EncryptEditorPassword.vue";
 import EncryptEditorEdit from "@/editor/EncryptEditor/components/EncryptEditorEdit.vue";
 import EncryptEditorDisplay from "@/editor/EncryptEditor/components/EncryptEditorDisplay.vue";
 import EncryptEditorInit from "@/editor/EncryptEditor/components/EncryptEditorInit.vue";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 const content = defineModel({
   type: Object as PropType<EncryptEditorData>,
@@ -62,35 +62,49 @@ const onLock = () => {
   text.value = '';
   password.value = null;
 }
+
+function decryptText(text: string, keyIv: EncryptKeyIv) {
+  if (isEmptyString(keyIv.key) && isEmptyString(keyIv.iv)) {
+    return Promise.resolve(text);
+  }
+  return NativeUtil.encrypt.decryptValue(keyIv, text);
+}
+
 const onUnlock = (pwd: EncryptKeyIv) => {
-  password.value = pwd;
-  text.value = decryptText(content.value.text, password.value);
-  lock.value = false;
+  (async () => {
+    password.value = pwd;
+    text.value = await decryptText(content.value.text, password.value);
+    lock.value = false;
+  })().catch(e => MessageUtil.error("解锁失败", e));
 }
 
 const setPassword = (pwd: string) => {
-  // 设置密码
-  content.value.password = buildPassword(pwd);
-  const keyIv = passwordEqual(pwd, content.value.password);
-  if (keyIv && typeof keyIv !== 'boolean') {
-    // 保存加密文本
-    content.value.text = encryptText(text.value, keyIv);
-    onUnlock(keyIv);
-  }
+  (async () => {
+    // 设置密码
+    content.value.password = await NativeUtil.encrypt.encryptPassword(pwd);
+    const keyIv = await NativeUtil.encrypt.verifyPassword(pwd, content.value.password);
+    if (keyIv && typeof keyIv !== 'boolean') {
+      // 保存加密文本
+      content.value.text = await NativeUtil.encrypt.encryptValue(keyIv, text.value);
+      onUnlock(keyIv);
+    }
+  })().catch(e => MessageUtil.error("设置密码错误", e));
 }
 
 function onSave(t: string) {
-  text.value = t;
-  if (!password.value) {
-    onLock();
-    return;
-  }
-  if (isEmptyString(content.value.password)) {
-    content.value.text = text.value;
-  } else {
-    content.value.text = encryptText(text.value, password.value);
-  }
-  MessageUtil.success("保存成功")
+  (async () => {
+    text.value = t;
+    if (!password.value) {
+      onLock();
+      return;
+    }
+    if (isEmptyString(content.value.password)) {
+      content.value.text = text.value;
+    } else {
+      content.value.text = await NativeUtil.encrypt.encryptValue(password.value, text.value);
+    }
+    MessageUtil.success("保存成功")
+  })().catch(e => MessageUtil.error("设置密码错误", e));
 }
 
 function onInit(type: EncryptEditorDataType) {

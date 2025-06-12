@@ -2,7 +2,6 @@ import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
 import {buildMindMapData} from "@/editor/MindMapEditor/constant";
 import {useBaseSettingStore} from "@/store";
 import {traverseNumber} from "@/utils/lang/ArrayUtil";
-import {usePluginSettingStore} from "@/store/db/PluginSettingStore";
 import {buildLogicFlowData, LogicFlowData} from "@/editor/LogicFlow/constants";
 import {buildEncryptEditorData, EncryptEditorData} from "@/editor/EncryptEditor/EncryptEditorType";
 import {MindMapTreeData} from "@/editor/MindMapEditor/domain";
@@ -46,17 +45,7 @@ export async function buildDefaultContent(name: string, type: ArticleTypeEnum): 
         columns: []
       };
     case ArticleTypeEnum.MARKDOWN:
-      // 查看是否有模板
-      const {markdownTemplates} = usePluginSettingStore();
-      for (let markdownTemplate of markdownTemplates) {
-        // 名字匹配
-        if (name.match(markdownTemplate.name)) {
-          // 获取内容
-          const {getContent} = usePluginSettingStore();
-          const res = await getContent(markdownTemplate.id);
-          return res.record ? res.record?.content : '';
-        }
-      }
+      // TODO: 查看是否有模板
       return '';
     case ArticleTypeEnum.LOGIC_FLOW:
       return buildLogicFlowData()

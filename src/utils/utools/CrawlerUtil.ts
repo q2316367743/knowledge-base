@@ -49,7 +49,7 @@ export interface CrawlerMarkdownResult extends CrawlerResult {
 }
 
 // 从uTools爬取数据
-export async function fetchMarkdownByUTools(url: string, props?: CrawlerMarkdownProps): Promise<CrawlerMarkdownResult> {
+async function fetchMarkdownByUTools(url: string, props?: CrawlerMarkdownProps): Promise<CrawlerMarkdownResult> {
   const {headers, timeout, wait, title, body, userAgent} = props || {};
   let uBrowser = utools.ubrowser.goto(url, {
     ...headers as any,
@@ -109,7 +109,6 @@ export async function fetchMarkdownByUTools(url: string, props?: CrawlerMarkdown
     markdown
   };
 }
-
 
 export const CrawlerUtil = {
   fetchMarkdown: async (url: string, props?: CrawlerMarkdownProps): Promise<CrawlerMarkdownResult> => {

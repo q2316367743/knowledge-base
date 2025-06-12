@@ -14,7 +14,7 @@ export async function useAttachmentUploadByPicGo(data: Blob | File | string, nam
     Constant.id,
     useSnowflake().nextId() + '.png',
     data,
-    InjectionUtil.getPath('temp')
+    await InjectionUtil.path.temp()
   );
   // 再调用接口
   const rsp = await fetch(`http://127.0.0.1:${port}/upload`, {

@@ -198,7 +198,7 @@
 <script lang="ts" setup>
 import {LockOffIcon} from "tdesign-icons-vue-next";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {passwordEqual} from "@/editor/EncryptEditor/EncryptEditorUtil";
+import {NativeUtil} from "@/utils/utools/NativeUtil";
 
 const props = defineProps({
   data: {
@@ -211,13 +211,15 @@ const emit = defineEmits(['unlock']);
 const text = ref('');
 
 function onSubmit() {
-  const keyIv = passwordEqual(text.value, props.data);
-  if (keyIv) {
-    emit('unlock', keyIv);
-  } else {
-    // 提示
-    MessageUtil.warning("密码输入错误");
-  }
+  (async () => {
+    const keyIv = await NativeUtil.encrypt.verifyPassword(text.value, props.data);
+    if (keyIv) {
+      emit('unlock', keyIv);
+    } else {
+      // 提示
+      MessageUtil.warning("密码输入错误");
+    }
+  })().catch(e => MessageUtil.warning("密码输入错误", e));
 }
 </script>
 <style scoped lang="less">

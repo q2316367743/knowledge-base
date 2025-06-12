@@ -23,7 +23,7 @@
 </template>
 <script lang="ts" setup>
 import {CloseIcon, MinusIcon, PinFilledIcon, PinIcon} from "tdesign-icons-vue-next";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {WindowUtil} from "@/utils/utools/WindowUtil";
 
 const props = defineProps({
   todoId: {
@@ -40,19 +40,19 @@ const props = defineProps({
   }
 });
 
-const onToggleTop = () => InjectionUtil.sendToParent('todo:from', {
+const onToggleTop = () => WindowUtil.sendToParent('todo:from', {
   event: '/todo/operator/toggleTop',
   data: {
     id: props.todoId,
   }
 });
-const onClose = () => InjectionUtil.sendToParent('todo:from', {
+const onClose = () => WindowUtil.sendToParent('todo:from', {
   event: '/todo/operator/close',
   data: {
     id: props.todoId,
   }
 });
-const onMinimize = () => InjectionUtil.sendToParent('todo:from', {
+const onMinimize = () => WindowUtil.sendToParent('todo:from', {
   event: '/todo/operator/minimize',
   data: {
     id: props.todoId,

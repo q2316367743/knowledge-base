@@ -140,3 +140,17 @@ export function getNo(index: number): string {
   }
   return result;
 }
+
+/**
+ * 生成指定长度的随机字符串
+ * @param length 字符串长度
+ */
+export function randomString(length: number): string {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}

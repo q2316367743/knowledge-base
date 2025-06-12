@@ -11,7 +11,6 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
-import {useMoreItemMenu, useMoreMenu} from "@/editor/MarkdownEditor/menu/MoreMenu";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {onClickPreview} from "@/editor/MarkdownEditor/common/event";
 
@@ -79,15 +78,6 @@ export async function buildConfig(
       YangShi: Cherry.createMenuHook("样式", {}),
       ZiTi: Cherry.createMenuHook("字体", {}),
       WenAn: Cherry.createMenuHook("文案", {}),
-      // 更多
-      More: useMoreMenu
-    }
-    const plugins = await useMoreItemMenu(instance);
-    if (plugins.length > 0) {
-      plugins.forEach(plugin => customMenu[plugin.name] = plugin.hook);
-      toolbar.push({
-        More: [...plugins.map(plugin => plugin.name)],
-      });
     }
   }
 

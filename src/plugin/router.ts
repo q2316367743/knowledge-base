@@ -34,10 +34,6 @@ const routers: Array<RouteRecordRaw> = [{
   path: '/todo',
   component: () => import("@/pages/todo/index.vue")
 }, {
-  name: "插件",
-  path: "/plugin",
-  component: () => import("@/pages/tool/plugin/index.vue")
-}, {
   name: "工具",
   path: "/tool",
   component: () => import("@/pages/tool/index.vue"),
@@ -90,10 +86,6 @@ const routers: Array<RouteRecordRaw> = [{
       name: "设置-ai助手",
       path: "ai-assistant",
       component: () => import("@/pages/setting/ai-assistant/index.vue")
-    }, {
-      name: "设置-关键字",
-      path: "feature",
-      component: () => import("@/pages/setting/feature/index.vue")
     }
   ]
 }, {

@@ -14,7 +14,7 @@ export async function useAttachmentUploadByImagePlus(data: Blob | File | string,
     Constant.id,
     useSnowflake().nextId() + '.png',
     data,
-    InjectionUtil.getPath('temp')
+    await InjectionUtil.path.temp()
   );
   const url = await NativeUtil.util.uploadToImagePlus(path, Constant.name);
   return {url, key: url, name};

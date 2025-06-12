@@ -51,6 +51,9 @@ export const useFolderStore = defineStore('folder', {
       await this.update(id, {name});
     },
     async drop(id: number, pid: number) {
+      if (pid != 0 && !this.folderMap.has(pid)) {
+        return Promise.reject(new Error("父目录错误，无法移动"));
+      }
       const index = this.folders.findIndex(e => e.id === id);
       if (index === -1) {
         return Promise.reject("文件夹未找到，请刷新后重试！");

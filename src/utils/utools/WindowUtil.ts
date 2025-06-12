@@ -1,6 +1,8 @@
 // 窗口相关工具
 import {useErrorStore} from "@/store/components/ErrorStore";
 import {getPlatform} from "@/utils/utools/common";
+import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
+import {TauriEvent} from "@tauri-apps/api/event";
 
 export interface CustomerWindowProps extends BrowserWindow.InitOptions {
   useContentSize: boolean;
@@ -37,16 +39,21 @@ export interface CustomerWindow {
    * @param channel 子窗口频道
    * @param message 消息
    */
-  sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): void;
-  close(): void;
-  hide(): void;
-  show(): void;
-  setAlwaysOnTop(alwaysOnTop: boolean): void;
-  isAlwaysOnTop(): boolean;
-  isDestroyed(): boolean;
-  getId(): number;
-  minimize(): void;
+  sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): Promise<void>;
 
+  close(): Promise<void>;
+
+  hide(): Promise<void>;
+
+  show(): Promise<void>;
+
+  setAlwaysOnTop(alwaysOnTop: boolean): Promise<void>;
+
+  isAlwaysOnTop(): Promise<boolean>;
+
+  isDestroyed(): Promise<boolean>;
+
+  minimize(): Promise<void>;
 
 
 }
@@ -93,50 +100,45 @@ class CustomerWindowForUTools implements CustomerWindow {
     });
   }
 
-  sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): void {
+  async sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): Promise<void> {
     if (!this.win) return;
     window.preload.ipcRenderer.sendMessage<T>(this.win.webContents.id, channel, message);
   }
 
-  close(): void {
-    if (!this.win) return;
+  async close() {
+    if (!this.win) return Promise.reject(new Error("窗口未打开"));
     this.win.close();
   }
 
-  hide(): void {
-    if (!this.win) return;
+  async hide() {
+    if (!this.win) return Promise.reject(new Error("窗口未打开"));
     this.win.hide();
   }
 
-  show(): void {
-    if (!this.win) return;
+  async show() {
+    if (!this.win) return Promise.reject(new Error("窗口未打开"));
     this.win.show();
   }
 
-  isAlwaysOnTop(): boolean {
+  async isAlwaysOnTop() {
     if (!this.win) return false;
     return this.win.isAlwaysOnTop();
   }
 
-  setAlwaysOnTop(alwaysOnTop: boolean): void {
-    if (!this.win) return;
-    return this.win.setAlwaysOnTop(alwaysOnTop);
+  async setAlwaysOnTop(alwaysOnTop: boolean): Promise<void> {
+    if (!this.win) return Promise.reject(new Error("窗口未打开"));
+    this.win.setAlwaysOnTop(alwaysOnTop);
   }
 
 
-  isDestroyed(): boolean {
+  async isDestroyed() {
     if (!this.win) return true;
     return this.win.isDestroyed();
   }
 
-  minimize(): void {
-    if (!this.win) return;
-    return this.win.minimize();
-  }
-
-  getId(): number {
-    if (!this.win) return 0;
-    return this.win.webContents.id;
+  async minimize(): Promise<void> {
+    if (!this.win) return Promise.reject(new Error("窗口未打开"));
+    this.win.minimize();
   }
 }
 
@@ -152,7 +154,7 @@ class CustomerWindowForWeb implements CustomerWindow {
     this.opener = null;
   }
 
-  open(callback?: (windowId: number) => void): void {
+  open(callback?: (windowId: number) => void) {
     let u = this.url;
     if (this.props.params) {
       const p = new URLSearchParams();
@@ -163,39 +165,35 @@ class CustomerWindowForWeb implements CustomerWindow {
     callback?.(0);
   }
 
-  sendMessage<T = any>(channelName: SubWindowChannel, message: IpcEvent<T>): void {
+  async sendMessage<T = any>(channelName: SubWindowChannel, message: IpcEvent<T>) {
     // 创建频道并发送消息
     const channel = new BroadcastChannel(channelName);
     channel.postMessage(message);
   }
 
-  close(): void {
+  async close() {
     if (!this.opener) return;
     this.opener.close();
   }
 
-  hide(): void {
+  async hide() {
   }
 
-  show(): void {
+  async show() {
   }
 
-  isAlwaysOnTop(): boolean {
+  async isAlwaysOnTop() {
     return false;
   }
 
-  setAlwaysOnTop(alwaysOnTop: boolean): void {
+  async setAlwaysOnTop(alwaysOnTop: boolean) {
   }
 
-  getId(): number {
-    return this.id;
-  }
-
-  isDestroyed(): boolean {
+  async isDestroyed() {
     return false;
   }
 
-  minimize(): void {
+  async minimize() {
   }
 
 }
@@ -204,43 +202,57 @@ class CustomerWindowForTauri implements CustomerWindow {
   private readonly url: string;
   private readonly props: Partial<CustomerWindowProps>;
   private readonly id: number = Date.now();
+  private ww: WebviewWindow | null = null;
+  private destroyed: boolean = false;
 
   constructor(url: string, props: Partial<CustomerWindowProps>) {
     this.url = url;
     this.props = props;
   }
 
-  close(): void {
-  }
-
-  getId(): number {
-    return 0;
-  }
-
-  hide(): void {
-  }
-
-  isAlwaysOnTop(): boolean {
-    return false;
-  }
-
-  isDestroyed(): boolean {
-    return false;
-  }
-
-  minimize(): void {
-  }
-
   open(callback: (windowId: number) => void): void {
+    this.ww = new WebviewWindow(this.url, this.props);
+    this.ww.once(TauriEvent.WINDOW_DESTROYED, () => this.destroyed = true);
+    this.ww.once(TauriEvent.WEBVIEW_CREATED, () => callback(this.id));
   }
 
-  sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): void {
+  async sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): Promise<void> {
+    if (!this.ww) return;
+    await this.ww.emit(channel, message);
   }
 
-  setAlwaysOnTop(alwaysOnTop: boolean): void {
+  async close() {
+    if (!this.ww) return;
+    await this.ww.close();
   }
 
-  show(): void {
+  async hide() {
+    if (!this.ww) return;
+    await this.ww.hide();
+  }
+
+  async isAlwaysOnTop() {
+    if (!this.ww) return false;
+    return this.ww.isAlwaysOnTop();
+  }
+
+  async isDestroyed() {
+    return this.destroyed;
+  }
+
+  async minimize() {
+    if (!this.ww) return Promise.reject(new Error("窗口未打开"));
+    await this.ww.minimize();
+  }
+
+  async setAlwaysOnTop(alwaysOnTop: boolean) {
+    if (!this.ww) return Promise.reject(new Error("窗口未打开"));
+    await this.ww.setAlwaysOnTop(alwaysOnTop);
+  }
+
+  async show() {
+    if (!this.ww) return Promise.reject(new Error("窗口未打开"));
+    await this.ww.show();
   }
 }
 
@@ -297,4 +309,11 @@ export const WindowUtil = {
       });
     }
   },
+  sendToParent(channel: string, ...params: any[]): void {
+    if (getPlatform() === 'uTools') {
+      utools.sendToParent(channel, ...params);
+    } else if (getPlatform() === 'tauri') {
+      // 发送到main
+    }
+  }
 }

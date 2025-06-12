@@ -1,9 +1,7 @@
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {CustomerWindow, WindowUtil} from "@/utils/utools/WindowUtil";
 
 export function openTodoWidget(id: number, name: string, onSuccess: (instance: CustomerWindow) => void) {
   // 打开笔记预览
-  const dev = InjectionUtil.isDev();
   const ubWindow = WindowUtil.createBrowserWindow(
     'todo.html', {
       // @ts-ignore

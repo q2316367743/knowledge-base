@@ -6,7 +6,7 @@ import {
   Edit2Icon, ExtensionIcon, FileExportIcon, FileImportIcon, FillColor1Icon,
   FolderAdd1Icon,
   GestureRightIcon,
-  PlusIcon, RoundIcon, TerminalWindowIcon
+  PlusIcon, RoundIcon, TagFilledIcon, TagIcon, TerminalWindowIcon
 } from "tdesign-icons-vue-next";
 import {useArticleStore, useFolderStore, useGlobalStore, useVipStore} from "@/store";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -26,6 +26,8 @@ import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
 import {setColor} from "@/pages/note/components/HeExtraContext";
 import VipIcon from "@/components/KbIcon/VipIcon.vue";
 import {openNotePreview} from "@/widget/NotePreview";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {UToolsUtil} from "@/utils/utools/UToolsUtil";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -71,6 +73,47 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
   const items = new Array<MenuItem>();
 
   if (node.leaf) {
+    // 一个笔记
+    const children = new Array<MenuItem>();
+    children.push({
+      label: '设置颜色',
+      icon: () => <FillColor1Icon/>,
+      onClick: () => {
+        setColor(node.value, node.leaf);
+      }
+    }, {
+      label: '多选',
+      icon: () => <CheckRectangleIcon/>,
+      onClick: () => {
+        multi(node.value);
+      }
+    }, {
+      label: '移动到',
+      icon: () => <GestureRightIcon/>,
+      onClick: () => {
+        moveTo(node.value, node.label, node.leaf);
+      }
+    });
+    if (InjectionUtil.env.isUtools()) {
+      // 判断关键字
+      const code = `note:${node.value}`;
+      const feature = UToolsUtil.feature.getFeatureOne(code);
+      const hasFeature = !!feature;
+      children.push({
+        label: (hasFeature ? '删除' : '加入') + '关键字',
+        icon: () => hasFeature ? <TagFilledIcon/> : <TagIcon/>,
+        onClick: () => {
+          if (hasFeature) {
+            // 删除关键字
+            UToolsUtil.feature.removeFeatureOne(code)
+          } else {
+            // 加入关键字
+            UToolsUtil.feature.setFeatureOneSimple(code, node.label);
+          }
+        }
+      })
+    }
+
     items.push({
       label: '打开',
       icon: () => <RoundIcon/>,
@@ -99,25 +142,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     }, {
       label: '更多操作',
       icon: () => <AppIcon/>,
-      children: [{
-        label: '设置颜色',
-        icon: () => <FillColor1Icon/>,
-        onClick: () => {
-          setColor(node.value, node.leaf);
-        }
-      }, {
-        label: '多选',
-        icon: () => <CheckRectangleIcon/>,
-        onClick: () => {
-          multi(node.value);
-        }
-      }, {
-        label: '移动到',
-        icon: () => <GestureRightIcon/>,
-        onClick: () => {
-          moveTo(node.value, node.label, node.leaf);
-        }
-      }]
+      children
     });
   } else {
     // 文件夹

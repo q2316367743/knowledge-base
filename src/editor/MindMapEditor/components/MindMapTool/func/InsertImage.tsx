@@ -17,29 +17,28 @@ export function openInsertImage(activeNodes: MindMapNode[]) {
     link: first.getData('image') || ''
   });
 
-  function handleImageUpload() {
-    NativeUtil.customer.openFile({
+  async function handleImageUpload() {
+    const files = await NativeUtil.customer.openFile({
       title: '选择图片',
       buttonLabel: '选择',
-      defaultPath: InjectionUtil.getPath('pictures'),
+      defaultPath: await InjectionUtil.path.picture(),
       filters: [{
         name: 'Images',
         extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp']
       }]
-    }).then(files => {
-      const file = files[0];
-      if (!file) {
-        MessageUtil.error("未选择图片")
-        return;
-      }
-      useAttachmentUpload.upload(file, file.name, "image/png")
-        .then(({name, url}) => {
-          data.value = {
-            title: name,
-            link: url
-          }
-        });
     })
+    const file = files[0];
+    if (!file) {
+      MessageUtil.error("未选择图片")
+      return;
+    }
+    useAttachmentUpload.upload(file, file.name, "image/png")
+      .then(({name, url}) => {
+        data.value = {
+          title: name,
+          link: url
+        }
+      });
   }
 
   const p = DialogPlugin({

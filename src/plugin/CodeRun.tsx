@@ -38,7 +38,7 @@ export async function codeRun(fileName: string, content: string) {
   const name = `${useSnowflake().nextId()}${ext ? '.' + ext : ''}`;
   // 保存到临时目录
   const {filePath, folder} = await NativeUtil.customer.writeStrToFile(
-    Constant.id, name, content, InjectionUtil.getPath('temp'));
+    Constant.id, name, content, await InjectionUtil.path.temp());
   let command = template(commandTemplate as string, {
     filePath,
     fileDir: folder,

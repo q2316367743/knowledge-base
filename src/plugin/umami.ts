@@ -49,7 +49,7 @@ const buildPathPayload = (path: string, name?: string): UmamiPayload => ({
 })
 
 function sendEvent(payload: UmamiPayload) {
-  if (InjectionUtil.isDev()) {
+  if (InjectionUtil.env.isDev()) {
     console.debug('Umami payload:', payload);
     return;
   }

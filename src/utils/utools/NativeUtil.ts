@@ -1,34 +1,41 @@
-// import {InjectionWebResult, http} from '@/utils/utools/common';
+import {InjectionWebResult, http} from '@/utils/utools/common';
 
 export const NativeUtil = {
   encrypt: {
-    encryptPassword: (password: string): string => {
+    encryptPassword: async (password: string): Promise<string> => {
       if (window.preload) {
         return window.preload.encrypt.encryptPassword(password);
       } else {
-
-        throw new Error("系统环境异常")
+        const rsp = await http.post<InjectionWebResult<string>>(
+          '/encrypt/encrypt-password', {password});
+        return rsp.data.data;
       }
     },
-    verifyPassword: (password: string, key: string): EncryptKeyIv | boolean => {
+    verifyPassword: async (password: string, hash: string): Promise<EncryptKeyIv | boolean> => {
       if (window.preload) {
-        return window.preload.encrypt.verifyPassword(password, key);
+        return window.preload.encrypt.verifyPassword(password, hash);
       } else {
-        throw new Error("系统环境异常")
+        const rsp = await http.post<InjectionWebResult<EncryptKeyIv | boolean>>(
+          '/encrypt/verify-password', {password, hash});
+        return rsp.data.data;
       }
     },
-    encryptValue: (keyIv: EncryptKeyIv, data: string): string => {
+    encryptValue: async (keyIv: EncryptKeyIv, data: string): Promise<string> => {
       if (window.preload) {
         return window.preload.encrypt.encryptValue(keyIv, data);
       } else {
-        throw new Error("系统环境异常")
+        const rsp = await http.post<InjectionWebResult<string>>(
+          '/encrypt/verify-password', {key: keyIv.key, iv: keyIv.iv, data});
+        return rsp.data.data;
       }
     },
-    decryptValue: (keyIv: EncryptKeyIv, data: string): string => {
+    decryptValue: async (keyIv: EncryptKeyIv, data: string): Promise<string> => {
       if (window.preload) {
         return window.preload.encrypt.decryptValue(keyIv, data);
       } else {
-        throw new Error("系统环境异常")
+        const rsp = await http.post<InjectionWebResult<string>>(
+          '/encrypt/verify-password', {key: keyIv.key, iv: keyIv.iv, data});
+        return rsp.data.data;
       }
     },
   },

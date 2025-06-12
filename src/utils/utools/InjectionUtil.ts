@@ -1,12 +1,19 @@
 import MessageUtil from "@/utils/modal/MessageUtil";
-import Constant from "@/global/Constant";
-import {versionGreaterEqual} from "@/utils/lang/FieldUtil";
+import {randomString, versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {AiService, AiServiceType, InnerAiService} from "@/entity/ai/AiService";
 import {useSnowflake} from "@/hooks/Snowflake";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {renderAttachmentUrl} from "@/plugin/server";
 import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
-import {InjectionWebResult, http, getPlatform} from '@/utils/utools/common';
+import {extname} from "@/utils/file/FileUtil";
+import {getPlatform, http, InjectionWebResult} from '@/utils/utools/common';
+import {join, pictureDir, tempDir} from '@tauri-apps/api/path';
+import {getCurrentWindow} from '@tauri-apps/api/window';
+import {load, Store} from '@tauri-apps/plugin-store';
+import {convertFileSrc} from '@tauri-apps/api/core';
+import {writeText} from '@tauri-apps/plugin-clipboard-manager';
+import {openUrl} from '@tauri-apps/plugin-opener';
+import {BaseDirectory, exists, mkdir, writeFile} from '@tauri-apps/plugin-fs';
 
 type InjectionDbDoc<T extends {} = Record<string, any>> = {
   _id: string,
@@ -21,43 +28,6 @@ interface InjectionDbReturn {
   name?: string,
   message?: string
 }
-
-interface Feature {
-  code: string,
-  explain: string,
-  platform: FeaturePlatform | Array<FeaturePlatform>,
-  icon?: string,
-  cmds: Array<string | FeatureCmd>
-}
-
-type FeaturePlatform = 'darwin' | 'win32' | 'linux';
-
-interface FeatureCmd {
-  type: FeatureCmdType,
-  label: string,
-  fileType?: FeatureCmdFileType,
-  match?: string,
-  minLength?: number
-  maxLength?: number
-}
-
-type FeatureCmdType = 'files' | 'regex' | 'over';
-
-type FeatureCmdFileType = 'file' | 'directory';
-
-type PathName =
-  'home'
-  | 'appData'
-  | 'userData'
-  | 'temp'
-  | 'exe'
-  | 'desktop'
-  | 'documents'
-  | 'downloads'
-  | 'music'
-  | 'pictures'
-  | 'videos'
-  | 'logs';
 
 const DEFAULT_AI_SERVICE: AiService = {
   id: '1',
@@ -123,6 +93,45 @@ export interface UserProfile {
   type: 'member' | 'user';
 }
 
+export interface BaseEvent<T> {
+  code: string,
+  type: string,
+  payload: T
+}
+
+export interface SelectEvent<T> extends BaseEvent<T> {
+  option: MainPushResult
+}
+
+export interface MainEvent<T, L> extends BaseEvent<T> {
+  option: L,
+  from?: PluginEnterFrom
+}
+
+export type MainPushCallback<T> = (action: BaseEvent<T>) => MainPushResultList;
+export type MainPushSelectCallback<T> = (action: SelectEvent<T>) => void;
+
+function shellOpenExternal(url: string): void {
+  switch (getPlatform()) {
+    case "uTools":
+      utools.shellOpenExternal(url);
+      break;
+    case "tauri":
+      openUrl(url).catch(console.error);
+      break;
+    default:
+      window.open(url, '_blank');
+  }
+}
+
+let store: Store | null = null;
+const getStore = async (): Promise<Store> => {
+  if (!store) {
+    store = await load('database/store.json', {autoSave: true});
+  }
+  return store;
+}
+
 export const InjectionUtil = {
   getPlatform: getPlatform,
   getUser(): UserProfile | null {
@@ -137,20 +146,19 @@ export const InjectionUtil = {
     }
     return null;
   },
-  isDev() {
-    if (window['utools']) {
-      return utools.isDev()
-    } else {
-      return import.meta.env.DEV;
-    }
-  },
   copyText(text: string) {
     (async () => {
-      if (window['utools']) {
-        return utools.copyText(text)
-      } else {
-        await navigator.clipboard.writeText(text);
-        return false
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.copyText(text)
+        case "web":
+          await navigator.clipboard.writeText(text);
+          return true;
+        case "tauri":
+          await writeText(text);
+          return true;
+        default:
+          throw new Error("环境异常");
       }
     })().then(r => {
       if (r) {
@@ -158,15 +166,9 @@ export const InjectionUtil = {
       } else {
         MessageUtil.error("复制失败");
       }
-    });
+    }).catch(e => MessageUtil.error("复制异常", e));
   },
-  shellOpenExternal(url: string): void {
-    if (window['utools']) {
-      return utools.shellOpenExternal(url);
-    } else {
-      window.open(url, '_blank');
-    }
-  },
+  shellOpenExternal: shellOpenExternal,
   getCursorScreenPoint(): { x: number, y: number } {
     if (window['utools']) {
       return utools.getCursorScreenPoint();
@@ -175,144 +177,87 @@ export const InjectionUtil = {
     }
   },
   screenCapture(callback: (imgBase64: string) => void): void {
-    if (window['utools']) {
+    if (getPlatform() === 'uTools') {
       utools.screenCapture(callback);
-    } else {
-      throw new Error("环境异常");
     }
   },
   isDarkColors(): boolean {
     return window['utools'] ? utools.isDarkColors() : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   },
   redirect(label: string | string[], payload: string | { type: 'text' | 'img' | 'files', data: any }): boolean {
-    if (window['utools']) {
-      return utools.redirect(label, payload);
-    } else {
-      window.open(`utools://${label[0]}/${label[1]}?${payload}`);
-      return true;
-    }
-  },
-  getPath(name: PathName): string {
-    if (window['utools']) {
-      return utools.getPath(name);
-    } else {
-      return '';
-    }
-  },
-  showNotification(body: string, featureName?: string): void {
-    if (window['utools']) {
-      utools.showNotification(body, featureName);
-    } else {
-      // 检查浏览器是否支持通知
-      if ("Notification" in window) {
-        // 请求通知权限
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            // 创建并发送通知
-            const notification = new Notification("通知标题", {
-              body: body,
-            });
+    switch (getPlatform()) {
+      case "uTools":
+        return utools.redirect(label, payload);
+      case "tauri":
+        openUrl(label as string).catch(console.error);
+        return true;
+      default:
+        window.open(`utools://${label[0]}/${label[1]}?${payload}`);
+        return true;
 
-            // 可选：处理通知点击事件
-            notification.onclick = function () {
-              window.focus();
-            };
-          } else {
-            console.error("通知权限被拒绝");
-          }
-        });
-      } else {
-        console.error("浏览器不支持通知");
-      }
     }
   },
-  sendToParent(channel: string, ...params: any[]): void {
-    utools.sendToParent(channel, ...params);
-  },
-  window: {
-    showMainWindow() {
-      if (window['utools']) {
-        return utools.showMainWindow();
-      } else {
-        return false;
+  path: {
+    picture: async () => {
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.getPath('pictures');
+        case "tauri":
+          return pictureDir();
+        default:
+          return Promise.reject(new Error("环境异常"))
       }
     },
-    hideMainWindow() {
-      if (window['utools']) {
-        return utools.hideMainWindow();
-      } else {
-        return false;
+    temp: async () => {
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.getPath('temp');
+        case "tauri":
+          return tempDir();
+        default:
+          return Promise.reject(new Error("环境异常"))
+      }
+    }
+  },
+  window: {
+    showMainWindow: async () => {
+      switch (getPlatform()) {
+        case 'uTools':
+          return utools.showMainWindow();
+        case 'tauri':
+          const w = getCurrentWindow();
+          await w.show();
+          return true;
+        default:
+          return false;
+      }
+    },
+    hideMainWindow: async () => {
+      switch (getPlatform()) {
+        case 'uTools':
+          return utools.hideMainWindow();
+        case 'tauri':
+          const w = getCurrentWindow();
+          await w.hide();
+          return true;
+        default:
+          return false;
       }
     },
     getWindowType(): 'main' | 'detach' | 'browser' {
       return window['utools'] ? utools.getWindowType() : 'detach';
     },
-    outPlugin(isKill?: boolean): boolean {
-      if (window['utools']) {
-        utools.hideMainWindow();
-        return utools.outPlugin(isKill);
-      } else {
-        return false;
-      }
-    },
-  },
-  feature: {
-    listFeature(prefix: string | string[], keys?: Array<any>): Array<string> {
-      if (window['utools']) {
-        let features;
-        if (typeof prefix === 'string') {
-          if (keys) {
-            features = utools.getFeatures(keys.map(key => prefix + key));
-          } else {
-            features = utools.getFeatures([prefix]);
-          }
-        } else {
-          features = utools.getFeatures(prefix);
-        }
-        return features.map(feature => feature.code);
-      } else {
-        return [];
-      }
-    },
-    setFeatureOneSimple(code: string, cmd: FeatureCmd | string): boolean {
-      if (window['utools']) {
-        return utools.setFeature({
-          code: code,
-          explain: Constant.name,
-          icon: "public/logo.png",
-          platform: [
-            "win32",
-            "darwin",
-            "linux"
-          ],
-          cmds: [cmd]
-        });
-      } else {
-        return false
-      }
-    },
-    getFeatureOne(code: string): Feature | null {
-      if (window['utools']) {
-        const features = utools.getFeatures([code]);
-        if (features.length === 0) {
-          return null;
-        }
-        for (let feature of features) {
-          if (feature.code === code) {
-            // @ts-ignore
-            return feature;
-          }
-        }
-        return null;
-      } else {
-        return null
-      }
-    },
-    removeFeatureOne(code: string): boolean {
-      if (window['utools']) {
-        return utools.removeFeature(code)
-      } else {
-        return false;
+    outPlugin: async (isKill?: boolean): Promise<boolean> => {
+      switch (getPlatform()) {
+        case 'uTools':
+          return utools.outPlugin(isKill);
+        case 'tauri':
+          const w = getCurrentWindow();
+          await w.close();
+          return true;
+        default:
+          window.close();
+          return true;
       }
     },
   },
@@ -360,65 +305,145 @@ export const InjectionUtil = {
   },
   db: {
     async put(doc: InjectionDbDoc): Promise<InjectionDbReturn> {
-      if (window['utools']) {
-        return utools.db.promises.put(doc);
-      } else {
-        return http.post<InjectionWebResult<InjectionDbReturn>>('/db/put', {
-          key: doc._id,
-          value: doc
-        }).then(res => {
-          const {data} = res;
-          if (data.code === 200) {
-            return data.data;
-          } else {
-            throw new Error(data.msg);
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.db.promises.put(doc);
+        case "web":
+          return http.post<InjectionWebResult<InjectionDbReturn>>('/db/put', {
+            key: doc._id,
+            value: doc
+          }).then(res => {
+            const {data} = res;
+            if (data.code === 200) {
+              return data.data;
+            } else {
+              throw new Error(data.msg);
+            }
+          });
+        case "tauri":
+          const s = await getStore();
+          // 获取旧的数据
+          const old = await s.get<InjectionDbDoc>(doc._id);
+          // 新的版本
+          let version = 1;
+          if (old) {
+            const {_rev} = old;
+            if (_rev) {
+              version = parseInt(_rev.split('-')[0]) + 1;
+            }
           }
-        });
+
+          let {_id, _rev} = doc;
+          if (version > 0) {
+            if (!_rev) return {
+              id: _id,
+              error: true,
+              message: 'Document update conflict'
+            };
+            const oldVersion = parseInt(_rev.split('-')[1]);
+            if (oldVersion >= version) return {
+              id: _id,
+              error: true,
+              message: 'Document update conflict'
+            };
+          }
+          _rev = version + '-' + randomString(32);
+          await s.set(doc._id, {...doc, _rev});
+          return {
+            id: doc._id,
+            rev: _rev,
+            ok: true
+          }
       }
     },
     async get(id: string): Promise<InjectionDbDoc | null> {
-      if (window['utools']) {
-        return utools.db.promises.get(id);
-      } else {
-        return http.get<InjectionWebResult<InjectionDbDoc>>('/db/get', {
-          params: {
-            key: id
-          }
-        }).then(res => {
-          const {data} = res;
-          if (data.code === 200) {
-            return data.data;
-          } else {
-            throw new Error(data.msg);
-          }
-        });
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.db.promises.get(id);
+        case "web":
+          return http.get<InjectionWebResult<InjectionDbDoc>>('/db/get', {
+            params: {
+              key: id
+            }
+          }).then(res => {
+            const {data} = res;
+            if (data.code === 200) {
+              return data.data;
+            } else {
+              throw new Error(data.msg);
+            }
+          });
+        case "tauri":
+          const s = await getStore();
+          const v = await s.get<InjectionDbDoc>(id);
+          return v || null;
       }
     },
     async remove(doc: string | InjectionDbDoc): Promise<InjectionDbReturn> {
-      if (window['utools']) {
-        return utools.db.promises.remove(doc);
-      } else {
-        return http.get<InjectionWebResult<InjectionDbReturn>>('/db/delete', {
-          params: {
-            key: typeof doc === 'string' ? doc : doc._id
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.db.promises.remove(doc);
+        case "web":
+          const key = typeof doc === 'string' ? doc : doc._id;
+          return http.get<InjectionWebResult<InjectionDbReturn>>('/db/delete', {
+            params: {key}
+          }).then(res => {
+            const {data} = res;
+            if (data.code === 200) {
+              return data.data;
+            } else {
+              return {
+                id: key,
+                error: true,
+                message: data.msg
+              }
+            }
+          });
+        case 'tauri':
+          const s = await getStore();
+          const id = typeof doc === 'string' ? doc : doc._id;
+          try {
+            const res = await s.delete(id);
+            return {
+              id,
+              ok: res,
+              error: !res
+            }
+          } catch (e) {
+            return {
+              id,
+              ok: false,
+              error: true,
+              message: e instanceof Error ? e.message : `${e}`
+            }
           }
-        }).then(res => {
-          const {data} = res;
-          if (data.code === 200) {
-            return data.data;
-          } else {
-            throw new Error(data.msg);
-          }
-        });
-      }
-    },
-    async allDocs(key?: string): Promise<InjectionDbDoc[]> {
-      if (window['utools']) {
-        return utools.db.promises.allDocs(key);
-      } else {
-        return Promise.reject(new Error("系统环境异常"))
       }
 
+    },
+    async allDocs(key?: string): Promise<InjectionDbDoc[]> {
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.db.promises.allDocs(key);
+        case "web":
+          return http.get<InjectionWebResult<Array<InjectionDbDoc>>>('/db/all-docs', {
+            params: {key}
+          }).then(res => {
+            const {data} = res;
+            if (data.code === 200) {
+              return data.data;
+            } else {
+              return Promise.reject(new Error(data.msg));
+            }
+          });
+        case "tauri":
+          const s = await getStore();
+          let keys = await s.keys();
+          if (key) {
+            keys = keys.filter(k => k.startsWith(key));
+          }
+          const res = await Promise.all(keys.map(k => s.get<InjectionDbDoc>(k)));
+          return res.filter(v => !!v) as InjectionDbDoc[];
+      }
     },
     async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<InjectionDbReturn> {
       if (window['utools']) {
@@ -428,65 +453,109 @@ export const InjectionUtil = {
       }
     },
     getAttachment(docId: string): Uint8Array | null {
-      if (window['utools']) {
-        return utools.db.getAttachment(docId);
-      } else {
-        throw new Error("系统环境异常");
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.db.getAttachment(docId);
+        default:
+          throw new Error("系统环境异常");
       }
     },
     async getAttachmentType(docId: string): Promise<string | null> {
-      if (window['utools']) {
-        return utools.db.promises.getAttachmentType(docId);
-      } else {
-        return Promise.reject(new Error("系统环境异常"))
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.db.promises.getAttachmentType(docId);
+        default:
+          return Promise.reject(new Error("系统环境异常"))
       }
     },
     async upload(file: Blob, fileName: string, mineType = "application/octet-stream"): Promise<FileUploadResult> {
       const id = useSnowflake().nextId();
       const docId = LocalNameEnum.ARTICLE_ATTACHMENT + id;
-      if (window['utools']) {
-        const buffer = await file.arrayBuffer();
-        const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), mineType);
-        if (res.error) {
-          return Promise.reject(res.message);
-        }
-        return {
-          name: fileName,
-          key: docId,
-          url: renderAttachmentUrl(docId)
-        }
-      } else {
-        // 文件上传
-        const formData = new FormData();
-        formData.append('file', file);
-        const rsp = await http.post('/file/upload', formData);
-        const {data} = rsp;
-        return data
+      switch (getPlatform()) {
+        case "uTools":
+          const buffer = await file.arrayBuffer();
+          const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), mineType);
+          if (res.error) {
+            return Promise.reject(res.message);
+          }
+          return {
+            name: fileName,
+            key: docId,
+            url: renderAttachmentUrl(docId)
+          }
+        case "web":
+          // 文件上传
+          const formData = new FormData();
+          formData.append('file', file);
+          const rsp = await http.post('/file/upload', formData);
+          const {data} = rsp;
+          return data;
+        case "tauri":
+          // 获取年月日
+          const now = new Date();
+          const year = now.getFullYear().toString();
+          const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份补零
+          const day = now.getDate().toString().padStart(2, '0'); // 日期补零
+          const folder = await join("attachment", year, month, day); // 拼接年/月/日目录
+          const e = await exists(folder, {
+            baseDir: BaseDirectory.AppData
+          });
+          if (!e) {
+            // 如果不存在目录，则创建
+            await mkdir(folder, {baseDir: BaseDirectory.AppData, recursive: true});
+          }
+          // 修改文件名
+          const name = `${useSnowflake().nextId()}.${extname(fileName)}`
+          const path = await join(folder, name);
+          // 写入文件
+          await writeFile(path,  new Uint8Array(await file.arrayBuffer()), {
+            baseDir: BaseDirectory.AppData, createNew: true, create: true
+          });
+          return {
+            name: fileName,
+            key: path,
+            url: convertFileSrc(path)
+          }
+      }
+    },
+    render(url: string): string {
+      switch (getPlatform()) {
+        case "uTools":
+          return renderAttachmentUrl(url)
+        case "web":
+          return './api/file/static/' + url;
+        case "tauri":
+          return convertFileSrc(url);
       }
     }
   },
   env: {
     isSupportAi(): boolean {
-      if (window['utools']) {
+      if (getPlatform() === 'uTools') {
         return versionGreaterEqual(utools.getAppVersion(), 7)
       } else {
         return false
       }
     },
     isSupportMarkdown(): boolean {
-      if (window['utools']) {
-        return versionGreaterEqual(utools.getAppVersion(), 7)
-      } else {
-        return true
+      switch (getPlatform()) {
+        case "uTools":
+          return versionGreaterEqual(utools.getAppVersion(), 7)
+        case "web":
+          return true;
+        case "tauri":
+          // TODO: tauri支持markdown
+          return false;
       }
     },
     isUtools: () => getPlatform() === 'uTools',
     isWeb: () => getPlatform() === 'web',
     isTauri: () => getPlatform() === 'tauri',
+    isDev: () => getPlatform() === 'uTools' ? utools.isDev() : import.meta.env.DEV
   },
   ai: {
     async service(): Promise<InnerAiService | null> {
-      if (window['utools']) {
+      if (getPlatform() == 'uTools') {
         const models = await utools.allAiModels();
         return {
           ...DEFAULT_AI_SERVICE,
@@ -498,93 +567,87 @@ export const InjectionUtil = {
       }
     },
     chat(option: AiChatOption, streamCallback: (chunk: AiChatMessage) => void): AiChatResult<void> {
-      if (window['utools']) {
+      if (getPlatform()) {
         return utools.ai(option, streamCallback);
-      } else {
-        throw new Error("不支持内置AI服务");
       }
+      throw new Error("不支持内置AI服务");
     }
   },
   payment: {
     open(options: OpenPaymentOptions, callback?: () => void): void {
-      if (window['utools']) {
-        utools.openPayment(options, callback);
-      } else {
-        openPayInGoodFaith().then(() => {
-          http.post('/payment/save', {
-            goodId: options.goodsId
-          }).then(res => {
-            const {data} = res;
-            if (data.code === 200) {
-              callback?.()
-            }
-          })
-        }).catch(() => MessageUtil.warning("取消支付"))
+      switch (getPlatform()) {
+        case 'uTools':
+          utools.openPayment(options, callback);
+          return;
+        case "web":
+          openPayInGoodFaith().then(() => {
+            http.post('/payment/save', {
+              goodId: options.goodsId
+            }).then(res => {
+              const {data} = res;
+              if (data.code === 200) {
+                callback?.()
+              }
+            })
+          }).catch(() => MessageUtil.warning("取消支付"))
+          return;
+        case "tauri":
+          throw new Error("tauri不支持支付功能");
       }
     },
     // 获取全部的订单ID
     async fetch(): Promise<Array<string>> {
-      if (window['utools']) {
-        return utools.fetchUserPayments().then(res => res.map(e => e.goods_id));
-      } else {
-        const rsp = await http.get<InjectionWebResult<Array<string>>>('/payment/list');
-        return rsp.data.data;
+      switch (getPlatform()) {
+        case "uTools":
+          return utools.fetchUserPayments().then(res => res.map(e => e.goods_id));
+        case 'web':
+          const rsp = await http.get<InjectionWebResult<Array<string>>>('/payment/list');
+          return rsp.data.data;
+        case "tauri":
+          return Promise.reject(new Error("tauri不支持支付功能"));
       }
     }
   },
   event: {
-    onPluginEnter<T = any, L = any>(callback: (action: {
-      code: string,
-      type: string,
-      payload: T,
-      option: L,
-      from?: PluginEnterFrom
-    }) => void): void {
-      if (window['utools']) {
+    onPluginEnter<T = any, L = any>(callback: (action: MainEvent<T, L>) => void): void {
+      if (getPlatform() === 'uTools') {
         utools.onPluginEnter(callback);
       }
     },
-    onMainPush<T = any>(callback: (action: {
-      code: string,
-      type: string,
-      payload: T
-    }) => MainPushResultList, selectCallback: (action: {
-      code: string,
-      type: string,
-      payload: any,
-      option: MainPushResult
-    }) => void): void {
-      if (window['utools']) {
+    onMainPush<T = any>(callback: MainPushCallback<T>, selectCallback: MainPushSelectCallback<T>): void {
+      if (getPlatform() === 'uTools') {
         utools.onMainPush(callback, selectCallback);
       }
     }
   },
   browser: {
     openUrl(url: string, width?: number, height?: number) {
-      if (window['utools']) {
+      if (getPlatform() === 'uTools') {
         utools.ubrowser
           .goto(url)
           .run({width: width || 1200, height: height || 800})
       } else {
-        window.open(url);
+        shellOpenExternal(url);
       }
     },
     openMd(text: string) {
-      return utools.ubrowser.goto('https://knowledge-base.esion.xyz/md/')
-        .wait("#editor")
-        .wait(1000)
-        .evaluate((text) => {
-          // @ts-ignore
-          window.setValue(text);
-        }, text)
-        .run({width: 1200, height: 800})
+      if (getPlatform() === 'uTools') {
+        return utools.ubrowser.goto('https://knowledge-base.esion.xyz/md/')
+          .wait("#editor")
+          .wait(1000)
+          .evaluate((text) => {
+            // @ts-ignore
+            window.setValue(text);
+          }, text)
+          .run({width: 1200, height: 800})
+      }
     },
     async feedback(params?: Record<string, string>) {
       const query = new URLSearchParams();
       query.set("type", "utools");
       query.set("pluginId", "1894929764697055232");
       if (params) Object.entries(params).forEach(([key, value]) => query.set(key, value));
-      if (window['utools']) {
+      if (getPlatform() === 'uTools') {
         // utools
         const t = await utools.fetchUserServerTemporaryToken()
         query.set("accessToken", t.token);
@@ -593,7 +656,7 @@ export const InjectionUtil = {
           height: 800
         })
       } else {
-        window.open(`https://feedback.esion.xyz/#/auth?${query.toString()}`);
+        shellOpenExternal(`https://feedback.esion.xyz/#/auth?${query.toString()}`);
       }
     }
   },
