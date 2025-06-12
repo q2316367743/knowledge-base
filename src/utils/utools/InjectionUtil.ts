@@ -7,7 +7,7 @@ import {renderAttachmentUrl} from "@/plugin/server";
 import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
 import {extname} from "@/utils/file/FileUtil";
 import {getPlatform, http, InjectionWebResult} from '@/utils/utools/common';
-import {join, pictureDir, tempDir} from '@tauri-apps/api/path';
+import {appDataDir, join, pictureDir, tempDir} from '@tauri-apps/api/path';
 import {getCurrentWindow} from '@tauri-apps/api/window';
 import {load, Store} from '@tauri-apps/plugin-store';
 import {convertFileSrc} from '@tauri-apps/api/core';
@@ -334,18 +334,24 @@ export const InjectionUtil = {
           }
 
           let {_id, _rev} = doc;
-          if (version > 0) {
-            if (!_rev) return {
-              id: _id,
-              error: true,
-              message: 'Document update conflict'
-            };
-            const oldVersion = parseInt(_rev.split('-')[1]);
-            if (oldVersion >= version) return {
-              id: _id,
-              error: true,
-              message: 'Document update conflict'
-            };
+          if (version > 1) {
+            if (!_rev) {
+              console.log(version, doc)
+              return {
+                id: _id,
+                error: true,
+                message: 'Document update conflict'
+              };
+            }
+            const oldVersion = parseInt(_rev.split('-')[0]);
+            if (oldVersion >= version) {
+              console.log(version, oldVersion, old?._rev, _rev);
+              return {
+                id: _id,
+                error: true,
+                message: 'Document update conflict'
+              };
+            }
           }
           _rev = version + '-' + randomString(32);
           await s.set(doc._id, {...doc, _rev});
@@ -492,6 +498,7 @@ export const InjectionUtil = {
           return data;
         case "tauri":
           // 获取年月日
+          const base = await appDataDir();
           const now = new Date();
           const year = now.getFullYear().toString();
           const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份补零
@@ -511,10 +518,11 @@ export const InjectionUtil = {
           await writeFile(path,  new Uint8Array(await file.arrayBuffer()), {
             baseDir: BaseDirectory.AppData, createNew: true, create: true
           });
+          const absPath = await join(base, path);
           return {
             name: fileName,
-            key: path,
-            url: convertFileSrc(path)
+            key: '',
+            url: convertFileSrc(absPath)
           }
       }
     },
@@ -604,7 +612,7 @@ export const InjectionUtil = {
           const rsp = await http.get<InjectionWebResult<Array<string>>>('/payment/list');
           return rsp.data.data;
         case "tauri":
-          return Promise.reject(new Error("tauri不支持支付功能"));
+          return [];
       }
     }
   },

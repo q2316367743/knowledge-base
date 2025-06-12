@@ -154,6 +154,7 @@ const visible = defineModel({
   default: false
 });
 const isWeb = InjectionUtil.env.isWeb();
+const isUtools = InjectionUtil.env.isUtools();
 
 const user = computed(() => useUserStore().profile);
 const noteNoVip = computed(() => useVipStore().noteNoVip);

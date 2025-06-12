@@ -159,9 +159,15 @@ export async function buildConfig(
     fileUpload: (file, callback) => {
       if (instance) {
         useAttachmentUpload.upload(file, file.name, file.type)
-          .then(({name, key}) => {
+          .then(({name, key, url}) => {
             if (instance.value) {
-              instance.value.insertValue(`![${name}#100%](attachment:${key})`);
+              let u: string;
+              if (key) {
+                u = `attachment:${key}`;
+              }else {
+                u = url;
+              }
+              instance.value.insertValue(`![${name}#100%](${u})`);
             } else {
               callback(key, {name})
             }

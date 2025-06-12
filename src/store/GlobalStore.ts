@@ -12,8 +12,6 @@ export enum GlobalType {
 
 export const useGlobalStore = defineStore('global', () => {
   const isDark = ref(InjectionUtil.isDarkColors());
-  const loading = ref(false);
-  const loadingText = ref('');
   const globalType = ref(getItemByDefault<GlobalType>(LocalNameEnum.KEY_APP_THEME, GlobalType.AUTO));
   const themeColor = useUtoolsDbStorage<string>(LocalNameEnum.KEY_APP_COLOR, 'ghibli');
 
@@ -47,21 +45,9 @@ export const useGlobalStore = defineStore('global', () => {
     initDarkColors()
   }
 
-  function startLoading(text?: string) { // 加载中.. 可以加载完成后自动关闭页面.. 不要忘
-    loading.value = true;
-    loadingText.value = text || '加载中...';
-  }
-
-  function closeLoading() {
-    loading.value = false;
-  }
-
   return {
-    isDark, globalType, loading, loadingText, themeColor,
-    initDarkColors, switchDarkColors, startLoading, closeLoading
+    isDark, globalType, themeColor,
+    initDarkColors, switchDarkColors
   }
 
 });
-
-export const collapsed = ref(false);
-

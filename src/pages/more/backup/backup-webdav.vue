@@ -47,13 +47,13 @@ import {createClient, FileStat} from "webdav";
 import {getDefaultBackupSetting, useBackupSettingStore} from "@/store/db/BackupSettingStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {urlJoin} from "@/utils/file/FileUtil";
-import {useGlobalStore} from "@/store/GlobalStore";
 import {toDateTimeString} from "@/utils/lang/FormatUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import Constant from "@/global/Constant";
 import updateCheck from "@/components/update-check/UpdateCheck";
 import {buildBackup, restoreBackup} from "@/pages/more/backup/func";
+import {useLoading} from "@/hooks";
 
 
 const FOLDER = Constant.id;
@@ -135,14 +135,14 @@ async function _loadFiles(): Promise<Array<string>> {
 }
 
 function execBackup() {
-  useGlobalStore().startLoading("开始备份");
+  const close = useLoading("开始备份");
   loading.value.exec = true;
   _execBackup()
     .then(() => MessageUtil.success("备份成功"))
     .catch(e => MessageUtil.error("备份失败", e))
     .finally(() => {
       loading.value.exec = false;
-      useGlobalStore().closeLoading();
+      close();
     });
 }
 
@@ -188,12 +188,12 @@ function restore() {
       MessageUtil.success("恢复成功");
       // 重新初始化数据
       import('@/global/BeanFactory').then(data => {
-        useGlobalStore().startLoading("开始初始化数据...");
+        const close = useLoading("开始初始化数据...");
         // 检查更新、执行更新
         updateCheck().catch(e => MessageUtil.error("更新失败", e))
           .finally(() =>
             data.initData().catch(e => MessageUtil.error("数据初始化失败", e))
-              .finally(() => useGlobalStore().closeLoading()))
+              .finally(() => close()))
       });
     })
     .catch(e => MessageUtil.error("恢复失败", e));

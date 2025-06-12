@@ -17,7 +17,15 @@ export const useScreenShotMenu = (editor: ShallowRef<Cherry | undefined>) => {
           InjectionUtil.window.showMainWindow()
           const name = `截屏-${Date.now()}.png`;
           useAttachmentUpload.upload(base64, name, "image/png")
-            .then(({name, key}) => editor.value && editor.value.insert(`![${name}#100%](attachment:${key})`))
+            .then(({name, key, url}) => {
+              let u: string;
+              if (key) {
+                u = `attachment:${key}`;
+              }else {
+                u = url;
+              }
+              editor.value && editor.value.insert(`![${name}#100%](${u})`)
+            })
             .catch(e => MessageUtil.error("截图失败", e))
         })
       }

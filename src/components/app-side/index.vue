@@ -39,9 +39,6 @@
         <t-menu-item value="/tool/category">
           分类图
         </t-menu-item>
-        <t-menu-item value="/plugin">
-          主题|插件|模板
-        </t-menu-item>
       </t-submenu>
       <t-menu-item value="/setting">
         <template #icon>

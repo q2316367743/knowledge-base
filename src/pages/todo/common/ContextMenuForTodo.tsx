@@ -20,9 +20,10 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useUmami} from "@/plugin/umami";
-import {openTodoItemInfo, openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
+import {openTodoItemInfo} from "@/pages/todo/common/TodoItemSetting/model";
 import UnTopIcon from "@/components/KbIcon/UnTopIcon.vue";
 import {DrawerOptions} from "tdesign-vue-next/es/drawer/type";
+import {useLoading} from "@/hooks";
 
 /**
  * 更新优先级
@@ -31,14 +32,14 @@ import {DrawerOptions} from "tdesign-vue-next/es/drawer/type";
  */
 function updatePriority(id: number, priority: TodoItemPriority) {
   return new Promise<void>(resolve => {
-    useGlobalStore().startLoading("开始更新待办项");
+    const close = useLoading("开始更新待办项");
     useTodoItemStore().updateById(id, {priority})
       .then(() => {
         MessageUtil.success("更新成功");
         resolve();
       })
       .catch(e => MessageUtil.error("更新失败", e))
-      .finally(() => useGlobalStore().closeLoading());
+      .finally(() => close());
   })
 }
 
@@ -100,14 +101,14 @@ function removeById(id: number) {
     MessageBoxUtil.confirm("是否删除该待办项？", "删除提示", {
       confirmButtonText: "删除"
     }).then(() => {
-      useGlobalStore().startLoading("开始删除待办项");
+      const close = useLoading("开始删除待办项")
       useTodoItemStore().deleteById(id)
         .then(() => {
           MessageUtil.success("删除成功");
           resolve();
         })
         .catch(e => MessageUtil.error("删除失败", e))
-        .finally(() => useGlobalStore().closeLoading());
+        .finally(() => close());
     })
   });
 }

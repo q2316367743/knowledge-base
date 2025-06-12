@@ -1,7 +1,7 @@
 // 窗口相关工具
 import {useErrorStore} from "@/store/components/ErrorStore";
 import {getPlatform} from "@/utils/utools/common";
-import {WebviewWindow} from '@tauri-apps/api/webviewWindow'
+import {getCurrentWebviewWindow, WebviewWindow} from '@tauri-apps/api/webviewWindow'
 import {TauriEvent} from "@tauri-apps/api/event";
 
 export interface CustomerWindowProps extends BrowserWindow.InitOptions {
@@ -30,9 +30,8 @@ export interface CustomerWindow {
 
   /**
    * 打开自定义窗口
-   * @param callback 打开成功后回调
    */
-  open(callback: (windowId: number) => void): void;
+  open(): Promise<void>;
 
   /**
    * 向子窗口发送消息
@@ -55,7 +54,6 @@ export interface CustomerWindow {
 
   minimize(): Promise<void>;
 
-
 }
 
 class CustomerWindowForUTools implements CustomerWindow {
@@ -69,35 +67,41 @@ class CustomerWindowForUTools implements CustomerWindow {
     this.win = null;
   }
 
-  open(callback?: (windowId: number) => void): void {
-    const dev = utools.isDev();
-    this.win = utools.createBrowserWindow(dev ? 'test.html' : `dist/${this.url}`, {
-      ...this.props,
-      webPreferences: {
-        preload: 'sub-window.js',
-        zoomFactor: 0,
-        devTools: dev
-      },
-    }, () => {
-      if (!this.win) return;
-      // 显示窗口
-      this.win.show();
-      if (dev) {
-        let u = this.url;
-        if (this.props.params) {
-          const p = new URLSearchParams();
-          Object.entries(this.props.params).forEach(([key, value]) => p.append(key, value));
-          u += `?${p.toString()}`
+  open(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const dev = utools.isDev();
+      this.win = utools.createBrowserWindow(dev ? 'test.html' : `dist/${this.url}`, {
+        ...this.props,
+        webPreferences: {
+          preload: 'sub-window.js',
+          zoomFactor: 0,
+          devTools: dev
+        },
+      }, () => {
+        try {
+          if (!this.win) return;
+          // 显示窗口
+          this.win.show();
+          if (dev) {
+            let u = this.url;
+            if (this.props.params) {
+              const p = new URLSearchParams();
+              Object.entries(this.props.params).forEach(([key, value]) => p.append(key, value));
+              u += `?${p.toString()}`
+            }
+            this.win.webContents.executeJavaScript(`location.href = 'http://localhost:5173/${u}'`)
+              .then(() => console.debug("代码执行成功"))
+              .catch((e: any) => console.error("代码执行失败", e));
+            this.win.webContents.openDevTools();
+          } else if (useErrorStore().consoleShow) {
+            this.win.webContents.openDevTools();
+          }
+          resolve()
+        } catch (e) {
+          reject(e);
         }
-        this.win.webContents.executeJavaScript(`location.href = 'http://localhost:5173/${u}'`)
-          .then(() => console.debug("代码执行成功"))
-          .catch((e: any) => console.error("代码执行失败", e));
-        this.win.webContents.openDevTools();
-      } else if (useErrorStore().consoleShow) {
-        this.win.webContents.openDevTools();
-      }
-      callback?.(this.win.webContents.id);
-    });
+      });
+    })
   }
 
   async sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): Promise<void> {
@@ -146,7 +150,6 @@ class CustomerWindowForWeb implements CustomerWindow {
   private readonly url: string;
   private readonly props: Partial<CustomerWindowProps>;
   private opener: Window | null;
-  private readonly id: number = Date.now();
 
   constructor(url: string, props: Partial<CustomerWindowProps>) {
     this.url = url;
@@ -154,15 +157,17 @@ class CustomerWindowForWeb implements CustomerWindow {
     this.opener = null;
   }
 
-  open(callback?: (windowId: number) => void) {
-    let u = this.url;
-    if (this.props.params) {
-      const p = new URLSearchParams();
-      Object.entries(this.props.params).forEach(([key, value]) => p.append(key, value));
-      u += `?${p.toString()}`
-    }
-    this.opener = window.open(`./${u}`);
-    callback?.(0);
+  open(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      let u = this.url;
+      if (this.props.params) {
+        const p = new URLSearchParams();
+        Object.entries(this.props.params).forEach(([key, value]) => p.append(key, value));
+        u += `?${p.toString()}`
+      }
+      this.opener = window.open(`./${u}`);
+      resolve();
+    })
   }
 
   async sendMessage<T = any>(channelName: SubWindowChannel, message: IpcEvent<T>) {
@@ -199,21 +204,41 @@ class CustomerWindowForWeb implements CustomerWindow {
 }
 
 class CustomerWindowForTauri implements CustomerWindow {
+  private readonly label: string;
   private readonly url: string;
   private readonly props: Partial<CustomerWindowProps>;
-  private readonly id: number = Date.now();
   private ww: WebviewWindow | null = null;
   private destroyed: boolean = false;
 
-  constructor(url: string, props: Partial<CustomerWindowProps>) {
+  constructor(label: string, url: string, props: Partial<CustomerWindowProps>) {
+    this.label = label;
     this.url = url;
     this.props = props;
   }
 
-  open(callback: (windowId: number) => void): void {
-    this.ww = new WebviewWindow(this.url, this.props);
-    this.ww.once(TauriEvent.WINDOW_DESTROYED, () => this.destroyed = true);
-    this.ww.once(TauriEvent.WEBVIEW_CREATED, () => callback(this.id));
+  open(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.ww = new WebviewWindow(this.label, {
+        x: this.props.x,
+        y: this.props.y,
+        width: this.props.width,
+        height: this.props.height,
+        minWidth: this.props.minWidth,
+        minHeight: this.props.minHeight,
+        alwaysOnTop: this.props.alwaysOnTop,
+        backgroundColor: this.props.backgroundColor,
+        transparent: this.props.transparent,
+        resizable: this.props.resizable,
+        shadow: this.props.hasShadow,
+        url: this.url
+      });
+      (async () => {
+        await this.ww?.once(TauriEvent.WINDOW_DESTROYED, () => this.destroyed = true);
+        // 真正的窗口是否创建成功
+        await this.ww?.once('window-initialized', () => resolve());
+        await this.ww?.once('tauri://error', reject);
+      })().catch(reject);
+    })
   }
 
   async sendMessage<T = any>(channel: SubWindowChannel, message: IpcEvent<T>): Promise<void> {
@@ -276,24 +301,50 @@ class WebSubWindow implements SubWindow {
   }
 }
 
+class TauriSubWindow implements SubWindow {
+  private readonly ww: WebviewWindow;
+  private readonly channel: SubWindowChannel;
+
+  constructor(channel: SubWindowChannel) {
+    this.ww = getCurrentWebviewWindow()
+    this.channel = channel;
+    // 推送创建完成事件
+    this.ww.emit('window-initialized');
+  }
+
+  receiveMsg<T = any>(callback: (msg: IpcEvent<T>) => void): void {
+    this.ww.listen<IpcEvent<T>>(this.channel, ({payload}) => {
+      callback(payload);
+    });
+  }
+
+  sendMsg<T = any>(msg: IpcEvent<T>): void {
+    this.ww.emit(this.channel, msg);
+  }
+
+}
+
 export const WindowUtil = {
-  createBrowserWindow(url: string, options: Partial<CustomerWindowProps>): CustomerWindow {
+  createBrowserWindow(label: string, url: string, options: Partial<CustomerWindowProps>): CustomerWindow {
     switch (getPlatform()) {
       case 'uTools':
         return new CustomerWindowForUTools(url, options);
       case 'web':
         return new CustomerWindowForWeb(url, options);
       case 'tauri':
-        return new CustomerWindowForTauri(url, options);
+        return new CustomerWindowForTauri(label, url, options);
       default:
         throw new Error('Unknown platform');
     }
   },
   buildSubWindow(channel: SubWindowChannel): SubWindow {
-    if (window.preload) {
-      return window.preload.ipcRenderer.buildSubWindow(channel);
-    } else {
-      return new WebSubWindow(channel);
+    switch (getPlatform()) {
+      case 'uTools':
+        return window.preload.ipcRenderer.buildSubWindow(channel);
+      case "web":
+        return new WebSubWindow(channel);
+      case "tauri":
+        return new TauriSubWindow(channel);
     }
   },
   receiveMessage<T = any>(channelName: SubWindowChannel, callback: (msg: IpcEvent<T>) => void): void {

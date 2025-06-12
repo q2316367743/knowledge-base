@@ -32,6 +32,7 @@ import {
 import {addArticleModal} from "@/pages/note/components/he-context";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {openSearchContent} from "@/pages/note/components/SearchContent";
+import {isEmptyArray} from "@/utils/lang/FieldUtil";
 
 // 代码编辑器环境注册
 self.MonacoEnvironment = {
@@ -108,6 +109,7 @@ window.addEventListener('click', e => {
   }
   // @ts-ignore
   const elements: Array<HTMLElement> = e.path;
+  if (isEmptyArray(elements)) return;
   for (let element of elements) {
     if (element.tagName && element.tagName.toLowerCase() === 'a') {
       const href = (element as HTMLLinkElement).href;

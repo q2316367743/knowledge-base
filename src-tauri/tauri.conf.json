@@ -13,6 +13,7 @@
     "windows": [
       {
         "title": "knowledge-base",
+        "label": "main",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -28,7 +29,10 @@
         "img-src": "'self' asset: http://asset.localhost blob: data:"
       },
       "assetProtocol": {
-        "enable": true
+        "enable": true,
+        "scope": [
+          "$APPDATA/attachment/**/*"
+        ]
       }
     }
   },

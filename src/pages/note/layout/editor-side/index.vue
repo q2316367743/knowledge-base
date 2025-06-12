@@ -77,14 +77,13 @@ import {
   MoreIcon
 } from "tdesign-icons-vue-next";
 import {
-  useGlobalStore,
   useArticleStore,
   useFolderStore,
   homeEditorId,
   useHomeEditorStore,
   useBaseSettingStore
 } from "@/store";
-import {useNoteTree} from "@/hooks";
+import {useLoading, useNoteTree} from "@/hooks";
 import {keyword} from "@/global/BeanFactory";
 import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -150,12 +149,12 @@ function multiCheckStop() {
 }
 
 function multiCheckDelete() {
-  useGlobalStore().startLoading("开始删除")
+  const close = useLoading("开始删除")
   useArticleStore().removeBatchByIds(checkKeys.value)
     .then(() => MessageUtil.success("删除成功"))
     .catch(e => MessageUtil.error("删除失败", e))
     .finally(() => {
-      useGlobalStore().closeLoading();
+      close();
       checkKeys.value = [];
     });
 }
@@ -234,7 +233,7 @@ function selectAll() {
 
 function moveMultiTo() {
   openFolderChoose().then(folder => {
-    useGlobalStore().startLoading("开始移动");
+    const close = useLoading("开始移动");
     try {
       const articleMap = useArticleStore().articleMap;
       // 笔记
@@ -259,7 +258,7 @@ function moveMultiTo() {
     } catch (e) {
       MessageUtil.error("移动失败");
     } finally {
-      useGlobalStore().closeLoading();
+      close();
     }
   })
 }
