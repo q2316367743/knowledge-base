@@ -20,7 +20,8 @@
             </template>
           </t-list-item-meta>
           <template #action>
-            <t-space size="small">
+            <t-button v-if="s.type === AiServiceType.U_TOOLS" theme="primary" @click="showUtoolsModel">查看</t-button>
+            <t-space v-else size="small">
               <t-button theme="primary" @click="openAddServiceDrawer(s)">编辑</t-button>
               <t-popconfirm content="是否立即删除此服务，删除后无法恢复" @confirm="handleRemove(s.id)">
                 <t-button theme="danger">删除</t-button>
@@ -37,6 +38,8 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useAiServiceStore} from "@/store";
 import {openAddServiceDrawer} from "@/pages/setting/ai-service/dialog/AddServiceDrawer";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {AiServiceType} from "@/entity/ai/AiService";
+import {showUtoolsModel} from "@/pages/setting/ai-service/dialog/ShowUtoolsModel";
 
 const aiServices = computed(() => useAiServiceStore().aiServices);
 

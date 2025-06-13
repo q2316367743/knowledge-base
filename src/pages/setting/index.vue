@@ -9,7 +9,6 @@
         <t-menu-item value="/setting/code-run" v-if="isUtools">代码运行设置</t-menu-item>
         <t-menu-item value="/setting/ai-service">AI 服务设置</t-menu-item>
         <t-menu-item value="/setting/ai-assistant">AI 助手设置</t-menu-item>
-        <t-menu-item value="/setting/feature" v-if="isUtools">关键字设置</t-menu-item>
       </t-menu>
     </t-aside>
     <t-header v-else>
@@ -21,7 +20,6 @@
         <t-tab-panel value="/setting/code-run" label="代码运行设置" v-if="isUtools"/>
         <t-tab-panel value="/setting/ai-service" label="AI 服务设置"/>
         <t-tab-panel value="/setting/ai-assistant" label="AI 助手设置"/>
-        <t-tab-panel value="/setting/feature" label="关键字设置" v-if="isUtools"/>
       </t-tabs>
     </t-header>
     <t-content class="main">
@@ -61,6 +59,7 @@ const handleClick = (v: any) => {
     padding: 24px 16px;
     overflow-y: auto;
     position: relative;
+    background-color: var(--td-bg-color-container);
 
     .setting-content {
       max-width: 800px;
