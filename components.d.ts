@@ -92,7 +92,6 @@ declare module 'vue' {
     TTabs: typeof import('tdesign-vue-next')['Tabs']
     TTag: typeof import('tdesign-vue-next')['Tag']
     TText: typeof import('tdesign-vue-next')['Text']
-    TTextarea: typeof import('tdesign-vue-next')['Textarea']
     TTimeline: typeof import('tdesign-vue-next')['Timeline']
     TTimelineItem: typeof import('tdesign-vue-next')['TimelineItem']
     TTimePicker: typeof import('tdesign-vue-next')['TimePicker']
