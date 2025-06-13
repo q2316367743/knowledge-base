@@ -149,7 +149,12 @@ export function treeEach(
         temp.children.push(article)
       });
       // 排序
-      temp.children = (temp.children as  Array<TreeOptionData>).sort((a, b) => (a.label as string).localeCompare(b.label as string));
+      temp.children = (temp.children as  Array<TreeOptionData>).sort((a, b) => {
+        if (a.leaf  === b.leaf) {
+          return (a.label as string).localeCompare(b.label as string)
+        }
+        return (a.leaf ? 1 : 0) - (b.leaf ? 1 : 0)
+      });
     }
   });
 }
