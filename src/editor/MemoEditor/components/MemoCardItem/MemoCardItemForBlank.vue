@@ -3,7 +3,7 @@
     <div class="memo-card-item-for-text__content">{{ card.data.answer }}</div>
     <div class="memo-card-item-for-text__footer">
       <div class="date">{{ card.createDate }}</div>
-      <t-tag theme="primary" size="small">填空卡</t-tag>
+      <t-tag theme="primary" size="small">空白卡</t-tag>
     </div>
   </div>
 </template>

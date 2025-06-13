@@ -1,10 +1,11 @@
 <template>
-  <t-form-item label="" label-align="top">
-    <t-textarea v-model="data.answer" placeholder="请输入填空，练习时会自动隐藏文字" :autosize="{minRows: 3, maxRows: 10}"/>
+  <t-form-item label="" label-align="top" help="请输入内容">
+    <memo-md-editor v-model="data.answer" />
   </t-form-item>
 </template>
 <script lang="ts" setup>
 import {MemoDataCardBlank} from "@/editor/MemoEditor/types";
+import MemoMdEditor from "@/editor/MemoEditor/components/MemoMdEditor.vue";
 
 const data = defineModel<Partial<MemoDataCardBlank>>({
   default: () => ({})

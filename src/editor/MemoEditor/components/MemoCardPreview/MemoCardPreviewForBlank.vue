@@ -1,6 +1,6 @@
 <template>
   <div class="memo-card-preview-for-text" v-if="card">
-    <div class="memo-card-preview-for-text__content">{{ card.data.answer }}</div>
+    <markdown-preview :value="card.data.answer" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -17,17 +17,6 @@ defineProps({
   display: flex;
   flex-direction: column;
   height: 100%;
-
-  &__content {
-    font-size: var(--td-font-size-body-medium);
-    color: var(--td-text-color-primary);
-    flex: 1 1 auto;
-    overflow: auto;
-    margin-bottom: 8px;
-    word-wrap: anywhere;
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
 
 }
 </style>

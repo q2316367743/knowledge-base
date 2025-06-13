@@ -47,7 +47,7 @@ export interface MemoDataCardChoice {
 export interface MemoDataCardContentMap {
   // 记忆卡：歧视就是问题、答案，简答题
   'TEXT': MemoDataCardText;
-  // 填空卡：填空题
+  // 空白卡：空白题
   'BLANK': MemoDataCardBlank;
   // 选择卡：选择题
   'CHOICE': MemoDataCardChoice;
@@ -62,7 +62,7 @@ export const renderMemoDataCardType = (type: MemoDataCardType) => {
     case 'TEXT':
       return '记忆卡';
     case 'BLANK':
-      return '填空卡';
+      return '空白卡';
     case 'WORD':
       return '单词卡';
     case 'CHOICE':

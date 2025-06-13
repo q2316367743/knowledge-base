@@ -133,7 +133,11 @@ function onImport(id: number) {
     }
 
     a {
-      color: rgb(var(--arcoblue-6));
+      color: var(--td-text-color-link);
+    }
+
+    image, img {
+      max-width: 100%;
     }
   }
 }

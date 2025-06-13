@@ -33,7 +33,7 @@ const options = ref<Array<TdDropdownItemProps>>([
     content: '新增记忆卡',
     value: 'TEXT'
   }, {
-    content: '新增填空卡',
+    content: '新增空白卡',
     value: 'BLANK'
   }, {
     content: '新增选择卡',
@@ -63,7 +63,7 @@ const onAdd = (item: TdDropdownItemProps) => {
     align-items: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 16px;
     position: relative;
     overflow: auto;
     height: calc(100% - 16px);

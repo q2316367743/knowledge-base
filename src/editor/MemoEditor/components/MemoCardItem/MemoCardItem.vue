@@ -1,17 +1,17 @@
 <template>
-  <div class="memo-card-item" v-if="card">
+  <div class="memo-card-item" v-if="card" @click="openMemoCardPreviewModel(card)">
     <memo-card-item-for-text v-if="card.type === 'TEXT'" :card="card as MemoDataCard<'TEXT'>"/>
     <memo-card-item-for-choice v-else-if="card.type === 'CHOICE'" :card="card as MemoDataCard<'CHOICE'>"/>
     <memo-card-item-for-word v-else-if="card.type === 'WORD'" :card="card as MemoDataCard<'WORD'>"/>
     <memo-card-item-for-blank v-else-if="card.type === 'BLANK'" :card="card as MemoDataCard<'BLANK'>"/>
     <div class="edit">
       <t-space size="small">
-        <t-button theme="primary" shape="square" size="small" @click="onEdit(card)">
+        <t-button theme="primary" shape="square" size="small" @click.stop="onEdit(card)">
           <template #icon>
             <edit-icon/>
           </template>
         </t-button>
-        <t-button theme="danger" shape="square" size="small" @click="onDelete(card)">
+        <t-button theme="danger" shape="square" size="small" @click.stop="onDelete(card)">
           <template #icon>
             <delete-icon />
           </template>
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {DeleteIcon, EditIcon} from "tdesign-icons-vue-next";
+import {BrowseIcon, DeleteIcon, EditIcon} from "tdesign-icons-vue-next";
 import {
   IMemoInstance,
   MemoDataCard,
@@ -35,6 +35,7 @@ import MemoCardItemForChoice from "@/editor/MemoEditor/components/MemoCardItem/M
 import MemoCardItemForWord from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForWord.vue";
 import MemoCardItemForBlank from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForBlank.vue";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {openMemoCardPreviewModel} from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewModel";
 
 defineProps({
   card: {
@@ -71,6 +72,7 @@ const onDelete = (card: MemoDataCard<MemoDataCardType>) => {
   height: 200px;
   width: 200px;
   position: relative;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--td-bg-color-component-hover);

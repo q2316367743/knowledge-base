@@ -1,6 +1,6 @@
 <template>
-  <div class="memo-card-preview" v-if="card">
-    <div class="memo-card-preview__star">
+  <div class="memo-card-preview" v-if="card" :class="{shadow:shadow}">
+    <div class="memo-card-preview__star" v-if="shadow">
       <t-tag theme="primary">{{ renderMemoDataCardType(card.type) }}</t-tag>
       <t-button theme="primary" variant="outline" shape="square" @click="onStar(card)">
         <template #icon>
@@ -39,6 +39,10 @@ defineProps({
     type: Number,
     required: true,
     default: 0,
+  },
+  shadow: {
+    type: Boolean,
+    default: true
   }
 });
 
@@ -54,9 +58,17 @@ const onStar = (card: MemoDataCard<MemoDataCardType>) => {
   width: 100%;
   height: 100%;
   border-radius: var(--td-radius-large);
-  box-shadow: var(--td-shadow-1);
   background-color: var(--td-bg-color-container);
   position: relative;
+  overflow: auto;
+
+  &.shadow {
+    box-shadow: var(--td-shadow-1);
+
+    .memo-card-preview__container {
+      top: 64px;
+    }
+  }
 
   .memo-card-preview__star {
     position: absolute;
@@ -70,7 +82,7 @@ const onStar = (card: MemoDataCard<MemoDataCardType>) => {
 
   .memo-card-preview__container {
     position: absolute;
-    top: 64px;
+    top: 16px;
     left: 16px;
     right: 16px;
     bottom: 16px;
