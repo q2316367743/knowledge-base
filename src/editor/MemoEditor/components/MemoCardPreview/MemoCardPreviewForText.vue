@@ -1,10 +1,12 @@
 <template>
   <div class="memo-card-preview-for-text" v-if="card">
     <div class="memo-card-preview-for-text__title">{{ card.data.question }}</div>
-    <div class="memo-card-preview-for-text__content">{{ card.data.answer }}</div>
+    <div class="memo-card-preview-for-text__content">
+      <markdown-preview :value="card.data.answer" />
+    </div>
     <template v-if="card.data.analysis">
       <t-divider align="left">解析</t-divider>
-      <div>{{ card.data.analysis }}</div>
+      <markdown-preview :value=" card.data.analysis" />
     </template>
   </div>
 </template>

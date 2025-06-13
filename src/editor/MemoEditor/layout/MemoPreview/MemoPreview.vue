@@ -90,7 +90,7 @@ const onReview = () => {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     align-content: flex-start;
   }

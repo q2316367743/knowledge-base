@@ -153,10 +153,6 @@ function handleDragstart(e: DragEvent) {
   &.deleted {
     color: var(--td-text-color-disabled);
     background-color: var(--td-bg-color-container-disabled);
-
-    .arco-typography {
-      color: var(--color-text-4);
-    }
   }
 
 
@@ -164,7 +160,7 @@ function handleDragstart(e: DragEvent) {
     position: absolute;
     right: 0;
     top: 0;
-    background-color: rgb(var(--orange-6));
+    background-color: var(--td-warning-color);
     color: var(--td-bg-color-container);
     clip-path: polygon(0 0, 100% 0, 100% 100%);
     width: 25px;

@@ -4,7 +4,7 @@
       <div class="home-assistant-select__wrap flex items-center ">
         <div class="mr-6px relative name">
           <div v-if="assistant" class=" ellipsis" :title="assistant.name">{{ assistant.name }}</div>
-          <div v-else style="color: var(--color-text-3)" title="AI 助手">请选择AI助手</div>
+          <div v-else style="color: var(--td-text-color-placeholder)" title="AI 助手">请选择AI助手</div>
         </div>
         <caret-down-icon class="down"/>
       </div>

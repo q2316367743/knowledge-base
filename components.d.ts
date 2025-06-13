@@ -29,6 +29,7 @@ declare module 'vue' {
     Item: typeof import('./src/components/update-check/item.vue')['default']
     KbAlert: typeof import('./src/components/KbAlert/KbAlert.vue')['default']
     LoadingResult: typeof import('./src/components/Result/LoadingResult.vue')['default']
+    MarkdownPreview: typeof import('./src/components/Chat/MarkdownPreview.vue')['default']
     PageLayout: typeof import('./src/components/PageLayout/PageLayout.vue')['default']
     PriorityDropdown: typeof import('./src/components/PriorityDropdown/PriorityDropdown.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

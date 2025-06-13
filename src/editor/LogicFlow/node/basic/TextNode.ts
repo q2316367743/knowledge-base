@@ -17,7 +17,7 @@ class TextNewModel extends TextNodeModel {
         const properties = this.getProperties()
         if (properties.backgroundColor) {
             style.backgroundStyle = {
-                fill: 'var(--color-neutral-2);',
+                fill: 'var(--td-bg-color-component);',
             }
         }
         return getTextStyleFunction(style, {

@@ -154,3 +154,38 @@ export function randomString(length: number): string {
   }
   return result;
 }
+
+export function deepClone<T>(obj: T): T {
+    // 检查是否为 null 或 undefined
+    if (obj === null || obj === undefined) {
+        return obj;
+    }
+
+    // 检查是否为日期对象
+    if (obj instanceof Date) {
+        return new Date(obj.getTime()) as any;
+    }
+
+    // 检查是否为正则表达式对象
+    if (obj instanceof RegExp) {
+        return new RegExp(obj) as any;
+    }
+
+    // 检查是否为对象或数组
+    if (typeof obj === 'object') {
+        const cloneObj = Array.isArray(obj) ? [] : {};
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                // 递归克隆每个属性
+                (cloneObj as any)[key] = deepClone((obj as any)[key]);
+            }
+        }
+
+        return cloneObj as T;
+    }
+
+    // 如果不是对象或数组，直接返回
+    return obj;
+}
+

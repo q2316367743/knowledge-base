@@ -47,7 +47,7 @@ function handlerClick() {
     align-items: center;
     justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--td-border-level-2-color);
     height: 50px;
     box-sizing: border-box;
 

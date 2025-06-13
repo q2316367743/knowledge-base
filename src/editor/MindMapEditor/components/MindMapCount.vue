@@ -54,8 +54,8 @@ function walk(data: any) {
   left: 20px;
   bottom: 10px;
   color: var(--td-text-color-primary);
-  background: var(--color-fill-3);
-  border-radius: 2px;
+  background: var(--td-bg-color-component);
+  border-radius: var(--td-radius-default);
   height: 22px;
   line-height: 22px;
   font-size: 12px;

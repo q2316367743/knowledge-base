@@ -13,16 +13,17 @@ import {useAskAi} from "@/editor/MarkdownEditor/menu/AskAi";
 import {RelationArticleSyntaxHook} from "@/editor/MarkdownEditor/syntax/RelationArticle";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {onClickPreview} from "@/editor/MarkdownEditor/common/event";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {MarkdownEditorPropsType} from "@/editor/MarkdownEditor/CherryMarkdownOption";
 
 
 export async function buildConfig(
-  articleId: number,
-  id: string,
-  value: string,
-  preview: boolean,
+  props: MarkdownEditorPropsType,
+  el: HTMLElement,
   instance: Ref<Cherry | undefined> | null,
   update: ((content: string) => void) | null,
   sendToChat: ((content: string) => void) | null): Promise<Partial<CherryOptions>> {
+  const {articleId, modelValue, preview, toc} = props;
 
   const {defaultModel, classicBr, mdEditorKeyMap} = useBaseSettingStore();
 
@@ -61,8 +62,10 @@ export async function buildConfig(
       insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
     },
     'graph',
-    'ScreenShotMenu'
   );
+  if (InjectionUtil.env.isUtools()) {
+    toolbar.push('ScreenShotMenu');
+  }
   bubble.push(...['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'PanGu', 'FanYi'])
 
   let customMenu: Record<string, any> = {};
@@ -84,8 +87,8 @@ export async function buildConfig(
   const {isDark} = useGlobalStore();
 
   return {
-    id: id,
-    value: value,
+    el,
+    value: modelValue,
     previewer: {
       dom: false,
       enablePreviewerBubble: false,
@@ -144,10 +147,10 @@ export async function buildConfig(
       toolbarRight: ['fullScreen', '|'],
       bubble: bubble, // array or false
       sidebar: ['settings'],
-      toc: {
+      toc: toc ? {
         updateLocationHash: false, // 要不要更新URL的hash
         defaultModel: 'pure', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题,
-      },
+      } : false,
       customMenu
     },
     callback: {
@@ -164,7 +167,7 @@ export async function buildConfig(
               let u: string;
               if (key) {
                 u = `attachment:${key}`;
-              }else {
+              } else {
                 u = url;
               }
               instance.value.insertValue(`![${name}#100%](${u})`);

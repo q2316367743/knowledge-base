@@ -11,15 +11,16 @@ import MemoCardEditForText from "@/editor/MemoEditor/components/MemoCardEdit/Mem
 import MemoCardEditForChoice from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEditForChoice.vue";
 import MemoCardEditForBlank from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEditForBlank.vue";
 import MemoCardEditForWord from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEditForWord.vue";
+import {deepClone} from "@/utils/lang/FieldUtil";
 
 export function openMemoCardEdit(type: MemoDataCardType, old?: MemoDataCard<MemoDataCardType>): Promise<MemoDataCard<MemoDataCardType>> {
-  return new Promise<MemoDataCard<MemoDataCardType>>((resolve, reject) => {
-    const data = ref<MemoDataCard<MemoDataCardType>>(old ? clone(old) : buildMemoDataCard(type, {}));
+  return new Promise<MemoDataCard<MemoDataCardType>>(resolve => {
+    const data = ref<MemoDataCard<MemoDataCardType>>(old ? deepClone(old) : buildMemoDataCard(type, {}));
     const op = !!old ? '修改' : '新增';
     const dp = DrawerPlugin({
       header: op + '卡片',
       placement: 'right',
-      size: 'calc(100vw - 49px)',
+      size: '751px',
       closeOnEscKeydown: false,
       closeOnOverlayClick: false,
       closeBtn: true,

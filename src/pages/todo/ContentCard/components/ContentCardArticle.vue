@@ -81,7 +81,7 @@ const count = computed(() => articles.value.length);
       flex-direction: row;
       align-items: center;
       padding: 6px 8px;
-      border-bottom: 1px solid var(--color-border-1);
+      border-bottom: 1px solid var(--td-border-level-1-color);
       cursor: pointer;
       transition: color 0.3s;
 

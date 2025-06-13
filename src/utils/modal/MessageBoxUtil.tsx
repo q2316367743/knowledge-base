@@ -261,12 +261,12 @@ export type LineContentStatus = 'success' | 'warning' | 'error' | 'info';
 export function renderColor(status: LineContentStatus): string {
   switch (status) {
     case "success":
-      return 'rgb(var(--green-6))';
+      return 'var(--td-success-color)';
     case 'warning':
-      return 'rgb(var(--orange-6))';
+      return 'var(--td-warning-color)';
     case "error":
-      return 'rgb(var(--red-6))';
+      return 'var(--td-error-color)';
     default:
-      return 'var(--color-neutral-10)';
+      return 'var(--td-text-color-primary)';
   }
 }

@@ -68,8 +68,8 @@ function _openMindMapLayout() {
   right: 10px;
   bottom: 10px;
   color: var(--td-text-color-primary);
-  background: var(--color-fill-3);
-  border-radius: 2px;
+  background: var(--td-bg-color-secondarycontainer);
+  border-radius: var(--td-radius-default);
   padding: 3px 6px;
 }
 </style>

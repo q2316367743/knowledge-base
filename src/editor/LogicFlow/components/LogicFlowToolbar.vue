@@ -148,7 +148,7 @@ export default defineComponent({
     color: var(--td-text-color-secondary);
 
     &.disabled {
-      color: var(--color-text-4);
+      color: var(--td-text-color-disabled);
     }
   }
 

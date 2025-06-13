@@ -1,11 +1,11 @@
 <template>
-  <div class="markdown-editor">
+  <div class="markdown-editor" ref="markdown-editor">
     <div class="markdown-editor-wrap" :id="id"></div>
   </div>
 </template>
 <script lang="ts" setup>
 import Cherry from "cherry-markdown";
-import {editorProps} from "@/editor/MarkdownEditor/CherryMarkdownOption";
+import {editorProps, MarkdownEditorPropsType} from "@/editor/MarkdownEditor/CherryMarkdownOption";
 import {
   useArticleExportEvent, useArticleImportEvent, useArticleStore, useBaseSettingStore, useGlobalStore, useHomeEditorStore
 } from "@/store";
@@ -27,17 +27,18 @@ const props = defineProps(editorProps);
 const emits = defineEmits(['update:modelValue', 'sendToChat']);
 
 const instance = shallowRef<Cherry>();
+const el = useTemplateRef<HTMLDivElement>('markdown-editor');
 const id = 'markdown-editor-' + props.articleId;
-const size = useWindowSize();
+const size = useElementSize(el);
 
 useMountEventBus(useArticleExportEvent, onExport);
 useMountEventBus(useArticleImportEvent, onImport);
 
 onMounted(() => {
+  if (!el.value) return MessageUtil.error("markdown笔记挂载元素不存在");
   buildConfig(
-    props.articleId || 0, id,
-    props.modelValue || '',
-    props.preview,
+    props,
+    el.value,
     instance,
     e => emits('update:modelValue', e),
     e => emits('sendToChat', e)
@@ -46,7 +47,6 @@ onMounted(() => {
     handleTheme();
   }).catch(e => MessageUtil.error("编辑器初始化失败", e))
 });
-
 
 watch(() => props.preview, handleToolbar);
 watch(() => size.width.value, value => {

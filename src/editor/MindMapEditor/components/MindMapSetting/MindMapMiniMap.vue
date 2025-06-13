@@ -15,7 +15,6 @@
             top: miniMapBoxTop + 'px'
       		}"
       >
-
       </div>
       <div class="viewBoxContainer" :style="viewBoxStyle"></div>
     </div>
@@ -85,11 +84,13 @@ onMounted(updateMiniMp)
   right: 10px;
   bottom: 50px;
   color: var(--td-text-color-primary);
-  background: var(--color-fill-3);
-  border-radius: 2px;
+  background: var(--td-bg-color-component);
+  border-radius: var(--td-radius-default);
   padding: 3px 6px;
   width: 200px;
   height: 100px;
+  box-shadow: var(--td-shadow-3);
+
 
   .container {
     transform-origin: left top;

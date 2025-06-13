@@ -54,8 +54,9 @@ export default defineComponent({
   padding: 8px 4px;
   background-color: var(--td-bg-color-container);
   border-radius: var(--border-radius-medium);
-  border: 1px solid var(--color-border-2);
+  border: 1px solid var(--td-border-level-2-color);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.1s ease-in-out;
 
 
   .group-item {
@@ -69,7 +70,7 @@ export default defineComponent({
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-fill-2);
+      background-color: var(--td-bg-color-container-hover);
     }
   }
 }

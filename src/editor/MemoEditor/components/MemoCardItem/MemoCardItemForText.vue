@@ -1,7 +1,7 @@
 <template>
   <div class="memo-card-item-for-text" v-if="card">
     <div class="memo-card-item-for-text__title ellipsis">{{ card.data.question }}</div>
-    <div class="memo-card-item-for-text__content">{{ card.data.answer }}</div>
+    <div class="memo-card-item-for-text__content">{{ answer }}</div>
     <div class="memo-card-item-for-text__footer">
       <div class="date">{{ card.createDate }}</div>
       <t-tag theme="primary" size="small">记忆卡</t-tag>
@@ -11,11 +11,19 @@
 <script lang="ts" setup>
 import {MemoDataCard} from "@/editor/MemoEditor/types";
 
-defineProps({
+const props = defineProps({
   card: {
     type: Object as PropType<MemoDataCard<'TEXT'>>,
   }
 });
+const answer = computed(() => {
+  const {card} = props;
+  const answer = card?.data.answer;
+  if (answer.length > 110) {
+    return answer.slice(0, 110) + '...';
+  }
+  return answer;
+})
 </script>
 <style scoped lang="less">
 .memo-card-item-for-text {

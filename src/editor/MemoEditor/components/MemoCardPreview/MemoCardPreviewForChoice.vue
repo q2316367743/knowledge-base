@@ -6,7 +6,7 @@
     </div>
     <template v-if="card.data.analysis">
       <t-divider align="left">解析</t-divider>
-      <div>{{ card.data.analysis }}</div>
+      <markdown-preview :value=" card.data.analysis" />
     </template>
   </div>
 </template>

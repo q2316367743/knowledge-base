@@ -31,15 +31,15 @@
       <t-empty type="empty" title="请添加选项" ></t-empty>
     </div>
   </t-form-item>
-  <t-form-item label="解析" label-align="top">
-    <t-textarea v-model="data.analysis" placeholder="请输入解析。注意：选项在练习时顺序是随机的"
-                :autosize="{minRows: 3, maxRows: 5}"/>
+  <t-form-item label="解析" label-align="top" help="请输入解析。注意：选项在练习时顺序是随机的">
+    <memo-md-editor v-model="data.analysis" />
   </t-form-item>
 </template>
 <script lang="ts" setup>
 import {MemoDataCardChoice} from "@/editor/MemoEditor/types";
 import {DeleteIcon, PlusIcon} from "tdesign-icons-vue-next";
 import {getNo} from "@/utils/lang/FieldUtil";
+import MemoMdEditor from "@/editor/MemoEditor/components/MemoMdEditor.vue";
 
 const data = defineModel<Partial<MemoDataCardChoice>>({
   default: () => ({})

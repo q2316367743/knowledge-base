@@ -384,7 +384,7 @@ export default class LinkTool implements BlockTool {
     this.data = {link: url, meta: {}};
 
     try {
-
+      // TODO: 此处只有uTools版本可用
       const rsp = await fetch(url);
       const body = await rsp.text();
       const dom = new DOMParser().parseFromString(body, 'text/html');
