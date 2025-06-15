@@ -69,7 +69,7 @@ export default defineConfig(({mode}) => {
     server: {
       proxy: {
         // 字符串简写（等价于对象写法）
-        '/api': 'http://localhost:3000',
+        '/api': 'http://localhost:13456',
       },
     },
   }

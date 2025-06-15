@@ -8,10 +8,11 @@
 import {
   IMemoInstance,
   MemoData,
-  MemoDataCardStatusEnum,
   MemoDataSetting,
   MemoInstance
 } from "@/editor/MemoEditor/types";
+import {useMountEventBus} from "@/hooks/MountEventBus";
+import {useArticleImportEvent} from "@/store";
 import MemoPreview from "@/editor/MemoEditor/layout/MemoPreview/MemoPreview.vue";
 import MemoEdit from "@/editor/MemoEditor/layout/MemoEdit/MemoEdit.vue";
 
@@ -63,6 +64,12 @@ provide<IMemoInstance>(MemoInstance, {
   },
   updateSetting: (setting: MemoDataSetting) => {
     content.value.setting = setting;
+  }
+});
+
+useMountEventBus(useArticleImportEvent, id => {
+  if (id === props.articleId) {
+    // 导出
   }
 })
 </script>

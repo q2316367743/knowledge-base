@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import {PlusIcon} from "tdesign-icons-vue-next";
-import {TdDropdownItemProps} from "tdesign-vue-next";
+import {TdDropdownItemProps, DropdownOption} from "tdesign-vue-next";
 import {IMemoInstance, MemoDataCard, MemoDataCardType, MemoInstance} from "@/editor/MemoEditor/types";
 import {openMemoCardEdit} from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEdit";
 import MemoCardItem from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItem.vue";
@@ -28,20 +28,20 @@ defineProps({
   }
 });
 
-const options = ref<Array<TdDropdownItemProps>>([
-  {
-    content: '新增记忆卡',
-    value: 'TEXT'
-  }, {
-    content: '新增空白卡',
-    value: 'BLANK'
-  }, {
-    content: '新增选择卡',
-    value: 'CHOICE'
-  }, {
-    content: '新增单词卡',
-    value: 'WORD'
-  }
+const options = ref<Array<DropdownOption>>([
+    {
+      content: '新增记忆卡',
+      value: 'TEXT'
+    }, {
+      content: '新增空白卡',
+      value: 'BLANK'
+    }, {
+      content: '新增选择卡',
+      value: 'CHOICE'
+    }, {
+      content: '新增单词卡',
+      value: 'WORD'
+    }
 ]);
 
 const instance = inject<IMemoInstance>(MemoInstance);
