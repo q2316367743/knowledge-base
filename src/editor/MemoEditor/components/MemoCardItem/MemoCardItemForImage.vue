@@ -5,7 +5,7 @@
     </div>
     <div class="memo-card-item-for-text__footer">
       <div class="date">{{ card.createDate }}</div>
-      <t-tag theme="primary" size="small">空白卡</t-tag>
+      <t-tag theme="primary" size="small">图片卡</t-tag>
     </div>
   </div>
 </template>
