@@ -44,6 +44,13 @@ export interface MemoDataCardChoice {
   analysis: string;
 }
 
+export interface MemoDataCardImage {
+  // 图片
+  url: string;
+  // 解析
+  analysis: string;
+}
+
 export interface MemoDataCardContentMap {
   // 记忆卡：歧视就是问题、答案，简答题
   'TEXT': MemoDataCardText;
@@ -53,9 +60,11 @@ export interface MemoDataCardContentMap {
   'CHOICE': MemoDataCardChoice;
   // 单词卡
   'WORD': MemoDataCardWord;
+  // 图片卡：一个纯图片
+  'IMAGE': MemoDataCardImage;
 }
 
-export type MemoDataCardType = 'TEXT' | 'BLANK' | 'CHOICE' | 'WORD';
+export type MemoDataCardType = keyof MemoDataCardContentMap;
 
 export const renderMemoDataCardType = (type: MemoDataCardType) => {
   switch (type) {
@@ -67,6 +76,8 @@ export const renderMemoDataCardType = (type: MemoDataCardType) => {
       return '单词卡';
     case 'CHOICE':
       return '选择卡';
+    case 'IMAGE':
+      return '图片卡';
     default:
       return '未知卡';
   }

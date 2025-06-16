@@ -102,7 +102,7 @@ const preCard = () => {
 const onStudy = (status: MemoDataCardStatusEnum) => {
   if (!current.value) return;
   instance?.study(current.value.id, status);
-  nexCard();
+  // nexCard();
 }
 </script>
 <style scoped lang="less">

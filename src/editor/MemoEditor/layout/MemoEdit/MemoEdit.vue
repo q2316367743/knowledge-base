@@ -30,20 +30,27 @@ defineProps({
 
 const options = ref<Array<DropdownOption>>([
   {
-    content: '新增记忆卡',
+    content: '新增 | 记忆卡',
     value: 'TEXT'
   }, {
-    content: '新增空白卡',
+    content: '新增 | 空白卡',
     value: 'BLANK'
   }, {
-    content: '新增选择卡',
+    content: '新增 | 选择卡',
     value: 'CHOICE'
   }, {
-    content: '新增单词卡',
-    value: 'WORD'
+    content: '新增 | 单词卡',
+    value: 'WORD',
+  }, {
+    content: '新增 | 图片卡',
+    value: 'IMAGE',
+    divider: true
   }, {
     content: '批量制卡',
     value: 'BATCH'
+  }, {
+    content: 'AI制卡',
+    value: 'AI'
   }
 ]);
 

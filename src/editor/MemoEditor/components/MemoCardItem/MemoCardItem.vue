@@ -4,6 +4,7 @@
     <memo-card-item-for-choice v-else-if="card.type === 'CHOICE'" :card="card as MemoDataCard<'CHOICE'>"/>
     <memo-card-item-for-word v-else-if="card.type === 'WORD'" :card="card as MemoDataCard<'WORD'>"/>
     <memo-card-item-for-blank v-else-if="card.type === 'BLANK'" :card="card as MemoDataCard<'BLANK'>"/>
+    <memo-card-item-for-image v-else-if="card.type === 'IMAGE'" :card="card as MemoDataCard<'IMAGE'>"/>
     <div class="edit">
       <t-space size="small">
         <t-button theme="primary" shape="square" size="small" @click.stop="onEdit(card)">
@@ -13,7 +14,7 @@
         </t-button>
         <t-button theme="danger" shape="square" size="small" @click.stop="onDelete(card)">
           <template #icon>
-            <delete-icon />
+            <delete-icon/>
           </template>
         </t-button>
       </t-space>
@@ -21,7 +22,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {BrowseIcon, DeleteIcon, EditIcon} from "tdesign-icons-vue-next";
+import {DeleteIcon, EditIcon} from "tdesign-icons-vue-next";
 import {
   IMemoInstance,
   MemoDataCard,
@@ -30,12 +31,13 @@ import {
   renderMemoDataCardType
 } from "@/editor/MemoEditor/types";
 import {openMemoCardEdit} from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEdit";
+import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
+import {openMemoCardPreviewModel} from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewModel";
 import MemoCardItemForText from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForText.vue";
 import MemoCardItemForChoice from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForChoice.vue";
 import MemoCardItemForWord from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForWord.vue";
 import MemoCardItemForBlank from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForBlank.vue";
-import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
-import {openMemoCardPreviewModel} from "@/editor/MemoEditor/components/MemoCardPreview/MemoCardPreviewModel";
+import MemoCardItemForImage from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItemForImage.vue";
 
 defineProps({
   card: {
@@ -88,6 +90,7 @@ const onDelete = (card: MemoDataCard<MemoDataCardType>) => {
     right: 16px;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
+    z-index: 2;
   }
 }
 </style>
