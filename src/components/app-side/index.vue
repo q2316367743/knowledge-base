@@ -46,7 +46,7 @@
         </template>
         设置
       </t-menu-item>
-      <t-menu-item value="/more/backup">
+      <t-menu-item value="/more">
         <template #icon>
           <ellipsis-icon/>
         </template>
@@ -162,6 +162,8 @@ watch(() => route.path, path => {
       selectedKey.value = '/news';
     } else if (path.startsWith("/setting")) {
       selectedKey.value = '/setting';
+    } else if (path.startsWith("/more")) {
+      selectedKey.value = '/more';
     } else {
       selectedKey.value = path;
     }

@@ -92,6 +92,7 @@ const routers: Array<RouteRecordRaw> = [{
   name: "更多",
   path: "/more",
   component: () => import("@/pages/more/index.vue"),
+  redirect: "/more/about",
   children: [
     {
       name: "更多-备份",
