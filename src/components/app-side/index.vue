@@ -53,7 +53,7 @@
         更多
       </t-menu-item>
       <template #logo>
-        <div class="flex items-center justify-center">
+        <div class="flex items-center justify-center" :class="{'w-full': appCollapsed}">
           <t-dropdown placement="bottom-left" trigger="click">
             <img :width="35" :src="profile.avatar" :alt="profile.nickname" :title="profile.nickname" class="cursor-pointer"/>
             <t-dropdown-menu>
