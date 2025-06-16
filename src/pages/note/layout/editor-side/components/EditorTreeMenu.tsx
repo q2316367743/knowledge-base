@@ -20,7 +20,6 @@ import {
   rename
 } from "@/pages/note/components/he-context";
 import {showArticleImportModal} from "@/pages/note/components/ArticleImportModal";
-import {exportToMd} from "@/pages/note/components/EditorExport";
 import {addNoteFunc} from "@/utils/component/AddNoteUtil";
 import {openArticleImportWithUBrowser} from "@/modules/NoteImport";
 import {setColor} from "@/pages/note/components/HeExtraContext";
@@ -28,6 +27,7 @@ import VipIcon from "@/components/KbIcon/VipIcon.vue";
 import {openNotePreview} from "@/widget/NotePreview";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {UToolsUtil} from "@/utils/utools/UToolsUtil";
+import {exportToZip} from "@/utils/utools/BackgroundUtil";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -242,7 +242,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       icon: () => <FileExportIcon/>,
       children: [{
         label: 'ZIP',
-        onClick: () => exportToMd(node.value)
+        onClick: () => exportToZip(node.value)
       }, {
         label: 'uTools文档插件',
         onClick: () => exportToUTools(node.value)

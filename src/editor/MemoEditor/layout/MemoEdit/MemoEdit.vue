@@ -29,27 +29,31 @@ defineProps({
 });
 
 const options = ref<Array<DropdownOption>>([
-    {
-      content: '新增记忆卡',
-      value: 'TEXT'
-    }, {
-      content: '新增空白卡',
-      value: 'BLANK'
-    }, {
-      content: '新增选择卡',
-      value: 'CHOICE'
-    }, {
-      content: '新增单词卡',
-      value: 'WORD'
-    }
+  {
+    content: '新增记忆卡',
+    value: 'TEXT'
+  }, {
+    content: '新增空白卡',
+    value: 'BLANK'
+  }, {
+    content: '新增选择卡',
+    value: 'CHOICE'
+  }, {
+    content: '新增单词卡',
+    value: 'WORD'
+  }, {
+    content: '批量制卡',
+    value: 'BATCH'
+  }
 ]);
 
 const instance = inject<IMemoInstance>(MemoInstance);
 const onAdd = (item: TdDropdownItemProps) => {
-  openMemoCardEdit(item.value as MemoDataCardType).then((card) => {
-    // 添加卡片
-    instance?.onAdd(card);
-  });
+  if (item.value === 'BATCH') {
+    // TODO: 批量制卡
+  } else {
+    openMemoCardEdit(item.value as MemoDataCardType).then((card) => instance?.onAdd(card));
+  }
 };
 </script>
 <style scoped lang="less">

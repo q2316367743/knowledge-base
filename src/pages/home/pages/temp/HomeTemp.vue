@@ -280,10 +280,7 @@ const handleOperator = (op: string, item: AiChatItem, index: number) => {
         q,
         t: item.think || '',
         a: item.content
-      }, () => {
-        MessageUtil.success("新增成功！");
-        router.push('/note');
-      })
+      }, () => MessageUtil.success("新增成功！"))
       break;
     case 'delete':
       break;

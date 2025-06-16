@@ -3,6 +3,7 @@ import db from "@/routers/db";
 import file from "@/routers/file";
 import payment from "@/routers/payment";
 import crawler from "@/routers/crawler";
+import background from "@/routers/background";
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use("/api/db", db);
 app.use("/api/file", file);
 app.use("/api/payment", payment);
 app.use("/api/crawler", crawler);
+app.use("/api/background", background);
 
 app.listen(13456);
 console.log("serve start at http://localhost:13456");

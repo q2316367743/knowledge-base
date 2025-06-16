@@ -1,11 +1,7 @@
 import { Router } from "express";
-import PouchDB from "pouchdb";
 import { Result } from "@/views/Result";
+import { db } from "@/global/constants";
 
-const db = new PouchDB("db", {
-  prefix: "/app/knowledge-base/",
-  auto_compaction: true,
-});
 const router = Router();
 
 // 读取一个文档

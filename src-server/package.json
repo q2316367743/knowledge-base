@@ -21,6 +21,7 @@
     "axios": "^1.9.0",
     "cheerio": "^1.1.0",
     "express": "^5.1.0",
+    "jszip": "^3.10.1",
     "multer": "^2.0.1",
     "pouchdb": "^9.0.0",
     "rss-to-json": "^2.1.1",
