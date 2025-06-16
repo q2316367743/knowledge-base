@@ -18,8 +18,6 @@ RUN bun install --production --frozen-lockfile --registry=https://mirrors.cloud.
 VOLUME /app/knowledge-base/data
 ## 附件
 VOLUME /app/knowledge-base/file
-## 支付信息
-VOLUME /app/knowledge-base/payment
 
 # 暴露端口
 EXPOSE 3000/tcp
