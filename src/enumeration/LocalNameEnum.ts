@@ -154,6 +154,11 @@ enum LocalNameEnum {
   KEY_APP_USER = '/key/app/user',
 
   /**
+   * 应用收起
+   */
+  KEY_APP_COLLAPSED = '/key/app/collapsed',
+
+  /**
    * 待办导出脚本
    */
   KEY_TODO_SCRIPT = '/key/todo/script',

@@ -3,6 +3,7 @@ import {getItemByDefault, setItem} from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useUtoolsKvStorage} from "@/hooks/UtoolsKvStorage";
 
 export enum GlobalType {
   DARK = 1,
@@ -51,3 +52,6 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
 });
+
+export const appCollapsed = useUtoolsKvStorage(LocalNameEnum.KEY_APP_COLLAPSED, false);
+export const useAppCollapsed = useToggle(appCollapsed);

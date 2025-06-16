@@ -1,13 +1,13 @@
 <template>
   <div class="app">
-      <div class="app-layout">
-        <div class="app-aside">
-          <app-side/>
-        </div>
-        <div class="app-content">
-          <router-view/>
-        </div>
+    <div class="app-layout" :class="{collapsed: appCollapsed}">
+      <div class="app-aside">
+        <app-side/>
       </div>
+      <div class="app-content">
+        <router-view/>
+      </div>
+    </div>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>
     <update-check/>
     <link :href="`./theme/${themeColor}.css`" type="text/css" rel="stylesheet"/>
@@ -18,7 +18,7 @@ import {useRouter} from "vue-router";
 import {createServer} from "@/plugin/server";
 import {usePageJumpEvent} from "@/global/BeanFactory";
 // 存储
-import {useGlobalStore} from "@/store";
+import {appCollapsed, useGlobalStore} from "@/store";
 // 组件
 import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
@@ -81,25 +81,37 @@ createServer();
   position: relative;
   overflow: hidden;
 
+  &.collapsed {
+    .app-aside {
+      width: 64px;
+    }
+
+    .app-content {
+      left: 65px;
+    }
+  }
+
   .app-aside {
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
-    width: 48px;
+    width: 232px;
     z-index: 1;
     overflow: hidden;
     border-right: 1px solid var(--td-border-level-2-color);
+    transition: width 0.3s;
   }
 
   .app-content {
     position: absolute;
     top: 0;
-    left: 49px;
+    left: 233px;
     right: 0;
     bottom: 0;
     overflow: hidden;
     transform: translate(0, 0);
+    transition: left 0.3s;
   }
 }
 </style>

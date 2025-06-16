@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
       avatar: '/user.png',
       nickname: '匿名用户',
       type: 'user'
-    }
+    } as UserProfile
   });
 
   function rename(nickname: string) {

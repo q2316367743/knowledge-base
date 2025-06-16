@@ -1,6 +1,6 @@
 <template>
   <div class="app-side">
-    <t-menu class="h-full" breakpoint="xl" v-model="selectedKey" @change="onMenuItemClick" :collapsed="true">
+    <t-menu class="h-full" breakpoint="xl" v-model="selectedKey" @change="onMenuItemClick" :collapsed="appCollapsed">
       <t-menu-item value="/home" v-if="moduleForAi">
         <template #icon>
           <questionnaire-icon size="12px"/>
@@ -46,94 +46,88 @@
         </template>
         设置
       </t-menu-item>
-      <t-submenu value="/more">
+      <t-menu-item value="/more/backup">
         <template #icon>
           <ellipsis-icon/>
         </template>
-        <template #title>更多</template>
-        <t-menu-item value="/more/backup" v-if="isUtools">
-          备份
-        </t-menu-item>
-        <t-menu-item value="/more/attachment" v-if="isUtools">
-          附件
-        </t-menu-item>
-        <t-menu-item value="/more/recommend">
-          推荐
-        </t-menu-item>
-        <t-menu-item value="/more/update">
-          更新
-        </t-menu-item>
-        <t-menu-item value="/more/about">
-          关于
-        </t-menu-item>
-      </t-submenu>
+        更多
+      </t-menu-item>
+      <template #logo>
+        <div class="flex items-center justify-center">
+          <t-dropdown placement="bottom-left" trigger="click">
+            <img :width="35" :src="profile.avatar" :alt="profile.nickname" :title="profile.nickname" class="cursor-pointer"/>
+            <t-dropdown-menu>
+              <t-dropdown-item divider>
+                <template #prefix-icon>
+                  <moon-icon v-if="themeType === GlobalType.DARK"/>
+                  <sunny-icon v-else-if="themeType === GlobalType.LIGHT"/>
+                  <fill-color-icon v-else/>
+                </template>
+                主题
+                <t-dropdown-menu>
+                  <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.DARK)">
+                    <template #prefix-icon>
+                      <moon-icon/>
+                    </template>
+                    暗黑
+                  </t-dropdown-item>
+                  <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.LIGHT)">
+                    <template #prefix-icon>
+                      <sunny-icon/>
+                    </template>
+                    明亮
+                  </t-dropdown-item>
+                  <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.AUTO)">
+                    跟随系统
+                  </t-dropdown-item>
+                </t-dropdown-menu>
+              </t-dropdown-item>
+              <t-dropdown-item @click="openKeyDrawer()">
+                <template #prefix-icon>
+                  <keyboard-icon/>
+                </template>
+                快捷键
+              </t-dropdown-item>
+              <t-dropdown-item @click="toDoc()">
+                <template #prefix-icon>
+                  <questionnaire-icon/>
+                </template>
+                帮助中心
+              </t-dropdown-item>
+              <t-dropdown-item @click="toFeedback()">
+                <template #prefix-icon>
+                  <chat-message-icon/>
+                </template>
+                反馈与建议
+              </t-dropdown-item>
+              <t-dropdown-item divider @click="toUpdateLog()">
+                <template #prefix-icon>
+                  <system-messages-icon/>
+                </template>
+                更新日志
+              </t-dropdown-item>
+              <t-dropdown-item @click="userVipToggle()">
+                <template #prefix-icon>
+                  <user-vip-icon/>
+                </template>
+                个人中心
+              </t-dropdown-item>
+            </t-dropdown-menu>
+          </t-dropdown>
+          <template v-if="!appCollapsed">
+            <span class="title ml-16px">知识库</span>
+            <span class="version">{{ Constant.version }}</span>
+          </template>
+        </div>
+      </template>
+      <template #operations>
+        <t-button theme="primary" variant="text" shape="square" size="large" @click="useAppCollapsed()">
+          <template #icon>
+            <view-list-icon/>
+          </template>
+        </t-button>
+      </template>
     </t-menu>
-    <div class="app-exit">
-      <t-dropdown position="tl" trigger="click">
-        <t-button theme="primary" variant="text" shape="square" style="margin-bottom: 7px;">
-          <template #icon>
-            <moon-icon v-if="themeType === GlobalType.DARK"/>
-            <sunny-icon v-else-if="themeType === GlobalType.LIGHT"/>
-            <fill-color-icon v-else/>
-          </template>
-        </t-button>
-        <t-dropdown-menu>
-          <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.DARK)">
-            <template #prefix-icon>
-              <moon-icon/>
-            </template>
-            暗黑
-          </t-dropdown-item>
-          <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.LIGHT)">
-            <template #prefix-icon>
-              <sunny-icon/>
-            </template>
-            明亮
-          </t-dropdown-item>
-          <t-dropdown-item @click="useGlobalStore().switchDarkColors(GlobalType.AUTO)">
-            跟随系统
-          </t-dropdown-item>
-        </t-dropdown-menu>
-      </t-dropdown>
-      <t-dropdown placement="top-left" trigger="click">
-        <t-button theme="primary" variant="text" shape="square" style="margin-bottom: 7px;">
-          <template #icon>
-            <questionnaire-icon/>
-          </template>
-        </t-button>
-        <t-dropdown-menu>
-          <t-dropdown-item @click="openKeyDrawer()">
-            <template #prefix-icon>
-              <keyboard-icon/>
-            </template>
-            快捷键
-          </t-dropdown-item>
-          <t-dropdown-item @click="toDoc()">
-            <template #prefix-icon>
-              <questionnaire-icon/>
-            </template>
-            帮助中心
-          </t-dropdown-item>
-          <t-dropdown-item @click="toFeedback()">
-            <template #prefix-icon>
-              <chat-message-icon/>
-            </template>
-            反馈与建议
-          </t-dropdown-item>
-          <t-dropdown-item @click="toUpdateLog()">
-            <template #prefix-icon>
-              <system-messages-icon/>
-            </template>
-            更新日志
-          </t-dropdown-item>
-        </t-dropdown-menu>
-      </t-dropdown>
-      <t-button theme="primary" variant="text" shape="square" @click="userVipToggle()">
-        <template #icon>
-          <user-vip-icon/>
-        </template>
-      </t-button>
-    </div>
     <user-vip-drawer v-model="userVipVisible"/>
   </div>
 </template>
@@ -144,28 +138,29 @@ import {
   Edit2Icon, EllipsisIcon, FillColorIcon, KeyboardIcon, MoonIcon,
   QuestionnaireIcon,
   SettingIcon, SunnyIcon, SystemMessagesIcon,
-  ToolsIcon, UserVipIcon
+  ToolsIcon, UserVipIcon, ViewListIcon
 } from "tdesign-icons-vue-next";
 import {openKeyDrawer} from "@/components/app-side/func";
-import {GlobalType, useGlobalStore} from "@/store/GlobalStore";
+import {appCollapsed, GlobalType, useAppCollapsed, useGlobalStore} from "@/store/GlobalStore";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
-import {toDoc, toFeedback} from "@/global/Constant";
+import Constant, {toDoc, toFeedback} from "@/global/Constant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useUserStore} from "@/store/components/UserStore";
 
 const route = useRoute();
 const router = useRouter();
 const disabledForModule = !InjectionUtil.env.isSupportMarkdown();
-const isUtools = InjectionUtil.env.isUtools();
 
 const selectedKey = ref('/note');
 
 const themeType = computed(() => useGlobalStore().globalType);
+const profile = computed(() => useUserStore().profile);
 
 watch(() => route.path, path => {
   if (selectedKey.value !== path) {
     if (path.startsWith("/news")) {
       selectedKey.value = '/news';
-    }else if (path.startsWith("/setting")) {
+    } else if (path.startsWith("/setting")) {
       selectedKey.value = '/setting';
     } else {
       selectedKey.value = path;
@@ -192,19 +187,17 @@ const userVipToggle = useToggle(userVipVisible);
   overflow-x: hidden;
   overflow-y: auto;
 
-  :deep(.t-menu) {
-    padding: 4px;
-
-    .t-menu__item {
-      padding: 0 4px !important;
-      width: 40px !important;
-    }
+  .title {
+    font-size: var(--td-font-size-title-large);
+    font-weight: bold;
+    user-select: none;
   }
 
-  .app-exit {
-    position: absolute;
-    left: 8px;
-    bottom: 8px;
+  .version {
+    font-size: var(--td-font-size-body-small);
+    margin-left: 6px;
+    padding-top: 6px;
   }
+
 }
 </style>

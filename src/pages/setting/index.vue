@@ -1,6 +1,6 @@
 <template>
   <t-layout class="setting">
-    <t-aside v-if="max">
+    <t-aside v-if="max" class="setting-aside">
       <t-menu v-model="activeKey" @change="handleClick">
         <t-menu-item value="/setting/base">基础设置</t-menu-item>
         <t-menu-item value="/setting/module">模块设置</t-menu-item>
@@ -52,6 +52,10 @@ const handleClick = (v: any) => {
   left: 0;
   right: 0;
   bottom: 0;
+
+  .setting-aside {
+    border-right: 1px solid var(--td-border-level-2-color);
+  }
 
   .main {
     width: calc(100% - 32px);
