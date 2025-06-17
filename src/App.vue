@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <app-bg-image />
     <div class="app-layout" :class="{collapsed: appCollapsed}">
       <div class="app-aside">
         <app-side/>
@@ -24,6 +25,8 @@ import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useMainPushCallback, useMainPushSelectCallback, usePluginEnter} from "@/hooks/UToolsEvent";
 import AppSide from "@/components/app-side/index.vue";
+import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
+import AppBgImage from "@/modules/AppLayout/AppBgImage.vue";
 
 
 const UpdateCheck = defineAsyncComponent(() => import("@/components/update-check/index.vue"));
@@ -36,8 +39,10 @@ const preview = ref({
 })
 
 const themeColor = computed(() => useGlobalStore().themeColor);
+
 // 主题
 useGlobalStore().initDarkColors();
+useThemeSettingStore().init();
 
 
 usePageJumpEvent.reset();

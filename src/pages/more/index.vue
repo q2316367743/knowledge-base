@@ -55,7 +55,7 @@ const handleClick = (v: any) => {
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: var(--td-bg-color-container);
+    background-color: transparent;
   }
 }
 </style>

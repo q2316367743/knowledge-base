@@ -31,7 +31,7 @@
         <chat-sender
           v-model="text"
           class="chat-sender"
-          :textarea-props="{placeholder: '请输入消息...',}"
+          :textarea-props="{placeholder: '请输入消息...'}"
           @send="inputEnter"
         >
           <template #suffix>
@@ -90,7 +90,6 @@ const inputEnter = (inputValue: string) => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--td-bg-color-container);
   border-radius: var(--td-radius-medium);
   padding: 8px;
   box-sizing: border-box;

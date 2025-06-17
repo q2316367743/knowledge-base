@@ -290,7 +290,6 @@ function onRootClick(e: MouseEvent) {
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: var(--td-bg-color-container);
 
   .option {
     position: absolute;
@@ -303,7 +302,6 @@ function onRootClick(e: MouseEvent) {
     .btn {
       border: 1px solid var(--td-border-level-1-color);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      background-color: var(--td-bg-color-container);
     }
 
   }

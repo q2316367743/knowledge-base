@@ -1,6 +1,6 @@
 <template>
   <div class="tool-search">
-    <t-card class="header" :bordered="false" size="small">
+    <div class="header" style="background-color: var(--kb-bg-color-3);padding: 6px 12px;margin: 4px;border-radius: var(--td-radius-medium)">
       <t-space direction="vertical" size="small" style="width: 100%">
         <t-row :gutter="[16, 16]">
           <t-col flex="120px">
@@ -26,7 +26,7 @@
           <t-col flex="32px">
             <t-button theme="danger" :disabled="!loading" @click="stop">
               <template #icon>
-                <close-icon />
+                <close-icon/>
               </template>
             </t-button>
           </t-col>
@@ -41,7 +41,7 @@
           </t-col>
         </t-row>
       </t-space>
-    </t-card>
+    </div>
     <t-layout class="container w-full">
       <t-alert v-if="loading" :message="text"/>
       <t-list :split="false" :max-height="maxHeight" class="w-full">
@@ -57,7 +57,7 @@
               >
                 {{ item.title }}
                 <t-tooltip content="打开预览">
-                  <round-icon />
+                  <round-icon/>
                 </t-tooltip>
               </t-link>
             </template>
@@ -69,7 +69,7 @@
             <t-tooltip content="跳转到编辑器">
               <t-button variant="text" shape="square" @click="jumpToArticle(item.value)">
                 <template #icon>
-                  <edit2-icon />
+                  <edit2-icon/>
                 </template>
               </t-button>
             </t-tooltip>
@@ -159,7 +159,6 @@ function jumpToArticle(id: number) {
     margin: 0 auto;
     height: calc(100vh - 81px);
     overflow: auto;
-    background-color: var(--td-bg-color-container);
   }
 }
 </style>

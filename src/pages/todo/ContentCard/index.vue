@@ -21,6 +21,6 @@ const groupType = computed(() => useTodoWrapStore().groupType);
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--td-bg-color-container);
+  background-color: var(--kb-bg-color-2);
 }
 </style>

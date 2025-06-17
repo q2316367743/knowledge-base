@@ -227,7 +227,7 @@ const inputEnter = async (inputValue: string) => {
         // 模型发生变化
         instance.value.items.unshift({
           time: Date.now(),
-          role: 'dialog-change',
+          role: 'model-change',
           content: `模型由<span>${changeService ? old.service + ' - ' : ''}${old.model}</span>变为<span>${changeService ? item.service + ' - ' : ''}${item.model}</span>`,
           aiServiceId,
           service: service.name,
@@ -404,7 +404,6 @@ const handleDeleteChat = (index: number) => {
 <style scoped lang="less">
 .home-chat {
   position: relative;
-  background-color: var(--td-bg-color-container);
 
   .home-chat-collapse {
     display: flex;

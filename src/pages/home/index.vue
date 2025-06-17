@@ -194,7 +194,7 @@ tryOnMounted(async () => {
 .home {
   width: 100%;
   height: 100vh;
-  background-color: var(--td-bg-color-container);
+  background-color: transparent;
 
   .home-side {
     height: 100vh;
@@ -246,7 +246,6 @@ tryOnMounted(async () => {
       align-items: center;
       margin-bottom: 8px;
       padding: 4px 8px;
-      background-color: var(--td-bg-color-container);
       transition: background-color 0.3s ease-in-out;
       border-radius: var(--td-radius-medium);
       cursor: pointer;

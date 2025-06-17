@@ -3,7 +3,7 @@
     <t-aside :width="collapsed ? '0px' : '270px'" class="overflow-hidden">
       <todo-side/>
     </t-aside>
-    <t-content style="position: relative;background-color: var(--td-bg-color-container)">
+    <t-content style="position: relative;">
       <empty-todo v-if="loading">
         <loading-result title="正在初始化清单"/>
       </empty-todo>

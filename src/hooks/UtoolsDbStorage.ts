@@ -17,10 +17,6 @@ type InitialValue<T> = T | InitialValueFunc<T>
 /**
  * 同步对象存储
  */
-
-/**
- * 异步对象存储
- */
 export function useUtoolsDbStorage<T extends (string | number | boolean | object | null)>(
   key: string,
   initial: InitialValue<T>,

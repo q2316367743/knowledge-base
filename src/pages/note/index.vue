@@ -34,6 +34,7 @@ useCustomerFileNameStore().init();
 
   .splitpanes__pane {
     position: relative;
+    background-color: transparent !important;
   }
 
   &.collapsed {
@@ -41,5 +42,6 @@ useCustomerFileNameStore().init();
       display: none;
     }
   }
+
 }
 </style>

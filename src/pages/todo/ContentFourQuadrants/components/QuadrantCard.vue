@@ -196,14 +196,14 @@ function onDragEnd(event: DragEvent) {
 }
 
 // 拖拽经过目标区域时触发
-function onDragOver(event: DragEvent) {
+function onDragOver(_event: DragEvent) {
   if (props.draggedItem && props.draggedItem.priority !== props.quadrant.priority) {
     emit('drag-over');
   }
 }
 
 // 放置时触发
-function onDrop(event: DragEvent) {
+function onDrop(_event: DragEvent) {
   emit('drop', props.quadrant);
 }
 </script>
@@ -212,7 +212,7 @@ function onDrop(event: DragEvent) {
 .quadrant-card {
   border: 1px solid var(--td-border-level-2-color);
   border-radius: var(--border-radius-medium);
-  background-color: var(--td-bg-color-container);
+  background-color: var(--kb-bg-color-3);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   display: flex;

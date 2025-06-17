@@ -63,7 +63,7 @@ const handleClick = (v: any) => {
     padding: 24px 16px;
     overflow-y: auto;
     position: relative;
-    background-color: var(--td-bg-color-container);
+    background-color: transparent;
 
     .setting-content {
       max-width: 800px;

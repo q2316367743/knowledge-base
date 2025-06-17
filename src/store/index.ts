@@ -9,6 +9,7 @@ export * from './db/CategoryStore';
 export * from './db/TodoItemStore';
 export * from './db/TodoCategoryStore';
 export * from './setting/BaseSettingStore';
+export * from './setting/ThemeSettingStore';
 export * from './ai/AiServiceStore';
 export * from './ai/AiAssistantStore';
 export * from './ai/AiChatListStore';

@@ -9,12 +9,10 @@
   }
 
 
-
   .info {
     position: relative;
     height: 100%;
     width: 100%;
-    background-color: var(--td-bg-color-container);
   }
 
   .list {
@@ -84,5 +82,11 @@
       height: 24px;
     }
 
+  }
+
+  &.splitpanes.default-theme {
+    .splitpanes__pane {
+      background-color: transparent !important;
+    }
   }
 }

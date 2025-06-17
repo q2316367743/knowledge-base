@@ -14,7 +14,6 @@
 </template>
 <script lang="ts" setup>
 import {
-  handleTodoTitleColor,
   TodoItemIndex,
 } from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
@@ -44,6 +43,7 @@ const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
   justify-content: space-between;
   overflow: hidden;
   width: calc(100% - 14px);
+  border-radius: var(--td-radius-default);
 
   &:last-child {
     border-bottom: 1px solid transparent;

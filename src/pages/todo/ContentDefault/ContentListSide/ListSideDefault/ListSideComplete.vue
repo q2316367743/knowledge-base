@@ -9,7 +9,7 @@
         <div class="content-default-complete__header-count">{{ count }}</div>
       </div>
     </div>
-    <div v-if="visible">
+    <div v-if="visible" class="mt-8px">
       <list-side-complete-list v-for="g in groups" :group-id="g.id" :items="g.complete" :key="g.id"/>
     </div>
   </div>
