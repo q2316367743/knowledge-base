@@ -20,7 +20,7 @@ VOLUME /app/knowledge-base/data
 VOLUME /app/knowledge-base/file
 
 # 暴露端口
-EXPOSE 3000/tcp
+EXPOSE 13456/tcp
 
 ENV NODE_ENV production
 
