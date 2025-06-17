@@ -53,5 +53,5 @@ export const useGlobalStore = defineStore('global', () => {
 
 });
 
-export const appCollapsed = useUtoolsKvStorage(LocalNameEnum.KEY_APP_COLLAPSED, false);
+export const appCollapsed = useUtoolsKvStorage(LocalNameEnum.KEY_APP_COLLAPSED, true);
 export const useAppCollapsed = useToggle(appCollapsed);
