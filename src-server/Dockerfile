@@ -11,7 +11,6 @@ COPY bun.lock ./
 COPY tsconfig.json ./
 
 # 安装依赖
-RUN export https_proxy=http://192.168.2.8:7897 http_proxy=http://192.168.2.8:7897 all_proxy=socks5://192.168.2.8:7897
 RUN bun install --production --frozen-lockfile --registry=https://mirrors.tencent.com/npm/
 
 # 挂载目录
