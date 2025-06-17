@@ -41,7 +41,6 @@ const options = [{
 .not-note {
   display: grid;
   place-items: center;
-  background-color: var(--td-bg-color-container);
 
   .not-note-container {
     max-width: 600px;
