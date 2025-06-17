@@ -53,7 +53,8 @@
         更多
       </t-menu-item>
       <template #logo>
-        <div class="flex items-center justify-center" :class="{'w-full': appCollapsed}" style="margin-left: 0">
+        <div class="flex items-center justify-center" :class="{'w-full': appCollapsed}"
+             :style="{marginLeft: appCollapsed?'0px':'16px'}">
           <t-dropdown placement="bottom-left" trigger="click">
             <img :width="35" :src="profile.avatar" :alt="profile.nickname" :title="profile.nickname"
                  class="cursor-pointer"/>
@@ -122,7 +123,7 @@
         </div>
       </template>
       <template #operations>
-        <t-button theme="primary" variant="text" shape="square" size="large" @click="useAppCollapsed()">
+        <t-button theme="primary" variant="text" shape="square" @click="useAppCollapsed()">
           <template #icon>
             <view-list-icon/>
           </template>

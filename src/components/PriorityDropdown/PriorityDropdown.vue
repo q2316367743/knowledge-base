@@ -1,6 +1,6 @@
 <template>
   <!-- 优先级 -->
-  <t-dropdown position="br" @select="updatePriority($event)" trigger="click">
+  <t-dropdown position="br" @select="updatePriority($event)" trigger="click" :disabled="readonly">
     <t-button class="priority" theme="default" :variant="variant" shape="square">
       <template #icon>
         <flag-icon :style="{color:color}"/>
@@ -39,6 +39,10 @@ defineProps({
   variant: {
     type: String as PropType<'text' | 'outline'>,
     default: 'text'
+  },
+  readonly: {
+    type: Boolean,
+    default: false
   }
 });
 const emit = defineEmits(['change']);

@@ -36,6 +36,10 @@ const props = defineProps({
   status: {
     type: Number as PropType<TodoItemStatus>,
     default: 1
+  },
+  readonly: {
+    type: Boolean,
+    default: false
   }
 });
 const emit = defineEmits(['update:status']);
@@ -64,6 +68,7 @@ const style = computed<StyleValue>(() => {
 const title = computed(() => handleStatusText(props.status));
 
 function handleClick() {
+  if (props.readonly) return;
   emit('update:status', getNextTodoItemStatus(props.status));
 }
 </script>

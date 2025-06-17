@@ -4,7 +4,7 @@ import {
   Input, Popconfirm, Popup,
   RadioButton, RadioGroup, Space
 } from "tdesign-vue-next";
-import {TodoItemAttr, TodoItemIndex} from "@/entity/todo/TodoItem";
+import {TodoItemAttr, TodoItemIndex, TodoItemStatus} from "@/entity/todo/TodoItem";
 import {useUmami} from "@/plugin/umami";
 import {clone} from "@/utils/lang/ObjectUtil";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
@@ -25,18 +25,25 @@ function renderIsRange(attr: TodoItemAttr): boolean {
   return attr.start !== attr.end;
 
 }
+
 export function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
-  return openTodoItemInfo({index, toUpdate});
+  return openTodoItemInfo({
+    index,
+    toUpdate,
+    preview: index.status === TodoItemStatus.ABANDON || index.status === TodoItemStatus.COMPLETE
+  });
 }
 
 interface TodoItemInfoProps {
   index: TodoItemIndex;
   toUpdate?: (index: TodoItemIndex) => void;
   attach?: DrawerOptions['attach'];
+  // 是否预览
+  preview?: boolean;
 }
 
 export async function openTodoItemInfo(props: TodoItemInfoProps) {
-  const {index, attach, toUpdate} = props;
+  const {index, attach, preview = false, toUpdate} = props;
   useUmami.track("/待办/操作/编辑卡片信息")
 
   const base = ref(clone(index, true));
@@ -91,7 +98,7 @@ export async function openTodoItemInfo(props: TodoItemInfoProps) {
     className: 'abs-drawer',
     default: () => <div class={'todo-item-setting'}>
       <div class={'todo-item-setting__header'}>
-        <TodoItemCheckbox priority={base.value.priority} v-model:status={base.value.status}/>
+        <TodoItemCheckbox priority={base.value.priority} v-model:status={base.value.status} readonly={preview}/>
         <div class={'ml-8px'}>
           <Popup placement={'bottom'} trigger={"click"} showArrow={true}>{{
             default: () => <Button size={'small'}>
@@ -99,33 +106,33 @@ export async function openTodoItemInfo(props: TodoItemInfoProps) {
             </Button>,
             content: () => <div class={'todo-item-setting__date'}>
               <div>
-                <RadioGroup v-model={isRange.value} variant={"default-filled"}>
+                <RadioGroup v-model={isRange.value} variant={"default-filled"} readonly={preview}>
                   <RadioButton value={false}>时间</RadioButton>
                   <RadioButton value={true}>时间段</RadioButton>
                 </RadioGroup>
               </div>
               <div style={{marginTop: '8px'}}>
-                {isRange.value ? <DateRangePicker v-model={range.value} clearable={true}></DateRangePicker> :
-                  <DatePicker v-model={range.value[0]} clearable={true}></DatePicker>}
+                {isRange.value ? <DateRangePicker v-model={range.value} clearable={true} readonly={preview}/> :
+                  <DatePicker v-model={range.value[0]} clearable={true} readonly={preview}/>}
               </div>
             </div>
           }}</Popup>
         </div>
         <div class={'ml-8px'}>
-          <Checkbox v-model={base.value.top}>置顶</Checkbox>
+          <Checkbox v-model={base.value.top} readonly={preview}>置顶</Checkbox>
         </div>
         <div style={{marginLeft: 'auto'}}>
-          <PriorityDropdown v-model={base.value.priority}/>
+          <PriorityDropdown v-model={base.value.priority} readonly={preview}/>
         </div>
       </div>
       <div class={'todo-item-setting__input'}>
-        <Input v-model={base.value.title}/>
+        <Input v-model={base.value.title} readonly={preview}/>
       </div>
       <div class={['todo-item-setting__content', windowType]}>
-        <RichTextEditor v-model={content.value.record.content} simple={true}/>
+        <RichTextEditor v-model={content.value.record.content} simple={true} readOnly={preview}/>
       </div>
       <div class={'todo-item-setting__tag'}>
-        <TagGroup v-model={attr.value.tags}/>
+        <TagGroup v-model={attr.value.tags} readonly={preview}/>
       </div>
     </div>,
     footer: () => <div style={{display: 'flex', justifyContent: 'space-between'}}>
