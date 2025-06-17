@@ -53,9 +53,10 @@
         更多
       </t-menu-item>
       <template #logo>
-        <div class="flex items-center justify-center" :class="{'w-full': appCollapsed}">
+        <div class="flex items-center justify-center" :class="{'w-full': appCollapsed}" style="margin-left: 0">
           <t-dropdown placement="bottom-left" trigger="click">
-            <img :width="35" :src="profile.avatar" :alt="profile.nickname" :title="profile.nickname" class="cursor-pointer"/>
+            <img :width="35" :src="profile.avatar" :alt="profile.nickname" :title="profile.nickname"
+                 class="cursor-pointer"/>
             <t-dropdown-menu>
               <t-dropdown-item divider>
                 <template #prefix-icon>
