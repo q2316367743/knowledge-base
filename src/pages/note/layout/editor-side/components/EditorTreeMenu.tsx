@@ -28,6 +28,7 @@ import {openNotePreview} from "@/widget/NotePreview";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {UToolsUtil} from "@/utils/utools/UToolsUtil";
 import {exportToZip} from "@/utils/utools/BackgroundUtil";
+import {getPlatform} from "@/utils/utools/common";
 
 function moveTo(id: number, name: string, article: boolean) {
   let folderId: number | undefined = undefined;
@@ -45,16 +46,23 @@ function moveTo(id: number, name: string, article: boolean) {
       // 更新笔记文件夹
       useArticleStore().updateIndex(id, {folder: folder.id})
         .then(() => MessageUtil.success("移动成功"))
+        .catch(e => MessageUtil.error(`移动笔记「${name}」失败`, e));
     } else {
-      useFolderStore().drop(id, folder.id);
+      useFolderStore().drop(id, folder.id)
+        .then(() => MessageUtil.success("移动成功"))
+        .catch(e => MessageUtil.error(`移动文件夹「${name}」失败`, e));
     }
   })
 }
 
 interface EditorTreeMenuProps {
+  // 右键的节点
   node: EditorTreeNode;
+  // 是否显示更多选项
   more?: boolean;
+  // 当点击多选
   multi: (id: number) => void;
+  // 当点击选择
   select: (id: number | string) => void;
 }
 
@@ -68,9 +76,10 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
   e.preventDefault();
   e.stopPropagation();
   const {noteNoVip} = useVipStore();
-  const {node, more = true, multi} = props;
+  const {node, multi} = props;
 
   const items = new Array<MenuItem>();
+  const platform = getPlatform();
 
   if (node.leaf) {
     // 一个笔记
@@ -78,21 +87,15 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     children.push({
       label: '设置颜色',
       icon: () => <FillColor1Icon/>,
-      onClick: () => {
-        setColor(node.value, node.leaf);
-      }
+      onClick: () => setColor(node.value, node.leaf)
     }, {
       label: '多选',
       icon: () => <CheckRectangleIcon/>,
-      onClick: () => {
-        multi(node.value);
-      }
+      onClick: () => multi(node.value)
     }, {
       label: '移动到',
       icon: () => <GestureRightIcon/>,
-      onClick: () => {
-        moveTo(node.value, node.label, node.leaf);
-      }
+      onClick: () => moveTo(node.value, node.label, node.leaf)
     });
     if (InjectionUtil.env.isUtools()) {
       // 判断关键字
@@ -117,9 +120,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
     items.push({
       label: '打开',
       icon: () => <RoundIcon/>,
-      onClick: () => {
-        props.select(node.value);
-      }
+      onClick: () => props.select(node.value)
     }, {
       label: '小窗打开',
       icon: () => <TerminalWindowIcon/>,
@@ -183,7 +184,7 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
         addFolder(node.value);
       }
     });
-    if (more && node.value !== 0) {
+    if (node.value !== 0) {
       items.push({
         label: '重命名',
         icon: () => <Edit2Icon/>,
@@ -242,13 +243,16 @@ export function openEditorTreeMenu(e: MouseEvent, props: EditorTreeMenuProps) {
       icon: () => <FileExportIcon/>,
       children: [{
         label: 'ZIP',
-        onClick: () => exportToZip(node.value)
+        onClick: () => exportToZip(node.value),
+        disabled: platform === 'tauri'
       }, {
         label: 'uTools文档插件',
-        onClick: () => exportToUTools(node.value)
+        onClick: () => exportToUTools(node.value),
+        disabled: platform !== 'uTools'
       }, {
         label: 'Epub',
-        onClick: () => exportForEpub(node.value)
+        onClick: () => exportForEpub(node.value),
+        disabled: platform !== 'uTools'
       }]
     });
   }

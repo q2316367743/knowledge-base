@@ -264,7 +264,11 @@ function moveMultiTo() {
 }
 
 function onContextmenu(node: Pick<TreeNodeModel, 'data'>, e: MouseEvent) {
-  openEditorTreeMenu(e, {node: node.data as any, multi: multiCheckStart, select: onSelect})
+  openEditorTreeMenu(e, {
+    node: node.data as any,
+    multi: multiCheckStart,
+    select: onSelect
+  })
 }
 
 function onRootClick(e: MouseEvent) {
@@ -273,7 +277,9 @@ function onRootClick(e: MouseEvent) {
       value: 0,
       label: '根目录',
       leaf: false
-    }, multi: multiCheckStart, select: onSelect
+    },
+    multi: multiCheckStart,
+    select: onSelect
   })
 }
 </script>

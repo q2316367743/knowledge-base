@@ -27,9 +27,7 @@ export function extname(fileName: string): string {
 }
 
 export function basename(fileName: string): string {
-  const s = fileName.split('/').pop() || '';
-  const t = fileName.split("\\").pop() || '';
-  return s.length > t.length ? t : s;
+  return fileName.split('/').pop() || fileName;
 }
 
 export function renderLanguage(ext: string): string {

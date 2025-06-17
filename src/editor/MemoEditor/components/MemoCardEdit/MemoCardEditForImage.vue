@@ -1,6 +1,6 @@
 <template>
   <t-form-item label="" label-align="top" help="请输入内容">
-    <t-upload accept='image/*' draggable :request-method='customRequest' class='w-full'/>
+    <t-upload accept='image/*' draggable :request-method='customRequest' class='w-full' :files="files"/>
   </t-form-item>
   <t-form-item label="解析" label-align="top" help="非必填">
     <memo-md-editor v-model="data.analysis"/>
@@ -8,16 +8,28 @@
 </template>
 <script lang="ts" setup>
 import {RequestMethodResponse, UploadFile} from "tdesign-vue-next";
-import { MemoDataCardImage} from "@/editor/MemoEditor/types";
+import {MemoDataCardImage} from "@/editor/MemoEditor/types";
 import MemoMdEditor from "@/editor/MemoEditor/components/MemoMdEditor.vue";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
+import {basename} from "@/utils/file/FileUtil";
 
 const data = defineModel<Partial<MemoDataCardImage>>({
   default: () => ({
     url: '',
     analysis: ''
   })
+})
+
+const files = computed<Array<UploadFile>>(() => {
+  if (data.value.url) {
+    return [{
+      name: basename(data.value.url),
+      url: data.value.url,
+      status: 'success'
+    }];
+  }
+  return [];
 })
 
 const customRequest = async (files: UploadFile | UploadFile[]): Promise<RequestMethodResponse> => {
