@@ -1,6 +1,6 @@
 <template>
   <div class="memo-card-preview-for-image" v-if="card">
-    <t-image :src="card.data.url" alt="图片卡" fit="contain" lazy/>
+    <img :src="card.data.url" alt="图片卡" class="w-full"/>
   </div>
 </template>
 <script lang="ts" setup>

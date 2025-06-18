@@ -39,7 +39,7 @@ export async function buildDefaultContent(name: string, type: ArticleTypeEnum): 
       return {
         data: [
           ...traverseNumber(tableColCount).map(() => {
-            return [...traverseNumber(tableColumnCount).map(() => "")]
+            return [...traverseNumber(tableColumnCount, "")]
           })
         ],
         columns: []

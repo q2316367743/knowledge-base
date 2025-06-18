@@ -62,7 +62,10 @@ const onAdd = (item: TdDropdownItemProps) => {
   if (item.value === 'BATCH') {
     // TODO: 批量制卡
     openMemoCardEditBatch()
-      .then(cards => cards.forEach(card => instance?.onAdd(card)))
+      .then(cards => {
+        cards.forEach(card => instance?.onAdd(card));
+        MessageUtil.success(`批量制卡成功，${cards.length}张卡片已添加`);
+      })
       .catch(e => MessageUtil.error("批量制卡失败", e));
   } else if (item.value === 'AI') {
     // TODO: AI制卡

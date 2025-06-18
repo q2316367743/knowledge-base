@@ -146,11 +146,12 @@ export class MapWrap<K, V> extends Map<K, V> {
 /**
  * 生成一个指定长度的数组
  * @param num 数组长度
+ * @param fill 填充字符串
  */
-export function traverseNumber(num: number) {
-  const arr = new Array<number>()
+export function traverseNumber(num: number, fill?: string): Array<string> {
+  const arr = new Array<string>()
   for (let i = 0; i < num; i++) {
-    arr.push(i);
+    arr.push(fill || (i + ""));
   }
   return arr
 }
