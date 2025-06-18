@@ -225,7 +225,6 @@ function onContextmenu(e: MouseEvent, idx: NewsIndex) {
 }
 
 .menu {
-  background-color: var(--td-bg-color-container);
   overflow: auto;
 
   .menu-item {

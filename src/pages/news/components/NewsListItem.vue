@@ -1,6 +1,6 @@
 <template>
   <div class="pb-8px">
-    <div class="t-card t-card--bordered news-list-item relative flex overflow-hidden" v-if="item && index">
+    <div class="news-list-item relative flex overflow-hidden" v-if="item && index">
       <div class="flex flex-col md:flex-row w-full">
         <div class="md-w-1/3" v-if="item.image">
           <img class="w-full h-full object-cover" :src="item.image" :alt="item.title"/>
@@ -70,6 +70,10 @@ function onPush(item: NewsInstance) {
 <style scoped lang="less">
 .news-list-item {
   padding: 8px;
+  background-color: var(--kb-bg-color-3);
+  border-radius: var(--td-radius-default);
+  border: 1px solid var(--td-border-level-2-color);
+
 
   .news-list-item__header {
     padding: 16px 16px 8px;

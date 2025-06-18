@@ -74,9 +74,9 @@ onUnmounted(() => {
 
     .cherry-previewer {
       border: none;
-      padding: 0;
-      background-color: var(--td-bg-color-container);
+      background-color: var(--kb-bg-color-3) !important;
     }
+
     img {
       max-width: calc(100% - 16px);
       margin: 8px;

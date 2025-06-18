@@ -6,12 +6,6 @@
 import * as monaco from 'monaco-editor'
 import {useGlobalStore} from "@/store/GlobalStore";
 import {useElementSize} from "@vueuse/core";
-import {useArticleExportEvent, useArticleImportEvent, useHomeEditorStore} from "@/store/components/HomeEditorStore";
-import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
-import {download} from "@/utils/BrowserUtil";
-import {readAsText} from "@/utils/file/FileUtil";
-import {openArticleImport} from "@/pages/note/layout/editor-content/components/ArticleImport";
-import {useArticleStore} from "@/store/db/ArticleStore";
 import {codeEditorSetting} from "@/store/setting/CodeEditorSettingStore";
 
 monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({

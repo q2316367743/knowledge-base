@@ -8,6 +8,7 @@ export * from './db/FolderStore';
 export * from './db/CategoryStore';
 export * from './db/TodoItemStore';
 export * from './db/TodoCategoryStore';
+export * from './db/NewsStore';
 export * from './setting/BaseSettingStore';
 export * from './setting/ThemeSettingStore';
 export * from './ai/AiServiceStore';

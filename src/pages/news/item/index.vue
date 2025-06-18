@@ -90,7 +90,6 @@ function refresh() {
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: var(--td-bg-color-container);
 
   .page-header {
     display: flex;

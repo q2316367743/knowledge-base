@@ -42,7 +42,7 @@
     <main class="page-container">
       <t-loading :loading class="w-full h-full" text="正在加载中">
         <div class="page-container-content">
-          <chat-content :value="article?.markdown"/>
+          <markdown-preview :value="article?.markdown"/>
         </div>
       </t-loading>
     </main>
@@ -52,18 +52,17 @@
 <script lang="ts" setup>
 import {ArrowLeftIcon, LinkIcon, RefreshIcon, SaveIcon} from "tdesign-icons-vue-next";
 import {NewsArticle, NewsIndex} from "@/entity/news";
-import {useNewsStore} from "@/store/db/NewsStore";
 import {prettyDate} from "@/utils/lang/FormatUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {useIntervalComputer} from "@/hooks/IntervalComputer";
-import {getNewsArticle} from "@/modules/NoteNews";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import NotificationUtil from "@/utils/modal/NotificationUtil";
+import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
+import {useIntervalComputer} from "@/hooks/IntervalComputer";
+import LocalNameEnum from "@/enumeration/LocalNameEnum";
+import {getNewsArticle} from "@/modules/NoteNews";
 import {addArticleModal} from "@/pages/note/components/he-context";
 import {ArticleTypeEnum} from "@/enumeration/ArticleTypeEnum";
-import NotificationUtil from "@/utils/modal/NotificationUtil";
-import {useHomeEditorStore} from "@/store";
+import {useHomeEditorStore, useNewsStore} from "@/store";
 
 const route = useRoute();
 const router = useRouter();
@@ -144,7 +143,6 @@ function handleSave() {
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: var(--td-bg-color-container);
 
   .page-header {
     display: flex;
@@ -181,11 +179,6 @@ function handleSave() {
       font-size: v-bind(fontSize) !important;
     }
 
-    :deep(img) {
-      max-width: calc(100% - 32px);
-      margin: 32px 16px;
-    }
-
     :deep(a) {
       display: inline-flex;
       cursor: pointer;
@@ -219,9 +212,6 @@ function handleSave() {
 
     }
 
-    .page-container-content {
-      padding: 8px 16px;
-    }
   }
 
   .empty {

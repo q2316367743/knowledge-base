@@ -100,5 +100,8 @@ function toApp(name: string) {
   InjectionUtil.redirect([name, name], '');
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
+:deep(.t-list) {
+  background-color: var(--kb-bg-color-1);
+}
 </style>

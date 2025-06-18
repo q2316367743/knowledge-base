@@ -2,7 +2,7 @@
   <!-- 编辑区 -->
   <div class="ec-container-item" v-if="articleIndex && load">
     <markdown-editor v-model="content" :preview="preview" ref="mdEditor" :article-id="articleIndex.id"
-                     v-if="editorType === ArticleTypeEnum.MARKDOWN" @send-to-chat="sendToChat"/>
+                     v-if="editorType === ArticleTypeEnum.MARKDOWN"/>
     <rich-text-editor v-model="content" :read-only="preview" ref="weEditor" :article-id="articleIndex.id"
                       v-else-if="editorType === ArticleTypeEnum.RICH_TEXT"/>
     <monaco-editor v-model="content" :language="language" :read-only="preview" :article-id="articleIndex.id"
@@ -50,12 +50,11 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {useArticlePreviewEvent, useArticleStore, useBaseSettingStore, useHomeEditorStore} from "@/store";
 import MdEditorEditModeEnum from "@/enumeration/MdEditorEditModeEnum";
 import {useMountEventBus} from "@/hooks/MountEventBus";
+import {useAsyncDebounce} from "@/hooks/AsyncDebounce";
 
 const props = defineProps({
   articleIndex: Object as PropType<ArticleIndex>,
 });
-const emits = defineEmits(['sendToChat']);
-defineExpose({insertToArticle});
 
 const load = ref(false);
 // 笔记内容，不一定是文本
@@ -94,26 +93,16 @@ const editorType = computed(() => {
   return props.articleIndex.type || ArticleTypeEnum.MARKDOWN;
 });
 
-
-async function saveContent(value: any) {
+const saveContent = useAsyncDebounce(async () => {
   if (!props.articleIndex) {
     return;
   }
-  contentRev = await useArticleStore().updateContent(props.articleIndex.id, value, contentRev);
-}
-
-watch(() => content.value, value => {
-  if (!props.articleIndex) {
-    return;
+  try {
+    contentRev = await useArticleStore().updateContent(props.articleIndex.id, content.value, contentRev);
+  }catch (e) {
+    MessageUtil.error("自动保存笔记失败", e)
   }
-  if (!load.value) {
-    console.debug("自动保存笔记，但未加载完成")
-    return;
-  }
-  saveContent(value).then(() => console.debug("自动保存笔记成功"))
-    .catch(e => MessageUtil.error("自动保存笔记失败", e));
-}, {deep: true});
-
+}, 300);
 
 async function initArticle(articleId: number) {
   if (articleId == 0) {
@@ -129,6 +118,18 @@ async function initArticle(articleId: number) {
   content.value = contentWrap.record.content;
   load.value = true;
   contentRev = contentWrap.rev;
+
+  // 增加内容监听
+  watch(() => content.value, () => {
+    if (!props.articleIndex) {
+      return;
+    }
+    if (!load.value) {
+      console.debug("自动保存笔记，但未加载完成")
+      return;
+    }
+    saveContent()
+  }, {deep: true});
 
 }
 
@@ -155,17 +156,6 @@ function onPreview(id: number) {
     }
   }
 }
-
-function insertToArticle(str: string) {
-  if (editorType.value === ArticleTypeEnum.MARKDOWN) {
-    mdEditor.value.onInsert(str);
-  }
-}
-
-function sendToChat(str: string) {
-  emits('sendToChat', str);
-}
-
 
 </script>
 <style scoped>

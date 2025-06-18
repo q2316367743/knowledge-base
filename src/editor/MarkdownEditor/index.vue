@@ -119,26 +119,32 @@ function onImport(id: number) {
   .markdown-editor-wrap {
     position: relative;
   }
-}
 
-.cherry {
-  background-color: var(--td-bg-color-container);
-  color: var(--td-text-color-primary);
-
-  .cherry-previewer {
-    background-color: var(--td-bg-color-container) !important;
-
-    &.cherry-preview--full {
-      border: none;
+  .cherry {
+    background-color: transparent;
+    color: var(--td-text-color-primary);
+    .cherry-editor {
+      .CodeMirror {
+        background-color: var(--kb-bg-color-6) !important;
+      }
     }
 
-    a {
-      color: var(--td-text-color-link);
-    }
+    .cherry-previewer {
+      background-color: var(--kb-bg-color-3) !important;
 
-    image, img {
-      max-width: 100%;
+      &.cherry-preview--full {
+        border: none;
+      }
+
+      a {
+        color: var(--td-text-color-link);
+      }
+
+      image, img {
+        max-width: 100%;
+      }
     }
   }
 }
+
 </style>
