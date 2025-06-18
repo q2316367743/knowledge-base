@@ -132,12 +132,12 @@ function onExport(id: number) {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--td-bg-color-container);
   display: flex;
   flex-direction: column;
 
   &.w-e-full-screen-container {
     z-index: 1000;
+    background-color: var(--td-bg-color-container);
   }
 
   &.readonly {

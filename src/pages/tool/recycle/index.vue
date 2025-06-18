@@ -1,7 +1,7 @@
 <template>
   <div class="recycle">
     <header class="header">
-      <t-input v-model="keyword" placeholder="请输入笔记标题" style="width: 50%" :clearable="true">
+      <t-input v-model="keyword" placeholder="请输入笔记标题" style="width: 50%;max-width: 300px" :clearable="true">
         <template #prefix-icon>
           <search-icon/>
         </template>
@@ -97,6 +97,10 @@ function clearAll() {
     padding: 7px;
     display: flex;
     justify-content: space-between;
+  }
+
+  :deep(.t-list) {
+    background-color: var(--kb-bg-color-1);
   }
 }
 </style>
