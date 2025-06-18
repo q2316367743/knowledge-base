@@ -82,6 +82,22 @@ export const renderMemoDataCardType = (type: MemoDataCardType) => {
       return '未知卡';
   }
 }
+export const memoDataCardTypeOptions = [{
+  label: '记忆卡',
+  value: 'TEXT'
+}, {
+  label: '空白卡',
+  value: 'BLANK'
+}, {
+  label: '选择卡',
+  value: 'CHOICE'
+}, {
+  label: '单词卡',
+  value: 'WORD'
+}, {
+  label: '图片卡',
+  value: 'IMAGE'
+}]
 
 export enum MemoDataCardStatusEnum {
   // 未知、未学习、彻底忘记

@@ -20,6 +20,8 @@ import {TdDropdownItemProps, DropdownOption} from "tdesign-vue-next";
 import {IMemoInstance, MemoDataCard, MemoDataCardType, MemoInstance} from "@/editor/MemoEditor/types";
 import {openMemoCardEdit} from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEdit";
 import MemoCardItem from "@/editor/MemoEditor/components/MemoCardItem/MemoCardItem.vue";
+import {openMemoCardEditBatch} from "@/editor/MemoEditor/components/MemoCardEdit/MemoCardEditBatch";
+import MessageUtil from "@/utils/modal/MessageUtil";
 
 defineProps({
   cards: {
@@ -50,7 +52,8 @@ const options = ref<Array<DropdownOption>>([
     value: 'BATCH'
   }, {
     content: 'AI制卡',
-    value: 'AI'
+    value: 'AI',
+    disabled: true
   }
 ]);
 
@@ -58,6 +61,11 @@ const instance = inject<IMemoInstance>(MemoInstance);
 const onAdd = (item: TdDropdownItemProps) => {
   if (item.value === 'BATCH') {
     // TODO: 批量制卡
+    openMemoCardEditBatch()
+      .then(cards => cards.forEach(card => instance?.onAdd(card)))
+      .catch(e => MessageUtil.error("批量制卡失败", e));
+  } else if (item.value === 'AI') {
+    // TODO: AI制卡
   } else {
     openMemoCardEdit(item.value as MemoDataCardType).then((card) => instance?.onAdd(card));
   }
