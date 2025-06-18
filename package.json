@@ -60,6 +60,7 @@
     "tdesign-icons-vue-next": "^0.3.4",
     "tdesign-vue-next": "1.13.0",
     "vconsole": "^3.15.1",
+    "vite-plugin-pwa": "^1.0.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "vue-virtual-scroller": "^2.0.0-beta.8",

@@ -15,6 +15,7 @@ const exportToZipByWeb = async (pid: number): Promise<void> => {
   const name = data.data;
   // 打开下载链接
   window.open(`/api/file/temp/${name}`, '_blank');
+  MessageUtil.success("文件10分钟内有效，已触发下载！");
 }
 
 export const exportToZip = (pid: number) => {

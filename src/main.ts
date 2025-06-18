@@ -1,4 +1,6 @@
 import {useUmami} from "@/plugin/umami";
+// @ts-ignore
+import { registerSW } from 'virtual:pwa-register';
 import {createPinia} from 'pinia';
 import App from './App.vue'
 import router from './plugin/router';
@@ -33,6 +35,19 @@ import {addArticleModal} from "@/pages/note/components/he-context";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {openSearchContent} from "@/pages/note/components/SearchContent";
 import {isEmptyArray} from "@/utils/lang/FieldUtil";
+
+// PWA
+const updateSW = registerSW({
+  onNeedRefresh() {
+    const confirmed = window.confirm(
+      "A new version is available! Reload to update?"
+    );
+    if (confirmed) {
+      updateSW(true);
+    }
+  },
+  onOfflineReady() {},
+});
 
 // 代码编辑器环境注册
 self.MonacoEnvironment = {

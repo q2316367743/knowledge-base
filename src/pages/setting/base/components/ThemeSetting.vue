@@ -26,13 +26,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {TdUploadProps, UploadFile} from 'tdesign-vue-next';
+import {RequestMethodResponse, TdUploadProps, UploadFile} from 'tdesign-vue-next';
 import {ThemeColors} from "@/global/theme";
 import {useGlobalStore} from "@/store";
 import {useThemeSettingStore} from "@/store/setting/ThemeSettingStore";
 import {basename} from "@/utils/file/FileUtil";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
-import {RequestMethodResponse} from "tdesign-vue-next/es/upload/type";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {ThemeSetting} from "@/entity/setting/ThemeSetting";
 
