@@ -1,19 +1,13 @@
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {randomString, versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {AiService, AiServiceType, InnerAiService} from "@/entity/ai/AiService";
-import {useSnowflake} from "@/hooks/Snowflake";
-import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {renderAttachmentUrl} from "@/plugin/server";
 import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
-import {extname} from "@/utils/file/FileUtil";
 import {getPlatform, http, InjectionWebResult} from '@/utils/utools/common';
-import {appDataDir, join, pictureDir, tempDir} from '@tauri-apps/api/path';
+import {pictureDir, tempDir} from '@tauri-apps/api/path';
 import {getCurrentWindow} from '@tauri-apps/api/window';
 import {load, Store} from '@tauri-apps/plugin-store';
-import {convertFileSrc} from '@tauri-apps/api/core';
 import {writeText} from '@tauri-apps/plugin-clipboard-manager';
 import {openUrl} from '@tauri-apps/plugin-opener';
-import {BaseDirectory, exists, mkdir, writeFile} from '@tauri-apps/plugin-fs';
 
 type InjectionDbDoc<T extends {} = Record<string, any>> = {
   _id: string,
@@ -75,15 +69,6 @@ interface OpenPaymentOptions {
   goodsId: string,
   outOrderId?: string,
   attach?: string
-}
-
-export interface FileUploadResult {
-  // 文件名
-  name: string;
-  // 文件key，在markdown文档中有效
-  key: string;
-  // 真正的url，全路径
-  url: string;
 }
 
 export interface UserProfile {
@@ -451,91 +436,6 @@ export const InjectionUtil = {
           return res.filter(v => !!v) as InjectionDbDoc[];
       }
     },
-    async postAttachment(docId: string, attachment: Uint8Array, type: string): Promise<InjectionDbReturn> {
-      if (window['utools']) {
-        return utools.db.promises.postAttachment(docId, attachment, type);
-      } else {
-        return Promise.reject(new Error("系统环境异常"))
-      }
-    },
-    getAttachment(docId: string): Uint8Array | null {
-      switch (getPlatform()) {
-        case "uTools":
-          return utools.db.getAttachment(docId);
-        default:
-          throw new Error("系统环境异常");
-      }
-    },
-    async getAttachmentType(docId: string): Promise<string | null> {
-      switch (getPlatform()) {
-        case "uTools":
-          return utools.db.promises.getAttachmentType(docId);
-        default:
-          return Promise.reject(new Error("系统环境异常"))
-      }
-    },
-    async upload(file: Blob, fileName: string, mineType = "application/octet-stream"): Promise<FileUploadResult> {
-      const id = useSnowflake().nextId();
-      const docId = LocalNameEnum.ARTICLE_ATTACHMENT + id;
-      switch (getPlatform()) {
-        case "uTools":
-          const buffer = await file.arrayBuffer();
-          const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), mineType);
-          if (res.error) {
-            return Promise.reject(res.message);
-          }
-          return {
-            name: fileName,
-            key: docId,
-            url: renderAttachmentUrl(docId)
-          }
-        case "web":
-          // 文件上传
-          const formData = new FormData();
-          formData.append('file', file);
-          const rsp = await http.post('/file/upload', formData);
-          const {data} = rsp;
-          return data;
-        case "tauri":
-          // 获取年月日
-          const base = await appDataDir();
-          const now = new Date();
-          const year = now.getFullYear().toString();
-          const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份补零
-          const day = now.getDate().toString().padStart(2, '0'); // 日期补零
-          const folder = await join("attachment", year, month, day); // 拼接年/月/日目录
-          const e = await exists(folder, {
-            baseDir: BaseDirectory.AppData
-          });
-          if (!e) {
-            // 如果不存在目录，则创建
-            await mkdir(folder, {baseDir: BaseDirectory.AppData, recursive: true});
-          }
-          // 修改文件名
-          const name = `${useSnowflake().nextId()}.${extname(fileName)}`
-          const path = await join(folder, name);
-          // 写入文件
-          await writeFile(path,  new Uint8Array(await file.arrayBuffer()), {
-            baseDir: BaseDirectory.AppData, createNew: true, create: true
-          });
-          const absPath = await join(base, path);
-          return {
-            name: fileName,
-            key: '',
-            url: convertFileSrc(absPath)
-          }
-      }
-    },
-    render(url: string): string {
-      switch (getPlatform()) {
-        case "uTools":
-          return renderAttachmentUrl(url)
-        case "web":
-          return './api/file/static/' + url;
-        case "tauri":
-          return convertFileSrc(url);
-      }
-    }
   },
   env: {
     isSupportAi(): boolean {

@@ -6,7 +6,7 @@ import {
   saveOneByAsync
 } from "@/utils/utools/DbStorageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {postAttachment} from "@/utils/utools/AttachmentUtil";
 
 /**
  * 恢复备份
@@ -63,7 +63,7 @@ function saveOneWithText(key: string, value: Blob): Promise<void> {
  */
 async function saveOneWithFile(docId: string, attachment: Blob): Promise<any> {
   const buffer = await attachment.arrayBuffer();
-  const res = await InjectionUtil.db.postAttachment(docId, new Uint8Array(buffer), "application/octet-stream");
+  const res = await postAttachment(docId, new Uint8Array(buffer), "application/octet-stream");
   if (res.error) {
     return Promise.reject(res.message);
   }

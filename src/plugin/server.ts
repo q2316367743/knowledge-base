@@ -6,6 +6,7 @@ import {NativeUtil} from "@/utils/utools/NativeUtil";
 const port = import.meta.env.DEV ? 11010 : 11000;
 let run = true;
 
+// TODO: 此处有BUG
 export function renderAttachmentBaseUrl() {
   return `http://localhost:${port}/attachment`;
 }
@@ -19,7 +20,7 @@ export function createServer() {
   });
 }
 
-export function renderAttachmentUrl(key: string) {
+export function renderAttachmentUrlByUTools(key: string) {
   if (run) {
     return `${renderAttachmentBaseUrl()}?key=${encodeURIComponent(key)}`;
   }

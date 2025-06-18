@@ -1,6 +1,7 @@
 import {toRaw} from "vue";
 import {clone} from "@/utils/lang/ObjectUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {getAttachment, getAttachmentType} from "@/utils/utools/AttachmentUtil";
 
 
 // 对象
@@ -239,11 +240,11 @@ export async function removeOneByAsync(key: string, ignoreError: boolean = false
  * @return 文件链接
  */
 export async function getAttachmentByAsync(docId: string): Promise<Blob | null> {
-  const data = InjectionUtil.db.getAttachment(docId);
+  const data = getAttachment(docId);
   if (!data) {
     return null;
   }
-  const mimeType = await InjectionUtil.db.getAttachmentType(docId);
+  const mimeType = await getAttachmentType(docId);
   return new Blob([data], {type: mimeType || 'application/octet-stream'});
 }
 
@@ -252,7 +253,7 @@ export async function getAttachmentByAsync(docId: string): Promise<Blob | null> 
  * @param docId 文档ID
  */
 export function getAttachmentBySync(docId: string): string {
-  const data = InjectionUtil.db.getAttachment(docId);
+  const data = getAttachment(docId);
   if (!data) {
     return "./logo.png";
   }

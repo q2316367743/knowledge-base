@@ -4,6 +4,7 @@ import {createArticleExport} from "@/pages/note/layout/editor-content/components
 import {download} from "@/utils/BrowserUtil";
 import cherryMarkdownCss from 'cherry-markdown/dist/cherry-markdown.markdown.min.css?raw';
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {getAttachment} from "@/utils/utools/AttachmentUtil";
 
 interface ImageItem {
   key: string;
@@ -58,7 +59,7 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
         jsZip.file('index.md', replacedStr);
         // 附件导出
         for (let image of images) {
-          const data = InjectionUtil.db.getAttachment(image.path);
+          const data = getAttachment(image.path);
           if (data) {
             const blob = new Blob([data]);
             jsZip.file(`image/${image.key}.png`, blob);

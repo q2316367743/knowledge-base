@@ -1,12 +1,10 @@
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
 import ImageStrategyEnum from "@/enumeration/ImageStrategyEnum";
-import NotificationUtil from "@/utils/modal/NotificationUtil";
 import {useAttachmentUploadByImage} from "@/plugin/AttachmentUpload/impl/ImageAttachmentUploadImpl";
 import {useAttachmentUploadByPicGo} from "@/plugin/AttachmentUpload/impl/PicGoAttachmentUploadImpl";
 import {useAttachmentUploadByImagePlus} from "@/plugin/AttachmentUpload/impl/ImagePlusAttachmentUploadImpl";
 import {useAttachmentUploadByUtools} from "@/plugin/AttachmentUpload/impl/UToolsAttachmentUploadImpl";
-import {renderAttachmentUrl} from "@/plugin/server";
-import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {FileUploadResult, renderAttachmentKey} from "@/utils/utools/AttachmentUtil";
 
 export const useAttachmentUpload = {
   upload: async (data: Blob | File | string, name: string, mineType?: string): Promise<FileUploadResult> => {
@@ -26,7 +24,7 @@ export const useAttachmentUpload = {
   },
   render: (url: string) => {
     if (/^attachment:/.test(url)) {
-      return InjectionUtil.db.render(url.replace(/^attachment:/, ""))
+      return renderAttachmentKey(url.replace(/^attachment:/, ""))
     }
     return url;
   }

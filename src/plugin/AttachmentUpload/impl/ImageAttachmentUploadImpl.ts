@@ -1,7 +1,8 @@
 import {blobToBase64} from "@/utils/BrowserUtil";
 import NotificationUtil from "@/utils/modal/NotificationUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {FileUploadResult} from '@/utils/utools/AttachmentUtil';
 
 export async function useAttachmentUploadByImage(data: Blob | File | string): Promise<FileUploadResult> {
   NotificationUtil.warningClose(

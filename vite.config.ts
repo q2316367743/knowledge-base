@@ -7,7 +7,7 @@ import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite';
 import {ArcoResolver, TDesignResolver} from 'unplugin-vue-components/resolvers';
-import { VitePWA } from 'vite-plugin-pwa';
+import {VitePWA} from 'vite-plugin-pwa';
 
 function _resolve(dir: string) {
   return resolve(__dirname, dir);
@@ -19,13 +19,17 @@ export default defineConfig(({mode}) => {
     // 加入PWA
     plugins.push(VitePWA({
       injectRegister: 'script',
-      includeAssets: ['logo.png'],
+      includeAssets: [
+        'user.png',
+        'mind-map/img/structures/*.png', 'mind-map/img/themes/*.jpg',
+        "js/*.js"
+      ],
       strategies: 'generateSW',
       manifest: {
         name: '知识库',
         short_name: '知识库',
         description: '支持markdown、富文本、代码、思维导图、流程图、表格笔记，支持文件夹形式组织自己的笔记结构。支持markdown模板。支持待办、卡片布局、日历布局。',
-        theme_color: '#FCB73F',
+        theme_color: '#fcb73f',
         icons: [
           {
             src: 'logo.png',

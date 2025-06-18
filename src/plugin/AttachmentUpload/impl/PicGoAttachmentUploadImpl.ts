@@ -1,8 +1,9 @@
 import Constant, {BASE64_PREFIX} from "@/global/Constant";
 import {useSnowflake} from "@/hooks/Snowflake";
 import {base64toBlob} from "@/utils/BrowserUtil";
-import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {NativeUtil} from "@/utils/utools/NativeUtil";
+import {FileUploadResult} from '@/utils/utools/AttachmentUtil';
 
 // PicGo: https://picgo.github.io/PicGo-Doc/zh/guide/advance.html
 export async function useAttachmentUploadByPicGo(data: Blob | File | string, name: string, port: number): Promise<FileUploadResult> {

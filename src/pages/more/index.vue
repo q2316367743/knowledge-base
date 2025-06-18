@@ -3,7 +3,7 @@
     <t-aside v-if="max" class="more-aside">
       <t-menu v-model="activeKey" @change="handleClick">
         <t-menu-item value="/more/backup" v-if="isUtools">备份</t-menu-item>
-        <t-menu-item value="/more/attachment" v-if="isUtools">附件</t-menu-item>
+        <t-menu-item value="/more/attachment">附件</t-menu-item>
         <t-menu-item value="/more/recommend">推荐</t-menu-item>
         <t-menu-item value="/more/update">更新</t-menu-item>
         <t-menu-item value="/more/about">关于</t-menu-item>
@@ -12,7 +12,7 @@
     <t-header v-else>
       <t-tabs v-model="activeKey" @change="handleClick">
         <t-tab-panel value="/more/backup" label="备份" v-if="isUtools"/>
-        <t-tab-panel value="/more/attachment" label="附件" v-if="isUtools"/>
+        <t-tab-panel value="/more/attachment" label="附件"/>
         <t-tab-panel value="/more/recommend" label="推荐"/>
         <t-tab-panel value="/more/update" label="更新"/>
         <t-tab-panel value="/more/about" label="关于"/>

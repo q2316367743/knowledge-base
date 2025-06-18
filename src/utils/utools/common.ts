@@ -16,3 +16,4 @@ export const http = axios.create({
 type PlatformType = 'uTools' | 'web' | 'tauri';
 
 export const getPlatform = (): PlatformType => import.meta.env.VITE_PLATFORM;
+

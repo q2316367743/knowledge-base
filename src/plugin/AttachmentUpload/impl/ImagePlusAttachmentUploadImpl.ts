@@ -1,8 +1,9 @@
 import {base64toBlob} from "@/utils/BrowserUtil";
 import Constant, {BASE64_PREFIX} from "@/global/Constant";
 import {useSnowflake} from "@/hooks/Snowflake";
-import {FileUploadResult, InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {NativeUtil} from "@/utils/utools/NativeUtil";
+import {FileUploadResult} from '@/utils/utools/AttachmentUtil';
 
 // 图床工具plus: https://docs.on-u.cn/picture-bed-plus/Service.html
 export async function useAttachmentUploadByImagePlus(data: Blob | File | string, name: string): Promise<FileUploadResult> {
