@@ -90,13 +90,7 @@
                 </template>
                 快捷键
               </t-dropdown-item>
-              <t-dropdown-item @click="toDoc()">
-                <template #prefix-icon>
-                  <questionnaire-icon/>
-                </template>
-                帮助中心
-              </t-dropdown-item>
-              <t-dropdown-item @click="toFeedback()">
+              <t-dropdown-item v-if="isUtools" @click="toFeedback()">
                 <template #prefix-icon>
                   <chat-message-icon/>
                 </template>
@@ -104,7 +98,7 @@
               </t-dropdown-item>
               <t-dropdown-item @click="openAuthorMoment()">
                 <template #prefix-icon>
-                  <chat-message-icon />
+                  <chat-message-icon/>
                 </template>
                 作者碎碎念
               </t-dropdown-item>
@@ -129,7 +123,7 @@
         </div>
       </template>
       <template #operations>
-        <t-button theme="primary" variant="text" shape="square" @click="useAppCollapsed()" class="ml-4px">
+        <t-button theme="primary" variant="text" shape="square" @click="useAppCollapsed()">
           <template #icon>
             <view-list-icon/>
           </template>
@@ -151,13 +145,14 @@ import {
 import {openKeyDrawer} from "@/components/app-side/func";
 import {appCollapsed, GlobalType, useAppCollapsed, useGlobalStore} from "@/store/GlobalStore";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
-import Constant, {openAuthorMoment, toDoc, toFeedback} from "@/global/Constant";
+import Constant, {openAuthorMoment, toFeedback} from "@/global/Constant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useUserStore} from "@/store/components/UserStore";
 
 const route = useRoute();
 const router = useRouter();
 const disabledForModule = !InjectionUtil.env.isSupportMarkdown();
+const isUtools = InjectionUtil.env.isUtools();
 
 const selectedKey = ref('/note');
 
