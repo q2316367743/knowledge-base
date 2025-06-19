@@ -4,7 +4,7 @@ import MemoCardPreview from "@/editor/MemoEditor/components/MemoCardPreview/Memo
 
 export function openMemoCardPreviewModel(card: MemoDataCard<MemoDataCardType>) {
   DialogPlugin({
-    header: false,
+    header: (card.data as any)['question'] || '',
     footer: false,
     closeBtn: true,
     placement: "center",

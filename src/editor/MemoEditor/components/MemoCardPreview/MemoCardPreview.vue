@@ -10,8 +10,9 @@
       </t-button>
     </div>
     <div class="memo-card-preview__container">
-      <memo-card-preview-for-text v-if="card.type === 'TEXT'" :card="card as MemoDataCard<'TEXT'>"/>
-      <memo-card-preview-for-choice v-else-if="card.type === 'CHOICE'" :card="card as MemoDataCard<'CHOICE'>"/>
+      <memo-card-preview-for-text v-if="card.type === 'TEXT'" :card="card as MemoDataCard<'TEXT'>" :shadow="shadow"/>
+      <memo-card-preview-for-choice v-else-if="card.type === 'CHOICE'" :card="card as MemoDataCard<'CHOICE'>"
+                                    :shadow="shadow"/>
       <memo-card-preview-for-word v-else-if="card.type === 'WORD'" :card="card as MemoDataCard<'WORD'>"/>
       <memo-card-preview-for-blank v-else-if="card.type === 'BLANK'" :card="card as MemoDataCard<'BLANK'>"/>
       <memo-card-preview-for-image v-else-if="card.type === 'IMAGE'" :card="card as MemoDataCard<'IMAGE'>"/>
@@ -59,16 +60,20 @@ const onStar = (card: MemoDataCard<MemoDataCardType>) => {
 .memo-card-preview {
   width: 100%;
   height: 100%;
-  border-radius: var(--td-radius-large);
+  border-radius: 0;
   background-color: var(--td-bg-color-container);
   position: relative;
   overflow: auto;
 
   &.shadow {
     box-shadow: var(--td-shadow-1);
+    border-radius: var(--td-radius-large);
 
     .memo-card-preview__container {
       top: 64px;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
     }
   }
 
@@ -84,11 +89,15 @@ const onStar = (card: MemoDataCard<MemoDataCardType>) => {
 
   .memo-card-preview__container {
     position: absolute;
-    top: 16px;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     overflow: auto;
+
+    :deep(.cherry-previewer) {
+      padding: 0;
+    }
   }
 }
 </style>

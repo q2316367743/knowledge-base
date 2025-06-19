@@ -1,6 +1,6 @@
 <template>
   <div class="memo-card-preview-for-text" v-if="card">
-    <div class="memo-card-preview-for-text__title">{{ card.data.question }}</div>
+    <div class="memo-card-preview-for-text__title" v-if="shadow">{{ card.data.question }}</div>
     <div class="memo-card-preview-for-text__content">
       <markdown-preview :value="card.data.answer" />
     </div>
@@ -16,6 +16,10 @@ import {MemoDataCard} from "@/editor/MemoEditor/types";
 defineProps({
   card: {
     type: Object as PropType<MemoDataCard<'TEXT'>>,
+  },
+  shadow: {
+    type: Boolean,
+    default: true
   }
 });
 </script>

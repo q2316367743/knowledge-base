@@ -241,13 +241,13 @@ export async function openMemoCardEditBatch(): Promise<Array<MemoDataCard<MemoDa
           <Button theme={'primary'} onClick={handleSubmit}>批量制卡</Button>
         </div>
         <FormItem label={'导入文件'} labelAlign={'top'}>
-          <Space size={'small'}>
-            <Button theme={'primary'}>Anki</Button>
+          <div class={'flex justify-between items-center'}>
+            <Button theme={'primary'} disabled={true}>Anki</Button>
             <Button theme={'primary'} disabled={true}>Excel</Button>
             <Button theme={'primary'} disabled={true}>微信读书</Button>
             <Button theme={'primary'} disabled={true}>脑图OPML</Button>
             <Button theme={'primary'} disabled={true}>大纲笔记OPML</Button>
-          </Space>
+          </div>
         </FormItem>
       </Form>
     })

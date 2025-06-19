@@ -1,7 +1,7 @@
 <template>
   <div class="memo-preview w-full h-full">
     <div class="w-full h-full flex ">
-      <div class="h-full w-full" style="background-color: var(--td-bg-color-container)">
+      <div class="h-full w-full">
         <memo-preview-content :cards="data" v-if="data.length > 0"/>
         <success-result v-else title="已完成今日的全部学习内容"/>
       </div>
