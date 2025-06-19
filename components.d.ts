@@ -95,6 +95,7 @@ declare module 'vue' {
     TText: typeof import('tdesign-vue-next')['Text']
     TTimeline: typeof import('tdesign-vue-next')['Timeline']
     TTimelineItem: typeof import('tdesign-vue-next')['TimelineItem']
+    TTimePicker: typeof import('tdesign-vue-next')['TimePicker']
     TTooltip: typeof import('tdesign-vue-next')['Tooltip']
     TTree: typeof import('tdesign-vue-next')['Tree']
     TUpload: typeof import('tdesign-vue-next')['Upload']
