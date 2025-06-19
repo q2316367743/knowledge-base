@@ -47,7 +47,7 @@ export async function getAttachmentType(docId: string): Promise<string | null> {
 export async function uploadAttachment(file: Blob, fileName: string, mineType = "application/octet-stream"): Promise<FileUploadResult> {
   const id = useSnowflake().nextId();
   const ext = extname(fileName);
-  const docId = LocalNameEnum.ARTICLE_ATTACHMENT + id + ext ? ('.' + ext) : "";
+  const docId = LocalNameEnum.ARTICLE_ATTACHMENT + id + (ext ? ('.' + ext) : "");
   switch (getPlatform()) {
     case "uTools":
       const buffer = await file.arrayBuffer();
@@ -147,7 +147,7 @@ export async function listAttachment(): Promise<Array<AttachmentInfo>> {
       return docs.map(it => ({
         filename: basename(it._id),
         key: it._id,
-        url: renderAttachmentUrlByUTools(it.id)
+        url: renderAttachmentUrlByUTools(it._id)
       }));
     case "tauri":
       const paths = new Array<AttachmentInfo>();

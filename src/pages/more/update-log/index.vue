@@ -33,6 +33,7 @@ import {Log} from "@/components/update-check/domain";
   background-color: var(--kb-bg-color-3);
   border-radius: var(--td-radius-default);
   padding: 8px;
+  transition: all 0.3s ease-in-out;
 
   &:hover {
     box-shadow: var(--td-shadow-3);

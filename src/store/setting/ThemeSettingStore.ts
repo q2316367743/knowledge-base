@@ -9,7 +9,6 @@ export const useThemeSettingStore = defineStore(LocalNameEnum.SETTING_THEME, () 
 
   const init = async () => {
     const res = await getFromOneByAsync(LocalNameEnum.SETTING_THEME);
-    console.log(res)
     if (res.record) theme.value = res.record;
     rev.value = res.rev;
   }

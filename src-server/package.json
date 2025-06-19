@@ -1,5 +1,6 @@
 {
   "name": "src-server",
+  "version": "2.7.2",
   "module": "src/index.ts",
   "type": "module",
   "license": "Apache-2.0",

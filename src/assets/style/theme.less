@@ -67,8 +67,13 @@ html {
   --kb-bg-color-5: rgba(255, 255, 255, 0.5);
   --kb-bg-color-6: rgba(255, 255, 255, 0.6);
   --kb-bg-color-8: rgba(255, 255, 255, 0.8);
+  --kb-bg-color-container: var(--kb-bg-color-3);
+  --kb-bg-color-container-hover: rgba(200, 200, 200, 0.3);
+  --kb-bg-color-container-active: rgba(139, 139, 139, 0.3);
   --kb-bg-color-secondarycomponent: rgba(220, 220, 220, 0.6);
   --kb-bg-color-component: rgba(231, 231, 231, 0.6);
+  --kb-bg-color-component-hover: rgba(220, 220, 220, 0.6);
+  --kb-bg-color-component-active: rgba(94, 94, 94, 0.6);
 }
 
 html[theme-mode="dark"] {
@@ -79,10 +84,19 @@ html[theme-mode="dark"] {
   --kb-bg-color-5: rgba(0, 0, 0, 0.5);
   --kb-bg-color-6: rgba(0, 0, 0, 0.6);
   --kb-bg-color-8: rgba(0, 0, 0, 0.8);
+  --kb-bg-color-container: var(--kb-bg-color-3);
+  --kb-bg-color-container-hover: rgba(55, 55, 55, 0.3);
+  --kb-bg-color-container-active: rgba(116, 116, 116, 0.3);
   --kb-bg-color-secondarycomponent: rgba(35, 35, 35, 0.6);
   --kb-bg-color-component: rgba(24, 24, 24, 0.6);
+  --kb-bg-color-component-hover: rgba(35, 35, 35, 0.6);
+  --kb-bg-color-component-active: rgba(161, 161, 161, 0.6);
 }
 
 .t-default-menu, .t-layout__sider, .t-layout, .t-tabs, .t-layout__header, .t-tabs__operations {
   background-color: transparent !important;
+}
+
+.t-list {
+  background-color: var(--kb-bg-color-container);
 }

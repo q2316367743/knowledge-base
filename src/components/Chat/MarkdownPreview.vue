@@ -74,7 +74,8 @@ onUnmounted(() => {
 
     .cherry-previewer {
       border: none;
-      background-color: var(--kb-bg-color-3) !important;
+      background-color: transparent !important;
+      color: var(--td-text-color-primary);
     }
 
     img {

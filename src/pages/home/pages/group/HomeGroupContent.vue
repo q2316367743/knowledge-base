@@ -258,18 +258,18 @@ function onMove(chat: AiChatList, targetGroupId: string) {
 
   .home-group-content-prompt {
     padding: 12px 16px;
-    background-color: var(--td-bg-color-component);
+    background-color: var(--kb-bg-color-component);
     border-radius: var(--td-radius-medium);
     cursor: pointer;
     transition: all .2s;
     display: flex;
 
     &:hover {
-      background-color: var(--td-bg-color-component-hover);
+      background-color: var(--kb-bg-color-component-hover);
     }
 
     &:active {
-      background-color: var(--td-bg-color-component-active);
+      background-color: var(--kb-bg-color-component-active);
     }
 
     &.center {
@@ -323,7 +323,7 @@ function onMove(chat: AiChatList, targetGroupId: string) {
 
     .chat-item {
       padding: 12px 16px;
-      background-color: var(--td-bg-color-container);
+      background-color: var(--kb-bg-color-container);
       border-radius: var(--td-radius-medium);
       transition: background-color 0.3s ease-in-out;
       cursor: pointer;
@@ -332,12 +332,16 @@ function onMove(chat: AiChatList, targetGroupId: string) {
       align-items: center;
       margin-bottom: 8px;
 
-      &:last-child {
+      &:first-child {
         margin-bottom: 0;
       }
 
       &:hover {
-        background-color: var(--td-bg-color-container-hover);
+        background-color: var(--kb-bg-color-container-hover);
+      }
+
+      &:active {
+        background-color: var(--kb-bg-color-container-active);
       }
 
       .left {

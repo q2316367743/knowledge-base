@@ -14,32 +14,6 @@ function _resolve(dir: string) {
 }
 
 export default defineConfig(({mode}) => {
-  const plugins: Array<PluginOption> = []
-  if (mode === 'web') {
-    // 加入PWA
-    plugins.push(VitePWA({
-      injectRegister: 'script',
-      includeAssets: [
-        'user.png',
-        'mind-map/img/structures/*.png', 'mind-map/img/themes/*.jpg',
-        "js/*.js"
-      ],
-      strategies: 'generateSW',
-      manifest: {
-        name: '知识库',
-        short_name: '知识库',
-        description: '支持markdown、富文本、代码、思维导图、流程图、表格笔记，支持文件夹形式组织自己的笔记结构。支持markdown模板。支持待办、卡片布局、日历布局。',
-        theme_color: '#fcb73f',
-        icons: [
-          {
-            src: 'logo.png',
-            sizes: '256x256',
-            type: 'image/png',
-          },
-        ],
-      },
-    }));
-  }
   return {
     resolve: {
       alias: {
@@ -47,7 +21,6 @@ export default defineConfig(({mode}) => {
       },
     },
     plugins: [
-      ...plugins,
       vue(), vueJsx(), UnoCSS(),
       AutoImport({
         resolvers: [ArcoResolver(), TDesignResolver({
@@ -64,6 +37,29 @@ export default defineConfig(({mode}) => {
             library: 'vue-next'
           })
         ]
+      }),
+      VitePWA({
+        disable: mode !== 'web',
+        injectRegister: 'script',
+        includeAssets: [
+          'user.png',
+          'mind-map/img/structures/*.png', 'mind-map/img/themes/*.jpg',
+          "js/*.js"
+        ],
+        strategies: 'generateSW',
+        manifest: {
+          name: '知识库',
+          short_name: '知识库',
+          description: '支持markdown、富文本、代码、思维导图、流程图、表格笔记，支持文件夹形式组织自己的笔记结构。支持markdown模板。支持待办、卡片布局、日历布局。',
+          theme_color: '#fcb73f',
+          icons: [
+            {
+              src: 'logo.png',
+              sizes: '256x256',
+              type: 'image/png',
+            },
+          ],
+        },
       })
     ],
     base: "./",

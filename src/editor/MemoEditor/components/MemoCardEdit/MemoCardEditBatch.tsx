@@ -241,7 +241,7 @@ export async function openMemoCardEditBatch(): Promise<Array<MemoDataCard<MemoDa
           <Button theme={'primary'} onClick={handleSubmit}>批量制卡</Button>
         </div>
         <FormItem label={'导入文件'} labelAlign={'top'}>
-          <div class={'flex justify-between items-center'}>
+          <div class={'flex justify-between items-center gap-8px'}>
             <Button theme={'primary'} disabled={true}>Anki</Button>
             <Button theme={'primary'} disabled={true}>Excel</Button>
             <Button theme={'primary'} disabled={true}>微信读书</Button>

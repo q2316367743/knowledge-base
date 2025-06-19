@@ -101,7 +101,4 @@ function toApp(name: string) {
 }
 </script>
 <style lang="less" scoped>
-:deep(.t-list) {
-  background-color: var(--kb-bg-color-1);
-}
 </style>

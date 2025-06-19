@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 8px">
+  <div class="more-attachment">
     <div class="waterfall-container">
       <div v-for="attachment in attachments" :key="attachment.key" class="waterfall-item">
         <div class="image-container">
@@ -11,16 +11,17 @@
             fit="cover"
             class="attachment-image"
           />
-          <div class="image-overlay">
-            <t-space size="small">
-              <t-button size="small" theme="primary" @click="copyMarkdown(attachment)">复制markdown链接</t-button>
-              <t-button size="small" theme="primary" @click="copyHtml(attachment)">复制html链接</t-button>
-              <t-button size="small" theme="danger" @click="remove(attachment)">删除</t-button>
-            </t-space>
-          </div>
+        </div>
+        <div class="image-overlay">
+          <t-space size="small">
+            <t-button size="small" theme="primary" @click="copyMarkdown(attachment)">复制markdown链接</t-button>
+            <t-button size="small" theme="primary" @click="copyHtml(attachment)">复制html链接</t-button>
+            <t-button size="small" theme="danger" @click="remove(attachment)">删除</t-button>
+          </t-space>
         </div>
       </div>
     </div>
+    <t-back-top container=".more-attachment"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -58,6 +59,13 @@ function remove(item: AttachmentInfo) {
 
 </script>
 <style scoped lang="less">
+.more-attachment {
+  padding: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 64px);
+  overflow: auto;
+}
+
 .waterfall-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -67,7 +75,6 @@ function remove(item: AttachmentInfo) {
 
 .waterfall-item {
   break-inside: avoid;
-  margin-bottom: 16px;
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -77,17 +84,10 @@ function remove(item: AttachmentInfo) {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   }
-}
 
-.image-container {
-  position: relative;
-  overflow: hidden;
-
-  .attachment-image {
-    display: block;
-    width: 100%;
-    height: auto;
-    transition: transform 0.3s ease;
+  &:hover .image-overlay {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   &:hover .attachment-image {
@@ -104,15 +104,24 @@ function remove(item: AttachmentInfo) {
     display: flex;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
     transform: translateY(100%);
     transition: transform 0.3s ease, opacity 0.3s ease;
     z-index: 2;
   }
 
-  &:hover .image-overlay {
-    opacity: 1;
-    transform: translateY(0);
+  .image-container {
+    position: relative;
+    overflow: hidden;
+
+    .attachment-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+
   }
 }
+
 </style>

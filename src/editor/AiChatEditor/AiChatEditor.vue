@@ -19,7 +19,8 @@
           </template>
           <chat-content v-if="item.think.length > 0" :value="item.think"/>
         </chat-reasoning>
-        <chat-content v-if="item.content.length > 0" :content="item.content" :class="[item.role]"/>
+        <markdown-preview v-if="item.content.length > 0 && item.role === 'assistant'" :value="item.content" :class="[item.role]"/>
+        <chat-content v-else-if="item.content.length > 0" :content="item.content" :class="[item.role]"/>
       </template>
       <template #actions="{ item, index }">
         <t-space size="small" class="mt-8px">

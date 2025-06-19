@@ -14,10 +14,10 @@
         <t-form-item label="背景图片" label-align="top">
           <div class="w-full flex justify-between items-center gap-8px">
             <t-card header="明亮" class="w-full">
-              <t-upload accept="image/*" class='w-full' theme="image" :files="lightFiles" :request-method="lightTheme"/>
+              <t-upload accept="image/*" class='w-full' theme="image" :files="lightFiles" :request-method="lightTheme" @remove="clearLightTheme" :show-image-file-name="false"/>
             </t-card>
             <t-card header="暗黑" class="w-full">
-              <t-upload accept="image/*" class='w-full' theme="image" :files="darkFiles" :request-method="darkTheme"/>
+              <t-upload accept="image/*" class='w-full' theme="image" :files="darkFiles" :request-method="darkTheme" @remove="clearDarkTheme" :show-image-file-name="false"/>
             </t-card>
           </div>
         </t-form-item>
@@ -70,6 +70,8 @@ const darkTheme: TdUploadProps["requestMethod"] = async (files: UploadFile | Upl
   await useThemeSettingStore().update({darkBgImage: r.url});
   return {status: 'success', response: {url: r.url, files: [f]}}
 }
+const clearLightTheme = () => handleChange('lightBgImage', '');
+const clearDarkTheme = () => handleChange('darkBgImage', '');
 const handleChange = <K extends keyof ThemeSetting>(k: K, v: any) => {
   const p: Partial<ThemeSetting> = {}
   p[k] = v;
