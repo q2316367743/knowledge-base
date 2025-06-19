@@ -15,6 +15,9 @@ function openEditTodoGroupFuncWrap(oldId: string, oldName: string, items: Array<
   const d = DialogPlugin({
     header: op + '分组',
     width: 400,
+    draggable: true,
+    placement: "center",
+    closeOnEscKeydown: false,
     default: () => <div>
       <Paragraph>请输入分组名称：</Paragraph>
       <Paragraph>
