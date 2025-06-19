@@ -102,6 +102,12 @@
                 </template>
                 反馈与建议
               </t-dropdown-item>
+              <t-dropdown-item @click="openAuthorMoment()">
+                <template #prefix-icon>
+                  <chat-message-icon />
+                </template>
+                作者碎碎念
+              </t-dropdown-item>
               <t-dropdown-item divider @click="toUpdateLog()">
                 <template #prefix-icon>
                   <system-messages-icon/>
@@ -145,7 +151,7 @@ import {
 import {openKeyDrawer} from "@/components/app-side/func";
 import {appCollapsed, GlobalType, useAppCollapsed, useGlobalStore} from "@/store/GlobalStore";
 import {moduleForAi, moduleForNews} from "@/store/ModuleStore";
-import Constant, {toDoc, toFeedback} from "@/global/Constant";
+import Constant, {openAuthorMoment, toDoc, toFeedback} from "@/global/Constant";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 import {useUserStore} from "@/store/components/UserStore";
 

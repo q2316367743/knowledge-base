@@ -73,3 +73,4 @@ export function openRssBackground() {
 
 export const openNoteVipWebsite = () => InjectionUtil.shellOpenExternal('https://blog.esion.xyz/archives/knowledge-base-note-vip');
 export const openTodoVipWebsite = () => InjectionUtil.shellOpenExternal('https://blog.esion.xyz/archives/knowledge-base-todo-vip');
+export const openAuthorMoment = () =>InjectionUtil.browser.openUrl("https://moment.esion.xyz", 414, 869)
