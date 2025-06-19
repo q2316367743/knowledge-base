@@ -123,7 +123,7 @@
         </div>
       </template>
       <template #operations>
-        <t-button theme="primary" variant="text" shape="square" @click="useAppCollapsed()">
+        <t-button theme="primary" variant="text" shape="square" @click="useAppCollapsed()" class="ml-4px">
           <template #icon>
             <view-list-icon/>
           </template>

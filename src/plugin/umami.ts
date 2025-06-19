@@ -24,7 +24,7 @@ function buildBasePayload(): UmamiPayloadBase {
   const hostname = `${InjectionUtil.getPlatform()}.esion.xyz`;
   const isWeb = InjectionUtil.env.isWeb();
   return {
-    hostname,
+    hostname: isWeb ? location.hostname : hostname,
     language: navigator.language,
     referrer: isWeb ? document.referrer : `https://${hostname}`,
     screen: `${window.screen.width}x${window.screen.height}`,
