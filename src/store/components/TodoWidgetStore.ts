@@ -61,14 +61,14 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   })
 
   // 检测小部件是否都有效
-  const checkWidget = () => {
+  const checkWidget = async () => {
     const ids = Array.from(widgets.value.keys());
     for (const id of ids) {
       const widget = widgets.value.get(id);
       if (widget) {
         // 测试接口
         try {
-          let destroyed = widget.isDestroyed();
+          let destroyed = await widget.isDestroyed();
           if (destroyed) {
             // 已销毁
             widgets.value.delete(id);
@@ -91,7 +91,7 @@ export const useTodoWidgetStore = defineStore('todo-widget', () => {
   const openWidget = async (id: number, name: string) => {
     await checkPower('todo')
     // 先去检查所有的小部件存活状态
-    checkWidget();
+    await checkWidget();
     // 先判断是否存在
     if (widgets.value.has(id)) {
       return;

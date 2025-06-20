@@ -85,7 +85,6 @@ import {
 } from "@/store";
 import {useLoading, useNoteTree} from "@/hooks";
 import {keyword} from "@/global/BeanFactory";
-import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";

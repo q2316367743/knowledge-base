@@ -1,4 +1,5 @@
 import {useUmami} from "@/plugin/umami";
+// @ts-ignore
 import { registerSW } from 'virtual:pwa-register';
 import {createPinia} from 'pinia';
 import App from './App.vue'

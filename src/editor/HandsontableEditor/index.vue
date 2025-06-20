@@ -78,6 +78,10 @@ const columnSorting = ref<boolean | Handsontable.plugins.ColumnSorting.Config[]>
 const filters = ref<Array<ColumnConditions>>(props.modelValue ? (props.modelValue.filters || []) : [])
 const mergeCells = ref<Handsontable.plugins.MergeCells.Settings>(props.modelValue ? (props.modelValue.mergeCells || true) : true);
 
+let onImport = () => {
+  MessageUtil.warning("系统初始化中")
+}
+
 function onExport() {
   handsontableExport(data, columns as any);
 }

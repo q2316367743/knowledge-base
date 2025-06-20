@@ -1,7 +1,7 @@
 {
   "name": "knowledge-base",
   "private": true,
-  "version": "2.7.2",
+  "version": "2.7.3",
   "type": "module",
   "description": "知识库",
   "scripts": {
@@ -11,7 +11,7 @@
     "build": "vite build --mode=utools",
     "build:web": "vite build --outDir=src-server/public --mode=web",
     "build:tauri": "vite build --outDir=dist --mode=tauri",
-    "check": "vue-tsc --noEmit",
+    "check": "vue-tsc --noEmi",
     "preview": "vite preview",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build"

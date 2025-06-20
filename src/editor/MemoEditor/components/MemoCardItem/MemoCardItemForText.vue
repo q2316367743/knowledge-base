@@ -19,6 +19,7 @@ const props = defineProps({
 const answer = computed(() => {
   const {card} = props;
   const answer = card?.data.answer;
+  if (!answer) return '';
   if (answer.length > 110) {
     return answer.slice(0, 110) + '...';
   }
