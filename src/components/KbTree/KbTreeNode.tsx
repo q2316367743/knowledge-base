@@ -20,23 +20,25 @@ export const KbTreeNode = defineComponent({
   },
   emits: ['click', 'contextmenu'],
   setup(props, {emit}) {
-    const {node, expandKeys, selectKey} = props;
+    const {node, expandKeys, selectKey} = toRefs(props);
+    ;
     const isExpanded = ref(false);
     const toggleIsExpanded = useToggle(isExpanded);
 
-    const hasChildren = isNull(node.leaf) ? (node.children && node.children.length > 0) : !node.leaf;
+    const hasChildren = isNull(node.value.leaf) ? (node.value.children && node.value.children.length > 0) : !node.value.leaf;
 
     const setIsExpanded = (e: MouseEvent) => {
       if (hasChildren) toggleIsExpanded();
-      else emit('click', {node, e})
+      else emit('click', {node: node.value, e})
     }
     const handleContextmenu = (e: MouseEvent) => {
-      emit('contextmenu', {node, e})
+      emit('contextmenu', {node: node.value, e})
     }
 
     return () => (
       <div class="kb-tree-node">
-        <div class={{'kb-tree-node-content': true, select: node.value === selectKey}} onClick={setIsExpanded}
+        <div class={{'kb-tree-node-content': true, select: node.value.value === selectKey.value}}
+             onClick={setIsExpanded}
              onContextmenu={handleContextmenu}>
           <div class={'kb-tree-node-content__chevron'}>
             {hasChildren && (isExpanded.value ? (
@@ -47,16 +49,16 @@ export const KbTreeNode = defineComponent({
           </div>
 
           <span class="kb-tree-node-content__icon">
-            {hasChildren ? <FolderIcon/> : <FileIcon/>}
+            {node.value.icon ? <node.value.icon/> : hasChildren ? <FolderIcon/> : <FileIcon/>}
           </span>
 
-          <span class="kb-tree-node-content__label ellipsis">{node.label}</span>
+          <span class="kb-tree-node-content__label ellipsis">{node.value.text || node.value.label}</span>
         </div>
 
         {isExpanded.value && hasChildren && (
-          <div class="">
-            {(node.children || []).map((child) => (
-              <KbTreeNode key={child.value} node={child} expandKeys={expandKeys} selectKey={selectKey}
+          <div class="kb-tree-node-children">
+            {(node.value.children || []).map((child) => (
+              <KbTreeNode key={child.value} node={child} expandKeys={expandKeys.value} selectKey={selectKey.value}
                           onClick={e => emit('click', e)} onContextmenu={e => emit('contextmenu', e)}/>
             ))}
           </div>

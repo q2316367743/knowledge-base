@@ -1,9 +1,9 @@
 import {ArticleIndex} from "@/entity/article";
 import {urlJoin} from "@/utils/file/FileUtil";
 import {buildArticleIcon} from "@/pages/note/components/he-context";
-import {TreeOptionData} from "tdesign-vue-next/es/common";
 import {FolderIcon} from "tdesign-icons-vue-next";
 import {group, MapWrap} from "@/utils/lang/ArrayUtil";
+import {KbTreeNodeData} from "@/components/KbTree/types";
 
 /**
  * 基础列表树
@@ -25,10 +25,10 @@ type TreeNode = ListTree & { fontColor?: string };
  * @param list 列表
  * @param topName 顶部名称
  */
-export function listToTree(list: Array<TreeNode>, topName: string): Array<TreeOptionData> {
+export function listToTree(list: Array<TreeNode>, topName: string): Array<KbTreeNodeData> {
   const folderGroupMap = group(list, 'pid');
   // 先找0
-  const base: Array<TreeOptionData> = folderGroupMap.getOrDefault(0, [])
+  const base: Array<KbTreeNodeData> = folderGroupMap.getOrDefault(0, [])
     .map(c => ({
       value: c.id,
       label: c.name,
@@ -64,9 +64,9 @@ export function listToTree(list: Array<TreeNode>, topName: string): Array<TreeOp
  * @param list 列表
  * @param pid 基础目录ID
  */
-export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<TreeOptionData> {
+export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<KbTreeNodeData> {
   const folderGroupMap = group(list, 'pid');
-  const base: Array<TreeOptionData> = folderGroupMap.getOrDefault(pid, [])
+  const base: Array<KbTreeNodeData> = folderGroupMap.getOrDefault(pid, [])
     .map(c => ({
       value: c.id,
       label: c.name,
@@ -76,7 +76,7 @@ export function listToTreeSpecial(list: Array<ListTree>, pid = 0): Array<TreeOpt
   return base;
 }
 
-function _listToTree(tree: TreeOptionData, pid: number, folderGroupMap: MapWrap<number, Array<TreeNode>>) {
+function _listToTree(tree: KbTreeNodeData, pid: number, folderGroupMap: MapWrap<number, Array<TreeNode>>) {
   tree.children = folderGroupMap.getOrDefault(pid, [])
     .map(c => ({
       value: c.id,
@@ -84,7 +84,7 @@ function _listToTree(tree: TreeOptionData, pid: number, folderGroupMap: MapWrap<
       text: c.name,
       children: [],
       fontColor: c?.fontColor
-    } as TreeOptionData));
+    } as KbTreeNodeData));
   folderGroupMap.delete(pid)
   tree.children.forEach(item => _listToTree(item, item.value as number, folderGroupMap));
 }
@@ -98,13 +98,13 @@ function _listToTree(tree: TreeOptionData, pid: number, folderGroupMap: MapWrap<
  * @param map 映射函数
  */
 export function treeEach(
-  list: Array<TreeOptionData>,
-  treeData: Array<TreeOptionData>,
+  list: Array<KbTreeNodeData>,
+  treeData: Array<KbTreeNodeData>,
   articleListMap: Map<number | null, Array<ArticleIndex>>,
-  map?: (data: TreeOptionData) => TreeOptionData
+  map?: (data: KbTreeNodeData) => KbTreeNodeData
 ) {
   list.forEach(item => {
-    let temp: TreeOptionData = {
+    let temp: KbTreeNodeData = {
       value: item.value,
       label: item.label,
       children: [],
@@ -121,7 +121,7 @@ export function treeEach(
     treeData.push(temp);
 
     // 分类
-    treeEach((item.children as Array<TreeOptionData>) || [], (temp.children as Array<TreeOptionData>) || [], articleListMap, map);
+    treeEach((item.children as Array<KbTreeNodeData>) || [], (temp.children as Array<KbTreeNodeData>) || [], articleListMap, map);
     // 笔记
     const articles = articleListMap.get(item.value as number);
     if (articles) {
@@ -133,7 +133,7 @@ export function treeEach(
         pid: article.folder,
         preview: article.preview,
         color: article.fontColor
-      } as TreeOptionData)).forEach(article => {
+      } as KbTreeNodeData)).forEach(article => {
 
         if (map) {
           article = map(article);
@@ -149,7 +149,7 @@ export function treeEach(
         temp.children.push(article)
       });
       // 排序
-      temp.children = (temp.children as  Array<TreeOptionData>).sort((a, b) => {
+      temp.children = (temp.children as  Array<KbTreeNodeData>).sort((a, b) => {
         if (a.leaf  === b.leaf) {
           return (a.label as string).localeCompare(b.label as string)
         }
@@ -164,14 +164,14 @@ export function treeEach(
  * @param keyword 关键字
  * @param tree 树
  */
-export function searchData(keyword: string, tree: Array<TreeOptionData>): Array<TreeOptionData> {
+export function searchData(keyword: string, tree: Array<KbTreeNodeData>): Array<KbTreeNodeData> {
   if (!keyword || keyword.length === 0) {
     return tree;
   }
-  const loop = (data: Array<TreeOptionData>): Array<TreeOptionData> => {
-    const result = new Array<TreeOptionData>();
+  const loop = (data: Array<KbTreeNodeData>): Array<KbTreeNodeData> => {
+    const result = new Array<KbTreeNodeData>();
     data.forEach(item => {
-      if (item.label && typeof item.label === 'string' && item.label.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+      if (item.label && item.label.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
         result.push({...item});
       } else if (Array.isArray(item.children)) {
         const filterData = loop(item.children);
