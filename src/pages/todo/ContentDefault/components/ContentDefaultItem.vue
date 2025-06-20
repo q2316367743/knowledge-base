@@ -14,6 +14,7 @@
 </template>
 <script lang="ts" setup>
 import {
+  handleTodoTitleColor,
   TodoItemIndex,
 } from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
