@@ -126,7 +126,7 @@ export const useTodoCategoryStore = defineStore('todo-category', () => {
   }
 
   return {
-    featureKeys, todoCategoryMap, todoCategoryTree,
+    value: state, featureKeys, todoCategoryMap, todoCategoryTree,
     init, add, update, remove, drop, rename, hasFeature, addFeature, removeFeature
   }
 

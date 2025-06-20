@@ -124,8 +124,8 @@ function onSelect(id: number | string) {
   }
   if (useArticleStore().articleMap.has(id)) {
     useHomeEditorStore().openArticle(id);
-    if (useBaseSettingStore().autoCollapsedByEditor && window.innerWidth < Constant.autoCollapsedWidth) {
-      useHomeEditorStore().switchCollapsed();
+    if (useBaseSettingStore().autoCollapsedByEditor) {
+      useHomeEditorStore().switchCollapsed(true);
     }
   } else {
     const index = expandedKeys.value.indexOf(id);

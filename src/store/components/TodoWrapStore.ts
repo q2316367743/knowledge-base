@@ -144,7 +144,7 @@ export const useTodoWrapStore = defineStore('todo-item', () => {
 
   const collapsedToggle = useToggle(collapsed);
 
-  const switchCollapsed = () => collapsedToggle();
+  const switchCollapsed = (res?: boolean) => collapsedToggle(res);
 
   const postGroup = async (id: string, name: string, items: Array<number>) => {
     // 处理分组

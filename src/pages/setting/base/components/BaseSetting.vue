@@ -25,7 +25,6 @@
         </t-input-number>
       </t-form-item>
       <t-divider>菜单设置</t-divider>
-      <t-alert style="margin-bottom: 8px">当插件宽度小于1080px时生效</t-alert>
       <t-paragraph>
         <t-checkbox v-model="instance.autoCollapsedByEditor">编辑笔记自动收起菜单</t-checkbox>
       </t-paragraph>

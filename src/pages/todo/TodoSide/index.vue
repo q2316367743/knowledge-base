@@ -38,7 +38,6 @@ import {
   PlusIcon,
 } from "tdesign-icons-vue-next";
 import {TreeNodeModel} from "tdesign-vue-next";
-import Constant from "@/global/Constant";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
@@ -70,8 +69,8 @@ function onOpen(categoryId: number, category: TodoCategory, widget = false) {
   if (categoryId !== useTodoWrapStore().categoryId || widget) {
     useTodoWrapStore().init(categoryId, widget || category.openType === TodoCategoryOpenTypeEnum.WIDGET);
   }
-  if (useBaseSettingStore().autoCollapsedByTodo && size.width.value < Constant.autoCollapsedWidth) {
-    useTodoWrapStore().switchCollapsed();
+  if (useBaseSettingStore().autoCollapsedByTodo) {
+    useTodoWrapStore().switchCollapsed(true);
   }
 }
 
