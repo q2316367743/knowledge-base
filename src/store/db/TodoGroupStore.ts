@@ -6,6 +6,7 @@ import {useSnowflake} from "@/hooks/Snowflake";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {isEmptyArray, isEmptyString} from "@/utils/lang/FieldUtil";
 import {toSorted} from "@/utils/lang/ArrayUtil";
+import {useAsyncDebounce} from "@/hooks/AsyncDebounce";
 
 export const useTodoGroupStore = defineStore('todoGroup', () => {
   const items: Ref<Array<TodoGroup>> = ref(new Array<any>());
@@ -35,9 +36,9 @@ export const useTodoGroupStore = defineStore('todoGroup', () => {
   }
 
   // 同步
-  async function _sync() {
+  const _sync = useAsyncDebounce(async () => {
     rev.value = await saveListByAsync(key, items.value, rev.value);
-  }
+  }, 300)
 
   // 删除
   async function deleteById(id: string, targetGroupId: string) {

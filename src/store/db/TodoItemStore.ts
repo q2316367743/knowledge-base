@@ -16,6 +16,7 @@ import {
 } from "@/entity/todo/TodoItem";
 import {useUmami} from "@/plugin/umami";
 import {clone} from "@/utils/lang/ObjectUtil";
+import {useAsyncDebounce} from "@/hooks/AsyncDebounce";
 
 export const useTodoItemStore = defineStore('todoItem', () => {
   const items: Ref<Array<TodoItemIndex>> = ref(new Array<any>());
@@ -49,9 +50,10 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     key = '';
   }
 
-  async function _sync() {
+  const _sync = useAsyncDebounce(async () => {
     rev.value = await saveListByAsync(key, items.value, rev.value);
-  }
+  }, 300)
+
 
   async function deleteById(id: number) {
     // 删除
@@ -61,7 +63,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     }
     items.value.splice(index, 1);
     // 同步
-    await _sync();
+    _sync();
     // 删除属性
     await removeOneByAsync(LocalNameEnum.TODO_ATTR + id, true);
     // 删除内容
@@ -73,7 +75,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
 
   async function deleteByBatchId(ids: Array<number>) {
     items.value = items.value.filter(e => !ids.includes(e.id));
-    await _sync();
+    _sync();
     for (let id of ids) {
       // 删除属性
       await removeOneByAsync(LocalNameEnum.TODO_ATTR + id, true);
@@ -116,7 +118,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
       updateTime: new Date(),
     };
     // 同步
-    await _sync();
+    _sync();
     return items.value[index];
   }
 
@@ -156,7 +158,7 @@ export const useTodoItemStore = defineStore('todoItem', () => {
     // 新增到当前列表
     items.value.push(item);
     // 同步
-    await _sync();
+    _sync();
     useUmami.track("/待办/新增")
     return item;
   }
