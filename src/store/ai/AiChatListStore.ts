@@ -20,12 +20,6 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
   const lists = ref(new Array<AiChatList>());
   const rev = ref<string>();
   let isInit = false;
-  
-  // 分页相关
-  const pageSize = 20;
-  const currentPage = ref(1);
-  const hasMore = ref(true);
-  const isLoading = ref(false);
 
   const listBy = async (groupId: string): Promise<DbList<AiChatList>> => {
     return listByAsync<AiChatList>(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId);
@@ -39,39 +33,14 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     // 无分组的ai列表
     const res = await listBy('0');
     lists.value = res.list.sort((a, b) => b.createBy - a.createBy);
+    console.log(res)
     rev.value = res.rev;
-    currentPage.value = 1;
-    hasMore.value = lists.value.length >= pageSize;
   }
 
   const init = async () => {
     if (isInit) return;
     isInit = true;
     await reInit();
-  }
-
-  const loadMore = async () => {
-    if (!hasMore.value || isLoading.value) return;
-    
-    isLoading.value = true;
-    try {
-      const res = await listBy('0');
-      const allItems = res.list.sort((a, b) => b.createBy - a.createBy);
-      const start = (currentPage.value - 1) * pageSize;
-      const end = currentPage.value * pageSize;
-      
-      if (start >= allItems.length) {
-        hasMore.value = false;
-        return;
-      }
-      
-      const newItems = allItems.slice(start, end);
-      lists.value = [...lists.value, ...newItems];
-      currentPage.value++;
-      hasMore.value = end < allItems.length;
-    } finally {
-      isLoading.value = false;
-    }
   }
 
   const getList = async (groupId: string) => {
@@ -103,7 +72,6 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     r = await saveListByAsync(LocalNameEnum.LIST_AI_CHAT_ + '/' + groupId, l, r);
     if (groupId === '0') {
       rev.value = r;
-      lists.value = [newChat, ...lists.value]; // 更新本地列表
     }
     const {aiServiceId, model} = renderModel(modelKey);
     const service = useAiServiceStore().aiServiceMap.get(aiServiceId);
@@ -207,10 +175,5 @@ export const useAiChatListStore = defineStore('ai-chat-list', () => {
     saveContent,
     listBy,
     saveList,
-    // 分页相关
-    currentPage,
-    hasMore,
-    isLoading,
-    loadMore
   }
 })

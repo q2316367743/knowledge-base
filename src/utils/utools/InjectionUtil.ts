@@ -376,7 +376,7 @@ export const InjectionUtil = {
           return utools.db.promises.remove(doc);
         case "web":
           const key = typeof doc === 'string' ? doc : doc._id;
-          return http.get<InjectionWebResult<InjectionDbReturn>>('/db/delete', {
+          return http.delete<InjectionWebResult<InjectionDbReturn>>('/db/delete', {
             params: {key}
           }).then(res => {
             const {data} = res;

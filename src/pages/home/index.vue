@@ -56,7 +56,7 @@
             </t-button>
           </div>
         </div>
-        <home-chat-list ref="homeChatListRef" />
+        <home-chat-list />
       </div>
     </div>
     <div class="home-content" :class="{collapsed}">
@@ -99,7 +99,6 @@ const router = useRouter();
 
 const show = ref(true);
 const groupList = ref<HTMLDivElement>();
-const contentRef = ref<HTMLDivElement>();
 const homeChatListRef = ref();
 
 const groups = computed(() => useAiChatGroupStore().groups);
@@ -162,18 +161,6 @@ const handleScroll = (e: Event) => {
     homeChatListRef.value?.loadMore();
   }
 };
-
-onMounted(() => {
-  if (contentRef.value) {
-    contentRef.value.addEventListener('scroll', handleScroll);
-  }
-})
-
-onUnmounted(() => {
-  if (contentRef.value) {
-    contentRef.value.removeEventListener('scroll', handleScroll);
-  }
-})
 
 tryOnMounted(async () => {
   await useAiChatGroupStore().init();
