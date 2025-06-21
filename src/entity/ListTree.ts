@@ -121,7 +121,7 @@ export function treeEach(
     treeData.push(temp);
 
     // 分类
-    treeEach((item.children as Array<KbTreeNodeData>) || [], (temp.children as Array<KbTreeNodeData>) || [], articleListMap, map);
+    treeEach((item.children) || [], (temp.children) || [], articleListMap, map);
     // 笔记
     const articles = articleListMap.get(item.value as number);
     if (articles) {

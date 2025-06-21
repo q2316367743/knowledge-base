@@ -87,7 +87,7 @@ export enum ArticleActionEnum {
 export function getDefaultBaseSetting(): BaseSetting {
   return {
     imageStrategy: ImageStrategyEnum.INNER,
-    autoCollapsedByEditor: true,
+    autoCollapsedByEditor: false,
     autoCollapsedByTodo: true,
     newArticleAutoName: false,
     newArticleTemplateByName: "[新建笔记] (YYYY/MM/DD HH:mm)",

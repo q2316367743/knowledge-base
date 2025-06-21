@@ -1,5 +1,6 @@
 <template>
-  <div class="more-attachment">
+  <empty-result v-if="attachments.length === 0" title="附件管理" tip="空空如也"/>
+  <div v-else class="more-attachment">
     <div class="waterfall-container">
       <div v-for="attachment in attachments" :key="attachment.key" class="waterfall-item">
         <div class="image-container">

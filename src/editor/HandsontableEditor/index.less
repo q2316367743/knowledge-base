@@ -25,25 +25,35 @@
   thead {
     th {
       color: var(--td-text-color-primary);
-      background-color: var(--td-bg-color-component);
+      background-color: var(--kb-bg-color-component);
     }
   }
 
   tbody {
     th {
       color: var(--td-text-color-primary);
-      background-color: var(--td-bg-color-container);
+      background-color: var(--kb-bg-color-container);
     }
 
     td, tr {
       color: var(--td-text-color-primary);
-      background-color: var(--td-bg-color-container);
+      background-color: var(--kb-bg-color-container);
     }
   }
 
   tbody th.ht__highlight, thead th.ht__highlight {
     color: var(--td-text-color-primary);
-    background-color: var(--td-bg-color-component);
+    background-color: var(--kb-bg-color-component);
+  }
+
+}
+
+.handsontable {
+  tbody th.ht__highlight, thead th.ht__highlight {
+    background-color: var(--kb-bg-color-component-active) !important;
+  }
+  tr {
+    background-color: var(--kb-bg-color-component) !important;
   }
 }
 

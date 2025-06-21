@@ -151,7 +151,7 @@ export class MapWrap<K, V> extends Map<K, V> {
 export function traverseNumber(num: number, fill?: string): Array<string> {
   const arr = new Array<string>()
   for (let i = 0; i < num; i++) {
-    arr.push(fill || (i + ""));
+    arr.push(typeof fill === 'undefined' ? (i + "") : fill);
   }
   return arr
 }

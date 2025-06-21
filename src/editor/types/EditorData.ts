@@ -38,7 +38,7 @@ export async function buildDefaultContent(name: string, type: ArticleTypeEnum): 
       const {tableColumnCount, tableColCount} = useBaseSettingStore();
       return {
         data: [
-          ...traverseNumber(tableColCount).map(() => {
+          ...traverseNumber(tableColCount, "").map(() => {
             return [...traverseNumber(tableColumnCount, "")]
           })
         ],

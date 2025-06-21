@@ -19,15 +19,15 @@ export const KbTree = defineComponent({
       default: null
     }
   },
-  emits: ['click', 'contextmenu'],
+  emits: ['click', 'contextmenu', 'NodeDrop'],
   setup: (props, {emit}) => {
     const {data, expandKeys, selectKey} = toRefs(props);
     return () => (
       <div class="kb-tree">
         {data.value.map((node) => (
           <KbTreeNode key={node.value} node={node} expandKeys={expandKeys.value} selectKey={selectKey.value}
-                      onClick={e => emit('click', e)}
-                      onContextmenu={e => emit('contextmenu', e)}/>
+                      onClick={e => emit('click', e)} onContextmenu={e => emit('contextmenu', e)}
+                      onNodeDrop={e => emit('NodeDrop', e)}/>
         ))}
       </div>
     );

@@ -60,7 +60,7 @@ export default defineComponent({
 
   &-container {
     min-height: 400px;
-    height: 75vh;
+    height: 85vh;
     display: flex;
     flex-direction: column;
     align-items: center;

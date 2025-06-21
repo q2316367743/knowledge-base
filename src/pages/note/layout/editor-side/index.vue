@@ -10,32 +10,22 @@
         </t-button>
       </t-input-group>
     </header>
-    <!--    <t-tree :data="treeNodeData" :scroll="scroll" :height="virtualHeight" :checkable="checkKeys.length > 0"-->
-    <!--            :default-expand-all="false" :allow-drop="checkAllowDrop" :draggable="true" :line="true"-->
-    <!--            value-mode="onlyLeaf" style="margin: 0 7px;" :activable="true" :hover="true"-->
-    <!--            :actived="selectedKeys" v-model="checkKeys" v-model:expanded="expandedKeys"-->
-    <!--            @drop="onDrop($event)"-->
-    <!--            @contextmenu="onContextmenu({data: {value: 0, label:'根目录', left: false}}, $event)">-->
-    <!--      <template #label="{ node }">-->
-    <!--        <div class="flex" :class="{active: homeEditorId===node.value}"-->
-    <!--             @contextmenu="onContextmenu(node, $event)" @click="onSelect(node.value)">-->
-    <!--          <div :class="{'pt-3px': node.data.preview}">-->
-    <!--            <component :is="node.data.icon"/>-->
-    <!--          </div>-->
-    <!--          <div class="pl-4px overflow-hidden text-ellipsis" :style="{color: node.data.color}">{{ node.label }}</div>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--      <template #operations="{ node }">-->
-    <!--        <t-button class="mr-4px" variant="text" shape="square" theme="primary" size="small"-->
-    <!--                  @click.stop="onContextmenu(node, $event)">-->
-    <!--          <template #icon>-->
-    <!--            <more-icon/>-->
-    <!--          </template>-->
-    <!--        </t-button>-->
-    <!--      </template>-->
-    <!--    </t-tree>-->
-    <KbTree :data="treeNodeData" @contextmenu="onContextmenu" @click="onNodeClick" :select-key="homeEditorId"
-            :expand-keys="expandedKeys"/>
+    <t-tree :data="treeNodeData" :scroll="scroll" :height="virtualHeight" :checkable="checkKeys.length > 0"
+            :default-expand-all="false" :allow-drop="checkAllowDrop" :draggable="true" :line="true"
+            value-mode="onlyLeaf" style="margin: 0 7px;" :activable="true" :hover="true"
+            :actived="selectedKeys" v-model="checkKeys" v-model:expanded="expandedKeys"
+            @drop="onDrop($event)"
+            @contextmenu="onContextmenu({data: {value: 0, label:'根目录', left: false}}, $event)">
+      <template #label="{ node }">
+        <div class="flex pb-3px" :class="{active: homeEditorId===node.value}"
+             @contextmenu="onContextmenu(node, $event)" @click="onSelect(node.value)">
+          <div :class="{'pt-3px': node.data.preview}">
+            <component :is="node.data.icon"/>
+          </div>
+          <div class="pl-4px overflow-hidden text-ellipsis" :style="{color: node.data.color}">{{ node.label }}</div>
+        </div>
+      </template>
+    </t-tree>
     <div class="option" v-if="checkKeys.length > 0">
       <t-space class="btn" size="small">
         <t-popconfirm content="确认删除这些笔记，注意：不会删除目录" @confirm="multiCheckDelete()">
@@ -90,9 +80,8 @@ import {keyword} from "@/global/BeanFactory";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import {openFolderChoose} from "@/components/ArticePreview/FolderChoose";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
-import {EditorTreeNode, openEditorTreeMenu} from "@/pages/note/layout/editor-side/components/EditorTreeMenu";
+import {openEditorTreeMenu} from "@/pages/note/layout/editor-side/components/EditorTreeMenu";
 import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
-import {KbTree} from "@/components/KbTree/KbTree";
 
 interface DropContext {
   e: DragEvent;
@@ -265,15 +254,9 @@ function moveMultiTo() {
   })
 }
 
-function onNodeClick(ctx: { e: MouseEvent, node: EditorTreeNode }) {
-  const {e, node} = ctx;
-  onSelect(node.value);
-}
-
-function onContextmenu(ctx: { e: MouseEvent, node: EditorTreeNode }) {
-  const {e, node} = ctx;
+function onContextmenu(node: Pick<TreeNodeModel, 'data'>, e: MouseEvent) {
   openEditorTreeMenu(e, {
-    node,
+    node: node.data as any,
     multi: multiCheckStart,
     select: onSelect
   })
@@ -290,7 +273,6 @@ function onRootClick(e: MouseEvent) {
     select: onSelect
   })
 }
-
 </script>
 <style lang="less">
 .home-editor-side {
