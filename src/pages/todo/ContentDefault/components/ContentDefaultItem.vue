@@ -2,11 +2,11 @@
   <div v-if="item" class="content-default-item"
        :class="itemId === item.id ? 'active' : ''"
        :key="item.id" @click.stop="setItemId(item.id)" @contextmenu="onContextMenuForTodo($event, item)">
-    <div class="flex">
-      <todo-item-checkbox :priority="item.priority" :status="item.status"
+    <div class="flex w-full">
+      <todo-item-checkbox :priority="item.priority" :status="item.status" style="width: 32px"
                           @click.stop="updateStatus(item.id, item.status)"/>
-      <div class="title ellipsis" :style="{color: handleTodoTitleColor(item)}">
-        {{ item.title }}
+      <div  :style="{color: handleTodoTitleColor(item), width: 'calc(100% - 32px)'}">
+        <kb-input v-model="item.title"/>
       </div>
     </div>
     <todo-date class="date" :item="item"/>
@@ -51,11 +51,11 @@ const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
   }
 
   &:hover {
-    background-color: var(--td-bg-color-container-hover);
+    background-color: var(--kb-bg-color-container-hover);
   }
 
   &.active {
-    background-color: var(--td-bg-color-container-active);
+    background-color: var(--kb-bg-color-container-active);
   }
 
   .delete {
