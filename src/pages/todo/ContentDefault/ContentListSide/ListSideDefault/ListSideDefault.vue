@@ -1,5 +1,5 @@
 <template>
-  <div class="list-side-default" @click="setItemId(0)" ref="el">
+  <div class="list-side-default" ref="el">
     <list-side-top :items="top"/>
     <template v-if="groups.length > 0">
       <list-side-one v-if="groups.length === 1 && groups[0].id === '-1'" :group="groups[0]"/>

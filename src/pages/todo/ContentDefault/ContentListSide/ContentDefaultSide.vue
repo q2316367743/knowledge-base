@@ -18,6 +18,4 @@ import ListSideDefault
 const groupType = computed(() => useTodoWrapStore().groupType);
 </script>
 <style scoped lang="less">
-.list {
-}
 </style>
