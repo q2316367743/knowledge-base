@@ -1,15 +1,3 @@
-# src-server
+# Nitro starter
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run src/index.ts
-```
-
-This project was created using `bun init` in bun v1.2.15. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Look at the [nitro quick start](https://nitro.unjs.io/guide#quick-start) to learn more how to get started.
