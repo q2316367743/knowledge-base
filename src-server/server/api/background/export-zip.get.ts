@@ -82,16 +82,6 @@ export default defineEventHandler(async (event) => {
     const zipFile = Bun.file(filePath);
     await zipFile.write(zipContent);
 
-    // 10分钟后自动删除文件
-    setTimeout(async () => {
-      try {
-        await zipFile.unlink();
-        console.log(`Temporary file deleted: ${filePath}`);
-      } catch (err) {
-        console.error(`Failed to delete temporary file: ${err}`);
-      }
-    }, 10 * 60 * 1000); // 10分钟 = 600,000毫秒
-
     // 返回完整文件名
     return Result.success(filename);
   } catch (e) {
