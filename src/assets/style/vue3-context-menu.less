@@ -1,4 +1,14 @@
 :root {
+  --mx-menu-shadow-color: var(--td-shadow-2);
+  --mx-menu-scrollbar-thumb-color: rgba(0, 0, 0, .2);
+  --mx-menu-scrollbar-thumb-color-light: rgba(0, 0, 0, .3);
+  --mx-menu-scrollbar-thumb-color-pressed: rgba(0, 0, 0, .1);
+  --mx-menu-shortcut-text: #424242;
+  --mx-menu-shortcut-text-hover: #424242;
+  --mx-menu-shortcut-text-active: #424242;
+  --mx-menu-shortcut-text-open: #424242;
+  --mx-menu-shortcut-text-disabled: #a5a5a5;
+  --mx-menu-placeholder-width: 24px;
   --mx-menu-backgroud: var(--td-bg-color-container);
   --mx-menu-hover-backgroud: var(--td-bg-color-container-hover);
   --mx-menu-active-backgroud: var(--td-bg-color-container-active);
@@ -9,23 +19,122 @@
   --mx-menu-hover-text: var(--td-brand-color-7);
   --mx-menu-active-text: var(--td-brand-color-8);
   --mx-menu-open-text: var(--td-brand-color-7);
-  --mx-menu-open-hover-text:  var(--td-brand-color-8);
+  --mx-menu-open-hover-text: var(--td-brand-color-8);
   --mx-menu-disabled-text: var(--td-text-color-disabled);
   --mx-menu-icon-size: var(--td-font-size-body-large);
-  --mx-menu-shadow-color: rgba(0, 0, 0, .1);
   --mx-menu-backgroud-radius: var(--td-radius-default);
   --mx-menu-shortcut-backgroud: var(--td-bg-color-component);
   --mx-menu-shortcut-backgroud-hover: var(--td-bg-color-component-hover);
   --mx-menu-shortcut-backgroud-active: var(--td-bg-color-component-active);
-  --mx-menu-shortcut-backgroud-open: #ebebeb;
   --mx-menu-shortcut-backgroud-disabled: var(--td-bg-color-component-disabled);
-  --mx-menu-shortcut-text: #424242;
-  --mx-menu-shortcut-text-hover: #424242;
-  --mx-menu-shortcut-text-active: #424242;
-  --mx-menu-shortcut-text-open: #424242;
-  --mx-menu-shortcut-text-disabled: #a5a5a5;
   --mx-menu-focus-color: var(--td-brand-color);
-  --mx-menu-placeholder-width: 24px
+  --vue-scroll-rect-scrollbar-thumb-color: rgba(122, 122, 122, .3);
+  --vue-scroll-rect-scrollbar-thumb-color-light: rgba(122, 122, 122, .5);
+  --vue-scroll-rect-scrollbar-thumb-color-pressed: rgba(112, 112, 112, .2);
+  --vue-scroll-rect-scrollbar-thumb-radius: 5px;
+  --vue-scroll-rect-scrollbar-thumb-margin: 0px;
+  --vue-scroll-rect-scrollbar-size: 8px
+}
+
+.vue-scroll-rect {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden
+}
+
+.vue-scroll-rect > .scroll-content {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none
+}
+
+.vue-scroll-rect > .scroll-content::-webkit-scrollbar {
+  width: 0;
+  height: 0
+}
+
+.vue-scroll-rect > .scroll-content::-ms-scrollbar {
+  width: 0;
+  height: 0
+}
+
+.vue-scroll-rect > .scroll-content.both {
+  overflow: scroll
+}
+
+.vue-scroll-rect > .scroll-content.horizontal {
+  overflow-x: scroll
+}
+
+.vue-scroll-rect > .scroll-content.vertical {
+  overflow-y: scroll
+}
+
+.vue-scroll-rect:hover > .scrollbar {
+  opacity: 1;
+  transition: opacity .1s
+}
+
+.vue-scroll-rect.always-show-scrollbar > .scrollbar, .vue-scroll-rect .dragging > .scrollbar {
+  opacity: 1
+}
+
+.vue-scroll-rect.background-clickable > .scrollbar {
+  pointer-events: all
+}
+
+.vue-scroll-rect > .scrollbar {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1.5s;
+  pointer-events: none
+}
+
+.vue-scroll-rect > .scrollbar:hover {
+  opacity: 1
+}
+
+.vue-scroll-rect > .scrollbar .thumb {
+  position: absolute;
+  background-color: var(--vue-scroll-rect-scrollbar-thumb-color);
+  border-radius: var(--vue-scroll-rect-scrollbar-thumb-radius);
+  pointer-events: all
+}
+
+.vue-scroll-rect > .scrollbar .thumb:hover {
+  background-color: var(--vue-scroll-rect-scrollbar-thumb-color-light)
+}
+
+.vue-scroll-rect > .scrollbar .thumb:active {
+  background-color: var(--vue-scroll-rect-scrollbar-thumb-color-pressed)
+}
+
+.vue-scroll-rect > .scrollbar.horizontal {
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: var(--vue-scroll-rect-scrollbar-size)
+}
+
+.vue-scroll-rect > .scrollbar.horizontal .thumb {
+  top: var(--vue-scroll-rect-scrollbar-thumb-margin);
+  bottom: var(--vue-scroll-rect-scrollbar-thumb-margin)
+}
+
+.vue-scroll-rect > .scrollbar.vertical {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--vue-scroll-rect-scrollbar-size)
+}
+
+.vue-scroll-rect > .scrollbar.vertical .thumb {
+  left: var(--vue-scroll-rect-scrollbar-thumb-margin);
+  right: var(--vue-scroll-rect-scrollbar-thumb-margin)
 }
 
 .mx-context-menu {
@@ -34,13 +143,14 @@
   overflow: visible;
   position: absolute;
   background-color: var(--mx-menu-backgroud);
+  border-radius: var(--mx-menu-backgroud-radius);
   padding: 12px 0;
+  box-shadow: 0 10px 40px 10px var(--mx-menu-shadow-color);
   opacity: 1;
   transition: opacity .2s ease-in-out;
-
-  box-shadow: var(--td-shadow-2);
-  border: 0.5px solid var(--td-component-border);
-  border-radius: var(--td-radius-medium);
+  --vue-scroll-rect-scrollbar-thumb-color: var(--mx-menu-scrollbar-thumb-color);
+  --vue-scroll-rect-scrollbar-thumb-color-light: var(--mx-menu-scrollbar-thumb-color-light);
+  --vue-scroll-rect-scrollbar-thumb-color-pressed: var(--mx-menu-scrollbar-thumb-color-pressed)
 }
 
 .mx-context-menu-items {
@@ -49,72 +159,7 @@
 }
 
 .mx-context-menu-scroll {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 1px;
-  pointer-events: none
-}
-
-.mx-context-menu-updown {
-  pointer-events: all;
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 15px;
-  border-radius: 10px;
-  background-color: var(--mx-menu-backgroud);
-  -webkit-user-select: none;
-  user-select: none;
-  cursor: pointer
-}
-
-.mx-context-menu-updown.placeholder {
-  position: relative;
-  cursor: default
-}
-
-.mx-context-menu-updown.disabled {
-  color: var(--mx-menu-disabled-text);
-  cursor: default
-}
-
-.mx-context-menu-updown.disabled .mx-right-arrow {
-  fill: var(--mx-menu-disabled-text)
-}
-
-.mx-context-menu-updown:hover:not(.disabled) {
-  background-color: var(--mx-menu-hover-backgroud)
-}
-
-.mx-context-menu-updown:active {
-  background-color: var(--mx-menu-active-backgroud)
-}
-
-.mx-context-menu-updown.up {
-  top: 0
-}
-
-.mx-context-menu-updown.up .mx-right-arrow {
-  transform: translate(-50%) rotate(270deg)
-}
-
-.mx-context-menu-updown.down {
-  bottom: -1px
-}
-
-.mx-context-menu-updown.down .mx-right-arrow {
-  transform: translate(-50%) rotate(90deg)
-}
-
-.mx-context-menu-updown .mx-right-arrow {
-  display: inline-block;
-  position: absolute;
-  height: 12px;
-  left: 50%;
-  top: 0;
-  padding: 0
+  overscroll-behavior: contain
 }
 
 .mx-context-menu-item {
@@ -184,8 +229,7 @@
 }
 
 .mx-context-menu-item.keyboard-focus {
-  background-color: var(--mx-menu-active-backgroud);
-  outline: 2px solid var(--mx-menu-focus-color)
+  background-color: var(--mx-menu-active-backgroud)
 }
 
 .mx-context-menu-item.disabled {
@@ -294,6 +338,9 @@
   --mx-menu-open-hover-text: #ffffff;
   --mx-menu-disabled-text: #9c9c9c;
   --mx-menu-shadow-color: rgba(51, 51, 51, .2);
+  --mx-menu-scrollbar-thumb-color: rgba(255, 255, 255, .3);
+  --mx-menu-scrollbar-thumb-color-light: rgba(255, 255, 255, .5);
+  --mx-menu-scrollbar-thumb-color-pressed: rgba(255, 255, 255, .2);
   --mx-menu-shortcut-backgroud: #505050;
   --mx-menu-shortcut-backgroud-hover: #505050;
   --mx-menu-shortcut-backgroud-active: #505050;
@@ -413,7 +460,6 @@
   --mx-menu-shortcut-text-active: #fff;
   --mx-menu-shortcut-text-open: #fff;
   --mx-menu-shortcut-text-disabled: #a5a5a5;
-  --mx-menu-focus-color: transparent;
   --mx-menu-border-color: #bbbbbb
 }
 
@@ -442,7 +488,6 @@
   --mx-menu-shortcut-text-active: #fff;
   --mx-menu-shortcut-text-open: #fff;
   --mx-menu-shortcut-text-disabled: #6a6a6a;
-  --mx-menu-focus-color: transparent;
   --mx-menu-border-color: #222
 }
 
@@ -469,6 +514,13 @@
 
 .mx-menu-bar.mac .mx-context-menu-item-sperator, .mx-context-menu.mac .mx-context-menu-item-sperator {
   margin: 0 12px
+}
+
+.mx-context-menu .vue-scroll-rect > .scroll-content {
+  overflow-y: scroll;
+  height: 100%;
+  width: auto;
+  position: relative !important
 }
 
 .mx-menu-ghost-host {

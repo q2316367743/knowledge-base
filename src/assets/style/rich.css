@@ -1,4 +1,4 @@
-:root {
+.kb-rich-editor {
   --aie-bg-color: var(--kb-bg-color-container);
   --aie-border-color: var(--td-border-level-2-color);
   --aie-text-color: var(--td-text-color-primary);
@@ -44,9 +44,8 @@
   --aie-content-link-a-color: var(--td-brand-color);
   --aie-content-link-a-hover-color: var(--td-brand-color-hover);
   --aie-content-link-a-visited-color: var(--td-brand-color-focus);
-  --aie-content-link-a-active-color: var(--td-brand-color-active)
+  --aie-content-link-a-active-color: var(--td-brand-color-active);
 }
-
 
 .table-bubble-menu.colors-menu {
   display: flex;
