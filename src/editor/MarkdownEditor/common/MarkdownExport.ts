@@ -50,7 +50,6 @@ export function openMarkdownExport(id: number, cherry: Cherry) {
         })
         return `![](./image/${code[0]}.png)`;
       });
-      console.log(images);
       if (images.length === 0) {
         // 文件导出
         download(markdown, res.title + '.md', 'text/plain')

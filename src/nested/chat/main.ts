@@ -6,7 +6,6 @@ import 'tdesign-vue-next/es/style/index.css';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
 import 'virtual:uno.css'
 import 'handsontable/dist/handsontable.full.min.css';
-import '@wangeditor/editor/dist/css/style.css';
 import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
 import '@/assets/style/global.less';

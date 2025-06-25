@@ -156,6 +156,14 @@ useEventListener(editorContainerDom, 'click', (e) => {
   display: flex;
   flex-direction: column;
 
+
+  &.readonly {
+    .aie-container {
+      background-color: var(--kb-bg-color-container);
+    }
+  }
+
+
   .kb-rich-editor-main {
     width: 100%;
     height: 100%;

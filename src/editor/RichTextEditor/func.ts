@@ -1,4 +1,4 @@
-import {IDomEditor} from "@wangeditor/editor";
+import {AiEditor} from "aieditor";
 import {createArticleExport} from "@/pages/note/layout/editor-content/components/ArticleExport";
 import {useArticleStore} from "@/store/db/ArticleStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
@@ -6,13 +6,15 @@ import {download} from "@/utils/BrowserUtil";
 import JSZip from "jszip";
 import {getAttachmentByAsync} from "@/utils/utools/DbStorageUtil";
 import {parseRichTextForAttachment} from "@/components/ArticleExport/exportForCommon";
+import {getAttachment} from "@/utils/utools/AttachmentUtil";
 
-export function onRichTextExport(id: number, articleId?: number, editorRef?: IDomEditor) {
+
+export function onRichTextExport(id: number, articleId?: number, editorRef?: AiEditor) {
   if (articleId === id) {
     createArticleExport(id, [{
       key: 1,
       name: 'Markdown',
-      desc: '暂不支持',
+      desc: '便于分享',
       extname: 'md'
     }, {
       key: 2,
@@ -36,13 +38,15 @@ export function onRichTextExport(id: number, articleId?: number, editorRef?: IDo
       if (!editorRef) {
         return;
       }
-      let article = await useArticleStore().getArticleById(articleId);
+      const article = await useArticleStore().getArticleById(articleId);
       if (res.type === 1) {
-        MessageUtil.warning('暂不支持导出markdown文档');
+        const markdown = editorRef.getMarkdown() as string;
+        // 文件导出
+        download(markdown, res.title + '.md', 'text/plain')
+
       } else if (res.type === 2) {
         const html = editorRef.getHtml();
         // 增加html基础结构
-
         if (html) {
           // 此处需要将html中图片、视频的src中的链接替换为绝对路径
           const {attachments, content} = parseRichTextForAttachment(html)
@@ -50,7 +54,7 @@ export function onRichTextExport(id: number, articleId?: number, editorRef?: IDo
             // zip压缩
             const zip = new JSZip();
             zip.file('index.html', content);
-            for (let attachment of attachments) {
+            for (const attachment of attachments) {
               const blob = await getAttachmentByAsync(attachment);
               if (blob) {
                 zip.file(attachment, blob);

@@ -5,27 +5,30 @@
       <t-link @click="toFeedback()" theme="primary">反馈中心</t-link>
       <span>，支持图片反馈。</span>
     </template>
-    <div class="p-8px">
-      <t-timeline style="margin-top: 10px;" label-position="relative">
-        <t-timeline-item :label="log.time" placement="top" v-for="log in UpdateLog">
-          <div class="update-log-card" :title="log.version">
-            <div class="flex justify-between items-center px-16px pt-12px pb-8px">
-              <div style="font-size: var(--td-font-size-title-large);font-weight: bold">{{ log.version }}</div>
-              <t-link v-if="log.url" theme="primary">详细链接</t-link>
-            </div>
-            <update-item :log="log as Log"/>
-          </div>
-        </t-timeline-item>
-      </t-timeline>
-    </div>
+    <loading-result v-if="loading" title="正在获取更新日志"/>
+    <markdown v-else v-model="md" preview/>
     <t-back-top container=".page-container"/>
   </page-layout>
 </template>
 <script lang="ts" setup>
-import UpdateItem from "@/components/update-check/item.vue";
-import UpdateLog from "@/global/UpdateLog.json";
 import {toFeedback} from "@/global/Constant";
-import {Log} from "@/components/update-check/domain";
+import axios from "axios";
+import MessageUtil from "@/utils/modal/MessageUtil";
+import Markdown from "@/editor/MarkdownEditor/index.vue";
+
+const md = ref('');
+const loading = ref(true);
+
+onMounted(() => {
+  axios.get('./example/changelog.md', {
+    responseType: 'text'
+  }).then((res) => {
+    loading.value = false;
+    md.value = res.data;
+  }).catch((err) => {
+    MessageUtil.error("获取更新日志失败", err);
+  });
+})
 </script>
 <style scoped lang="less">
 .update-log-card {

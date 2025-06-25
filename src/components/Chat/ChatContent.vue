@@ -71,6 +71,7 @@ onUnmounted(() => {
 <style scoped lang="less">
 .chat-content {
   :deep(.cherry) {
+    color: var(--td-text-color-primary);
     box-shadow: none;
     background-color: transparent;
 
