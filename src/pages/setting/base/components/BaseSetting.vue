@@ -83,7 +83,7 @@
         </t-radio-group>
       </t-form-item>
       <t-divider>动作设置</t-divider>
-      <t-form-item label="待办笔记动作" label-align="top">
+      <t-form-item label="笔记引用动作" label-align="top">
         <t-radio-group v-model="instance.todoArticleAction">
           <t-radio :value="ArticleActionEnum.TO_ARTICLE">前往笔记</t-radio>
           <t-radio :value="ArticleActionEnum.DRAWER">侧边预览</t-radio>

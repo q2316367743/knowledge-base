@@ -1,18 +1,23 @@
 <template>
-  <main class="edit-wang-editor kb-wang-editor" :class="{readonly: readOnly}">
-    <div class="wang-editor-header" ref=editorHeaderDom></div>
-    <div class="wang-editor-main" ref="editorContainerDom"></div>
+  <main class="kb-rich-editor" :class="{readonly: readOnly}">
+    <div class="kb-rich-editor-main" ref="editorContainerDom">
+      <div class="aie-container">
+        <div class="aie-container-header" v-show="!readOnly"></div>
+        <div class="aie-container-main"></div>
+        <div class="aie-container-footer"></div>
+      </div>
+    </div>
   </main>
 </template>
 <script lang="ts" setup>
-import {createEditor, createToolbar, IDomEditor, Toolbar, IToolbarConfig} from '@wangeditor/editor'
-import {useArticleExportEvent} from "@/store";
+import {AiEditor, Uploader} from "aieditor";
+import {useArticleExportEvent, useArticleStore, useGlobalStore} from "@/store";
 import {onRichTextExport} from "@/editor/RichTextEditor/func";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {useMountEventBus} from "@/hooks/MountEventBus";
 import MessageUtil from "@/utils/modal/MessageUtil";
+import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
 
-type InsertFnType = (url: string, alt: string, href: string) => void
 
 const content = defineModel({
   type: String,
@@ -33,104 +38,116 @@ const props = defineProps({
 });
 const emit = defineEmits(['change']);
 
-const editorHeaderDom = ref<HTMLDivElement>();
 const editorContainerDom = ref<HTMLDivElement>();
+const editorRef = shallowRef<AiEditor>()
 
-const editorRef = shallowRef<IDomEditor>()
-const toolbarRef = shallowRef<Toolbar>()
 
-watch(() => props.readOnly, value => {
-  value ? editorRef.value?.disable() : editorRef.value?.enable();
-}, {immediate: true});
+watch(() => props.readOnly, value => editorRef.value?.setEditable(!value), {immediate: true});
+watch(() => useGlobalStore().isDark, value => editorRef.value?.changeTheme(value ? 'dark' : 'light'));
 
-function init() {
-  if (!editorHeaderDom.value || !editorHeaderDom.value) {
-    return;
+
+useMountEventBus(useArticleExportEvent, onExport);
+
+const fileUploader: Uploader = async (file) => {
+  const {url, name} = await useAttachmentUpload.upload(file, file.name, file.type);
+  return {
+    "errorCode": 0,
+    "data": {
+      "src": url,
+      "alt": name,
+      "align": "center",
+      "width": "100%",
+      "height": "auto",
+      "loading": true,
+      "data-src": url
+    }
   }
-  const editor = createEditor({
-    selector: editorContainerDom.value,
-    html: content.value,
-    mode: 'default',
-    config: {
-      autoFocus: props.autoFocus,
-      onChange: (editor: IDomEditor) => {
-        content.value = editor.getHtml();
-        emit('change');
-      },
-      placeholder: '请输入内容...(支持部分markdown语法)',
-      readOnly: props.readOnly,
-      MENU_CONF: {
-        uploadImage: {
-          server: '/api/upload',
-          // 自定义上传
-          customUpload(file: File, insertFn: InsertFnType) {  // TS 语法
-            useAttachmentUpload.upload(file, file.name, 'image/png')
-              .then(({name, url}) => insertFn(url, name, url))
-              .catch(e => MessageUtil.error("上传失败", e));
-          }
-        },
-        uploadVideo: {
-          server: '/api/upload',
-          customUpload(file: File, insertFn: InsertFnType) {
-            //
-            useAttachmentUpload.upload(file, file.name, file.type)
-              .then(({name, url}) => insertFn(url, name, url))
-              .catch(e => MessageUtil.error("上传失败", e));
+}
+
+onMounted(() => {
+  if (!editorContainerDom.value) return MessageUtil.error("editorContainerDom不存在");
+  const {isDark} = useGlobalStore();
+  // 初始化
+  editorRef.value = new AiEditor({
+    element: editorContainerDom.value,
+    placeholder: "点击输入内容，支持markdown语法",
+    content: content.value,
+    editable: !props.readOnly,
+    draggable: false,
+    theme: isDark ? 'dark' : 'light',
+    toolbarKeys: props.simple ? ["font-family", "font-size",
+        "|", "highlight", "font-color",
+        "|", "link", "subscript", "superscript", "todo", "emoji",
+        "|", "align", "line-height",
+        "|", "image", "video", "table"
+      ] :
+      ["undo", "redo", "brush", "eraser",
+        "|", "heading", "font-family", "font-size",
+        "|", "bold", "italic", "underline", "strike", "link", "code", "subscript", "superscript", "hr", "todo", "emoji",
+        "|", "highlight", "font-color",
+        "|", "align", "line-height",
+        "|", "bullet-list", "ordered-list", "indent-decrease", "indent-increase", "break",
+        "|", "image", "video", "attachment", "quote", "container", "code-block", "table",
+        "|", "printer", "fullscreen"
+      ],
+    textSelectionBubbleMenu: {
+      enable: true,
+      items: ["Bold", "Italic", "Underline", "Strike", "code", "comment"],
+    },
+    onChange: (editor) => {
+      content.value = editor.getHtml();
+    },
+    image: {
+      allowBase64: true,
+      defaultSize: 350,
+      uploader: fileUploader,
+      bubbleMenuItems: ["AlignLeft", "AlignCenter", "AlignRight", "delete"]
+    },
+    video: {
+      uploader: fileUploader
+    },
+    attachment: {
+      uploader: async (file) => {
+        const {url, name} = await useAttachmentUpload.upload(file, file.name, file.type);
+        return {
+          "errorCode": 0,
+          "data": {
+            href: url,
+            fileName: name
           }
         }
       }
+    },
+    onMentionQuery: async (query) => {
+      const {articles} = useArticleStore()
+      return articles.filter(e => e.name.includes(query)).map(e => ({
+        id: e.id,
+        label: e.name
+      }));
     }
-  });
-  const toolbarConfig: Partial<IToolbarConfig> = {}
-
-  if (props.simple) {
-    toolbarConfig.toolbarKeys = [
-      {
-        key: 'insert',
-        title: '插入',
-        menuKeys: ['insertLink', 'insertTable', 'insertImage', 'insertVideo']
-      }, {
-        key: 'upload',
-        title: '上传',
-        menuKeys: ['uploadImage', 'uploadVideo']
-      },
-      'fullScreen']
-  }
-
-
-  const toolbar = createToolbar({
-    editor,
-    selector: editorHeaderDom.value,
-    config: toolbarConfig,
-    mode: 'default', // or 'simple'
-  });
-
-  editorRef.value = editor;
-  toolbarRef.value = toolbar;
-
-}
-
-useMountEventBus(useArticleExportEvent, onExport)
-
-onMounted(() => {
-  // 初始化
-  init();
+  })
 });
 
 onBeforeUnmount(() => {
-  toolbarRef.value?.destroy();
-  editorRef.value?.destroy();
   // 移除键盘事件监听
+  editorRef.value?.destroy();
 })
-
 
 function onExport(id: number) {
   onRichTextExport(id, props.articleId, editorRef.value)
 }
 
+useEventListener(editorContainerDom, 'click', (e) => {
+  const target = e.target as HTMLElement;
+  if (!target) return;
+  if (target.tagName === 'SPAN' && target.dataset.type === 'mention') {
+    toArticleByTodo(Number(target.dataset.id));
+  }
+})
+
 </script>
 <style lang="less">
-.edit-wang-editor {
+.kb-rich-editor {
   position: absolute;
   top: 0;
   left: 0;
@@ -139,44 +156,31 @@ function onExport(id: number) {
   display: flex;
   flex-direction: column;
 
-  &.w-e-full-screen-container {
-    z-index: 1000;
-    background-color: var(--td-bg-color-container);
+  .kb-rich-editor-main {
+    width: 100%;
+    height: 100%;
   }
 
-  &.readonly {
-    .wang-editor-header {
-      display: none;
+  .aie-container-main {
+    flex-grow: 1;
+    overflow: auto;
+  }
+
+  .aie-container-footer {
+    span {
+      color: var(--td-text-color-primary) !important;
     }
   }
 
-  .wang-editor-main {
-    flex: 1;
-    overflow: hidden;
-  }
+  span[data-type="mention"] {
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    color: var(--td-brand-color);
 
-  // 搜索容器样式
-  .search-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    align-items: center;
-    background-color: var(--td-bg-color-container-hover);
-    padding: 8px;
-    border-radius: var(--td-radius-medium);
-    box-shadow: var(--td-shadow-1);
-    z-index: 100;
-
-    .t-input {
-      width: 200px;
-      margin-right: 8px;
-    }
-
-    .search-buttons {
-      display: flex;
-      gap: 8px;
+    &:hover {
+      color: var(--td-brand-color-hover);
     }
   }
+
 }
 </style>

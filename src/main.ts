@@ -7,23 +7,20 @@ import router from './plugin/router';
 // 样式
 import 'tdesign-vue-next/es/style/index.css';
 import 'cherry-markdown/dist/cherry-markdown.min.css'
-import 'virtual:uno.css'
+import 'virtual:uno.css';
 import 'handsontable/dist/handsontable.full.min.css';
-import '@wangeditor/editor/dist/css/style.css';
 import '@logicflow/core/dist/index.css';
 import '@logicflow/extension/dist/index.css';
 import '@/assets/style/global.less';
-import 'splitpanes/dist/splitpanes.css'
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import 'splitpanes/dist/splitpanes.css';
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+import "aieditor/dist/style.css";
 // 代码编辑器
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-// 富文本编辑器
-import {Boot} from '@wangeditor/editor'
-import markdownModule from '@wangeditor/plugin-md'
 // 其他
 import {useDeleteEvent} from '@/global/BeanFactory';
 import {
@@ -67,8 +64,6 @@ self.MonacoEnvironment = {
     return new EditorWorker()
   },
 }
-// 富文本编辑器注册插件
-Boot.registerModule(markdownModule);
 
 createApp(App)
   .use(createPinia())

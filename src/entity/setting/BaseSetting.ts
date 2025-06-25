@@ -49,7 +49,7 @@ export interface BaseSetting {
   mdEditorKeyMap: 'sublime' | 'vim';
 
   /**
-   * 待办笔记动作
+   * 笔记引用动作
    */
   todoArticleAction: ArticleActionEnum;
 

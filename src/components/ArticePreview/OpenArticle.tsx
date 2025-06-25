@@ -87,9 +87,6 @@ export function openArticle(id: number) {
     MessageUtil.error("笔记不存在");
     return;
   }
-  const size = useWindowSize();
-
-
   const open = DrawerPlugin({
       header: () => <Space>
         <Button shape={'circle'} theme={'primary'} variant={'text'} onClick={() => open.destroy?.()}>{{
