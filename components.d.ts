@@ -28,6 +28,7 @@ declare module 'vue' {
     InfoResult: typeof import('./src/components/Result/InfoResult.vue')['default']
     Item: typeof import('./src/components/update-check/item.vue')['default']
     KbInput: typeof import('./src/components/KbInput/KbInput.vue')['default']
+    KbTitleInput: typeof import('./src/components/KbInput/KbTitleInput.vue')['default']
     LoadingResult: typeof import('./src/components/Result/LoadingResult.vue')['default']
     MarkdownPreview: typeof import('./src/components/Chat/MarkdownPreview.vue')['default']
     PageLayout: typeof import('./src/components/PageLayout/PageLayout.vue')['default']

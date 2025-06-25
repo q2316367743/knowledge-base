@@ -3,15 +3,14 @@
     <header class="header">
       <!-- 标题 -->
       <div class="title">
-        <t-input v-model="item.index.title" :clearable="true" placeholder="待办标题，回车修改"
-                 @change="updateSelf()"/>
+        <kb-title-input v-model="item.index.title"  placeholder="待办标题，回车修改" @change="updateSelf()"/>
       </div>
       <!-- 优先级 -->
       <priority-dropdown v-model="item.index.priority" variant="outline" @change="updateSelf()"/>
     </header>
     <div class="content">
       <main class="container kb-wang-editor">
-        <rich-text-editor v-model="item.content.record.content" simple @change="updateContent()" v-if="isInit"/>
+        <rich-text-editor v-model="item.content.record.content" simple @change="updateContent()" v-if="isInit" :auto-focus="false"/>
       </main>
     </div>
     <footer class="footer overflow-y-hidden">
@@ -36,7 +35,7 @@ onMounted(async () => {
   isInit.value = true;
 });
 
-// 只更新标题
+// 更新标题
 function updateSelf() {
   // 更新标题
   useTodoItemStore().updateById(
@@ -50,7 +49,7 @@ function updateSelf() {
     }
   )
 }
-
+// 更新内容
 async function updateContent() {
   if (!isInit.value) return;
   // 更新内容
@@ -58,7 +57,6 @@ async function updateContent() {
     useTodoWrapStore().itemId,
     item.value.content.record, item.value.content.rev)
 }
-
 </script>
 <style scoped>
 

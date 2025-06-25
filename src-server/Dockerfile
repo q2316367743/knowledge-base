@@ -4,11 +4,8 @@ FROM oven/bun:1.2.15
 # 工作目录
 WORKDIR /app/knowledge-base
 
-COPY src ./src
-COPY public ./public
-COPY package.json ./
-COPY bun.lock ./
-COPY tsconfig.json ./
+# 复制打包文件
+COPY .output/ runtime/
 
 # 安装依赖
 RUN bun install --production --frozen-lockfile --registry=https://mirrors.tencent.com/npm/
@@ -23,6 +20,7 @@ VOLUME /app/knowledge-base/file
 EXPOSE 13456/tcp
 
 ENV NODE_ENV production
+ENV PORT 13456
 
 # 启动命令
-ENTRYPOINT [ "bun", "run", "/app/knowledge-base/src/index.ts" ]
+ENTRYPOINT [ "bun", "run", "/app/knowledge-base/runtime/server/index.mjs" ]

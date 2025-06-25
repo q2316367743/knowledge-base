@@ -25,7 +25,11 @@ const props = defineProps({
     default: false
   },
   articleId: Number,
-  simple: Boolean
+  simple: Boolean,
+  autoFocus: {
+    type: Boolean,
+    default: false
+  }
 });
 const emit = defineEmits(['change']);
 
@@ -48,6 +52,7 @@ function init() {
     html: content.value,
     mode: 'default',
     config: {
+      autoFocus: props.autoFocus,
       onChange: (editor: IDomEditor) => {
         content.value = editor.getHtml();
         emit('change');
@@ -74,7 +79,6 @@ function init() {
           }
         }
       }
-
     }
   });
   const toolbarConfig: Partial<IToolbarConfig> = {}
