@@ -4,7 +4,6 @@
     <mind-map-count v-if="available" :mind-map="mindMap"/>
     <mind-map-tool v-if="available && !props.readOnly" :mind-map="mindMap" :width="size.width.value"/>
     <mind-map-setting v-if="available && !props.readOnly" :mind-map="mindMap"/>
-    <mind-map-context v-if="available && !props.readOnly" :mind-map="mindMap"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -15,7 +14,6 @@ import MindMapCount from "@/editor/MindMapEditor/components/MindMapCount.vue";
 import MindMapTool from "@/editor/MindMapEditor/components/MindMapTool/index.vue";
 import MindMapSetting
   from "@/editor/MindMapEditor/components/MindMapSetting/index.vue";
-import MindMapContext from "@/editor/MindMapEditor/components/MindMapContext.vue";
 
 // 插件
 import MiniMap from 'simple-mind-map/src/plugins/MiniMap.js';
@@ -32,6 +30,10 @@ import {openArticleImport} from "@/pages/note/layout/editor-content/components/A
 import {useArticleExportEvent, useArticleImportEvent} from "@/store";
 import {openMindMapExport} from "@/editor/MindMapEditor/components/MindMapExport";
 import {useMountEventBus} from "@/hooks/MountEventBus";
+import {MindMapNode} from "@/editor/MindMapEditor/domain";
+import {handleRootContextmenu} from "@/editor/MindMapEditor/components/MindMapDialog/RootContextmenu";
+import {handleNodeContextmenu} from "@/editor/MindMapEditor/components/MindMapDialog/NodeContextmenu";
+import {handleNodeRemarkDialog} from "@/editor/MindMapEditor/components/MindMapDialog/NodeRemarkDialog";
 
 const props = defineProps({
   modelValue: {
@@ -57,7 +59,11 @@ const init = () => {
   }
   mindMap.value = new MindMap({
     // @ts-ignore
-    el: mindMapEditor.value
+    el: mindMapEditor.value,
+    customNoteContentShow: {
+      show: handleNodeRemarkDialog,
+      hide: () => {}
+    },
   });
   mindMap.value.setFullData(props.modelValue);
   mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');
@@ -70,6 +76,12 @@ const init = () => {
       emits("update:modelValue", mindMap.value.getData(true));
     }
   });
+  mindMap.value.on('node_contextmenu', (e: PointerEvent, node: MindMapNode) => {
+    handleNodeContextmenu(e, node, mindMap.value!);
+  });
+  mindMap.value.on('contextmenu', (e: PointerEvent) => {
+    handleRootContextmenu(e, mindMap.value!)
+  })
 
   mindMap.value.addPlugin(MiniMap, undefined);
   mindMap.value.addPlugin(Export, undefined);

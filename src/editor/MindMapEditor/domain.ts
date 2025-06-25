@@ -20,6 +20,8 @@ export interface MindMapNode {
 
   setNote(note: string): void;
 
+  setText(text: string, richText: boolean, resetRichText: boolean): void;
+
   setTag(tags: Array<string>): void;
 
   setIcon(icons: Array<string>): void;
