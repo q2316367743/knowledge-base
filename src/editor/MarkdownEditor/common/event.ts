@@ -44,8 +44,8 @@ export function onClickPreview(event: MouseEvent) {
       const src = (aEle as HTMLImageElement).src;
       // @ts-ignore
       window.onImagePreview(src);
-    } else if (aEle.classList.contains('relation-article')) {
-      const title = aEle.getAttribute('data-title');
+    } else if (aEle.tagName === 'SPAN' && aEle.dataset.type === 'mention') {
+      const {title} = aEle.dataset;
       if (title) {
         const real = decodeURIComponent(title);
         toArticleByRelation(real);

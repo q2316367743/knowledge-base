@@ -5,9 +5,9 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {Edit2Icon, ChevronLeftSIcon} from 'tdesign-icons-vue-next';
 import {usePageJumpEvent} from "@/global/BeanFactory";
 import {ArticleIndex} from "@/entity/article";
+import {openNotePreview} from "@/widget/NotePreview";
 import EditorContentContainer
   from "@/pages/note/layout/editor-content/layout/EditorContentEditor/EditorContentEditor.vue";
-import {openNotePreview} from "@/widget/NotePreview";
 
 
 function _openArticle(articleIndex: ArticleIndex, width = '80vw') {
@@ -59,25 +59,28 @@ function toArticle(id: number, articleAction: ArticleActionEnum) {
   }
 }
 
-
 export function toArticleByTodo(id: number) {
   toArticle(id, useBaseSettingStore().todoArticleAction);
 }
 
-export function toArticleByRelation(title: string) {
+export function toArticleByRelation(idOrTitle: number | string) {
   let id: number | null = null;
-  for (let article of useArticleStore().articles) {
-    if (article.name === title) {
-      id = article.id;
-      break;
+  if (typeof idOrTitle === "string") {
+    for (let article of useArticleStore().articles) {
+      if (article.name === idOrTitle) {
+        id = article.id;
+        break;
+      }
     }
+  }else {
+    id = idOrTitle;
   }
   if (!id) {
-    MessageUtil.warning(`笔记【${title}】不存在`)
+    MessageUtil.warning(`笔记【${idOrTitle}】不存在`)
     return;
   }
   // 查询笔记
-  toArticle(id, useBaseSettingStore().relationArticleAction);
+  toArticle(id, useBaseSettingStore().todoArticleAction);
 }
 
 

@@ -1,5 +1,5 @@
 import {App} from "@vue/runtime-core";
-import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
+import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 
 /**
  * 节点内容备注对话框
@@ -44,7 +44,7 @@ export function handleNodeRemarkDialog() {
           const target = e.target as HTMLElement;
           if (!target) return;
           if (target.tagName === 'SPAN' && target.dataset.type === 'mention') {
-            toArticleByTodo(Number(target.dataset.id));
+            toArticleByRelation(Number(target.dataset.id));
           }
         }}>
         </div>

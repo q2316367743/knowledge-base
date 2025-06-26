@@ -16,7 +16,7 @@ import {onRichTextExport} from "@/editor/RichTextEditor/func";
 import {useAttachmentUpload} from "@/plugin/AttachmentUpload";
 import {useMountEventBus} from "@/hooks/MountEventBus";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {toArticleByTodo} from "@/components/ArticePreview/OpenArticle";
+import {toArticleByRelation} from "@/components/ArticePreview/OpenArticle";
 
 
 const content = defineModel({
@@ -140,7 +140,7 @@ useEventListener(editorContainerDom, 'click', (e) => {
   const target = e.target as HTMLElement;
   if (!target) return;
   if (target.tagName === 'SPAN' && target.dataset.type === 'mention') {
-    toArticleByTodo(Number(target.dataset.id));
+    toArticleByRelation(Number(target.dataset.id));
   }
 })
 

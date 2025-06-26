@@ -1,5 +1,5 @@
 <template>
-  <div class="markdown-editor" ref="markdown-editor">
+  <div class="markdown-editor editor-common" ref="markdown-editor">
     <div class="markdown-editor-wrap" :id="id"></div>
   </div>
 </template>

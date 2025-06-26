@@ -6,15 +6,15 @@ import Cherry from "cherry-markdown";
  * @param {object} options 自定义语法的主体逻辑
  */
 export const RelationArticleSyntaxHook = Cherry.createSyntaxHook(
-    'relation-article',
-    Cherry.constants.HOOKS_TYPE_LIST.SEN,
-    {
-        makeHtml(str: string) {
-            return str.replace(this.RULE.reg, function (_whole, m1) {
-                return `<span class="arco-link relation-article" data-title="${encodeURIComponent(m1)}">${m1}</span>`;
-            });
-        },
-        rule() {
-            return {reg: /\[\[(.*)]]/g};
-        },
-    });
+  'relation-article',
+  Cherry.constants.HOOKS_TYPE_LIST.SEN,
+  {
+    makeHtml(str: string) {
+      return str.replace(this.RULE.reg, function (_whole, m1) {
+        return `<span data-type="mention" data-title="${encodeURIComponent(m1)}">@${m1}</span>`;
+      });
+    },
+    rule() {
+      return {reg: /\[\[(.*)]]/g};
+    },
+  });
