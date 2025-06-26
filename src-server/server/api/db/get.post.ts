@@ -2,7 +2,7 @@ import { db } from "~/global/constants";
 import { Result } from "~/views/Result";
 
 export default defineEventHandler(async (event) => {
-  const { key } = getQuery(event);
+  const { key } = await readBody(event);
   if (!key) {
     return Result.error("key is required");
   }

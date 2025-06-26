@@ -60,10 +60,7 @@ const init = () => {
   mindMap.value = new MindMap({
     // @ts-ignore
     el: mindMapEditor.value,
-    customNoteContentShow: {
-      show: handleNodeRemarkDialog,
-      hide: () => {}
-    },
+    customNoteContentShow: handleNodeRemarkDialog(),
   });
   mindMap.value.setFullData(props.modelValue);
   mindMap.value.setMode(props.readOnly ? 'readonly' : 'edit');

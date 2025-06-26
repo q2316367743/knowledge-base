@@ -34,9 +34,6 @@ pre code.hljs {
   color: var(--td-text-color-secondary);
 }
 
-.w-e-text-container [data-slate-editor] pre > code {
-  text-shadow: none;
-}
 
 .cherry {
   background-color: var(--kb-bg-color-container);
@@ -204,4 +201,16 @@ pre code.hljs {
 .splitpanes__splitter {
   background-color: var(--td-border-level-1-color) !important;
   border-left: none !important;
+}
+
+.editor-common {
+  span[data-type="mention"] {
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    color: var(--td-brand-color);
+
+    &:hover {
+      color: var(--td-brand-color-hover);
+    }
+  }
 }

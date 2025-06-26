@@ -1,10 +1,10 @@
 <template>
-  <main class="kb-rich-editor" :class="{readonly: readOnly}">
+  <main class="kb-rich-editor editor-common" :class="{readonly: readOnly}">
     <div class="kb-rich-editor-main" ref="editorContainerDom">
       <div class="aie-container">
         <div class="aie-container-header" v-show="!readOnly"></div>
         <div class="aie-container-main"></div>
-        <div class="aie-container-footer"></div>
+        <div class="aie-container-footer" v-show="!readOnly"></div>
       </div>
     </div>
   </main>
@@ -165,8 +165,8 @@ useEventListener(editorContainerDom, 'click', (e) => {
 
 
   .kb-rich-editor-main {
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
   }
 
   .aie-container-main {
@@ -180,15 +180,7 @@ useEventListener(editorContainerDom, 'click', (e) => {
     }
   }
 
-  span[data-type="mention"] {
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
-    color: var(--td-brand-color);
 
-    &:hover {
-      color: var(--td-brand-color-hover);
-    }
-  }
 
 }
 </style>

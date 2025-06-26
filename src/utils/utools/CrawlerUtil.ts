@@ -1,5 +1,5 @@
 import {parse} from 'rss-to-json';
-import {InjectionWebResult, http} from '@/utils/utools/common';
+import {requestRemoteApi} from '@/utils/utools/common';
 import {NewsInstance} from "@/entity/news";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
@@ -115,8 +115,7 @@ export const CrawlerUtil = {
     if (window['utools']) {
       return fetchMarkdownByUTools(url, props);
     } else {
-      const rsp = await http.post<InjectionWebResult<CrawlerMarkdownResult>>('/crawler/markdown', {url, props});
-      return rsp.data.data;
+      return requestRemoteApi<CrawlerMarkdownResult>('crawler', 'markdown', {url, props})
     }
   },
   rss: async (url: string): Promise<Array<NewsInstance>> => {
@@ -135,10 +134,7 @@ export const CrawlerUtil = {
         }
       })
     } else {
-      const rsp = await http.get<InjectionWebResult<Array<NewsInstance>>>('/crawler/rss', {
-        params: {url}
-      });
-      return rsp.data.data;
+      return requestRemoteApi('crawler', "rss", {url});
     }
   }
 }

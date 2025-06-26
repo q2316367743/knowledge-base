@@ -2,7 +2,7 @@ import * as RssParser from "rss-to-json";
 import { Result } from "~/views/Result";
 
 export default defineEventHandler(async (event) => {
-  const { url } = getQuery(event);
+  const { url } = await readBody(event);
   if (!url) {
     return Result.error("url is required");
   }

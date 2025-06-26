@@ -2,17 +2,12 @@ import {useUmami} from "@/plugin/umami";
 import {useLoading} from "@/hooks";
 import {articleToZip} from "@/utils/file/ConvertUtil";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {getPlatform} from "@/utils/utools/common";
-import {InjectionWebResult, http} from '@/utils/utools/common';
+import {getPlatform, requestRemoteApi} from "@/utils/utools/common";
 
 type ExportToZip = (pid: number) => Promise<void>;
 
 const exportToZipByWeb = async (pid: number): Promise<void> => {
-  const rsp = await http.get<InjectionWebResult<string>>('/background/export-zip', {
-    params: {pid}
-  });
-  const {data} = rsp;
-  const name = data.data;
+  const name = await requestRemoteApi<string>('background', 'export-zip', {pid});
   // 打开下载链接
   window.open(`/api/file/temp/${name}`, '_blank');
   MessageUtil.success("文件10分钟内有效，已触发下载！");

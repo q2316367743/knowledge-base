@@ -3,6 +3,7 @@ import { existsSync, mkdirSync } from "node:fs";
 import { FILE_DIR, db } from "~/global/constants";
 import type { AttachmentInfo } from "~/views/AttachmentInfo";
 import type { PouchValue } from "~/views/PouchValue";
+import { Result } from "~/views/Result";
 
 /**
  * 获取文件相对路径
@@ -59,9 +60,9 @@ export default defineEventHandler(async (event) => {
       url,
     },
   }).catch(console.error);
-  return {
+  return Result.success({
     name: name,
     key: relativePath,
     url,
-  };
+  });
 });

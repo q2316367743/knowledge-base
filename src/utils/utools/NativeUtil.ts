@@ -1,4 +1,4 @@
-import {InjectionWebResult, http} from '@/utils/utools/common';
+import {requestRemoteApi} from '@/utils/utools/common';
 
 export const NativeUtil = {
   encrypt: {
@@ -6,36 +6,28 @@ export const NativeUtil = {
       if (window.preload) {
         return window.preload.encrypt.encryptPassword(password);
       } else {
-        const rsp = await http.post<InjectionWebResult<string>>(
-          '/encrypt/encrypt-password', {password});
-        return rsp.data.data;
+        return requestRemoteApi<string>('encrypt', "encrypt-password", {password})
       }
     },
     verifyPassword: async (password: string, hash: string): Promise<EncryptKeyIv | boolean> => {
       if (window.preload) {
         return window.preload.encrypt.verifyPassword(password, hash);
       } else {
-        const rsp = await http.post<InjectionWebResult<EncryptKeyIv | boolean>>(
-          '/encrypt/verify-password', {password, hash});
-        return rsp.data.data;
+        return requestRemoteApi<EncryptKeyIv | boolean>("encrypt", "verify-password", {password, hash})
       }
     },
     encryptValue: async (keyIv: EncryptKeyIv, data: string): Promise<string> => {
       if (window.preload) {
         return window.preload.encrypt.encryptValue(keyIv, data);
       } else {
-        const rsp = await http.post<InjectionWebResult<string>>(
-          '/encrypt/verify-password', {key: keyIv.key, iv: keyIv.iv, data});
-        return rsp.data.data;
+        return requestRemoteApi<string>("encrypt", "encrypt-value", {key: keyIv.key, iv: keyIv.iv, data})
       }
     },
     decryptValue: async (keyIv: EncryptKeyIv, data: string): Promise<string> => {
       if (window.preload) {
         return window.preload.encrypt.decryptValue(keyIv, data);
       } else {
-        const rsp = await http.post<InjectionWebResult<string>>(
-          '/encrypt/verify-password', {key: keyIv.key, iv: keyIv.iv, data});
-        return rsp.data.data;
+        return requestRemoteApi("encrypt", "decrypt-value", {key: keyIv.key, iv: keyIv.iv, data})
       }
     },
   },

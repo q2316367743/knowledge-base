@@ -12,7 +12,7 @@ export function handleNodeContextmenu(e: PointerEvent, node: MindMapNode, mindMa
       label: "插入同级节点",
       onClick: () => {
         if (!node.isRoot && !node.isGeneralization) {
-           mindMap.execCommand('INSERT_NODE');
+          mindMap.execCommand('INSERT_NODE');
         }
       }
     }, {
@@ -30,11 +30,11 @@ export function handleNodeContextmenu(e: PointerEvent, node: MindMapNode, mindMa
         }
       }
     }, {
-      label: '删除节点',
+      label: () => <div style={{color: 'var(--td-error-color)'}}>删除节点</div>,
       onClick: () => {
         mindMap.execCommand('REMOVE_NODE');
       }
-    },  {
+    }, {
       label: '插入概要',
       onClick: () => {
         if (!node.isRoot && !node.isGeneralization) {

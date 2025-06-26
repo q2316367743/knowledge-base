@@ -2,7 +2,7 @@ import {useSnowflake} from "@/hooks/Snowflake";
 import LocalNameEnum from "@/enumeration/LocalNameEnum";
 import {renderAttachmentUrlByUTools} from "@/plugin/server";
 import {basename, extname} from "@/utils/file/FileUtil";
-import {getPlatform, http, InjectionWebResult} from '@/utils/utools/common';
+import {getPlatform, requestRemoteApi} from '@/utils/utools/common';
 import {appDataDir, join} from '@tauri-apps/api/path';
 import {BaseDirectory, exists, mkdir, readDir, writeFile, remove} from '@tauri-apps/plugin-fs';
 import {convertFileSrc} from '@tauri-apps/api/core';
@@ -65,9 +65,7 @@ export async function uploadAttachment(file: Blob, fileName: string, mineType = 
       const formData = new FormData();
       formData.append('file', file);
       formData.append("filename", fileName);
-      const rsp = await http.post('/file/upload', formData);
-      const {data} = rsp;
-      return data;
+      return requestRemoteApi<FileUploadResult>("file", "upload", formData)
     case "tauri":
       // 获取年月日
       const base = await appDataDir();
@@ -171,8 +169,7 @@ export async function listAttachment(): Promise<Array<AttachmentInfo>> {
       await loop(TAURI_ATTACHMENT);
       return paths;
     case "web":
-      const rsp = await http.get<InjectionWebResult<Array<PouchValue<AttachmentInfo>>>>('/file/attachments');
-      const {data} = rsp.data;
+      const data = await requestRemoteApi<Array<PouchValue<AttachmentInfo>>>('file', 'attachments');
       return data.map(e => e.value);
     default:
       return Promise.reject(new Error("系统环境异常"))
@@ -188,9 +185,7 @@ export async function deleteAttachment(info: AttachmentInfo): Promise<void> {
       }
       break;
     case "web":
-      const rsp = await http.delete<InjectionWebResult<void>>('/file/delete', {data: info});
-      const {data} = rsp;
-      if (data.code !== 200) return Promise.reject(data.msg);
+      await requestRemoteApi<void>("file", "delete", info)
       break;
     case "tauri":
       await remove(info.key, {baseDir: BaseDirectory.AppData});

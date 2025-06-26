@@ -13,7 +13,7 @@ import type { ArticleContent } from "~/views/ArticleContent";
 import type { Folder } from "~/views/Folder";
 
 export default defineEventHandler(async (event) => {
-  const { pid } = getQuery(event);
+  const { pid } = await readBody(event);
   if (!pid) {
     return Result.error("参数错误");
   }

@@ -2,7 +2,7 @@ import MessageUtil from "@/utils/modal/MessageUtil";
 import {randomString, versionGreaterEqual} from "@/utils/lang/FieldUtil";
 import {AiService, AiServiceType, InnerAiService} from "@/entity/ai/AiService";
 import {openPayInGoodFaith} from "@/utils/utools/UtoolsModel";
-import {getPlatform, http, InjectionWebResult} from '@/utils/utools/common';
+import {getPlatform, requestRemoteApi} from '@/utils/utools/common';
 import {pictureDir, tempDir} from '@tauri-apps/api/path';
 import {getCurrentWindow} from '@tauri-apps/api/window';
 import {load, Store} from '@tauri-apps/plugin-store';
@@ -294,17 +294,10 @@ export const InjectionUtil = {
         case "uTools":
           return utools.db.promises.put(doc);
         case "web":
-          return http.post<InjectionWebResult<InjectionDbReturn>>('/db/put', {
+          return requestRemoteApi<InjectionDbReturn>('db', 'put', {
             key: doc._id,
             value: doc
-          }).then(res => {
-            const {data} = res;
-            if (data.code === 200) {
-              return data.data;
-            } else {
-              throw new Error(data.msg);
-            }
-          });
+          })
         case "tauri":
           const s = await getStore();
           // 获取旧的数据
@@ -352,18 +345,9 @@ export const InjectionUtil = {
         case "uTools":
           return utools.db.promises.get(id);
         case "web":
-          return http.get<InjectionWebResult<InjectionDbDoc>>('/db/get', {
-            params: {
-              key: id
-            }
-          }).then(res => {
-            const {data} = res;
-            if (data.code === 200) {
-              return data.data;
-            } else {
-              throw new Error(data.msg);
-            }
-          });
+          return requestRemoteApi<InjectionDbDoc>('db', 'get', {
+            key: id,
+          })
         case "tauri":
           const s = await getStore();
           const v = await s.get<InjectionDbDoc>(id);
@@ -376,20 +360,9 @@ export const InjectionUtil = {
           return utools.db.promises.remove(doc);
         case "web":
           const key = typeof doc === 'string' ? doc : doc._id;
-          return http.delete<InjectionWebResult<InjectionDbReturn>>('/db/delete', {
-            params: {key}
-          }).then(res => {
-            const {data} = res;
-            if (data.code === 200) {
-              return data.data;
-            } else {
-              return {
-                id: key,
-                error: true,
-                message: data.msg
-              }
-            }
-          });
+          return requestRemoteApi<InjectionDbReturn>('db', 'delete', {
+            key: key,
+          })
         case 'tauri':
           const s = await getStore();
           const id = typeof doc === 'string' ? doc : doc._id;
@@ -409,23 +382,13 @@ export const InjectionUtil = {
             }
           }
       }
-
     },
     async allDocs(key?: string): Promise<InjectionDbDoc[]> {
       switch (getPlatform()) {
         case "uTools":
           return utools.db.promises.allDocs(key);
         case "web":
-          return http.get<InjectionWebResult<Array<InjectionDbDoc>>>('/db/all-docs', {
-            params: {key}
-          }).then(res => {
-            const {data} = res;
-            if (data.code === 200) {
-              return data.data;
-            } else {
-              return Promise.reject(new Error(data.msg));
-            }
-          });
+          return requestRemoteApi<Array<InjectionDbDoc>>('db', 'all-docs', {key});
         case "tauri":
           const s = await getStore();
           let keys = await s.keys();
@@ -489,14 +452,9 @@ export const InjectionUtil = {
           return;
         case "web":
           openPayInGoodFaith().then(() => {
-            http.post('/payment/save', {
+            requestRemoteApi('payment', 'save', {
               goodId: options.goodsId
-            }).then(res => {
-              const {data} = res;
-              if (data.code === 200) {
-                callback?.()
-              }
-            })
+            }).then(() => callback?.())
           }).catch(() => MessageUtil.warning("取消支付"))
           return;
         case "tauri":
@@ -509,8 +467,7 @@ export const InjectionUtil = {
         case "uTools":
           return utools.fetchUserPayments().then(res => res.map(e => e.goods_id));
         case 'web':
-          const rsp = await http.get<InjectionWebResult<Array<string>>>('/payment/list');
-          return rsp.data.data;
+          return requestRemoteApi<Array<string>>('payment', "list");
         case "tauri":
           return [];
       }
@@ -534,6 +491,7 @@ export const InjectionUtil = {
         utools.ubrowser
           .goto(url)
           .run({width: width || 1200, height: height || 800})
+          .then(console.log);
       } else {
         shellOpenExternal(url);
       }
