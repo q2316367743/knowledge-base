@@ -88,7 +88,6 @@ onMounted(() => {
         "|", "align", "line-height",
         "|", "bullet-list", "ordered-list", "indent-decrease", "indent-increase", "break",
         "|", "image", "video", "attachment", "quote", "container", "code-block", "table",
-        "|", "printer", "fullscreen"
       ],
     textSelectionBubbleMenu: {
       enable: true,
@@ -155,14 +154,6 @@ useEventListener(editorContainerDom, 'click', (e) => {
   bottom: 0;
   display: flex;
   flex-direction: column;
-
-
-  &.readonly {
-    .aie-container {
-      background-color: var(--kb-bg-color-container);
-    }
-  }
-
 
   .kb-rich-editor-main {
     width: calc(100% - 2px);

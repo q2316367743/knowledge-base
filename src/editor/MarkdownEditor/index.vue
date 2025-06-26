@@ -123,14 +123,8 @@ function onImport(id: number) {
   .cherry {
     background-color: transparent;
     color: var(--td-text-color-primary);
-    .cherry-editor {
-      .CodeMirror {
-        background-color: var(--kb-bg-color-6) !important;
-      }
-    }
 
     .cherry-previewer {
-      background-color: var(--kb-bg-color-3) !important;
 
       &.cherry-preview--full {
         border: none;
