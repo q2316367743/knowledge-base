@@ -19,7 +19,7 @@ import {useLoading} from "@/hooks";
 const router = useRouter();
 
 const version = Constant.version;
-const visible = ref(true);
+const visible = ref(false);
 
 // 初始化数据
 import('@/global/BeanFactory').then(data => {
