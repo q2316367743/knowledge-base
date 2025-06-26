@@ -24,11 +24,11 @@ export default defineComponent({
 
   &-container {
     min-height: 400px;
-    height: 86vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
 
   &-bg-img {

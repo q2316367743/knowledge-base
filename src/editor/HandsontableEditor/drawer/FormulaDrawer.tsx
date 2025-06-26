@@ -12,6 +12,9 @@ import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 function openUrl() {
   InjectionUtil.shellOpenExternal("https://hyperformula.handsontable.com/guide/built-in-functions.html#list-of-available-functions")
 }
+function openUrl1() {
+  InjectionUtil.shellOpenExternal("https://handsontable.com/docs/javascript-data-grid/formula-calculation/")
+}
 
 export function openFormulaDrawer() {
   const onChange = (value: any) => {
@@ -60,6 +63,7 @@ export function openFormulaDrawer() {
       <Paragraph>
         例如，我要计算一列的和：
         <pre>=SUM(G:G)</pre>
+        详细使用方法：<Link onClick={openUrl1} theme={'primary'}>Formula calculation</Link>
       </Paragraph>
       <Title level={'h2'} style="text-align: start;">概述</Title>
       <Paragraph>HyperFormula附带了一个广泛的预构建函数库。您可以使用它们为任何业务应用程序创建复杂的公式。公式语法和函数逻辑类似于现代电子表格软件中的标准。这是因为电子表格可能是有史以来最通用的软件。我们希望HyperFormula具有相同的灵活性，但没有电子表格UI的限制。</Paragraph>

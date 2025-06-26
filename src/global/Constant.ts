@@ -1,14 +1,12 @@
-import UpdateLog from "@/global/UpdateLog.json";
 import MessageUtil from "@/utils/modal/MessageUtil";
-import {versionLess} from "@/utils/lang/FieldUtil";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 
 const Constant = {
   uid: 'zdllh16g',
   id: 'knowledge-base',
   name: '知识库',
-  version: UpdateLog[0].version,
-  sign: UpdateLog[0].sign,
+  version: '2.7.3',
+  sign: 273,
   author: '落雨不悔',
   txcId: '612648',
   website: 'https://blog.esion.xyz',

@@ -7,7 +7,6 @@ export function openInsertRemark(activeNodes: MindMapNode[]) {
     return;
   }
   const first = activeNodes[0];
-  console.log(first)
   const data = ref({
     note: first.getData('note') || ''
   });
