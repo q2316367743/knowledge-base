@@ -20,7 +20,7 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import MessageUtil from "@/utils/modal/MessageUtil";
 import MessageBoxUtil from "@/utils/modal/MessageBoxUtil";
 import {useUmami} from "@/plugin/umami";
-import {openTodoItemInfo} from "@/pages/todo/common/TodoItemSetting/model";
+import {openTodoItemSetting} from "@/pages/todo/common/TodoItemSetting/model";
 import UnTopIcon from "@/components/KbIcon/UnTopIcon.vue";
 import {DrawerOptions} from "tdesign-vue-next/es/drawer/type";
 import {useLoading} from "@/hooks";
@@ -149,7 +149,7 @@ export function onTodoContextMenu(props: ContextMenuForTodoProps) {
   items.push({
     label: '编辑',
     icon: () => <EditIcon/>,
-    onClick: () => openTodoItemInfo({index: item, attach, toUpdate})
+    onClick: () => openTodoItemSetting(item)
   }, {
     label: '优先级',
     icon: () => <FlagIcon/>,

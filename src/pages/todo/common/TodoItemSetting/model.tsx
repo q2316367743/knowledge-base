@@ -17,6 +17,7 @@ import DateRange from '@/components/DateRange/DateRange.vue';
 import './model.less';
 import {DrawerOptions} from "tdesign-vue-next/es/drawer/type";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
+import {useTodoWrapStore} from "@/store";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
   if (attr.start === '' && attr.end === '') {
@@ -27,11 +28,12 @@ function renderIsRange(attr: TodoItemAttr): boolean {
 }
 
 export function openTodoItemSetting(index: TodoItemIndex, toUpdate?: (index: TodoItemIndex) => void) {
-  return openTodoItemInfo({
-    index,
-    toUpdate,
-    preview: index.status === TodoItemStatus.ABANDON || index.status === TodoItemStatus.COMPLETE
-  });
+  useTodoWrapStore().setItemId(index.id);
+  // return openTodoItemInfo({
+  //   index,
+  //   toUpdate,
+  //   preview: index.status === TodoItemStatus.ABANDON || index.status === TodoItemStatus.COMPLETE
+  // });
 }
 
 interface TodoItemInfoProps {

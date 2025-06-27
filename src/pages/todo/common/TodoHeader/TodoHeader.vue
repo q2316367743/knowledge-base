@@ -8,14 +8,14 @@
             <menu-unfold-icon v-else/>
           </template>
         </t-button>
-        <div class="title">{{ title }}</div>
-        <t-radio-group size="small" variant="default-filled" v-model="view">
+        <div class="title" :class="{view: showView}">{{ title }}</div>
+        <t-radio-group size="small" variant="default-filled" v-model="view" v-if="showView">
           <t-radio-button value="list">待办</t-radio-button>
           <t-radio-button value="note">笔记</t-radio-button>
         </t-radio-group>
       </div>
       <div class="todo-header__right">
-        <div class="todo-header__progress" v-if="!side">
+        <div class="todo-header__progress">
           <t-progress :percentage="percent"/>
         </div>
         <div class="flex">
@@ -25,9 +25,6 @@
           <todo-header-more/>
         </div>
       </div>
-    </div>
-    <div class="todo-header__bottom" v-if="side">
-      <t-progress :percentage="percent"/>
     </div>
   </header>
 </template>
@@ -41,7 +38,7 @@ import TodoHeaderMore from "@/pages/todo/common/TodoHeader/TodoHeaderMore.vue";
 import {ITodoInstance, TodoInstance} from "@/pages/todo/types";
 
 defineProps({
-  side: {
+  showView: {
     type: Boolean,
     default: false
   }
@@ -108,8 +105,10 @@ watch(view, value => ij?.setView(value));
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border-right: 1px solid var(--td-border-level-2-color);
     padding-right: 8px;
+    &.view {
+      border-right: 1px solid var(--td-border-level-2-color);
+    }
   }
 }
 </style>

@@ -68,7 +68,7 @@ function renderIsRange(attr: TodoItemAttr): boolean {
 const item = ref<TodoItem>(getDefaultTodoItem());
 const isInit = ref(false);
 const isRange = ref(true);
-const range = ref<Array<string | undefined>>([]);
+const range = ref<Array<string>>([]);
 
 onMounted(async () => {
   item.value = await useTodoItemStore().getTodoItem(useTodoWrapStore().itemId);

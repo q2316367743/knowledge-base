@@ -47,7 +47,7 @@ useSortable(el, groups, {
 <style scoped>
 .content-card-main {
   position: absolute;
-  top: 32px;
+  top: 40px;
   left: 0;
   right: 0;
   bottom: 0;

@@ -1,6 +1,7 @@
 export type TodoInstanceView = 'list' | 'note';
 
 export interface ITodoInstance {
+
   getView(): TodoInstanceView;
   setView(view: TodoInstanceView): void;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="content-default-wrap">
   <div class="content-default">
-    <todo-header/>
+    <todo-header show-view/>
     <div class="content-default-container">
       <content-default-side v-if="view === 'list'"/>
       <todo-relation-note v-else-if="view === 'note'"/>
