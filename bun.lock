@@ -45,7 +45,6 @@
         "splitpanes": "^4.0.3",
         "tdesign-icons-vue-next": "^0.3.4",
         "tdesign-vue-next": "1.13.0",
-        "vconsole": "^3.15.1",
         "vite-plugin-pwa": "^1.0.0",
         "vue": "^3.5.13",
         "vue-router": "^4.5.0",
@@ -857,7 +856,7 @@
 
     "combined-stream": ["combined-stream@1.0.8", "http://mirrors.tencent.com/npm/combined-stream/-/combined-stream-1.0.8.tgz", { "dependencies": { "delayed-stream": "~1.0.0" } }, "sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg=="],
 
-    "commander": ["commander@8.3.0", "http://mirrors.tencent.com/npm/commander/-/commander-8.3.0.tgz", {}, "sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww=="],
+    "commander": ["commander@2.20.3", "http://mirrors.tencent.com/npm/commander/-/commander-2.20.3.tgz", {}, "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ=="],
 
     "common-tags": ["common-tags@1.8.2", "http://mirrors.tencent.com/npm/common-tags/-/common-tags-1.8.2.tgz", {}, "sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA=="],
 
@@ -872,8 +871,6 @@
     "convert-source-map": ["convert-source-map@2.0.0", "http://mirrors.tencent.com/npm/convert-source-map/-/convert-source-map-2.0.0.tgz", {}, "sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg=="],
 
     "copy-anything": ["copy-anything@2.0.6", "http://mirrors.tencent.com/npm/copy-anything/-/copy-anything-2.0.6.tgz", { "dependencies": { "is-what": "^3.14.1" } }, "sha512-1j20GZTsvKNkc4BY3NpMOM8tt///wY3FpIzozTOFO2ffuZcV61nojHXVKIy3WM+7ADCy5FVhdZYHYDdgTU0yJw=="],
-
-    "copy-text-to-clipboard": ["copy-text-to-clipboard@3.2.0", "http://mirrors.tencent.com/npm/copy-text-to-clipboard/-/copy-text-to-clipboard-3.2.0.tgz", {}, "sha512-RnJFp1XR/LOBDckxTib5Qjr/PMfkatD0MUCQgdpqS8MdKiNUzBjAQBEN6oUy+jW7LI93BBG3DtMB2KOOKpGs2Q=="],
 
     "core-js": ["core-js@3.43.0", "http://mirrors.tencent.com/npm/core-js/-/core-js-3.43.0.tgz", {}, "sha512-N6wEbTTZSYOY2rYAn85CuvWWkCK6QweMn7/4Nr3w+gDBeBhk/x4EJeY6FPo4QzDoJZxVTv8U7CMvgWk6pOHHqA=="],
 
@@ -1471,8 +1468,6 @@
 
     "muggle-string": ["muggle-string@0.3.1", "http://mirrors.tencent.com/npm/muggle-string/-/muggle-string-0.3.1.tgz", {}, "sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg=="],
 
-    "mutation-observer": ["mutation-observer@1.0.3", "http://mirrors.tencent.com/npm/mutation-observer/-/mutation-observer-1.0.3.tgz", {}, "sha512-M/O/4rF2h776hV7qGMZUH3utZLO/jK7p8rnNgGkjKUw8zCGjRQPxB8z6+5l8+VjRUQ3dNYu4vjqXYLr+U8ZVNA=="],
-
     "nanoid": ["nanoid@3.3.11", "http://mirrors.tencent.com/npm/nanoid/-/nanoid-3.3.11.tgz", { "bin": { "nanoid": "bin/nanoid.cjs" } }, "sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w=="],
 
     "needle": ["needle@3.3.1", "http://mirrors.tencent.com/npm/needle/-/needle-3.3.1.tgz", { "dependencies": { "iconv-lite": "^0.6.3", "sax": "^1.2.4" }, "bin": { "needle": "bin/needle" } }, "sha512-6k0YULvhpw+RoLNiQCRKOl09Rv1dPLr8hHnVjHqdolKwDrdNyk+Hmrthi4lIGPPz3r39dLx0hsF5s40sZ3Us4Q=="],
@@ -1871,8 +1866,6 @@
 
     "vanilla-picker": ["vanilla-picker@2.12.3", "http://mirrors.tencent.com/npm/vanilla-picker/-/vanilla-picker-2.12.3.tgz", { "dependencies": { "@sphinxxxx/color-conversion": "^2.2.2" } }, "sha512-qVkT1E7yMbUsB2mmJNFmaXMWE2hF8ffqzMMwe9zdAikd8u2VfnsVY2HQcOUi2F38bgbxzlJBEdS1UUhOXdF9GQ=="],
 
-    "vconsole": ["vconsole@3.15.1", "http://mirrors.tencent.com/npm/vconsole/-/vconsole-3.15.1.tgz", { "dependencies": { "@babel/runtime": "^7.17.2", "copy-text-to-clipboard": "^3.0.1", "core-js": "^3.11.0", "mutation-observer": "^1.0.3" } }, "sha512-KH8XLdrq9T5YHJO/ixrjivHfmF2PC2CdVoK6RWZB4yftMykYIaXY1mxZYAic70vADM54kpMQF+dYmvl5NRNy1g=="],
-
     "vite": ["vite@6.3.4", "http://mirrors.tencent.com/npm/vite/-/vite-6.3.4.tgz", { "dependencies": { "esbuild": "^0.25.0", "fdir": "^6.4.4", "picomatch": "^4.0.2", "postcss": "^8.5.3", "rollup": "^4.34.9", "tinyglobby": "^0.2.13" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "peerDependencies": { "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "jiti": ">=1.21.0", "less": "*", "lightningcss": "^1.21.0", "sass": "*", "sass-embedded": "*", "stylus": "*", "sugarss": "*", "terser": "^5.16.0", "tsx": "^4.8.1", "yaml": "^2.4.2" }, "optionalPeers": ["@types/node", "jiti", "less", "lightningcss", "sass", "sass-embedded", "stylus", "sugarss", "terser", "tsx", "yaml"], "bin": { "vite": "bin/vite.js" } }, "sha512-BiReIiMS2fyFqbqNT/Qqt4CVITDU9M9vE+DKcVAsB+ZV0wvTKd+3hMbkpxz1b+NmEDMegpVbisKiAZOnvO92Sw=="],
 
     "vite-plugin-pwa": ["vite-plugin-pwa@1.0.0", "http://mirrors.tencent.com/npm/vite-plugin-pwa/-/vite-plugin-pwa-1.0.0.tgz", { "dependencies": { "debug": "^4.3.6", "pretty-bytes": "^6.1.1", "tinyglobby": "^0.2.10", "workbox-build": "^7.3.0", "workbox-window": "^7.3.0" }, "peerDependencies": { "@vite-pwa/assets-generator": "^1.0.0", "vite": "^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0" }, "optionalPeers": ["@vite-pwa/assets-generator"] }, "sha512-X77jo0AOd5OcxmWj3WnVti8n7Kw2tBgV1c8MCXFclrSlDV23ePzv2eTDIALXI2Qo6nJ5pZJeZAuX0AawvRfoeA=="],
@@ -2071,6 +2064,8 @@
 
     "jsonfile/universalify": ["universalify@2.0.1", "http://mirrors.tencent.com/npm/universalify/-/universalify-2.0.1.tgz", {}, "sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw=="],
 
+    "katex/commander": ["commander@8.3.0", "http://mirrors.tencent.com/npm/commander/-/commander-8.3.0.tgz", {}, "sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww=="],
+
     "make-dir/semver": ["semver@5.7.2", "http://mirrors.tencent.com/npm/semver/-/semver-5.7.2.tgz", { "bin": { "semver": "bin/semver" } }, "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g=="],
 
     "markdown-it/entities": ["entities@4.5.0", "http://mirrors.tencent.com/npm/entities/-/entities-4.5.0.tgz", {}, "sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw=="],
@@ -2115,15 +2110,11 @@
 
     "tern/minimatch": ["minimatch@3.1.2", "http://mirrors.tencent.com/npm/minimatch/-/minimatch-3.1.2.tgz", { "dependencies": { "brace-expansion": "^1.1.7" } }, "sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw=="],
 
-    "terser/commander": ["commander@2.20.3", "http://mirrors.tencent.com/npm/commander/-/commander-2.20.3.tgz", {}, "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ=="],
-
     "unconfig/@antfu/utils": ["@antfu/utils@0.7.10", "http://mirrors.tencent.com/npm/@antfu/utils/-/utils-0.7.10.tgz", {}, "sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww=="],
 
     "unimport/pathe": ["pathe@2.0.3", "http://mirrors.tencent.com/npm/pathe/-/pathe-2.0.3.tgz", {}, "sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w=="],
 
     "unplugin-utils/pathe": ["pathe@2.0.3", "http://mirrors.tencent.com/npm/pathe/-/pathe-2.0.3.tgz", {}, "sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w=="],
-
-    "vconsole/@babel/runtime": ["@babel/runtime@7.27.6", "http://mirrors.tencent.com/npm/@babel/runtime/-/runtime-7.27.6.tgz", {}, "sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q=="],
 
     "vue-virtual-scroller/mitt": ["mitt@2.1.0", "http://mirrors.tencent.com/npm/mitt/-/mitt-2.1.0.tgz", {}, "sha512-ILj2TpLiysu2wkBbWjAmww7TkZb65aiQO+DkVdUTBpBXq+MHYiETENkKFMtsJZX1Lf4pe4QOrTSjIfUwN5lRdg=="],
 

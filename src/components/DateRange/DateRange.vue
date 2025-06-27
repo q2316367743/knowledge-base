@@ -20,5 +20,4 @@ const hasSign = computed(() => props.start === props.end);
 const hasDate = computed(() => props.start && props.end);
 </script>
 <style scoped lang="less">
-
 </style>

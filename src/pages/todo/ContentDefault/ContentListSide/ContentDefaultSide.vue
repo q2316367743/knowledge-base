@@ -1,9 +1,7 @@
 <template>
-  <div class="list">
-    <content-default-header/>
-    <list-side-priority v-if="groupType === TodoCategoryGroupEnum.PRIORITY"/>
-    <list-side-default v-else/>
-  </div>
+  <content-default-header/>
+  <list-side-priority v-if="groupType === TodoCategoryGroupEnum.PRIORITY"/>
+  <list-side-default v-else/>
 </template>
 <script lang="ts" setup>
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";

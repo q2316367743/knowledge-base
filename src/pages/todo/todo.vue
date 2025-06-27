@@ -3,7 +3,7 @@
     <t-aside :width="collapsed ? '0px' : '270px'" class="overflow-hidden">
       <todo-side/>
     </t-aside>
-    <t-content style="position: relative;">
+    <t-content class="todo-layout-content">
       <empty-todo v-if="loading">
         <loading-result title="正在初始化清单"/>
       </empty-todo>
@@ -18,6 +18,10 @@
       <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
       <content-four-quadrants v-else-if="!empty && layout === TodoListLayoutEnum.FOUR_QUADRANTS"/>
     </t-content>
+    <t-aside :width="itemId === 0 ? '0px' : '40vw'" class="overflow-hidden" :style="{minWidth: itemId === 0 ? '0px': '400px'}">
+      <loading-result title="正在加载中" v-if="!show && itemId > 0"/>
+      <todo-info v-else-if="show"/>
+    </t-aside>
   </t-layout>
 </template>
 <script lang="ts" setup>
@@ -25,12 +29,13 @@ import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoWidgetStore} from "@/store/components/TodoWidgetStore";
 
-import TodoSide from "@/pages/todo/TodoSide/index.vue";
+import TodoSide from "@/pages/todo/common/TodoSide/TodoSide.vue";
 import ContentDefault from "@/pages/todo/ContentDefault/index.vue";
 import ContentCard from "@/pages/todo/ContentCard/index.vue";
 import ContentCalendar from "@/pages/todo/ContentCalendar/index.vue";
 import ContentFourQuadrants from "@/pages/todo/ContentFourQuadrants/index.vue";
 import EmptyTodo from "@/pages/todo/common/EmptyTodo.vue";
+import TodoInfo from "@/pages/todo/common/TodoInfo/TodoInfo.vue";
 
 const collapsed = computed(() => useTodoWrapStore().collapsed);
 const layout = computed(() => useTodoWrapStore().layout);
@@ -46,6 +51,17 @@ const isWidget = computed(() => {
 // 每次进来都检查一下窗口
 useTodoWidgetStore().checkWidget();
 
+
+const show = ref(true);
+
+const itemId = computed(() => useTodoWrapStore().itemId);
+
+watch(() => itemId.value, value => {
+  if (value > 0) {
+    show.value = false;
+    nextTick(() => show.value = true);
+  }
+}, {immediate: true})
 </script>
 <style scoped>
 .todo {
@@ -54,5 +70,8 @@ useTodoWidgetStore().checkWidget();
   left: 0;
   right: 0;
   bottom: 0;
+  .todo-layout-content {
+    position: relative;
+  }
 }
 </style>

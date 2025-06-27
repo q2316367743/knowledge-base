@@ -114,6 +114,8 @@ declare interface Window {
       decryptValue: (keyIv: EncryptKeyIv, data: string) => string;
     },
   }
+
+  VConsole: any;
 }
 
 interface ImportMetaEnv {

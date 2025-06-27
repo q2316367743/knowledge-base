@@ -6,7 +6,11 @@
         <app-side/>
       </div>
       <div class="app-content">
-        <router-view/>
+        <router-view v-slot="{ Component }">
+          <keep-alive :include="['home', 'note', 'todo', 'news']">
+            <component :is="Component"/>
+          </keep-alive>
+        </router-view>
       </div>
     </div>
     <t-image-viewer v-model:visible="preview.visible" :images="[preview.src]"/>

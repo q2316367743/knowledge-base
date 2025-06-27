@@ -8,7 +8,6 @@
       </template>
     </template>
     <list-side-complete :groups="groups" v-if="!hideOfCompleteOrAbandon"/>
-    <list-side-article v-if="!hideOfArticle"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -19,17 +18,12 @@ import ListSideGroup
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideGroup.vue";
 import ListSideComplete
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideComplete.vue";
-import ListSideArticle
-  from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideArticle.vue";
 import ListSideOne from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideOne.vue";
 import ListSideTop from "@/pages/todo/ContentDefault/components/ListSideTop.vue";
 
 const groups = computed(() => useTodoWrapStore().todoGroupView);
 const top = computed(() => groups.value.flatMap(e => e.top));
-const hideOfArticle = computed(() => useTodoWrapStore().hideOfArticle);
 const hideOfCompleteOrAbandon = computed(() => useTodoWrapStore().hideOfCompleteOrAbandon);
-
-const setItemId = (e: number) => useTodoWrapStore().setItemId(e);
 
 const el = ref();
 
@@ -53,7 +47,7 @@ useSortable(el, groups.value, {
 <style scoped lang="less">
 .list-side-default {
   position: absolute;
-  top: 120px;
+  top: 40px;
   left: 0;
   right: 0;
   bottom: 0;

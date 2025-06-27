@@ -44,8 +44,8 @@ import {useUtoolsDbStorage} from "@/hooks/UtoolsDbStorage";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {useBaseSettingStore} from "@/store/setting/BaseSettingStore";
-import {openAddTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
-import {onContextmenuForTodo} from "@/pages/todo/TodoSide/ContextmenuForTodo";
+import {openAddTodoCategory} from "@/pages/todo/common/TodoSide/AddTodoCategory";
+import {onContextmenuForTodo} from "@/pages/todo/common/TodoSide/ContextmenuForTodo";
 import {TodoCategory, TodoCategoryOpenTypeEnum, TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
 
 interface DropContext {

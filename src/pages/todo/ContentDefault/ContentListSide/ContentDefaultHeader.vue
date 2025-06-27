@@ -1,6 +1,5 @@
 <template>
   <div class="header-wrap">
-    <todo-header side/>
     <t-input v-model="titleWrap" :clearable="true" class="input" :placeholder="placeholder" @enter="submit()"
              :disabled>
       <template #suffix>
@@ -20,7 +19,6 @@ import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {getDefaultTodoCategory} from "@/entity/todo/TodoCategory";
 import {TodoItemPriority} from "@/entity/todo/TodoItem";
 // 组件
-import TodoHeader from "@/pages/todo/common/TodoHeader/TodoHeader.vue";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 
 const id = computed(() => useTodoWrapStore().categoryId);
@@ -88,7 +86,7 @@ function submit() {
 
   .input {
     width: calc(100% - 14px);
-    margin: 7px 7px;
+    margin: 0 7px 7px;
     padding-right: 0;
 
     .arco-input-suffix {

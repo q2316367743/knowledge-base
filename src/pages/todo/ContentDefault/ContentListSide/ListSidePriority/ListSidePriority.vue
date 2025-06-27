@@ -3,7 +3,6 @@
     <list-side-top :items="list.top"/>
     <list-side-priority-item v-for="item in list.priorities" :key="item.value" :priority="item"/>
     <list-side-complete :groups="list.self" v-if="!hideOfCompleteOrAbandon"/>
-    <list-side-article v-if="!hideOfArticle"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -15,8 +14,6 @@ import ListSidePriorityItem
   from "@/pages/todo/ContentDefault/ContentListSide/ListSidePriority/ListSidePriorityItem.vue";
 import ListSideComplete
   from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideComplete.vue";
-import ListSideArticle
-  from "@/pages/todo/ContentDefault/ContentListSide/ListSideDefault/ListSideArticle.vue";
 import ListSideTop from "@/pages/todo/ContentDefault/components/ListSideTop.vue";
 
 const list = computed<{

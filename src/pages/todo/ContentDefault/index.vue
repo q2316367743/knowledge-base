@@ -1,36 +1,48 @@
 <template>
-  <splitpanes class="default-theme todo-content-default">
-    <pane :size="30" class="relative">
-      <content-default-side/>
-    </pane>
-    <pane :size="70" class="relative">
-      <div class="info">
-        <empty-result v-if="itemId === 0" title="未选择待办项" tip="请选择待办项"/>
-        <loading-result title="正在加载中" v-else-if="!show && itemId > 0"/>
-        <content-default-main v-else-if="show"/>
-      </div>
-    </pane>
-  </splitpanes>
+  <div class="content-default-wrap">
+  <div class="content-default">
+    <todo-header/>
+    <div class="content-default-container">
+      <content-default-side v-if="view === 'list'"/>
+      <todo-relation-note v-else-if="view === 'note'"/>
+    </div>
+  </div>
+  </div>
 </template>
 <script lang="ts" setup>
-import {Splitpanes, Pane} from 'splitpanes'
 import './index.less';
-import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
-import ContentDefaultMain from "@/pages/todo/ContentDefault/ContentDefaultMain/index.vue";
+import {TodoInstance, TodoInstanceView} from "@/pages/todo/types";
 import ContentDefaultSide from "@/pages/todo/ContentDefault/ContentListSide/ContentDefaultSide.vue";
+import TodoRelationNote from "@/pages/todo/common/TodoRelationNote/TodoRelationNote.vue";
+import TodoHeader from "@/pages/todo/common/TodoHeader/TodoHeader.vue";
 
-const show = ref(true);
+const view = ref<TodoInstanceView>('list');
 
-const itemId = computed(() => useTodoWrapStore().itemId);
-
-watch(() => itemId.value, value => {
-  if (value > 0) {
-    show.value = false;
-    nextTick(() => show.value = true);
-  }
-}, {immediate: true})
-
-
+provide(TodoInstance, {
+  getView: () => view.value,
+  setView: (value: TodoInstanceView) => view.value = value
+})
 </script>
 <style lang="less">
+.content-default-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: var(--kb-bg-color-component);
+}
+.content-default {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  height: 100vh;
+  background-color: var(--td-bg-color-container);
+  .content-default-container {
+    position: absolute;
+    top: 54px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+  }
+}
 </style>

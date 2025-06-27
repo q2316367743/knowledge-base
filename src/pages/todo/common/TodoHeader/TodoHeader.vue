@@ -9,6 +9,10 @@
           </template>
         </t-button>
         <div class="title">{{ title }}</div>
+        <t-radio-group size="small" variant="default-filled" v-model="view">
+          <t-radio-button value="list">待办</t-radio-button>
+          <t-radio-button value="note">笔记</t-radio-button>
+        </t-radio-group>
       </div>
       <div class="todo-header__right">
         <div class="todo-header__progress" v-if="!side">
@@ -18,7 +22,7 @@
           <!-- 排序 -->
           <todo-header-order/>
           <!-- 更多 -->
-          <todo-header-more />
+          <todo-header-more/>
         </div>
       </div>
     </div>
@@ -34,6 +38,7 @@ import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import TodoHeaderOrder from "@/pages/todo/common/TodoHeader/TodoHeaderOrder.vue";
 import TodoHeaderMore from "@/pages/todo/common/TodoHeader/TodoHeaderMore.vue";
+import {ITodoInstance, TodoInstance} from "@/pages/todo/types";
 
 defineProps({
   side: {
@@ -42,6 +47,9 @@ defineProps({
   }
 });
 
+const ij = inject<ITodoInstance>(TodoInstance);
+
+const view = ref(ij ?  ij.getView() : 'list');
 const title = computed(() => useTodoWrapStore().currentCategory?.name);
 const collapsed = computed(() => useTodoWrapStore().collapsed);
 
@@ -56,6 +64,8 @@ const percent = computed(() => {
 });
 
 const switchCollapsed = () => useTodoWrapStore().switchCollapsed();
+
+watch(view, value => ij?.setView(value));
 
 </script>
 <style scoped lang="less">
@@ -93,11 +103,13 @@ const switchCollapsed = () => useTodoWrapStore().switchCollapsed();
   }
 
   .title {
-    margin-left: 7px;
-    line-height: 32px;
+    margin: 8px;
+    line-height: 24px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    border-right: 1px solid var(--td-border-level-2-color);
+    padding-right: 8px;
   }
 }
 </style>

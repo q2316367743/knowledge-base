@@ -3,7 +3,7 @@ import {DeleteIcon, EditIcon, PlusIcon, RoundIcon, TerminalWindowIcon} from "tde
 import {useGlobalStore, useVipStore} from "@/store";
 import {useTodoCategoryStore} from "@/store/db/TodoCategoryStore";
 import {TodoCategoryTypeEnum} from "@/entity/todo/TodoCategory";
-import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/TodoSide/AddTodoCategory";
+import {openAddTodoCategory, openUpdateTodoCategory} from "@/pages/todo/common/TodoSide/AddTodoCategory";
 import VipIcon from "@/components/KbIcon/VipIcon.vue";
 import {InjectionUtil} from "@/utils/utools/InjectionUtil";
 

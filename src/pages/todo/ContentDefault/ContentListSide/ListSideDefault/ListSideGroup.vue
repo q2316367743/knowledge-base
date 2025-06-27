@@ -1,7 +1,7 @@
 <template>
   <div class="content-default-group" v-if="group">
-    <div class="content-default-group__header" @click.stop="toggleVisible()">
-      <div class="content-default-group__header-left">
+    <div class="content-default-group__header">
+      <div class="content-default-group__header-left" @click.stop="toggleVisible()">
         <div class="content-default-group__header-handle">
           <chevron-down-icon :style="{transform: visible ? '' : 'rotate(-90deg)'}"/>
         </div>

@@ -34,7 +34,7 @@ const props = defineProps({
   autoFocus: {
     type: Boolean,
     default: false
-  }
+  },
 });
 const emit = defineEmits(['change']);
 
@@ -44,7 +44,6 @@ const editorRef = shallowRef<AiEditor>()
 
 watch(() => props.readOnly, value => editorRef.value?.setEditable(!value), {immediate: true});
 watch(() => useGlobalStore().isDark, value => editorRef.value?.changeTheme(value ? 'dark' : 'light'));
-
 
 useMountEventBus(useArticleExportEvent, onExport);
 

@@ -1,9 +1,8 @@
 import {defineStore} from "pinia";
-import VConsole from "vconsole";
 
 import {useGlobalStore} from "@/store/GlobalStore";
 
-let vconsole: VConsole | undefined;
+let vconsole: any | undefined;
 
 export const useErrorStore = defineStore('error', {
   state: () => ({
@@ -14,7 +13,7 @@ export const useErrorStore = defineStore('error', {
       if (vconsole) {
         vconsole.destroy();
       }
-      vconsole = new VConsole({
+      vconsole = new window.VConsole({
         theme: useGlobalStore().isDark ? 'dark' : 'light',
       });
       this.consoleShow = true;

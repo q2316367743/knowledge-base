@@ -9,11 +9,11 @@ const routers: Array<RouteRecordRaw> = [{
 }, {
   name: "首页",
   path: '/home',
-  component: () => import('@/pages/home/index.vue'),
+  component: () => import('@/pages/home/home.vue'),
 }, {
   name: "资讯",
   path: '/news',
-  component: () => import('@/pages/news/index.vue'),
+  component: () => import('@/pages/news/news.vue'),
   children: [
     {
       name: "资讯-项",
@@ -28,11 +28,11 @@ const routers: Array<RouteRecordRaw> = [{
 }, {
   name: "笔记",
   path: '/note',
-  component: () => import('@/pages/note/index.vue')
+  component: () => import('@/pages/note/note.vue')
 }, {
   name: "待办",
   path: '/todo',
-  component: () => import("@/pages/todo/index.vue")
+  component: () => import("@/pages/todo/todo.vue")
 }, {
   name: "工具",
   path: "/tool",
