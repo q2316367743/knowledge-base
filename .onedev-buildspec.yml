@@ -15,7 +15,7 @@ jobs:
         image: docker.1panel.live/oven/bun:1.2.17
         interpreter: !DefaultInterpreter
           commands: |
-            bun install --legacy-peer-deps --production
+            bun install --legacy-peer-deps
         useTTY: true
         condition: SUCCESSFUL
         optional: false

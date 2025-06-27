@@ -14,6 +14,12 @@ function _resolve(dir: string) {
 }
 
 export default defineConfig(({mode}) => {
+  let outDir = 'dist';
+  if (mode === 'web') {
+    outDir = 'src-server/public';
+  } else if (mode === 'utools') {
+    outDir = 'src-utools/dist';
+  }
   return {
     resolve: {
       alias: {
@@ -67,7 +73,7 @@ export default defineConfig(({mode}) => {
     ],
     base: "./",
     build: {
-      outDir: "src-utools/dist",
+      outDir,
       rollupOptions: {
         input: {
           main: _resolve('index.html'),
