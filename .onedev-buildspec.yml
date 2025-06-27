@@ -1,0 +1,70 @@
+version: 40
+jobs:
+  - name: 构建docker版本
+    steps:
+      - !CheckoutStep
+        name: 拉取代码
+        cloneCredential: !DefaultCredential {}
+        withLfs: false
+        withSubmodules: false
+        condition: SUCCESSFUL
+        optional: false
+      - !CommandStep
+        name: 安装web依赖
+        runInContainer: true
+        image: docker.1panel.live/library/node:22-alpine
+        interpreter: !DefaultInterpreter
+          commands: |
+            npm install --legacy-peer-deps --registry=https://registry.npmmirror.com
+        useTTY: true
+        condition: SUCCESSFUL
+        optional: false
+      - !CommandStep
+        name: 构建web
+        runInContainer: true
+        image: docker.1panel.live/library/node:22-alpine
+        interpreter: !DefaultInterpreter
+          commands: |
+            export NODE_OPTIONS=--max-old-space-size=4096
+            npm run build:web
+        useTTY: true
+        condition: SUCCESSFUL
+        optional: false
+      - !CommandStep
+        name: 安装服务器依赖
+        runInContainer: true
+        image: docker.1panel.live/oven/bun:1.2.17
+        interpreter: !DefaultInterpreter
+          commands: |
+            cd src-server
+            bun install --registry=https://registry.npmmirror.com
+        useTTY: true
+        condition: SUCCESSFUL
+        optional: false
+      - !CommandStep
+        name: 构建服务器代码
+        runInContainer: true
+        image: docker.1panel.live/oven/bun:1.2.17
+        interpreter: !DefaultInterpreter
+          commands: |
+            cd src-server
+            bun run build
+        useTTY: true
+        condition: SUCCESSFUL
+        optional: false
+      - !BuildImageStep
+        name: 构建docker镜像
+        buildPath: src-server
+        dockerfile: src-server/Dockerfile
+        output: !RegistryOutput
+          tags: '@tag@'
+        condition: SUCCESSFUL
+        optional: false
+    triggers:
+      - !TagCreateTrigger
+        branches: master
+        projects: knowledge_base
+    retryCondition: never
+    maxRetries: 3
+    retryDelay: 30
+    timeout: 14400
