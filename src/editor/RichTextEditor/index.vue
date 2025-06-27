@@ -159,6 +159,10 @@ useEventListener(editorContainerDom, 'click', (e) => {
     height: calc(100% - 2px);
   }
 
+  .aie-container {
+    border: none !important;
+  }
+
   .aie-container-main {
     flex-grow: 1;
     overflow: auto;
@@ -169,7 +173,6 @@ useEventListener(editorContainerDom, 'click', (e) => {
       color: var(--td-text-color-primary) !important;
     }
   }
-
 
 
 }

@@ -135,7 +135,7 @@ function handleClose() {
     margin-top: 8px;
     border-radius: var(--td-radius-default);
     overflow: hidden;
-
+    border: 1px solid var(--td-border-level-2-color);
   }
 
   .footer {
