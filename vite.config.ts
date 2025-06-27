@@ -60,6 +60,9 @@ export default defineConfig(({mode}) => {
             },
           ],
         },
+        workbox: {
+          maximumFileSizeToCacheInBytes: 1024 * 1024 * 20,
+        }
       })
     ],
     base: "./",
