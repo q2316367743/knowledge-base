@@ -5,9 +5,6 @@
       :placeholder="placeholder"
       :maxlength="100"
     >
-      <template #suffix>
-        <t-icon name="edit" class="t-icon"/>
-      </template>
     </t-input>
   </div>
 </template>

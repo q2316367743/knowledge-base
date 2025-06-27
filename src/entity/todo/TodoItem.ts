@@ -73,6 +73,26 @@ export interface TodoItemAttr {
 
 }
 
+export interface TodoItemChild {
+  id: string;
+
+  /**
+   * 是否完成
+   */
+  complete: boolean;
+
+  /**
+   * 优先级，用于排序
+   */
+  priority: TodoItemPriority;
+
+  /**
+   * 标题
+   */
+  title: string;
+
+}
+
 export interface TodoItemContent {
 
   id: number
@@ -88,6 +108,11 @@ export interface TodoItemContent {
    * 内容源码
    */
   content: string;
+
+  /**
+   * 子任务
+   */
+  children?: Array<TodoItemChild>
 
 }
 
@@ -231,7 +256,8 @@ export function getDefaultTodoItemContent(id?: number): TodoItemContent {
   return {
     id: id || 0,
     content: '',
-    tags: []
+    tags: [],
+    children: [],
   };
 }
 

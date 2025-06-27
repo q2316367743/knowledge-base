@@ -1,5 +1,6 @@
 <template>
   <div class="todo-info">
+    <!-- 头部 -->
     <header class="header">
       <div class="close">
         <t-button theme="danger" shape="square" @click="handleClose">
@@ -38,24 +39,28 @@
     <div class="title">
       <kb-title-input v-model="item.index.title" placeholder="待办标题，回车修改" @change="updateSelf()"/>
     </div>
-    <div class="content">
-      <rich-text-editor v-model="item.content.record.content" simple @change="updateContent()" v-if="isInit"
-                        :auto-focus="false"/>
-    </div>
-    <footer class="footer overflow-y-hidden">
+    <!-- 标签 -->
+    <div class="tags">
       <tag-group v-model="item.attr.tags" @change="updateSelf()"/>
-      <main-content-attr/>
-    </footer>
+    </div>
+    <!-- 内容 -->
+    <div class="content">
+      <rich-text-editor v-model="item.content.record.content" simple v-if="isInit" :auto-focus="false"/>
+    </div>
+    <!-- 子任务 -->
+    <t-card header="子任务" class="children" size="small">
+      <todo-info-children v-model="item.content.record.children"/>
+    </t-card>
   </div>
 </template>
 <script lang="ts" setup>
+import {CloseIcon} from "tdesign-icons-vue-next";
 import {getDefaultTodoItem, TodoItem, TodoItemAttr} from "@/entity/todo/TodoItem";
 import {useTodoWrapStore} from "@/store/components/TodoWrapStore";
 import {useTodoItemStore} from "@/store/db/TodoItemStore";
 import RichTextEditor from "@/editor/RichTextEditor/index.vue";
-import MainContentAttr
-  from "@/pages/todo/common/TodoInfo/components/MainContentAttr.vue";
-import {CloseIcon} from "tdesign-icons-vue-next";
+import TodoInfoChildren from "@/pages/todo/common/TodoInfo/components/TodoInfoChildren.vue";
+import {useAsyncDebounce} from "@/hooks/AsyncDebounce";
 
 function renderIsRange(attr: TodoItemAttr): boolean {
   if (attr.start === '' && attr.end === '') {
@@ -93,19 +98,19 @@ function updateSelf() {
     }
   )
 }
-
-// 更新内容
-async function updateContent() {
-  if (!isInit.value) return;
-  // 更新内容
+const updateContent = useAsyncDebounce(async () => {
   item.value.content.rev = await useTodoItemStore().saveContent(
     useTodoWrapStore().itemId,
     item.value.content.record, item.value.content.rev)
-}
+}, 300);
 
-function handleClose() {
-  useTodoWrapStore().setItemId(0);
-}
+watch(() => item.value.content.record, () => {
+  if (!isInit.value) return;
+  // 更新内容
+  updateContent();
+})
+
+const handleClose = () => useTodoWrapStore().setItemId(0);
 </script>
 <style scoped lang="less">
 .todo-info {
@@ -113,7 +118,7 @@ function handleClose() {
   width: calc(100% - 16px);
   height: calc(100% - 16px);
   padding: 8px;
-  overflow: hidden;
+  overflow: auto;
   border-left: 1px solid var(--td-border-level-2-color);
 
   .header {
@@ -125,28 +130,18 @@ function handleClose() {
     }
   }
 
-  .title {
+  .title, .tags, .children, .content {
     margin-top: 8px;
   }
 
   .content {
     position: relative;
-    height: 70vh;
-    margin-top: 8px;
+    height: 50vh;
     border-radius: var(--td-radius-default);
     overflow: hidden;
     border: 1px solid var(--td-border-level-2-color);
   }
 
-  .footer {
-    position: absolute;
-    left: 7px;
-    right: 7px;
-    bottom: 7px;
-    display: flex;
-    justify-content: space-between;
-    overflow-x: auto;
-    height: 24px;
-  }
+
 }
 </style>

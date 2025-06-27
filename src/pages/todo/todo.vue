@@ -1,8 +1,8 @@
 <template>
-  <t-layout class="todo">
-    <t-aside :width="collapsed ? '0px' : '270px'" class="overflow-hidden">
+  <div class="todo">
+    <div class="todo-layout-side" :style="{width: collapsed ? '0px' : '270px'}">
       <todo-side/>
-    </t-aside>
+    </div>
     <t-content class="todo-layout-content">
       <empty-todo v-if="loading">
         <loading-result title="正在初始化清单"/>
@@ -18,11 +18,12 @@
       <content-calendar v-else-if="!empty && layout === TodoListLayoutEnum.CALENDAR"/>
       <content-four-quadrants v-else-if="!empty && layout === TodoListLayoutEnum.FOUR_QUADRANTS"/>
     </t-content>
-    <t-aside :width="itemId === 0 ? '0px' : '40vw'" class="overflow-hidden" :style="{minWidth: itemId === 0 ? '0px': '400px'}">
+    <div :style="{width: itemId === 0 ? '0px' : '40vw', minWidth: itemId === 0 ? '0px': '500px'}"
+         class="todo-layout-aside">
       <loading-result title="正在加载中" v-if="!show && itemId > 0"/>
       <todo-info v-else-if="show"/>
-    </t-aside>
-  </t-layout>
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
 import {TodoListLayoutEnum} from "@/entity/todo/TodoCategory";
@@ -70,8 +71,41 @@ watch(() => itemId.value, value => {
   left: 0;
   right: 0;
   bottom: 0;
+
+  flex-direction: row;
+  display: flex;
+  background: var(--td-bg-color-page);
+  font: var(--td-font-body-medium);
+  color: var(--td-text-color-primary);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  .todo-layout-side, .todo-layout-aside {
+    position: relative;
+    transition: all 0.2s;
+    background: var(--td-bg-color-container);
+    width: 232px;
+    overflow: hidden;
+  }
+
+
+  @media screen and (max-width: 950px) {
+    .todo-layout-aside {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      box-shadow: var(--td-shadow-2);
+    }
+  }
+
   .todo-layout-content {
     position: relative;
+    flex: auto;
+    border-left: 1px solid var(--td-border-level-2-color);
   }
 }
 </style>

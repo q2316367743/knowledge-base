@@ -159,6 +159,5 @@ function onDrop(data: DropContext) {
   left: 0;
   bottom: 0;
   width: 269px;
-  border-right: 1px solid var(--td-border-level-2-color);
 }
 </style>
