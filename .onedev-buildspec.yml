@@ -15,7 +15,7 @@ jobs:
         image: docker.1panel.live/oven/bun:1.2.17
         interpreter: !DefaultInterpreter
           commands: |
-            bun install --legacy-peer-deps --config=./bunfig.toml --production
+            bun install --legacy-peer-deps --production
         useTTY: true
         condition: SUCCESSFUL
         optional: false
@@ -26,7 +26,7 @@ jobs:
         interpreter: !DefaultInterpreter
           commands: |
             export NODE_OPTIONS=--max-old-space-size=4096
-            bun run build:web --config=./bunfig.toml
+            bun run build:web
         useTTY: true
         condition: SUCCESSFUL
         optional: false
@@ -37,7 +37,7 @@ jobs:
         interpreter: !DefaultInterpreter
           commands: |
             cd src-server
-            bun install --config=./bunfig.toml --production
+            bun install --production
         useTTY: true
         condition: SUCCESSFUL
         optional: false
@@ -48,7 +48,7 @@ jobs:
         interpreter: !DefaultInterpreter
           commands: |
             cd src-server
-            bun run build --config=./bunfig.toml
+            bun run build
         useTTY: true
         condition: SUCCESSFUL
         optional: false

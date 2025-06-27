@@ -1,4 +1,2 @@
 [install]
 registry = "https://registry.npmmirror.com/"
-production = true
-frozenLockfile = true
